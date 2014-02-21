@@ -6,5 +6,5 @@ clubman
 Contributors
 ============
 
-Bart Seghers
+Bart Seghers  
 Franky Braem
