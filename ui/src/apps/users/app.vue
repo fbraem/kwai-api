@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import Site from '../../site/components/site.vue';
+  import Site from '@/site/components/site.vue';
 
   export default {
       components : {
