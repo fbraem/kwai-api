@@ -1,0 +1,37 @@
+{
+    "description": "Club Management",
+    "authors": [
+        {
+            "name": "fbraem",
+            "email": "franky.braem@gmail.com"
+        }
+    ],
+    "require": {
+      "php" : ">=7.0",
+        "zendframework/zend-stratigility": "^2.0",
+        "zendframework/zend-diactoros": "^1.4",
+        "zendframework/zend-config": "^3.1",
+        "lulco/phoenix": "^0.9.1",
+        "pimple/pimple": "^3.0",
+        "aura/router": "^3.1",
+        "aura/payload": "^3.0",
+        "league/fractal": "^0.16.0",
+        "nesbot/carbon": "^1.22",
+        "filp/whoops": "^2.1",
+        "Analogue/ORM": "^5.4",
+        "mtdowling/jmespath.php": "^2.4",
+        "zendframework/zend-validator": "^2.9",
+        "zendframework/zend-authentication": "^2.5",
+        "firebase/php-jwt": "^5.0",
+        "dflydev/fig-cookies": "^1.0"
+    },
+    "require-dev": {
+    },
+    "autoload" : {
+        "psr-4" : {
+            "Core\\" : "./src/core",
+            "Domain\\" : "./src/domain",
+            "REST\\" : "./src/rest"
+        }
+    }
+}
