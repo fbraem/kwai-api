@@ -41,10 +41,12 @@ class Application
 
         $this->container = new \Pimple\Container();
 
-        $dbConnection = $this->config->database->{$this->config->default_environment};
+        $dbConnection = $this->config->database->{$this->config->default_database};
         $dbConnectionArray = $dbConnection->toArray();
         $dbConnectionArray['driver'] = $dbConnection->adapter;
-        $dbConnectionArray['database'] = $dbConnection->db_name;
+        $dbConnectionArray['database'] = $dbConnection->name;
+        $dbConnectionArray['username'] = $dbConnection->user;
+        $dbConnectionArray['password'] = $dbConnection->pass;
         $analogue = new \Analogue\ORM\Analogue($dbConnectionArray);
         $analogue->registerPlugin('Analogue\ORM\Plugins\Timestamps\TimestampsPlugin');
     }
