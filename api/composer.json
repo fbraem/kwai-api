@@ -11,7 +11,6 @@
         "zendframework/zend-stratigility": "^2.0",
         "zendframework/zend-diactoros": "^1.4",
         "zendframework/zend-config": "^3.1",
-        "lulco/phoenix": "^0.9.1",
         "pimple/pimple": "^3.0",
         "aura/router": "^3.1",
         "aura/payload": "^3.0",
@@ -23,7 +22,8 @@
         "zendframework/zend-validator": "^2.9",
         "zendframework/zend-authentication": "^2.5",
         "firebase/php-jwt": "^5.0",
-        "dflydev/fig-cookies": "^1.0"
+        "dflydev/fig-cookies": "^1.0",
+        "robmorgan/phinx": "^0.8.1"
     },
     "require-dev": {
     },
