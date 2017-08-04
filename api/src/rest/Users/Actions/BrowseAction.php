@@ -8,8 +8,6 @@ use Aura\Payload\Payload;
 use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 
-use DusanKasan\Knapsack\Collection;
-
 use League\Fractal;
 
 class BrowseAction implements \Core\ActionInterface
