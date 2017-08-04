@@ -9,14 +9,14 @@ class UserMigration extends AbstractMigration
 {
     public function up()
     {
-        $this->table('users')
+        $this->table('users', ['signed' => false])
             ->addColumn('email', 'string')
             ->addColumn('password', 'string')
             ->addColumn('last_login', 'datetime', ['null' => true])
-            ->addColumn('first_name', 'string')
-            ->addColumn('last_name', 'string')
-            ->addColumn('remark', 'text')
-            ->addTimestamps(null, 'modified_at')
+            ->addColumn('first_name', 'string', ['null' => true])
+            ->addColumn('last_name', 'string', ['null' => true])
+            ->addColumn('remark', 'text', ['null' => true])
+            ->addTimestamps()
             ->create();
     }
 
