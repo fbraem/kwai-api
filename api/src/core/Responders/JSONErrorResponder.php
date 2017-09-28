@@ -19,7 +19,20 @@ class JSONErrorResponder implements ResponderInterface
         $response = $this->responder->respond();
         $response = $response->withHeader('content-type', 'application/vnd.api+json');
 
-        $data = json_encode($this->errors);
+        $errors = [];
+        foreach($this->errors as $pointer => $messages) {
+            foreach($messages as $message) {
+                $errors[] = [
+                    'source' => [
+                        'pointer' => $pointer
+                    ],
+                    'title' => $message
+                ];
+            }
+        }
+        $data = json_encode([
+            'errors' => $errors
+        ]);
         $response->getBody()->write($data);
 
         return $response;

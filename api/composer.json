@@ -21,9 +21,11 @@
         "mtdowling/jmespath.php": "^2.4",
         "zendframework/zend-validator": "^2.9",
         "zendframework/zend-authentication": "^2.5",
-        "firebase/php-jwt": "^5.0",
         "dflydev/fig-cookies": "^1.0",
-        "robmorgan/phinx": "^0.8.1"
+        "robmorgan/phinx": "^0.8.1",
+        "zendframework/zend-log": "^2.9",
+        "lcobucci/jwt": "^3.2",
+        "zendframework/zend-filter": "^2.7"
     },
     "require-dev": {
     },

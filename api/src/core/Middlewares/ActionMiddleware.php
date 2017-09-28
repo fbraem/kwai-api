@@ -25,11 +25,8 @@ class ActionMiddleware implements MiddlewareInterface
         if (!$json['data']) {
             $json['data'] = [];
         }
+        $payload->setInput($json);
 
-        $payload->setInput([
-            'attributes' => $route->attributes,
-            'data' => $json
-        ]);
         $actionClass = $route->handler;
         $action = new $actionClass();
 

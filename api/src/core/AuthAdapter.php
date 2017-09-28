@@ -46,6 +46,11 @@ class AuthAdapter implements AdapterInterface
             //$activation = $user->activation;
             //if ($activation != null && $activation->completed) {
                 if (password_verify($this->password, $user->password)) {
+                    $user->last_login = \Carbon\Carbon::now();
+                    $userRepo = new \Domain\User\UserRepository();
+                    $userRepo->store($user);
+
+                    //TODO: Add roles or permissions
                     return new Result(Result::SUCCESS, $user);
                 } else {
                     return new Result(

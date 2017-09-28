@@ -1,54 +1,42 @@
 <template>
     <site>
         <div slot="content">
-            <section class="uk-section uk-container uk-container-expand">
-                <div class="uk-flex uk-flex-center">
-                    <div class="uk-card uk-card-default">
-                        <div class="uk-card-header">
-                            <h3 class="uk-card-title"><i uk-icon="icon: user"></i> Clubman</h3>
-                            <p class="uk-text-meta uk-text-small uk-margin-remove-top">Login to Clubman</p>
-                        </div>
-                        <div class="uk-card-body">
-                            <form class="uk-form-horizontal">
-                                <div class="uk-margin">
-                                    <label class="uk-form-label" :class="{ 'uk-text-danger': $v.email.$error }" for="email">Email:</label>
-                                    <div class="uk-form-controls">
-                                        <div class="uk-inline">
-                                            <span class="uk-form-icon" uk-icon="icon: mail"></span>
-                                            <input class="uk-input" v-model="email" id="email" type="email"
-                                                placeholder="Email" required="required" autofocus="autofocus"
-                                                :class="{ 'uk-form-danger' : $v.email.$error, 'uk-form-success' : $v.email.$dirty && !$v.email.$error }"
-                                                @input="$v.email.$touch()"
-                                                />
-                                        </div>
-                                        <div v-if="$v.email.$dirty && !$v.email.required" class="uk-text-danger uk-text-small">Email is required.</div>
-                                        <div v-if="$v.email.$dirty && !$v.email.email" class="uk-text-danger uk-text-small">Email is not valid.</div>
-                                    </div>
-                                </div>
-                                <div class="uk-margin">
-                                    <label class="uk-form-label" :class="{ 'uk-text-danger': $v.password.$error }" for="pwd">Password:</label>
-                                    <div class="uk-form-controls">
-                                        <div class="uk-inline">
-                                            <span class="uk-form-icon" uk-icon="icon: lock"></span>
-                                            <input class="uk-input" v-model="password" id="pwd" type="password" placeholder="Password" required="required"
-                                            :class="{ 'uk-form-danger' : $v.password.$error, 'uk-form-success' : $v.password.$dirty && !$v.password.$error }"
-                                            @input="$v.password.$touch()"
-                                            />
-                                        </div>
-                                        <div v-if="$v.password.$dirty && !$v.password.required" class="uk-text-danger uk-text-small">Password is required.</div>
-                                    </div>
-                                </div>
-                            </form>
-                            <div v-if="error" class="uk-alert-danger" uk-alert>
-                                {{ this.error }}
-                            </div>
-                        </div>
-                        <div class="uk-card-footer">
-                            <button :disabled="$v.$invalid" class="uk-button uk-button-primary" v-on:click="click">Login</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <v-layout>
+                <v-flex xs12 sm4 offset-sm4>
+                    <v-card>
+                        <v-card-title>
+                            <h3 class="headline mb-0">Login</h3>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-text-field name="email"
+                                label="Enter your email"
+                                v-model="email"
+                                :error-messages="emailErrors"
+                                @input="$v.email.$touch()"
+                                append-icon="mail"
+                                type="email"
+                                required
+                                autofocus>
+                            </v-text-field>
+                            <v-text-field
+                              name="password"
+                              label="Enter your password"
+                              v-model="password"
+                              :error-messages="passwordErrors"
+                              @input="$v.password.$touch()"
+                              :append-icon="hidePassword ? 'visibility' : 'visibility_off'"
+                              :append-icon-cb="() => (hidePassword = !hidePassword)"
+                              :type="hidePassword ? 'password' : 'text'"
+                              required
+                            ></v-text-field>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn :disabled="$v.$invalid" flat @click="submit">Submit</v-btn>
+                            <v-btn flat @click="clear">Clear</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-flex>
+            </v-layout>
         </div>
     </site>
 </template>
@@ -75,6 +63,7 @@
             return {
                 email : '',
                 password : '',
+                hidePassword : true,
                 errors : initError(),
                 error : false
             }
@@ -88,10 +77,30 @@
                 required
             }
         },
+        computed : {
+            emailErrors() {
+                const errors = [];
+                if (! this.$v.email.$dirty) return errors;
+                ! this.$v.email.required && errors.push('Email is required');
+                ! this.$v.email.email && errors.push('Email is not valid');
+                return errors;
+            },
+            passwordErrors() {
+                const errors = [];
+                if (! this.$v.password.$dirty) return errors;
+                ! this.$v.password.required && errors.push('Password is required');
+                return errors;
+            }
+        },
         mounted() {
         },
         methods : {
-            click() {
+            clear() {
+                this.$v.$reset();
+                this.email = "";
+                this.password = "";
+            },
+            submit() {
                 this.errors = initError();
                 this.error = false;
 

@@ -123,7 +123,7 @@ export default {
                 console.log('success');
             }).catch(err => {
                 if ( err.response.status == 400 ) {
-                    err.response.data.forEach((item, index) => {
+                    err.response.data.errors.forEach((item, index) => {
                         if (item.source.pointer == '/data/attributes/email') {
                             this.errors.email.push(item.title);
                         } else if (item.source.pointer == '/data/attributes/password') {

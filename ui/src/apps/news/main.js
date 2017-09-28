@@ -8,8 +8,8 @@ Vue.use(VueRouter);
 import Vuex from 'vuex';
 Vue.use(Vuex);
 import store from '@/js/store';
-import installStore from './store';
-store.registerModule('installModule', installStore);
+import newsStore from './store';
+store.registerModule('newsModule', newsStore);
 
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
@@ -25,13 +25,23 @@ Vue.use(VueKindergarten, {
     }
 });
 
-import InstallApp from './app.vue';
+import NewsApp from './app.vue';
+import NewsCreate from './app/create.vue';
+import NewsUpdate from './app/update.vue';
 
 const router = new VueRouter({
     routes : [
         {
             path : '/',
-            component : InstallApp
+            component : NewsApp
+        },
+        {
+            path : '/create',
+            component : NewsCreate
+        },
+        {
+            path : '/update/:id',
+            component : NewsUpdate
         }
     ]
 });

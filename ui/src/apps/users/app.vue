@@ -1,11 +1,9 @@
 <template>
     <site>
         <div slot="content">
-            <section class="uk-section uk-container uk-container-expand">
-                <div v-for="user in users">
-                    {{ user.email }}
-                </div>
-            </section>
+            <div v-for="user in users">
+                {{ user.email }}
+            </div>
         </div>
     </site>
 </template>

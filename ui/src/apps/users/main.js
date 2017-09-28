@@ -11,10 +11,9 @@ import store from '../../js/store.js';
 import userStore from './store';
 store.registerModule('userModule', userStore);
 
-import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
-UIkit.use(Icons);
-import css from 'uikit/dist/css/uikit.min.css';
+import Vuetify from 'vuetify';
+Vue.use(Vuetify);
+import '@/../node_modules/vuetify/dist/vuetify.min.css';
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {

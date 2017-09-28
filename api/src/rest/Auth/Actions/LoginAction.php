@@ -21,7 +21,7 @@ class LoginAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload)
     {
         $responder = new Responder();
-        $data = $payload->getInput()['data'];
+        $data = $payload->getInput();
 
         $attributes = \JmesPath\search('data.attributes', $data);
         if (empty($attributes['email'])) {
@@ -58,13 +58,10 @@ class LoginAction implements \Core\ActionInterface
 
         if ($result->isValid()) {
             $user = $result->getIdentity();
-            $user->last_login = \Carbon\Carbon::now();
-            $userRepo = new \Domain\User\UserRepository();
-            $userRepo->store($user);
 
             $payload->setOutput(new Fractal\Resource\Item($user, new \Domain\User\UserTransformer, 'users'));
             $payload->setExtras([
-                'jwt' => $auth->getStorage()->getJWT()
+                'jwt' => (string) $auth->getStorage()->getToken()
             ]);
             return new JSONResponder($responder, $payload);
         } else {

@@ -1,26 +1,25 @@
 <?php
 
-use Phoenix\Migration\AbstractMigration;
+use Phinx\Migration\AbstractMigration;
 
 /**
  * Base News Migration
  */
-class Migration extends AbstractMigration
+class NewsMigration extends AbstractMigration
 {
-    protected function up()
+    public function up()
     {
-        $this->table('categories')
+        $this->table('news_categories', ['signed' => false])
             ->addColumn('name', 'string')
             ->addColumn('description', 'text', ['null' => true])
             ->addColumn('remark', 'text', ['null' => true])
             ->addColumn('user_id', 'integer')
             ->addColumn('original_image_path', 'string', ['null' => true])
             ->addColumn('image_path', 'string', ['null' => true])
-            ->addColumn('created_at', 'datetime')
-            ->addColumn('updated_at', 'datetime')
+            ->addTimestamps()
             ->create()
         ;
-        $this->table('news')
+        $this->table('news_stories', ['signed' => false])
             ->addColumn('title', 'string')
             ->addColumn('content', 'text')
             ->addColumn('summary', 'text', ['null' => true])
@@ -36,16 +35,14 @@ class Migration extends AbstractMigration
             ->addColumn('remark', 'text', ['null' => true])
             ->addColumn('category_id', 'integer')
             ->addColumn('user_id', 'integer')
-            ->addColumn('created_at', 'datetime')
-            ->addColumn('updated_at', 'datetime')
+            ->addTimestamps()
             ->create()
         ;
     }
 
-    protected function down()
+    public function down()
     {
-        $this->table('news')
-            ->drop()
-        ;
+        $this->table('news_stories')->drop();
+        $this->table('news_categories')->drop();
     }
 }

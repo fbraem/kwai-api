@@ -1,9 +1,7 @@
 <template>
     <site>
         <div slot="content">
-            <section class="uk-section uk-container uk-container-expand">
-                Home page
-            </section>
+            Home page
         </div>
     </site>
 </template>

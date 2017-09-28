@@ -2,82 +2,68 @@
 
 namespace Core;
 
-use Firebase\JWT\JWT;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 use Zend\Authentication\Storage\StorageInterface;
 
 class JWTStorage implements StorageInterface
 {
-    private $jwt;
+    private $token;
 
-    private $jwtData;
+    private $signer;
 
-    private $xsfr;
+    private $secret;
 
-    private $config;
+    private $source;
 
-    private $request;
-
-    public function __construct($config, $request)
+    public function __construct($secret, $source = "")
     {
-        $this->config = $config;
-        $this->request = $request;
-        $this->jwt = null;
-        $this->xsfr = 0;
+        $this->secret = $secret;
+        $this->source = $source;
+        $this->signer = new Sha256();
+        $this->token = null;
     }
 
     public function isEmpty()
     {
-        return $this->jwt === null;
+        return $this->token === null;
     }
 
     public function read()
     {
         $this->clear();
-        $authHeader = $this->request->getHeader('authorization');
-        if ($authHeader) {
-            list($this->jwt) = sscanf($authHeader[0], 'Bearer %s');
-            if ($this->jwt && $this->jwt != "undefined") {
-                $this->jwtData = JWT::decode($this->jwt, $this->config['secret'], [$this->config['algorithm']]);
-                $this->xsfr = $this->jwtData->xsfr;
+        if (strlen($this->source) > 0) {
+            $this->token = (new Parser())->parse($this->source);
+            if ($this->token->verify($this->signer, $this->secret)) {
+                return $this->token;
             }
         }
-        return $this->jwt;
+        return null;
     }
 
     public function write($contents)
     {
-        $this->xsfr = md5(uniqid(rand(), true));
-
-        $issuedAt = time();
-        $notBefore = $issuedAt;
-        $expire = time() + 3600;
-        $this->jwtData = [
-            'jti' => base64_encode(mcrypt_create_iv(32)), // Token ID
-            'iat' => $issuedAt,
-            'iss' => $this->config['server'],
-            'nbf' => $notBefore,
-            'exp' => $expire,
-            'xsfr' => $this->xsfr,
-            'data' => $contents
-        ];
-
-        $this->jwt = JWT::encode($this->jwtData, $this->config['secret'], $this->config['algorithm']);
+        // $contents contains a user model
+        $this->token = (new Builder())
+            ->setIssuer('clubman')
+            ->setId(base64_encode(mcrypt_create_iv(32)), true)
+            ->setIssuedAt(time())
+            ->setNotBefore(time())
+            ->setExpiration(time() + 3600)
+            ->set('xsfr', md5(uniqid(rand(), true)))
+            ->set('data', [
+                'id' => $contents->id
+            ])
+            ->sign($this->signer, $this->secret)
+            ->getToken();
+        return $this->token;
     }
 
-    public function getJWT()
+    public function getToken()
     {
-        return $this->jwt;
-    }
-
-    public function getJWTData()
-    {
-        return $this->jwtData;
-    }
-
-    public function getXSFR()
-    {
-        return $this->xsfr;
+        return $this->token;
     }
 
     public function clear()

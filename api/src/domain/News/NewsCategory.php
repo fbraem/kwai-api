@@ -6,7 +6,7 @@ use Analogue\ORM\Entity;
 /**
  * @inheritdoc
  */
-class News extends Entity
+class NewsCategory extends Entity
 {
     public function __construct()
     {

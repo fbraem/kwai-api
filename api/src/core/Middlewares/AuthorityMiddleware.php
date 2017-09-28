@@ -15,6 +15,9 @@ use Dflydev\FigCookies\FigRequestCookies;
 
 use Zend\Diactoros\Response;
 
+use Core\Responders\HTTPCodeResponder;
+use Core\Responders\Responder;
+
 class AuthorityMiddleware implements MiddlewareInterface
 {
     private $jwtConfig;
@@ -28,7 +31,15 @@ class AuthorityMiddleware implements MiddlewareInterface
     {
         // Create the Authentication service and storage
         $auth = new AuthenticationService();
-        $authStorage = new \Core\JWTStorage($this->jwtConfig , $request);
+
+        $authStorage = null;
+        $authHeader = $request->getHeader('authorization');
+        if ($authHeader) {
+            list($jwt) = sscanf($authHeader[0], 'Bearer %s');
+            $authStorage = new \Core\JWTStorage($this->jwtConfig['secret'] , $jwt);
+        } else {
+            $authStorage = new \Core\JWTStorage($this->jwtConfig['secret']);
+        }
         $auth->setStorage($authStorage);
         $request = $request->withAttribute('clubman.authenticationService', $auth);
 
@@ -36,23 +47,12 @@ class AuthorityMiddleware implements MiddlewareInterface
         $xsfrCookie = FigRequestCookies::get($request, 'XSRF-TOKEN');
 
         // Check the JWT, if there is one ...
+        $authStorage->read();
         $jwt = null;
-        try {
-            $authStorage->read();
-        } catch (\Firebase\JWT\ExpiredException $ee) {
-            //return $this->createUnauthorizedResponse();
-        }
         if ($auth->hasIdentity()) {
-            $jwt = $authStorage->getJWTData();
-            // Check the user in the jwt (if there is one)
-            if ($jwt && $jwt->data && $jwt->data->id) {
-                $userRepo = new \Domain\User\UserRepository();
-                $user = $userRepo->find($jwt->data->id);
-                //TODO: check active user?
-                if ($user === null) {
-                    return $this->createUnauthorizedResponse();
-                }
-                $request = $request->withAttribute('clubman.user', $user);
+            $jwt = $authStorage->getToken();
+            if ($jwt) {
+                $request = $request->withAttribute('clubman.user', $jwt->getClaim('data')->id);
             }
         }
 
@@ -66,8 +66,9 @@ class AuthorityMiddleware implements MiddlewareInterface
 
             // When the JWT has a XSFR, check that the XSFR cookie contains
             // the same value.
-            if ($jwt->xsfr) {
-                if ($xsfrCookie == null || $xsfrCookie->getValue() != $jwt->xsfr) {
+            $xsfr = $jwt->getClaim('xsfr');
+            if ($xsfr) {
+                if ($xsfrCookie == null || $xsfrCookie->getValue() != $xsfr) {
                     return $this->createUnauthorizedResponse();
                 }
             }
@@ -85,7 +86,8 @@ class AuthorityMiddleware implements MiddlewareInterface
                  $xsfr = $xsfrCookie->getValue();
             }
         } else {
-            $xsfr = $authStorage->getXSFR();
+            $jwt = $authStorage->getToken();
+            $xsfr = $jwt->getClaim('xsfr');
         }
 
         if ($xsfr !== null) {

@@ -49,6 +49,16 @@ class Application
         $dbConnectionArray['password'] = $dbConnection->pass;
         $analogue = new \Analogue\ORM\Analogue($dbConnectionArray);
         $analogue->registerPlugin('Analogue\ORM\Plugins\Timestamps\TimestampsPlugin');
+
+        $analogue->connection()->setEventDispatcher(new \Illuminate\Events\Dispatcher(new \Illuminate\Container\Container));
+        $analogue->connection()->listen(function ($query) {
+            //TODO: Move the creation of the logger to application
+            // and move the name of the file to the configuration
+            $writer = new \Zend\Log\Writer\Stream('../tmp/clubman.sql');
+            $logger = new \Zend\Log\Logger();
+            $logger->addWriter($writer, 7);
+            $logger->info($query->sql);
+        });
     }
 
     /**
@@ -80,6 +90,7 @@ class Application
         $app->pipe(new Middlewares\PathMiddleware());
         $app->pipe(new Middlewares\RoutingMiddleware());
         $app->pipe(new Middlewares\AuthorityMiddleware($this->config->jwt));
+        $app->pipe(new Middlewares\ParametersMiddleware());
         $app->pipe(new Middlewares\ActionMiddleware());
         $server = Server::createServer(
             $app,

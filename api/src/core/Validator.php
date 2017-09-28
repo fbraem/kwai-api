@@ -25,7 +25,7 @@ class Validator implements ValidatorInterface
             if (isset($value) && !$validator->isValid($value)) {
                 $messages = [];
                 foreach ($validator->getMessages() as $messageId => $message) {
-                    $pointer = '/' + str_replace('.', '/', $path);
+                    $pointer = '/' . str_replace('.', '/', $path);
                     if (!isset($this->errors[$pointer])) {
                         $errors[$pointer] = [];
                     }

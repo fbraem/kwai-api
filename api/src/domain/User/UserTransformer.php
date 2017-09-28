@@ -21,7 +21,7 @@ class UserTransformer extends Fractal\TransformerAbstract
             'remark' => $user->remark,
             'last_login' => $lastLogin,
             'created_at' => (string) $user->created_at,
-            'modified_at' => (string) $user->modified_at
+            'updated_at' => (string) $user->updated_at
         ];
     }
 }

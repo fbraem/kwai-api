@@ -11,6 +11,8 @@ use Core\Responders\Responder;
 use Core\Responders\HTTPCodeResponder;
 
 /**
+ * Middleware that is responsible of instantiating a router class based on then
+ * first part of the URI.
  */
 class RoutingMiddleware implements MiddlewareInterface
 {
@@ -34,6 +36,10 @@ class RoutingMiddleware implements MiddlewareInterface
           $router = new $routerClassName();
           $route = $router->match($request);
           if ($route) {
+              // add route attributes to the request
+              foreach ($route->attributes as $key => $val) {
+                  $request = $request->withAttribute('route.' . $key, $val);
+              }
               $request = $request->withAttribute('clubman.route', $route);
               return $delegate->process($request);
           }

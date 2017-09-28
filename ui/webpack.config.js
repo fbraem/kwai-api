@@ -10,6 +10,7 @@ var config = {
         "auth" : "./src/apps/auth/main.js",
         "install" : "./src/apps/install/main.js",
         "users" : "./src/apps/users/main.js",
+        "news" : "./src/apps/news/main.js",
         "site" : "./src/site/main.js"
     },
     output : {
@@ -27,10 +28,23 @@ var config = {
             { test: /\.vue$/, loader: "vue-loader" },
             { test: /\.css$/, loader: "style-loader!css-loader" },
             { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader' },
-            { test: /\.(png|jpe?g|gif|svg)$/i, loaders: [
-                "file-loader?name=build/assets/[name]_[hash].[ext]&publicPath=ui/",
-                'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
-            ] }
+            { test: /\.(png|jpe?g|gif|svg)$/i,
+                loaders: [
+                    "file-loader?name=build/assets/[name]_[hash].[ext]&publicPath=ui/",
+                    {
+                        loader : 'image-webpack-loader',
+                        query : {
+                            bypassOnDebug : true,
+                            gifsicle: {
+                                interlaced : false
+                            },
+                            optipng : {
+                                optimizationLevel : 7
+                            }
+                        }
+                    }
+                ]
+            }
         ]
     },
     resolve : {
