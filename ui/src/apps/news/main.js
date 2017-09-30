@@ -28,12 +28,17 @@ Vue.use(VueKindergarten, {
 import NewsApp from './app.vue';
 import NewsCreate from './app/create.vue';
 import NewsUpdate from './app/update.vue';
+import NewsRead from './app/read.vue';
 
 const router = new VueRouter({
     routes : [
         {
             path : '/',
             component : NewsApp
+        },
+        {
+            path : '/read/:id',
+            component : NewsRead
         },
         {
             path : '/create',
