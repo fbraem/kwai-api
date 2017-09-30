@@ -26,10 +26,9 @@
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
             }
         },
-        watch : {
-            '$route'() {
-                this.fetchData(this.$route.params.id);
-            }
+        beforeRouteUpdate(to, from, next) {
+            this.fetchData(to.params.id);
+            next();
         },
         methods : {
             fetchData(id) {
