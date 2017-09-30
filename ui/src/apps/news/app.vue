@@ -11,11 +11,16 @@
                 <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md4>
                     <v-card>
                         <v-card-title primary-title>
-                            <h4>{{ story.title }}</h4>
                             <div>
-                            {{ story.summary }}
-                        </div>
+                                <h3 class="headline mb-0">{{ story.title }}</h3>
+                                <div>
+                                    {{ story.summary }}
+                                </div>
+                            </div>
                         </v-card-title>
+                        <v-card-actions v-if="story.content != story.content.length > 0">
+                            <v-btn :to="'/read/' + story.id" flat>Read more</v-btn>
+                        </v-card-actions>
                     </v-card>
                 </v-flex>
             </v-layout>
