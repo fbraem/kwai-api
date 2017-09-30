@@ -266,11 +266,13 @@
                     }
                 },
                 errors : initError(),
-                error : false,
                 stepper : 1
             }
         },
         computed : {
+            error() {
+                return this.$store.state.newsModule.status.error;
+            },
             categories() {
                 return this.$store.state.newsModule.categories.map((category) => ({value : category.id, text : category.name }));
             },
@@ -410,30 +412,34 @@
             ]
         },
         mounted() {
-            this.$store.dispatch('newsModule/getCategories');
+            this.$store.dispatch('newsModule/getCategories').
+                then(() => {
+                    if ( this.story ) this.fillForm(this.story);
+                });
         },
         watch : {
             story(nv) {
                 if (nv) {
-                    this.$set(this.form.story, 'title', nv.title);
-                    this.$set(this.form.story, 'category', nv.category.id);
-                    this.$set(this.form.story, 'summary', nv.summary);
-                    this.$set(this.form.story, 'content', nv.content);
-                    this.$set(this.form.story, 'enabled', nv.enabled == 1);
-                    if (nv.publish_date) {
-                        this.$set(this.form.story, 'publish_date', moment(nv.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
-                        this.$set(this.form.story, 'publish_time', moment(nv.publish_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                    this.fillForm(nv);
+                }
+            },
+            error(nv) {
+                if (nv) {
+                    if ( nv.response.status == 422 ) {
+                        nv.response.data.errors.forEach((item, index) => {
+                            if ( item.source && item.source.pointer ) {
+                                var attr = item.source.pointer.split('/').pop();
+                                this.errors[attr].push(item.title);
+                            }
+                        });
                     }
-                    if (nv.end_date) {
-                        this.$set(this.form.story, 'end_date', moment(nv.end_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
-                        this.$set(this.form.story, 'end_time', moment(nv.end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                    else if ( nv.response.status == 404 ){
+                      //this.error = err.response.statusText;
                     }
-                    this.$set(this.form.story, 'featured', nv.featured);
-                    if (nv.featured_end_date) {
-                        this.$set(this.form.story, 'featured_end_date', moment(nv.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
-                        this.$set(this.form.story, 'featured_end_time', moment(nv.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                    else {
+                      //TODO: check if we can get here ...
+                      console.log(nv);
                     }
-                    this.$set(this.form.story, 'remark', nv.remark);
                 }
             }
         },
@@ -452,6 +458,27 @@
             },
             clear() {
                 this.$v.reset();
+            },
+            fillForm(model) {
+                this.$set(this.form.story, 'title', model.title);
+                this.$set(this.form.story, 'category', model.category.id);
+                this.$set(this.form.story, 'summary', model.summary);
+                this.$set(this.form.story, 'content', model.content);
+                this.$set(this.form.story, 'enabled', model.enabled == 1);
+                if (model.publish_date) {
+                    this.$set(this.form.story, 'publish_date', moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
+                    this.$set(this.form.story, 'publish_time', moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                }
+                if (model.end_date) {
+                    this.$set(this.form.story, 'end_date', moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
+                    this.$set(this.form.story, 'end_time', moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                }
+                this.$set(this.form.story, 'featured', model.featured);
+                if (model.featured_end_date) {
+                    this.$set(this.form.story, 'featured_end_date', moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
+                    this.$set(this.form.story, 'featured_end_time', moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                }
+                this.$set(this.form.story, 'remark', model.remark);
             },
             fillModel(model) {
                 model.addAttribute('title', this.form.story.title);
@@ -477,52 +504,21 @@
             },
             submit() {
                 this.errors = initError();
-                this.error = false;
 
                 if (this.story) { // update
                     this.fillModel(this.story);
                     this.$store.dispatch('newsModule/update', this.story.serialize())
                         .then(() => {
-                            console.log('update success');
-                        }).catch(err => {
-                          if ( err.response.status == 422 ) {
-                              err.response.data.errors.forEach((item, index) => {
-                                  if ( item.source && item.source.pointer ) {
-                                      var attr = item.source.pointer.split('/').pop();
-                                      this.errors[attr].push(item.title);
-                                  }
-                              });
-                          }
-                          else if ( err.response.status == 404 ){
-                            this.error = err.response.statusText;
-                          }
-                          else {
-                            //TODO: check if we can get here ...
-                            console.log(err);
-                          }
+                            this.$router.push('/read/' + this.story.id);
+                        }).catch(() => {
                         });
                 } else { // create
                     var story = new Model('news');
                     this.fillModel(story);
                     this.$store.dispatch('newsModule/create', story.serialize())
                         .then(() => {
-                            console.log('success');
+                            this.$router.push('/read/' + this.story.id);
                         }).catch(err => {
-                          if ( err.response.status == 422 ) {
-                              err.response.data.errors.forEach((item, index) => {
-                                  if ( item.source && item.source.pointer ) {
-                                      var attr = item.source.pointer.split('/').pop();
-                                      this.errors[attr].push(item.title);
-                                  }
-                              });
-                          }
-                          else if ( err.response.status == 404 ){
-                            this.error = err.response.statusText;
-                          }
-                          else {
-                            //TODO: check if we can get here ...
-                            console.log(err);
-                          }
                         });
                 }
             }
