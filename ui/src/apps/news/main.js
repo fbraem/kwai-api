@@ -24,6 +24,7 @@ Vue.use(VueKindergarten, {
         return store ? store.getters.activeUser : null;
     }
 });
+import storyPerimeter from './perimeter.js';
 
 import NewsApp from './app.vue';
 import NewsCreate from './app/create.vue';
@@ -53,5 +54,8 @@ const router = new VueRouter({
 
 var app = new Vue({
     router,
-    store
+    store,
+    perimeters : [
+        storyPerimeter
+    ]
 }).$mount('#clubmanApp');
