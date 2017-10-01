@@ -15,8 +15,8 @@ const state = {
 };
 
 const getters = {
-    activeUser : state => state.user,
-    isLoggedIn : state => state.user.meta.jwt != null
+    activeUser : state => state.user.data,
+    isLoggedIn : state => state.user && state.user.meta.jwt != null
 };
 
 const mutations = {
