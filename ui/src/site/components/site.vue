@@ -9,7 +9,7 @@
             <login></login>
         </v-toolbar>
         <main>
-            <v-container grid-list-md fluid>
+            <v-container grid-list-lg fluid>
                 <slot name="content"></slot>
             </v-container>
         </main>
