@@ -1,66 +1,62 @@
 <template>
-    <site>
-        <div slot="content">
-            <v-layout row wrap>
-                <v-flex xs12>
-                    <v-toolbar class="elevation-0">
-                        <v-toolbar-title>News</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn v-if="$isAllowed('create')" icon dark class="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
-                    </v-toolbar>
-                </v-flex>
-            </v-layout>
-            <v-layout v-if="stories.length == 0" row wrap>
-                <v-flex xs12>
-                    No news for today
-                </v-flex>
-            </v-layout>
-            <v-layout row wrap>
-                <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md4>
-                    <v-card>
-                        <v-card-title primary-title>
-                            <div>
-                                <h3 class="headline mb-0">{{ story.title }}</h3>
-                                <div>
-                                    {{ story.summary }}
-                                </div>
-                            </div>
-                        </v-card-title>
-                        <v-card-actions>
-                            <v-btn v-if="story.content != story.content.length > 0" icon :to="'/read/' + story.id" flat>
-                                <v-icon>more_horiz</v-icon>
-                            </v-btn>
-                            <v-spacer></v-spacer>
-                            <v-btn v-if="$isAllowed('update', story)" icon :to="'/update/' + story.id" flat>
-                                <v-icon>mode_edit</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-flex>
-            </v-layout>
-        </div>
-    </site>
+    <div>
+        <v-layout row wrap>
+            <v-flex xs12>
+                <v-toolbar class="elevation-0">
+                    <v-toolbar-title>News</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn v-if="$isAllowed('create')" icon dark class="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
+                </v-toolbar>
+            </v-flex>
+        </v-layout>
+        <v-layout v-if="noNews" row wrap>
+            <v-flex xs12>
+                No news for today
+            </v-flex>
+        </v-layout>
+        <v-layout row wrap>
+            <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md4>
+                <news-card :story="story" :complete="false"></news-card>
+            </v-flex>
+        </v-layout>
+    </div>
 </template>
 
 <script>
-  import Site from '@/site/components/site.vue';
+    import NewsCard from './components/card.vue';
 
-  export default {
-      components : {
-          Site
-      },
-      computed : {
-          stories() {
-              return this.$store.state.newsModule.stories;
+    export default {
+        components : {
+            NewsCard
+        },
+        data() {
+            return {
+                category : null,
+                year : null,
+                month : null
+            };
+        },
+        computed : {
+            stories() {
+                return this.$store.state.newsModule.stories;
+            },
+            noNews() {
+                return !this.stories || this.stories.length == 0;
+            },
+            categories() {
+                return this.$store.getters['newsModule/categories'](this.$route.params.id);
+            }
+          },
+          mounted() {
+              this.fetchData();
+          },
+          methods : {
+              fetchData() {
+                  this.$store.dispatch('newsModule/browse', this.$route.params);
+                  this.year = this.$route.params.year;
+                  this.month = this.$route.params.month;
+                  this.year = this.$route.params.year;
+              }
           }
-      },
-      mounted() {
-        this.$store.dispatch('newsModule/browse')
-          .catch((error) => {
-            console.log(error);
-        });
-      },
-      methods : {
-      }
-  };
+      };
 </script>

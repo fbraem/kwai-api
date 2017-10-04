@@ -1,17 +1,17 @@
 <template>
-    <site>
-        <div v-if="story" slot="content">
-            <h2>{{ story.title }}</h2>
-        </div>
-    </site>
+    <v-layout>
+        <v-flex xs12 sm6 offset-sm3>
+            <news-card :story="story" :complete="true"></news-card>
+        </v-flex>
+    </v-layout>
 </template>
 
 <script>
-    import Site from '@/site/components/site.vue';
+    import NewsCard from '../components/card.vue';
 
     export default {
         components : {
-            Site
+            NewsCard
         },
         computed : {
             story() {
@@ -23,8 +23,6 @@
             .catch((error) => {
               console.log(error);
           });
-        },
-        methods : {
         }
     };
 </script>

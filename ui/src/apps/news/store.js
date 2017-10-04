@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import _ from 'lodash';
+import URI from 'urijs';
 
 import client from '@/js/client';
 import JSONAPI from '@/js/JSONAPI';
@@ -24,6 +25,12 @@ const getters = {
     },
     story: (state) => (id) => {
         return _.find(state.stories, ['id', id]);
+    },
+    categories(state) {
+        return state.categories;
+    },
+    category: (state) => (id) => {
+        return _.find(state.categories, ['id', id]);
     },
     loading(state) {
         return state.status.loading;
@@ -69,7 +76,21 @@ const mutations = {
 const actions = {
     browse(context, payload) {
         context.commit('loading');
-        client().withoutAuth().get('api/news/stories', {
+
+        var uri = new URI('api/news/stories');
+        var offset = payload.offset || 0;
+        uri.addQuery('page[offset]', offset);
+        if (payload.category) {
+            uri.addQuery('filter[category]', payload.category);
+        }
+        if (payload.year) {
+            uri.addQuery('filter[year]', payload.year);
+        }
+        if (payload.month) {
+            uri.addQuery('filter[month]', payload.month);
+        }
+
+        client().withoutAuth().get(uri.href(), {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();

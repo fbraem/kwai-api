@@ -26,6 +26,9 @@ Vue.use(VueKindergarten, {
 });
 import storyPerimeter from './perimeter.js';
 
+import { VueExtendLayout, layout } from 'vue-extend-layout';
+Vue.use(VueExtendLayout);
+
 import NewsApp from './app.vue';
 import NewsCreate from './app/create.vue';
 import NewsUpdate from './app/update.vue';
@@ -35,7 +38,7 @@ const router = new VueRouter({
     routes : [
         {
             path : '/',
-            component : NewsApp
+            component : NewsApp,
         },
         {
             path : '/read/:id',
@@ -57,5 +60,6 @@ var app = new Vue({
     store,
     perimeters : [
         storyPerimeter
-    ]
+    ],
+    ...layout
 }).$mount('#clubmanApp');

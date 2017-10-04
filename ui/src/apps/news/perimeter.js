@@ -15,6 +15,12 @@ export default createPerimeter({
                 return true;
             }
             return false;
+        },
+        remove(story) {
+            if (this.child) {
+                return true;
+            }
+            return false;
         }
     }
 });
