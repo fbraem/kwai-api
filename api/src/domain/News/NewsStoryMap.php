@@ -16,4 +16,9 @@ class NewsStoryMap extends EntityMap
     {
         return $this->belongsTo($news, NewsCategory::class, 'category_id', 'id');
     }
+
+    public function author(NewsStory $news)
+    {
+        return $this->belongsTo($news, \Domain\User\User::class, 'user_id', 'id');
+    }
 }

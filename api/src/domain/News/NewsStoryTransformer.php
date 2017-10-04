@@ -7,7 +7,8 @@ use League\Fractal;
 class NewsStoryTransformer extends Fractal\TransformerAbstract
 {
     protected $defaultIncludes = [
-        'category'
+        'category',
+        'author'
     ];
 
     public function transform(NewsStory $story)
@@ -32,5 +33,11 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     {
         $category = $story->category;
         return $this->item($category, new NewsCategoryTransformer, 'news_category');
+    }
+
+    public function includeAuthor(NewsStory $story)
+    {
+        $author = $story->author;
+        return $this->item($author, new \Domain\User\UserTransformer, 'user');
     }
 }
