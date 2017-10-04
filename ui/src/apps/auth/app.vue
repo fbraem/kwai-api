@@ -64,8 +64,7 @@
                 email : '',
                 password : '',
                 hidePassword : true,
-                errors : initError(),
-                error : false
+                errors : initError()
             }
         },
         validations : {
@@ -78,6 +77,9 @@
             }
         },
         computed : {
+            error() {
+                return this.$store.state.status.error;
+            },
             emailErrors() {
                 const errors = [];
                 if (! this.$v.email.$dirty) return errors;
@@ -92,7 +94,26 @@
                 return errors;
             }
         },
-        mounted() {
+        watch : {
+            error(nv) {
+                if (nv) {
+                    if ( nv.response.status == 422 ) {
+                        nv.response.data.errors.forEach((item, index) => {
+                            if ( item.source && item.source.pointer ) {
+                                var attr = item.source.pointer.split('/').pop();
+                                this.errors[attr].push(item.title);
+                            }
+                        });
+                    }
+                    else if ( nv.response.status == 404 ){
+                      //this.error = err.response.statusText;
+                    }
+                    else {
+                      //TODO: check if we can get here ...
+                      console.log(nv);
+                    }
+                }
+            }
         },
         methods : {
             clear() {
@@ -102,7 +123,6 @@
             },
             submit() {
                 this.errors = initError();
-                this.error = false;
 
                 var user = new Model('users');
                 user.addAttribute('email', this.email);
@@ -111,23 +131,7 @@
                 this.$store.dispatch('login', user.serialize())
                     .then(() => {
                         console.log('success');
-                    }).catch(err => {
-                      if ( err.response.status == 400 ) {
-                        err.response.data.forEach((item, index) => {
-                          if (item.source.pointer == '/data/attributes/email') {
-                            this.errors.email.push(item.title);
-                          } else if (item.source.pointer == '/data/attributes/password') {
-                            this.errors.password.push(item.title);
-                          }
-                        });
-                      }
-                      else if ( err.response.status == 404 ){
-                        this.error = err.response.statusText;
-                      }
-                      else {
-                        //TODO: check if we can get here ...
-                        console.log(err);
-                      }
+                    }).catch({
                     });
             }
         }
