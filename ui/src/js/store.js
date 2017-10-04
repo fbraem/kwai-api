@@ -12,11 +12,26 @@ const USER_KEY = 'user';
 
 const state = {
     user : Lockr.get(USER_KEY, null),
+    status : {
+        loading : false,
+        success : false,
+        error : false
+    }
 };
 
 const getters = {
-    activeUser : state => state.user.data,
-    isLoggedIn : state => state.user && state.user.meta.jwt != null
+    activeUser(state) {
+        if (state.user) {
+            return state.user.data;
+        }
+        return null;
+    },
+    isLoggedIn(state) {
+        return state.user && state.user.meta.jwt != null;
+    },
+    loading(state) {
+        return state.status.loading;
+    }
 };
 
 const mutations = {
@@ -25,25 +40,50 @@ const mutations = {
     },
     logout(state) {
         state.user = null;
+    },
+    loading(state) {
+        state.status = {
+            loading : true,
+            success: false,
+            error : false
+        };
+    },
+    success(state) {
+        state.status = {
+            loading : false,
+            success: true,
+            error : false
+        };
+    },
+    error(state, payload) {
+        state.status = {
+            loading : false,
+            success: false,
+            error : payload
+        };
     }
 };
 
 const actions = {
     login(context, payload) {
-        return client().withoutAuth().post('api/auth/login', {
-            data : payload
-        }).then((response) => {
-            var api = new JSONAPI();
-            var user = api.parse(response.data);
-
-            Lockr.set(USER_KEY, user);
-
-            context.commit('login', {
-                user : user
+        return new Promise((resolve, reject) => {
+            context.commit('loading');
+            client().withoutAuth().post('api/auth/login', {
+                data : payload
+            }).then((response) => {
+                var api = new JSONAPI();
+                var user = api.parse(response.data);
+                Lockr.set(USER_KEY, user);
+                context.commit('login', {
+                    user : user
+                });
+                context.commit('success');
+                resolve();
+            }).catch((err) => {
+                context.commit('error', err);
+                reject();
             });
-        }).catch((err) => {
-            return Promise.reject(err);
-        });
+        })
     },
     logout(context) {
         Lockr.rm(USER_KEY);
