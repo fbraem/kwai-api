@@ -1,5 +1,7 @@
 <template>
     <v-card>
+        <v-card-media src="/tmp/test.png" height="200px">
+        </v-card-media>
         <v-card-title>
             <div>
                 <h3 class="headline mb-0">{{ story.title }}</h3>
@@ -31,7 +33,7 @@
     </v-card>
 </template>
 
-<style>
+<style scoped>
     .mini-meta {
         font-size: 12px;
         color: #999;

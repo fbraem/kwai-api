@@ -87,9 +87,9 @@ class Application
         $app = new MiddlewarePipe();
         $app->setResponsePrototype(new Response());
 
-        $app->pipe(new Middlewares\PathMiddleware());
+        $app->pipe(new Middlewares\SetupMiddleware($this->config));
         $app->pipe(new Middlewares\RoutingMiddleware());
-        $app->pipe(new Middlewares\AuthorityMiddleware($this->config->jwt));
+        $app->pipe(new Middlewares\AuthorityMiddleware());
         $app->pipe(new Middlewares\ParametersMiddleware());
         $app->pipe(new Middlewares\ActionMiddleware());
         $server = Server::createServer(

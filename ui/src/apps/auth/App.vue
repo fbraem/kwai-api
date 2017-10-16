@@ -1,52 +1,48 @@
 <template>
-    <site>
-        <div slot="content">
-            <v-layout>
-                <v-flex xs12 sm4 offset-sm4>
-                    <v-card>
-                        <v-card-title>
-                            <h3 class="headline mb-0">Login</h3>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-text-field name="email"
-                                label="Enter your email"
-                                v-model="email"
-                                :error-messages="emailErrors"
-                                @input="$v.email.$touch()"
-                                append-icon="mail"
-                                type="email"
-                                required
-                                autofocus>
-                            </v-text-field>
-                            <v-text-field
-                              name="password"
-                              label="Enter your password"
-                              v-model="password"
-                              :error-messages="passwordErrors"
-                              @input="$v.password.$touch()"
-                              :append-icon="hidePassword ? 'visibility' : 'visibility_off'"
-                              :append-icon-cb="() => (hidePassword = !hidePassword)"
-                              :type="hidePassword ? 'password' : 'text'"
-                              required
-                            ></v-text-field>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn :disabled="$v.$invalid" flat @click="submit">Submit</v-btn>
-                            <v-btn flat @click="clear">Clear</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-flex>
-            </v-layout>
-        </div>
-    </site>
+    <v-container fluid>
+        <v-layout row wrap>
+            <v-flex xs12 sm4 offset-sm4>
+                <v-card>
+                    <v-card-title>
+                        <h3 class="headline mb-0">Login</h3>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field name="email"
+                            label="Enter your email"
+                            v-model="email"
+                            :error-messages="emailErrors"
+                            @input="$v.email.$touch()"
+                            append-icon="mail"
+                            type="email"
+                            required
+                            autofocus>
+                        </v-text-field>
+                        <v-text-field
+                          name="password"
+                          label="Enter your password"
+                          v-model="password"
+                          :error-messages="passwordErrors"
+                          @input="$v.password.$touch()"
+                          :append-icon="hidePassword ? 'visibility' : 'visibility_off'"
+                          :append-icon-cb="() => (hidePassword = !hidePassword)"
+                          :type="hidePassword ? 'password' : 'text'"
+                          required
+                        ></v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn :disabled="$v.$invalid" flat @click="submit">Submit</v-btn>
+                        <v-btn flat @click="clear">Clear</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
     import Model from '@/js/model';
 
     import { required, email } from 'vuelidate/lib/validators';
-
-    import Site from '@/site/components/site.vue';
 
     var initError = function() {
       return {
@@ -56,9 +52,6 @@
     }
 
     export default {
-        components : {
-            Site
-        },
         data() {
             return {
                 email : '',

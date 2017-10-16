@@ -20,15 +20,10 @@ use Core\Responders\Responder;
 
 class AuthorityMiddleware implements MiddlewareInterface
 {
-    private $jwtConfig;
-
-    public function __construct($jwtConfig)
-    {
-        $this->jwtConfig = $jwtConfig;
-    }
-
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
+        $config = $request->getAttribute('clubman.config');
+        
         // Create the Authentication service and storage
         $auth = new AuthenticationService();
 
@@ -36,9 +31,9 @@ class AuthorityMiddleware implements MiddlewareInterface
         $authHeader = $request->getHeader('authorization');
         if ($authHeader) {
             list($jwt) = sscanf($authHeader[0], 'Bearer %s');
-            $authStorage = new \Core\JWTStorage($this->jwtConfig['secret'] , $jwt);
+            $authStorage = new \Core\JWTStorage($config->jwt['secret'] , $jwt);
         } else {
-            $authStorage = new \Core\JWTStorage($this->jwtConfig['secret']);
+            $authStorage = new \Core\JWTStorage($config->jwt['secret']);
         }
         $auth->setStorage($authStorage);
         $request = $request->withAttribute('clubman.authenticationService', $auth);

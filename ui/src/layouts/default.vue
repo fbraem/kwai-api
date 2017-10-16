@@ -1,21 +1,22 @@
 <template>
-    <v-app toolbar footer>
-        <v-navigation-drawer persistent v-model="drawer" light enable-resize-watcher overflow>
+    <v-app>
+        <v-navigation-drawer persistent v-model="drawer" light enable-resize-watcher overflow app>
         </v-navigation-drawer>
-        <v-toolbar class="indigo" dark>
+        <v-toolbar class="indigo" dark app>
             <v-toolbar-side-icon @click.stop="clickDrawer"></v-toolbar-side-icon>
             <v-toolbar-title>JudoKwai Kemzeke</v-toolbar-title>
             <v-spacer></v-spacer>
             <login></login>
         </v-toolbar>
         <main>
-            <v-container grid-list-lg fluid>
-                <router-view />
-            </v-container>
+            <v-content>
+                <v-container grid-list-lg fluid>
+                    <router-view />
+                </v-container>
+            </v-content>
         </main>
         <v-footer class="indigo">
             <span class="white--text">&copy; ClubMan</span>
-            <slot name="footer"></slot>
         </v-footer>
     </v-app>
 </template>

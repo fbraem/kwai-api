@@ -5,7 +5,7 @@
                 <v-toolbar class="elevation-0">
                     <v-toolbar-title>News</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn v-if="$isAllowed('create')" icon dark class="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
+                    <v-btn v-if="$isAllowed('create')" icon dark color="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
                 </v-toolbar>
             </v-flex>
         </v-layout>
@@ -15,15 +15,15 @@
             </v-flex>
         </v-layout>
         <v-layout row wrap>
-            <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md4>
-                <news-card :story="story" :complete="false"></news-card>
+            <v-flex v-for="story in stories" :key="story.id" xs12 sm6>
+                <NewsCard :story="story" :complete="false" />
             </v-flex>
         </v-layout>
     </div>
 </template>
 
 <script>
-    import NewsCard from './components/card.vue';
+    import NewsCard from './components/NewsCard.vue';
 
     export default {
         components : {

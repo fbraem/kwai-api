@@ -18,5 +18,6 @@ class Router extends \Core\Router
             ->accepts(['application/vnd.api+json']);
         $this->map->get('browseCategory', '/news/categories', \REST\News\Actions\BrowseCategoryAction::class)
             ->accepts(['application/vnd.api+json']);
+        $this->map->post('upload', '/news/image', \REST\News\Actions\UploadAction::class);
     }
 }

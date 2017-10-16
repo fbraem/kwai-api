@@ -7,6 +7,8 @@
                 <v-stepper-step step="2" :complete="!$v.step2Group.$invalid" :editable="!$v.step1Group.$invalid">Publish Information</v-stepper-step>
                 <v-divider></v-divider>
                 <v-stepper-step step="3" :complete="!$v.step3Group.$invalid" :editable="!$v.step1Group.$invalid && !$v.step2Group.$invalid">Featured Information</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step step="4" :complete="true" :editable="true">Image</v-stepper-step>
             </v-stepper-header>
             <v-stepper-content step="1">
                 <v-card class="mb-5">
@@ -106,8 +108,8 @@
                                 label="Pubish Date"
                                 v-model="form.story.publish_date"
                                 :errors="publishDateErrors"
-                                :$v="$v.form.story.publish_date">
-                            </date-field>
+                                :$v="$v.form.story.publish_date"
+                            />
                         </v-flex>
                         <v-flex xs12>
                             <v-text-field name="publish_time"
@@ -127,8 +129,7 @@
                                 :$v="$v.form.story.end_date"
                                 :errors="endDateErrors"
                                 :allowed-dates="allowedDates"
-                                >
-                            </date-field>
+                            />
                         </v-flex>
                         <v-flex xs12>
                             <v-text-field name="end_time"
@@ -176,8 +177,7 @@
                                     :$v="$v.form.story.featured_end_date"
                                     :errors="featuredEndDateErrors"
                                     :allowed-dates="allowedDates"
-                                    >
-                                </date-field>
+                                />
                             </v-flex>
                             <v-flex xs12>
                                 <v-text-field name="featured_end_time"
@@ -194,16 +194,47 @@
                 </v-card>
                 <v-btn flat @click.native="stepper=2">Previous</v-btn>
             </v-stepper-content>
+            <v-stepper-content step="4">
+                <v-layout row wrap>
+                    <v-flex xs12>
+                        <VueCroppie v-model="image" :url="imageURL" @result="cropResult" :boundary="{ height : 400 }" :viewport="{ width: 800, height : 200 }"/>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-layout row justify-center>
+                            <v-flex xs2>
+                                <v-btn @click="upload">Upload</v-btn>
+                            </v-flex>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-layout justify-center>
+                            <img class="text-xs-center" v-if="imagePreview" :src="imagePreview" />
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </v-stepper-content>
         </v-stepper>
-        <v-btn primary :disabled="$v.$invalid" @click="submit">Submit</v-btn>
+        <v-btn color="primary" :disabled="$v.$invalid" @click="submit">Submit</v-btn>
         <v-btn flat @click="clear">Clear</v-btn>
+        <form enctype="multipart/form-data" novalidate>
+            <input type="file" accept="image/*" ref="fileInput" @change="onFileChange"/>
+        </form>
     </v-container>
 </template>
+
+<style scoped>
+    input[type=file] {
+        position: absolute;
+        left: -99999px;
+    }
+</style>
+
 
 <script>
     import Model from '@/js/model';
     import moment from 'moment';
     import marked from 'marked';
+    import axios from 'axios';
 
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
@@ -220,7 +251,8 @@
         return true;
     });
 
-    import DateField from './date.vue';
+    import DateField from '@/components/DateField.vue';
+    import VueCroppie from "@/components/Croppie.vue";
 
     var initError = function() {
         return {
@@ -244,7 +276,8 @@
             }
         },
         components : {
-            DateField
+            DateField,
+            VueCroppie
         },
         data() {
             return {
@@ -266,7 +299,10 @@
                     }
                 },
                 errors : initError(),
-                stepper : 1
+                stepper : 1,
+                image : null,
+                imageURL : null,
+                imagePreview : null
             }
         },
         computed : {
@@ -418,6 +454,8 @@
                 });
         },
         watch : {
+            image(nv) {
+            },
             story(nv) {
                 if (nv) {
                     this.fillForm(nv);
@@ -444,6 +482,9 @@
             }
         },
         methods : {
+            cropResult(result) {
+                this.imagePreview = result;
+            },
             formatDate(date) {
                 if (date != null) {
                     return moment(date).format('L');
@@ -460,25 +501,25 @@
                 this.$v.reset();
             },
             fillForm(model) {
-                this.$set(this.form.story, 'title', model.title);
-                this.$set(this.form.story, 'category', model.category.id);
-                this.$set(this.form.story, 'summary', model.summary);
-                this.$set(this.form.story, 'content', model.content);
-                this.$set(this.form.story, 'enabled', model.enabled == 1);
+                this.form.story.title = model.title;
+                this.form.story.category = model.category.id;
+                this.form.story.summary = model.summary;
+                this.form.story.content = model.content;
+                this.form.story.enabled = model.enabled == 1;
                 if (model.publish_date) {
-                    this.$set(this.form.story, 'publish_date', moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
-                    this.$set(this.form.story, 'publish_time', moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                    this.form.story.publish_date = moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L');
+                    this.form.story.publish_time = moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
                 }
                 if (model.end_date) {
-                    this.$set(this.form.story, 'end_date', moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
-                    this.$set(this.form.story, 'end_time', moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                    this.form.story.end_date = moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('L');
+                    this.form.story.end_time = moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
                 }
-                this.$set(this.form.story, 'featured', model.featured);
+                this.form.story.featured = model.featured;
                 if (model.featured_end_date) {
-                    this.$set(this.form.story, 'featured_end_date', moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('L'));
-                    this.$set(this.form.story, 'featured_end_time', moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm'));
+                    this.form.story.featured_end_date = moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('L');
+                    this.form.story.featured_end_time = moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
                 }
-                this.$set(this.form.story, 'remark', model.remark);
+                this.form.story.remark = model.remark;
             },
             fillModel(model) {
                 model.addAttribute('title', this.form.story.title);
@@ -503,6 +544,12 @@
                 }
             },
             submit() {
+
+                var formData = new FormData();
+                formData.append('image', this.$refs.fileInput.files[0]);
+                console.log(formData);
+                axios.post('/api/news/image', formData);
+
                 this.errors = initError();
 
                 if (this.story) { // update
@@ -521,6 +568,26 @@
                         }).catch(err => {
                         });
                 }
+            },
+            upload() {
+                this.$refs.fileInput.click();
+            },
+            onFileChange($event) {
+                const files = $event.target.files || $event.dataTransfer.files
+                if (files) {
+                    if (files.length > 0) {
+                        this.filename = [...files].map(file => file.name).join(', ');
+                    } else {
+                        this.filename = null;
+                    }
+                } else {
+                    this.filename = $event.target.value.split('\\').pop();
+                }
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageURL = e.target.result;
+                };
+                reader.readAsDataURL(files[0]);
             }
         }
     };

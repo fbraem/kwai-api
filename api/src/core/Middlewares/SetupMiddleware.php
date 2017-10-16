@@ -2,20 +2,26 @@
 
 namespace Core\Middlewares;
 
-define('CLUBMAN_ABSPATH', str_replace('\\', '/', dirname(dirname(dirname(__FILE__)))) . '/');
-
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * This middleware determines the root path. When clubman is
- * installed in a subfolder of the document root, all these subfolders must be
- * removed from the URI path in the RouterMiddleware.
+ * This middleware determines the root path (When clubman is installed in a
+ * subfolder of the document root, all these subfolders must be
+ * removed from the URI path for the RouterMiddleware.), sets some
+ * configuration, ...
  */
-class PathMiddleware implements MiddlewareInterface
+class SetupMiddleware implements MiddlewareInterface
 {
+    private $config;
+
+    public function __construct($config)
+    {
+        $this->config = $config;
+    }
+
     /**
      * Gets the base folder of clubman
      */
@@ -50,6 +56,8 @@ class PathMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         DelegateInterface $delegate
     ) {
+        $request = $request->withAttribute('clubman.config', $this->config);
+
         $baseurl = $this->getBase($request->getServerParams());
         $uri = $request->getUri();
         $domainPath = substr($uri->getPath(), strlen($baseurl));

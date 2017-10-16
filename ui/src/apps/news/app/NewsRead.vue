@@ -1,13 +1,13 @@
 <template>
-    <v-layout>
+    <v-layout row wrap>
         <v-flex xs12 sm6 offset-sm3>
-            <news-card :story="story" :complete="true"></news-card>
+            <NewsCard v-if="story" :story="story" :complete="true" />
         </v-flex>
     </v-layout>
 </template>
 
 <script>
-    import NewsCard from '../components/card.vue';
+    import NewsCard from '../components/NewsCard.vue';
 
     export default {
         components : {

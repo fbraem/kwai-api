@@ -29,10 +29,10 @@ import storyPerimeter from './perimeter.js';
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
 
-import NewsApp from './app.vue';
-import NewsCreate from './app/create.vue';
-import NewsUpdate from './app/update.vue';
-import NewsRead from './app/read.vue';
+import NewsApp from './App.vue';
+import NewsCreate from './app/NewsCreate.vue';
+import NewsUpdate from './app/NewsUpdate.vue';
+import NewsRead from './app/NewsRead.vue';
 
 const router = new VueRouter({
     routes : [

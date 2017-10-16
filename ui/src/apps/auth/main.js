@@ -23,7 +23,10 @@ Vue.use(VueKindergarten, {
     }
 });
 
-import AuthApp from './app.vue';
+import { VueExtendLayout, layout } from 'vue-extend-layout';
+Vue.use(VueExtendLayout);
+
+import AuthApp from './App.vue';
 //import AuthLogout from './app/logout.vue';
 
 const router = new VueRouter({
@@ -43,5 +46,6 @@ const router = new VueRouter({
 
 var app = new Vue({
     router,
-    store
+    store,
+    ...layout
 }).$mount('#clubmanApp');
