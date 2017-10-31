@@ -2,9 +2,8 @@
 
 namespace Core\Middlewares;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -14,7 +13,7 @@ class ParametersMiddleware implements MiddlewareInterface
 {
     public function process(
         ServerRequestInterface $request,
-        DelegateInterface $delegate
+        RequestHandlerInterface $delegate
     ) {
         $parameters = [];
         $queryParameters = $request->getQueryParams();

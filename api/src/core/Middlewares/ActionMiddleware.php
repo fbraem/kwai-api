@@ -2,9 +2,8 @@
 
 namespace Core\Middlewares;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use Aura\Payload\Payload;
@@ -16,7 +15,7 @@ class ActionMiddleware implements MiddlewareInterface
 {
     public function process(
         ServerRequestInterface $request,
-        DelegateInterface $delegate
+        RequestHandlerInterface $delegate
     ) {
         $route = $request->getAttribute('clubman.route');
         $payload = new Payload();

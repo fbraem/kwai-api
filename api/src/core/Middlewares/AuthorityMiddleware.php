@@ -4,9 +4,8 @@ namespace Core\Middlewares;
 
 use Zend\Authentication\AuthenticationService;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use Dflydev\FigCookies\SetCookie;
@@ -20,10 +19,10 @@ use Core\Responders\Responder;
 
 class AuthorityMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate)
     {
         $config = $request->getAttribute('clubman.config');
-        
+
         // Create the Authentication service and storage
         $auth = new AuthenticationService();
 

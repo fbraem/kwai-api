@@ -2,10 +2,12 @@
 
 namespace Core\Middlewares;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-
+use Interop\Http\Server\RequestHandlerInterface;
+use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 
 /**
  * This middleware determines the root path (When clubman is installed in a
@@ -54,9 +56,13 @@ class SetupMiddleware implements MiddlewareInterface
      */
     public function process(
         ServerRequestInterface $request,
-        DelegateInterface $delegate
+        RequestHandlerInterface $delegate
     ) {
         $request = $request->withAttribute('clubman.config', $this->config);
+
+        $flyAdapter = new Local($this->config->files);
+        $filesystem = new Filesystem($flyAdapter);
+        $request = $request->withAttribute('clubman.filesystem', $filesystem);
 
         $baseurl = $this->getBase($request->getServerParams());
         $uri = $request->getUri();
