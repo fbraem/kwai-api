@@ -40,6 +40,14 @@ class BrowseStoryAction implements \Core\ActionInterface
             $storyQuery->orderBy('featured', 'desc');
         }
 
+        if ($request->getAttribute('clubman.user') == null) {
+            $storyQuery->where('enabled', '=', true);
+            $storyQuery->where(function ($query) {
+                $query->WhereDate('publish_date', '<=', \Carbon\Carbon::now())
+                    ->orWhereNull('publish_date');
+            });
+        }
+
         $count = $storyQuery->count();
 
         $limit = $parameters['page']['limit'] ?? 10;
@@ -53,7 +61,9 @@ class BrowseStoryAction implements \Core\ActionInterface
             'offset' => $offset,
             'count' => $count
         ]);
-        $payload->setOutput(new Fractal\Resource\Collection($stories, new \Domain\News\NewsStoryTransformer, 'news_stories'));
+
+        $filesystem = $request->getAttribute('clubman.filesystem');
+        $payload->setOutput(new Fractal\Resource\Collection($stories, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
 
         return new JSONResponder(new Responder(), $payload);
     }

@@ -23,7 +23,8 @@ class ReadStoryAction implements \Core\ActionInterface
             return new NotFoundResponder(new Responder(), _("Story doesn't exist."));
         }
 
-        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer, 'news_story'));
+        $filesystem = $request->getAttribute('clubman.filesystem');
+        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
 
         return new JSONResponder(new Responder(), $payload);
     }

@@ -6,14 +6,21 @@ use League\Fractal;
 
 class NewsStoryTransformer extends Fractal\TransformerAbstract
 {
+    private $filesystem;
+
     protected $defaultIncludes = [
         'category',
         'author'
     ];
 
+    public function __construct($filesystem = null)
+    {
+        $this->filesystem = $filesystem;
+    }
+
     public function transform(NewsStory $story)
     {
-        return [
+        $result = [
             'id' => (int) $story->id,
             'title' => $story->title,
             'summary' => $story->summary,
@@ -27,6 +34,14 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
             'created_at' => $story->created_at,
             'updated_at' => $story->updated_at
         ];
+
+        if ($this->filesystem) {
+            $images = $this->filesystem->listContents('images/news/' . $story->id);
+            foreach($images as $image) {
+                $result[$image['filename']] = '/files/' . $image['path'];
+            }
+        }
+        return $result;
     }
 
     public function includeCategory(NewsStory $story)

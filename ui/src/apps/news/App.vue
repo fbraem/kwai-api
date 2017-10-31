@@ -1,25 +1,47 @@
 <template>
-    <div>
-        <v-layout row wrap>
-            <v-flex xs12>
-                <v-toolbar class="elevation-0">
-                    <v-toolbar-title>News</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn v-if="$isAllowed('create')" icon dark color="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
-                </v-toolbar>
-            </v-flex>
-        </v-layout>
-        <v-layout v-if="noNews" row wrap>
-            <v-flex xs12>
-                No news for today
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap>
-            <v-flex v-for="story in stories" :key="story.id" xs12 sm6>
-                <NewsCard :story="story" :complete="false" />
-            </v-flex>
-        </v-layout>
-    </div>
+    <v-card flat>
+        <v-card-title primary-title>
+            <div class="headline">News</div>
+            <v-spacer></v-spacer>
+            <v-btn v-if="$isAllowed('create')" icon dark color="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
+        </v-card-title>
+        <v-card-text>
+            <v-layout row wrap>
+                <v-flex xs12 sm2>
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-card>
+                                <v-card-title>
+                                    <div class="headline">Categories</div>
+                                </v-card-title>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-card>
+                                <v-card-title>
+                                    <div class="headline">Archive</div>
+                                </v-card-title>
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-flex>
+                <v-flex xs12 sm10>
+                    <v-layout v-if="noNews" row wrap>
+                        <v-flex xs12>
+                            No news for today
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md5 lg4>
+                            <NewsCard :story="story" :complete="false" />
+                        </v-flex>
+                    </v-layout>
+                </v-flex>
+            </v-layout>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>

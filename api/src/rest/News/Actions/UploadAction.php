@@ -13,6 +13,8 @@ use Core\Responders\NotFoundResponder;
 
 use League\Fractal;
 
+use Intervention\Image\ImageManager;
+
 class UploadAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload)
@@ -21,43 +23,43 @@ class UploadAction implements \Core\ActionInterface
         if (!isset($files['image'])) {
             return new HTTPCodeResponder(new Responder(), 400);
         }
+        $uploadedFilename = $files['image']->getClientFilename();
 
         $config = $request->getAttribute('clubman.config');
-        $path = $config->files . 'images/news/';
-        if (! file_exists($path)) {
-            echo 'creating ...';
-            echo var_dump(mkdir($path, 0755, true));
+
+        $id = $request->getAttribute('route.id');
+        $repository = new \Domain\News\NewsStoryRepository();
+        $story = $repository->find($id);
+        if (!$story) {
+            return new NotFoundResponder(new Responder(), _("Story doesn't exist."));
         }
-        else {
-            echo 'Already exist';
-        }
-        $filename = $path . $files['image']->getClientFilename();
-        echo $filename;
-        if (file_exists($filename)) {
-            echo 'Already exist 2';
-        }
+
+        $filesystem = $request->getAttribute('clubman.filesystem');
+        $stream = $files['image']->getStream();
+        $ext = pathinfo($uploadedFilename, PATHINFO_EXTENSION);
+
+        $originalFilename = 'images/news/' . $id . '/header_original.' . $ext;
+        $filesystem->put($originalFilename, $stream->detach());
+
+        $originalFile = $filesystem->read($originalFilename);
+
         try {
-            echo $files['image']->moveTo($filename);
+            $post = $request->getParsedBody();
+
+            $manager = new ImageManager();
+            $image = $manager->make($originalFile);
+            $image = $image->crop($post['overview_width'], $post['overview_height'], $post['overview_x'], $post['overview_y'])->resize($image->width() * $post['overview_scale'], $image->height() * $post['overview_scale']);
+            $filesystem->put('images/news/' . $id . '/header_overview_crop.' . $ext, $image->stream());
+
+            $image = $manager->make($originalFile);
+            $image = $image->crop($post['detail_width'], $post['detail_height'], $post['detail_x'], $post['detail_y'])->resize($image->width() * $post['detail_scale'], $image->height() * $post['detail_scale']);
+            $filesystem->put('images/news/' . $id . '/header_detail_crop.' . $ext, $image->stream());
         } catch (\Exception $e) {
             echo $e;
             exit;
         }
-        exit;
-/*
-        list($width, $height) = getimagesize($filename);
-        if ($width == null && $height == null) { // This file is not an image
-            unlink($filename);
-            $this->payload->setMessages([
-                _('Invalid file uploaded')
-            ]);
-            return new \Core\Responders\ErrorResponder($this->payload);
-        }
 
-        $this->payload->setOutput(new \Core\Collection([
-            'url' => substr($filename, strlen(CLUBMAN_ABSPATH))
-        ]));
-*/
-        return new \Core\Responders\JSONResponder($this->payload);
-        //return new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload);
+        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
+        return new JSONResponder(new Responder(), $payload);
     }
 }

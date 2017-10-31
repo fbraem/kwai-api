@@ -195,20 +195,47 @@
                 <v-btn flat @click.native="stepper=2">Previous</v-btn>
             </v-stepper-content>
             <v-stepper-content step="4">
+                <v-flex xs12>
+                    <v-layout row justify-center>
+                        <v-flex xs2>
+                            <v-btn @click="upload">Upload</v-btn>
+                        </v-flex>
+                    </v-layout>
+                </v-flex>
                 <v-layout row wrap>
                     <v-flex xs12>
-                        <VueCroppie v-model="image" :url="imageURL" @result="cropResult" :boundary="{ height : 400 }" :viewport="{ width: 800, height : 200 }"/>
+                        <div class="headline">Overview Image</div>
+                        <p>
+                            This is the image that will be shown in the header on the overview page
+                            or on small screens.
+                        </p>
                     </v-flex>
+                </v-layout>
+                <v-layout row wrap>
                     <v-flex xs12>
-                        <v-layout row justify-center>
-                            <v-flex xs2>
-                                <v-btn @click="upload">Upload</v-btn>
-                            </v-flex>
-                        </v-layout>
+                        <VueCroppie v-model="imageOverviewCrop" :url="imageOverviewURL" @result="cropOverviewResult" :boundary="{ height : 400 }" :viewport="{ width: 333, height : 200 }"/>
                     </v-flex>
                     <v-flex xs12>
                         <v-layout justify-center>
-                            <img class="text-xs-center" v-if="imagePreview" :src="imagePreview" />
+                            <img class="text-xs-center" v-if="imageOverviewPreview" :src="imageOverviewPreview" />
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap>
+                    <v-flex xs12>
+                        <div class="headline">details Image</div>
+                        <p>
+                            This is the image that will be shown in the header on story page.
+                        </p>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap>
+                    <v-flex xs12>
+                        <VueCroppie v-model="imageDetailCrop" :url="imageDetailURL" @result="cropDetailResult" :boundary="{ height : 400 }" :viewport="{ width: 800, height : 200 }"/>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-layout justify-center>
+                            <img class="text-xs-center" v-if="imageDetailPreview" :src="imageDetailPreview" />
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -234,7 +261,6 @@
     import Model from '@/js/model';
     import moment from 'moment';
     import marked from 'marked';
-    import axios from 'axios';
 
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
@@ -300,9 +326,12 @@
                 },
                 errors : initError(),
                 stepper : 1,
-                image : null,
-                imageURL : null,
-                imagePreview : null
+                imageOverviewCrop : null,
+                imageOverviewURL : null,
+                imageOverviewPreview : null,
+                imageDetailCrop : null,
+                imageDetailURL : null,
+                imageDetailPreview : null
             }
         },
         computed : {
@@ -482,8 +511,11 @@
             }
         },
         methods : {
-            cropResult(result) {
-                this.imagePreview = result;
+            cropDetailResult(result) {
+                this.imageDetailPreview = result;
+            },
+            cropOverviewResult(result) {
+                this.imageOverviewPreview = result;
             },
             formatDate(date) {
                 if (date != null) {
@@ -544,12 +576,26 @@
                 }
             },
             submit() {
-
-                var formData = new FormData();
-                formData.append('image', this.$refs.fileInput.files[0]);
-                console.log(formData);
-                axios.post('/api/news/image', formData);
-
+                if (this.imageOverviewCrop) {
+                    var formData = new FormData();
+                    formData.append('image', this.$refs.fileInput.files[0]);
+                    formData.append('overview_x', this.imageOverviewCrop.points[0]);
+                    formData.append('overview_y', this.imageOverviewCrop.points[1]);
+                    formData.append('overview_width', this.imageOverviewCrop.points[2] - this.imageOverviewCrop.points[0]);
+                    formData.append('overview_height', this.imageOverviewCrop.points[3] - this.imageOverviewCrop.points[1]);
+                    formData.append('overview_scale', this.imageOverviewCrop.zoom);
+                    formData.append('detail_x', this.imageDetailCrop.points[0]);
+                    formData.append('detail_y', this.imageDetailCrop.points[1]);
+                    formData.append('detail_width', this.imageDetailCrop.points[2] - this.imageDetailCrop.points[0]);
+                    formData.append('detail_height', this.imageDetailCrop.points[3] - this.imageDetailCrop.points[1]);
+                    formData.append('detail_scale', this.imageDetailCrop.zoom);
+                    this.$store.dispatch('newsModule/uploadImage', {
+                        story : {
+                            id : this.story.id
+                        },
+                        formData : formData
+                    });
+                }
                 this.errors = initError();
 
                 if (this.story) { // update
@@ -585,7 +631,8 @@
                 }
                 var reader = new FileReader();
                 reader.onload = (e) => {
-                    this.imageURL = e.target.result;
+                    this.imageOverviewURL = e.target.result;
+                    this.imageDetailURL = e.target.result;
                 };
                 reader.readAsDataURL(files[0]);
             }

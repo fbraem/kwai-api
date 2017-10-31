@@ -6,6 +6,7 @@ Vue.use(Vuex);
 import _ from 'lodash';
 import URI from 'urijs';
 
+import axios from 'axios';
 import client from '@/js/client';
 import JSONAPI from '@/js/JSONAPI';
 
@@ -90,7 +91,7 @@ const actions = {
             uri.addQuery('filter[month]', payload.month);
         }
 
-        client().withoutAuth().get(uri.href(), {
+        client().withAuth().get(uri.href(), {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();
@@ -111,7 +112,7 @@ const actions = {
             return;
         }
 
-        client().withoutAuth().get('api/news/stories/' + payload.id, {
+        client().withAuth().get('api/news/stories/' + payload.id, {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();
@@ -172,6 +173,9 @@ const actions = {
                 reject();
             });
         });
+    },
+    uploadImage(context, payload) {
+        axios.post('/api/news/image/' + payload.story.id, payload.formData);
     }
 };
 

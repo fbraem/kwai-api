@@ -61,7 +61,8 @@ class UpdateStoryAction implements \Core\ActionInterface
         $story->user_id = $request->getAttribute('clubman.user');
         $repository->store($story);
 
-        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer, 'news_story'));
+        $filesystem = $request->getAttribute('clubman.filesystem');
+        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem, 'news_stories')));
 
         return new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload);
     }
