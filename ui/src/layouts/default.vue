@@ -10,7 +10,7 @@
         </v-toolbar>
         <main>
             <v-content>
-                <v-container grid-list-lg fluid>
+                <v-container grid-list-xl fluid>
                     <router-view />
                 </v-container>
             </v-content>
