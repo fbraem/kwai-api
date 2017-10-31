@@ -1,7 +1,7 @@
 <template>
-    <v-card>
-        <v-card-media src="/tmp/test.png" height="200px">
-        </v-card-media>
+    <v-card :flat="complete">
+        <v-card-media v-if="complete && story.header_detail_crop" :src="story.header_detail_crop" height="200px" />
+        <v-card-media v-if="!complete && story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
         <v-card-title>
             <div>
                 <h3 class="headline mb-0">{{ story.title }}</h3>
