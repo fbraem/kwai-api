@@ -78,9 +78,7 @@
             var el = this.$refs.croppie;
 
             el.addEventListener('update', (ev) => {
-                this.$emit('input', {
-                    'crop' : ev.detail
-                });
+                this.$emit('input', ev.detail);
                 this.croppie.result({ format : 'blob' }).then((output) => {
                     this.$emit('result', output);
                     this.result = output;
