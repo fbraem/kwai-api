@@ -1,13 +1,20 @@
 <template>
     <v-card :flat="complete">
-        <v-card-media v-if="complete && story.header_detail_crop" :src="story.header_detail_crop" height="200px" />
+        <v-card-media v-if="complete && story.header_detail_crop" :src="story.header_detail_crop" height="200px">
+            <v-container fill-height fluid>
+                <v-layout fill-height>
+                    <v-flex xs12 align-end flexbox>
+                        <span class="pa-2 white headline"><v-icon class="mr-2">subject</v-icon>{{ story.title }}</span>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-card-media>
         <v-card-media v-if="!complete && story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
         <v-card-title>
             <div>
-                <h3 class="headline mb-0">{{ story.title }}</h3>
+                <h3 v-if="!complete"class="headline mb-0">{{ story.title }}</h3>
                 <div class="mini-meta">
-                    Published {{ publishDateFromNow }}
-                    <span v-if="authorName.length > 0"> - Written by {{ authorName }}</span>
+                    <span v-if="authorName.length > 0">{{ authorName }} | </span>Published on {{ publishDate }} - {{ publishDateFromNow }}
                 </div>
                 <div v-html="summaryHtml" style="margin-top:20px" :class="{ 'meta' : complete }">
                 </div>
@@ -21,6 +28,9 @@
         <v-card-actions>
             <v-btn v-if="!complete && story.content != story.content.length > 0" icon :to="'/read/' + story.id" flat>
                 <v-icon>more_horiz</v-icon>
+            </v-btn>
+            <v-btn v-if="complete" icon :to="'/'" flat>
+                <v-icon>view_list</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn v-if="$isAllowed('update', story)" icon :to="'/update/' + story.id" flat>
@@ -71,6 +81,9 @@
                     return marked(this.story.content, { sanitize : true });
                 }
                 return '';
+            },
+            publishDate() {
+                return moment(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L');
             },
             publishDateFromNow() {
                 return moment(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss').fromNow();
