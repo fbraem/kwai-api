@@ -40,14 +40,14 @@ class BrowseStoryAction implements \Core\ActionInterface
             $storyQuery->orderBy('featured', 'desc');
         }
 
-        if ($request->getAttribute('clubman.user') == null) {
+        $parameters['filter']['enabled'] = $parameters['filter']['enabled'] ?? 1;
+        if ($request->getAttribute('clubman.user') == null || $parameters['filter']['enabled'] == 1) {
             $storyQuery->where('enabled', '=', true);
             $storyQuery->where(function ($query) {
                 $query->WhereDate('publish_date', '<=', \Carbon\Carbon::now())
                     ->orWhereNull('publish_date');
             });
         }
-
         $count = $storyQuery->count();
 
         $limit = $parameters['page']['limit'] ?? 10;
