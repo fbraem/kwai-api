@@ -24,6 +24,7 @@ Vue.use(VueKindergarten, {
         return store ? store.getters.activeUser : null;
     }
 });
+import basePerimeter from '@/js/perimeter.js';
 import storyPerimeter from './perimeter.js';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
@@ -59,6 +60,7 @@ var app = new Vue({
     router,
     store,
     perimeters : [
+        basePerimeter,
         storyPerimeter
     ],
     ...layout

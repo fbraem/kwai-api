@@ -8,6 +8,8 @@ Vue.use(VueRouter);
 import Vuex from 'vuex';
 Vue.use(Vuex);
 import store from '@/js/store.js';
+import authStore from './store';
+store.registerModule('authModule', authStore);
 
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
@@ -22,6 +24,8 @@ Vue.use(VueKindergarten, {
         return store ? store.getters.activeUser : null;
     }
 });
+import basePerimeter from '@/js/perimeter.js';
+import authPerimeter from './perimeter.js';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
@@ -47,5 +51,9 @@ const router = new VueRouter({
 var app = new Vue({
     router,
     store,
+    perimeters : [
+        basePerimeter,
+        authPerimeter
+    ],
     ...layout
 }).$mount('#clubmanApp');
