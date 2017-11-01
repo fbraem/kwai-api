@@ -26,7 +26,6 @@
         "zendframework/zend-log": "^2.9",
         "lcobucci/jwt": "^3.2",
         "zendframework/zend-filter": "^2.7",
-        "eventviva/php-image-resize": "^1.6",
         "league/flysystem": "^1.0",
         "http-interop/http-middleware": "0.5.0",
         "intervention/image": "^2.4"
