@@ -1,13 +1,17 @@
 <template>
     <v-card flat>
-        <v-card-title primary-title>
-            <div class="headline">News</div>
-            <v-spacer></v-spacer>
-            <v-btn v-if="$isAllowed('create')" icon dark color="primary" :to="'/create'"><v-icon>add</v-icon></v-btn>
-        </v-card-title>
+        <v-card-media :src="backgroundImage" height="200">
+            <v-container fill-height fluid>
+                <v-layout fill-height>
+                    <v-flex xs12 align-end flexbox>
+                        <span class="pa-2 white headline"><v-icon class="mr-2">subject</v-icon>News</span>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-card-media>
         <v-card-text>
             <v-layout row wrap>
-                <v-flex xs12 sm2>
+                <v-flex xs12 sm4>
                     <v-layout row wrap>
                         <v-flex xs12>
                             <v-card>
@@ -27,7 +31,7 @@
                         </v-flex>
                     </v-layout>
                 </v-flex>
-                <v-flex xs12 sm10>
+                <v-flex xs12 sm8>
                     <v-layout v-if="noNews" row wrap>
                         <v-flex xs12>
                             No news for today
@@ -67,6 +71,9 @@
             },
             categories() {
                 return this.$store.getters['newsModule/categories'](this.$route.params.id);
+            },
+            backgroundImage() {
+                return require('./images/news.jpg');
             }
           },
           mounted() {
