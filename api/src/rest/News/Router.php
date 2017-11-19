@@ -7,7 +7,9 @@ class Router extends \Core\Router
     public function createRoutes()
     {
         $this->map->get('browseStory', '/news/stories', \REST\News\Actions\BrowseStoryAction::class)
-            ->accepts(['application/vnd.api+json']);
+            ->accepts(['application/vnd.api+json'])
+            ->auth(['login' => true])
+            ;
         $this->map->get('readStory', '/news/stories/{id}', \REST\News\Actions\ReadStoryAction::class)
             ->accepts(['application/vnd.api+json']);
         $this->map->post('createStory', '/news/stories', \REST\News\Actions\CreateStoryAction::class)

@@ -29,7 +29,6 @@ class ActionMiddleware implements MiddlewareInterface
         $actionClass = $route->handler;
         $action = new $actionClass();
 
-        $responder = $action($request, $payload);
-        return $responder->respond();
+        return $action($request, $payload);
     }
 }

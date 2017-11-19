@@ -8,10 +8,10 @@ import client from './client';
 import Model from './model';
 import JSONAPI from './JSONAPI';
 
-const USER_KEY = 'user';
+import OAuth from './oauth';
 
 const state = {
-    user : Lockr.get(USER_KEY, null),
+    oauth : new OAuth(),
     status : {
         loading : false,
         success : false,
@@ -27,7 +27,7 @@ const getters = {
         return null;
     },
     isLoggedIn(state) {
-        return state.user && state.user.meta.jwt != null;
+        return state.oauth.isAuthenticated();
     },
     loading(state) {
         return state.status.loading;
@@ -35,12 +35,6 @@ const getters = {
 };
 
 const mutations = {
-    login(state, data) {
-        state.user = data.user;
-    },
-    logout(state) {
-        state.user = null;
-    },
     loading(state) {
         state.status = {
             loading : true,
@@ -66,17 +60,34 @@ const mutations = {
 
 const actions = {
     login(context, payload) {
+        context.commit('loading');
+        return context.state.oauth.login(payload.data.attributes.email, payload.data.attributes.password)
+            .then((response) => {
+                context.commit('success');
+            })
+            .catch((response) => {
+                context.commit('error', response);
+            });
+/*
         return new Promise((resolve, reject) => {
-            context.commit('loading');
-            client().withoutAuth().post('api/auth/login', {
-                data : payload
+            context.commit('loa        Lockr.rm(ACCESSTOKEN_KEY);
+        Lockr.rm(REFRESHTOKEN_KEY);
+        context.commit('logout');
+ding');
+            var form = new FormData();
+            form.append('grant_type', 'password');
+            form.append('client_id', 'clubman');
+            form.append('client_secret', 'abc123');
+            form.append('username', );
+            form.append('password', );
+            form.append('scope', 'basic');
+            client().withoutAuth().post('api/auth/access_token', {
+                data : form
             }).then((response) => {
-                var api = new JSONAPI();
-                var user = api.parse(response.data);
-                Lockr.set(USER_KEY, user);
-                context.commit('login', {
-                    user : user
-                });
+                Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
+                Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
+                context.commit('access', response.data);
+                //client().withAuth().get('api/user')
                 context.commit('success');
                 resolve();
             }).catch((err) => {
@@ -84,10 +95,10 @@ const actions = {
                 reject();
             });
         })
+        */
     },
     logout(context) {
-        Lockr.rm(USER_KEY);
-        context.commit('logout');
+        context.state.oauth.logout();
     }
 };
 

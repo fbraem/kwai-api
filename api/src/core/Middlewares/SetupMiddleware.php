@@ -6,9 +6,6 @@ use Interop\Http\Server\RequestHandlerInterface;
 use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Local;
-
 /**
  * This middleware determines the root path (When clubman is installed in a
  * subfolder of the document root, all these subfolders must be
@@ -17,11 +14,11 @@ use League\Flysystem\Adapter\Local;
  */
 class SetupMiddleware implements MiddlewareInterface
 {
-    private $config;
+    private $app;
 
-    public function __construct($config)
+    public function __construct($app)
     {
-        $this->config = $config;
+        $this->app = $app;
     }
 
     /**
@@ -58,11 +55,8 @@ class SetupMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $delegate
     ) {
-        $request = $request->withAttribute('clubman.config', $this->config);
-
-        $flyAdapter = new Local($this->config->files);
-        $filesystem = new Filesystem($flyAdapter);
-        $request = $request->withAttribute('clubman.filesystem', $filesystem);
+        $request = $request->withAttribute('clubman.config', $this->app->getConfig());
+        $request = $request->withAttribute('clubman.container', $this->app->getContainer());
 
         $baseurl = $this->getBase($request->getServerParams());
         $uri = $request->getUri();

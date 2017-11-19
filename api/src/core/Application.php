@@ -6,6 +6,21 @@ use Zend\Diactoros\Server;
 use Zend\Stratigility\MiddlewarePipe;
 use Zend\Stratigility\NoopFinalHandler;
 
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\ResourceServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
+
+use Domain\Auth\AccessTokenRepository;
+use Domain\Auth\ClientRepository;
+use Domain\Auth\RefreshTokenRepository;
+use Domain\Auth\ScopeRepository;
+use Domain\Auth\UserRepository;
+
 /**
  * The Application class.
  */
@@ -59,6 +74,37 @@ class Application
             $logger->addWriter($writer, 7);
             $logger->info($query->sql);
         });
+
+        $this->container['filesystem'] = function($c) use ($config) {
+            $flyAdapter = new Local($config->files);
+            return new Filesystem($flyAdapter);
+        };
+        $this->container['authorizationServer'] = function($c) use ($config) {
+            $server = new AuthorizationServer(
+                new ClientRepository(),
+                new AccessTokenRepository(),
+                new ScopeRepository(),
+                $config->oauth2->private_key,
+                $config->oauth2->encryption_key
+            );
+            $refreshTokenRepo = new RefreshTokenRepository();
+
+            $grant = new PasswordGrant(
+                new UserRepository(),
+                $refreshTokenRepo
+            );
+            $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
+            $server->enableGrantType($grant, new \DateInterval('PT1H'));
+
+            $grant = new RefreshTokenGrant($refreshTokenRepo);
+            $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
+            $server->enableGrantType($grant, new \DateInterval('PT1H'));
+
+            return $server;
+        };
+        $this->container['resourceServer'] = function($c) use ($config) {
+            return new ResourceServer(new AccessTokenRepository(), $config->oauth2->public_key);
+        };
     }
 
     /**
@@ -87,7 +133,7 @@ class Application
         $app = new MiddlewarePipe();
         $app->setResponsePrototype(new Response());
 
-        $app->pipe(new Middlewares\SetupMiddleware($this->config));
+        $app->pipe(new Middlewares\SetupMiddleware($this));
         $app->pipe(new Middlewares\RoutingMiddleware());
         $app->pipe(new Middlewares\AuthorityMiddleware());
         $app->pipe(new Middlewares\ParametersMiddleware());

@@ -12,7 +12,8 @@ return [
     'paths' => [
         'migrations' => [
             __DIR__ . '/domain/User/migrations',
-            __DIR__ . '/domain/News/migrations'
+            __DIR__ . '/domain/News/migrations',
+            __DIR__ . '/domain/Auth/migrations'
         ]
     ],
     'environments' => $environments
