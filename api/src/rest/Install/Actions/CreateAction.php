@@ -3,6 +3,7 @@
 namespace REST\Install\Actions;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Aura\Payload\Payload;
 
 use Core\Responders\Responder;
@@ -13,7 +14,7 @@ use League\Fractal;
 
 class CreateAction implements \Core\ActionInterface
 {
-  public function __invoke(RequestInterface $request, Payload $payload)
+  public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
   {
       $userRepo = new \Domain\User\UserRepository();
       if ( $userRepo->count() == 0 ) {
@@ -22,7 +23,7 @@ class CreateAction implements \Core\ActionInterface
           $validator = new \Domain\User\UserValidator();
           $errors = $validator->validate($data);
           if (count($errors) > 0) {
-              return new JSONErrorResponder(new Responder(), $errors);
+              return (new JSONErrorResponder(new Responder(), $errors))->respond();
           }
 
           $attributes = \JmesPath\search('data.attributes', $data);
@@ -31,9 +32,9 @@ class CreateAction implements \Core\ActionInterface
           $userRepo->store($user);
 
           $payload->setOutput(new Fractal\Resource\Item($user, new \Domain\User\UserTransformer, 'users'));
-          return new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload);
+          return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
       }
 
-      return new HTTPCodeResponder(new Responder(), 403, _('Installation is already done'));
+      return (new HTTPCodeResponder(new Responder(), 403, _('Installation is already done')))->respond();
   }
 }

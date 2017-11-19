@@ -3,6 +3,7 @@
 namespace REST\News\Actions;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Aura\Payload\Payload;
 
 use Core\Responders\Responder;
@@ -17,11 +18,11 @@ use Intervention\Image\ImageManager;
 
 class UploadAction implements \Core\ActionInterface
 {
-    public function __invoke(RequestInterface $request, Payload $payload)
+    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $files = $request->getUploadedFiles();
         if (!isset($files['image'])) {
-            return new HTTPCodeResponder(new Responder(), 400);
+            return (new HTTPCodeResponder(new Responder(), 400))->respond();
         }
         $uploadedFilename = $files['image']->getClientFilename();
 
@@ -31,10 +32,10 @@ class UploadAction implements \Core\ActionInterface
         $repository = new \Domain\News\NewsStoryRepository();
         $story = $repository->find($id);
         if (!$story) {
-            return new NotFoundResponder(new Responder(), _("Story doesn't exist."));
+            return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 
-        $filesystem = $request->getAttribute('clubman.filesystem');
+        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $stream = $files['image']->getStream();
         $ext = pathinfo($uploadedFilename, PATHINFO_EXTENSION);
 
@@ -60,6 +61,6 @@ class UploadAction implements \Core\ActionInterface
         }
 
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
-        return new JSONResponder(new Responder(), $payload);
+        return (new JSONResponder(new Responder(), $payload))->respond();
     }
 }

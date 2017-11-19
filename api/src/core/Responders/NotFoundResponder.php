@@ -2,6 +2,8 @@
 
 namespace Core\Responders;
 
+use Psr\Http\Message\ResponseInterface;
+
 class NotFoundResponder implements ResponderInterface
 {
     private $responder;
@@ -14,7 +16,7 @@ class NotFoundResponder implements ResponderInterface
         $this->message = $message;
     }
 
-    public function respond()
+    public function respond() : ResponseInterface
     {
         $response = $this->responder->respond();
         return $response->withStatus(404, $this->message);

@@ -2,6 +2,8 @@
 
 namespace Core\Responders;
 
+use Psr\Http\Message\ResponseInterface;
+
 class JSONErrorResponder implements ResponderInterface
 {
     private $responder;
@@ -14,7 +16,7 @@ class JSONErrorResponder implements ResponderInterface
         $this->errors = $errors;
     }
 
-    public function respond()
+    public function respond() : ResponseInterface
     {
         $response = $this->responder->respond();
         $response = $response->withHeader('content-type', 'application/vnd.api+json');

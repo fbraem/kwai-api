@@ -3,6 +3,7 @@
 namespace REST\News\Actions;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Aura\Payload\Payload;
 
 use Core\Responders\Responder;
@@ -14,7 +15,8 @@ use League\Fractal;
 
 class BrowseStoryAction implements \Core\ActionInterface
 {
-    public function __invoke(RequestInterface $request, Payload $payload)
+    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+
     {
         $parameters = $request->getAttribute('parameters');
 
@@ -62,9 +64,9 @@ class BrowseStoryAction implements \Core\ActionInterface
             'count' => $count
         ]);
 
-        $filesystem = $request->getAttribute('clubman.filesystem');
+        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $payload->setOutput(new Fractal\Resource\Collection($stories, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
 
-        return new JSONResponder(new Responder(), $payload);
+        return (new JSONResponder(new Responder(), $payload))->respond();
     }
 }

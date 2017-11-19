@@ -2,6 +2,8 @@
 
 namespace Core\Responders;
 
+use Psr\Http\Message\ResponseInterface;
+
 class HTTPCodeResponder implements ResponderInterface
 {
     private $responder;
@@ -17,7 +19,7 @@ class HTTPCodeResponder implements ResponderInterface
         $this->message = $message;
     }
 
-    public function respond()
+    public function respond() : ResponseInterface
     {
         $response = $this->responder->respond();
         return $response->withStatus($this->code, $this->message);

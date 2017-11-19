@@ -2,7 +2,9 @@
 
 namespace Core\Responders;
 
+use Psr\Http\Message\ResponseInterface;
+
 interface ResponderInterface
 {
-    public function respond();
+    public function respond() : ResponseInterface;
 }

@@ -3,6 +3,7 @@
 namespace REST\News\Actions;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Aura\Payload\Payload;
 
 use Core\Responders\Responder;
@@ -13,19 +14,19 @@ use League\Fractal;
 
 class ReadStoryAction implements \Core\ActionInterface
 {
-    public function __invoke(RequestInterface $request, Payload $payload)
+    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
 
         $repository = new \Domain\News\NewsStoryRepository();
         $story = $repository->find($id);
         if (!$story) {
-            return new NotFoundResponder(new Responder(), _("Story doesn't exist."));
+            return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 
-        $filesystem = $request->getAttribute('clubman.filesystem');
+        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
 
-        return new JSONResponder(new Responder(), $payload);
+        return (new JSONResponder(new Responder(), $payload))->respond());
     }
 }

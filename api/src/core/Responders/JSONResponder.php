@@ -4,6 +4,8 @@ namespace Core\Responders;
 
 use Aura\Payload\Payload;
 
+use Psr\Http\Message\ResponseInterface;
+
 use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 
@@ -19,7 +21,7 @@ class JSONResponder implements ResponderInterface
         $this->payload = $payload;
     }
 
-    public function respond()
+    public function respond() : ResponseInterface
     {
         $response = $this->responder->respond();
         $response = $response->withHeader('content-type', 'application/vnd.api+json');
