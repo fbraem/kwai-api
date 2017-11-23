@@ -44,6 +44,13 @@
                     </v-layout>
                 </v-flex>
             </v-layout>
+            <v-layout>
+                <v-flex xs12>
+                    <v-btn v-if="$isAllowed('create')" icon :to="'create'">
+                        <v-icon>add</v-icon>
+                    </v-btn>
+                </v-flex>
+            </v-layout>
         </v-card-text>
     </v-card>
 </template>
