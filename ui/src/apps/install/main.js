@@ -21,11 +21,15 @@ Vue.use(Vuelidate);
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
     child : (store) => {
-        return store ? store.getters.activeUser : null;
+        return store ? store.getters.oauth : null;
     }
 });
+import basePerimeter from '@/js/perimeter.js';
 
-import InstallApp from './app.vue';
+import { VueExtendLayout, layout } from 'vue-extend-layout';
+Vue.use(VueExtendLayout);
+
+import InstallApp from './App.vue';
 
 const router = new VueRouter({
     routes : [
@@ -38,5 +42,9 @@ const router = new VueRouter({
 
 var app = new Vue({
     router,
-    store
+    store,
+    perimeters : [
+        basePerimeter
+    ],
+    ...layout
 }).$mount('#clubmanApp');

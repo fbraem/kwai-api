@@ -7,26 +7,71 @@ import client from '@/js/client';
 import JSONAPI from '@/js/JSONAPI';
 
 const state = {
-    user : []
+    installed : false,
+    status : {
+        loading : false,
+        success : false,
+        error : false
+    }
 };
 
 const getters = {
 };
 
 const mutations = {
-  user(state, data) {
-      state.user = data.user;
+  installed(state) {
+    state.installed = true;
+  },
+  loading(state) {
+      state.status = {
+          loading : true,
+          success: false,
+          error : false
+      };
+  },
+  success(state) {
+      state.status = {
+          loading : false,
+          success: true,
+          error : false
+      };
+  },
+  error(state, payload) {
+      state.status = {
+          loading : false,
+          success: false,
+          error : payload
+      };
   }
 };
 
 const actions = {
-    install(context, payload) {
-        return client().withAuth().post('api/install', {
-            data : payload
+    check(context) {
+        context.commit('loading');
+        return client().withoutAuth().get('api/install/check', {
         }).then((res) => {
-            api = new JSONAPI();
-            console.log('JOEHOE');
-            console.log(api.parse(res.data));
+            context.commit('success');
+        }).catch((error) => {
+            if (error.response.status == 403) {
+                context.commit('success');
+                context.commit('installed');
+            } else {
+                context.commit('error', error.response.statusText);
+            }
+        });
+    },
+    install(context, payload) {
+        context.commit('loading');
+        return new Promise((resolve, reject) => {
+            return client().withoutAuth().post('api/install', {
+                data : payload
+            }).then((res) => {
+                context.commit('success');
+                resolve();
+            }).catch((error) => {
+                context.commit('error', error);
+                reject();
+            });
         });
     }
 };
