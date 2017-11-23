@@ -4,13 +4,13 @@ export default createPerimeter({
     purpose : 'base',
     can : {
         login() {
-            return this.isLoggedIn();
+            return !this.isLoggedIn();
         },
         logout() {
-            return !this.isLoggedIn();
+            return this.isLoggedIn();
         }
     },
     isLoggedIn() {
-        return this.child != null;
+        return this.child.isAuthenticated();
     }
 });

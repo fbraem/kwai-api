@@ -5,19 +5,19 @@ export default createPerimeter({
     can: {
         read: () => true,
         update(story) {
-            if (this.child) {
+            if (this.child.isAuthenticated()) {
                 return true;
             }
             return false;
         },
         create(story) {
-            if (this.child) {
+            if (this.child.isAuthenticated()) {
                 return true;
             }
             return false;
         },
         remove(story) {
-            if (this.child) {
+            if (this.child.isAuthenticated()) {
                 return true;
             }
             return false;

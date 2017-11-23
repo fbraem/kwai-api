@@ -16,7 +16,7 @@ import store from '../js/store.js';
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
-  child : store => store.getters.activeUser
+  child : store => store.getters.oauth
 });
 
 import SiteApp from './app.vue';

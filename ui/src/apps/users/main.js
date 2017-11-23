@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
-import store from '../../js/store.js';
+import store from '@/js/store.js';
 import userStore from './store';
 store.registerModule('userModule', userStore);
 
@@ -17,7 +17,9 @@ import '@/../node_modules/vuetify/dist/vuetify.min.css';
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
-    child : store => store.getters.activeUser
+    child : (store) => {
+        return store ? store.getters.oauth : null;
+    }
 });
 
 import UserApp from './app.vue';

@@ -21,7 +21,7 @@ Vue.use(Vuelidate);
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
     child : (store) => {
-        return store ? store.getters.activeUser : null;
+        return store ? store.getters.oauth : null;
     }
 });
 import basePerimeter from '@/js/perimeter.js';

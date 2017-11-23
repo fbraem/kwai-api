@@ -20,11 +20,8 @@ const state = {
 };
 
 const getters = {
-    activeUser(state) {
-        if (state.user) {
-            return state.user.data;
-        }
-        return null;
+    oauth(state) {
+        return state.oauth;
     },
     isLoggedIn(state) {
         return state.oauth.isAuthenticated();
@@ -68,34 +65,6 @@ const actions = {
             .catch((response) => {
                 context.commit('error', response);
             });
-/*
-        return new Promise((resolve, reject) => {
-            context.commit('loa        Lockr.rm(ACCESSTOKEN_KEY);
-        Lockr.rm(REFRESHTOKEN_KEY);
-        context.commit('logout');
-ding');
-            var form = new FormData();
-            form.append('grant_type', 'password');
-            form.append('client_id', 'clubman');
-            form.append('client_secret', 'abc123');
-            form.append('username', );
-            form.append('password', );
-            form.append('scope', 'basic');
-            client().withoutAuth().post('api/auth/access_token', {
-                data : form
-            }).then((response) => {
-                Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
-                Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
-                context.commit('access', response.data);
-                //client().withAuth().get('api/user')
-                context.commit('success');
-                resolve();
-            }).catch((err) => {
-                context.commit('error', err);
-                reject();
-            });
-        })
-        */
     },
     logout(context) {
         context.state.oauth.logout();
