@@ -39,12 +39,19 @@ class AccessTokenRepository extends Repository implements AccessTokenRepositoryI
 
     public function revokeAccessToken($tokenId)
     {
-        //TODO:
+        $token = $this->find($tokenId);
+        if ($token) {
+            $token->revoked = true;
+            $this->store($token);
+        }
     }
 
     public function isAccessTokenRevoked($tokenId)
     {
-        //TODO:
+        $token = $this->find($tokenId);
+        if ($token) {
+            return $token->revoked;
+        }
         return false;
     }
 }

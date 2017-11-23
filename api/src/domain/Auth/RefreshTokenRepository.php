@@ -19,12 +19,20 @@ class RefreshTokenRepository extends Repository implements RefreshTokenRepositor
 
     public function revokeRefreshToken($tokenId)
     {
-        // Some logic to revoke the refresh token in a database
+        $token = $this->find($tokenId);
+        if ($token) {
+            $token->revoked = true;
+            $this->store($token);
+        }
     }
 
     public function isRefreshTokenRevoked($tokenId)
     {
-        return false; // The refresh token has not been revoked
+        $token = $this->find($tokenId);
+        if ($token) {
+            return $token->revoked;
+        }
+        return false;
     }
 
     public function getNewRefreshToken()
