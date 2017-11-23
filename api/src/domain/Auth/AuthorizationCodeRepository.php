@@ -2,10 +2,10 @@
 namespace Domain\Auth;
 
 use Analogue\ORM\Repository;
-use League\OAuth2\Server\Repositories\AuthorizationCodeRepositoryInterface;
+use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 
-class AuthorizationCodeRepository extends Repository implements AuthorizationCodeRepositoryInterface
+class AuthorizationCodeRepository extends Repository implements AuthCodeRepositoryInterface
 {
     public function __construct()
     {
@@ -22,14 +22,21 @@ class AuthorizationCodeRepository extends Repository implements AuthorizationCod
         $this->store($authCodeEntity);
     }
 
-    public function revokeAccessToken($tokenId)
+    public function revokeAuthCode($tokenId)
     {
-        // Some logic to revoke the auth code in a database
+        $token = $this->find($tokenId);
+        if ($token) {
+            $token->revoked = true;
+            $this->store($token);
+        }
     }
 
     public function isAccessTokenRevoked($tokenId)
     {
-        //TODO:
-        return false; // The auth code has not been revoked
+        $token = $this->find($tokenId);
+        if ($token) {
+            return $token->revoked;
+        }
+        return false;
     }
 }
