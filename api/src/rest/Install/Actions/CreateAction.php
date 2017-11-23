@@ -18,7 +18,7 @@ class CreateAction implements \Core\ActionInterface
   {
       $userRepo = new \Domain\User\UserRepository();
       if ( $userRepo->count() == 0 ) {
-          $data = $payload->getInput()['data'];
+          $data = $payload->getInput();
 
           $validator = new \Domain\User\UserValidator();
           $errors = $validator->validate($data);
