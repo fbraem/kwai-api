@@ -36,6 +36,8 @@ class OAuth
             }).then((response) => {
                 this.access_token = response.data.access_token;
                 Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
+                this.refresh_token = response.data.access_token;
+                Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
                 resolve(response);
             }).catch((err) => {
                 console.log(err.response);
