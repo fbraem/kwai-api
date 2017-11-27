@@ -7,6 +7,12 @@ function resolve(dir) {
 
 var config = {
     entry : {
+        "vendor" : [
+            "lockr", "moment", "axios", "lodash", "urijs", "marked"
+        ],
+        "vue" : [
+            "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vuetify"
+        ],
         "auth" : "./src/apps/auth/main.js",
         "install" : "./src/apps/install/main.js",
         "users" : "./src/apps/users/main.js",
@@ -20,13 +26,11 @@ var config = {
         loaders : [
             { test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015'],
-                    plugins: ["transform-object-rest-spread"]
-                }
+                loader: 'babel-loader'
             },
-            { test: /\.vue$/, loader: "vue-loader" },
+            { test: /\.vue$/,
+                loader: "vue-loader"
+            },
             { test: /\.css$/, loader: "style-loader!css-loader" },
             { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader' },
             { test: /\.(png|jpe?g|gif|svg)$/i,
@@ -64,7 +68,16 @@ var config = {
         }),
 */
         // Workaround to exclude moment.js locales
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+/*        new webpack.optimize.CommonsChunkPlugin({
+            name : 'vendor',
+            filename : "build/vendor.js"
+        }),
+*/
+        new webpack.optimize.CommonsChunkPlugin({
+            names : ['vendor', 'vue'],
+            filename : "build/[name].js"
+        })
     ]
 };
 
