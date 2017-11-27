@@ -22,7 +22,7 @@
                 :date-format="formatDate"
                 :allowed-dates="allowedDates"
                 >
-              <template scope="{ save, cancel }">
+              <template slot-scope="{ save, cancel }">
                 <v-card-actions>
                   <v-btn flat primary @click.native="cancel()">Cancel</v-btn>
                   <v-btn flat primary @click.native="save()">Save</v-btn>
