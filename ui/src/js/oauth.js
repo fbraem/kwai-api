@@ -69,7 +69,7 @@ class OAuth
                             }
                             console.log('No access_token received?');
                         }).catch((error) => {
-                            console.log(error.response);
+                            console.log(error);
                         })
                     }
                 }
@@ -98,7 +98,7 @@ class OAuth
                 this.setTokens(response.data.access_token, response.data.refresh_token);
                 resolve(response);
             }).catch((err) => {
-                console.log(err.response);
+                console.log(err);
                 reject(err);
             });
         })
@@ -128,13 +128,13 @@ class OAuth
     setTokens(access, refresh) {
         this.access_token = access;
         if (access) {
-            Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
+            Lockr.set(ACCESSTOKEN_KEY, access);
         } else {
             Lockr.rm(ACCESSTOKEN_KEY);
         }
         this.refresh_token = refresh;
         if (refresh) {
-            Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
+            Lockr.set(REFRESHTOKEN_KEY, refresh);
         } else {
             Lockr.rm(REFRESHTOKEN_KEY);
         }
