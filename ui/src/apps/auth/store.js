@@ -3,11 +3,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import _ from 'lodash';
-import URI from 'urijs';
+import OAuth from '@/js/oauth';
+const oauth = new OAuth();
 
-import axios from 'axios';
-import client from '@/js/client';
 import JSONAPI from '@/js/JSONAPI';
 
 const state = {

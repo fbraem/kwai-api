@@ -11,6 +11,6 @@ export default createPerimeter({
         }
     },
     isLoggedIn() {
-        return this.child.isAuthenticated();
+        return this.child.authenticated;
     }
 });

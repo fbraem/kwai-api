@@ -1,5 +1,5 @@
 import Lockr from 'lockr';
-import client from './client';
+import axios from 'axios';
 
 const USER_KEY = 'user';
 const ACCESSTOKEN_KEY = 'access_token';
@@ -16,6 +16,67 @@ class OAuth
         this.user = Lockr.get(USER_KEY, null);
     }
 
+    get(url, options) {
+        var opt = options || Object.create(null);
+        opt.method = 'get';
+        return this.call(url, options);
+    }
+
+    post(url, options) {
+        var opt = options || Object.create(null);
+        opt.method = 'post';
+        return this.call(url, options);
+    }
+
+    patch(url, options) {
+        var opt = options || Object.create(null);
+        opt.method = 'patch';
+        return this.call(url, options);
+    }
+
+    delete(url, options) {
+        var opt = options || Object.create(null);
+        opt.method = 'delete';
+        return this.call(url, options);
+    }
+
+    call(url, options) {
+        var opts = options || Object.create(null);
+        opts.headers = opts.headers || {
+            'Accept' : 'application/vnd.api+json',
+            'Content-Type' : 'application/vnd.api+json'
+        };
+        opts.withCredentials = true;
+        if ( this.access_token) {
+            opts.headers['Authorization'] = `Bearer ${this.access_token}`
+        }
+        opts.url = url;
+        return axios.request(opts)
+            .then((response) => {
+                return response;
+            }).catch((error) => {
+                if (error.response.status == 401) {
+                    if (this.refresh_token) {
+                        this.refreshToken().then((response) => {
+                            if (this.access_token) {
+                                opts.headers['Authorization'] = `Bearer ${this.access_token}`
+                                return axios.request(opts)
+                                .then((response) => {
+                                    return response;
+                                }).catch((error) => {
+                                    console.log(error.response);
+                                });
+                            }
+                            console.log('No access_token received?');
+                        }).catch((error) => {
+                            console.log(error.response);
+                        })
+                    }
+                }
+                throw(error);
+            });
+    };
+
     isGuest() {
         return this.access_token == null;
     }
@@ -31,13 +92,10 @@ class OAuth
             form.append('client_id', CLIENT_ID);
             form.append('client_secret', CLIENT_SECRET);
             form.append('refresh_token', this.refresh_token);
-            client().withoutAuth().post('api/auth/access_token', {
+            this.post('api/auth/access_token', {
                 data : form
             }).then((response) => {
-                this.access_token = response.data.access_token;
-                Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
-                this.refresh_token = response.data.access_token;
-                Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
+                this.setTokens(response.data.access_token, response.data.refresh_token);
                 resolve(response);
             }).catch((err) => {
                 console.log(err.response);
@@ -55,19 +113,31 @@ class OAuth
             form.append('username', username);
             form.append('password', password);
             form.append('scope', 'basic');
-            client().withoutAuth().post('api/auth/access_token', {
+            this.post('api/auth/access_token', {
                 data : form
             }).then((response) => {
-                this.access_token = response.data.access_token;
-                Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
-                this.refresh_token = response.data.refresh_token;
-                Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
+                this.setTokens(response.data.access_token, response.data.refresh_token);
                 resolve(response);
             }).catch((err) => {
                 console.log(err.response.status);
                 reject(err);
             });
         });
+    }
+
+    setTokens(access, refresh) {
+        this.access_token = access;
+        if (access) {
+            Lockr.set(ACCESSTOKEN_KEY, response.data.access_token);
+        } else {
+            Lockr.rm(ACCESSTOKEN_KEY);
+        }
+        this.refresh_token = refresh;
+        if (refresh) {
+            Lockr.set(REFRESHTOKEN_KEY, response.data.refresh_token);
+        } else {
+            Lockr.rm(REFRESHTOKEN_KEY);
+        }
     }
 
     logout() {

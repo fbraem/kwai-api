@@ -1,13 +1,15 @@
 import Vue from 'vue';
 
+import OAuth from '@/js/oauth';
+const oauth = new OAuth();
+import axios from 'axios';
+
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import _ from 'lodash';
 import URI from 'urijs';
 
-import axios from 'axios';
-import client from '@/js/client';
 import JSONAPI from '@/js/JSONAPI';
 
 const state = {
@@ -91,7 +93,7 @@ const actions = {
             uri.addQuery('filter[month]', payload.month);
         }
 
-        client().withAuth().get(uri.href(), {
+        oauth.get(uri.href(), {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();
@@ -112,7 +114,7 @@ const actions = {
             return;
         }
 
-        client().withAuth().get('api/news/stories/' + payload.id, {
+        oauth.get('api/news/stories/' + payload.id, {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();
@@ -127,7 +129,7 @@ const actions = {
     },
     create(context, payload) {
         context.commit('loading');
-        return client().withAuth().post('api/news/stories', {
+        return oauth.post('api/news/stories', {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();
@@ -143,7 +145,7 @@ const actions = {
     update(context, payload) {
         context.commit('loading');
         return new Promise((resolve, reject) => {
-            client().withAuth().patch('api/news/stories/' + payload.data.id, {
+            context.state.oauth.patch('api/news/stories/' + payload.data.id, {
                 data : payload
             }).then((res) => {
                 var api = new JSONAPI();
@@ -161,7 +163,7 @@ const actions = {
     },
     getCategories(context, payload) {
         return new Promise((resolve, reject) => {
-            client().withoutAuth().get('api/news/categories', {
+            oauth.get('api/news/categories', {
             }).then((res) => {
                 var api = new JSONAPI();
                 var categories = api.parse(res.data);

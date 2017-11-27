@@ -9,12 +9,8 @@
 </template>
 
 <script>
-  import Site from '@/site/components/site.vue';
 
   export default {
-      components : {
-          Site
-      },
       computed : {
         users() {
           return this.$store.state.userModule.users;

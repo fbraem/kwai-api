@@ -3,7 +3,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import client from '@/js/client';
+import OAuth from '@/js/oauth';
+const oauth = new OAuth();
+
 import JSONAPI from '@/js/JSONAPI';
 
 const state = {
@@ -48,7 +50,7 @@ const mutations = {
 const actions = {
     check(context) {
         context.commit('loading');
-        return client().withoutAuth().get('api/install/check', {
+        return oauth.get('api/install/check', {
         }).then((res) => {
             context.commit('success');
         }).catch((error) => {
@@ -63,7 +65,7 @@ const actions = {
     install(context, payload) {
         context.commit('loading');
         return new Promise((resolve, reject) => {
-            return client().withoutAuth().post('api/install', {
+            return oauth.post('api/install', {
                 data : payload
             }).then((res) => {
                 context.commit('success');

@@ -4,14 +4,17 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import Lockr from 'lockr';
-import client from './client';
+
+import OAuth from '@/js/oauth';
+const oauth = new OAuth();
+
 import Model from './model';
 import JSONAPI from './JSONAPI';
 
-import OAuth from './oauth';
-
 const state = {
-    oauth : new OAuth(),
+    user : {
+        authenticated : oauth.isAuthenticated()
+    },
     status : {
         loading : false,
         success : false,
@@ -20,11 +23,8 @@ const state = {
 };
 
 const getters = {
-    oauth(state) {
-        return state.oauth;
-    },
-    isLoggedIn(state) {
-        return state.oauth.isAuthenticated();
+    user(state) {
+        return state.user;
     },
     loading(state) {
         return state.status.loading;
@@ -32,6 +32,9 @@ const getters = {
 };
 
 const mutations = {
+    authenticated(state, sw) {
+        state.user.authenticated = sw;
+    },
     loading(state) {
         state.status = {
             loading : true,
@@ -58,16 +61,19 @@ const mutations = {
 const actions = {
     login(context, payload) {
         context.commit('loading');
-        return context.state.oauth.login(payload.data.attributes.email, payload.data.attributes.password)
+        return oauth.login(payload.data.attributes.email, payload.data.attributes.password)
             .then((response) => {
                 context.commit('success');
+                context.commit('authenticated', true);
             })
             .catch((response) => {
                 context.commit('error', response);
+                context.commit('authenticated', false);
             });
     },
     logout(context) {
-        context.state.oauth.logout();
+        oauth.logout();
+        context.commit('authenticated', false);
     }
 };
 

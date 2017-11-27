@@ -3,8 +3,10 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import client from '../../js/client';
-import JSONAPI from '../../js/JSONAPI';
+import OAuth from '@/js/oauth';
+const oauth = new OAuth();
+
+import JSONAPI from '@/js/JSONAPI';
 
 const state = {
     users : []
@@ -21,7 +23,7 @@ const mutations = {
 
 const actions = {
     read(context, payload) {
-        return client().withAuth().get('api/users', {
+        return oauth.get('api/users', {
             data : payload
         }).then((res) => {
             var api = new JSONAPI();

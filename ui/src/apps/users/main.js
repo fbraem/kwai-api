@@ -18,11 +18,11 @@ import '@/../node_modules/vuetify/dist/vuetify.min.css';
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
     child : (store) => {
-        return store ? store.getters.oauth : null;
+        return store ? store.getters.user : null;
     }
 });
 
-import UserApp from './app.vue';
+import UserApp from './App.vue';
 
 const router = new VueRouter({
     routes : [
