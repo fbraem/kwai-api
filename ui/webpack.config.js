@@ -11,7 +11,7 @@ var config = {
             "lockr", "moment", "axios", "lodash", "urijs", "marked"
         ],
         "vue" : [
-            "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vuetify"
+            "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vuetify", "vue-i18n"
         ],
         "auth" : "./src/apps/auth/main.js",
         "install" : "./src/apps/install/main.js",

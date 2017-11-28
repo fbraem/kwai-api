@@ -48,6 +48,7 @@
     "urijs": "^1.19.0",
     "vue": "^2.5.9",
     "vue-extend-layout": "^1.0.1",
+    "vue-i18n": "^7.3.2",
     "vue-kindergarten": "^0.3.2",
     "vue-router": "^3.0.1",
     "vuelidate": "^0.6.0",

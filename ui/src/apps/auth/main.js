@@ -15,6 +15,15 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import '@/../node_modules/vuetify/dist/vuetify.min.css';
 
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);
+import messages from './lang/nl.js';
+const i18n = new VueI18n({
+    locale : 'nl',
+    fallbackLocale : 'nl',
+    messages
+});
+
 import Vuelidate from 'vuelidate';
 Vue.use(Vuelidate);
 
@@ -55,5 +64,6 @@ var app = new Vue({
         basePerimeter,
         authPerimeter
     ],
-    ...layout
+    ...layout,
+    i18n
 }).$mount('#clubmanApp');

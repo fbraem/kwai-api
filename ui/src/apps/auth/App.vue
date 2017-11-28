@@ -8,7 +8,7 @@
                     </v-card-title>
                     <v-card-text>
                         <v-text-field name="email"
-                            label="Enter your email"
+                            :label="$t('email.label')"
                             v-model="email"
                             :error-messages="emailErrors"
                             @input="$v.email.$touch()"
@@ -19,7 +19,7 @@
                         </v-text-field>
                         <v-text-field
                           name="password"
-                          label="Enter your password"
+                          :label="$t('password.label')"
                           v-model="password"
                           :error-messages="passwordErrors"
                           @input="$v.password.$touch()"
