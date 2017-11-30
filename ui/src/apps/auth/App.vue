@@ -4,7 +4,10 @@
             <v-flex xs12 sm4 offset-sm4>
                 <v-card>
                     <v-card-title>
-                        <h3 class="headline mb-0">Login</h3>
+                        <div>
+                            <h3 class="headline mb-0">Login</h3>
+                            {{ $t('welcome') }}
+                        </div>
                     </v-card-title>
                     <v-card-text>
                         <v-text-field name="email"
@@ -30,8 +33,8 @@
                         ></v-text-field>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn :disabled="$v.$invalid" flat @click="submit">Submit</v-btn>
-                        <v-btn flat @click="clear">Clear</v-btn>
+                        <v-btn :disabled="$v.$invalid" flat @click="submit">{{ $t('submit') }}</v-btn>
+                        <v-btn flat @click="clear">{{ $t('clear') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -76,14 +79,14 @@
             emailErrors() {
                 const errors = [];
                 if (! this.$v.email.$dirty) return errors;
-                ! this.$v.email.required && errors.push('Email is required');
-                ! this.$v.email.email && errors.push('Email is not valid');
+                ! this.$v.email.required && errors.push(this.$t('email.required'));
+                ! this.$v.email.email && errors.push(this.$t('email.invalid'));
                 return errors;
             },
             passwordErrors() {
                 const errors = [];
                 if (! this.$v.password.$dirty) return errors;
-                ! this.$v.password.required && errors.push('Password is required');
+                ! this.$v.password.required && errors.push(this.$t('password.required'));
                 return errors;
             }
         },
