@@ -4,7 +4,7 @@
             <v-container fill-height fluid>
                 <v-layout fill-height>
                     <v-flex xs12 align-end flexbox>
-                        <span class="pa-2 white headline"><v-icon class="mr-2">subject</v-icon>{{ story.title }}</span>
+                        <span class="pa-2 white headline"><v-icon class="mr-2">subject</v-icon>{{ title }}</span>
                     </v-flex>
                 </v-layout>
             </v-container>
@@ -12,21 +12,22 @@
         <v-card-media v-if="!complete && story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
         <v-card-title>
             <div>
-                <h3 v-if="!complete"class="headline mb-0">{{ story.title }}</h3>
+                <h3 v-if="!complete"class="headline mb-0">{{ title }}</h3>
                 <div class="mini-meta">
-                    <span v-if="authorName.length > 0">{{ authorName }} | </span>Published on {{ publishDate }} - {{ publishDateFromNow }}
+                    <span v-if="authorName.length > 0">{{ authorName }} | </span>
+                    <span v-if="story.publish_date">Published on {{ publishDate }} - {{ publishDateFromNow }}</span>
                 </div>
-                <div v-html="summaryHtml" style="margin-top:20px" :class="{ 'meta' : complete }">
+                <div v-html="summary" style="margin-top:20px" :class="{ 'meta' : complete }">
                 </div>
             </div>
         </v-card-title>
         <v-divider v-if="complete"></v-divider>
         <v-card-text v-if="complete">
-            <div v-html="contentHtml">
+            <div v-html="content">
             </div>
         </v-card-text>
         <v-card-actions>
-            <v-btn v-if="!complete && story.content != story.content.length > 0" icon :to="'/read/' + story.id" flat>
+            <v-btn v-if="!complete" icon :to="'/read/' + story.id" flat>
                 <v-icon>more_horiz</v-icon>
             </v-btn>
             <v-btn v-if="complete" icon :to="'/'" flat>
@@ -54,33 +55,47 @@
 </style>
 
 <script>
-    import marked from 'marked';
     import moment from 'moment';
     import _ from 'lodash';
 
     export default {
         props : {
-            'story' : {
+            story : {
                 type : Object,
                 required : true
             },
-            'complete' : {
+            complete : {
                 type : Boolean,
                 required : true
             }
         },
         computed : {
-            summaryHtml() {
-                if (this.story.summary) {
-                    return marked(this.story.summary, { sanitize : true });
+            summary() {
+                var content = _.find(this.story.contents, function(o) {
+                    return o.locale == 'nl';
+                });
+                if (content) {
+                    return content.summary;
                 }
-                return '';
+                return "";
             },
-            contentHtml() {
-                if (this.story.content) {
-                    return marked(this.story.content, { sanitize : true });
+            content() {
+                var content = _.find(this.story.contents, function(o) {
+                    return o.locale == 'nl';
+                });
+                if (content) {
+                    return content.content;
                 }
-                return '';
+                return "";
+            },
+            title() {
+                var content = _.find(this.story.contents, function(o) {
+                    return o.locale == 'nl';
+                });
+                if (content) {
+                    return content.title;
+                }
+                return "";
             },
             publishDate() {
                 return moment(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L');

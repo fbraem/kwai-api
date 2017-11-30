@@ -9,8 +9,9 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     private $filesystem;
 
     protected $defaultIncludes = [
+        'contents',
         'category',
-        'author'
+        'author',
     ];
 
     public function __construct($filesystem = null)
@@ -22,9 +23,6 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     {
         $result = [
             'id' => (int) $story->id,
-            'title' => $story->title,
-            'summary' => $story->summary,
-            'content' => $story->content,
             'publish_date' => $story->publish_date,
             'enabled' => $story->enabled,
             'featured' => $story->featured,
@@ -44,15 +42,23 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
         return $result;
     }
 
+    public function includeContents(NewsStory $story)
+    {
+        $contents = $story->contents;
+        return $this->collection($contents, new \Domain\Content\ContentTransformer, 'contents');
+    }
+
     public function includeCategory(NewsStory $story)
     {
         $category = $story->category;
-        return $this->item($category, new NewsCategoryTransformer, 'news_category');
+        return $this->item($category, new NewsCategoryTransformer, 'news_categories');
     }
 
     public function includeAuthor(NewsStory $story)
     {
         $author = $story->author;
-        return $this->item($author, new \Domain\User\UserTransformer, 'user');
+        if ($author) {
+            return $this->item($author, new \Domain\User\UserTransformer, 'users');
+        }
     }
 }

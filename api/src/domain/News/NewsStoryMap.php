@@ -12,13 +12,18 @@ class NewsStoryMap extends EntityMap
 
     public $timestamps = true;
 
-    public function category(NewsStory $news)
+    public function category(NewsStory $story)
     {
-        return $this->belongsTo($news, NewsCategory::class, 'category_id', 'id');
+        return $this->belongsTo($story, NewsCategory::class, 'category_id', 'id');
     }
 
-    public function author(NewsStory $news)
+    public function author(NewsStory $story)
     {
-        return $this->belongsTo($news, \Domain\User\User::class, 'user_id', 'id');
+        return $this->belongsTo($story, \Domain\User\User::class, 'user_id', 'id');
+    }
+
+    public function contents(NewsStory $story)
+    {
+        return $this->morphToMany($story, \Domain\Content\Content::class, 'contentable');
     }
 }

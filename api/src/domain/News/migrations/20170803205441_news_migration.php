@@ -20,9 +20,6 @@ class NewsMigration extends AbstractMigration
             ->create()
         ;
         $this->table('news_stories', ['signed' => false])
-            ->addColumn('title', 'string')
-            ->addColumn('content', 'text')
-            ->addColumn('summary', 'text', ['null' => true])
             ->addColumn('enabled', 'boolean', ['default' => false])
             ->addColumn('featured', 'integer', ['default' => 0])
             ->addColumn('featured_end_date', 'datetime', ['null' => true])

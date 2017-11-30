@@ -20,8 +20,6 @@ class BrowseStoryAction implements \Core\ActionInterface
     {
         $parameters = $request->getAttribute('parameters');
 
-        $repository = new \Domain\News\NewsStoryRepository();
-
         $mapper = Manager::getMapper(\Domain\News\NewsStory::class);
         $storyQuery = $mapper->query();
         $storyQuery->orderBy('publish_date', 'desc');
@@ -56,7 +54,7 @@ class BrowseStoryAction implements \Core\ActionInterface
         $offset = $parameters['page']['offset'] ?? 0;
         $storyQuery->skip($offset)->take($limit);
 
-        $stories = $storyQuery->with(['category'])->get();
+        $stories = $storyQuery->with(['category', 'contents', 'author'])->get();
 
         $payload->setExtras([
             'limit' => $limit,
