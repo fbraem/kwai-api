@@ -17,11 +17,22 @@ class UserMigration extends AbstractMigration
             ->addColumn('last_name', 'string', ['null' => true])
             ->addColumn('remark', 'text', ['null' => true])
             ->addTimestamps()
-            ->create();
+            ->create()
+        ;
+
+        $this->table('user_logs', ['signed' => false])
+            ->addColumn('user_id', 'integer')
+            ->addColumn('action', 'string')
+            ->addColumn('domain', 'string')
+            ->addColumn('model_id', 'integer')
+            ->addTimestamps()
+            ->create()
+        ;
     }
 
     public function down()
     {
         $this->table('users')->drop();
+        $this->table('user_logs')->drop();
     }
 }
