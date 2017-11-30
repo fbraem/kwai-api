@@ -27,6 +27,6 @@ class ReadStoryAction implements \Core\ActionInterface
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
 
-        return (new JSONResponder(new Responder(), $payload))->respond());
+        return (new JSONResponder(new Responder(), $payload))->respond();
     }
 }
