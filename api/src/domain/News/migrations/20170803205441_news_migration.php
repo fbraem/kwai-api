@@ -14,8 +14,6 @@ class NewsMigration extends AbstractMigration
             ->addColumn('description', 'text', ['null' => true])
             ->addColumn('remark', 'text', ['null' => true])
             ->addColumn('user_id', 'integer')
-            ->addColumn('original_image_path', 'string', ['null' => true])
-            ->addColumn('image_path', 'string', ['null' => true])
             ->addTimestamps()
             ->create()
         ;
