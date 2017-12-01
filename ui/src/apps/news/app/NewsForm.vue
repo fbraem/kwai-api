@@ -38,43 +38,25 @@
                                 </v-select>
                             </v-flex>
                             <v-flex xs12>
-                                <v-layout row wrap>
-                                    <v-flex xs6>
-                                        <v-text-field
-                                            name="summary"
-                                            v-model="form.story.summary"
-                                            @input="$v.form.story.summary.$touch"
-                                            :error-messages="summaryErrors"
-                                            label="Summary"
-                                            textarea
-                                            required
-                                            hint="Use Markdown for styling">
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs6>
-                                        Preview
-                                        <div v-html="summaryHtml"></div>
-                                    </v-flex>
-                                </v-layout>
+                                <v-text-field
+                                    name="summary"
+                                    v-model="form.story.summary"
+                                    @input="$v.form.story.summary.$touch"
+                                    :error-messages="summaryErrors"
+                                    label="Summary"
+                                    textarea
+                                    required>
+                                </v-text-field>
                             </v-flex>
                             <v-flex xs12>
-                                <v-layout row wrap>
-                                    <v-flex xs6>
-                                        <v-text-field
-                                            name="content"
-                                            v-model="form.story.content"
-                                            @input="$v.form.story.content.$touch"
-                                            :error-messages="contentErrors"
-                                            label="Content"
-                                            textarea
-                                            hint="Use Markdown for styling">
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs6>
-                                        Preview
-                                        <div v-html="contentHtml"></div>
-                                    </v-flex>
-                                </v-layout>
+                                <v-text-field
+                                    name="content"
+                                    v-model="form.story.content"
+                                    @input="$v.form.story.content.$touch"
+                                    :error-messages="contentErrors"
+                                    label="Content"
+                                    textarea>
+                                </v-text-field>
                             </v-flex>
                             <v-flex xs12>
                                 <v-text-field
@@ -260,7 +242,6 @@
 <script>
     import Model from '@/js/model';
     import moment from 'moment';
-    import marked from 'marked';
 
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
@@ -359,7 +340,7 @@
             summaryErrors() {
                 const errors = [...this.errors.summary];
                 if (! this.$v.form.story.summary.$dirty) return errors;
-                ! this.$v.form.story.summary.required && errors.push('Category is required');
+                ! this.$v.form.story.summary.required && errors.push('Summary is required');
                 return errors;
             },
             contentErrors() {
@@ -412,18 +393,6 @@
                 if (! this.$v.form.story.featured_end_time.$dirty) return errors;
                 ! this.$v.form.story.featured_end_time.timeValidator && errors.push('Time is not valid. Format must be HH:MM');
                 return errors;
-            },
-            summaryHtml() {
-                if (this.form.story.summary) {
-                    return marked(this.form.story.summary, { sanitize : true });
-                }
-                return '';
-            },
-            contentHtml() {
-                if (this.form.story.content) {
-                    return marked(this.form.story.content, { sanitize : true });
-                }
-                return '';
             }
         },
         validations : {
