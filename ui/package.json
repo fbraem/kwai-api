@@ -40,7 +40,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "croppie": "^2.5.0",
-    "jquery": "^3.2.1",
     "lockr": "^0.8.4",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
@@ -51,6 +50,7 @@
     "vue-i18n": "^7.3.2",
     "vue-kindergarten": "^0.3.2",
     "vue-router": "^3.0.1",
+    "vue2-editor": "^2.3.11",
     "vuelidate": "^0.6.0",
     "vuetify": "^0.17.3",
     "vuex": "^3.0.1"
