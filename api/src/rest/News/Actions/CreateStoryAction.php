@@ -55,7 +55,7 @@ class CreateStoryAction implements \Core\ActionInterface
         $story->user_id = $request->getAttribute('clubman.user');
         $repository->store($story);
 
-        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer, 'news_story'));
+        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer(), 'news_stories'));
 
         return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
     }
