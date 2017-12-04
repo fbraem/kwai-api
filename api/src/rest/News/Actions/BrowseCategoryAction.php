@@ -19,7 +19,7 @@ class BrowseCategoryAction implements \Core\ActionInterface
     {
         $repository = new \Domain\News\NewsCategoryRepository();
         $categories = $repository->all();
-        $payload->setOutput(new Fractal\Resource\Collection($categories, new \Domain\News\NewsCategoryTransformer, 'news_categories'));
+        $payload->setOutput(new Fractal\Resource\Collection($categories, new \Domain\News\NewsCategoryTransformer(), 'news_categories'));
 
         return (new JSONResponder(new Responder(), $payload))->respond();
     }
