@@ -34,6 +34,9 @@ import NewsApp from './App.vue';
 import NewsCreate from './app/NewsCreate.vue';
 import NewsUpdate from './app/NewsUpdate.vue';
 import NewsRead from './app/NewsRead.vue';
+import CategoryCreate from './app/CategoryCreate.vue';
+import CategoryUpdate from './app/CategoryUpdate.vue';
+import CategoryRead from './app/CategoryRead.vue';
 
 const router = new VueRouter({
     routes : [
@@ -52,6 +55,18 @@ const router = new VueRouter({
         {
             path : '/update/:id',
             component : NewsUpdate
+        },
+        {
+            path : '/category/create',
+            component : CategoryCreate
+        },
+        {
+            path : '/category/read/:id',
+            component : CategoryRead
+        },
+        {
+            path : '/category/update/:id',
+            component : CategoryUpdate
         }
     ]
 });
