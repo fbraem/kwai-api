@@ -4,6 +4,7 @@ namespace Domain\Auth;
 use Analogue\ORM\Repository;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 class RefreshTokenRepository extends Repository implements RefreshTokenRepositoryInterface
 {
@@ -19,16 +20,18 @@ class RefreshTokenRepository extends Repository implements RefreshTokenRepositor
 
     public function revokeRefreshToken($tokenId)
     {
-        $token = $this->find($tokenId);
+        $token = $this->firstMatching(['identifier' => $tokenId]);
         if ($token) {
             $token->revoked = true;
             $this->store($token);
+        } else {
+            throw OAuthServerException::invalidRefreshToken("RefreshToken doesn't exist");
         }
     }
 
     public function isRefreshTokenRevoked($tokenId)
     {
-        $token = $this->find($tokenId);
+        $token = $this->firstMatching(['identifier' => $tokenId]);
         if ($token) {
             return $token->revoked;
         }
