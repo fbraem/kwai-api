@@ -22,6 +22,7 @@ class AuthorityMiddleware implements MiddlewareInterface
             $server = $request->getAttribute('clubman.container')['resourceServer'];
             try {
                 $request = $server->validateAuthenticatedRequest($request);
+                $request = $request->withAttribute('clubman.user', $request->getAttribute('oauth_user_id'));
             } catch(OAuthServerException $exception) {
                 $response = (new Responder())->respond();
                 return $exception->generateHttpResponse($response);
