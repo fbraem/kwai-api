@@ -55,7 +55,7 @@ class OAuth
             .then((response) => {
                 return response;
             }).catch((error) => {
-                if (error.response.status == 401) {
+                if (error.response.status == 401 && !options.dontRetry) {
                     if (this.refresh_token) {
                         this.refreshToken().then((response) => {
                             if (this.access_token) {
@@ -93,7 +93,8 @@ class OAuth
             form.append('client_secret', CLIENT_SECRET);
             form.append('refresh_token', this.refresh_token);
             this.post('api/auth/access_token', {
-                data : form
+                data : form,
+                dontRetry : true
             }).then((response) => {
                 this.setTokens(response.data.access_token, response.data.refresh_token);
                 resolve(response);
@@ -114,7 +115,8 @@ class OAuth
             form.append('password', password);
             form.append('scope', 'basic');
             this.post('api/auth/access_token', {
-                data : form
+                data : form,
+                dontRetry : true
             }).then((response) => {
                 this.setTokens(response.data.access_token, response.data.refresh_token);
                 resolve(response);
