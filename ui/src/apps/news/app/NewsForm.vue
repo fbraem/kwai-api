@@ -49,6 +49,14 @@
                                 </v-text-field>
                             </v-flex>
                             <v-flex xs12>
+                                <vue-editor
+                                    v-model="form.story.content"
+                                    useCustomImageHandler
+                                    @imageAdded="handleEmbeddImage"
+                                    >
+                                </vue-editor>
+                            </v-flex>
+                            <v-flex xs12>
                                 <v-text-field
                                     name="content"
                                     v-model="form.story.content"
@@ -243,6 +251,8 @@
     import Model from '@/js/model';
     import moment from 'moment';
 
+    import { VueEditor } from 'vue2-editor';
+
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
 
@@ -260,6 +270,26 @@
 
     import DateField from '@/components/DateField.vue';
     import VueCroppie from "@/components/Croppie.vue";
+
+    var initForm = function() {
+        return {
+            story : {
+                title : '',
+                category : 0,
+                summary : '',
+                content : '',
+                enabled : true,
+                publish_date : moment().format('L'),
+                publish_time : moment().format('HH:mm'),
+                end_date : null,
+                end_time : null,
+                featured : 0,
+                featured_end_date : null,
+                featured_end_time : null,
+                remark : ''
+            }
+        };
+    }
 
     var initError = function() {
         return {
@@ -284,27 +314,12 @@
         },
         components : {
             DateField,
-            VueCroppie
+            VueCroppie,
+            VueEditor
         },
         data() {
             return {
-                form : {
-                    story : {
-                        title : '',
-                        category : 0,
-                        summary : '',
-                        content : '',
-                        enabled : true,
-                        publish_date : moment().format('L'),
-                        publish_time : moment().format('HH:mm'),
-                        end_date : null,
-                        end_time : null,
-                        featured : 0,
-                        featured_end_date : null,
-                        featured_end_time : null,
-                        remark : ''
-                    }
-                },
+                form : initForm(),
                 errors : initError(),
                 stepper : 1,
                 imageOverviewCrop : null,
@@ -480,6 +495,22 @@
             }
         },
         methods : {
+            handleEmbeddImage(file, editor, cursorLocation) {
+                var formData = new FormData();
+                formData.append('image', file);
+                this.$store.dispatch('newsModule/embeddImage', {
+                    story : {
+                        id : this.story.id
+                    },
+                    formData : formData
+                }).then((result) => {
+                    console.log(result);
+                    let url = result.data.url;
+                    editor.insertEmbed(cursorLocation, 'image', url);
+                }).catch((err) => {
+                    console.log(err);
+                });
+            },
             cropDetailResult(result) {
                 this.imageDetailPreview = result;
             },
@@ -499,13 +530,14 @@
                 return false;
             },
             clear() {
-                this.$v.reset();
+                this.$v.$reset();
+                this.form = initForm();
             },
             fillForm(model) {
-                this.form.story.title = model.title;
+                this.form.story.title = model.contents[0].title;
                 this.form.story.category = model.category.id;
-                this.form.story.summary = model.summary;
-                this.form.story.content = model.content;
+                this.form.story.summary = model.contents[0].summary;
+                this.form.story.content = model.contents[0].content;
                 this.form.story.enabled = model.enabled == 1;
                 if (model.publish_date) {
                     this.form.story.publish_date = moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L');
@@ -575,7 +607,7 @@
                         }).catch(() => {
                         });
                 } else { // create
-                    var story = new Model('news');
+                    var story = new Model('news_stories');
                     this.fillModel(story);
                     this.$store.dispatch('newsModule/create', story.serialize())
                         .then(() => {

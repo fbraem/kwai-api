@@ -35,11 +35,11 @@ class UpdateStoryAction implements \Core\ActionInterface
 
         $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
         if (!isset($categoryId)) {
-            return new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
+            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
                 '/data/relationships/category' => [
                     _('Category is required')
                 ]
-            ])->respond();
+            ]))->respond();
         }
         $categoryRepository = new \Domain\News\NewsCategoryRepository();
         $category = $categoryRepository->find($categoryId);
@@ -53,14 +53,17 @@ class UpdateStoryAction implements \Core\ActionInterface
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $repository = new \Domain\News\NewsStoryRepository();
-        $story->title = $attributes['title'];
         $story->category = $category;
-        $story->summary = $attributes['summary'];
-        $story->content = $attributes['content'];
         $story->publish_date = $attributes['publish_date'];
         $story->user_id = $request->getAttribute('clubman.user');
         $repository->store($story);
+
+        $contents = $story->contents;
+        $contents[0]->title = $attributes['title'];
+        $contents[0]->summary = $attributes['summary'];
+        $contents[0]->content = $attributes['content'];
+        $contentRepo = new \Domain\Content\ContentRepository();
+        $contentRepo->store($contents[0]);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));

@@ -13,17 +13,17 @@
         <v-card-title>
             <div>
                 <h3 v-if="!complete"class="headline mb-0">{{ title }}</h3>
-                <div class="mini-meta">
+                <div class="news-mini-meta">
                     <span v-if="authorName.length > 0">{{ authorName }} | </span>
                     <span v-if="story.publish_date">Published on {{ publishDate }} - {{ publishDateFromNow }}</span>
                 </div>
-                <div v-html="summary" style="margin-top:20px" :class="{ 'meta' : complete }">
+                <div v-html="summary" style="margin-top:20px" :class="{ 'news-meta' : complete }">
                 </div>
             </div>
         </v-card-title>
         <v-divider v-if="complete"></v-divider>
         <v-card-text v-if="complete">
-            <div v-html="content">
+            <div class="news-content" v-html="content">
             </div>
         </v-card-text>
         <v-card-actions>
@@ -44,13 +44,16 @@
     </v-card>
 </template>
 
-<style scoped>
-    .mini-meta {
+<style>
+    .news-mini-meta {
         font-size: 12px;
         color: #999;
     }
-    .meta {
+    .news-meta {
         color: #999;
+    }
+    .news-content img {
+        max-width: 100%;
     }
 </style>
 
