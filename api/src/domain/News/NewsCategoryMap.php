@@ -12,8 +12,13 @@ class NewsCategoryMap extends EntityMap
 
     public $timestamps = true;
 
-    public function news(NewsStory $news)
+    public function news(NewsCategory $category)
     {
-        return $this->hasMany($news, NewsStory::class, 'category_id', 'id');
+        return $this->hasMany($category, NewsStory::class, 'category_id', 'id');
+    }
+
+    public function author(NewsCategory $category)
+    {
+        return $this->belongsTo($category, \Domain\User\User::class, 'user_id', 'id');
     }
 }

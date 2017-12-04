@@ -10,7 +10,9 @@ class NewsCategoryTransformer extends Fractal\TransformerAbstract
     {
         return [
             'id' => (int) $category->id,
-            'name' => $category->name
+            'name' => $category->name,
+            'description' => $category->description,
+            'remark' => $category->remark
         ];
     }
 }
