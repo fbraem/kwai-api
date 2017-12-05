@@ -47,12 +47,17 @@ class CreateStoryAction implements \Core\ActionInterface
 
         $repository = new \Domain\News\NewsStoryRepository();
         $story = new \Domain\News\NewsStory();
-        $story->title = $attributes['title'];
         $story->category = $category;
-        $story->summary = $attributes['summary'];
-        $story->content = $attributes['content'];
         $story->publish_date = $attributes['publish_date'];
         $story->user_id = $request->getAttribute('clubman.user');
+
+        $content = new \Domain\Content\Content();
+        $content->locale = 'nl';
+        $content->format = 'html';
+        $content->title = $attributes['title'];
+        $content->summary = $attributes['summary'];
+        $content->content = $attributes['content'];
+        $story->contents->add($content);
         $repository->store($story);
 
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer(), 'news_stories'));
