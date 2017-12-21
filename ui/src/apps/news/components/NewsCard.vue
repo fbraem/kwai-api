@@ -78,7 +78,7 @@
                     return o.locale == 'nl';
                 });
                 if (content) {
-                    return content.summary;
+                    return content.html_summary;
                 }
                 return "";
             },
@@ -87,7 +87,7 @@
                     return o.locale == 'nl';
                 });
                 if (content) {
-                    return content.content;
+                    return content.html_content;
                 }
                 return "";
             },
