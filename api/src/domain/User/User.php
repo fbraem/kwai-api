@@ -18,7 +18,7 @@ class User implements UserInterface, UserEntityInterface
 
     use \Domain\DatetimeMetaTrait;
 
-    public function __construct($db, ?iterable $data)
+    public function __construct($db, ?iterable $data = null)
     {
         $this->db = $db;
         if ($data) {
