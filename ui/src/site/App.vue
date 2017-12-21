@@ -20,9 +20,83 @@
                     </v-container>
                 </v-card-media>
             </v-card>
+            <v-container fluid class="button-container">
+                <v-layout row wrap>
+                    <v-flex xs6 sm4 md2 px-0>
+                        <v-btn href="news.html" style="width:100%">
+                            <v-icon large color="red">fa-newspaper</v-icon>
+                            Nieuws
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 sm4 md2 px-0>
+                        <v-btn href="#" style="width:100%">
+                            <v-icon large color="red">fa-university</v-icon>
+                            Trainingen
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 sm4 md2 px-0>
+                        <v-btn href="#" style="width:100%">
+                            <v-icon large color="red">fa-trophy</v-icon>
+                            Tornooien
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 sm4 md2 px-0>
+                        <v-btn href="#" style="width:100%">
+                            <v-icon large color="red">fa-calendar</v-icon>
+                            Kalender
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 sm4 md2 px-0>
+                        <v-btn href="#" style="width:100%">
+                            <v-icon large color="red">fa-shopping-basket</v-icon>
+                            Materiaal
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 sm4 md2 px-0>
+                        <v-btn href="#" style="width:100%">
+                            <v-icon large color="red">fa-users</v-icon>
+                            Bestuur
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+            </v-container>
         </v-flex>
     </v-layout>
 </template>
+
+<style>
+.button-container {
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0;
+}
+
+.button-container .btn {
+    background-color:hsla(0,0%,94%,.9);
+    height:9rem;
+    margin:0;
+    border-radius:0
+}
+
+.button-container .btn .icon {
+    font-size:2.5rem;
+    margin-bottom:.25rem;
+    color:#0279d7
+}
+
+.button-container .btn .btn__content {
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+    -ms-flex-direction:column;
+    flex-direction:column
+}
+
+@media screen and (max-width:959px) {
+    .button-container .btn {
+        height:6rem
+    }
+}
+</style>
 
 <script>
     export default {
