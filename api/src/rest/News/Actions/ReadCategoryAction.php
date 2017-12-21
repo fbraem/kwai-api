@@ -17,9 +17,9 @@ class ReadCategoryAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
+        $db = $request->getAttribute('clubman.container')['db'];
 
-        $repository = new \Domain\News\NewsCategoryRepository();
-        $category = $repository->find($id);
+        $category = (new \Domain\News\NewsCategoriesTable($db))->whereId($id)->findOne();
         if (!$category) {
             return (new NotFoundResponder(new Responder(), _("Category doesn't exist.")))->respond();
         }

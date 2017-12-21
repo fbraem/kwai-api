@@ -16,8 +16,9 @@ class CheckAction implements \Core\ActionInterface
 {
   public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
   {
-      $userRepo = new \Domain\User\UserRepository();
-      if ($userRepo->count() == 0) {
+      $db = $request->getAttribute('clubman.container')['db'];
+      $users = new \Domain\User\UsersTable($db);
+      if ($users->count() == 0) {
           return (new HTTPCodeResponder(new Responder(), 200))->respond();
       }
       return (new HTTPCodeResponder(new Responder(), 403, _('Installation is already done')))->respond();

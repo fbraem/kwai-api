@@ -1,24 +1,32 @@
 <?php
 namespace Domain\Auth;
 
-use Analogue\ORM\Repository;
-use Analogue\ORM\EntityCollection;
-
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
-class ScopeRepository extends Repository implements ScopeRepositoryInterface
+class ScopeTable implements ScopeRepositoryInterface
 {
-    public function __construct()
+    private $db;
+
+    private $table;
+
+    private $select;
+
+    public function __construct($db)
     {
-        parent::__construct(Scope::class);
+        $this->db = $db;
+        $this->table = new \Zend\Db\TableGateway\TableGateway('oauth_scopes', $this->db);
     }
 
     public function getScopeEntityByIdentifier($identifier)
     {
-        $scope = $this->mapper->where('identifier', '=', $identifier)->first();
-        return $scope;
+        $result = $this->table->select(['identifier' => $identifier]);
+        if ($result) {
+            return new Scope($this->db, $result->current());
+        }
+
+        throw OAuthServerException::invalidRefreshToken("Scope doesn't exist");
     }
 
     public function finalizeScopes(array $scopes, $grantType, ClientEntityInterface $client, $userIdentifier = null)

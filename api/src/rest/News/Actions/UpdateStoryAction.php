@@ -19,15 +19,17 @@ class UpdateStoryAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
-        $repository = new \Domain\News\NewsStoryRepository();
-        $story = $repository->find($id);
+        $db = $request->getAttribute('clubman.container')['db'];
+
+        $storiesTable = new \Domain\News\NewsStoriesTable($db);
+        $story = $storiesTable->whereId($id)->findOne();
         if (!$story) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 
         $data = $payload->getInput();
 
-        $validator = new \Domain\News\NewsStoryValidator();
+        $validator = new \REST\News\NewsStoryValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
@@ -41,9 +43,9 @@ class UpdateStoryAction implements \Core\ActionInterface
                 ]
             ]))->respond();
         }
-        $categoryRepository = new \Domain\News\NewsCategoryRepository();
-        $category = $categoryRepository->find($categoryId);
-        if ($category == null) {
+        $categoriesTable = new \Domain\News\NewsCategoriesTable($db);
+        $category = $categoriesTable->whereId($categoryId)->findOne();
+        if (!$category) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
                 '/data/relationships/category' => [
                     _('Category doesn\'t exist')
@@ -53,17 +55,28 @@ class UpdateStoryAction implements \Core\ActionInterface
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $story->category = $category;
-        $story->publish_date = $attributes['publish_date'];
-        $story->user_id = $request->getAttribute('clubman.user');
-        $repository->store($story);
+        $story = new \Domain\News\NewsStory(
+            $db,
+            array_merge($story->extract(), [
+                'category' => $category,
+                'publish_date' => $attributes['publish_date'],
+                'author' => $request->getAttribute('clubman.user'),
+                'contents' => $story->contents()
+            ])
+        );
+        $story->store();
 
-        $contents = $story->contents;
-        $contents[0]->title = $attributes['title'];
-        $contents[0]->summary = $attributes['summary'];
-        $contents[0]->content = $attributes['content'];
-        $contentRepo = new \Domain\Content\ContentRepository();
-        $contentRepo->store($contents[0]);
+        $content = new \Domain\Content\Content(
+            $db,
+            array_merge($story->contents()->contents()[0]->extract(), [
+                'title' => $attributes['title'],
+                'summary' => $attributes['summary'],
+                'content' => $attributes['content']
+            ])
+        );
+        $content->store();
+
+        $story->contents()->replace($content);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));

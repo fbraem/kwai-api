@@ -17,9 +17,10 @@ class ReadStoryAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
+        $db = $request->getAttribute('clubman.container')['db'];
 
-        $repository = new \Domain\News\NewsStoryRepository();
-        $story = $repository->find($id);
+        $stories = new \Domain\News\NewsStoriesTable($db);
+        $story = $stories->whereId($id)->findOne();
         if (!$story) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }

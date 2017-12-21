@@ -1,24 +1,24 @@
 <?php
 namespace Domain\Auth;
 
-use Analogue\ORM\Repository;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
-class UserRepository extends Repository implements UserRepositoryInterface
+class UserRepository implements UserRepositoryInterface
 {
-    public function __construct()
+    private $db;
+
+    public function __construct($db)
     {
-        parent::__construct(\Domain\User\User::class);
+        $this->db = $db;
     }
 
     public function getUserEntityByUserCredentials($email, $password, $grantType, ClientEntityInterface $client)
     {
-        $user = $this->mapper->where('email', '=', $email)->first();
-        if ($user) {
-            if (password_verify($password, $user->password)) {
-                $user->last_login = \Carbon\Carbon::now();
-                $this->store($user);
+        $users = (new \Domain\User\UsersTable($this->db))->whereEmail($email)->find();
+        if (count($users) > 0) {
+            $user = reset($users);
+            if ($user->verify($password)) {
                 return $user;
             }
         }

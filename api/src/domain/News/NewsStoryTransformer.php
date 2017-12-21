@@ -19,23 +19,13 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
         $this->filesystem = $filesystem;
     }
 
-    public function transform(NewsStory $story)
+    public function transform(NewsStoryInterface $story)
     {
-        $result = [
-            'id' => (int) $story->id,
-            'publish_date' => $story->publish_date,
-            'enabled' => $story->enabled,
-            'featured' => $story->featured,
-            'featured_end_date' => $story->featured_end_date,
-            'end_date' => $story->end_date,
-            'remark' => $story->remark,
-            'created_at' => $story->created_at,
-            'updated_at' => $story->updated_at
-        ];
+        $result = $story->extract();
 
         if ($this->filesystem) {
-            $images = $this->filesystem->listContents('images/news/' . $story->id);
-            foreach($images as $image) {
+            $images = $this->filesystem->listContents('images/news/' . $story->id());
+            foreach ($images as $image) {
                 $result[$image['filename']] = '/files/' . $image['path'];
             }
         }
@@ -44,19 +34,23 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
 
     public function includeContents(NewsStory $story)
     {
-        $contents = $story->contents;
-        return $this->collection($contents, new \Domain\Content\ContentTransformer, 'contents');
+        $contents = $story->contents();
+        if ($contents) {
+            return $this->collection($contents->contents(), new \Domain\Content\ContentTransformer, 'contents');
+        }
     }
 
     public function includeCategory(NewsStory $story)
     {
-        $category = $story->category;
-        return $this->item($category, new NewsCategoryTransformer, 'news_categories');
+        $category = $story->category();
+        if ($category) {
+            return $this->item($category, new NewsCategoryTransformer, 'news_categories');
+        }
     }
 
     public function includeAuthor(NewsStory $story)
     {
-        $author = $story->author;
+        $author = $story->author();
         if ($author) {
             return $this->item($author, new \Domain\User\UserTransformer, 'users');
         }

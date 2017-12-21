@@ -20,11 +20,13 @@ class AccessTokenAction implements \Core\ActionInterface
             return $server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $exception) {
             return $exception->generateHttpResponse($response);
+/*
         } catch (\Exception $exception) {
             // Catch unexpected exceptions
             $body = $response->getBody();
             $body->write($exception->getMessage());
             return $response->withStatus(500)->withBody($body);
+*/            
         }
     }
 }

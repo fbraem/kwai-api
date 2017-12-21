@@ -14,27 +14,30 @@ use League\Fractal;
 
 class CreateAction implements \Core\ActionInterface
 {
-  public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-  {
-      $userRepo = new \Domain\User\UserRepository();
-      if ( $userRepo->count() == 0 ) {
-          $data = $payload->getInput();
+    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    {
+        $db = $request->getAttribute('clubman.container')['db'];
+        $users = new \Domain\User\UsersTable($db);
+        if ($users->count() == 0) {
+            $data = $payload->getInput();
 
-          $validator = new \Domain\User\UserValidator();
-          $errors = $validator->validate($data);
-          if (count($errors) > 0) {
-              return (new JSONErrorResponder(new Responder(), $errors))->respond();
-          }
+            $validator = new \REST\Users\UserValidator();
+            $errors = $validator->validate($data);
+            if (count($errors) > 0) {
+                return (new JSONErrorResponder(new Responder(), $errors))->respond();
+            }
 
-          $attributes = \JmesPath\search('data.attributes', $data);
-          $user = new \Domain\User\User($attributes['email']);
-          $user->password = password_hash($attributes['password'], PASSWORD_DEFAULT);
-          $userRepo->store($user);
+            $attributes = \JmesPath\search('data.attributes', $data);
+            $user = new \Domain\User\User($db, [
+                'email' => $attributes['email'],
+                'password' => password_hash($attributes['password'], PASSWORD_DEFAULT)
+            ]);
+            $user->store();
 
-          $payload->setOutput(new Fractal\Resource\Item($user, new \Domain\User\UserTransformer, 'users'));
-          return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
-      }
+            $payload->setOutput(new Fractal\Resource\Item($user, new \Domain\User\UserTransformer, 'users'));
+            return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
+        }
 
-      return (new HTTPCodeResponder(new Responder(), 403, _('Installation is already done')))->respond();
-  }
+        return (new HTTPCodeResponder(new Responder(), 403, _('Installation is already done')))->respond();
+    }
 }

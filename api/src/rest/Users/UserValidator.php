@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\User;
+namespace REST\Users;
 
 use Zend\Validator\ValidatorChain;
 use Zend\Validator\EmailAddress;

@@ -19,7 +19,7 @@ class CreateCategoryAction implements \Core\ActionInterface
     {
         $data = $payload->getInput();
 
-        $validator = new \Domain\News\NewsCategoryValidator();
+        $validator = new \REST\News\NewsCategoryValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
@@ -27,13 +27,11 @@ class CreateCategoryAction implements \Core\ActionInterface
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $repository = new \Domain\News\NewsCategoryRepository();
-        $category = new \Domain\News\NewsCategory();
-        $category->name = $attributes['name'];
-        $category->description = $attributes['description'];
-        $category->remark = $attributes['remark'];
-        $category->user_id = $request->getAttribute('clubman.user');
-        $repository->store($category);
+        $db = $request->getAttribute('clubman.container')['db'];
+        $attributes['user'] = $request->getAttribute('clubman.user');
+
+        $category = new \Domain\News\NewsCategory($db, $attributes);
+        $category->store();
 
         $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\News\NewsCategoryTransformer(), 'news_categories'));
 

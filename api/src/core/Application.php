@@ -15,10 +15,10 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
-use Domain\Auth\AccessTokenRepository;
-use Domain\Auth\ClientRepository;
-use Domain\Auth\RefreshTokenRepository;
-use Domain\Auth\ScopeRepository;
+use Domain\Auth\AccessTokenTable;
+use Domain\Auth\ClientTable;
+use Domain\Auth\RefreshTokenTable;
+use Domain\Auth\ScopeTable;
 use Domain\Auth\UserRepository;
 
 /**
@@ -56,41 +56,34 @@ class Application
 
         $this->container = new \Pimple\Container();
 
-        $dbConnection = $this->config->database->{$this->config->default_database};
-        $dbConnectionArray = $dbConnection->toArray();
-        $dbConnectionArray['driver'] = $dbConnection->adapter;
-        $dbConnectionArray['database'] = $dbConnection->name;
-        $dbConnectionArray['username'] = $dbConnection->user;
-        $dbConnectionArray['password'] = $dbConnection->pass;
-        $analogue = new \Analogue\ORM\Analogue($dbConnectionArray);
-        $analogue->registerPlugin('Analogue\ORM\Plugins\Timestamps\TimestampsPlugin');
+        $this->container['db'] = function ($c) use ($config) {
+            $dbConnection = $config->database->{$config->default_database};
+            return new \Zend\Db\Adapter\Adapter([
+                'driver' => 'Pdo_Mysql',
+                'database' => $dbConnection->name,
+                'username' => $dbConnection->user,
+                'password' => $dbConnection->pass,
+                'hostname' => $dbConnection->host,
+                'charset' =>  $dbConnection->charset,
+            ]);
+        };
 
-        $analogue->connection()->setEventDispatcher(new \Illuminate\Events\Dispatcher(new \Illuminate\Container\Container));
-        $analogue->connection()->listen(function ($query) {
-            //TODO: Move the creation of the logger to application
-            // and move the name of the file to the configuration
-            $writer = new \Zend\Log\Writer\Stream('../tmp/clubman.sql');
-            $logger = new \Zend\Log\Logger();
-            $logger->addWriter($writer, 7);
-            $logger->info($query->sql);
-        });
-
-        $this->container['filesystem'] = function($c) use ($config) {
+        $this->container['filesystem'] = function ($c) use ($config) {
             $flyAdapter = new Local($config->files);
             return new Filesystem($flyAdapter);
         };
-        $this->container['authorizationServer'] = function($c) use ($config) {
+        $this->container['authorizationServer'] = function ($c) use ($config) {
             $server = new AuthorizationServer(
-                new ClientRepository(),
-                new AccessTokenRepository(),
-                new ScopeRepository(),
+                new ClientTable($c['db']),
+                new AccessTokenTable($c['db']),
+                new ScopeTable($c['db']),
                 $config->oauth2->private_key,
                 $config->oauth2->encryption_key
             );
-            $refreshTokenRepo = new RefreshTokenRepository();
+            $refreshTokenRepo = new RefreshTokenTable($c['db']);
 
             $grant = new PasswordGrant(
-                new UserRepository(),
+                new UserRepository($c['db']),
                 $refreshTokenRepo
             );
             $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
@@ -102,8 +95,8 @@ class Application
 
             return $server;
         };
-        $this->container['resourceServer'] = function($c) use ($config) {
-            return new ResourceServer(new AccessTokenRepository(), $config->oauth2->public_key);
+        $this->container['resourceServer'] = function ($c) use ($config) {
+            return new ResourceServer(new AccessTokenTable($c['db']), $config->oauth2->public_key);
         };
     }
 

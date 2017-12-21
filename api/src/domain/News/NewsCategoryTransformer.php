@@ -6,13 +6,8 @@ use League\Fractal;
 
 class NewsCategoryTransformer extends Fractal\TransformerAbstract
 {
-    public function transform(NewsCategory $category)
+    public function transform(NewsCategoryInterface $category)
     {
-        return [
-            'id' => (int) $category->id,
-            'name' => $category->name,
-            'description' => $category->description,
-            'remark' => $category->remark
-        ];
+        return $category->extract();
     }
 }

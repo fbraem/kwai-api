@@ -17,9 +17,11 @@ class CreateStoryAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
+        $db = $request->getAttribute('clubman.container')['db'];
+
         $data = $payload->getInput();
 
-        $validator = new \Domain\News\NewsStoryValidator();
+        $validator = new \REST\News\NewsStoryValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
@@ -33,9 +35,9 @@ class CreateStoryAction implements \Core\ActionInterface
                 ]
             ]))->respond();
         }
-        $categoryRepository = new \Domain\News\NewsCategoryRepository();
-        $category = $categoryRepository->find($categoryId);
-        if ($category == null) {
+        $categories = new \Domain\News\NewsCategoriesTable($db);
+        $category = $categories->whereId($categoryId)->findOne();
+        if (!$category) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
                 '/data/relationships/category' => [
                     _('Category doesn\'t exist')
@@ -45,20 +47,22 @@ class CreateStoryAction implements \Core\ActionInterface
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $repository = new \Domain\News\NewsStoryRepository();
-        $story = new \Domain\News\NewsStory();
-        $story->category = $category;
-        $story->publish_date = $attributes['publish_date'];
-        $story->user_id = $request->getAttribute('clubman.user');
+        $story = new \Domain\News\NewsStory($db, [
+            'category' => $category,
+            'author' => $request->getAttribute('clubman.user'),
+            'publish_date' => $attributes['publish_date']
+        ]);
+        $story->store();
 
-        $content = new \Domain\Content\Content();
-        $content->locale = 'nl';
-        $content->format = 'html';
-        $content->title = $attributes['title'];
-        $content->summary = $attributes['summary'];
-        $content->content = $attributes['content'];
-        $story->contents->add($content);
-        $repository->store($story);
+        $story->contents()->add(new \Domain\Content\Content($db, [
+            'locale' => 'nl',
+            'format' => 'html',
+            'title' => $attributes['title'],
+            'summary' => $attributes['summary'],
+            'content' => $attributes['content'],
+            'user' => $request->getAttribute('clubman.user')
+        ]));
+        $story->contents()->store();
 
         $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer(), 'news_stories'));
 

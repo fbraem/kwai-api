@@ -18,23 +18,25 @@ trait TokenTrait
 
     public function getExpiryDatetime()
     {
-        return $this->expiration;
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $this->expiration);
     }
 
     public function setExpiryDatetime(\DateTime $datetime)
     {
-        $this->expiration = $datetime;
+        $this->expiration = \Carbon\Carbon::instance($datetime)->toDateTimeString();
     }
 
     public function getUserIdentifier()
     {
-        return $this->user->id;
+        return $this->user->id();
     }
 
     public function setUserIdentifier($identifier)
     {
-        $repo = new UserRepository();
-        $this->user = $repo->find($identifier);
+        $users = (new \Domain\User\UsersTable($this->db))->whereId($identifier)->find();
+        if (count($users) > 0) {
+            $this->user = reset($users);
+        }
     }
 
     public function getScopes()
@@ -44,6 +46,9 @@ trait TokenTrait
 
     public function addScope(ScopeEntityInterface $scope)
     {
-        $this->scopes->push($scope);
+        if (!$this->scopes) {
+            $this->scopes = [];
+        }
+        $this->scopes[] = $scope;
     }
 }

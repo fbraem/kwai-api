@@ -30,25 +30,25 @@ class AuthMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('oauth_client_scopes', ['primary_key' => ['client_id', 'scope_id']])
+        $this->table('oauth_client_scopes', ['id' => false, 'primary_key' => ['client_id', 'scope_id']])
             ->addColumn('client_id', 'integer')
             ->addColumn('scope_id', 'integer')
             ->create()
         ;
 
-        $this->table('oauth_client_grants', ['primary_key' => ['client_id', 'grant_id']])
+        $this->table('oauth_client_grants', ['id' => false, 'primary_key' => ['client_id', 'grant_id']])
             ->addColumn('client_id', 'integer')
             ->addColumn('grant_id', 'integer')
             ->create()
         ;
 
-        $this->table('oauth_user_grants', ['primary_key' => ['user_id', 'grant_id']])
+        $this->table('oauth_user_grants', ['id' => false, 'primary_key' => ['user_id', 'grant_id']])
             ->addColumn('user_id', 'integer')
             ->addColumn('grant_id', 'integer')
             ->create()
         ;
 
-        $this->table('oauth_user_scopes', ['primary_key' => ['user_id', 'scope_id']])
+        $this->table('oauth_user_scopes', ['id' => false, 'primary_key' => ['user_id', 'scope_id']])
             ->addColumn('user_id', 'integer')
             ->addColumn('scope_id', 'integer')
             ->create()
@@ -65,7 +65,7 @@ class AuthMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('oauth_access_token_scopes', ['primary_key' => ['access_token_id', 'scope_id']])
+        $this->table('oauth_access_token_scopes', ['id' => false, 'primary_key' => ['access_token_id', 'scope_id']])
             ->addColumn('access_token_id', 'integer')
             ->addColumn('scope_id', 'integer')
             ->create()
@@ -91,7 +91,7 @@ class AuthMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('oauth_auth_code_scopes', ['primary_key' => ['auth_code_id', 'scope_id']])
+        $this->table('oauth_auth_code_scopes', ['id' => false, 'primary_key' => ['auth_code_id', 'scope_id']])
             ->addColumn('auth_code_id', 'integer')
             ->addColumn('scope_id', 'integer')
             ->create()

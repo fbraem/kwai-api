@@ -9,6 +9,7 @@ use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use Core\Responders\Responder;
+use Core\Responders\HTTPCodeResponder;
 
 use League\OAuth2\Server\Exception\OAuthServerException;
 
@@ -22,11 +23,18 @@ class AuthorityMiddleware implements MiddlewareInterface
             $server = $request->getAttribute('clubman.container')['resourceServer'];
             try {
                 $request = $server->validateAuthenticatedRequest($request);
-                $request = $request->withAttribute('clubman.user', $request->getAttribute('oauth_user_id'));
-            } catch(OAuthServerException $exception) {
+                $userId = $request->getAttribute('oauth_user_id');
+                $db = $request->getAttribute('clubman.container')['db'];
+                $users = (new \Domain\User\UsersTable($db))->whereId($userId)->find();
+                if (count($users) > 0) {
+                    $request = $request->withAttribute('clubman.user', reset($users));
+                } else {
+                    return (new HTTPResponder(new Responder(), 500, _('Unable to find user')))->respond();
+                }
+            } catch (OAuthServerException $exception) {
                 $response = (new Responder())->respond();
                 return $exception->generateHttpResponse($response);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $response = (new Responder())->respond();
                 return (new OAuthServerException($exception->getMessage(), 0, 'unknown_error', 500))
                     ->generateHttpResponse($response);

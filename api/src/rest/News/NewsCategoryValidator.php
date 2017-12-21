@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\News;
+namespace REST\News;
 
 use Zend\Validator\StringLength;
 
