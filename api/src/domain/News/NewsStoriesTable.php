@@ -18,6 +18,12 @@ class NewsStoriesTable implements NewsStoriesInterface
         $this->select = $this->table->getSql()->select();
     }
 
+    public function whereCategory($id)
+    {
+        $this->select->where(['category_id' => $id]);
+        return $this;
+    }
+
     public function whereFeatured()
     {
         $this->select->order('featured DESC');
@@ -141,5 +147,25 @@ class NewsStoriesTable implements NewsStoriesInterface
         $this->select->columns(['c' => new \Zend\Db\Sql\Expression('COUNT(id)')]);
         $resultSet = $this->table->selectWith($this->select);
         return (int) $resultSet->current()->c;
+    }
+
+    public function archive() : iterable
+    {
+        $archive = $this->table->getSql()->select();
+        $archive->columns([
+            'year' => new \Zend\Db\Sql\Expression('YEAR(publish_date)'),
+            'month' => new \Zend\Db\Sql\Expression('MONTH(publish_date)'),
+            'count' => new \Zend\Db\Sql\Expression('COUNT(id)')
+        ]);
+        $archive->where->equalTo('enabled', 1);
+        $archive->group(['year', 'month']);
+        $archive->order(['year DESC', 'month DESC']);
+
+        $result = [];
+        $resultSet = $this->table->selectWith($archive);
+        foreach ($resultSet as $row) {
+            $result[] = $row;
+        }
+        return $result;
     }
 }
