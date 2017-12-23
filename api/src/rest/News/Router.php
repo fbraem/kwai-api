@@ -31,5 +31,9 @@ class Router extends \Core\Router
         $this->map->patch('updateCategory', '/news/categories/{id}', \REST\News\Actions\UpdateCategoryAction::class)
             ->auth(['login' => true])
             ->accepts(['application/vnd.api+json']);
+
+        $this->map->get('archive', '/news/archive', \REST\News\Actions\ArchiveAction::class)
+            ->accepts(['application/vnd.api+json'])
+            ->extras(['format' => 'json']);
     }
 }
