@@ -21,6 +21,10 @@ class BrowseStoryAction implements \Core\ActionInterface
         $dbStories = new \Domain\News\NewsStoriesTable($db);
         $dbStories->orderByDate();
 
+        if (isset($parameters['filter']['category'])) {
+            $dbStories->whereCategory($parameters['filter']['category']);
+        }
+
         if (isset($parameters['filter']['year'])) {
             $dbStories->wherePublished($parameters['filter']['year'], $parameters['filter']['month'] ?? null);
         }
