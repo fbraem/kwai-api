@@ -61,6 +61,10 @@ class UpdateStoryAction implements \Core\ActionInterface
                 'category' => $category,
                 'publish_date' => $attributes['publish_date'],
                 'author' => $request->getAttribute('clubman.user'),
+                'end_date' => $attributes['end_date'] ?? null,
+                'featured' => $attributes['featured'] ?? 0,
+                'featured_end_date' => $attributes['featured_end_date'] ?? null,
+                'enabled' => $attributes['enabled'],
                 'contents' => $story->contents()
             ])
         );

@@ -50,7 +50,11 @@ class CreateStoryAction implements \Core\ActionInterface
         $story = new \Domain\News\NewsStory($db, [
             'category' => $category,
             'author' => $request->getAttribute('clubman.user'),
-            'publish_date' => $attributes['publish_date']
+            'publish_date' => $attributes['publish_date'],
+            'end_date' => $attributes['end_date'] ?? null,
+            'featured' => $attributes['featured'] ?? 0,
+            'featured_end_date' => $attributes['featured_end_date'] ?? null,
+            'enabled' => $attributes['enabled']
         ]);
         $story->store();
 
