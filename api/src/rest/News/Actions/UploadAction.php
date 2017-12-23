@@ -29,8 +29,9 @@ class UploadAction implements \Core\ActionInterface
         $config = $request->getAttribute('clubman.config');
 
         $id = $request->getAttribute('route.id');
-        $repository = new \Domain\News\NewsStoryRepository();
-        $story = $repository->find($id);
+        $db = $request->getAttribute('clubman.container')['db'];
+        $dbStories = new \Domain\News\NewsStoriesTable($db);
+        $story = $dbStories->whereId($id)->findOne();
         if (!$story) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
