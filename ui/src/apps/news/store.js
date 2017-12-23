@@ -235,7 +235,10 @@ const actions = {
         });
     },
     uploadImage(context, payload) {
-        return axios.post('/api/news/image/' + payload.story.id, payload.formData);
+        //return axios.post('/api/news/image/' + payload.story.id, payload.formData);
+        return oauth.post('/api/news/image/' + payload.story.id, {
+            data : payload.formData
+        });
     },
     embeddImage(context, payload) {
         return oauth.post('/api/news/embedded_image/' + payload.story.id, {
