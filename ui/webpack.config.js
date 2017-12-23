@@ -67,13 +67,6 @@ var config = {
             "window.jQuery" : "jquery"
         }),
 */
-        // Workaround to exclude moment.js locales
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-/*        new webpack.optimize.CommonsChunkPlugin({
-            name : 'vendor',
-            filename : "build/vendor.js"
-        }),
-*/
         new webpack.optimize.CommonsChunkPlugin({
             names : ['vendor', 'vue'],
             filename : "build/[name].js"
