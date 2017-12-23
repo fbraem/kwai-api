@@ -1,6 +1,6 @@
 <template>
     <v-layout>
-        <v-flex xs12 lg8 offset-lg2>
+        <v-flex xs12 lg10 offset-lg1>
             <v-card>
                 <v-card-media :src="require('./images/judokwaikemzeke.jpg')" height="500">
                     <v-container fill-height fluid>
