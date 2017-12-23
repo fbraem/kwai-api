@@ -22,6 +22,10 @@ class ParametersMiddleware implements MiddlewareInterface
         if ($pageParameters !== null) {
             $parameters['page'] = $pageParameters;
         }
+        $filterParameters = $this->getFilterParameters($queryParameters);
+        if ($filterParameters !== null) {
+            $parameters['filter'] = $filterParameters;
+        }
 
         $request = $request->withAttribute('parameters', $parameters);
 
@@ -30,12 +34,12 @@ class ParametersMiddleware implements MiddlewareInterface
 
     private function getPageParameters($parameters)
     {
-        $value = $this->getArrayParameter($parameters, 'page');
+        return $this->getArrayParameter($parameters, 'page');
     }
 
     private function getFilterParameters($parameters)
     {
-        $value = $this->getArrayParameter($parameters, 'filter');
+        return $this->getArrayParameter($parameters, 'filter');
     }
 
     private function getArrayParameter($parameters, $name)
