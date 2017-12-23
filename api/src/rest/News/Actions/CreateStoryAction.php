@@ -60,7 +60,7 @@ class CreateStoryAction implements \Core\ActionInterface
 
         $story->contents()->add(new \Domain\Content\Content($db, [
             'locale' => 'nl',
-            'format' => 'html',
+            'format' => 'md',
             'title' => $attributes['title'],
             'summary' => $attributes['summary'],
             'content' => $attributes['content'],
