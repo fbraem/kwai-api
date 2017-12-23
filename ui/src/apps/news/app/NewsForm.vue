@@ -49,14 +49,6 @@
                                 </v-text-field>
                             </v-flex>
                             <v-flex xs12>
-                                <vue-editor
-                                    v-model="form.story.content"
-                                    useCustomImageHandler
-                                    @imageAdded="handleEmbeddImage"
-                                    >
-                                </vue-editor>
-                            </v-flex>
-                            <v-flex xs12>
                                 <v-text-field
                                     name="content"
                                     v-model="form.story.content"
@@ -221,7 +213,7 @@
                 </v-layout>
                 <v-layout row wrap>
                     <v-flex xs12>
-                        <VueCroppie v-model="imageDetailCrop" :url="imageDetailURL" @result="cropDetailResult" :boundary="{ height : 400 }" :viewport="{ width: 800, height : 200 }"/>
+                        <VueCroppie v-model="imageDetailCrop" :url="imageDetailURL" @result="cropDetailResult" :boundary="{ height : 600 }" :viewport="{ width: 800, height : 400 }"/>
                     </v-flex>
                     <v-flex xs12>
                         <v-layout justify-center>
@@ -250,8 +242,6 @@
 <script>
     import Model from '@/js/model';
     import moment from 'moment';
-
-    import { VueEditor } from 'vue2-editor';
 
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
@@ -314,8 +304,7 @@
         },
         components : {
             DateField,
-            VueCroppie,
-            VueEditor
+            VueCroppie
         },
         data() {
             return {
@@ -495,22 +484,6 @@
             }
         },
         methods : {
-            handleEmbeddImage(file, editor, cursorLocation) {
-                var formData = new FormData();
-                formData.append('image', file);
-                this.$store.dispatch('newsModule/embeddImage', {
-                    story : {
-                        id : this.story.id
-                    },
-                    formData : formData
-                }).then((result) => {
-                    console.log(result);
-                    let url = result.data.url;
-                    editor.insertEmbed(cursorLocation, 'image', url);
-                }).catch((err) => {
-                    console.log(err);
-                });
-            },
             cropDetailResult(result) {
                 this.imageDetailPreview = result;
             },
@@ -565,7 +538,7 @@
                 if ( this.form.story.end_date ) {
                     var time = this.form.story.end_time;
                     if (time == null || time.length == 0) time = '00:00';
-                    model.addAttribute('end_date', this.form.story.end_date.input + " " + time + ":00");
+                    model.addAttribute('end_date', moment(this.form.story.end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00");
                 }
                 if (this.form.story.featured.length > 0 ) {
                     model.addAttribute('featured', this.form.story.featured);
@@ -573,7 +546,7 @@
                 if ( this.form.story.featured_end_date ) {
                     var time = this.form.story.featured_end_time;
                     if (time == null || time.length == 0) time = '00:00';
-                    model.addAttribute('featured_end_date', moment(this.form.story.featured_end_date, 'YYYY-MM-DD') + " " + time + ":00");
+                    model.addAttribute('featured_end_date', moment(this.form.story.featured_end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00");
                 }
             },
             submit() {
@@ -604,15 +577,17 @@
                     this.$store.dispatch('newsModule/update', this.story.serialize())
                         .then(() => {
                             this.$router.push('/read/' + this.story.id);
-                        }).catch(() => {
+                        }).catch(err => {
+                            console.log(err);
                         });
                 } else { // create
                     var story = new Model('news_stories');
                     this.fillModel(story);
                     this.$store.dispatch('newsModule/create', story.serialize())
                         .then(() => {
-                            this.$router.push('/read/' + this.story.id);
+                            this.$router.push('/read/' + story.id);
                         }).catch(err => {
+                            console.log(err);
                         });
                 }
             },
