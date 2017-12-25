@@ -26,7 +26,11 @@ class BrowseStoryAction implements \Core\ActionInterface
         }
 
         if (isset($parameters['filter']['year'])) {
-            $dbStories->wherePublished($parameters['filter']['year'], $parameters['filter']['month'] ?? null);
+            if (isset($parameters['filter']['month'])) {
+                $dbStories->wherePublishedYearMonth($parameters['filter']['year'], $parameters['filter']['month']);
+            } else {
+                $dbStories->wherePublishedYear($parameters['filter']['year']);
+            }
         }
 
         if (isset($parameters['filter']['featured'])) {

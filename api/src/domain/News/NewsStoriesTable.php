@@ -2,6 +2,9 @@
 
 namespace Domain\News;
 
+use \Zend\Db\Sql\Expression;
+use \Zend\Db\TableGateway\TableGateway;
+
 class NewsStoriesTable implements NewsStoriesInterface
 {
     private $db;
@@ -14,7 +17,7 @@ class NewsStoriesTable implements NewsStoriesInterface
     {
         $this->db = $db;
 
-        $this->table = new \Zend\Db\TableGateway\TableGateway('news_stories', $this->db);
+        $this->table = new TableGateway('news_stories', $this->db);
         $this->select = $this->table->getSql()->select();
     }
 
@@ -48,14 +51,19 @@ class NewsStoriesTable implements NewsStoriesInterface
             ->unnest();
     }
 
-    public function wherePublished(int $year, ?int $month = null)
+    public function wherePublishedYear(int $year)
     {
-        $this->select->where('YEAR(publish_date)', '=', $year);
-        if ($month) {
-            $this->select->where('MONTH(publish_date)', '=', $month);
-        }
+        $this->select->where->expression('YEAR(publish_date) = ?', $year);
         return $this;
     }
+
+    public function wherePublishedYearMonth(int $year, int $month)
+    {
+        $this->wherePublishedYear($year);
+        $this->select->where->expression('MONTH(publish_date) = ?', $month);
+        return $this;
+    }
+
 
     public function whereId($id)
     {
@@ -144,7 +152,7 @@ class NewsStoriesTable implements NewsStoriesInterface
 
     public function count() : int
     {
-        $this->select->columns(['c' => new \Zend\Db\Sql\Expression('COUNT(id)')]);
+        $this->select->columns(['c' => new Expression('COUNT(id)')]);
         $resultSet = $this->table->selectWith($this->select);
         return (int) $resultSet->current()->c;
     }
@@ -153,9 +161,9 @@ class NewsStoriesTable implements NewsStoriesInterface
     {
         $archive = $this->table->getSql()->select();
         $archive->columns([
-            'year' => new \Zend\Db\Sql\Expression('YEAR(publish_date)'),
-            'month' => new \Zend\Db\Sql\Expression('MONTH(publish_date)'),
-            'count' => new \Zend\Db\Sql\Expression('COUNT(id)')
+            'year' => new Expression('YEAR(publish_date)'),
+            'month' => new Expression('MONTH(publish_date)'),
+            'count' => new Expression('COUNT(id)')
         ]);
         $archive->where->equalTo('enabled', 1);
         $archive->group(['year', 'month']);

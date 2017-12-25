@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 import _ from 'lodash';
 import URI from 'urijs';
+import moment from 'moment';
 
 import JSONAPI from '@/js/JSONAPI';
 
@@ -19,7 +20,8 @@ const state = {
         loading : false,
         success : false,
         error : false
-    }
+    },
+    archive : {}
 };
 
 const getters = {
@@ -37,6 +39,9 @@ const getters = {
     },
     loading(state) {
         return state.status.loading;
+    },
+    archive(state) {
+        return state.archive;
     }
 };
 
@@ -55,6 +60,20 @@ const mutations = {
   },
   addCategory(state, data) {
       state.categories.unshift(data.category);
+  },
+  archive(state, data) {
+      state.archive = {};
+      data.forEach((element) => {
+          if (! state.archive[element.year]) {
+              state.archive[element.year] = [];
+          }
+          state.archive[element.year].push({
+              monthName : moment.months()[element.month - 1],
+              month : element.month,
+              year : element.year,
+              count : element.count
+          });
+      });
   },
   loading(state) {
       state.status = {
@@ -243,6 +262,18 @@ const actions = {
     embeddImage(context, payload) {
         return oauth.post('/api/news/embedded_image/' + payload.story.id, {
             data : payload.formData
+        });
+    },
+    loadArchive(context, payload) {
+        context.commit('loading');
+        return new Promise((resolve, reject) => {
+            oauth.get('api/news/archive', {
+            }).then((res) => {
+                context.commit('success');
+                context.commit('archive', res.data);
+            }).catch((error) => {
+                context.commit('error', error);
+            });
         });
     }
 };

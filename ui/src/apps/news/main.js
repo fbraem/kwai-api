@@ -82,6 +82,10 @@ const router = new VueRouter({
         {
             path : '/category/:category',
             component : NewsApp
+        },
+        {
+            path : '/archive/:year/:month',
+            component : NewsApp
         }
     ]
 });

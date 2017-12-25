@@ -57,6 +57,21 @@
                                             <v-card-title>
                                                 <div class="headline">{{ $t('archive') }}</div>
                                             </v-card-title>
+                                            <v-list dense>
+                                                <template v-for="(months, year) in archive">
+                                                    <v-subheader>{{ year }}</v-subheader>
+                                                    <v-list-tile @click="selectArchive(year, month.month)" v-for="(month) in months" key="month.month">
+                                                        <v-list-tile-content>
+                                                            {{ month.monthName }} {{ year }}
+                                                        </v-list-tile-content>
+                                                        <v-list-tile-action>
+                                                            <v-chip small color="primary" text-color="white">
+                                                                {{ month.count }}
+                                                            </v-chip>
+                                                        </v-list-tile-action>
+                                                    </v-list-tile>
+                                                </template>
+                                            </v-list>
                                         </v-card>
                                     </v-flex>
                                 </v-layout>
@@ -68,6 +83,11 @@
                                         <div class="category-description">
                                             {{ category.description }}
                                         </div>
+                                    </v-flex>
+                                </v-layout>
+                                <v-layout v-if="year && month">
+                                    <v-flex xs12>
+                                        <h1 class="display-1">{{ $t('archive_title', { monthName : monthName, year : year }) }}</h1>
                                     </v-flex>
                                 </v-layout>
                                 <v-layout v-if="noNews" row wrap>
@@ -84,7 +104,7 @@
                         </v-layout>
                         <v-layout>
                             <v-flex xs12>
-                                <v-btn v-if="$isAllowed('create')" color="primary" icon :to="'create'" fab>
+                                <v-btn v-if="$isAllowed('create')" color="primary" icon :to="'/create'" fab>
                                     <v-icon>fa-plus</v-icon>
                                 </v-btn>
                             </v-flex>
@@ -136,7 +156,7 @@
 </style>
 
 <script>
-    import URI from 'urijs';
+    import moment from 'moment';
     import NewsCard from './components/NewsCard.vue';
 
     export default {
@@ -167,10 +187,17 @@
                     return this.$store.getters['newsModule/category'](this.$route.params.category);
                 }
                 return null;
+            },
+            archive() {
+                return this.$store.getters['newsModule/archive'];
+            },
+            monthName() {
+                return moment.months()[this.month -1];
             }
           },
         created() {
             this.$store.dispatch('newsModule/getCategories');
+            this.$store.dispatch('newsModule/loadArchive');
             this.fetchData();
         },
         watch : {
@@ -187,6 +214,9 @@
             },
             selectCategory(id) {
                 this.$router.push('/category/' + id);
+            },
+            selectArchive(year, month) {
+                this.$router.push('/archive/' + year + '/' + month);
             }
         }
     };
