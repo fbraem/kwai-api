@@ -51,29 +51,32 @@ class OAuth
             opts.headers['Authorization'] = `Bearer ${this.access_token}`
         }
         opts.url = url;
-        return axios.request(opts)
-            .then((response) => {
-                return response;
-            }).catch((error) => {
-                if (error.response.status == 401 && !options.dontRetry) {
-                    if (this.refresh_token) {
-                        this.refreshToken().then((response) => {
-                            if (this.access_token) {
-                                opts.headers['Authorization'] = `Bearer ${this.access_token}`
-                                return axios.request(opts)
-                                .then((response) => {
-                                    return response;
-                                }).catch((error) => {
-                                    console.log(error.response);
-                                });
-                            }
-                            console.log('No access_token received?');
-                        }).catch((error) => {
-                            console.log(error);
-                        })
+        return new Promise((resolve, reject) => {
+            axios.request(opts)
+                .then((response) => {
+                    resolve(response);
+                }).catch((error) => {
+                    if (error.response.status == 401 && !options.dontRetry) {
+                        if (this.refresh_token) {
+                            this.refreshToken().then((response) => {
+                                if (this.access_token) {
+                                    opts.headers['Authorization'] = `Bearer ${this.access_token}`
+                                    return axios.request(opts)
+                                    .then((response) => {
+                                        resolve(response);
+                                    }).catch((error) => {
+                                        reject(error);
+                                    });
+                                }
+                                console.log('No access_token received?');
+                            }).catch((error) => {
+                                reject(error);
+                            })
+                        }
+                    } else {
+                        reject(error);
                     }
-                }
-                throw(error);
+                });
             });
     };
 
