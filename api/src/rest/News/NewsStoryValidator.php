@@ -23,7 +23,7 @@ class NewsStoryValidator implements \Core\ValidatorInterface
         );
         $this->validator->addValidator('data.attributes.featured', $featuredValidation);
 
-        $dateValidator = new Date(['format' => 'Y-m-d H:i:s']);
+        $dateValidator = new Date(['format' => 'Y-m-d H:i:s P']);
         $dateValidator->setMessage(
             _('Invalid date'),
             Date::INVALID_DATE

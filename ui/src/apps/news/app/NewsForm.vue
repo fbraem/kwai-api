@@ -465,6 +465,7 @@
             },
             error(nv) {
                 if (nv) {
+                    console.log(nv);
                     if ( nv.response.status == 422 ) {
                         nv.response.data.errors.forEach((item, index) => {
                             if ( item.source && item.source.pointer ) {
@@ -513,8 +514,8 @@
                 this.form.story.content = model.contents[0].content;
                 this.form.story.enabled = model.enabled == 1;
                 if (model.publish_date) {
-                    this.form.story.publish_date = moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L');
-                    this.form.story.publish_time = moment(model.publish_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                    this.form.story.publish_date = moment(model.publish_date).format('L');
+                    this.form.story.publish_time = moment(model.publish_date).format('HH:mm');
                 }
                 if (model.end_date) {
                     this.form.story.end_date = moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('L');
@@ -534,7 +535,7 @@
                 model.addAttribute('enabled', this.form.story.enabled);
                 model.addAttribute('remark', this.form.story.remark);
                 model.addRelation('category', new Model('category', this.form.story.category));
-                model.addAttribute('publish_date', moment(this.form.story.publish_date, 'L').format('YYYY-MM-DD') + " " + this.form.story.publish_time + ":00");
+                model.addAttribute('publish_date', moment(this.form.story.publish_date, 'L').format('YYYY-MM-DD') + " " + this.form.story.publish_time + ":00" + ' ' + moment().format('Z'));
                 if ( this.form.story.end_date ) {
                     var time = this.form.story.end_time;
                     if (time == null || time.length == 0) time = '00:00';

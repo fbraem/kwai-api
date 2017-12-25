@@ -47,10 +47,12 @@ class CreateStoryAction implements \Core\ActionInterface
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
+        $publisDate = new \Carbon\Carbon($attributes['publish_date']);
+
         $story = new \Domain\News\NewsStory($db, [
             'category' => $category,
             'author' => $request->getAttribute('clubman.user'),
-            'publish_date' => $attributes['publish_date'],
+            'publish_date' => $publisDate->toDateTimeString(),
             'end_date' => $attributes['end_date'] ?? null,
             'featured' => $attributes['featured'] ?? 0,
             'featured_end_date' => $attributes['featured_end_date'] ?? null,
