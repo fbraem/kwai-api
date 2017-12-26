@@ -10,8 +10,11 @@ class NewsStory implements NewsStoryInterface
     private $enabled;
     private $featured;
     private $featuredEndDate;
+    private $featureEndDateTimezone;
     private $publishDate;
+    private $publishDateTimezone;
     private $endDate;
+    private $endDateTimezone;
     private $remark;
     private $contents;
     private $category;
@@ -34,8 +37,11 @@ class NewsStory implements NewsStoryInterface
         $this->enabled = $data['enabled'] ?? 0;
         $this->featured = $data['featured'] ?? 0;
         $this->featuredEndDate = $data['featured_end_date'] ?? null;
+        $this->featuredEndDateTimezone = $data['featured_end_date_timezone'] ?? null;
         $this->publishDate = $data['publish_date'] ?? null;
+        $this->publishDateTimezone = $data['publish_date_timezone'] ?? null;
         $this->endDate = $data['end_date'] ?? null;
+        $this->endDateTimezone = $data['end_date_timezone'] ?? null;
         $this->remark = $data['remark'] ?? null;
         $this->contents = $data['contents'] ?? null;
         $this->category = $data['category'] ?? null;
@@ -49,10 +55,13 @@ class NewsStory implements NewsStoryInterface
         return [
             'id' => $this->id(),
             'publish_date' => $this->publishDate(),
+            'publish_date_timezone' => $this->publishDateTimezone(),
             'enabled' => $this->enabled(),
             'featured' => $this->featured(),
             'featured_end_date' => $this->featuredEndDate(),
+            'featured_end_date_timezone' => $this->featuredEndDateTimezone(),
             'end_date' => $this->endDate(),
+            'end_date_timezone' => $this->endDateTimezone(),
             'remark' => $this->remark(),
             'created_at' => $this->createdAt(),
             'updated_at' => $this->updatedAt()
@@ -136,5 +145,20 @@ class NewsStory implements NewsStoryInterface
     public function author()
     {
         return $this->author;
+    }
+
+    public function featuredEndDateTimezone() : ?string
+    {
+        return $this->featuredEndDateTimezone;
+    }
+
+    public function endDateTimezone() : ?string
+    {
+        return $this->endDateTimezone;
+    }
+
+    public function publishDateTimezone() : ?string
+    {
+        return $this->publishDateTimezone;
     }
 }

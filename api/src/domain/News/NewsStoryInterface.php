@@ -7,8 +7,11 @@ interface NewsStoryInterface extends \Domain\DatetimeMetaInterface, \Domain\Hydr
     public function enabled() : bool;
     public function featured() : int;
     public function featuredEndDate() : ?string;
+    public function featuredEndDateTimezone() : ?string;
     public function publishDate() : ?string;
+    public function publishDateTimezone() : ?string;
     public function endDate() : ?string;
+    public function endDateTimezone() : ?string;
     public function remark() : ?string;
     public function contents() : ?NewsContent;
     public function category();

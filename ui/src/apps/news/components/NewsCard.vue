@@ -118,10 +118,12 @@
                 return "";
             },
             publishDate() {
-                return moment(this.story.publish_date).format('L');
+                var utc = moment.utc(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss');
+                return utc.local().format('L');
             },
             publishDateFromNow() {
-                return moment(this.story.publish_date).fromNow();
+                var utc = moment.utc(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss');
+                return utc.local().fromNow();
             },
             authorName() {
                 var author = this.story.author;

@@ -535,7 +535,8 @@
                 model.addAttribute('enabled', this.form.story.enabled);
                 model.addAttribute('remark', this.form.story.remark);
                 model.addRelation('category', new Model('category', this.form.story.category));
-                model.addAttribute('publish_date', moment(this.form.story.publish_date, 'L').format('YYYY-MM-DD') + " " + this.form.story.publish_time + ":00" + ' ' + moment().format('Z'));
+                model.addAttribute('publish_date', moment(moment(this.form.story.publish_date, 'L').format('YYYY-MM-DD') + " " + this.form.story.publish_time + ":00").utc().format('YYYY-MM-DD HH:mm:ss'));
+                model.addAttribute('publish_date_timezone', 'Europe/Brussels');
                 if ( this.form.story.end_date ) {
                     var time = this.form.story.end_time;
                     if (time == null || time.length == 0) time = '00:00';
@@ -585,8 +586,8 @@
                     var story = new Model('news_stories');
                     this.fillModel(story);
                     this.$store.dispatch('newsModule/create', story.serialize())
-                        .then(() => {
-                            this.$router.push('/read/' + story.id);
+                        .then((newStory) => {
+                            this.$router.push('/read/' + newStory.id);
                         }).catch(err => {
                             console.log(err);
                         });
