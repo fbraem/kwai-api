@@ -515,17 +515,23 @@
                 this.form.story.content = model.contents[0].content;
                 this.form.story.enabled = model.enabled == 1;
                 if (model.publish_date) {
-                    this.form.story.publish_date = moment(model.publish_date).format('L');
-                    this.form.story.publish_time = moment(model.publish_date).format('HH:mm');
+                    var utc = moment.utc(model.publish_date, 'YYYY-MM-DD HH:mm:ss');
+                    var publishDate = utc.local();
+                    this.form.story.publish_date = moment(publishDate).format('L');
+                    this.form.story.publish_time = moment(publishDate).format('HH:mm');
                 }
                 if (model.end_date) {
-                    this.form.story.end_date = moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('L');
-                    this.form.story.end_time = moment(model.end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                    var utc = moment.utc(model.end_date, 'YYYY-MM-DD HH:mm:ss');
+                    var endDate = utc.local();
+                    this.form.story.end_date = moment(endDate, 'YYYY-MM-DD HH:mm:ss').format('L');
+                    this.form.story.end_time = moment(endDate, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
                 }
                 this.form.story.featured = model.featured;
                 if (model.featured_end_date) {
-                    this.form.story.featured_end_date = moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('L');
-                    this.form.story.featured_end_time = moment(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                    var utc = moment.utc(model.featured_end_date, 'YYYY-MM-DD HH:mm:ss');
+                    var featuredEndDate = utc.local();
+                    this.form.story.featured_end_date = moment(featuredEndDate, 'YYYY-MM-DD HH:mm:ss').format('L');
+                    this.form.story.featured_end_time = moment(featuredEndDate, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
                 }
                 this.form.story.remark = model.remark;
             },
