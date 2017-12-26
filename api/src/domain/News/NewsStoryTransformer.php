@@ -23,11 +23,6 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     {
         $result = $story->extract();
 
-        $publishDate = new \Carbon\Carbon($result['publish_date'], 'UTC');
-        //$publishDate->timezone($result['publish_date_timezone']);
-        $result['publish_date'] = $publishDate->toDateTimeString();
-        $result['created_at'] = (new \Carbon\Carbon($result['created_at']))->toIso8601String();
-
         if ($this->filesystem) {
             $images = $this->filesystem->listContents('images/news/' . $story->id());
             foreach ($images as $image) {
