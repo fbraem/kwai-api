@@ -184,6 +184,11 @@ class NewsStoriesTable implements NewsStoriesInterface
             ->isNull('end_date')
             ->or
             ->greaterThan('end_date', \Carbon\Carbon::now('UTC')->toDateTimeString())
+            ->unnest()
+            ->nest()
+            ->isNull('publish_date')
+            ->or
+            ->lessThanOrEqualTo('publish_date', \Carbon\Carbon::now('UTC')->toDateTimeString())
             ->unnest();
         $archive->group(['year', 'month']);
         $archive->order(['year DESC', 'month DESC']);
