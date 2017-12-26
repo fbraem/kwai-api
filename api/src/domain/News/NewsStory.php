@@ -114,17 +114,26 @@ class NewsStory implements NewsStoryInterface
 
     public function featuredEndDate() : ?string
     {
-        return $this->featuredEndDate;
+        if ($this->featuredEndDate) {
+            $featuredEndDate = new \Carbon\Carbon($this->featuredEndDate, 'UTC');
+            return $featuredEndDate->toDateTimeString();
+        }
+        return null;
     }
 
     public function publishDate() : ?string
     {
-        return $this->publishDate;
+        $publishDate = new \Carbon\Carbon($this->publishDate, 'UTC');
+        return $publishDate->toDateTimeString();
     }
 
     public function endDate() : ?string
     {
-        return $this->endDate;
+        if ($this->endDate) {
+            $endDate = new \Carbon\Carbon($this->endDate, 'UTC');
+            return $endDate->toDateTimeString();
+        }
+        return null;
     }
 
     public function remark() : ?string
