@@ -118,10 +118,10 @@
                 return "";
             },
             publishDate() {
-                return moment(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss').format('L');
+                return moment(this.story.publish_date).format('L');
             },
             publishDateFromNow() {
-                return moment(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss').fromNow();
+                return moment(this.story.publish_date).fromNow();
             },
             authorName() {
                 var author = this.story.author;
