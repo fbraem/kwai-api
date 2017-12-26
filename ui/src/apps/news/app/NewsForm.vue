@@ -242,6 +242,7 @@
 <script>
     import Model from '@/js/model';
     import moment from 'moment';
+    import 'moment-timezone';
 
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
@@ -536,7 +537,7 @@
                 model.addAttribute('remark', this.form.story.remark);
                 model.addRelation('category', new Model('category', this.form.story.category));
                 model.addAttribute('publish_date', moment(moment(this.form.story.publish_date, 'L').format('YYYY-MM-DD') + " " + this.form.story.publish_time + ":00").utc().format('YYYY-MM-DD HH:mm:ss'));
-                model.addAttribute('publish_date_timezone', 'Europe/Brussels');
+                model.addAttribute('publish_date_timezone', moment.tz.guess());
                 if ( this.form.story.end_date ) {
                     var time = this.form.story.end_time;
                     if (time == null || time.length == 0) time = '00:00';
