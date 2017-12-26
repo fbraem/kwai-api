@@ -160,6 +160,7 @@ const actions = {
                 story : result.data
             });
             context.commit('success');
+            return result.data;
         }).catch((error) => {
             context.commit('error', error);
         });
