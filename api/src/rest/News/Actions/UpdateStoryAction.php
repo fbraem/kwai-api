@@ -65,7 +65,10 @@ class UpdateStoryAction implements \Core\ActionInterface
                 'featured' => $attributes['featured'] ?? 0,
                 'featured_end_date' => $attributes['featured_end_date'] ?? null,
                 'enabled' => $attributes['enabled'],
-                'contents' => $story->contents()
+                'contents' => $story->contents(),
+                'publish_date_timezone' => $attributes['publish_date_timezone'] ?? null,
+                'end_date_timezone' => $attributes['end_date_timezone'] ?? null,
+                'featured_date_timezone' => $attributes['featured_date_timezone'] ?? null,
             ])
         );
         $story->store();
