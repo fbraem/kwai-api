@@ -7,7 +7,10 @@ export default {
         archive_title : "Archief van {monthName} {year}",
         clear : "Herbegin",
         published : "Geschreven op {publishDate} - {publishDateFromNow}",
-        no_news : "Er zijn geen nieuwsberichten"
+        no_news : "Er zijn geen nieuwsberichten",
+        sure_to_delete : "Ben je zeker dat je dit nieuwsbericht wil verwijderen?",
+        delete : "Verwijder",
+        cancel : "Annuleer"
     },
     en : {
         news : "News",
@@ -17,6 +20,9 @@ export default {
         archive_title : "Archive of {monthName} {year}",
         clear : "Clear",
         published : "Published on {publishDate} - {publishDateFromNow}",
-        no_news : "There are no newsstories"
+        no_news : "There are no newsstories",
+        sure_to_delete : "Are you sure to delete this newsstory?",
+        delete : "Delete",
+        cancel : "Cancel"
     }
 };

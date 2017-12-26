@@ -55,6 +55,11 @@ const mutations = {
   addStory(state, data) {
       state.stories.unshift(data.story);
   },
+  deleteStory(state, data) {
+      state.stories = _.remove(state.stories, (story) => {
+         return story.id == data.id;
+      });
+  },
   categories(state, data) {
       state.categories = data.categories;
   },
@@ -176,6 +181,20 @@ const actions = {
                 context.commit('modifyStory', {
                     story : result.data
                 });
+                context.commit('success');
+                resolve();
+            }).catch((error) => {
+                context.commit('error', error);
+                reject();
+            });
+        });
+    },
+    delete(context, payload) {
+        context.commit('loading');
+        return new Promise((resolve, reject) => {
+            oauth.delete('api/news/stories/' + payload.id)
+            .then((res) => {
+                context.commit('deleteStory', { id : payload.id });
                 context.commit('success');
                 resolve();
             }).catch((error) => {

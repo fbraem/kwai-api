@@ -16,6 +16,9 @@ class Router extends \Core\Router
         $this->map->patch('updateStory', '/news/stories/{id}', \REST\News\Actions\UpdateStoryAction::class)
             ->auth(['login' => true])
             ->accepts(['application/vnd.api+json']);
+        $this->map->delete('deleteStory', '/news/stories/{id}', \REST\News\Actions\DeleteStoryAction::class)
+            ->auth(['login' => true])
+            ->accepts(['application/vnd.api+json']);
         $this->map->post('upload', '/news/image/{id}', \REST\News\Actions\UploadAction::class)
             ->auth(['login' => true]);
         $this->map->post('uploadEmbeddImage', '/news/embedded_image/{id}', \REST\News\Actions\UploadEmbeddedAction::class)

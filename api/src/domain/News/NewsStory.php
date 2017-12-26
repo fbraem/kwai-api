@@ -97,6 +97,12 @@ class NewsStory implements NewsStoryInterface
         }
     }
 
+    public function delete()
+    {
+        $table = new \Zend\Db\TableGateway\TableGateway('news_stories', $this->db);
+        $table->delete(['id' => $this->id()]);
+    }
+
     public function id() : ?int
     {
         return $this->id;

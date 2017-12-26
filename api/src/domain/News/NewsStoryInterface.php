@@ -18,4 +18,5 @@ interface NewsStoryInterface extends \Domain\DatetimeMetaInterface, \Domain\Hydr
     public function author();
 
     public function store();
+    public function delete();
 }
