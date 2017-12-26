@@ -19,25 +19,25 @@ class OAuth
     get(url, options) {
         var opt = options || Object.create(null);
         opt.method = 'get';
-        return this.call(url, options);
+        return this.call(url, opt);
     }
 
     post(url, options) {
         var opt = options || Object.create(null);
         opt.method = 'post';
-        return this.call(url, options);
+        return this.call(url, opt);
     }
 
     patch(url, options) {
         var opt = options || Object.create(null);
         opt.method = 'patch';
-        return this.call(url, options);
+        return this.call(url, opt);
     }
 
     delete(url, options) {
         var opt = options || Object.create(null);
         opt.method = 'delete';
-        return this.call(url, options);
+        return this.call(url, opt);
     }
 
     call(url, options) {
