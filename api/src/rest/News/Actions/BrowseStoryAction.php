@@ -41,6 +41,9 @@ class BrowseStoryAction implements \Core\ActionInterface
         if ($request->getAttribute('clubman.user') == null || $parameters['filter']['enabled'] == 1) {
             $dbStories->whereAllowedToSee();
         }
+
+        $dbStories->whereNotEnded();
+
         $count = $dbStories->count();
 
         $limit = $parameters['page']['limit'] ?? 10;
