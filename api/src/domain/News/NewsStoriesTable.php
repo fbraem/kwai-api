@@ -35,7 +35,7 @@ class NewsStoriesTable implements NewsStoriesInterface
             ->nest()
             ->isNull('featured_end_date')
             ->or
-            ->greaterThan('featured_end_date', \Carbon\Carbon::now()->toDateTimeString())
+            ->greaterThan('featured_end_date', \Carbon\Carbon::now('UTC')->toDateTimeString())
             ->unnest();
         return $this;
     }
@@ -47,7 +47,7 @@ class NewsStoriesTable implements NewsStoriesInterface
             ->nest()
             ->isNull('publish_date')
             ->or
-            ->lessThanOrEqualTo('publish_date', \Carbon\Carbon::now()->toDateTimeString())
+            ->lessThanOrEqualTo('publish_date', \Carbon\Carbon::now('UTC')->toDateTimeString())
             ->unnest();
     }
 
