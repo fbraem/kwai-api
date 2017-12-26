@@ -51,6 +51,16 @@ class NewsStoriesTable implements NewsStoriesInterface
             ->unnest();
     }
 
+    public function whereNotEnded()
+    {
+        $this->select->where
+            ->nest()
+            ->isNull('end_date')
+            ->or
+            ->greaterThan('end_date', \Carbon\Carbon::now('UTC')->toDateTimeString())
+            ->unnest();
+    }
+
     public function wherePublishedYear(int $year)
     {
         $this->select->where->expression('YEAR(publish_date) = ?', $year);
@@ -169,6 +179,12 @@ class NewsStoriesTable implements NewsStoriesInterface
             'count' => new Expression('COUNT(id)')
         ]);
         $archive->where->equalTo('enabled', 1);
+        $archive->where
+            ->nest()
+            ->isNull('end_date')
+            ->or
+            ->greaterThan('end_date', \Carbon\Carbon::now('UTC')->toDateTimeString())
+            ->unnest();
         $archive->group(['year', 'month']);
         $archive->order(['year DESC', 'month DESC']);
 
