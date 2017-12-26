@@ -541,7 +541,8 @@
                 if ( this.form.story.end_date ) {
                     var time = this.form.story.end_time;
                     if (time == null || time.length == 0) time = '00:00';
-                    model.addAttribute('end_date', moment(this.form.story.end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00");
+                    model.addAttribute('end_date', moment(moment(this.form.story.end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00").utc().format('YYYY-MM-DD HH:mm:ss'));
+                    model.addAttribute('end_date_timezone', moment.tz.guess());
                 }
                 if (this.form.story.featured.length > 0 ) {
                     model.addAttribute('featured', this.form.story.featured);
@@ -549,7 +550,8 @@
                 if ( this.form.story.featured_end_date ) {
                     var time = this.form.story.featured_end_time;
                     if (time == null || time.length == 0) time = '00:00';
-                    model.addAttribute('featured_end_date', moment(this.form.story.featured_end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00");
+                    model.addAttribute('featured_end_date', moment(moment(this.form.story.featured_end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00").utc().format('YYYY-MM-DD HH:mm:ss'));
+                    model.addAttribute('featured_date_timezone', moment.tz.guess());
                 }
             },
             submit() {
