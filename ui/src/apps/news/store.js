@@ -49,11 +49,8 @@ const mutations = {
   stories(state, data) {
       state.stories = data.stories;
   },
-  modifyStory(state, data) {
+  setStory(state, data) {
       state.stories = _.unionBy([data.story], state.stories, 'id');
-  },
-  addStory(state, data) {
-      state.stories.unshift(data.story);
   },
   deleteStory(state, data) {
       state.stories = _.remove(state.stories, (story) => {
@@ -146,7 +143,7 @@ const actions = {
         }).then((res) => {
             var api = new JSONAPI();
             var result = api.parse(res.data);
-            context.commit('addStory', {
+            context.commit('setStory', {
                 story : result.data
             });
             context.commit('success');
@@ -161,7 +158,7 @@ const actions = {
         }).then((res) => {
             var api = new JSONAPI();
             var result = api.parse(res.data);
-            context.commit('addStory', {
+            context.commit('setStory', {
                 story : result.data
             });
             context.commit('success');
@@ -178,7 +175,7 @@ const actions = {
             }).then((res) => {
                 var api = new JSONAPI();
                 var result = api.parse(res.data);
-                context.commit('modifyStory', {
+                context.commit('setStory', {
                     story : result.data
                 });
                 context.commit('success');
