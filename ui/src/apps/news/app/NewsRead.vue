@@ -1,6 +1,6 @@
 <template>
     <v-layout>
-        <v-flex xs12 md6 offset-md3>
+        <v-flex xs12>
             <NewsCard v-if="story" :story="story" :complete="true" />
         </v-flex>
     </v-layout>

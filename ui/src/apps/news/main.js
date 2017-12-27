@@ -44,6 +44,7 @@ Vue.use(VueExtendLayout);
 import NewsApp from './App.vue';
 import NewsCreate from './app/NewsCreate.vue';
 import NewsUpdate from './app/NewsUpdate.vue';
+import NewsBrowse from './app/NewsBrowse.vue';
 import NewsRead from './app/NewsRead.vue';
 import NewsDelete from './app/NewsDelete.vue';
 import CategoryCreate from './app/CategoryCreate.vue';
@@ -55,10 +56,27 @@ const router = new VueRouter({
         {
             path : '/',
             component : NewsApp,
-        },
-        {
-            path : '/read/:id',
-            component : NewsRead
+            children: [
+                {
+                    path : 'story/:id',
+                    component : NewsRead,
+                    props : true
+                },
+                {
+                    path : 'category/:category_id',
+                    component : NewsBrowse,
+                    props : true
+                },
+                {
+                    path : 'archive/:year/:month',
+                    component : NewsBrowse,
+                    props : true
+                },
+                {
+                    path : '',
+                    component : NewsBrowse
+                }
+            ]
         },
         {
             path : '/create',
@@ -83,14 +101,6 @@ const router = new VueRouter({
         {
             path : '/category/update/:id',
             component : CategoryUpdate
-        },
-        {
-            path : '/category/:category',
-            component : NewsApp
-        },
-        {
-            path : '/archive/:year/:month',
-            component : NewsApp
         }
     ]
 });

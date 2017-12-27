@@ -44,7 +44,7 @@
             </div>
         </v-card-text>
         <v-card-actions>
-            <v-btn v-if="!complete && content.length > 0" icon :to="'/read/' + story.id" flat>
+            <v-btn v-if="!complete && content.length > 0" icon :to="'/story/' + story.id" flat>
                 <v-icon>fa-ellipsis-h</v-icon>
             </v-btn>
             <v-btn v-if="complete" icon :to="'/'" flat>

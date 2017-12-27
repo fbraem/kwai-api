@@ -77,29 +77,7 @@
                                 </v-layout>
                             </v-flex>
                             <v-flex xs12 sm8 md9>
-                                <v-layout v-if="category">
-                                    <v-flex xs12>
-                                        <h1 class="display-1">{{ category.name }}</h1>
-                                        <div class="category-description">
-                                            {{ category.description }}
-                                        </div>
-                                    </v-flex>
-                                </v-layout>
-                                <v-layout v-if="year && month">
-                                    <v-flex xs12>
-                                        <h1 class="display-1">{{ $t('archive_title', { monthName : monthName, year : year }) }}</h1>
-                                    </v-flex>
-                                </v-layout>
-                                <v-layout v-if="noNews" row wrap>
-                                    <v-flex xs12>
-                                        {{ $t('no_news') }}
-                                    </v-flex>
-                                </v-layout>
-                                <v-layout row wrap>
-                                    <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md5 lg4>
-                                        <NewsCard :story="story" :complete="false" />
-                                    </v-flex>
-                                </v-layout>
+                                <router-view></router-view>
                             </v-flex>
                         </v-layout>
                         <v-layout>
@@ -157,61 +135,24 @@
 
 <script>
     import moment from 'moment';
-    import NewsCard from './components/NewsCard.vue';
 
     export default {
-        components : {
-            NewsCard
-        },
-        data() {
-            return {
-                year : null,
-                month : null
-            };
-        },
         computed : {
-            stories() {
-                return this.$store.state.newsModule.stories;
-            },
-            noNews() {
-                return !this.stories || this.stories.length == 0;
-            },
             categories() {
                 return this.$store.getters['newsModule/categories']
             },
             backgroundImage() {
                 return require('./images/news.jpg');
             },
-            category() {
-                if (this.$route.params.category) {
-                    return this.$store.getters['newsModule/category'](this.$route.params.category);
-                }
-                return null;
-            },
             archive() {
                 return this.$store.getters['newsModule/archive'];
-            },
-            monthName() {
-                return moment.months()[this.month -1];
             }
           },
         created() {
             this.$store.dispatch('newsModule/getCategories');
             this.$store.dispatch('newsModule/loadArchive');
-            this.fetchData();
-        },
-        watch : {
-            '$route'() {
-                this.fetchData();
-            }
         },
         methods : {
-            fetchData() {
-                this.$store.dispatch('newsModule/browse', this.$route.params);
-                this.year = this.$route.params.year;
-                this.month = this.$route.params.month;
-                this.year = this.$route.params.year;
-            },
             selectCategory(id) {
                 this.$router.push('/category/' + id);
             },

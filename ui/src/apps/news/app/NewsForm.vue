@@ -587,7 +587,7 @@
                     this.fillModel(this.story);
                     this.$store.dispatch('newsModule/update', this.story.serialize())
                         .then(() => {
-                            this.$router.push('/read/' + this.story.id);
+                            this.$router.push('/story/' + this.story.id);
                         }).catch(err => {
                             console.log(err);
                         });
@@ -596,7 +596,7 @@
                     this.fillModel(story);
                     this.$store.dispatch('newsModule/create', story.serialize())
                         .then((newStory) => {
-                            this.$router.push('/read/' + newStory.id);
+                            this.$router.push('/story/' + newStory.id);
                         }).catch(err => {
                             console.log(err);
                         });
