@@ -11,4 +11,5 @@ interface ContentInterface extends \Domain\DatetimeMetaInterface, \Domain\Hydrat
     public function content() : string;
 
     public function store();
+    public function delete();
 }

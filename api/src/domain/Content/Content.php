@@ -74,6 +74,12 @@ class Content implements ContentInterface
         }
     }
 
+    public function delete()
+    {
+        $table = new \Zend\Db\TableGateway\TableGateway('contents', $this->db);
+        $table->delete(['id' => $this->id()]);
+    }
+
     public function id() : ?int
     {
         return $this->id;

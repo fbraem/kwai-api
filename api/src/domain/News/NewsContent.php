@@ -51,4 +51,16 @@ class NewsContent implements NewsContentInterface
             ]);
         }
     }
+
+    public function delete()
+    {
+        $contentablesTable = new \Zend\Db\TableGateway\TableGateway('contentables', $this->db);
+        foreach ($this->contents as $content) {
+            $contentablesTable->delete([
+                'content_id' => $content->id(),
+                'contentable_id' => $this->newsId,
+            ]);
+            $content->delete();
+        }
+    }
 }

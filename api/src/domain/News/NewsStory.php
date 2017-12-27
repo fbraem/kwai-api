@@ -100,6 +100,7 @@ class NewsStory implements NewsStoryInterface
     public function delete()
     {
         $table = new \Zend\Db\TableGateway\TableGateway('news_stories', $this->db);
+        $this->contents->delete();
         $table->delete(['id' => $this->id()]);
     }
 

@@ -9,4 +9,5 @@ interface NewsContentInterface
     public function add(\Domain\Content\Content $content);
 
     public function store();
+    public function delete();
 }
