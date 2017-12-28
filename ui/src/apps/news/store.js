@@ -53,8 +53,8 @@ const mutations = {
       state.stories = _.unionBy([data.story], state.stories, 'id');
   },
   deleteStory(state, data) {
-      state.stories = _.remove(state.stories, (story) => {
-         return story.id == data.id;
+      state.stories = _.filter(state.stories, (story) => {
+         return story.id != data.id;
       });
   },
   categories(state, data) {
