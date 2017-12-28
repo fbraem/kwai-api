@@ -40,6 +40,12 @@ const getters = {
     loading(state) {
         return state.status.loading;
     },
+    success(state) {
+        return state.status.success;
+    },
+    error(state) {
+        return state.status.error;
+    },
     archive(state) {
         return state.archive;
     }
