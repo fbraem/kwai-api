@@ -3,8 +3,8 @@
         <v-layout>
             <v-flex xs12>
                 <NewsCard v-if="story" :story="story" :complete="true" @delete="areYouSure(story.id)" />
-                <v-alert v-if="!story && !loading" color="error" value="true">
-                    The story you are looking for doesn't exist!
+                <v-alert v-if="!story && !loading" color="error" value="true" icon="fa-exclamation-triangle">
+                    {{ $t('not_found') }}
                 </v-alert>
             </v-flex>
         </v-layout>
