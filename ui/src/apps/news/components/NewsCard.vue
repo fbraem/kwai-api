@@ -54,7 +54,7 @@
             <v-btn v-if="$isAllowed('update', story)" color="secondary" icon :to="'/update/' + story.id" flat>
                 <v-icon>fa-edit</v-icon>
             </v-btn>
-            <v-btn v-if="$isAllowed('remove', story)" color="secondary" icon :to="'/delete/' + story.id" flat>
+            <v-btn v-if="$isAllowed('remove', story)" color="secondary" icon @click="$emit('delete')" flat>
                 <v-icon>fa-trash</v-icon>
             </v-btn>
         </v-card-actions>

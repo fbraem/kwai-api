@@ -46,7 +46,6 @@ import NewsCreate from './app/NewsCreate.vue';
 import NewsUpdate from './app/NewsUpdate.vue';
 import NewsBrowse from './app/NewsBrowse.vue';
 import NewsRead from './app/NewsRead.vue';
-import NewsDelete from './app/NewsDelete.vue';
 import CategoryCreate from './app/CategoryCreate.vue';
 import CategoryUpdate from './app/CategoryUpdate.vue';
 import CategoryRead from './app/CategoryRead.vue';
@@ -85,10 +84,6 @@ const router = new VueRouter({
         {
             path : '/update/:id',
             component : NewsUpdate
-        },
-        {
-            path : '/delete/:id',
-            component : NewsDelete
         },
         {
             path : '/category/create',
