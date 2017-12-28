@@ -10,8 +10,6 @@ use Core\Responders\Responder;
 use Core\Responders\HTTPCodeResponder;
 use Core\Responders\NotFoundResponder;
 
-use League\Fractal;
-
 class DeleteStoryAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
@@ -26,6 +24,10 @@ class DeleteStoryAction implements \Core\ActionInterface
         }
 
         $story->delete();
+
+        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
+        $folder = 'images/news/' . $id;
+        $filesystem->deleteDir($folder);
 
         return (new HTTPCodeResponder(new Responder(), 200))->respond();
     }
