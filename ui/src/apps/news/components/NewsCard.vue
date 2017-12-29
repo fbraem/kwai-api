@@ -140,7 +140,6 @@
             },
             isNew() {
                 var utc = moment.utc(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss');
-                console.log(moment().diff(utc.local(), 'weeks'));
                 return moment().diff(utc.local(), 'weeks') < 1;
             },
             authorName() {
