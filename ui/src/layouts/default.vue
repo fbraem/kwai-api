@@ -4,7 +4,10 @@
         </v-navigation-drawer>
         <v-toolbar class="red" dark app>
             <v-toolbar-side-icon @click.stop="clickDrawer"></v-toolbar-side-icon>
-            <v-toolbar-title>JudoKwai Kemzeke</v-toolbar-title>
+            <v-toolbar-title>
+                {{ title }}
+                <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
+            </v-toolbar-title>
             <v-spacer></v-spacer>
             <login></login>
             <v-btn icon href="/">
@@ -25,6 +28,8 @@
 <script>
   import Login from '@/apps/auth/components/login.vue';
 
+  import config from 'config';
+
   export default {
       name : 'default',
       components : {
@@ -34,6 +39,22 @@
           return {
               drawer : false
           };
+      },
+      computed : {
+          title() {
+              return this.$store.getters['title'];
+          },
+          subTitle() {
+              return this.$store.getters['subTitle'];
+          }
+      },
+      created() {
+        document.title = this.title;
+      },
+      watch : {
+          title(nv) {
+              document.title = nv;
+          }
       },
       methods : {
           clickDrawer() {

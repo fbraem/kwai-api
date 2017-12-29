@@ -149,6 +149,7 @@
             }
           },
         created() {
+            this.$store.dispatch('setSubTitle', this.$t('news'));
             this.$store.dispatch('newsModule/getCategories');
             this.$store.dispatch('newsModule/loadArchive');
         },

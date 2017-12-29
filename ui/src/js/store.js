@@ -5,6 +5,8 @@ Vue.use(Vuex);
 
 import Lockr from 'lockr';
 
+import config from 'config';
+
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
 
@@ -14,6 +16,10 @@ import JSONAPI from './JSONAPI';
 const state = {
     user : {
         authenticated : oauth.isAuthenticated()
+    },
+    page : {
+        title : config.title,
+        subTitle : ""
     },
     status : {
         loading : false,
@@ -26,6 +32,12 @@ const getters = {
     user(state) {
         return state.user;
     },
+    title(state) {
+        return state.page.title;
+    },
+    subTitle(state) {
+        return state.page.subTitle;
+    },
     loading(state) {
         return state.status.loading;
     }
@@ -34,6 +46,12 @@ const getters = {
 const mutations = {
     authenticated(state, sw) {
         state.user.authenticated = sw;
+    },
+    title(state, text) {
+        state.page.title = text;
+    },
+    subTitle(state, text) {
+        state.page.subTitle = text;
     },
     loading(state) {
         state.status = {
@@ -74,6 +92,12 @@ const actions = {
     logout(context) {
         oauth.logout();
         context.commit('authenticated', false);
+    },
+    setTitle(context, text) {
+        context.commit('title', text);
+    },
+    setSubTitle(context, text) {
+        context.commit('subTitle', text);
     }
 };
 
