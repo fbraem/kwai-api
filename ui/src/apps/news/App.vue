@@ -82,7 +82,7 @@
                         </v-layout>
                         <v-layout>
                             <v-flex xs12>
-                                <v-btn v-if="$isAllowed('create')" color="primary" icon :to="'/create'" fab>
+                                <v-btn v-if="$isAllowed('create')" color="primary" icon :to="'/create'" fab small>
                                     <v-icon>fa-plus</v-icon>
                                 </v-btn>
                             </v-flex>
