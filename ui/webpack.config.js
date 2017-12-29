@@ -5,6 +5,8 @@ function resolve(dir) {
     return path.join(__dirname, '..', dir);
 }
 
+var environment = process.argv.indexOf('-p') !== -1 ? 'production' : 'development';
+
 var config = {
     entry : {
         "vendor" : [
@@ -26,7 +28,7 @@ var config = {
         loaders : [
             { test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader'
+                loader: 'babel-loader?presets[]=es2015'
             },
             { test: /\.vue$/,
                 loader: "vue-loader"
@@ -55,7 +57,8 @@ var config = {
     resolve : {
         alias : {
             'vue$' : 'vue/dist/vue.common.js',
-            '@' : resolve('ui/src')
+            '@' : resolve('ui/src'),
+            'config' : path.join(__dirname, 'src', 'site', 'config', environment)
         }
     },
     plugins : [
