@@ -6,6 +6,9 @@
                     <v-layout fill-height>
                         <v-flex xs8 align-end flexbox>
                             <div class="pa-2 white headline" style="background-color:rgba(34,34,34,0.8)">
+                                <v-icon v-if="isNew" color="red" light style="float:right">
+                                    fa-star
+                                </v-icon>
                                 {{ title }}
                             </div>
                         </v-flex>
@@ -14,7 +17,12 @@
             </v-card-media>
             <v-card-title>
                 <div>
-                    <h3 v-if="!story.header_detail_crop" class="headline mb-0">{{ title }}</h3>
+                    <h3 v-if="!story.header_detail_crop" class="headline mb-0">
+                        <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
+                            fa-star
+                        </v-icon>
+                        {{ title }}
+                    </h3>
                     <div class="news-mini-meta">
                         <span v-if="authorName.length > 0">{{ authorName }} | </span>
                         <span v-if="story.publish_date">{{ $t('published', { publishDate : publishDate, publishDateFromNow : publishDateFromNow }) }}</span>
@@ -28,7 +36,12 @@
             <v-card-media v-if="story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
             <v-card-title>
                 <div>
-                    <h3 class="headline mb-0">{{ title }}</h3>
+                    <h3 class="headline mb-0">
+                        <v-icon v-if="isNew" color="red" light style="float:right">
+                            fa-star
+                        </v-icon>
+                        {{ title }}
+                    </h3>
                     <div class="news-mini-meta">
                         <span v-if="authorName.length > 0">{{ authorName }} | </span>
                         <span v-if="story.publish_date">{{ $t('published', { publishDate : publishDate, publishDateFromNow : publishDateFromNow }) }}</span>
@@ -124,6 +137,11 @@
             publishDateFromNow() {
                 var utc = moment.utc(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss');
                 return utc.local().fromNow();
+            },
+            isNew() {
+                var utc = moment.utc(this.story.publish_date, 'YYYY-MM-DD HH:mm:ss');
+                console.log(moment().diff(utc.local(), 'weeks'));
+                return moment().diff(utc.local(), 'weeks') < 1;
             },
             authorName() {
                 var author = this.story.author;
