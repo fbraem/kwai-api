@@ -57,7 +57,7 @@
             </div>
         </v-card-text>
         <v-card-actions>
-            <v-btn v-if="!complete && content.length > 0" icon :to="'/story/' + story.id" flat>
+            <v-btn v-if="!complete && content.length > 0" icon :href="'news.html#/story/' + story.id" flat>
                 <v-icon>fa-ellipsis-h</v-icon>
             </v-btn>
             <v-btn v-if="complete" icon :to="'/'" flat>
@@ -91,7 +91,12 @@
     import moment from 'moment';
     import _ from 'lodash';
 
+    import messages from '../lang/NewsCardLang';
+
     export default {
+        i18n : {
+            messages : messages
+        },
         props : {
             story : {
                 type : Object,
