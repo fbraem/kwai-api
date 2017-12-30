@@ -139,7 +139,7 @@
     export default {
         computed : {
             categories() {
-                return this.$store.getters['newsModule/categories']
+                return this.$store.getters['newsModule/categories'];
             },
             backgroundImage() {
                 return require('./images/news.jpg');
