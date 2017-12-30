@@ -15,7 +15,7 @@
             </v-btn>
         </v-toolbar>
         <v-content>
-            <v-container fluid>
+            <v-container>
                 <router-view />
             </v-container>
         </v-content>
