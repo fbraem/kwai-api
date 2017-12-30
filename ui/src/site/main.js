@@ -20,12 +20,18 @@ const i18n = new VueI18n({
     fallbackLocale : 'nl',
     messages
 });
+import moment from 'moment';
+moment.locale('nl');
 
-import store from '../js/store.js';
+import store from '@/js/store.js';
+import newsStore from '@/apps/news/store.js';
+store.registerModule('newsModule', newsStore);
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
-  child : store => store.getters.user
+    child : (store) => {
+        return store ? store.getters.user : null;
+    }
 });
 import basePerimeter from '@/js/perimeter.js';
 
