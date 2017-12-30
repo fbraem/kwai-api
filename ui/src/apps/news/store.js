@@ -122,6 +122,9 @@ const actions = {
         if (payload.month) {
             uri.addQuery('filter[month]', payload.month);
         }
+        if (payload.featured) {
+            uri.addQuery('filter[featured]', true);
+        }
 
         oauth.get(uri.href(), {
             data : payload
