@@ -87,24 +87,25 @@
                 return moment.months()[this.month -1];
             }
           },
-        created() {
-            this.fetchData();
+        mounted() {
+            this.fetchData({
+                year : this.year,
+                month : this.month,
+                category : this.category_id
+            });
         },
         watch : {
             '$route'() {
-                this.year = this.$route.params.year;
-                this.month = this.$route.params.month;
-                this.category_id = this.$route.params.category_id;
-                this.fetchData();
+                this.fetchData({
+                    year : this.$route.params.year,
+                    month : this.$route.params.month,
+                    category : this.$route.params.category_id
+                });
             }
         },
         methods : {
-            fetchData() {
-                this.$store.dispatch('newsModule/browse', {
-                    category : this.category_id,
-                    year : this.year,
-                    month : this.month
-                });
+            fetchData(payload) {
+                this.$store.dispatch('newsModule/browse', payload);
             },
             areYouSure(id) {
                 this.showAreYouSure = true;
