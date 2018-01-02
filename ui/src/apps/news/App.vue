@@ -77,7 +77,7 @@
                                 </v-layout>
                             </v-flex>
                             <v-flex xs12 sm8 md9>
-                                <router-view></router-view>
+                                <router-view name="NewsContent"></router-view>
                             </v-flex>
                         </v-layout>
                         <v-layout>

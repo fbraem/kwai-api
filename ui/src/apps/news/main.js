@@ -43,48 +43,10 @@ import storyPerimeter from './perimeter.js';
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
 
-import NewsApp from './App.vue';
-import NewsCreate from './app/NewsCreate.vue';
-import NewsUpdate from './app/NewsUpdate.vue';
-import NewsBrowse from './app/NewsBrowse.vue';
-import NewsRead from './app/NewsRead.vue';
+import routes from './routes';
 
 const router = new VueRouter({
-    routes : [
-        {
-            path : '/',
-            component : NewsApp,
-            children: [
-                {
-                    path : 'story/:id',
-                    component : NewsRead,
-                    props : true
-                },
-                {
-                    path : 'category/:category_id',
-                    component : NewsBrowse,
-                    props : true
-                },
-                {
-                    path : 'archive/:year/:month',
-                    component : NewsBrowse,
-                    props : true
-                },
-                {
-                    path : '',
-                    component : NewsBrowse
-                }
-            ]
-        },
-        {
-            path : '/create',
-            component : NewsCreate
-        },
-        {
-            path : '/update/:id',
-            component : NewsUpdate
-        }
-    ]
+    routes
 });
 
 var app = new Vue({
