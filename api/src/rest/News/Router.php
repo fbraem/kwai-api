@@ -23,18 +23,6 @@ class Router extends \Core\Router
             ->auth(['login' => true]);
         $this->map->post('uploadEmbeddImage', '/news/embedded_image/{id}', \REST\News\Actions\UploadEmbeddedAction::class)
             ->auth(['login' => true]);
-
-        $this->map->get('browseCategory', '/news/categories', \REST\News\Actions\BrowseCategoryAction::class)
-            ->accepts(['application/vnd.api+json']);
-        $this->map->get('readCategory', '/news/categories/{id}', \REST\News\Actions\ReadCategoryAction::class)
-            ->accepts(['application/vnd.api+json']);
-        $this->map->post('createCategory', '/news/categories', \REST\News\Actions\CreateCategoryAction::class)
-            ->auth(['login' => true])
-            ->accepts(['application/vnd.api+json']);
-        $this->map->patch('updateCategory', '/news/categories/{id}', \REST\News\Actions\UpdateCategoryAction::class)
-            ->auth(['login' => true])
-            ->accepts(['application/vnd.api+json']);
-
         $this->map->get('archive', '/news/archive', \REST\News\Actions\ArchiveAction::class)
             ->accepts(['application/vnd.api+json'])
             ->extras(['format' => 'json']);

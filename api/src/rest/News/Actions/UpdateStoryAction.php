@@ -43,7 +43,7 @@ class UpdateStoryAction implements \Core\ActionInterface
                 ]
             ]))->respond();
         }
-        $categoriesTable = new \Domain\News\NewsCategoriesTable($db);
+        $categoriesTable = new \Domain\Category\CategoriesTable($db);
         $category = $categoriesTable->whereId($categoryId)->findOne();
         if (!$category) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [

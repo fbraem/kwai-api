@@ -1,6 +1,6 @@
 <?php
 
-namespace REST\News\Actions;
+namespace REST\Categories\Actions;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -19,12 +19,12 @@ class ReadCategoryAction implements \Core\ActionInterface
         $id = $request->getAttribute('route.id');
         $db = $request->getAttribute('clubman.container')['db'];
 
-        $category = (new \Domain\News\NewsCategoriesTable($db))->whereId($id)->findOne();
+        $category = (new \Domain\Category\CategoriesTable($db))->whereId($id)->findOne();
         if (!$category) {
             return (new NotFoundResponder(new Responder(), _("Category doesn't exist.")))->respond();
         }
 
-        $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\News\NewsCategoryTransformer(), 'news_categories'));
+        $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\Category\CategoryTransformer(), 'categories'));
 
         return (new JSONResponder(new Responder(), $payload))->respond();
     }

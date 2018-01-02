@@ -325,7 +325,7 @@
                 return this.$store.state.newsModule.status.error;
             },
             categories() {
-                return this.$store.state.newsModule.categories.map((category) => ({value : category.id, text : category.name }));
+                return this.$store.state.categoryModule.categories.map((category) => ({value : category.id, text : category.name }));
             },
             dateFormat() {
                 return 'Format ' + moment.localeData().longDateFormat('L');
@@ -451,7 +451,7 @@
             ]
         },
         mounted() {
-            this.$store.dispatch('newsModule/getCategories').
+            this.$store.dispatch('categoryModule/browse').
                 then(() => {
                     if ( this.story ) this.fillForm(this.story);
                 });

@@ -1,8 +1,8 @@
 <?php
 
-namespace Domain\News;
+namespace Domain\Category;
 
-class NewsCategory implements NewsCategoryInterface
+class Category implements CategoryInterface
 {
     private $db;
 
@@ -47,7 +47,7 @@ class NewsCategory implements NewsCategoryInterface
 
     public function store()
     {
-        $table = new \Zend\Db\TableGateway\TableGateway('news_categories', $this->db);
+        $table = new \Zend\Db\TableGateway\TableGateway('categories', $this->db);
 
         if ($this->id()) {
             $this->updated_at = \Carbon\Carbon::now()->toDateTimeString();

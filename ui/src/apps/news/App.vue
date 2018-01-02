@@ -139,7 +139,7 @@
     export default {
         computed : {
             categories() {
-                return this.$store.getters['newsModule/categories'];
+                return this.$store.getters['categoryModule/categories'];
             },
             backgroundImage() {
                 return require('./images/news.jpg');
@@ -150,7 +150,7 @@
           },
         created() {
             this.$store.dispatch('setSubTitle', this.$t('news'));
-            this.$store.dispatch('newsModule/getCategories');
+            this.$store.dispatch('categoryModule/browse');
             this.$store.dispatch('newsModule/loadArchive');
         },
         methods : {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Domain\News;
+namespace Domain\Category;
 
-class NewsCategoriesTable implements NewsCategoriesInterface
+class CategoriesTable implements CategoriesInterface
 {
     private $db;
 
@@ -13,7 +13,7 @@ class NewsCategoriesTable implements NewsCategoriesInterface
     public function __construct($db)
     {
         $this->db = $db;
-        $this->table = new \Zend\Db\TableGateway\TableGateway('news_categories', $this->db);
+        $this->table = new \Zend\Db\TableGateway\TableGateway('categories', $this->db);
         $this->select = $this->table->getSql()->select();
     }
 
@@ -23,7 +23,7 @@ class NewsCategoriesTable implements NewsCategoriesInterface
         return $this;
     }
 
-    public function findOne() : ?NewsCategoryInterface
+    public function findOne() : ?CategoryInterface
     {
         $categories = $this->find();
         if ($categories && count($categories) > 0) {
@@ -47,7 +47,7 @@ class NewsCategoriesTable implements NewsCategoriesInterface
         $categories = [];
         $results = $this->table->selectWith($this->select);
         foreach ($results as $result) {
-            $categories[$result->id] = new NewsCategory($this->db, $result);
+            $categories[$result->id] = new Category($this->db, $result);
         }
         return $categories;
     }

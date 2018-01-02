@@ -35,7 +35,7 @@ class CreateStoryAction implements \Core\ActionInterface
                 ]
             ]))->respond();
         }
-        $categories = new \Domain\News\NewsCategoriesTable($db);
+        $categories = new \Domain\Category\CategoriesTable($db);
         $category = $categories->whereId($categoryId)->findOne();
         if (!$category) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [

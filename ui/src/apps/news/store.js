@@ -15,7 +15,6 @@ import JSONAPI from '@/js/JSONAPI';
 
 const state = {
     stories : [],
-    categories : [],
     status : {
         loading : false,
         success : false,
@@ -30,12 +29,6 @@ const getters = {
     },
     story: (state) => (id) => {
         return _.find(state.stories, ['id', id]);
-    },
-    categories(state) {
-        return state.categories;
-    },
-    category: (state) => (id) => {
-        return _.find(state.categories, ['id', id]);
     },
     loading(state) {
         return state.status.loading;
@@ -62,12 +55,6 @@ const mutations = {
       state.stories = _.filter(state.stories, (story) => {
          return story.id != data.id;
       });
-  },
-  categories(state, data) {
-      state.categories = data.categories;
-  },
-  addCategory(state, data) {
-      state.categories.unshift(data.category);
   },
   archive(state, data) {
       state.archive = {};
@@ -109,7 +96,6 @@ const mutations = {
 const actions = {
     browse(context, payload) {
         context.commit('loading');
-
         var uri = new URI('api/news/stories');
         var offset = payload.offset || 0;
         uri.addQuery('page[offset]', offset);
@@ -205,76 +191,6 @@ const actions = {
                 resolve();
             }).catch((error) => {
                 context.commit('error', error);
-                reject();
-            });
-        });
-    },
-    createCategory(context, payload) {
-        context.commit('loading');
-        return oauth.post('api/news/categories', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addCategory', {
-                category : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
-    },
-    updateCategory(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/news/categories/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('modifyCategory', {
-                    category : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
-    },
-    readCategory(context, payload) {
-        context.commit('loading');
-        var category = context.getters['category'](payload.id);
-        if (category) { // already read
-            context.commit('success');
-            return;
-        }
-
-        oauth.get('api/news/categories/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addCategory', {
-                category : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
-    },
-    getCategories(context, payload) {
-        return new Promise((resolve, reject) => {
-            oauth.get('api/news/categories', {
-            }).then((res) => {
-                var api = new JSONAPI();
-                var categories = api.parse(res.data);
-                context.commit('categories', {
-                    categories : categories.data
-                });
-                resolve();
-            }).catch((error) => {
                 reject();
             });
         });

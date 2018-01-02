@@ -1,6 +1,6 @@
 <?php
 
-namespace REST\News\Actions;
+namespace REST\Categories\Actions;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -19,7 +19,7 @@ class CreateCategoryAction implements \Core\ActionInterface
     {
         $data = $payload->getInput();
 
-        $validator = new \REST\News\NewsCategoryValidator();
+        $validator = new \REST\Categories\CategoryValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
@@ -30,10 +30,10 @@ class CreateCategoryAction implements \Core\ActionInterface
         $db = $request->getAttribute('clubman.container')['db'];
         $attributes['user'] = $request->getAttribute('clubman.user');
 
-        $category = new \Domain\News\NewsCategory($db, $attributes);
+        $category = new \Domain\Category\Category($db, $attributes);
         $category->store();
 
-        $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\News\NewsCategoryTransformer(), 'news_categories'));
+        $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\Category\CategoryTransformer(), 'categories'));
 
         return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
     }

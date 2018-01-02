@@ -82,7 +82,7 @@ export default {
     },
     computed : {
         error() {
-            return this.$store.state.newsModule.status.error;
+            return this.$store.state.categoryModule.status.error;
         },
         nameErrors() {
             const errors = [...this.errors.name];
@@ -163,18 +163,18 @@ export default {
 
             if (this.category) { // update
                 this.fillModel(this.category);
-                this.$store.dispatch('newsModule/updateCategory', this.category.serialize())
+                this.$store.dispatch('categoryModule/update', this.category.serialize())
                     .then(() => {
-                        this.$router.push('/category/read/' + this.category.id);
+                        this.$router.push('/read/' + this.category.id);
                     }).catch(() => {
-                        console.log("Error occurred in newsModule/updateCategory");
+                        console.log("Error occurred in categoryModule/update");
                     });
             } else { // create
                 var category = new Model('categories');
                 this.fillModel(category);
-                this.$store.dispatch('newsModule/createCategory', category.serialize())
-                    .then(() => {
-                        this.$router.push('/category/read/' + this.category.id);
+                this.$store.dispatch('categoryModule/create', category.serialize())
+                    .then((newCategory) => {
+                        this.$router.push('/read/' + newCategory.id);
                     }).catch(err => {
                     });
             }

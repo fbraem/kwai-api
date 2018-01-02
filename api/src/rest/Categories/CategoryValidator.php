@@ -1,10 +1,10 @@
 <?php
 
-namespace REST\News;
+namespace REST\Categories;
 
 use Zend\Validator\StringLength;
 
-class NewsCategoryValidator implements \Core\ValidatorInterface
+class CategoryValidator implements \Core\ValidatorInterface
 {
     private $validator;
 

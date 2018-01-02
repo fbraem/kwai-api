@@ -18,6 +18,7 @@ var config = {
         "auth" : "./src/apps/auth/main.js",
         "install" : "./src/apps/install/main.js",
         "users" : "./src/apps/users/main.js",
+        "categories" : "./src/apps/categories/main.js",
         "news" : "./src/apps/news/main.js",
         "site" : "./src/site/main.js"
     },

@@ -79,7 +79,7 @@
             },
             category() {
                 if (this.category_id) {
-                    return this.$store.getters['newsModule/category'](this.category_id);
+                    return this.$store.getters['categoryModule/category'](this.category_id);
                 }
                 return null;
             },

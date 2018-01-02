@@ -1,6 +1,6 @@
 <?php
 
-namespace REST\News\Actions;
+namespace REST\Categories\Actions;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,8 +16,8 @@ class BrowseCategoryAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $db = $request->getAttribute('clubman.container')['db'];
-        $categories = (new \Domain\News\NewsCategoriesTable($db))->find();
-        $payload->setOutput(new Fractal\Resource\Collection($categories, new \Domain\News\NewsCategoryTransformer(), 'news_categories'));
+        $categories = (new \Domain\Category\CategoriesTable($db))->find();
+        $payload->setOutput(new Fractal\Resource\Collection($categories, new \Domain\Category\CategoryTransformer(), 'categories'));
 
         return (new JSONResponder(new Responder(), $payload))->respond();
     }

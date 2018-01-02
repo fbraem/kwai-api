@@ -44,7 +44,7 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     {
         $category = $story->category();
         if ($category) {
-            return $this->item($category, new NewsCategoryTransformer, 'news_categories');
+            return $this->item($category, new \Domain\Category\CategoryTransformer, 'categories');
         }
     }
 

@@ -1,7 +1,7 @@
 <?php
-namespace Domain\News;
+namespace Domain\Category;
 
-interface NewsCategoryInterface extends \Domain\DatetimeMetaInterface, \Domain\HydratorInterface
+interface CategoryInterface extends \Domain\DatetimeMetaInterface, \Domain\HydratorInterface
 {
     public function id() : ?int;
     public function name() : string;

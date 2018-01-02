@@ -9,9 +9,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 import store from '@/js/store';
 import newsStore from './store';
-store.registerModule('newsModule', newsStore);
-import categoryStore from '@/apps/categories/store';
-store.registerModule('categoryModule', categoryStore);
+store.registerModule('categoryModule', newsStore);
 
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
@@ -38,51 +36,37 @@ Vue.use(VueKindergarten, {
     }
 });
 import basePerimeter from '@/js/perimeter.js';
-import storyPerimeter from './perimeter.js';
+import categoryPerimeter from './perimeter.js';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
 
-import NewsApp from './App.vue';
-import NewsCreate from './app/NewsCreate.vue';
-import NewsUpdate from './app/NewsUpdate.vue';
-import NewsBrowse from './app/NewsBrowse.vue';
-import NewsRead from './app/NewsRead.vue';
+import CategoryApp from './App.vue';
+import CategoryCreate from './app/CategoryCreate.vue';
+import CategoryUpdate from './app/CategoryUpdate.vue';
+import CategoryRead from './app/CategoryRead.vue';
 
 const router = new VueRouter({
     routes : [
         {
             path : '/',
-            component : NewsApp,
-            children: [
-                {
-                    path : 'story/:id',
-                    component : NewsRead,
-                    props : true
-                },
-                {
-                    path : 'category/:category_id',
-                    component : NewsBrowse,
-                    props : true
-                },
-                {
-                    path : 'archive/:year/:month',
-                    component : NewsBrowse,
-                    props : true
-                },
-                {
-                    path : '',
-                    component : NewsBrowse
-                }
-            ]
+            component : CategoryApp
         },
         {
             path : '/create',
-            component : NewsCreate
+            component : CategoryCreate
         },
         {
             path : '/update/:id',
-            component : NewsUpdate
+            component : CategoryUpdate
+        },
+        {
+            path : '/create',
+            component : CategoryCreate
+        },
+        {
+            path : '/read/:id',
+            component : CategoryRead
         }
     ]
 });
@@ -92,7 +76,7 @@ var app = new Vue({
     store,
     perimeters : [
         basePerimeter,
-        storyPerimeter
+        categoryPerimeter
     ],
     ...layout,
     i18n

@@ -1,6 +1,6 @@
 <?php
 
-namespace REST\News\Actions;
+namespace REST\Categories\Actions;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -21,14 +21,14 @@ class UpdateCategoryAction implements \Core\ActionInterface
         $id = $request->getAttribute('route.id');
         $db = $request->getAttribute('clubman.container')['db'];
 
-        $category = (new \Domain\News\NewsCategoriesTable($db))->whereId($id)->findOne();
+        $category = (new \Domain\Category\CategoriesTable($db))->whereId($id)->findOne();
         if (!$category) {
             return (new NotFoundResponder(new Responder(), _("Category doesn't exist.")))->respond();
         }
 
         $data = $payload->getInput();
 
-        $validator = new \REST\News\NewsCategoryValidator();
+        $validator = new \REST\Categories\CategoryValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
@@ -36,7 +36,7 @@ class UpdateCategoryAction implements \Core\ActionInterface
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $category = new \Domain\News\NewsCategory(
+        $category = new \Domain\Category\Category(
             $db,
             array_merge($category->extract(), [
                 'name' => $attributes['name'],
@@ -47,7 +47,7 @@ class UpdateCategoryAction implements \Core\ActionInterface
         );
         $category->store();
 
-        $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\News\NewsCategoryTransformer(), 'news_categories'));
+        $payload->setOutput(new Fractal\Resource\Item($category, new \Domain\Category\CategoryTransformer(), 'categories'));
 
         return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
     }

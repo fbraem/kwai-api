@@ -140,7 +140,7 @@ class NewsStoriesTable implements NewsStoriesInterface
                     return $v->category_id;
                 }, $stories)
             );
-            $categories = (new NewsCategoriesTable($this->db))->whereId($ids)->find();
+            $categories = (new \Domain\Category\CategoriesTable($this->db))->whereId($ids)->find();
             foreach ($stories as $story) {
                 $story->category = $categories[$story->category_id];
             }
