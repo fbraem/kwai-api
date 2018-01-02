@@ -2,7 +2,7 @@
     <div>
         <v-container>
             <v-layout>
-                <v-flex xs12 lg10 offset-lg1>
+                <v-flex xs12 xl10 offset-xl1>
                     <v-card>
                         <v-card-media :src="require('./images/judokwaikemzeke.jpg')" height="500">
                             <v-container fill-height fluid>
