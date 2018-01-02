@@ -23,7 +23,8 @@ var config = {
         "site" : "./src/site/main.js"
     },
     output : {
-        filename : "./build/[name].js"
+        filename : "./build/[name].js",
+        publicPath : "/ui/"
     },
     module : {
         loaders : [
