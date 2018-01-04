@@ -62,14 +62,6 @@ var config = {
         }
     },
     plugins : [
-/*
-        new webpack.ProvidePlugin({
-            $ : "jquery",
-            jQuery : "jquery",
-            "window.$" : "$",
-            "window.jQuery" : "jquery"
-        }),
-*/
         new webpack.optimize.CommonsChunkPlugin({
             names : ['vendor', 'vue', 'manifest']
         }),
