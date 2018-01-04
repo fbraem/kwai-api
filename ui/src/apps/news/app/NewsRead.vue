@@ -39,7 +39,12 @@
 <script>
     import NewsCard from '../components/NewsCard.vue';
 
+    import messages from '../lang/NewsRead';
+
     export default {
+        i18n : {
+            messages
+        },
         components : {
             NewsCard
         },

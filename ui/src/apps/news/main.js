@@ -17,6 +17,7 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import '@/../node_modules/vuetify/dist/vuetify.min.css';
 
+/*
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 import messages from './lang/lang.js';
@@ -25,6 +26,7 @@ const i18n = new VueI18n({
     fallbackLocale : 'nl',
     messages
 });
+*/
 import moment from 'moment';
 moment.locale('nl');
 

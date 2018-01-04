@@ -14,7 +14,7 @@ import '@/../node_modules/vuetify/dist/vuetify.min.css';
 
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
-import messages from './lang/nl.js';
+import messages from './lang/nl';
 const i18n = new VueI18n({
     locale : 'nl',
     fallbackLocale : 'nl',
@@ -23,9 +23,13 @@ const i18n = new VueI18n({
 import moment from 'moment';
 moment.locale('nl');
 
-import store from '@/js/store.js';
-import newsStore from '@/apps/news/store.js';
+import store from '@/js/store';
+
+import newsStore from '@/apps/news/store';
 store.registerModule('newsModule', newsStore);
+
+import categoryStore from '@/apps/categories/store';
+store.registerModule('categoryModule', categoryStore);
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
@@ -34,26 +38,30 @@ Vue.use(VueKindergarten, {
     }
 });
 import basePerimeter from '@/js/perimeter.js';
+import newsPerimeter from '@/apps/news/perimeter.js';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
 
-import SiteApp from './App.vue';
+import Vuelidate from 'vuelidate';
+Vue.use(Vuelidate);
+
+var routes = [];
+import siteRoutes from './routes';
+routes = routes.concat(siteRoutes);
+import newsRoutes from '@/apps/news/routes';
+routes = routes.concat(newsRoutes);
 
 const router = new VueRouter({
-    routes : [
-        {
-            path : '/',
-            component : SiteApp
-        }
-    ]
+    routes : routes
 });
 
 var app = new Vue({
     router,
     store,
     perimeters : [
-        basePerimeter
+        basePerimeter,
+        newsPerimeter
     ],
     ...layout,
     i18n

@@ -55,7 +55,12 @@
     import moment from 'moment';
     import NewsCard from '../components/NewsCard.vue';
 
+    import messages from '../lang/NewsBrowse';
+
     export default {
+        i18n : {
+            messages : messages
+        },
         components : {
             NewsCard
         },

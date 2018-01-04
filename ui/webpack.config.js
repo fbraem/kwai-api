@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir);
@@ -15,16 +16,13 @@ var config = {
         "vue" : [
             "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vuetify", "vue-i18n"
         ],
-        "auth" : "./src/apps/auth/main.js",
-        "install" : "./src/apps/install/main.js",
-        "users" : "./src/apps/users/main.js",
-        "categories" : "./src/apps/categories/main.js",
-        "news" : "./src/apps/news/main.js",
         "site" : "./src/site/main.js"
     },
     output : {
-        filename : "./build/[name].js",
-        publicPath : "/ui/"
+        path : path.join(__dirname, "build"),
+        filename : "[name].[chunkhash].js",
+        publicPath : "/ui/",
+        chunkFilename : 'chunk.[name].[chunkhash].js'
     },
     module : {
         loaders : [
@@ -39,7 +37,7 @@ var config = {
             { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader' },
             { test: /\.(png|jpe?g|gif|svg)$/i,
                 loaders: [
-                    "file-loader?name=build/assets/[name]_[hash].[ext]&publicPath=ui/",
+                    "file-loader?name=assets/[name]_[hash].[ext]&publicPath=ui/",
                     {
                         loader : 'image-webpack-loader',
                         query : {
@@ -73,8 +71,11 @@ var config = {
         }),
 */
         new webpack.optimize.CommonsChunkPlugin({
-            names : ['vendor', 'vue'],
-            filename : "build/[name].js"
+            names : ['vendor', 'vue', 'manifest']
+        }),
+        new HtmlWebpackPlugin({
+            filename: '../../index.html',
+            template: 'src/index.template.html'
         })
     ]
 };

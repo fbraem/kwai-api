@@ -57,17 +57,17 @@
             </div>
         </v-card-text>
         <v-card-actions>
-            <v-btn v-if="!complete && content.length > 0" icon :href="'news.html#/story/' + story.id" flat>
+            <v-btn v-if="!complete && content.length > 0" icon :to="{ name : 'news.story' , params : { id : story.id }}" flat>
                 <v-icon>fa-ellipsis-h</v-icon>
             </v-btn>
-            <v-btn v-if="complete" icon :to="'/'" flat>
+            <v-btn v-if="complete" icon :to="{ name : 'news.browse' }" flat>
                 <v-icon>view_list</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn v-if="$isAllowed('update', story)" color="secondary" icon :to="'/update/' + story.id" flat>
+            <v-btn v-if="!featured && $isAllowed('update', story)" color="secondary" icon :to="{ name : 'news.update', params : { id : story.id }}" flat>
                 <v-icon>fa-edit</v-icon>
             </v-btn>
-            <v-btn v-if="$isAllowed('remove', story)" color="secondary" icon @click="$emit('delete')" flat>
+            <v-btn v-if="!featured && $isAllowed('remove', story)" color="secondary" icon @click="$emit('delete')" flat>
                 <v-icon>fa-trash</v-icon>
             </v-btn>
         </v-card-actions>
@@ -91,7 +91,7 @@
     import moment from 'moment';
     import _ from 'lodash';
 
-    import messages from '../lang/NewsCardLang';
+    import messages from '../lang/NewsCard';
 
     export default {
         i18n : {
@@ -105,6 +105,10 @@
             complete : {
                 type : Boolean,
                 required : true
+            },
+            featured : {
+                type : Boolean,
+                default : false
             }
         },
         computed : {

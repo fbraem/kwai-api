@@ -25,7 +25,7 @@
                     <v-container fluid class="button-container">
                         <v-layout row wrap>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="news.html" style="width:100%">
+                                <v-btn :to="{ name : 'news.browse' }" style="width:100%">
                                     <v-icon large color="red">fa-newspaper</v-icon>
                                     Nieuws
                                 </v-btn>
@@ -68,7 +68,7 @@
         <v-container grid-list-lg>
             <v-layout justify-space-around row wrap>
                 <v-flex v-for="story in featuredNews" :key="story.id" xs12 sm6 md4>
-                    <NewsCard :story="story" :complete="false"></NewsCard>
+                    <NewsCard :story="story" :complete="false" :featured="true"></NewsCard>
                 </v-flex>
             </v-layout>
         </v-container>

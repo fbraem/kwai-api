@@ -1,20 +1,14 @@
-import NewsApp from './App.vue';
-import NewsCreate from './app/NewsCreate.vue';
-import NewsUpdate from './app/NewsUpdate.vue';
-import NewsBrowse from './app/NewsBrowse.vue';
-import NewsRead from './app/NewsRead.vue';
-
 export default [
         {
-            path : '/',
+            path : '/news/',
             components : {
-                default : NewsApp
+                default : () => import(/* webpackChunkName: "news_chunck" */ './App.vue')
             },
             children: [
                 {
                     path : 'story/:id',
                     components : {
-                        NewsContent : NewsRead
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ './app/NewsRead.vue')
                     },
                     name : 'news.story',
                     props : {
@@ -24,7 +18,7 @@ export default [
                 {
                     path : 'category/:category_id',
                     components : {
-                        NewsContent : NewsBrowse
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ './app/NewsBrowse.vue')
                     },
                     name : 'news.category',
                     props : {
@@ -34,7 +28,7 @@ export default [
                 {
                     path : 'archive/:year/:month',
                     components : {
-                        NewsContent : NewsBrowse
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ './app/NewsBrowse.vue')
                     },
                     name : 'news.archive',
                     props : {
@@ -44,20 +38,20 @@ export default [
                 {
                     path : '',
                     components : {
-                        NewsContent : NewsBrowse
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ './app/NewsBrowse.vue')
                     },
                     name : 'news.browse'
                 }
             ]
         },
         {
-            path : '/create',
-            component : NewsCreate,
+            path : '/news/create',
+            component : () => import(/* webpackChunkName: "news_admin" */ './app/NewsCreate.vue'),
             name : 'news.create'
         },
         {
-            path : '/update/:id',
-            component : NewsUpdate,
+            path : '/news/update/:id',
+            component : () => import(/* webpackChunkName: "news_admin" */ './app/NewsUpdate.vue'),
             name : 'news.update'
         }
 ];
