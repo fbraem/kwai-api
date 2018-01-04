@@ -24,10 +24,17 @@ class NewsMigration extends AbstractMigration
             ->addTimestamps()
             ->create()
         ;
+
+        $this->table('news_contents', ['id' => false, 'primary_key' => ['content_id', 'contentable_id']])
+            ->addColumn('content_id', 'integer')
+            ->addColumn('news_id', 'integer')
+            ->create()
+        ;
     }
 
     public function down()
     {
+        $this->table('news_contents')->drop();
         $this->table('news_stories')->drop();
     }
 }

@@ -19,17 +19,10 @@ class ContentsMigration extends AbstractMigration
             ->addTimestamps()
             ->create()
         ;
-        $this->table('contentables', ['id' => false, 'primary_key' => ['content_id', 'contentable_id', 'contentable_type']])
-            ->addColumn('content_id', 'integer')
-            ->addColumn('contentable_id', 'integer')
-            ->addColumn('contentable_type', 'string')
-            ->create()
-        ;
     }
 
     public function down()
     {
         $this->table('contents')->drop();
-        $this->table('contentables')->drop();
     }
 }
