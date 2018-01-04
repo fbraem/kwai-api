@@ -21,7 +21,7 @@ var config = {
     output : {
         path : path.join(__dirname, "build"),
         filename : "[name].[chunkhash].js",
-        publicPath : "/ui/",
+        publicPath : "/ui/build/",
         chunkFilename : 'chunk.[name].[chunkhash].js'
     },
     module : {
@@ -37,7 +37,7 @@ var config = {
             { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader' },
             { test: /\.(png|jpe?g|gif|svg)$/i,
                 loaders: [
-                    "file-loader?name=assets/[name]_[hash].[ext]&publicPath=ui/",
+                    "file-loader?name=assets/[name]_[hash].[ext]&publicPath=ui/build/",
                     {
                         loader : 'image-webpack-loader',
                         query : {
