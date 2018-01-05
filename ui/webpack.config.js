@@ -1,6 +1,9 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanupWebpackPlugin = require('webpack-cleanup-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 function resolve(dir) {
     return path.join(__dirname, '..', dir);
@@ -11,10 +14,13 @@ var environment = process.argv.indexOf('-p') !== -1 ? 'production' : 'developmen
 var config = {
     entry : {
         "vendor" : [
-            "lockr", "moment", "axios", "lodash", "urijs", "marked"
+            "lockr", "moment", "axios", "lodash", "urijs", "babel-polyfill"
         ],
         "vue" : [
-            "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vuetify", "vue-i18n"
+            "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vue-i18n"
+        ],
+        "vuetify" : [
+            "vuetify"
         ],
         "site" : "./src/site/main.js"
     },
@@ -33,8 +39,15 @@ var config = {
             { test: /\.vue$/,
                 loader: "vue-loader"
             },
-            { test: /\.css$/, loader: "style-loader!css-loader" },
-            { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader' },
+            { test: /\.css$/,
+                loader: ExtractTextPlugin.extract({
+                    fallback : "style-loader",
+                    use : "css-loader"
+                })
+            },
+            { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'url-loader'
+            },
             { test: /\.(png|jpe?g|gif|svg)$/i,
                 loaders: [
                     "file-loader?name=assets/[name]_[hash].[ext]&publicPath=ui/build/",
@@ -62,12 +75,20 @@ var config = {
         }
     },
     plugins : [
+        new BundleAnalyzerPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
-            names : ['vendor', 'vue', 'manifest']
+            names : ['vendor', 'vue', 'vuetify'],
+            minChunks : Infinity
         }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name : 'manifest'
+        }),
+        new ExtractTextPlugin("style.css"),
         new HtmlWebpackPlugin({
             filename: '../../index.html',
             template: 'src/index.template.html'
+        }),
+        new CleanupWebpackPlugin({
         })
     ]
 };
