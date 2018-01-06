@@ -40,6 +40,7 @@ Vue.use(VueKindergarten, {
 import basePerimeter from '@/js/perimeter.js';
 import newsPerimeter from '@/apps/news/perimeter.js';
 import authPerimeter from '@/apps/auth/perimeter.js';
+import categoryPerimeter from '@/apps/categories/perimeter.js';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
@@ -52,6 +53,8 @@ import siteRoutes from './routes';
 routes = routes.concat(siteRoutes);
 import newsRoutes from '@/apps/news/routes';
 routes = routes.concat(newsRoutes);
+import categoryRoutes from '@/apps/categories/routes';
+routes = routes.concat(categoryRoutes);
 
 const router = new VueRouter({
     routes : routes
@@ -63,7 +66,8 @@ var app = new Vue({
     perimeters : [
         basePerimeter,
         authPerimeter,
-        newsPerimeter
+        newsPerimeter,
+        categoryPerimeter
     ],
     ...layout,
     i18n
