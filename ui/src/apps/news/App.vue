@@ -1,7 +1,7 @@
 <template>
-    <v-container grid-list-xl ma-0 pa-0>
+    <v-container fluid grid-list-xl ma-0 pa-0>
         <v-layout>
-            <v-flex xs12 xl10 offset-xl1>
+            <v-flex xs12>
                 <v-card flat>
                     <v-card-text>
                         <v-layout row wrap>
