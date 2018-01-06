@@ -10,7 +10,7 @@ Vue.use(Vuex);
 
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
-import '@/../node_modules/vuetify/dist/vuetify.min.css';
+import 'vuetify/dist/vuetify.min.css';
 
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
@@ -39,6 +39,7 @@ Vue.use(VueKindergarten, {
 });
 import basePerimeter from '@/js/perimeter.js';
 import newsPerimeter from '@/apps/news/perimeter.js';
+import authPerimeter from '@/apps/auth/perimeter.js';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
@@ -61,6 +62,7 @@ var app = new Vue({
     store,
     perimeters : [
         basePerimeter,
+        authPerimeter,
         newsPerimeter
     ],
     ...layout,
