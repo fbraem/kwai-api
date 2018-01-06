@@ -13,7 +13,12 @@
 <script>
     import moment from 'moment';
 
+    import messages from './lang/lang';
+
     export default {
+        i18n : {
+            messages
+        },
         computed : {
             categories() {
                 return this.$store.getters['categoryModule/categories'];
