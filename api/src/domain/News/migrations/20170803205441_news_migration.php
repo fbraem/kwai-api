@@ -25,7 +25,7 @@ class NewsMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('news_contents', ['id' => false, 'primary_key' => ['content_id', 'contentable_id']])
+        $this->table('news_contents', ['id' => false, 'primary_key' => ['content_id', 'news_id']])
             ->addColumn('content_id', 'integer')
             ->addColumn('news_id', 'integer')
             ->create()
