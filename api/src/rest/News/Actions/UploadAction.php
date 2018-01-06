@@ -26,8 +26,6 @@ class UploadAction implements \Core\ActionInterface
         }
         $uploadedFilename = $files['image']->getClientFilename();
 
-        $config = $request->getAttribute('clubman.config');
-
         $id = $request->getAttribute('route.id');
         $db = $request->getAttribute('clubman.container')['db'];
         $dbStories = new \Domain\News\NewsStoriesTable($db);
