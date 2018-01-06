@@ -65,13 +65,7 @@
                 </v-flex>
             </v-layout>
         </v-container>
-        <v-container grid-list-lg>
-            <v-layout justify-space-around row wrap>
-                <v-flex v-for="story in featuredNews" :key="story.id" xs12 sm6 md4>
-                    <NewsCard :story="story" :complete="false" :featured="true"></NewsCard>
-                </v-flex>
-            </v-layout>
-        </v-container>
+        <NewsBrowse :featured="true"></NewsBrowse>
     </div>
 </template>
 
@@ -110,22 +104,14 @@
 </style>
 
 <script>
-    import NewsCard from '@/apps/news/components/NewsCard.vue';
+    import NewsBrowse from '@/apps/news/app/NewsBrowse.vue';
 
     export default {
         components : {
-            NewsCard
+            NewsBrowse
         },
         data() {
             return {};
-        },
-        computed : {
-            featuredNews() {
-                return this.$store.getters['newsModule/stories'];
-            }
-        },
-        created() {
-            this.$store.dispatch('newsModule/browse', { featured : true });
         }
     };
 </script>

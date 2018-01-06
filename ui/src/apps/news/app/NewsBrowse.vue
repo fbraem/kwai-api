@@ -18,8 +18,8 @@
                 {{ $t('no_news') }}
             </v-flex>
         </v-layout>
-        <v-layout row wrap>
-            <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md5 lg4>
+        <v-layout v-else :justify-space-around="featured" row wrap>
+            <v-flex v-for="story in stories" :key="story.id" xs12 sm4>
                 <NewsCard :story="story" :complete="false" @delete="areYouSure(story.id)" />
             </v-flex>
         </v-layout>
@@ -67,7 +67,8 @@
         props : [
             'year',
             'month',
-            'category_id'
+            'category_id',
+            'featured'
         ],
         data() {
             return {
@@ -96,7 +97,8 @@
             this.fetchData({
                 year : this.year,
                 month : this.month,
-                category : this.category_id
+                category : this.category_id,
+                featured : this.featured
             });
         },
         watch : {
