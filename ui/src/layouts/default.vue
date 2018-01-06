@@ -1,9 +1,13 @@
 <template>
     <v-app>
+        <!--
         <v-navigation-drawer fixed v-model="drawer" app>
         </v-navigation-drawer>
+        -->
         <v-toolbar class="red" dark app>
+            <!--
             <v-toolbar-side-icon @click.stop="clickDrawer"></v-toolbar-side-icon>
+            -->
             <v-toolbar-title>
                 {{ title }}
                 <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
