@@ -13,7 +13,7 @@
                 <h1 class="display-1">{{ $t('archive_title', { monthName : monthName, year : year }) }}</h1>
             </v-flex>
         </v-layout>
-        <v-layout v-if="noNews" row wrap>
+        <v-layout v-if="noNews && !featured" row wrap>
             <v-flex xs12>
                 {{ $t('no_news') }}
             </v-flex>
