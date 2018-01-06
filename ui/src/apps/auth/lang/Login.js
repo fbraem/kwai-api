@@ -1,6 +1,6 @@
 export default {
     nl : {
-        welcome : "Via deze pagina kan je inloggen op onze website.",
+        welcome : "Vul alle gegevens in om in te loggen op onze website.",
         email : {
             label : "Geef uw emailadres in",
             required : 'Het emailadres is verplicht in te vullen',
@@ -11,10 +11,12 @@ export default {
             required : "Het paswoord is verplicht in te vullen"
         },
         submit : "Login",
-        clear : "Wis"
+        clear : "Wis",
+        not_authorized : "Uw email en/of paswoord zijn niet correct.",
+        logout : "Logout"
     },
     en : {
-        welcome : "On this page you can login to the website.",
+        welcome : "Fill in all fields to login to the website.",
         email : {
             label : "Enter your email",
             required : "Email is required",
@@ -25,6 +27,8 @@ export default {
             required : "Password is required"
         },
         submit : "Login",
-        clear : "Clear"
+        clear : "Clear",
+        not_authorized : "Your email address and/or password are incorrect.",
+        logout : "Logout"
     }
 };

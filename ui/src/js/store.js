@@ -79,15 +79,19 @@ const mutations = {
 const actions = {
     login(context, payload) {
         context.commit('loading');
-        return oauth.login(payload.data.attributes.email, payload.data.attributes.password)
-            .then((response) => {
-                context.commit('success');
-                context.commit('authenticated', true);
-            })
-            .catch((response) => {
-                context.commit('error', response);
-                context.commit('authenticated', false);
-            });
+        return new Promise((resolve, reject) => {
+            oauth.login(payload.data.attributes.email, payload.data.attributes.password)
+                .then((response) => {
+                    context.commit('success');
+                    context.commit('authenticated', true);
+                    resolve(response);
+                })
+                .catch((response) => {
+                    context.commit('error', response);
+                    context.commit('authenticated', false);
+                    reject(response);
+                });
+        });
     },
     logout(context) {
         oauth.logout();
