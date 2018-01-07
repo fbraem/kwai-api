@@ -7,7 +7,10 @@ import axios from 'axios';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import _ from 'lodash';
+import find from 'lodash/find';
+import filter from 'lodash/filter';
+import unionBy from 'lodash/unionBy';
+
 import URI from 'urijs';
 import moment from 'moment';
 
@@ -28,7 +31,7 @@ const getters = {
         return state.stories;
     },
     story: (state) => (id) => {
-        return _.find(state.stories, ['id', id]);
+        return find(state.stories, ['id', id]);
     },
     loading(state) {
         return state.status.loading;
@@ -49,10 +52,10 @@ const mutations = {
       state.stories = data.stories;
   },
   setStory(state, data) {
-      state.stories = _.unionBy([data.story], state.stories, 'id');
+      state.stories = unionBy([data.story], state.stories, 'id');
   },
   deleteStory(state, data) {
-      state.stories = _.filter(state.stories, (story) => {
+      state.stories = filter(state.stories, (story) => {
          return story.id != data.id;
       });
   },

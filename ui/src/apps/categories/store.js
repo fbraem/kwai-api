@@ -7,7 +7,7 @@ import axios from 'axios';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import _ from 'lodash';
+import find from 'lodash/find';
 import URI from 'urijs';
 import moment from 'moment';
 
@@ -27,7 +27,7 @@ const getters = {
         return state.categories;
     },
     category: (state) => (id) => {
-        return _.find(state.categories, ['id', id]);
+        return find(state.categories, ['id', id]);
     },
     loading(state) {
         return state.status.loading;

@@ -89,7 +89,8 @@
 
 <script>
     import moment from 'moment';
-    import _ from 'lodash';
+    import find from 'lodash/find';
+    import filter from 'lodash/filter';
 
     import messages from '../lang/NewsCard';
 
@@ -113,7 +114,7 @@
         },
         computed : {
             summary() {
-                var content = _.find(this.story.contents, function(o) {
+                var content = find(this.story.contents, function(o) {
                     return o.locale == 'nl';
                 });
                 if (content) {
@@ -122,7 +123,7 @@
                 return "";
             },
             content() {
-                var content = _.find(this.story.contents, function(o) {
+                var content = find(this.story.contents, function(o) {
                     return o.locale == 'nl';
                 });
                 if (content) {
@@ -131,7 +132,7 @@
                 return "";
             },
             title() {
-                var content = _.find(this.story.contents, function(o) {
+                var content = find(this.story.contents, function(o) {
                     return o.locale == 'nl';
                 });
                 if (content) {
@@ -154,7 +155,7 @@
             authorName() {
                 var author = this.story.author;
                 if (author) {
-                    return _.filter([author.first_name, author.last_name]).join(' ');
+                    return filter([author.first_name, author.last_name]).join(' ');
                 }
                 return "";
             }
