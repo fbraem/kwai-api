@@ -37,10 +37,7 @@ Vue.use(VueKindergarten, {
         return store ? store.getters.user : null;
     }
 });
-import basePerimeter from '@/js/perimeter.js';
-import newsPerimeter from '@/apps/news/perimeter.js';
-import authPerimeter from '@/apps/auth/perimeter.js';
-import categoryPerimeter from '@/apps/categories/perimeter.js';
+import perimeters from '@/perimeters';
 
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
@@ -63,12 +60,7 @@ const router = new VueRouter({
 var app = new Vue({
     router,
     store,
-    perimeters : [
-        basePerimeter,
-        authPerimeter,
-        newsPerimeter,
-        categoryPerimeter
-    ],
+    perimeters : perimeters(),
     ...layout,
     i18n
 }).$mount('#clubmanApp');
