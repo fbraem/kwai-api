@@ -48,6 +48,13 @@
                                                     <v-divider v-if="index != categories.length - 1"></v-divider>
                                                 </template>
                                             </v-list>
+                                            <v-card-actions v-if="$category.isAllowed('create')">
+                                                <v-spacer>
+                                                </v-spacer>
+                                                <v-btn icon :to="{ name : 'category.create' }" fab small>
+                                                    <v-icon>fa-plus</v-icon>
+                                                </v-btn>
+                                            </v-card-actions>
                                         </v-card>
                                     </v-flex>
                                 </v-layout>
@@ -82,7 +89,7 @@
                         </v-layout>
                         <v-layout>
                             <v-flex xs12>
-                                <v-btn v-if="$isAllowed('create')" color="primary" icon :to="{ name : 'news.create' }" fab small>
+                                <v-btn v-if="$isAllowed('create')" icon :to="{ name : 'news.create' }" fab small>
                                     <v-icon>fa-plus</v-icon>
                                 </v-btn>
                             </v-flex>
