@@ -83,6 +83,10 @@ var config = {
         new webpack.optimize.CommonsChunkPlugin({
             name : 'manifest'
         }),
+        new webpack.ContextReplacementPlugin(
+          /moment[\/\\]locale$/,
+          /nl|en/
+        ),
         new ExtractTextPlugin("style.css"),
         new HtmlWebpackPlugin({
             filename: '../../index.html',
