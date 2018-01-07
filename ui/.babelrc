@@ -7,6 +7,13 @@
         "transform-es2015-template-literals",
         "transform-es2015-arrow-functions",
         "transform-es2015-spread",
-        "syntax-dynamic-import"
+        "syntax-dynamic-import",
+        "lodash"
+    ],
+    "presets" : [
+        [
+            "es2015",
+            { modules : false }
+        ]
     ]
 }
