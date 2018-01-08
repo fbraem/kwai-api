@@ -112,6 +112,9 @@
         },
         data() {
             return {};
+        },
+        mounted() {
+            this.$store.dispatch('setSubTitle', '');
         }
     };
 </script>
