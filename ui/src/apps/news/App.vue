@@ -5,7 +5,7 @@
                 <v-card flat>
                     <v-card-text>
                         <v-layout row wrap>
-                            <v-flex xs12 sm4 md3>
+                            <v-flex xs12 sm5 md3>
                                 <v-layout row wrap>
                                     <v-flex xs12>
                                         <v-card flat>
@@ -83,7 +83,7 @@
                                     </v-flex>
                                 </v-layout>
                             </v-flex>
-                            <v-flex xs12 sm8 md9>
+                            <v-flex xs12 sm7 md9>
                                 <router-view name="NewsContent"></router-view>
                             </v-flex>
                         </v-layout>
