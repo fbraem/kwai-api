@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn v-if="$isAllowed('login')" @click="showLogin = true" icon>
+        <v-btn v-if="$base.isAllowed('login')" @click="showLogin = true" icon>
             <v-icon>lock</v-icon>
         </v-btn>
         <v-menu v-else offset-y right>
