@@ -28,11 +28,11 @@
     export default {
         computed : {
             category() {
-                return this.$store.getters['newsModule/category'](this.$route.params.id);
+                return this.$store.getters['categoryModule/category'](this.$route.params.id);
             }
         },
         mounted() {
-          this.$store.dispatch('newsModule/readCategory', { id : this.$route.params.id })
+          this.$store.dispatch('categoryModule/read', { id : this.$route.params.id })
             .catch((error) => {
               console.log(error);
           });
