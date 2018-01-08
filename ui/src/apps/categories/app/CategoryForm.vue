@@ -165,7 +165,7 @@ export default {
                 this.fillModel(this.category);
                 this.$store.dispatch('categoryModule/update', this.category.serialize())
                     .then(() => {
-                        this.$router.push('/read/' + this.category.id);
+                        this.$router.push({ name : 'category.read', params : { id : this.category.id }});
                     }).catch(() => {
                         console.log("Error occurred in categoryModule/update");
                     });
@@ -174,7 +174,7 @@ export default {
                 this.fillModel(category);
                 this.$store.dispatch('categoryModule/create', category.serialize())
                     .then((newCategory) => {
-                        this.$router.push('/read/' + newCategory.id);
+                        this.$router.push({ name : 'category.read', params : { id : newCategory.id }});
                     }).catch(err => {
                     });
             }
