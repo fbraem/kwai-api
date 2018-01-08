@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanupWebpackPlugin = require('webpack-cleanup-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 function resolve(dir) {
@@ -75,7 +75,7 @@ var config = {
         }
     },
     plugins : [
-        new BundleAnalyzerPlugin(),
+//        new BundleAnalyzerPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             names : ['vendor', 'vue', 'vuetify'],
             minChunks : Infinity
