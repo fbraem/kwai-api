@@ -6,7 +6,7 @@
                     <v-layout fill-height>
                         <v-flex xs8 align-end flexbox>
                             <div class="pa-2 white headline" style="background-color:rgba(34,34,34,0.8)">
-                                <v-icon v-if="isNew" color="red" light style="float:right">
+                                <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
                                     fa-star
                                 </v-icon>
                                 {{ title }}
@@ -24,7 +24,8 @@
                         {{ title }}
                     </h3>
                     <div class="news-mini-meta">
-                        <span v-if="authorName.length > 0">{{ authorName }} | </span>
+                        <span v-if="category"><router-link :to="{ name: 'news.category', params: { category_id : category.id} }">{{ category.name }}</router-link> &bull; </span>
+                        <span v-if="authorName.length > 0">{{ authorName }} &bull; </span>
                         <span v-if="story.publish_date">{{ $t('published', { publishDate : publishDate, publishDateFromNow : publishDateFromNow }) }}</span>
                     </div>
                     <div v-html="summary" style="margin-top:20px" :class="{ 'news-meta' : complete }">
@@ -37,12 +38,13 @@
             <v-card-title>
                 <div>
                     <h3 class="headline mb-0">
-                        <v-icon v-if="isNew" color="red" light style="float:right">
+                        <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
                             fa-star
                         </v-icon>
                         {{ title }}
                     </h3>
                     <div class="news-mini-meta">
+                        <span v-if="category"><router-link :to="{ name: 'news.category', params: { category_id : category.id} }">{{ category.name }}</router-link> &bull; </span>
                         <span v-if="authorName.length > 0">{{ authorName }} | </span>
                         <span v-if="story.publish_date">{{ $t('published', { publishDate : publishDate, publishDateFromNow : publishDateFromNow }) }}</span>
                     </div>
@@ -158,6 +160,9 @@
                     return filter([author.first_name, author.last_name]).join(' ');
                 }
                 return "";
+            },
+            category() {
+                return this.$store.getters['categoryModule/category'](this.story.id);
             }
         }
     }
