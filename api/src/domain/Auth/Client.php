@@ -15,7 +15,7 @@ class Client implements ClientInterface, ClientEntityInterface
     private $id;
     private $name;
     private $secret;
-    private $redirectUri;
+    private $redirect_uri;
     private $status;
 
     public function __construct($db, ?iterable $data = null)
@@ -46,7 +46,7 @@ class Client implements ClientInterface, ClientEntityInterface
         $this->name = $data['name'];
         $this->identifier = $data['identifier'];
         $this->secret = $data['secret'];
-        $this->redirectUri = $data['redirect_uri'];
+        $this->redirect_uri = $data['redirect_uri'];
         $this->status = $data['status'] ?? 1;
         $this->created_at = $data['created_at'] ?? null;
         $this->updated_at = $data['updated_at'] ?? null;
