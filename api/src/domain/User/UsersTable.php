@@ -35,6 +35,15 @@ class UsersTable implements UsersInterface
         return $this;
     }
 
+    public function findOne() : ?UserInterface
+    {
+        $users = $this->find();
+        if ($users && count($users) > 0) {
+            return reset($users);
+        }
+        return null;
+    }
+
     public function find() : iterable
     {
         $this->select->columns([

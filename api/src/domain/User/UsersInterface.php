@@ -4,6 +4,7 @@ namespace Domain\User;
 
 interface UsersInterface
 {
-    function find() : iterable;
-    function count() : int;
+    public function find() : iterable;
+    public function findOne() : ?UserInterface;
+    public function count() : int;
 }
