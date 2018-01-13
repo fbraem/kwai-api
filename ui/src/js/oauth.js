@@ -5,8 +5,7 @@ const USER_KEY = 'user';
 const ACCESSTOKEN_KEY = 'access_token';
 const REFRESHTOKEN_KEY = 'refresh_token';
 
-const CLIENT_ID = 'clubman';
-const CLIENT_SECRET = 'abc123';
+const CLIENT_ID = 'judokwaikemzeke';
 
 class OAuth
 {
@@ -93,7 +92,6 @@ class OAuth
             var form = new FormData();
             form.append('grant_type', 'refresh_token');
             form.append('client_id', CLIENT_ID);
-            form.append('client_secret', CLIENT_SECRET);
             form.append('refresh_token', this.refresh_token);
             this.post('api/auth/access_token', {
                 data : form,
@@ -113,7 +111,6 @@ class OAuth
             var form = new FormData();
             form.append('grant_type', 'password');
             form.append('client_id', CLIENT_ID);
-            form.append('client_secret', CLIENT_SECRET);
             form.append('username', username);
             form.append('password', password);
             form.append('scope', 'basic');
