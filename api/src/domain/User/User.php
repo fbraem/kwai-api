@@ -1,12 +1,10 @@
 <?php
 namespace Domain\User;
 
-use League\OAuth2\Server\Entities\UserEntityInterface;
-
 /**
  * @inheritdoc
  */
-class User implements UserInterface, UserEntityInterface
+class User implements UserInterface
 {
     private $id;
     private $email;

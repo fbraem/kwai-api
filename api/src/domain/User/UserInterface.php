@@ -2,7 +2,9 @@
 
 namespace Domain\User;
 
-interface UserInterface extends \Domain\DatetimeMetaInterface, \Domain\HydratorInterface
+use League\OAuth2\Server\Entities\UserEntityInterface;
+
+interface UserInterface extends \Domain\DatetimeMetaInterface, \Domain\HydratorInterface, UserEntityInterface
 {
     // Properties
     public function id() : ?int;
