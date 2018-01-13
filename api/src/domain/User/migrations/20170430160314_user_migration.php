@@ -29,18 +29,16 @@ class UserMigration extends AbstractMigration
             ->create()
         ;
 
-        $pwd = $this->randomPassword();
-
         $application = \Core\Clubman::getApplication();
-        $db = $application->getContainer()['db'];
-        //TODO: Use User class
-        $table = new \Zend\Db\TableGateway\TableGateway('users', $db);
-        $table->insert([
-            'email' => $application->getConfig()->email,
-            'password' => password_hash($pwd, PASSWORD_DEFAULT),
-            'remark' => 'Clubman Root User',
-            'created_at' => \Carbon\Carbon::now()->toDateTimeString()
-        ]);
+        $pwd = $this->randomPassword();
+        $data = [
+            [
+                'email' => $application->getConfig()->email,
+                'password' => password_hash($pwd, PASSWORD_DEFAULT),
+                'remark' => 'Root User'
+            ]
+        ];
+        $this->table('users')->insert($data)->save();
 
         echo 'Root User', PHP_EOL;
         echo '---------', PHP_EOL;
