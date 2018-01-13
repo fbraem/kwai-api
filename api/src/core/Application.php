@@ -13,6 +13,7 @@ use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
 use Domain\Auth\AccessTokenTable;
@@ -92,6 +93,8 @@ class Application
             $grant = new RefreshTokenGrant($refreshTokenRepo);
             $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
             $server->enableGrantType($grant, new \DateInterval('PT1H'));
+
+            $server->enableGrantType(new ImplicitGrant(new \DateInterval('PT1H')));
 
             return $server;
         };
