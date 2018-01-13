@@ -17,16 +17,18 @@ class AccessTokenAction implements \Core\ActionInterface
         $server = $request->getAttribute('clubman.container')['authorizationServer'];
         $response = (new Responder())->respond();
         try {
+            $application = \Core\Clubman::getApplication();
+            $request = $request->withAttribute('client_secret', $application->getConfig()->oauth2->client->secret);
             return $server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $exception) {
             return $exception->generateHttpResponse($response);
-/*
-        } catch (\Exception $exception) {
-            // Catch unexpected exceptions
-            $body = $response->getBody();
-            $body->write($exception->getMessage());
-            return $response->withStatus(500)->withBody($body);
-*/            
+            /*
+                    } catch (\Exception $exception) {
+                        // Catch unexpected exceptions
+                        $body = $response->getBody();
+                        $body->write($exception->getMessage());
+                        return $response->withStatus(500)->withBody($body);
+            */
         }
     }
 }
