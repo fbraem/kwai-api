@@ -31,19 +31,19 @@
                                 </v-btn>
                             </v-flex>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="#" style="width:100%" disabled>
+                                <v-btn href="/oud/training/training.htm" style="width:100%">
                                     <v-icon large color="red">fa-university</v-icon>
                                     Trainingen
                                 </v-btn>
                             </v-flex>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="#" style="width:100%" disabled>
+                                <v-btn href="https://docs.google.com/spreadsheets/d/1nU2LaRgVjma7g9UHN_9ObUeOnUDqi55Ztb005p1FJW4/edit?usp=sharing" style="width:100%">
                                     <v-icon large color="red">fa-trophy</v-icon>
                                     Tornooien
                                 </v-btn>
                             </v-flex>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="#" style="width:100%" disabled>
+                                <v-btn href="/oud/kalender.htm" style="width:100%">
                                     <v-icon large color="red">fa-calendar</v-icon>
                                     Kalender
                                 </v-btn>
@@ -55,7 +55,7 @@
                                 </v-btn>
                             </v-flex>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="#" style="width:100%" disabled>
+                                <v-btn href="oud/training/trainers.htm" style="width:100%">
                                     <v-icon large color="red">fa-users</v-icon>
                                     Bestuur
                                 </v-btn>
