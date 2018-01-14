@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid grid-list-xl ma-0 pa-0>
+    <v-container fluid grid-list-xl class="ma-0 pa-0">
         <v-layout>
             <v-flex xs12>
                 <v-card flat>
@@ -83,7 +83,7 @@
                                     </v-flex>
                                 </v-layout>
                             </v-flex>
-                            <v-flex xs12 sm7 md9>
+                            <v-flex xs12 sm7 md9 class="ma-0 pa-0">
                                 <router-view name="NewsContent"></router-view>
                             </v-flex>
                         </v-layout>
