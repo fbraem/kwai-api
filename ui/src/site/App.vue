@@ -3,17 +3,36 @@
         <v-container>
             <v-layout>
                 <v-flex xs12 xl10 offset-xl1>
-                    <v-card>
+                    <v-card class="hidden-sm-and-up">
+                        <v-container>
+                            <v-layout row>
+                                <v-flex xs7>
+                                    <div>
+                                        <p style="padding:5px">
+                                            {{ $t("message.hello") }}
+                                        </p>
+                                        <p style="padding:5px;margin-bottom:0px;">
+                                            {{ $t("message.info") }}
+                                        </p>
+                                    </div>
+                                </v-flex>
+                                <v-flex xs5>
+                                    <v-card-media :src="require('./images/logo.jpg')" height="125" contain></v-card-media>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card>
+                    <v-card class="hidden-xs-only">
                         <v-card-media :src="require('./images/judokwaikemzeke.jpg')" height="500">
                             <v-container fill-height fluid>
                                 <v-layout fill-height>
-                                    <v-flex xs8 align-end flexbox>
-                                        <div class="white--text" style="padding:5px;background-color:rgba(34,34,34,0.8)">
-                                            <h3 class="headline">Judokwai Kemzeke</h3>
-                                            <p>
+                                    <v-flex xs8 sm6 align-end flexbox>
+                                        <div class="white--text" style="padding:5px;background-color:rgba(34,34,34,0.8);min-height:181px">
+                                            <img :src="require('./images/logo.jpg')" style="width:171px;height:171px;float:left;margin-right:10px" />
+                                            <p style="padding:5px">
                                                 {{ $t("message.hello") }}
                                             </p>
-                                            <p>
+                                            <p style="padding:5px;margin-bottom:0px;">
                                                 {{ $t("message.info") }}
                                             </p>
                                         </div>
@@ -65,7 +84,99 @@
                 </v-flex>
             </v-layout>
         </v-container>
-        <NewsBrowse :featured="true"></NewsBrowse>
+        <v-container fluid grid-list-xl class="ma-0 pa-0">
+            <NewsBrowse :featured="true"></NewsBrowse>
+        </v-container>
+        <v-container fluid grid-list-xl>
+            <v-layout row wrap>
+                <v-flex xs12 sm6 lg3 d-flex>
+                    <v-card color="blue-grey darken-2" class="white--text">
+                        <v-container>
+                            <v-layout row>
+                                <v-flex xs7>
+                                    <div>
+                                        <div class="headline">
+                                            Jeugdvriendelijke Judoclub
+                                        </div>
+                                        <div>
+                                            Voor het derde jaar op rij verdient onze club
+                                            goud bij de proclomatie van het jeugdjudofonds!
+                                        </div>
+                                    </div>
+                                </v-flex>
+                                <v-flex xs5>
+                                    <v-card-media :src="require('./images/goud_jeugdsport_2017.jpg')" height="125" contain></v-card-media>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card>
+                </v-flex>
+                <v-flex xs12 sm6 lg3 d-flex>
+                    <v-card color="blue-grey darken-2" class="white--text">
+                        <v-container>
+                            <v-layout row>
+                                <v-flex xs7>
+                                    <div>
+                                        <div class="headline">
+                                            Locatie
+                                        </div>
+                                        <div>
+                                            Wij trainen in de gevechtssportzaal van sportcentrum "De Sportstek" in Stekene,
+                                            Nieuwstraat 60D.
+                                        </div>
+                                    </div>
+                                </v-flex>
+                                <v-flex xs5>
+                                    <v-card-media :src="require('./images/sporthal.jpg')" height="125"></v-card-media>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card>
+                </v-flex>
+                <v-flex xs12 sm6 lg3 d-flex>
+                    <v-card color="blue-grey darken-2" class="white--text">
+                        <v-container>
+                            <v-layout row>
+                                <v-flex xs7>
+                                    <div>
+                                        <div class="headline">
+                                            Eens proberen?
+                                        </div>
+                                        <div>
+                                            De Vlaamse Judo Federatie en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.
+                                        </div>
+                                    </div>
+                                </v-flex>
+                                <v-flex xs5>
+                                    <v-card-media :src="require('./images/kim_ono.png')" height="125" contain></v-card-media>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card>
+                </v-flex>
+                <v-flex xs12 sm6 lg3 d-flex>
+                    <v-card color="blue-grey darken-2" class="white--text">
+                        <v-container>
+                            <v-layout row>
+                                <v-flex xs7>
+                                    <div>
+                                        <div class="headline">
+                                            Hartveilig
+                                        </div>
+                                        <div>
+                                            Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.
+                                        </div>
+                                    </div>
+                                </v-flex>
+                                <v-flex xs5>
+                                    <v-card-media :src="require('./images/hartveilig.jpg')" height="125" contain></v-card-media>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card>
+                </v-flex>
+            </v-layout>
+        </v-container>
     </div>
 </template>
 
