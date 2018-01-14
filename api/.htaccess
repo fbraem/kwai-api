@@ -1,7 +1,7 @@
 # Enable rewrite engine and route requests to framework
 
 <IfModule mod_rewrite.c>
-    Options -MultiViews
+#   Options -MultiViews
 
     RewriteEngine On
 
@@ -12,5 +12,5 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-php_value upload_max_filesize 15M
-php_value post_max_size 15M
+#php_value upload_max_filesize 15M
+#php_value post_max_size 15M
