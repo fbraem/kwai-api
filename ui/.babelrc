@@ -1,0 +1,19 @@
+{
+    "plugins" : [
+        "transform-runtime",
+        "transform-es2015-shorthand-properties",
+        "transform-object-rest-spread",
+        "transform-es2015-classes",
+        "transform-es2015-template-literals",
+        "transform-es2015-arrow-functions",
+        "transform-es2015-spread",
+        "syntax-dynamic-import",
+        "lodash"
+    ],
+    "presets" : [
+        [
+            "es2015",
+            { modules : false }
+        ]
+    ]
+}
