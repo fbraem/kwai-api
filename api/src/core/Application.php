@@ -133,6 +133,7 @@ class Application
         $app->pipe(new Middlewares\RoutingMiddleware());
         $app->pipe(new Middlewares\AuthorityMiddleware());
         $app->pipe(new Middlewares\ParametersMiddleware());
+        $app->pipe(new Middlewares\LogActionMiddleware());
         $app->pipe(new Middlewares\ActionMiddleware());
         $server = Server::createServer(
             $app,
