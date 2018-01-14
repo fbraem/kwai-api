@@ -4,13 +4,13 @@
             <v-card-media v-if="story.header_detail_crop" :src="story.header_detail_crop" height="400px">
                 <v-container fill-height fluid>
                     <v-layout fill-height>
-                        <v-flex xs8 align-end flexbox>
-                            <div class="pa-2 white headline" style="background-color:rgba(34,34,34,0.8)">
-                                <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
+                        <v-flex align-end flexbox>
+                            <span class="pa-2 headline" style="background-color:rgba(255,255,255,0.7)">
+                                {{ title }}
+                                <v-icon v-if="isNew" color="red" light style="margin-left:5px;margin-top:-7px">
                                     fa-star
                                 </v-icon>
-                                {{ title }}
-                            </div>
+                            </span>
                         </v-flex>
                     </v-layout>
                 </v-container>
@@ -37,7 +37,7 @@
             <v-card-media v-if="story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
             <v-card-title>
                 <div>
-                    <h3 class="headline mb-0">
+                    <h3 class="mb-0">
                         <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
                             fa-star
                         </v-icon>
@@ -86,6 +86,17 @@
     }
     .news-content img {
         max-width: 100%;
+    }
+
+    blockquote {
+      background: #f9f9f9;
+      border-left: 10px solid #ccc;
+      margin: 1.5em 10px;
+      padding: 0.5em 10px;
+      quotes: "\201C""\201D""\2018""\2019";
+    }
+    blockquote p {
+      display: inline;
     }
 </style>
 
@@ -162,7 +173,7 @@
                 return "";
             },
             category() {
-                return this.$store.getters['categoryModule/category'](this.story.id);
+                return this.$store.getters['categoryModule/category'](this.story.category.id);
             }
         }
     }
