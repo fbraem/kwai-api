@@ -19,7 +19,7 @@
             </v-flex>
         </v-layout>
         <v-layout v-else :justify-space-around="featured" row wrap>
-            <v-flex v-for="story in stories" :key="story.id" xs12 :sm6="featured" md4>
+            <v-flex v-for="story in stories" :key="story.id" xs12 :sm6="featured" md4 d-flex>
                 <NewsCard :story="story" :complete="false" @delete="areYouSure(story.id)" />
             </v-flex>
         </v-layout>
@@ -54,6 +54,7 @@
 <script>
     import moment from 'moment';
     import NewsCard from '../components/NewsCard.vue';
+    import Paginator from '@/components/Paginator.vue';
 
     import messages from '../lang/NewsBrowse';
 
@@ -62,7 +63,8 @@
             messages : messages
         },
         components : {
-            NewsCard
+            NewsCard,
+            Paginator
         },
         props : [
             'year',
@@ -123,6 +125,9 @@
                 this.$store.dispatch('newsModule/delete', {
                     id : this.storyToDelete
                 });
+            },
+            readPage(offset) {
+                console.log(offset);
             }
         }
     };
