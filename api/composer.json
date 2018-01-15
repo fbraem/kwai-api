@@ -29,7 +29,8 @@
         "http-interop/http-middleware": "^0.5.0",
         "zendframework/zend-db": "^2.9",
         "zendframework/zend-hydrator": "^2.3",
-        "erusev/parsedown": "^1.6"
+        "league/commonmark": "^0.17.0",
+        "webuni/commonmark-table-extension": "^0.7.0"
     },
     "require-dev": {
     },
