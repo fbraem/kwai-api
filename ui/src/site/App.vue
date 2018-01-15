@@ -89,7 +89,7 @@
         </v-container>
         <v-container fluid grid-list-xl>
             <v-layout row wrap>
-                <v-flex xs12 sm6 lg3 d-flex>
+                <v-flex xs12 sm6 xl3 d-flex>
                     <v-card color="blue-grey darken-2" class="white--text">
                         <v-container>
                             <v-layout row>
@@ -111,7 +111,7 @@
                         </v-container>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 sm6 lg3 d-flex>
+                <v-flex xs12 sm6 xl3 d-flex>
                     <v-card color="blue-grey darken-2" class="white--text">
                         <v-container>
                             <v-layout row>
@@ -133,7 +133,7 @@
                         </v-container>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 sm6 lg3 d-flex>
+                <v-flex xs12 sm6 xl3 d-flex>
                     <v-card color="blue-grey darken-2" class="white--text">
                         <v-container>
                             <v-layout row>
@@ -154,7 +154,7 @@
                         </v-container>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 sm6 lg3 d-flex>
+                <v-flex xs12 sm6 xl3 d-flex>
                     <v-card color="blue-grey darken-2" class="white--text">
                         <v-container>
                             <v-layout row>
