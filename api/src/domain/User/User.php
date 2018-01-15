@@ -33,6 +33,8 @@ class User implements UserInterface
         $this->first_name = $data['first_name'] ?? null;
         $this->last_name = $data['last_name'] ?? null;
         $this->remark = $data['remark'] ?? null;
+        $this->created_at = $data['created_at'] ?? null;
+        $this->updated_at = $data['updated_at'] ?? null;
     }
 
     public function extract() : iterable
@@ -45,7 +47,8 @@ class User implements UserInterface
             'first_name' => $this->firstName(),
             'last_name' => $this->lastName(),
             'remark' => $this->remark(),
-            'created_at' => $this->createdAt()
+            'created_at' => $this->createdAt(),
+            'updated_at' => $this->updatedAt()
         ];
     }
 

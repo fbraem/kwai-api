@@ -21,14 +21,13 @@ class LogActionMiddleware implements MiddlewareInterface
         if ($user) {
             $route = $request->getAttribute('clubman.route');
             $db = $request->getAttribute('clubman.container')['db'];
-            $this->table = new \Zend\Db\TableGateway\TableGateway('user_logs', $db);
-            $this->table->insert([
-                'user_id' => $user->id(),
+            $log = new \Domain\User\UserLog($db, [
+                'user' => $user,
                 'action' => $route->name,
                 'rest' => $route->extras['rest'] ?? '',
                 'model_id' => $route->attributes['id'] ?? 0,
-                'created_at' => \Carbon\Carbon::now()->toDateTimeString()
             ]);
+            $log->store();
         }
         return $delegate->process($request);
     }
