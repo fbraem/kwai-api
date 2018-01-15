@@ -25,7 +25,7 @@ class LogActionMiddleware implements MiddlewareInterface
             $this->table->insert([
                 'user_id' => $user->id(),
                 'action' => $route->name,
-                'domain' => $route->extras['domain'] ?? '',
+                'rest' => $route->extras['rest'] ?? '',
                 'model_id' => $route->attributes['id'] ?? 0,
                 'created_at' => \Carbon\Carbon::now()->toDateTimeString()
             ]);
