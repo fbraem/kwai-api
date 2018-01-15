@@ -1,5 +1,5 @@
 <template>
-    <v-card :flat="complete">
+    <v-card :flat="complete" style="flex:1">
         <div v-if="complete">
             <v-card-media v-if="story.header_detail_crop" :src="story.header_detail_crop" height="400px">
                 <v-container fill-height fluid>
