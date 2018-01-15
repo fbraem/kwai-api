@@ -35,9 +35,11 @@ class CreateStoryAction implements \Core\ActionInterface
                 ]
             ]))->respond();
         }
+
         $categories = new \Domain\Category\CategoriesTable($db);
-        $category = $categories->whereId($categoryId)->findOne();
-        if (!$category) {
+        try {
+            $category = $categories->whereId($categoryId)->findOne();
+        } catch (\Domain\NewsStoryInterface $nfe) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
                 '/data/relationships/category' => [
                     _('Category doesn\'t exist')

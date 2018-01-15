@@ -35,13 +35,13 @@ class UsersTable implements UsersInterface
         return $this;
     }
 
-    public function findOne() : ?UserInterface
+    public function findOne() : UserInterface
     {
         $users = $this->find();
         if ($users && count($users) > 0) {
             return reset($users);
         }
-        return null;
+        throw new \Domain\NotFoundException("User not found");
     }
 
     public function find() : iterable

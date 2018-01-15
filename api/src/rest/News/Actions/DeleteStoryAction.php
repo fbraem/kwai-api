@@ -18,8 +18,9 @@ class DeleteStoryAction implements \Core\ActionInterface
         $db = $request->getAttribute('clubman.container')['db'];
 
         $storiesTable = new \Domain\News\NewsStoriesTable($db);
-        $story = $storiesTable->whereId($id)->findOne();
-        if (!$story) {
+        try {
+            $story = $storiesTable->whereId($id)->findOne();
+        } catch (\Domain\NotFoundException $nfe) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 

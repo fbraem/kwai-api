@@ -87,13 +87,13 @@ class NewsStoriesTable implements NewsStoriesInterface
         return $this;
     }
 
-    public function findOne() : ?NewsStoryInterface
+    public function findOne() : NewsStoryInterface
     {
         $stories = $this->find();
         if ($stories && count($stories) > 0) {
             return reset($stories);
         }
-        return null;
+        throw new \Domain\NotFoundException("News story not found");
     }
 
     public function find(?int $limit = null, ?int $offset = null) : iterable

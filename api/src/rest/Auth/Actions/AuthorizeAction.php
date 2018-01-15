@@ -25,13 +25,11 @@ class AuthorizeAction implements \Core\ActionInterface
             return $server->completeAuthorizationRequest($authRequest, $response);
         } catch (OAuthServerException $exception) {
             return $exception->generateHttpResponse($response);
-            /*
-                    } catch (\Exception $exception) {
-                        // Catch unexpected exceptions
-                        $body = $response->getBody();
-                        $body->write($exception->getMessage());
-                        return $response->withStatus(500)->withBody($body);
-            */
+        } catch (\Exception $exception) {
+            // Catch unexpected exceptions
+            $body = $response->getBody();
+            $body->write($exception->getMessage());
+            return $response->withStatus(500)->withBody($body);
         }
     }
 }

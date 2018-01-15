@@ -23,13 +23,13 @@ class CategoriesTable implements CategoriesInterface
         return $this;
     }
 
-    public function findOne() : ?CategoryInterface
+    public function findOne() : CategoryInterface
     {
         $categories = $this->find();
         if ($categories && count($categories) > 0) {
             return reset($categories);
         }
-        return null;
+        throw new \Domain\NotFoundException("Category not found");
     }
 
     public function find() : iterable

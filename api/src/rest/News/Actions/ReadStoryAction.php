@@ -20,8 +20,9 @@ class ReadStoryAction implements \Core\ActionInterface
         $db = $request->getAttribute('clubman.container')['db'];
 
         $stories = new \Domain\News\NewsStoriesTable($db);
-        $story = $stories->whereId($id)->findOne();
-        if (!$story) {
+        try {
+            $story = $stories->whereId($id)->findOne();
+        } catch (\Domain\NotFoundException $nfe) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 

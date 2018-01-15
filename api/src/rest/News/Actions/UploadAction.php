@@ -29,8 +29,10 @@ class UploadAction implements \Core\ActionInterface
         $id = $request->getAttribute('route.id');
         $db = $request->getAttribute('clubman.container')['db'];
         $dbStories = new \Domain\News\NewsStoriesTable($db);
-        $story = $dbStories->whereId($id)->findOne();
-        if (!$story) {
+
+        try {
+            $story = $dbStories->whereId($id)->findOne();
+        } catch (\Domain\NotFoundException $nfe) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 

@@ -22,8 +22,9 @@ class UpdateStoryAction implements \Core\ActionInterface
         $db = $request->getAttribute('clubman.container')['db'];
 
         $storiesTable = new \Domain\News\NewsStoriesTable($db);
-        $story = $storiesTable->whereId($id)->findOne();
-        if (!$story) {
+        try {
+            $story = $storiesTable->whereId($id)->findOne();
+        } catch (\Domain\NotFoundException $nfe) {
             return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
         }
 
@@ -44,13 +45,14 @@ class UpdateStoryAction implements \Core\ActionInterface
             ]))->respond();
         }
         $categoriesTable = new \Domain\Category\CategoriesTable($db);
-        $category = $categoriesTable->whereId($categoryId)->findOne();
-        if (!$category) {
+        try {
+            $category = $categoriesTable->whereId($categoryId)->findOne();
+        } catch (\Domain\NotFoundException $nfe) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
-                '/data/relationships/category' => [
-                    _('Category doesn\'t exist')
-                ]
-            ]))->respond();
+                    '/data/relationships/category' => [
+                        _('Category doesn\'t exist')
+                    ]
+                ]))->respond();
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
