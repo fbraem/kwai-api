@@ -143,10 +143,24 @@ class OAuth
     }
 
     logout() {
-        this.access_token = null;
-        Lockr.rm(ACCESSTOKEN_KEY);
-        this.refresh_token = null;
-        Lockr.rm(REFRESHTOKEN_KEY);
+        return new Promise((resolve, reject) => {
+            var form = new FormData();
+            form.append('refresh_token', this.refresh_token);
+            this.post('api/auth/logout', {
+                data : form,
+                dontRetry : true
+            }).then((response) => {
+                this.access_token = null;
+                Lockr.rm(ACCESSTOKEN_KEY);
+                this.refresh_token = null;
+                Lockr.rm(REFRESHTOKEN_KEY);
+                resolve(response)
+            }).catch((err) => {
+                if ( err.response.status != 401 ) {
+                    reject(err);
+                }
+            });
+        });
     }
 }
 
