@@ -32,8 +32,10 @@ class AuthorityMiddleware implements MiddlewareInterface
                     return (new HTTPResponder(new Responder(), 500, _('Unable to find user')))->respond();
                 }
             } catch (OAuthServerException $exception) {
-                $response = (new Responder())->respond();
-                return $exception->generateHttpResponse($response);
+                if ($route->name != 'auth.logout') {
+                    $response = (new Responder())->respond();
+                    return $exception->generateHttpResponse($response);
+                }
             } catch (\Exception $exception) {
                 $response = (new Responder())->respond();
                 return (new OAuthServerException($exception->getMessage(), 0, 'unknown_error', 500))
