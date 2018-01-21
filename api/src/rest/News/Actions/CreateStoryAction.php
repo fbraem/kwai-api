@@ -39,7 +39,7 @@ class CreateStoryAction implements \Core\ActionInterface
         $categories = new \Domain\Category\CategoriesTable($db);
         try {
             $category = $categories->whereId($categoryId)->findOne();
-        } catch (\Domain\NewsStoryInterface $nfe) {
+        } catch (\Domain\NotFoundException $nfe) {
             return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
                 '/data/relationships/category' => [
                     _('Category doesn\'t exist')
@@ -59,7 +59,8 @@ class CreateStoryAction implements \Core\ActionInterface
             'featured' => $attributes['featured'] ?? 0,
             'featured_end_date' => $attributes['featured_end_date'] ?? null,
             'featered_end_date_timezone' => $attributes['featured_end_date_timezone'] ?? null,
-            'enabled' => $attributes['enabled']
+            'enabled' => $attributes['enabled'],
+            'remark' => $attributes['remark'] ?? null
         ]);
         $story->store();
 
