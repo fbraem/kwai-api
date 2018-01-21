@@ -19,7 +19,7 @@
             </v-btn>
         </v-toolbar>
         <v-content>
-            <v-container>
+            <v-container fluid class="pl-0 pr-0">
                 <router-view />
             </v-container>
         </v-content>
