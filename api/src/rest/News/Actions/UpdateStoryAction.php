@@ -71,6 +71,7 @@ class UpdateStoryAction implements \Core\ActionInterface
                 'publish_date_timezone' => $attributes['publish_date_timezone'] ?? null,
                 'end_date_timezone' => $attributes['end_date_timezone'] ?? null,
                 'featured_date_timezone' => $attributes['featured_date_timezone'] ?? null,
+                'remark' => $attributes['remark'] ?? null
             ])
         );
         $story->store();
@@ -78,6 +79,7 @@ class UpdateStoryAction implements \Core\ActionInterface
         $content = new \Domain\Content\Content(
             $db,
             array_merge($story->contents()->contents()[0]->extract(), [
+                'user' => $request->getAttribute('clubman.user'),
                 'title' => $attributes['title'],
                 'summary' => $attributes['summary'],
                 'content' => $attributes['content']
