@@ -23,8 +23,12 @@
                 <router-view />
             </v-container>
         </v-content>
-        <v-footer class="red" app>
-            <span class="white--text">&copy; ClubMan</span>
+        <v-footer class="red" app dark>
+            <span class="white--text">&copy; Judokwai Kemzeke</span>
+            <v-spacer></v-spacer>
+            <v-btn color="red" small fab href="mailto:franky.braem@gmail.com">
+                <v-icon>fa-envelope</v-icon>
+            </v-btn>
         </v-footer>
     </v-app>
 </template>
