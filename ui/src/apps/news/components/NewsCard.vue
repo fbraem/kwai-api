@@ -87,6 +87,10 @@
     .news-content img {
         max-width: 100%;
     }
+    .news-content ul {
+        list-style-position: inside;
+        margin-bottom: 20px;
+    }
 
     blockquote {
       background: #f9f9f9;
