@@ -11,6 +11,10 @@ use Webuni\CommonMark\TableExtension\TableExtension;
 
 class ContentTransformer extends Fractal\TransformerAbstract
 {
+    protected $defaultIncludes = [
+        'user'
+    ];
+
     public function transform(ContentInterface $content)
     {
         $data = $content->extract();
@@ -25,5 +29,13 @@ class ContentTransformer extends Fractal\TransformerAbstract
             $data['html_content'] = $data['content'];
         }
         return $data;
+    }
+
+    public function includeUser(Content $content)
+    {
+        $author = $content->user();
+        if ($author) {
+            return $this->item($author, new \Domain\User\UserTransformer, 'users');
+        }
     }
 }

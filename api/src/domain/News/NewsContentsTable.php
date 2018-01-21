@@ -46,11 +46,12 @@ class NewsContentsTable
         ;
 
         $contents = [];
+        $userIds = [];
 
         $resultSet = $this->table->selectWith($this->select);
         foreach ($resultSet as $row) {
             if (! isset($contents[$row->news_id])) {
-                $contents[$row->news_id] = new NewsContent($this->db, $row->news_id);
+                $contents[$row->news_id] = [];
             }
             $contentData = array_filter(
                 (array) $row,
@@ -63,10 +64,28 @@ class NewsContentsTable
                 $contentData[substr($key, 8)] = $value;
                 unset($contentData[$key]);
             }
-            $contentData['id'] = $row->content_id;
-            $contents[$row->news_id]->add(new \Domain\Content\Content($this->db, $contentData));
+
+            $contents[$row->news_id][$contentData['id']] = $contentData;
+            $userIds[] = $contentData['user_id'];
         }
 
-        return $contents;
+        $userIds = array_unique($userIds);
+        $users = (new \Domain\User\UsersTable($this->db))->whereId($userIds)->find();
+
+        foreach ($contents as $newsId => $newsContent) {
+            foreach ($newsContent as $contentId => $content) {
+                $contents[$newsId][$contentId]['user'] = $users[$content['user_id']];
+            }
+        }
+
+        $result = [];
+        foreach ($contents as $newsId => $newsContent) {
+            $result[$newsId] = new NewsContent($this->db, $newsId);
+            foreach ($newsContent as $content) {
+                $result[$newsId]->add(new \Domain\Content\Content($this->db, $content));
+            }
+        }
+
+        return $result;
     }
 }

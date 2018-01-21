@@ -9,6 +9,7 @@ interface ContentInterface extends \Domain\DatetimeMetaInterface, \Domain\Hydrat
     public function title() : string;
     public function summary() : string;
     public function content() : string;
+    public function user() : \Domain\User\UserInterface;
 
     public function store();
     public function delete();

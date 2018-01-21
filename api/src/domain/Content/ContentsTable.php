@@ -38,12 +38,25 @@ class ContentsTable implements ContentsInterface
 
     public function find() : iterable
     {
-        $contents = [];
-        $results = $this->table->selectWith($this->select);
-        foreach ($results as $row) {
-            $contents[$row->id] = new Content($this->db, $row);
+        $contents = $this->table->selectWith($this->select);
+
+        if (count($contents) > 0) {
+            $ids = array_unique(
+                array_map(function ($v) {
+                    return $v->user_id;
+                }, $contents)
+            );
+            $users = (new \Domain\User\UsersTable($this->db))->whereId($ids)->find();
+            foreach ($contents as $content) {
+                $content->user = $users[$content->user_id];
+            }
         }
-        return $contents;
+
+        $result = [];
+        foreach ($contents as $content) {
+            $result[] = new Content($this->db, $content);
+        }
+        return $result;
     }
 
     public function count() : int

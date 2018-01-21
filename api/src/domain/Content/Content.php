@@ -110,7 +110,7 @@ class Content implements ContentInterface
         return $this->content;
     }
 
-    public function user()
+    public function user() : \Domain\User\UserInterface
     {
         return $this->user;
     }
