@@ -19,7 +19,7 @@
             </v-flex>
         </v-layout>
         <v-layout v-else :justify-space-around="featured" row wrap>
-            <v-flex v-for="story in stories" :key="story.id" xs12 :sm6="featured" md4 d-flex>
+            <v-flex v-for="story in stories" :key="story.id" xs12 sm6 md6 lg4 d-flex>
                 <NewsCard :story="story" :complete="false" @delete="areYouSure(story.id)" />
             </v-flex>
         </v-layout>

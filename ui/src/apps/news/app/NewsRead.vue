@@ -1,5 +1,5 @@
 <template>
-    <v-container class="ma-0 pa-0">
+    <v-container>
         <v-layout>
             <v-flex xs12>
                 <NewsCard v-if="story" :story="story" :complete="true" @delete="areYouSure(story.id)" />
