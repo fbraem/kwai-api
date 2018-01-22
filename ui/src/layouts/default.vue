@@ -19,9 +19,7 @@
             </v-btn>
         </v-toolbar>
         <v-content>
-            <v-container fluid class="pl-0 pr-0">
-                <router-view />
-            </v-container>
+            <router-view />
         </v-content>
         <v-footer class="red" app dark>
             <span class="white--text">&copy; Judokwai Kemzeke</span>
