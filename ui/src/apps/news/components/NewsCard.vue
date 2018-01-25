@@ -1,5 +1,5 @@
 <template>
-    <v-card :flat="complete" style="flex:1">
+    <v-card :flat="complete" style="flex:1" :to="contentLink">
         <div v-if="complete">
             <v-card-media v-if="story.header_detail_crop" :src="story.header_detail_crop" height="400px">
                 <v-container fill-height fluid>
@@ -15,12 +15,12 @@
                     </v-layout>
                 </v-container>
             </v-card-media>
+            <span v-if="isNew" style="float:right;">
+                <v-icon color="red" light style="margin:10px;">fa-star</v-icon>
+            </span>
             <v-card-title>
                 <div>
                     <h3 v-if="!story.header_detail_crop" class="headline mb-0">
-                        <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
-                            fa-star
-                        </v-icon>
                         {{ title }}
                     </h3>
                     <div class="news-mini-meta">
@@ -35,12 +35,15 @@
         </div>
         <div v-else>
             <v-card-media v-if="story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
+            <span v-if="content.length > 0" style="float:right;">
+                <v-icon style="margin:10px;">fa-ellipsis-h</v-icon>
+            </span>
+            <span v-if="isNew" style="float:right;">
+                <v-icon color="red" style="margin:10px;">fa-star</v-icon>
+            </span>
             <v-card-title>
                 <div>
                     <h3 class="mb-0">
-                        <v-icon v-if="isNew" color="red" light style="float:right;margin-left:5px">
-                            fa-star
-                        </v-icon>
                         {{ title }}
                     </h3>
                     <div class="news-mini-meta">
@@ -55,13 +58,9 @@
         </div>
         <v-divider v-if="complete"></v-divider>
         <v-card-text v-if="complete">
-            <div class="news-content" v-html="content">
-            </div>
+            <div class="news-content" v-html="content"></div>
         </v-card-text>
         <v-card-actions>
-            <v-btn v-if="!complete && content.length > 0" icon :to="{ name : 'news.story' , params : { id : story.id }}" flat>
-                <v-icon>fa-ellipsis-h</v-icon>
-            </v-btn>
             <v-btn v-if="complete" icon :to="{ name : 'news.browse' }" flat>
                 <v-icon>view_list</v-icon>
             </v-btn>
@@ -130,6 +129,17 @@
             }
         },
         computed : {
+            contentLink() {
+                if ( !this.complete && this.content.length > 0) {
+                    return {
+                        name : 'news.story',
+                        params : {
+                            id : this.story.id
+                        }
+                    };
+                }
+                return null;
+            },
             summary() {
                 var content = find(this.story.contents, function(o) {
                     return o.locale == 'nl';
