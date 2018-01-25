@@ -15,7 +15,8 @@ return [
             __DIR__ . '/domain/Category/migrations',
             __DIR__ . '/domain/News/migrations',
             __DIR__ . '/domain/Auth/migrations',
-            __DIR__ . '/domain/Content/migrations'
+            __DIR__ . '/domain/Content/migrations',
+            __DIR__ . '/domain/Page/migrations'
         ]
     ],
     'environments' => $environments

@@ -31,6 +31,9 @@ store.registerModule('newsModule', newsStore);
 import categoryStore from '@/apps/categories/store';
 store.registerModule('categoryModule', categoryStore);
 
+import pageStore from '@/apps/pages/store';
+store.registerModule('pageModule', pageStore);
+
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
     child : (store) => {
@@ -52,6 +55,8 @@ import newsRoutes from '@/apps/news/routes';
 routes = routes.concat(newsRoutes);
 import categoryRoutes from '@/apps/categories/routes';
 routes = routes.concat(categoryRoutes);
+import pageRoutes from '@/apps/pages/routes';
+routes = routes.concat(pageRoutes);
 
 const router = new VueRouter({
     routes : routes

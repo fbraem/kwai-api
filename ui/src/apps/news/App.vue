@@ -1,17 +1,19 @@
 <template>
     <v-container fluid>
         <v-layout row wrap>
-            <v-menu offset-y class="hidden-md-and-up">
-                <v-btn color="red" flat icon @click="drawer = !drawer" slot="activator">
-                    <v-icon>fa-bars</v-icon>
-                </v-btn>
-                <NewsSideBar :categories="categories" :archive="archive"></NewsSideBar>
-            </v-menu>
-            <v-flex md3 class="hidden-sm-and-down">
+            <v-flex xs12 class="hidden-md-and-up">
+                <v-menu offset-y>
+                    <v-btn color="red" flat @click="drawer = !drawer" slot="activator">
+                        <v-icon left>fa-bars</v-icon> {{ $t('news') }}
+                    </v-btn>
+                    <NewsSideBar :categories="categories" :archive="archive"></NewsSideBar>
+                </v-menu>
+            </v-flex>
+            <v-flex md3 class="hidden-sm-and-down pl-3">
                 <NewsSideBar :categories="categories" :archive="archive"></NewsSideBar>
             </v-flex>
-            <v-flex xs11 md9>
-                <v-container grid-list-xl class="pt-0 pl-0">
+            <v-flex xs12 md9>
+                <v-container grid-list-xl class="pa-0">
                     <v-layout row wrap>
                         <v-flex xs12 class="pt-0">
                             <router-view name="NewsContent"></router-view>
