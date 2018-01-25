@@ -8,15 +8,15 @@
             <!--
             <v-toolbar-side-icon @click.stop="clickDrawer"></v-toolbar-side-icon>
             -->
+            <v-btn icon href="/">
+                <v-icon>home</v-icon>
+            </v-btn>
             <v-toolbar-title>
                 {{ title }}
                 <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <login></login>
-            <v-btn icon href="/">
-                <v-icon>home</v-icon>
-            </v-btn>
         </v-toolbar>
         <v-content>
             <router-view />
@@ -24,7 +24,7 @@
         <v-footer class="red" app dark>
             <span class="white--text">&copy; Judokwai Kemzeke</span>
             <v-spacer></v-spacer>
-            <v-btn color="red" small fab href="mailto:franky.braem@gmail.com">
+            <v-btn icon href="mailto:franky.braem@gmail.com">
                 <v-icon>fa-envelope</v-icon>
             </v-btn>
         </v-footer>
