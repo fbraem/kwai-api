@@ -42,7 +42,6 @@ class User implements UserInterface
         return [
             'id' => $this->id(),
             'email' => $this->email(),
-            'password' => $this->password(),
             'last_login' => $this->lastLogin(),
             'first_name' => $this->firstName(),
             'last_name' => $this->lastName(),
