@@ -50,7 +50,7 @@
                                 </v-btn>
                             </v-flex>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="/oud/training/training.htm" style="width:100%">
+                                <v-btn :to="{ name : 'pages.category', params : { category_id : '2' } }" style="width:100%">
                                     <v-icon large color="red">fa-university</v-icon>
                                     Trainingen
                                 </v-btn>
