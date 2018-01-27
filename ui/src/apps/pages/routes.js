@@ -10,7 +10,7 @@ export default [
                     components : {
                         PageContent : () => import(/* webpackChunkName: "pages_chunck" */ './app/PageRead.vue')
                     },
-                    name : 'page',
+                    name : 'pages.read',
                     props : {
                         PageContent : true
                     }

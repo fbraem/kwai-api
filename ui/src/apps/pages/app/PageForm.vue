@@ -297,7 +297,7 @@
                     this.fillModel(this.page);
                     this.$store.dispatch('pageModule/update', this.page.serialize())
                         .then(() => {
-                            this.$router.push({ name : 'page', params : { id : this.page.id }});
+                            this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
                         }).catch(err => {
                             console.log(err);
                         });
@@ -306,7 +306,7 @@
                     this.fillModel(page);
                     this.$store.dispatch('pageModule/create', page.serialize())
                         .then((newPage) => {
-                            this.$router.push({ name : 'page', params : { id : newPage.id }});
+                            this.$router.push({ name : 'pages.read', params : { id : newPage.id }});
                         }).catch(err => {
                             console.log(err);
                         });

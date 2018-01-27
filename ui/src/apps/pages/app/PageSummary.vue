@@ -1,5 +1,5 @@
 <template>
-    <v-card :to="{ name : 'page' , params : { id : page.id }}">
+    <v-card :to="{ name : 'pages.read' , params : { id : page.id }}">
         <span style="float:right;">
             <v-icon style="margin:10px;">fa-ellipsis-h</v-icon>
         </span>
