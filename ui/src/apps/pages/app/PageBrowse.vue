@@ -58,6 +58,10 @@
             }
           },
         mounted() {
+            var categories = this.$store.getters['categoryModule/categories'];
+            if (categories.length == 0) {
+                this.$store.dispatch('categoryModule/browse');
+            }
             this.fetchData({
                 category : this.category_id
             });
