@@ -51,10 +51,12 @@
                         <span v-if="authorName.length > 0">{{ authorName }} | </span>
                         <span v-if="story.publish_date">{{ $t('published', { publishDate : publishDate, publishDateFromNow : publishDateFromNow }) }}</span>
                     </div>
-                    <div v-html="summary" style="margin-top:10px" :class="{ 'news-meta' : complete }">
-                    </div>
                 </div>
             </v-card-title>
+            <v-card-text class="pt-0 pb-0">
+                <div v-html="summary" style="margin-top:10px" :class="{ 'news-meta' : complete }">
+                </div>
+            </v-card-text>
         </div>
         <v-divider v-if="complete"></v-divider>
         <v-card-text v-if="complete">
