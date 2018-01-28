@@ -276,28 +276,22 @@
                 model.addRelation('category', new Model('category', this.form.page.category));
             },
             submit() {
-                if (this.imageCrop) {
-                    var formData = new FormData();
-                    formData.append('image', this.$refs.fileInput.files[0]);
-                    formData.append('x', this.imageCrop.points[0]);
-                    formData.append('y', this.imageCrop.points[1]);
-                    formData.append('width', this.imageCrop.points[2] - this.imageCrop.points[0]);
-                    formData.append('height', this.imageCrop.points[3] - this.imageCrop.points[1]);
-                    formData.append('scale', this.imageCrop.zoom);
-                    this.$store.dispatch('pageModule/uploadImage', {
-                        page : {
-                            id : this.page.id
-                        },
-                        formData : formData
-                    });
-                }
                 this.errors = initError();
 
                 if (this.page) { // update
                     this.fillModel(this.page);
                     this.$store.dispatch('pageModule/update', this.page.serialize())
                         .then(() => {
-                            this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
+                            if (this.imageURL) {
+                                this.uploadImage(this.page.id)
+                                    .then(() => {
+                                        this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
+                                    }).catch(err => {
+                                        console.log(err);
+                                    });
+                            } else {
+                                this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
+                            }
                         }).catch(err => {
                             console.log(err);
                         });
@@ -306,11 +300,35 @@
                     this.fillModel(page);
                     this.$store.dispatch('pageModule/create', page.serialize())
                         .then((newPage) => {
-                            this.$router.push({ name : 'pages.read', params : { id : newPage.id }});
+                            if (this.imageURL) {
+                                this.uploadImage(newPage.id)
+                                    .then(() => {
+                                        this.$router.push({ name : 'pages.read', params : { id : newPage.id }});
+                                    }).catch(err => {
+                                        console.log(err);
+                                    });
+                            } else {
+                                this.$router.push({ name : 'pages.read', params : { id : newPage.id }});
+                            }
                         }).catch(err => {
                             console.log(err);
                         });
                 }
+            },
+            uploadImage(pageId) {
+                var formData = new FormData();
+                formData.append('image', this.$refs.fileInput.files[0]);
+                formData.append('x', this.imageCrop.points[0]);
+                formData.append('y', this.imageCrop.points[1]);
+                formData.append('width', this.imageCrop.points[2] - this.imageCrop.points[0]);
+                formData.append('height', this.imageCrop.points[3] - this.imageCrop.points[1]);
+                formData.append('scale', this.imageCrop.zoom);
+                return this.$store.dispatch('pageModule/uploadImage', {
+                    page : {
+                        id : pageId
+                    },
+                    formData : formData
+                });
             },
             upload() {
                 this.$refs.fileInput.click();

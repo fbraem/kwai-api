@@ -561,33 +561,22 @@
                 }
             },
             submit() {
-                if (this.imageOverviewCrop) {
-                    var formData = new FormData();
-                    formData.append('image', this.$refs.fileInput.files[0]);
-                    formData.append('overview_x', this.imageOverviewCrop.points[0]);
-                    formData.append('overview_y', this.imageOverviewCrop.points[1]);
-                    formData.append('overview_width', this.imageOverviewCrop.points[2] - this.imageOverviewCrop.points[0]);
-                    formData.append('overview_height', this.imageOverviewCrop.points[3] - this.imageOverviewCrop.points[1]);
-                    formData.append('overview_scale', this.imageOverviewCrop.zoom);
-                    formData.append('detail_x', this.imageDetailCrop.points[0]);
-                    formData.append('detail_y', this.imageDetailCrop.points[1]);
-                    formData.append('detail_width', this.imageDetailCrop.points[2] - this.imageDetailCrop.points[0]);
-                    formData.append('detail_height', this.imageDetailCrop.points[3] - this.imageDetailCrop.points[1]);
-                    formData.append('detail_scale', this.imageDetailCrop.zoom);
-                    this.$store.dispatch('newsModule/uploadImage', {
-                        story : {
-                            id : this.story.id
-                        },
-                        formData : formData
-                    });
-                }
                 this.errors = initError();
 
                 if (this.story) { // update
                     this.fillModel(this.story);
                     this.$store.dispatch('newsModule/update', this.story.serialize())
                         .then(() => {
-                            this.$router.push({ name : 'news.story', params : { id : this.story.id }});
+                            if (this.imageOverviewURL) {
+                                this.uploadImage(this.story.id)
+                                    .then(() => {
+                                        this.$router.push({ name : 'news.story', params : { id : this.story.id }});
+                                    }).catch(err => {
+                                        console.log(err);
+                                    });
+                            } else {
+                                this.$router.push({ name : 'news.story', params : { id : this.story.id }});
+                            }
                         }).catch(err => {
                             console.log(err);
                         });
@@ -596,7 +585,16 @@
                     this.fillModel(story);
                     this.$store.dispatch('newsModule/create', story.serialize())
                         .then((newStory) => {
-                            this.$router.push({ name : 'news.story', params : { id : newStory.id }});
+                            if (this.imageOverviewURL) {
+                                this.uploadImage(newStory.id)
+                                    .then(() => {
+                                        this.$router.push({ name : 'news.story', params : { id : newStory.id }});
+                                    }).catch(err => {
+                                        console.log(err);
+                                    });
+                            }  else {
+                                this.$router.push({ name : 'news.story', params : { id : newStory.id }});
+                            }
                         }).catch(err => {
                             console.log(err);
                         });
@@ -604,6 +602,26 @@
             },
             upload() {
                 this.$refs.fileInput.click();
+            },
+            uploadImage(newsId) {
+                var formData = new FormData();
+                formData.append('image', this.$refs.fileInput.files[0]);
+                formData.append('overview_x', this.imageOverviewCrop.points[0]);
+                formData.append('overview_y', this.imageOverviewCrop.points[1]);
+                formData.append('overview_width', this.imageOverviewCrop.points[2] - this.imageOverviewCrop.points[0]);
+                formData.append('overview_height', this.imageOverviewCrop.points[3] - this.imageOverviewCrop.points[1]);
+                formData.append('overview_scale', this.imageOverviewCrop.zoom);
+                formData.append('detail_x', this.imageDetailCrop.points[0]);
+                formData.append('detail_y', this.imageDetailCrop.points[1]);
+                formData.append('detail_width', this.imageDetailCrop.points[2] - this.imageDetailCrop.points[0]);
+                formData.append('detail_height', this.imageDetailCrop.points[3] - this.imageDetailCrop.points[1]);
+                formData.append('detail_scale', this.imageDetailCrop.zoom);
+                return this.$store.dispatch('newsModule/uploadImage', {
+                    story : {
+                        id : newsId
+                    },
+                    formData : formData
+                });
             },
             onFileChange($event) {
                 const files = $event.target.files || $event.dataTransfer.files
