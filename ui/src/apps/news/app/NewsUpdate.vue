@@ -1,21 +1,23 @@
 <template>
-    <v-layout>
-        <v-flex xs12 lg8 offset-lg2>
-            <v-layout row wrap>
-                <v-flex xs12>
-                    <v-toolbar class="elevation-0">
-                        <v-icon>mode_edit</v-icon>
-                        <v-toolbar-title>Update News <span v-if="story"> - {{ story.title }}</span></v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn icon dark color="primary" @click="$router.go(-1)"><v-icon>cancel</v-icon></v-btn>
-                    </v-toolbar>
-                </v-flex>
-                <v-flex xs12>
-                    <NewsForm :story="story"></NewsForm>
-                </v-flex>
-            </v-layout>
-        </v-flex>
-    </v-layout>
+    <v-container>
+        <v-layout>
+            <v-flex xs12>
+                <v-layout row wrap>
+                    <v-flex xs12>
+                        <v-toolbar class="elevation-0">
+                            <v-icon>mode_edit</v-icon>
+                            <v-toolbar-title>Update News <span v-if="story"> - {{ story.title }}</span></v-toolbar-title>
+                            <v-spacer></v-spacer>
+                            <v-btn icon dark color="primary" @click="$router.go(-1)"><v-icon>cancel</v-icon></v-btn>
+                        </v-toolbar>
+                    </v-flex>
+                    <v-flex xs12>
+                        <NewsForm :story="story"></NewsForm>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
