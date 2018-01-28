@@ -1,5 +1,12 @@
 <template>
-    <v-container>
+    <v-container v-if="loading">
+        <v-layout row justify-space-around>
+            <v-flex xs1>
+                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <v-container v-else>
         <v-layout v-if="category">
             <v-flex xs12>
                 <h1 class="display-1">{{ category.name }}</h1>
@@ -79,8 +86,11 @@
             };
         },
         computed : {
+            loading() {
+                return this.$store.getters['newsModule/loading'];
+            },
             stories() {
-                return this.$store.state.newsModule.stories;
+                return this.$store.getters['newsModule/stories'];
             },
             noNews() {
                 return !this.stories || this.stories.length == 0;
