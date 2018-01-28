@@ -7,22 +7,24 @@
                         <v-flex align-end flexbox>
                             <span class="pa-2 headline" style="background-color:rgba(255,255,255,0.7)">
                                 {{ title }}
-                                <v-icon v-if="isNew" color="red" light style="margin-left:5px;margin-top:-7px">
-                                    fa-star
-                                </v-icon>
                             </span>
                         </v-flex>
                     </v-layout>
                 </v-container>
             </v-card-media>
             <span v-if="isNew" style="float:right;">
-                <v-icon color="red" light style="margin:10px;">fa-star</v-icon>
+
             </span>
             <v-card-title>
-                <div>
-                    <h3 v-if="!story.header_detail_crop" class="headline mb-0">
-                        {{ title }}
-                    </h3>
+                <div style="width:100%">
+                    <div style="position:relative;width:100%">
+                        <div style="position:absolute;top:0;right:0;margin-top:-5px">
+                            <v-icon v-if="isNew" color="red">fa-star</v-icon>
+                        </div>
+                        <h3 v-if="!story.header_detail_crop" class="headline mb-0">
+                            {{ title }}
+                        </h3>
+                    </div>
                     <div class="news-mini-meta">
                         <span v-if="category"><router-link :to="{ name: 'news.category', params: { category_id : category.id} }">{{ category.name }}</router-link> &bull; </span>
                         <span v-if="authorName.length > 0">{{ authorName }} &bull; </span>
@@ -35,17 +37,17 @@
         </div>
         <div v-else>
             <v-card-media v-if="story.header_overview_crop" :src="story.header_overview_crop" height="200px" />
-            <span v-if="content.length > 0" style="float:right;">
-                <v-icon style="margin:10px;">fa-ellipsis-h</v-icon>
-            </span>
-            <span v-if="isNew" style="float:right;">
-                <v-icon color="red" style="margin:10px;">fa-star</v-icon>
-            </span>
             <v-card-title>
-                <div>
-                    <h3 class="mb-0">
-                        {{ title }}
-                    </h3>
+                <div style="width:100%">
+                    <div style="position:relative;width:100%">
+                        <div style="position:absolute;top:0;right:0;margin-top:-5px">
+                            <v-icon v-if="isNew" color="red">fa-star</v-icon>
+                            <v-icon v-if="content.length > 0">fa-ellipsis-h</v-icon>
+                        </div>
+                        <h3 class="mb-0" style="width:80%">
+                            {{ title }}
+                        </h3>
+                    </div>
                     <div class="news-mini-meta">
                         <span v-if="category"><router-link :to="{ name: 'news.category', params: { category_id : category.id} }">{{ category.name }}</router-link> &bull; </span>
                         <span v-if="authorName.length > 0">{{ authorName }} | </span>
