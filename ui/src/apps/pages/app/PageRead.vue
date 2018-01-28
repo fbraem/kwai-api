@@ -3,7 +3,7 @@
         <v-layout>
             <v-flex xs12>
                 <v-card v-if="page" flat style="flex:1">
-                    <v-card-media v-if="page.crop" :src="page.crop" height="300px" class="no-print">
+                    <v-card-media v-if="page.crop" :src="page.crop" :height="imageHeight" class="no-print">
                         <v-container fill-height fluid>
                             <v-layout fill-height>
                                 <v-flex align-end flexbox>
@@ -81,9 +81,16 @@
 </template>
 
 <style>
+    .page-mini-meta {
+        font-size: 12px;
+        color: #999;
+    }
+
     .page-content table {
         border-collapse: collapse;
-        width: 100%;
+        margin-bottom:20px;
+        margin-left:auto;
+        margin-right:auto;
     }
 
     .page-content table tbody tr:nth-child(odd) {
@@ -111,6 +118,11 @@
         line-height: 32px;
         letter-spacing: normal;
     }
+    .page-content ul {
+        list-style-position: inside;
+        margin-bottom: 20px;
+    }
+
     @media print
     {
         .no-print, .no-print *
@@ -138,6 +150,20 @@
             }
         },
         computed : {
+            imageHeight() {
+                switch(this.$vuetify.breakpoint.name) {
+                    case 'xs':
+                        return '200px';
+                    case 'sm':
+                        return '250px';
+                    case 'md':
+                        return '300px';
+                    case 'lg':
+                        return '400px';
+                    case 'xl':
+                        return '400px';
+                }
+            },
             page() {
                 return this.$store.getters['pageModule/page'](this.$route.params.id);
             },
