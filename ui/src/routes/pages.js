@@ -2,13 +2,13 @@ export default [
         {
             path : '/pages/',
             components : {
-                default : () => import(/* webpackChunkName: "pages_chunck" */ './App.vue')
+                default : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/App.vue')
             },
             children: [
                 {
                     path : ':id',
                     components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ './app/PageRead.vue')
+                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageRead.vue')
                     },
                     name : 'pages.read',
                     props : {
@@ -18,7 +18,7 @@ export default [
                 {
                     path : 'category/:category_id',
                     components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ './app/PageBrowse.vue')
+                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageBrowse.vue')
                     },
                     name : 'pages.category',
                     props : {
@@ -28,7 +28,7 @@ export default [
                 {
                     path : '',
                     components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ './app/PageBrowse.vue')
+                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageBrowse.vue')
                     },
                     name : 'pages'
                 }
@@ -36,12 +36,12 @@ export default [
         },
         {
             path : '/pages/create',
-            component : () => import(/* webpackChunkName: "pages_admin" */ './app/PageCreate.vue'),
+            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageCreate.vue'),
             name : 'pages.create'
         },
         {
             path : '/page/update/:id',
-            component : () => import(/* webpackChunkName: "pages_admin" */ './app/PageUpdate.vue'),
+            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageUpdate.vue'),
             name : 'pages.update'
         }
 ];

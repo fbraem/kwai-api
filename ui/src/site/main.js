@@ -48,6 +48,7 @@ Vue.use(VueExtendLayout);
 import Vuelidate from 'vuelidate';
 Vue.use(Vuelidate);
 
+/*
 var routes = [];
 import siteRoutes from './routes';
 routes = routes.concat(siteRoutes);
@@ -57,9 +58,11 @@ import categoryRoutes from '@/apps/categories/routes';
 routes = routes.concat(categoryRoutes);
 import pageRoutes from '@/apps/pages/routes';
 routes = routes.concat(pageRoutes);
+*/
+import routes from '@/routes';
 
 const router = new VueRouter({
-    routes : routes
+    routes : routes()
 });
 
 var app = new Vue({

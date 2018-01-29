@@ -1,4 +1,4 @@
-import SiteApp from './App.vue';
+import SiteApp from '@/site/App.vue';
 
 export default [
     {
