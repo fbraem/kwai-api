@@ -6,7 +6,7 @@ export default [
             },
             children: [
                 {
-                    path : 'story/:id',
+                    path : 'story/:id(\\d+)',
                     components : {
                         NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsRead.vue')
                     },
@@ -16,7 +16,7 @@ export default [
                     }
                 },
                 {
-                    path : 'category/:category_id',
+                    path : 'category/:category_id(\\d+)',
                     components : {
                         NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsBrowse.vue')
                     },
@@ -26,7 +26,7 @@ export default [
                     }
                 },
                 {
-                    path : 'archive/:year/:month',
+                    path : 'archive/:year(\\d+)/:month(\\d+)',
                     components : {
                         NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsBrowse.vue')
                     },
@@ -50,7 +50,7 @@ export default [
             name : 'news.create'
         },
         {
-            path : '/news/update/:id',
+            path : '/news/update/:id(\\d+)',
             component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsUpdate.vue'),
             name : 'news.update'
         }

@@ -6,7 +6,7 @@ export default [
             },
             children: [
                 {
-                    path : ':id',
+                    path : ':id(\\d+)',
                     components : {
                         PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageRead.vue')
                     },
@@ -16,7 +16,7 @@ export default [
                     }
                 },
                 {
-                    path : 'category/:category_id',
+                    path : 'category/:category_id(\\d+)',
                     components : {
                         PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageBrowse.vue')
                     },
@@ -40,7 +40,7 @@ export default [
             name : 'pages.create'
         },
         {
-            path : '/page/update/:id',
+            path : '/page/update/:id(\\d+)',
             component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageUpdate.vue'),
             name : 'pages.update'
         }

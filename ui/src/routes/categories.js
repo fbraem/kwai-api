@@ -10,12 +10,12 @@ export default [
         name : 'category.create'
     },
     {
-        path : '/categories/update/:id',
+        path : '/categories/update/:id(\\d+)',
         component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryUpdate.vue'),
         name : 'category.update'
     },
     {
-        path : '/categories/read/:id',
+        path : '/categories/read/:id(\\d+)',
         component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryRead.vue'),
         name : 'category.read'
     }
