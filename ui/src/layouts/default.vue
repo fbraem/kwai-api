@@ -16,7 +16,7 @@
                 <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon v-if="facebook" :href="facebook" dark>
+            <v-btn icon v-if="facebook" :href="facebook">
                 <v-icon class="fab">fa-facebook</v-icon>
             </v-btn>
             <login></login>
