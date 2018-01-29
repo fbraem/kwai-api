@@ -16,6 +16,9 @@
                 <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn icon v-if="facebook" :href="facebook" dark>
+                <v-icon class="fab">fa-facebook</v-icon>
+            </v-btn>
             <login></login>
         </v-toolbar>
         <v-content>
@@ -52,6 +55,9 @@
           },
           subTitle() {
               return this.$store.getters['subTitle'];
+          },
+          facebook() {
+              return this.$store.getters['facebook'];
           }
       },
       created() {

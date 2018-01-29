@@ -19,6 +19,7 @@ const state = {
     },
     page : {
         title : config.title,
+        facebook : config.facebook,
         subTitle : ""
     },
     status : {
@@ -37,6 +38,9 @@ const getters = {
     },
     subTitle(state) {
         return state.page.subTitle;
+    },
+    facebook(state) {
+        return state.page.facebook;
     },
     loading(state) {
         return state.status.loading;
