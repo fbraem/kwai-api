@@ -30,7 +30,7 @@
         },
         methods : {
             selectCategory(id) {
-                this.$router.push({ name : 'category.read', params : { id : id }});
+                this.$router.push({ name : 'categories.read', params : { id : id }});
             }
         }
     };

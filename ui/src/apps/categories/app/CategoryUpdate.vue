@@ -32,7 +32,7 @@
         },
         computed : {
             category() {
-                return this.$store.getters['newsModule/category'](this.$route.params.id);
+                return this.$store.getters['categoryModule/category'](this.$route.params.id);
             }
         },
         beforeRouteUpdate(to, from, next) {
@@ -41,11 +41,10 @@
         },
         methods : {
             fetchData(id) {
-                this.$store.dispatch('newsModule/readCategory', {
+                this.$store.dispatch('categoryModule/read', {
                     id : id
                 });
             }
         }
-
     };
 </script>

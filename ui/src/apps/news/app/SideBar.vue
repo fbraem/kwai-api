@@ -34,7 +34,7 @@
             <v-card-actions v-if="$category.isAllowed('create')">
                 <v-spacer>
                 </v-spacer>
-                <v-btn icon :to="{ name : 'category.create' }" fab small>
+                <v-btn icon :to="{ name : 'categories.create' }" fab small>
                     <v-icon>fa-plus</v-icon>
                 </v-btn>
             </v-card-actions>
