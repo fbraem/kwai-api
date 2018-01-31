@@ -1,5 +1,12 @@
 <template>
-    <v-container>
+    <v-container v-if="loading">
+        <v-layout row justify-space-around>
+            <v-flex xs1>
+                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <v-container v-else>
         <v-layout>
             <v-flex xs12>
                 <NewsCard v-if="story" :story="story" :complete="true" @delete="areYouSure(story.id)" />
@@ -55,6 +62,9 @@
             }
         },
         computed : {
+            loading() {
+                return this.$store.getters['newsModule/loading'];
+            },
             story() {
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
             },

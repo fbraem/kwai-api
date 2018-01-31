@@ -1,5 +1,12 @@
 <template>
-    <v-container grid-list-xl class="pt-0">
+    <v-container v-if="loading">
+        <v-layout row justify-space-around>
+            <v-flex xs1>
+                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
+            </v-flex>
+        </v-layout>
+    </v-container>
+    <v-container v-else grid-list-xl class="pt-0">
         <v-layout v-if="category">
             <v-flex xs12>
                 <h1 class="display-1">{{ category.name }}</h1>
@@ -44,6 +51,9 @@
             };
         },
         computed : {
+            loading() {
+                return this.$store.getters['pageModule/loading'];
+            },
             pages() {
                 return this.$store.getters['pageModule/pages'];
             },
