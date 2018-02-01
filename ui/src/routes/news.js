@@ -1,9 +1,7 @@
 export default [
         {
             path : '/news/',
-            components : {
-                default : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/App.vue')
-            },
+            component : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/App.vue'),
             children: [
                 {
                     path : ':id(\\d+)',
