@@ -6,7 +6,7 @@ export default [
             },
             children: [
                 {
-                    path : 'story/:id(\\d+)',
+                    path : ':id(\\d+)',
                     components : {
                         NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsRead.vue')
                     },
