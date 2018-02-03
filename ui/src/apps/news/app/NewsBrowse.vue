@@ -6,7 +6,7 @@
             </v-flex>
         </v-layout>
     </v-container>
-    <v-container v-else>
+    <v-container style="padding-top:0px" v-else>
         <v-layout v-if="category">
             <v-flex xs12>
                 <h1 class="display-1">{{ category.name }}</h1>

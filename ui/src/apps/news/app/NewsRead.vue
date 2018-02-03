@@ -6,9 +6,9 @@
             </v-flex>
         </v-layout>
     </v-container>
-    <v-container v-else>
+    <v-container :class="{ 'pa-1' : $vuetify.breakpoint.name == 'xs' }" v-else>
         <v-layout>
-            <v-flex xs12>
+            <v-flex xs12 style="padding-top:0px">
                 <NewsCard v-if="story" :story="story" :complete="true" @delete="areYouSure(story.id)" />
                 <v-alert v-if="!story && !loading" color="error" value="true" icon="fa-exclamation-triangle">
                     {{ $t('not_found') }}

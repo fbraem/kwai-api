@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid :class="{ 'pa-1' : $vuetify.breakpoint.name == 'xs' }">
         <v-layout row wrap>
             <v-flex xs12 class="hidden-md-and-up">
                 <v-menu offset-y>
@@ -13,9 +13,9 @@
                 <NewsSideBar :categories="categories" :archive="archive"></NewsSideBar>
             </v-flex>
             <v-flex xs12 md9>
-                <v-container grid-list-xl class="pa-0">
+                <v-container grid-list-xl class="pa-0" style="margin-top:10px;">
                     <v-layout row wrap>
-                        <v-flex xs12 class="pt-0">
+                        <v-flex xs12 :class="{ 'pt-0' : $vuetify.breakpoint.name != 'xs' }">
                             <router-view name="NewsContent"></router-view>
                         </v-flex>
                         <v-flex xs12>
