@@ -46,7 +46,7 @@
             <v-list dense>
                 <template v-for="(months, year) in archive">
                     <v-subheader>{{ year }}</v-subheader>
-                    <v-list-tile @click="selectArchive(year, month.month)" v-for="(month) in months" key="month.month">
+                    <v-list-tile @click="selectArchive(year, month.month)" v-for="(month) in months" :key="month.month">
                         <v-list-tile-content>
                             {{ month.monthName }} {{ year }}
                         </v-list-tile-content>
