@@ -12,9 +12,6 @@
                     </v-layout>
                 </v-container>
             </v-card-media>
-            <span v-if="isNew" style="float:right;">
-
-            </span>
             <v-card-title>
                 <div style="width:100%">
                     <div style="position:relative;width:100%">
@@ -87,9 +84,11 @@
     .news-meta {
         color: #999;
     }
+
     .news-content img {
         max-width: 100%;
     }
+
     .news-content ul {
         list-style-position: inside;
         margin-bottom: 20px;
@@ -104,6 +103,43 @@
     }
     blockquote p {
       display: inline;
+    }
+
+    .gallery {
+        background: #eee;
+        column-count: 4;
+        column-gap: 1em;
+        padding-left: 1em;
+        padding-top: 1em;
+        padding-right: 1em;
+    }
+    .gallery .item {
+        background: white;
+        display: inline-block;
+        margin: 0 0 1em;
+        width: 100%;
+        padding: 1em;
+    }
+
+    @media (max-width: 1200px) {
+      .gallery {
+      column-count: 4;
+      }
+    }
+    @media (max-width: 1000px) {
+      .gallery {
+      column-count: 3;
+      }
+    }
+    @media (max-width: 800px) {
+      .gallery {
+      column-count: 2;
+      }
+    }
+    @media (max-width: 400px) {
+      .gallery {
+      column-count: 1;
+      }
     }
 </style>
 
