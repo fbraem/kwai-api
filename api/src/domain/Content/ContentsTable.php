@@ -17,23 +17,9 @@ class ContentsTable implements ContentsInterface
         $this->select = $this->table->getSql()->select();
     }
 
-    public function forNewsStory($id)
+    public function whereUser($userId)
     {
-        return $this->forNewsStories([$id]);
-    }
-
-    public function forNewsStories(array $ids)
-    {
-        $this->select
-            ->join(
-                'contentables',
-                'contents.id = contentables.content_id'
-                )
-            ->where([
-                'contentables.contentable_id' => $ids,
-                'contentables.contentable_type' => 'news'
-            ]);
-        return $this;
+        $this->select->where(['user_id' => $id]);
     }
 
     public function find() : iterable
