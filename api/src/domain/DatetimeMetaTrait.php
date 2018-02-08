@@ -10,8 +10,11 @@ trait DatetimeMetaTrait
 
     public function createdAt() : ?string
     {
-        $createdAt = new \Carbon\Carbon($this->created_at);
-        return $createdAt->toDateTimeString();
+        if ($this->created_at) {
+            $createdAt = new \Carbon\Carbon($this->created_at);
+            return $createdAt->toDateTimeString();
+        }
+        return null;
     }
 
     public function updatedAt() : ?string
