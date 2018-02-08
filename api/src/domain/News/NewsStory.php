@@ -10,7 +10,7 @@ class NewsStory implements NewsStoryInterface
     private $enabled;
     private $featured;
     private $featuredEndDate;
-    private $featureEndDateTimezone;
+    private $featuredEndDateTimezone;
     private $publishDate;
     private $publishDateTimezone;
     private $endDate;
@@ -109,12 +109,12 @@ class NewsStory implements NewsStoryInterface
         return $this->id;
     }
 
-    public function enabled() : bool
+    public function enabled() : ?bool
     {
         return $this->enabled;
     }
 
-    public function featured() : int
+    public function featured() : ?int
     {
         return $this->featured;
     }
@@ -130,8 +130,11 @@ class NewsStory implements NewsStoryInterface
 
     public function publishDate() : ?string
     {
-        $publishDate = new \Carbon\Carbon($this->publishDate, 'UTC');
-        return $publishDate->toDateTimeString();
+        if ($this->publishDate) {
+            $publishDate = new \Carbon\Carbon($this->publishDate, 'UTC');
+            return $publishDate->toDateTimeString();
+        }
+        return null;
     }
 
     public function endDate() : ?string
@@ -153,12 +156,12 @@ class NewsStory implements NewsStoryInterface
         return $this->contents;
     }
 
-    public function category()
+    public function category() : ?\Domain\Category\CategoryInterface
     {
         return $this->category;
     }
 
-    public function author()
+    public function author() : ?\Domain\User\UserInterface
     {
         return $this->author;
     }
