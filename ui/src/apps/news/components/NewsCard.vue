@@ -220,7 +220,10 @@
                 return moment().diff(utc.local(), 'weeks') < 1;
             },
             authorName() {
-                var author = this.story.author;
+                var content = find(this.story.contents, function(o) {
+                    return o.locale == 'nl';
+                });
+                var author = content.user;
                 if (author) {
                     return filter([author.first_name, author.last_name]).join(' ');
                 }
