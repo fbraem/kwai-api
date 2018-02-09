@@ -100,11 +100,6 @@ class NewsStoriesTable implements NewsStoriesInterface
         throw new \Domain\NotFoundException("News story not found");
     }
 
-    // SELECT news_stories.*, contents.* FROM `news_stories`
-    // left join news_contents on news_contents.news_id = news_stories.id
-    // left join contents on contents.id = news_contents.content_id
-    // where contents.user_id = 1
-
     public function find(?int $limit = null, ?int $offset = null) : iterable
     {
         $this->select->columns([
@@ -146,6 +141,9 @@ class NewsStoriesTable implements NewsStoriesInterface
             ],
             $this->select::JOIN_LEFT
         );
+        //TODO: for now we assume only 'nl'
+        // In the future we must allow multiple locales
+        $this->select->where(['contents.locale' => 'nl']);
 
         if ($limit) {
             $this->select->limit($limit);
@@ -162,36 +160,15 @@ class NewsStoriesTable implements NewsStoriesInterface
         $result = $this->table->selectWith($this->select);
         if ($result->count() > 0) {
             foreach ($result as $row) {
-                $story = array_filter(
-                    (array) $row,
-                    function ($val, $key) {
-                        return substr($key, 0, strlen('news_')) == 'news_';
-                    },
-                    ARRAY_FILTER_USE_BOTH
-                );
-                foreach ($story as $key => $value) {
-                    $story[substr($key, strlen('news_'))] = $value;
-                    unset($story[$key]);
-                }
+                $story = self::getPrefixedValues($row, 'news_');
                 $categories[$story['category_id']] = 1;
-                $content = array_filter(
-                    (array) $row,
-                    function ($val, $key) {
-                        return substr($key, 0, strlen('content_')) == 'content_';
-                    },
-                    ARRAY_FILTER_USE_BOTH
-                );
-                foreach ($content as $key => $value) {
-                    $content[substr($key, strlen('content_'))] = $value;
-                    unset($content[$key]);
-                }
+                $content = self::getPrefixedValues($row, 'content_');
 
+                $users[$content['user_id']] = 1;
                 if (! isset($contents[$story['id']])) {
                     $contents[$story['id']] = [];
                 }
                 $contents[$story['id']][] = $content;
-
-                $users[$story['user_id']] = 1;
 
                 $stories[$story['id']] = $story;
             }
@@ -254,6 +231,23 @@ class NewsStoriesTable implements NewsStoriesInterface
         $resultSet = $this->table->selectWith($archive);
         foreach ($resultSet as $row) {
             $result[] = $row;
+        }
+        return $result;
+    }
+
+    private static function getPrefixedValues($arr, $prefix)
+    {
+        $length = strlen($prefix);
+        $result = array_filter(
+            (array) $arr,
+            function ($val, $key) use ($length, $prefix) {
+                return substr($key, 0, $length) == $prefix;
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+        foreach ($result as $key => $value) {
+            $result[substr($key, $length)] = $value;
+            unset($result[$key]);
         }
         return $result;
     }
