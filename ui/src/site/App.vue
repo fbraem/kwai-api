@@ -93,7 +93,7 @@
                     <v-card color="blue-grey darken-2" class="white--text">
                         <v-container>
                             <v-layout row>
-                                <v-flex xs7>
+                                <v-flex xs8>
                                     <div>
                                         <div class="headline">
                                             Jeugdvriendelijke Judoclub
@@ -104,7 +104,7 @@
                                         </div>
                                     </div>
                                 </v-flex>
-                                <v-flex xs5>
+                                <v-flex xs4>
                                     <v-card-media :src="require('./images/goud_jeugdsport_2017.jpg')" height="125" contain></v-card-media>
                                 </v-flex>
                             </v-layout>
