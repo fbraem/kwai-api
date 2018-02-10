@@ -54,6 +54,9 @@ const router = new VueRouter({
     routes : routes()
 });
 
+import VueScrollBehavior from 'vue-scroll-behavior';
+Vue.use(VueScrollBehavior, { router : router });
+
 var app = new Vue({
     router,
     store,
