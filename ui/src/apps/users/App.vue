@@ -1,31 +1,38 @@
 <template>
-    <site>
-        <div slot="content">
-            <div v-for="user in users">
-                {{ user.email }}
-            </div>
-        </div>
-    </site>
+    <div>
+        <v-layout>
+            <v-flex xs12>
+                <v-layout row wrap>
+                    <v-flex xs12>
+                        <v-toolbar class="elevation-0">
+                            <v-icon class="fas">fa-users</v-icon>
+                            <v-toolbar-title>{{ $t('users') }}</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                        </v-toolbar>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
+        </v-layout>
+        <router-view name="UserContent"></router-view>
+    </div>
 </template>
 
 <script>
+    import userStore from '@/apps/users/store';
+    import messages from './lang/App';
 
-  export default {
-      computed : {
-        users() {
-          return this.$store.state.userModule.users;
-        }
-      },
-      mounted() {
-        this.$store.dispatch('userModule/read')
-          .catch((error) => {
-            console.log(error);
-            if (error.response && error.response.status == 401) { // Not authorized
-              //TODO: show an alert?
+    export default {
+        i18n : {
+            messages
+        },
+        data() {
+            return {
+            };
+        },
+        created() {
+            if (!this.$store.state.userModule) {
+                this.$store.registerModule('userModule', userStore);
             }
-        });
-      },
-      methods : {
-      }
+        }
   };
 </script>

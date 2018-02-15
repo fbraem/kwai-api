@@ -15,14 +15,17 @@ class ReadAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $userRepo = new \Domain\User\UserRepository();
+        $db = $request->getAttribute('clubman.container')['db'];
+        $usersTable = new \Domain\User\UsersTable($db);
 
-        $route = $request->getAttribute('clubman.route');
-        $id = $route->getAttribute('id');
-        $user = $userRepo->find($id);
+        $id = $request->getAttribute('route.id');
+        try {
+            $user = $usersTable->findOne();
+        } catch (\Domain\NotFoundException $nfe) {
+            return (new NotFoundResponder(new Responder(), _("User doesn't exist.")))->respond();
+        }
 
         $payload->setOutput(new Fractal\Resource\Item($user, new \Domain\User\UserTransformer, 'users'));
-
         return (new JSONResponder(new Responder(), $payload))->respond();
     }
 }

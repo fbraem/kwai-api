@@ -15,8 +15,10 @@ class BrowseAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $userRepo = new \Domain\User\UserRepository();
-        $users = $userRepo->all();
+        $db = $request->getAttribute('clubman.container')['db'];
+        $usersTable = new \Domain\User\UsersTable($db);
+
+        $users = $usersTable->find();
 
         $payload->setOutput(new Fractal\Resource\Collection($users, new \Domain\User\UserTransformer, 'users'));
 
