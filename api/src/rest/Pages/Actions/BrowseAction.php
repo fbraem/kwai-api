@@ -30,6 +30,10 @@ class BrowseAction implements \Core\ActionInterface
             $dbPages->whereAllowedToSee();
         }
 
+        if (isset($parameters['filter']['user'])) {
+            $dbPages->whereUser($parameters['filter']['user']);
+        }
+
         $count = $dbPages->count();
 
         $limit = $parameters['page']['limit'] ?? 10;

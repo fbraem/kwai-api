@@ -42,6 +42,10 @@ class BrowseStoryAction implements \Core\ActionInterface
             $dbStories->whereAllowedToSee();
         }
 
+        if (isset($parameters['filter']['user'])) {
+            $dbStories->whereUser($parameters['filter']['user']);
+        }
+
         $dbStories->whereNotEnded();
 
         $count = $dbStories->count();

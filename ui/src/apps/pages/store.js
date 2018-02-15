@@ -88,6 +88,9 @@ const actions = {
         if (payload.category) {
             uri.addQuery('filter[category]', payload.category);
         }
+        if (payload.user) {
+            uri.addQuery('filter[user]', payload.user);
+        }
 
         oauth.get(uri.href(), {
             data : payload

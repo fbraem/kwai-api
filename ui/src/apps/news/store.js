@@ -114,6 +114,9 @@ const actions = {
         if (payload.featured) {
             uri.addQuery('filter[featured]', true);
         }
+        if (payload.user) {
+            uri.addQuery('filter[user]', payload.user);
+        }
 
         oauth.get(uri.href(), {
             data : payload
