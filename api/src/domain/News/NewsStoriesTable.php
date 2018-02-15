@@ -18,7 +18,53 @@ class NewsStoriesTable implements NewsStoriesInterface
         $this->db = $db;
 
         $this->table = new TableGateway('news_stories', $this->db);
-        $this->select = $this->table->getSql()->select();
+        $this->select = $this->createSelect();
+    }
+
+    private function createSelect()
+    {
+        $select = $this->table->getSql()->select();
+
+        $select->columns([
+            'news_id' => 'id',
+            'news_enabled' => 'enabled',
+            'news_featured' => 'featured',
+            'news_featured_end_date' => 'featured_end_date',
+            'news_featured_end_date_timezone' => 'featured_end_date_timezone',
+            'news_publish_date' => 'publish_date',
+            'news_publish_date_timezone' => 'publish_date_timezone',
+            'news_end_date' => 'end_date',
+            'news_end_date_timezone' => 'end_date_timezone',
+            'news_remark' => 'remark',
+            'news_category_id' => 'category_id',
+            'news_user_id' => 'user_id',
+            'news_created_at' => 'created_at',
+            'news_updated_at' => 'updated_at'
+        ]);
+
+        $select->join(
+            'news_contents',
+            'news_stories.id = news_contents.news_id',
+            [],
+            $select::JOIN_LEFT
+        );
+        $select->join(
+            'contents',
+            'news_contents.content_id = contents.id',
+            [
+                'content_id' => 'id',
+                'content_locale' => 'locale',
+                'content_format' => 'format',
+                'content_title' => 'title',
+                'content_content' => 'content',
+                'content_summary' => 'summary',
+                'content_user_id' => 'user_id',
+                'content_created_at' => 'created_at',
+                'content_updated_at' => 'updated_at'
+            ],
+            $select::JOIN_LEFT
+        );
+        return $select;
     }
 
     public function whereCategory($id)
@@ -102,45 +148,6 @@ class NewsStoriesTable implements NewsStoriesInterface
 
     public function find(?int $limit = null, ?int $offset = null) : iterable
     {
-        $this->select->columns([
-            'news_id' => 'id',
-            'news_enabled' => 'enabled',
-            'news_featured' => 'featured',
-            'news_featured_end_date' => 'featured_end_date',
-            'news_featured_end_date_timezone' => 'featured_end_date_timezone',
-            'news_publish_date' => 'publish_date',
-            'news_publish_date_timezone' => 'publish_date_timezone',
-            'news_end_date' => 'end_date',
-            'news_end_date_timezone' => 'end_date_timezone',
-            'news_remark' => 'remark',
-            'news_category_id' => 'category_id',
-            'news_user_id' => 'user_id',
-            'news_created_at' => 'created_at',
-            'news_updated_at' => 'updated_at'
-        ]);
-
-        $this->select->join(
-            'news_contents',
-            'news_stories.id = news_contents.news_id',
-            null,
-            $this->select::JOIN_LEFT
-        );
-        $this->select->join(
-            'contents',
-            'news_contents.content_id = contents.id',
-            [
-                'content_id' => 'id',
-                'content_locale' => 'locale',
-                'content_format' => 'format',
-                'content_title' => 'title',
-                'content_content' => 'content',
-                'content_summary' => 'summary',
-                'content_user_id' => 'user_id',
-                'content_created_at' => 'created_at',
-                'content_updated_at' => 'updated_at'
-            ],
-            $this->select::JOIN_LEFT
-        );
         //TODO: for now we assume only 'nl'
         // In the future we must allow multiple locales
         $this->select->where(['contents.locale' => 'nl']);
@@ -199,8 +206,9 @@ class NewsStoriesTable implements NewsStoriesInterface
 
     public function count() : int
     {
-        $this->select->columns(['c' => new Expression('COUNT(0)')]);
-        $resultSet = $this->table->selectWith($this->select);
+        $select = clone $this->select;
+        $select->columns(['c' => new Expression('COUNT(0)')]);
+        $resultSet = $this->table->selectWith($select);
         return (int) $resultSet->current()->c;
     }
 

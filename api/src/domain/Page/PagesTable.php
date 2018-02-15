@@ -18,7 +18,45 @@ class PagesTable implements PagesInterface
         $this->db = $db;
 
         $this->table = new TableGateway('pages', $this->db);
-        $this->select = $this->table->getSql()->select();
+        $this->select = $this->createSelect();
+    }
+
+    private function createSelect()
+    {
+        $select = $this->table->getSql()->select();
+        $select->columns([
+            'page_id' => 'id',
+            'page_enabled' => 'enabled',
+            'page_remark' => 'remark',
+            'page_category_id' => 'category_id',
+            'page_created_at' => 'created_at',
+            'page_updated_at' => 'updated_at'
+        ]);
+
+        $select->join(
+            'page_contents',
+            'pages.id = page_contents.page_id',
+            null,
+            $select::JOIN_LEFT
+        );
+
+        $select->join(
+            'contents',
+            'page_contents.content_id = contents.id',
+            [
+                'content_id' => 'id',
+                'content_locale' => 'locale',
+                'content_format' => 'format',
+                'content_title' => 'title',
+                'content_content' => 'content',
+                'content_summary' => 'summary',
+                'content_user_id' => 'user_id',
+                'content_created_at' => 'created_at',
+                'content_updated_at' => 'updated_at'
+            ],
+            $select::JOIN_LEFT
+        );
+        return $select;
     }
 
     public function whereCategory($id)
@@ -39,14 +77,14 @@ class PagesTable implements PagesInterface
         return $this;
     }
 
-    public function whereUser($userId)
+    public function whereUser($id)
     {
         $this->select->where(['contents.user_id' => $id]);
     }
 
     public function orderByDate()
     {
-        $this->select->order('pages.created_at DESC');
+        $this->select->order('pages.created_at ASC');
         return $this;
     }
 
@@ -61,38 +99,6 @@ class PagesTable implements PagesInterface
 
     public function find(?int $limit = null, ?int $offset = null) : iterable
     {
-        $this->select->columns([
-            'page_id' => 'id',
-            'page_enabled' => 'enabled',
-            'page_remark' => 'remark',
-            'page_category_id' => 'category_id',
-            'page_created_at' => 'created_at',
-            'page_updated_at' => 'updated_at'
-        ]);
-
-        $this->select->join(
-            'page_contents',
-            'pages.id = page_contents.page_id',
-            null,
-            $this->select::JOIN_LEFT
-        );
-
-        $this->select->join(
-            'contents',
-            'page_contents.content_id = contents.id',
-            [
-                'content_id' => 'id',
-                'content_locale' => 'locale',
-                'content_format' => 'format',
-                'content_title' => 'title',
-                'content_content' => 'content',
-                'content_summary' => 'summary',
-                'content_user_id' => 'user_id',
-                'content_created_at' => 'created_at',
-                'content_updated_at' => 'updated_at'
-            ],
-            $this->select::JOIN_LEFT
-        );
         //TODO: for now we assume only 'nl'
         // In the future we must allow multiple locales
         $this->select->where(['contents.locale' => 'nl']);
@@ -152,8 +158,9 @@ class PagesTable implements PagesInterface
 
     public function count() : int
     {
-        $this->select->columns(['c' => new Expression('COUNT(0)')]);
-        $resultSet = $this->table->selectWith($this->select);
+        $select = clone $this->select;
+        $select->columns(['c' => new Expression('COUNT(0)')]);
+        $resultSet = $this->table->selectWith($select);
         return (int) $resultSet->current()->c;
     }
 
