@@ -130,6 +130,29 @@
         margin-bottom: 20px;
     }
 
+    .page-content .gallery {
+        background: #eee;
+        column-count: 4;
+        column-gap: 1em;
+        padding-left: 1em;
+        padding-top: 1em;
+        padding-right: 1em;
+    }
+
+    .page-content .gallery .item {
+        background: white;
+        display: inline-block;
+        margin: 0 0 1em;
+        /*width: 100%;*/
+        padding: 1em;
+    }
+
+    .page-content .avatar {
+        border-radius:50%;
+        width:150px;
+        height:150px;
+    }
+
     @media print
     {
         .no-print, .no-print *
