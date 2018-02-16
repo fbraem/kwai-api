@@ -8,6 +8,7 @@ class Page implements PageInterface
 
     private $id;
     private $enabled;
+    private $priority;
     private $remark;
     private $contents;
     private $category;
@@ -27,6 +28,7 @@ class Page implements PageInterface
     {
         $this->id = $data['id'] ?? null;
         $this->enabled = $data['enabled'] ?? 0;
+        $this->priority = $data['priority'] ?? 0;
         $this->remark = $data['remark'] ?? null;
         $this->contents = $data['contents'] ?? null;
         $this->category = $data['category'] ?? null;
@@ -39,6 +41,7 @@ class Page implements PageInterface
         return [
             'id' => $this->id(),
             'enabled' => $this->enabled(),
+            'priority' => $this->priority(),
             'remark' => $this->remark(),
             'created_at' => $this->createdAt(),
             'updated_at' => $this->updatedAt()
@@ -101,5 +104,10 @@ class Page implements PageInterface
     public function category()
     {
         return $this->category;
+    }
+
+    public function priority() : ?int
+    {
+        return $this->priority;
     }
 }

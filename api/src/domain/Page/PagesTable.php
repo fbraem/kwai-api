@@ -27,6 +27,7 @@ class PagesTable implements PagesInterface
         $select->columns([
             'page_id' => 'id',
             'page_enabled' => 'enabled',
+            'page_priority' => 'priority',
             'page_remark' => 'remark',
             'page_category_id' => 'category_id',
             'page_created_at' => 'created_at',
@@ -85,6 +86,18 @@ class PagesTable implements PagesInterface
     public function orderByDate()
     {
         $this->select->order('pages.created_at ASC');
+        return $this;
+    }
+
+    public function orderByPriority()
+    {
+        $this->select->order('pages.priority DESC');
+        return $this;
+    }
+
+    public function orderByTitle()
+    {
+        $this->select->order('contents.title ASC');
         return $this;
     }
 

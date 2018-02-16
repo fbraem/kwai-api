@@ -52,7 +52,8 @@ class CreateAction implements \Core\ActionInterface
         $page = new \Domain\Page\Page($db, [
             'category' => $category,
             'remark' => $attributes['remark'],
-            'enabled' => $attributes['enabled']
+            'enabled' => $attributes['enabled'],
+            'priority' => $attributes['priority']
         ]);
         $page->store();
 

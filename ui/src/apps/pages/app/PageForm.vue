@@ -27,6 +27,21 @@
                         </v-select>
                     </v-flex>
                     <v-flex xs12>
+                        <v-switch :label="form.page.enabled ? $t('enabled') : $t('disabled')" v-model="form.page.enabled">
+                        </v-switch>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-text-field
+                            name="priority"
+                            v-model="form.page.priority"
+                            @input="$v.form.page.priority.$touch"
+                            :error-messages="priorityErrors"
+                            label="Priority"
+                            hint="A list of pages can be sorted based on the priority"
+                            required>
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
                         <v-text-field style="font-family:monospace"
                             name="summary"
                             v-model="form.page.summary"
@@ -44,6 +59,8 @@
                             @input="$v.form.page.content.$touch"
                             :error-messages="contentErrors"
                             label="Content"
+                            multi-line
+                            :rows="30"
                             textarea>
                         </v-text-field>
                     </v-flex>
@@ -101,9 +118,7 @@
     }
 </style>
 
-
 <script>
-
     import Model from '@/js/model';
     import moment from 'moment';
     import 'moment-timezone';
@@ -113,11 +128,14 @@
 
     import VueCroppie from "@/components/Croppie.vue";
 
+    import messages from '../lang/PageForm.js';
+
     var initForm = function() {
         return {
             page : {
                 title : '',
                 category : 0,
+                priority : 0,
                 summary : '',
                 content : '',
                 enabled : true,
@@ -130,6 +148,7 @@
         return {
             title : [],
             category : [],
+            priority : [],
             summary : [],
             content : [],
             enabled : [],
@@ -142,6 +161,9 @@
             page : {
                 type : Object
             }
+        },
+        i18n : {
+            messages
         },
         components : {
             VueCroppie
@@ -177,6 +199,13 @@
                 ! this.$v.form.page.category.required && errors.push('Category is required');
                 return errors;
             },
+            priorityErrors() {
+                const errors = [...this.errors.priority];
+                if (! this.$v.form.page.priority.$dirty) return errors;
+                ! this.$v.form.page.priority.required && errors.push('Priority is required');
+                ! this.$v.form.page.priority.numeric && errors.push('Priority must be numeric');
+                return errors;
+            },
             summaryErrors() {
                 const errors = [...this.errors.summary];
                 if (! this.$v.form.page.summary.$dirty) return errors;
@@ -200,6 +229,10 @@
                     },
                     category : {
                         required
+                    },
+                    priority : {
+                        required,
+                        numeric
                     },
                     summary : {
                         required
@@ -262,6 +295,7 @@
             fillForm(model) {
                 this.form.page.title = model.contents[0].title;
                 this.form.page.category = model.category.id;
+                this.form.page.priority = model.priority;
                 this.form.page.summary = model.contents[0].summary;
                 this.form.page.content = model.contents[0].content;
                 this.form.page.enabled = model.enabled == 1;
@@ -269,6 +303,7 @@
             },
             fillModel(model) {
                 model.addAttribute('title', this.form.page.title);
+                model.addAttribute('priority', this.form.page.priority);
                 model.addAttribute('summary', this.form.page.summary);
                 model.addAttribute('content', this.form.page.content);
                 model.addAttribute('enabled', this.form.page.enabled);

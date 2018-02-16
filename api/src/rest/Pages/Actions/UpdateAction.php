@@ -61,6 +61,7 @@ class UpdateAction implements \Core\ActionInterface
             $db,
             array_merge($page->extract(), [
                 'category' => $category,
+                'priority' => $attributes['priority'],
                 'enabled' => $attributes['enabled'],
                 'contents' => $page->contents(),
                 'remark' => $attributes['remark'] ?? null,

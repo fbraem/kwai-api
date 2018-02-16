@@ -8,6 +8,7 @@ interface PageInterface extends \Domain\DatetimeMetaInterface, \Domain\HydratorI
     public function remark() : ?string;
     public function contents() : ?PageContent;
     public function category();
+    public function priority() : ?int;
 
     public function store();
     public function delete();

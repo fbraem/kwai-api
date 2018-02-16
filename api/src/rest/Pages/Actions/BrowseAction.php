@@ -19,7 +19,6 @@ class BrowseAction implements \Core\ActionInterface
 
         $db = $request->getAttribute('clubman.container')['db'];
         $dbPages = new \Domain\Page\PagesTable($db);
-        $dbPages->orderByDate();
 
         if (isset($parameters['filter']['category'])) {
             $dbPages->whereCategory($parameters['filter']['category']);
@@ -33,6 +32,9 @@ class BrowseAction implements \Core\ActionInterface
         if (isset($parameters['filter']['user'])) {
             $dbPages->whereUser($parameters['filter']['user']);
         }
+
+        $dbPages->orderByPriority();
+        $dbPages->orderByDate();
 
         $count = $dbPages->count();
 
