@@ -242,12 +242,20 @@
             }
         },
         mounted() {
-          this.$store.dispatch('pageModule/read', { id : this.$route.params.id })
-            .catch((error) => {
-              console.log(error);
-          });
+            this.fetchData();
+        },
+        watch : {
+            '$route'() {
+                this.fetchData();
+            }
         },
         methods : {
+            fetchData() {
+                this.$store.dispatch('pageModule/read', { id : this.$route.params.id })
+                  .catch((error) => {
+                    console.log(error);
+                });
+            },
             areYouSure() {
                 this.showAreYouSure = true;
             },
