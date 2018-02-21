@@ -56,7 +56,7 @@
                                 </v-btn>
                             </v-flex>
                             <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="https://docs.google.com/spreadsheets/d/1nU2LaRgVjma7g9UHN_9ObUeOnUDqi55Ztb005p1FJW4/edit?usp=sharing" style="width:100%">
+                                <v-btn :to="{ name : 'pages.category', params : { category_id : '3' } }" style="width:100%">
                                     <v-icon large color="red">fa-trophy</v-icon>
                                     Tornooien
                                 </v-btn>
