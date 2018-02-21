@@ -40,7 +40,7 @@ export default [
             name : 'pages.create'
         },
         {
-            path : '/page/update/:id(\\d+)',
+            path : '/pages/update/:id(\\d+)',
             component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageUpdate.vue'),
             name : 'pages.update'
         }
