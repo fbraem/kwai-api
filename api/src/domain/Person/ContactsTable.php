@@ -5,7 +5,7 @@ namespace Domain\Person;
 use \Zend\Db\Sql\Expression;
 use \Zend\Db\TableGateway\TableGateway;
 
-class CountriesTable implements CountriesInterface
+class ContactsTable implements ContactsInterface
 {
     private $db;
 
@@ -17,7 +17,7 @@ class CountriesTable implements CountriesInterface
     {
         $this->db = $db;
 
-        $this->table = new TableGateway('countries', $this->db);
+        $this->table = new TableGateway('contacts', $this->db);
         $this->select = $this->createSelect();
     }
 
@@ -26,47 +26,34 @@ class CountriesTable implements CountriesInterface
         $select = $this->table->getSql()->select();
         $select->columns([
             'id',
-            'iso_2',
-            'iso_3',
-            'name',
+            'email',
+            'tel',
+            'mobile',
+            'address',
+            'postal_code',
+            'city',
+            'county',
+            'country_id',
+            'remark',
             'created_at',
             'updated_at'
         ]);
-
         return $select;
     }
 
     public function whereId($id)
     {
-        $this->select->where(['countries.id' => $id]);
+        $this->select->where(['id' => $id]);
         return $this;
     }
 
-    public function orderByIso2()
+    public function findOne() : ContactInterface
     {
-        $this->select->order('iso_2 ASC');
-        return $this;
-    }
-
-    public function orderByIso3()
-    {
-        $this->select->order('iso_3 ASC');
-        return $this;
-    }
-
-    public function orderByName()
-    {
-        $this->select->order('name ASC');
-        return $this;
-    }
-
-    public function findOne() : CountryInterface
-    {
-        $result = $this->table->selectWith($this->select);
-        if ($result->count() > 0) {
-            return new Country($this->db, $result->current());
+        $contacts = $this->find();
+        if ($contacts && count($contacts) > 0) {
+            return reset($contacts);
         }
-        throw new \Domain\NotFoundException("Country not found");
+        throw new \Domain\NotFoundException("Contact not found");
     }
 
     public function find(?int $limit = null, ?int $offset = null) : iterable
@@ -78,15 +65,29 @@ class CountriesTable implements CountriesInterface
             $this->select->offset($offset);
         }
 
+        $result = [];
+        $contacts = [];
         $countries = [];
 
         $result = $this->table->selectWith($this->select);
         if ($result->count() > 0) {
             foreach ($result as $row) {
-                $countries[$row['id']] = new Country($this->db, $row);
+                $countries[$row['country_id']] = 1;
+                $contacts[$row['id']] = $row;
             }
         }
-        return $countries;
+
+        if (count($countries) > 0) {
+            $countries = (new CountriesTable($this->db))->whereId(array_keys($countries))->find();
+        }
+
+        $result = [];
+        foreach ($contacts as $contact) {
+            $contact['country'] = $countries[$contact['country_id']] ?? null;
+            $result[] = new Contact($this->db, $contact);
+        }
+
+        return $result;
     }
 
     public function count() : int

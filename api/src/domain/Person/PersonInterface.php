@@ -8,7 +8,7 @@ interface PersonInterface extends \Domain\DatetimeMetaInterface, \Domain\Hydrato
     public function lastname() : ?string;
     public function firstname() : ?string;
     public function gender() : ?int;
-    public function active() : boolean;
+    public function active() : ?bool;
     public function birthdate() : ?string;
     public function remark() : ?string;
     public function user() : ?\Domain\User\UserInterface;

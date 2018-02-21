@@ -35,7 +35,7 @@ class Person implements PersonInterface
         $this->lastname = $data['lastname'] ?? null;
         $this->firstname = $data['firstname'] ?? null;
         $this->gender = $data['gender'] ?? null;
-        $this->active = $data['active'] ?? null;
+        $this->active = $data['active'] ?? 0;
         $this->birthdate = $data['birthdate'] ?? null;
         $this->remark = $data['remark'] ?? null;
         $this->user = $data['user'] ?? null;
@@ -82,7 +82,7 @@ class Person implements PersonInterface
         return $this->gender;
     }
 
-    public function active() : boolean
+    public function active() : ?bool
     {
         return $this->active;
     }
