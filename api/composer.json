@@ -30,7 +30,8 @@
         "zendframework/zend-db": "^2.9",
         "zendframework/zend-hydrator": "^2.3",
         "league/commonmark": "^0.17.0",
-        "webuni/commonmark-table-extension": "^0.7.0"
+        "webuni/commonmark-table-extension": "^0.7.0",
+        "league/csv": "^9.0"
     },
     "require-dev": {
     },
@@ -38,7 +39,9 @@
         "psr-4" : {
             "Core\\" : "./src/core",
             "Domain\\" : "./src/domain",
-            "REST\\" : "./src/rest"
+            "REST\\" : "./src/rest",
+            "Judo\\Domain\\" : "./src/sport/judo/domain",
+            "Judo\\REST\\" : "./src/sport/judo/rest"
         }
     }
 }
