@@ -148,7 +148,7 @@ class PersonsTable implements PersonsInterface
             if (isset($countries[$person['nationality_id']])) {
                 $person['nationality'] = $countries[$person['nationality_id']];
             }
-            $result[] = new Person($this->db, $person);
+            $result[$person['id']] = new Person($this->db, $person);
         }
         return $result;
     }
