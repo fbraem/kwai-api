@@ -62,7 +62,7 @@ class PersonMigration extends AbstractMigration
             ->addColumn('address', 'string')
             ->addColumn('postal_code', 'string')
             ->addColumn('city', 'string')
-            ->addColumn('county', 'string')
+            ->addColumn('county', 'string', ['null' => true])
             ->addColumn('country_id', 'integer')
             ->addColumn('remark', 'text', ['null' => true])
             ->addTimestamps()

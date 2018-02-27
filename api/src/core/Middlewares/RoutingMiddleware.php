@@ -19,30 +19,30 @@ class RoutingMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $delegate
     ) {
-      $domainPath = $request->getAttribute('clubman.domainpath');
+        $domainPath = $request->getAttribute('clubman.domainpath');
 
-      $parts = explode('/', $domainPath);
+        $parts = explode('/', $domainPath);
 
-      if (count($parts) > 0) { // Sport, for example : judo/member
-          if ($parts[0] == 'sport') {
-              //TODO
-          } else {
-              $routerClassName = '\\REST\\' . ucfirst($parts[0]) . '\\Router';
-          }
-      }
+        if (count($parts) > 0) { // Sport, for example : judo/member
+            if ($parts[0] == 'sport') {
+                $routerClassName = '\\' . ucfirst($parts[1]) . '\\REST\\' . ucfirst($parts[2]) . '\\Router';
+            } else {
+                $routerClassName = '\\REST\\' . ucfirst($parts[0]) . '\\Router';
+            }
+        }
 
-      if (class_exists($routerClassName)) {
-          $router = new $routerClassName();
-          $route = $router->match($request);
-          if ($route) {
-              // add route attributes to the request
-              foreach ($route->attributes as $key => $val) {
-                  $request = $request->withAttribute('route.' . $key, $val);
-              }
-              $request = $request->withAttribute('clubman.route', $route);
-              return $delegate->process($request);
-          }
-      }
-      return (new HTTPCodeResponder(new Responder(), 501, "Route not found"))->respond();
+        if (class_exists($routerClassName)) {
+            $router = new $routerClassName();
+            $route = $router->match($request);
+            if ($route) {
+                // add route attributes to the request
+                foreach ($route->attributes as $key => $val) {
+                    $request = $request->withAttribute('route.' . $key, $val);
+                }
+                $request = $request->withAttribute('clubman.route', $route);
+                return $delegate->process($request);
+            }
+        }
+        return (new HTTPCodeResponder(new Responder(), 501, "Route not found"))->respond();
     }
 }
