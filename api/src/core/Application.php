@@ -65,7 +65,7 @@ class Application
                 'username' => $dbConnection->user,
                 'password' => $dbConnection->pass,
                 'hostname' => $dbConnection->host,
-                'charset' =>  $dbConnection->charset,
+                'charset' =>  $dbConnection->charset
             ]);
         };
 
