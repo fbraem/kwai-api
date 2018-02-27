@@ -38,7 +38,13 @@ class CountriesTable implements CountriesInterface
 
     public function whereId($id)
     {
-        $this->select->where(['countries.id' => $id]);
+        $this->select->where(['id' => $id]);
+        return $this;
+    }
+
+    public function whereIso3($iso3)
+    {
+        $this->select->where(['iso_3' => $iso3]);
         return $this;
     }
 
