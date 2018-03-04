@@ -45,10 +45,10 @@ var config = {
                     use : "css-loader"
                 })
             },
-            { test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            { test: /\.(woff|woff2|eot|ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'url-loader'
             },
-            { test: /\.(png|jpe?g|gif|svg)$/i,
+            { test: /\.(png|jpe?g|gif)$/i,
                 loaders: [
                     "file-loader?name=assets/[name]_[hash].[ext]&publicPath=ui/build/",
                     {
@@ -64,10 +64,14 @@ var config = {
                         }
                     }
                 ]
+            },
+            { test: /\.svg$/,
+                loader : 'svg-url-loader'
             }
         ]
     },
     resolve : {
+        extensions : [ '*', '.js', '.vue', '.json' ],
         alias : {
             'vue$' : 'vue/dist/vue.common.js',
             '@' : resolve('ui/src'),
