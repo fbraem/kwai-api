@@ -3,6 +3,7 @@ import newsRouter from './news';
 import categoriesRouter from './categories';
 import pagesRouter from './pages';
 import usersRouter from './users';
+import membersRouter from './members';
 
 function routes() {
     var routes = [];
@@ -11,6 +12,7 @@ function routes() {
         .concat(categoriesRouter)
         .concat(pagesRouter)
         .concat(usersRouter)
+        .concat(membersRouter)
 };
 
 export default routes;
