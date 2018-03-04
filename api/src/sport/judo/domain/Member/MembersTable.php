@@ -62,8 +62,8 @@ class MembersTable implements MembersInterface
 
     public function orderByName()
     {
-        $this->select->order('sport_judo_persons.lastname ASC');
-        $this->select->order('sport_judo_persons.firstname ASC');
+        $this->select->order('persons.lastname ASC');
+        $this->select->order('persons.firstname ASC');
         return $this;
     }
 
