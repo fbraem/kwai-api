@@ -16,7 +16,7 @@ class BrowseStoryAction implements \Core\ActionInterface
         $parameters = $request->getAttribute('parameters');
 
         $query = \Domain\News\NewsStoriesTable::getTableFromRegistry()->find();
-        $query->contain(['Contents', 'Category']);
+        $query->contain(['Contents', 'Category', 'Contents.User']);
         $query->order(['NewsStories.publish_date' => 'DESC']);
 
         if (isset($parameters['filter']['category'])) {
@@ -67,8 +67,6 @@ class BrowseStoryAction implements \Core\ActionInterface
             $query->matching('Contents.User', function ($q) use ($parameters) {
                 return $q->where(['User.id' => $parameters['filter']['user']]);
             });
-        } else {
-            $query->contain('Contents.User');
         }
 
         $count = $query->count();

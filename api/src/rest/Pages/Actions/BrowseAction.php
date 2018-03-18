@@ -33,12 +33,11 @@ class BrowseAction implements \Core\ActionInterface
             $query->matching('Contents.User', function ($q) use ($parameters) {
                 return $q->where(['User.id' => $parameters['filter']['user']]);
             });
-        } else {
-            $query->contain('Contents.User');
         }
 
         $query->order(['Pages.priority' => 'DESC']);
         $query->order(['Pages.created_at' => 'ASC']);
+
         $count = $query->count();
 
         $limit = $parameters['page']['limit'] ?? 10;
@@ -46,14 +45,6 @@ class BrowseAction implements \Core\ActionInterface
 
         $query->limit($limit);
         $query->offset($offset);
-
-        if (isset($parameters['filter']['user'])) {
-            $query->matching('Contents.User', function ($q) use ($parameters) {
-                return $q->where(['User.id' => $parameters['filter']['user']]);
-            });
-        } else {
-            $query->contain('Contents.User');
-        }
 
         $pages = $query->all();
 
