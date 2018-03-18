@@ -6,8 +6,20 @@ use League\Fractal;
 
 class CountryTransformer extends Fractal\TransformerAbstract
 {
-    public function transform(CountryInterface $country)
+    private static $type = 'countries';
+
+    public static function createForItem(Country $country)
     {
-        return $country->extract();
+        return new Fractal\Resource\Item($country, new self(), self::$type);
+    }
+
+    public static function createForCollection(iterable $countries)
+    {
+        return new Fractal\Resource\Collection($countries, new self(), self::$type);
+    }
+
+    public function transform(Country $country)
+    {
+        return $country->toArray();
     }
 }

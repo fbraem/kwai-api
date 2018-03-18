@@ -31,7 +31,9 @@
         "zendframework/zend-hydrator": "^2.3",
         "league/commonmark": "^0.17.0",
         "webuni/commonmark-table-extension": "^0.7.0",
-        "league/csv": "^9.0"
+        "league/csv": "^9.0",
+        "cakephp/orm": "^3.5",
+        "cakephp/i18n": "^3.5"
     },
     "require-dev": {
     },

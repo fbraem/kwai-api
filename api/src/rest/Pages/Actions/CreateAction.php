@@ -17,58 +17,87 @@ class CreateAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $db = $request->getAttribute('clubman.container')['db'];
-
         $data = $payload->getInput();
 
         $validator = new \REST\Pages\PageValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
+            return (
+                new JSONErrorResponder(
+                    new HTTPCodeResponder(
+                        new Responder(),
+                        422
+                    ),
+                    $errors
+                )
+            )->respond();
         }
 
         $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
         if (!isset($categoryId)) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
-                '/data/relationships/category' => [
-                    _('Category is required')
-                ]
-            ]))->respond();
+            return (
+                new JSONErrorResponder(
+                    new HTTPCodeResponder(
+                        new Responder(),
+                        422
+                    ),
+                    [
+                        '/data/relationships/category' => [
+                            _('Category is required')
+                        ]
+                    ]
+                )
+            )->respond();
         }
 
-        $categories = new \Domain\Category\CategoriesTable($db);
+        $pagesTable = \Domain\Page\PagesTable::getTableFromRegistry();
         try {
-            $category = $categories->whereId($categoryId)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
-                '/data/relationships/category' => [
-                    _('Category doesn\'t exist')
-                ]
-            ]))->respond();
+            $category = $pagesTable->Category->get($categoryId);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new JSONErrorResponder(
+                    new HTTPCodeResponder(
+                        new Responder(),
+                        422
+                    ),
+                    [
+                        '/data/relationships/category' => [
+                            _('Category doesn\'t exist')
+                        ]
+                    ]
+                ))->respond();
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $page = new \Domain\Page\Page($db, [
-            'category' => $category,
-            'remark' => $attributes['remark'],
-            'enabled' => $attributes['enabled'],
-            'priority' => $attributes['priority']
-        ]);
-        $page->store();
+        $page = $pagesTable->newEntity();
+        $page->category = $category;
+        $page->remark = $attributes['remark'];
+        $page->enabled = $attributes['enabled'];
+        $page->priority = $attributes['priority'];
 
-        $page->contents()->add(new \Domain\Content\Content($db, [
-            'locale' => 'nl',
-            'format' => 'md',
-            'title' => $attributes['title'],
-            'summary' => $attributes['summary'],
-            'content' => $attributes['content'],
-            'user' => $request->getAttribute('clubman.user')
-        ]));
-        $page->contents()->store();
+        $contentsTable = \Domain\Content\ContentsTable::getTableFromRegistry();
+        $content = $contentsTable->newEntity();
+        $content->locale = 'nl';
+        $content->format = 'md';
+        $content->title = $attributes['title'];
+        $content->summary = $attributes['summary'];
+        $content->content = $attributes['content'];
+        $content->user = $request->getAttribute('clubman.user');
+        $page->contents = [ $content ];
 
-        $payload->setOutput(new Fractal\Resource\Item($page, new \Domain\Page\PageTransformer(), 'pages'));
+        $pagesTable->save($page);
 
-        return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
+        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page));
+
+        return (
+            new JSONResponder(
+                new HTTPCodeResponder(
+                    new Responder(),
+                    201
+                ),
+                $payload
+            )
+        )->respond();
     }
 }

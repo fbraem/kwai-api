@@ -17,17 +17,16 @@ class LogoutAction implements \Core\ActionInterface
 
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $db = $request->getAttribute('clubman.container')['db'];
         $config = $request->getAttribute('clubman.config');
         $this->setEncryptionKey($config->oauth2->encryption_key);
         $server = $request->getAttribute('clubman.container')['authorizationServer'];
 
-        $refreshTokenTable = new \Domain\Auth\RefreshTokenTable($db);
+        $refreshTokenRepo = new \Domain\Auth\RefreshTokenRepository();
         $token = json_decode($this->decrypt($request->getParsedBody()['refresh_token']));
-        $refreshTokenTable->revokeRefreshToken($token->refresh_token_id);
+        $refreshTokenRepo->revokeRefreshToken($token->refresh_token_id);
 
-        $accessTokenTable = new \Domain\Auth\AccessTokenTable($db);
-        $accessTokenTable->revokeAccessToken($token->access_token_id);
+        $accessTokenRepo = new \Domain\Auth\AccessTokenRepository();
+        $accessTokenRepo->revokeAccessToken($token->access_token_id);
 
         return (new HTTPCodeResponder(new Responder(), 200))->respond();
     }

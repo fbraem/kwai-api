@@ -17,31 +17,35 @@ class BrowseAction implements \Core\ActionInterface
     {
         $parameters = $request->getAttribute('parameters');
 
-        $db = $request->getAttribute('clubman.container')['db'];
-        $dbPages = new \Domain\Page\PagesTable($db);
+        $query = \Domain\Page\PagesTable::getTableFromRegistry()->find();
+        $query->contain('Contents');
+        //TODO: contain Users
+        $query->contain('Category');
 
         if (isset($parameters['filter']['category'])) {
-            $dbPages->whereCategory($parameters['filter']['category']);
+            $query->where(['Category.id' => $parameters['filter']['category']]);
         }
 
         $parameters['filter']['enabled'] = $parameters['filter']['enabled'] ?? 1;
         if ($request->getAttribute('clubman.user') == null || $parameters['filter']['enabled'] == 1) {
-            $dbPages->whereAllowedToSee();
+            $query->where(['enabled' => true]);
         }
 
         if (isset($parameters['filter']['user'])) {
-            $dbPages->whereUser($parameters['filter']['user']);
+            $query->where(['Contents.User.id' => $parameters['filter']['user']]);
         }
 
-        $dbPages->orderByPriority();
-        $dbPages->orderByDate();
-
-        $count = $dbPages->count();
+        $query->order(['Pages.priority' => 'DESC']);
+        $query->order(['Pages.created_at' => 'ASC']);
+        $count = $query->count();
 
         $limit = $parameters['page']['limit'] ?? 10;
         $offset = $parameters['page']['offset'] ?? 0;
 
-        $pages = $dbPages->find($limit, $offset);
+        $query->limit($limit);
+        $query->offset($offset);
+
+        $pages = $query->all();
 
         $payload->setExtras([
             'limit' => $limit,

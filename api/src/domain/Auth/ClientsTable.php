@@ -1,12 +1,11 @@
 <?php
+namespace Domain\Auth;
 
-namespace Domain\User;
-
-class UsersTable extends \Cake\ORM\Table
+class ClientsTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'Users';
-    public static $tableName = 'users';
-    public static $entityClass = 'Domain\User\User';
+    public static $registryName = 'Client';
+    public static $tableName = 'oauth_clients';
+    public static $entityClass = 'Domain\Auth\Client';
 
     use \Domain\DomainTableTrait;
 
@@ -19,12 +18,11 @@ class UsersTable extends \Cake\ORM\Table
     {
         $schema
             ->addColumn('id', [ 'type' => 'integer' ])
-            ->addColumn('email', [ 'type' => 'string' ])
-            ->addColumn('password', [ 'type' => 'string' ])
-            ->addColumn('last_login', [ 'type' => 'timestamp'])
-            ->addColumn('last_name', [ 'type' => 'string' ])
-            ->addColumn('first_name', [ 'type' => 'string' ])
-            ->addColumn('remark', [ 'type' => 'text' ])
+            ->addColumn('name', [ 'type' => 'string' ])
+            ->addColumn('identifier', [ 'type' => 'string' ])
+            ->addColumn('secret', [ 'type' => 'string' ])
+            ->addColumn('redirect_uri', [ 'type' => 'string' ])
+            ->addColumn('status', [ 'type' => 'integer' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(

@@ -2,99 +2,46 @@
 
 namespace Domain\Person;
 
-use \Zend\Db\Sql\Expression;
-use \Zend\Db\TableGateway\TableGateway;
-
-class ContactsTable implements ContactsInterface
+class ContactsTable extends \Cake\ORM\Table
 {
-    private $db;
+    public static $registryName = 'Contacts';
+    public static $tableName = 'contacts';
+    public static $entityClass = 'Domain\Person\Contact';
 
-    private $table;
+    use \Domain\DomainTableTrait;
 
-    private $select;
-
-    public function __construct($db)
+    public function initialize(array $config)
     {
-        $this->db = $db;
-
-        $this->table = new TableGateway('contacts', $this->db);
-        $this->select = $this->createSelect();
+        $this->initializeTable();
+        $this->belongsTo('Country', [
+                'className' => CountriesTable::class
+            ])
+            ->setForeignKey('country_id')
+            ->setProperty('country');
     }
 
-    private function createSelect()
+    protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
-        $select = $this->table->getSql()->select();
-        $select->columns([
-            'id',
-            'email',
-            'tel',
-            'mobile',
-            'address',
-            'postal_code',
-            'city',
-            'county',
-            'country_id',
-            'remark',
-            'created_at',
-            'updated_at'
-        ]);
-        return $select;
-    }
-
-    public function whereId($id)
-    {
-        $this->select->where(['id' => $id]);
-        return $this;
-    }
-
-    public function findOne() : ContactInterface
-    {
-        $contacts = $this->find();
-        if ($contacts && count($contacts) > 0) {
-            return reset($contacts);
-        }
-        throw new \Domain\NotFoundException("Contact not found");
-    }
-
-    public function find(?int $limit = null, ?int $offset = null) : iterable
-    {
-        if ($limit) {
-            $this->select->limit($limit);
-        }
-        if ($offset) {
-            $this->select->offset($offset);
-        }
-
-        $result = [];
-        $contacts = [];
-        $countries = [];
-
-        $result = $this->table->selectWith($this->select);
-        if ($result->count() > 0) {
-            foreach ($result as $row) {
-                $countries[$row['country_id']] = 1;
-                $contacts[$row['id']] = $row;
-            }
-        }
-
-        if (count($countries) > 0) {
-            $countries = (new CountriesTable($this->db))->whereId(array_keys($countries))->find();
-        }
-
-        $result = [];
-        foreach ($contacts as $contact) {
-            $contact['country'] = $countries[$contact['country_id']] ?? null;
-            $result[] = new Contact($this->db, $contact);
-        }
-
-        return $result;
-    }
-
-    public function count() : int
-    {
-        $select = clone $this->select;
-        $select->columns(['c' => new Expression('COUNT(0)')]);
-        $resultSet = $this->table->selectWith($select);
-        return (int) $resultSet->current()->c;
+        $schema
+            ->addColumn('id', [ 'type' => 'integer' ])
+            ->addColumn('email', [ 'type' => 'string' ])
+            ->addColumn('tel', [ 'type' => 'string' ])
+            ->addColumn('mobile', [ 'type' => 'string' ])
+            ->addColumn('address', [ 'type' => 'string' ])
+            ->addColumn('postal_code', [ 'type' => 'string' ])
+            ->addColumn('city', [ 'type' => 'string' ])
+            ->addColumn('county', [ 'type' => 'string' ])
+            ->addColumn('remark', [ 'type' => 'text' ])
+            ->addColumn('created_at', [ 'type' => 'timestamp'])
+            ->addColumn('updated_at', [ 'type' => 'timestamp'])
+            ->addConstraint(
+                'primary',
+                [
+                    'type' => 'primary',
+                    'columns' => [
+                        'id'
+                    ]
+                ]
+        );
     }
 }

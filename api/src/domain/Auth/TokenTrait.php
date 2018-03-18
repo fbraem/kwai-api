@@ -28,14 +28,14 @@ trait TokenTrait
 
     public function getUserIdentifier()
     {
-        return $this->user->id();
+        return $this->user->id;
     }
 
     public function setUserIdentifier($identifier)
     {
-        $users = (new \Domain\User\UsersTable($this->db))->whereId($identifier)->find();
-        if (count($users) > 0) {
-            $this->user = reset($users);
+        try {
+            $this->user = \Domain\User\UsersTable::getTableFromRegistry()->get($identifier);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
         }
     }
 

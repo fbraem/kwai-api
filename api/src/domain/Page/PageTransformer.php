@@ -6,6 +6,8 @@ use League\Fractal;
 
 class PageTransformer extends Fractal\TransformerAbstract
 {
+    private static $type = 'pages';
+
     private $filesystem;
 
     protected $defaultIncludes = [
@@ -13,17 +15,27 @@ class PageTransformer extends Fractal\TransformerAbstract
         'category'
     ];
 
+    public static function createForItem(Page $page, $filesystem)
+    {
+        return new Fractal\Resource\Item($page, new self($filesystem), self::$type);
+    }
+
+    public static function createForCollection(iterable $pages, $filesystem)
+    {
+        return new Fractal\Resource\Collection($pages, new self($filesystem), self::$type);
+    }
+
     public function __construct($filesystem = null)
     {
         $this->filesystem = $filesystem;
     }
 
-    public function transform(PageInterface $page)
+    public function transform(Page $page)
     {
-        $result = $page->extract();
+        $result = $page->toArray();
 
         if ($this->filesystem) {
-            $images = $this->filesystem->listContents('images/pages/' . $page->id());
+            $images = $this->filesystem->listContents('images/pages/' . $page->id);
             foreach ($images as $image) {
                 $result[$image['filename']] = '/files/' . $image['path'];
             }
@@ -33,17 +45,17 @@ class PageTransformer extends Fractal\TransformerAbstract
 
     public function includeContents(Page $page)
     {
-        $contents = $page->contents();
+        $contents = $page->contents;
         if ($contents) {
-            return $this->collection($contents->contents(), new \Domain\Content\ContentTransformer, 'contents');
+            return \Domain\Content\ContentTransformer::createForCollection($contents);
         }
     }
 
     public function includeCategory(Page $page)
     {
-        $category = $page->category();
+        $category = $page->category;
         if ($category) {
-            return $this->item($category, new \Domain\Category\CategoryTransformer, 'categories');
+            return \Domain\Category\CategoryTransformer::createForItem($category);
         }
     }
 }

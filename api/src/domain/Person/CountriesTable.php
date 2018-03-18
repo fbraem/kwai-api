@@ -2,104 +2,36 @@
 
 namespace Domain\Person;
 
-use \Zend\Db\Sql\Expression;
-use \Zend\Db\TableGateway\TableGateway;
-
-class CountriesTable implements CountriesInterface
+class CountriesTable extends \Cake\ORM\Table
 {
-    private $db;
+    public static $registryName = 'Countries';
+    public static $tableName = 'countries';
+    public static $entityClass = 'Domain\Person\Country';
 
-    private $table;
+    use \Domain\DomainTableTrait;
 
-    private $select;
-
-    public function __construct($db)
+    public function initialize(array $config)
     {
-        $this->db = $db;
-
-        $this->table = new TableGateway('countries', $this->db);
-        $this->select = $this->createSelect();
+        $this->initializeTable();
     }
 
-    private function createSelect()
+    protected function initializeSchema($schema)
     {
-        $select = $this->table->getSql()->select();
-        $select->columns([
-            'id',
-            'iso_2',
-            'iso_3',
-            'name',
-            'created_at',
-            'updated_at'
-        ]);
-
-        return $select;
-    }
-
-    public function whereId($id)
-    {
-        $this->select->where(['id' => $id]);
-        return $this;
-    }
-
-    public function whereIso3($iso3)
-    {
-        $this->select->where(['iso_3' => $iso3]);
-        return $this;
-    }
-
-    public function orderByIso2()
-    {
-        $this->select->order('iso_2 ASC');
-        return $this;
-    }
-
-    public function orderByIso3()
-    {
-        $this->select->order('iso_3 ASC');
-        return $this;
-    }
-
-    public function orderByName()
-    {
-        $this->select->order('name ASC');
-        return $this;
-    }
-
-    public function findOne() : CountryInterface
-    {
-        $result = $this->table->selectWith($this->select);
-        if ($result->count() > 0) {
-            return new Country($this->db, $result->current());
-        }
-        throw new \Domain\NotFoundException("Country not found");
-    }
-
-    public function find(?int $limit = null, ?int $offset = null) : iterable
-    {
-        if ($limit) {
-            $this->select->limit($limit);
-        }
-        if ($offset) {
-            $this->select->offset($offset);
-        }
-
-        $countries = [];
-
-        $result = $this->table->selectWith($this->select);
-        if ($result->count() > 0) {
-            foreach ($result as $row) {
-                $countries[$row['id']] = new Country($this->db, $row);
-            }
-        }
-        return $countries;
-    }
-
-    public function count() : int
-    {
-        $select = clone $this->select;
-        $select->columns(['c' => new Expression('COUNT(0)')]);
-        $resultSet = $this->table->selectWith($select);
-        return (int) $resultSet->current()->c;
+        $schema
+            ->addColumn('id', [ 'type' => 'integer' ])
+            ->addColumn('iso_2', [ 'type' => 'string' ])
+            ->addColumn('iso_3', [ 'type' => 'string' ])
+            ->addColumn('name', [ 'type' => 'string' ])
+            ->addColumn('created_at', [ 'type' => 'timestamp'])
+            ->addColumn('updated_at', [ 'type' => 'timestamp'])
+            ->addConstraint(
+                'primary',
+                [
+                    'type' => 'primary',
+                    'columns' => [
+                        'id'
+                    ]
+                ]
+        );
     }
 }

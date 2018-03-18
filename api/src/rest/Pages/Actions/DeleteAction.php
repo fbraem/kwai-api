@@ -15,21 +15,34 @@ class DeleteAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
-        $db = $request->getAttribute('clubman.container')['db'];
 
-        $pagesTable = new \Domain\Page\PagesTable($db);
+        $pageTable = \Domain\Page\PagesTable::getTableFromRegistry();
         try {
-            $page = $pagesTable->whereId($id)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new NotFoundResponder(new Responder(), _("Page doesn't exist.")))->respond();
+            $page = $pageTable->get($id, [
+                'contain' => ['Contents']
+            ]);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new NotFoundResponder(
+                    new Responder(),
+                    _("Page doesn't exist.")
+                ))->respond();
         }
 
-        $page->delete();
+        $contentTable = \Domain\Content\ContentsTable::getTableFromRegistry();
+        foreach ($page->contents as $content) {
+            $contentTable->delete($content);
+        }
+        $pageTable->delete($page);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $folder = 'images/pages/' . $id;
         $filesystem->deleteDir($folder);
 
-        return (new HTTPCodeResponder(new Responder(), 200))->respond();
+        return (
+            new HTTPCodeResponder(
+                new Responder(),
+                200
+            ))->respond();
     }
 }

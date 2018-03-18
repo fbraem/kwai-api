@@ -15,21 +15,34 @@ class DeleteStoryAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
-        $db = $request->getAttribute('clubman.container')['db'];
 
-        $storiesTable = new \Domain\News\NewsStoriesTable($db);
+        $storiesTable = \Domain\News\NewsStoriesTable::getTableFromRegistry();
         try {
-            $story = $storiesTable->whereId($id)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
+            $story = $storiesTable->get($id, [
+                'contain' => ['Contents']
+            ]);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new NotFoundResponder(
+                    new Responder(),
+                    _("Story doesn't exist.")
+                ))->respond();
         }
 
-        $story->delete();
+        $contentTable = \Domain\Content\ContentsTable::getTableFromRegistry();
+        foreach ($story->contents as $content) {
+            $contentTable->delete($content);
+        }
+        $storiesTable->delete($story);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $folder = 'images/news/' . $id;
         $filesystem->deleteDir($folder);
 
-        return (new HTTPCodeResponder(new Responder(), 200))->respond();
+        return (
+            new HTTPCodeResponder(
+                new Responder(),
+                200
+            ))->respond();
     }
 }

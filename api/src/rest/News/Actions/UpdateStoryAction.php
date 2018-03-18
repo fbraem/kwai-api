@@ -12,20 +12,23 @@ use Core\Responders\JSONErrorResponder;
 use Core\Responders\HTTPCodeResponder;
 use Core\Responders\NotFoundResponder;
 
-use League\Fractal;
-
 class UpdateStoryAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
-        $db = $request->getAttribute('clubman.container')['db'];
 
-        $storiesTable = new \Domain\News\NewsStoriesTable($db);
+        $storiesTable = \Domain\News\NewsStoriesTable::getTableFromRegistry();
         try {
-            $story = $storiesTable->whereId($id)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
+            $story = $storiesTable->get($id, [
+                'contain' => ['Contents', 'Category', 'Contents.User']
+            ]);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new NotFoundResponder(
+                    new Responder(),
+                    _("Story doesn't exist.")
+                ))->respond();
         }
 
         $data = $payload->getInput();
@@ -33,65 +36,100 @@ class UpdateStoryAction implements \Core\ActionInterface
         $validator = new \REST\News\NewsStoryValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
+            return (
+                new JSONErrorResponder(
+                    new HTTPCodeResponder(
+                        new Responder(),
+                        422
+                    ),
+                $errors
+                )
+            )->respond();
         }
 
         $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
-        if (!isset($categoryId)) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
-                '/data/relationships/category' => [
-                    _('Category is required')
-                ]
-            ]))->respond();
-        }
-        $categoriesTable = new \Domain\Category\CategoriesTable($db);
-        try {
-            $category = $categoriesTable->whereId($categoryId)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), [
-                    '/data/relationships/category' => [
-                        _('Category doesn\'t exist')
-                    ]
-                ]))->respond();
+        if (isset($categoryId)) {
+            try {
+                $category = \Domain\Category\CategoriesTable::getTableFromRegistry()->get($categoryId);
+            } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+                return (
+                    new JSONErrorResponder(
+                        new HTTPCodeResponder(
+                            new Responder(),
+                            422
+                        ),
+                        [
+                            '/data/relationships/category' => [
+                                _('Category doesn\'t exist')
+                            ]
+                        ]
+                    ))->respond();
+            }
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $story = new \Domain\News\NewsStory(
-            $db,
-            array_merge($story->extract(), [
-                'category' => $category,
-                'publish_date' => $attributes['publish_date'],
-                'author' => $request->getAttribute('clubman.user'),
-                'end_date' => $attributes['end_date'] ?? null,
-                'featured' => $attributes['featured'] ?? 0,
-                'featured_end_date' => $attributes['featured_end_date'] ?? null,
-                'enabled' => $attributes['enabled'],
-                'contents' => $story->contents(),
-                'publish_date_timezone' => $attributes['publish_date_timezone'] ?? null,
-                'end_date_timezone' => $attributes['end_date_timezone'] ?? null,
-                'featured_date_timezone' => $attributes['featured_date_timezone'] ?? null,
-                'remark' => $attributes['remark'] ?? null
-            ])
-        );
-        $story->store();
+        if (isset($category)) {
+            $story->category = $category;
+        }
+        if (isset($attributes['publish_date'])) {
+            $story->publish_date = $attributes['publish_date'];
+        }
+        if (isset($attributes['end_date'])) {
+            $story->end_date = $attributes['end_date'];
+        }
+        if (isset($attributes['featured'])) {
+            $story->featured = $attributes['featured'];
+        }
+        if (isset($attributes['featured_end_date'])) {
+            $story->featured_end_date = $attributes['featured_end_date'];
+        }
+        if (isset($attributes['enabled'])) {
+            $story->enabled = $attributes['enabled'];
+        }
+        if (isset($attributes['publish_date_timezone'])) {
+            $story->publish_date_timezone = $attributes['publish_date_timezone'];
+        }
+        if (isset($attributes['end_date_timezone'])) {
+            $story->end_date_timezone = $attributes['end_date_timezone'];
+        }
+        if (isset($attributes['featured_date_timezone'])) {
+            $story->featured_date_timezone = $attributes['featured_date_timezone'];
+        }
+        if (isset($attributes['remark'])) {
+            $story->remark = $attributes['remark'];
+        }
 
-        $content = new \Domain\Content\Content(
-            $db,
-            array_merge($story->contents()->contents()[0]->extract(), [
-                'user' => $request->getAttribute('clubman.user'),
-                'title' => $attributes['title'],
-                'summary' => $attributes['summary'],
-                'content' => $attributes['content']
-            ])
-        );
-        $content->store();
+        //TODO: for now we only support one content.
+        // In the future we will support multi lingual
+        $content = $story->contents[0];
+        if (isset($attributes['title'])) {
+            $content->title = $attributes['title'];
+        }
+        if (isset($attributes['summary'])) {
+            $content->summary = $attributes['summary'];
+        }
+        if (isset($attributes['content'])) {
+            $content->content = $attributes['content'];
+        }
+        if ($content->isDirty()) {
+            $content->user = $request->getAttribute('clubman.user');
+            $story->contents = [ $content ];
+        }
 
-        $story->contents()->replace($content);
+        $storiesTable->save($story);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
+        $payload->setOutput(\Domain\News\NewsStoryTransformer::createForItem($story, $filesystem));
 
-        return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
+        return (
+            new JSONResponder(
+                new HTTPCodeResponder(
+                    new Responder(),
+                    201
+                ),
+                $payload
+            )
+        )->respond();
     }
 }

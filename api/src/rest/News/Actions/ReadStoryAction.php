@@ -10,25 +10,30 @@ use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 use Core\Responders\NotFoundResponder;
 
-use League\Fractal;
-
 class ReadStoryAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
-        $db = $request->getAttribute('clubman.container')['db'];
 
-        $stories = new \Domain\News\NewsStoriesTable($db);
         try {
-            $story = $stories->whereId($id)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new NotFoundResponder(new Responder(), _("Story doesn't exist.")))->respond();
+            $story = \Domain\News\NewsStoriesTable::getTableFromRegistry()->get($id, [
+                'contain' => ['Contents', 'Category', 'Contents.User']
+            ]);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new NotFoundResponder(
+                    new Responder(),
+                    _("Story doesn't exist.")
+                ))->respond();
         }
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(new Fractal\Resource\Item($story, new \Domain\News\NewsStoryTransformer($filesystem), 'news_stories'));
-
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        $payload->setOutput(\Domain\News\NewsStoryTransformer::createForItem($story, $filesystem));
+        return (
+            new JSONResponder(
+                new Responder(),
+                $payload
+            ))->respond();
     }
 }

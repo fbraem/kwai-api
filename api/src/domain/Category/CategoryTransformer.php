@@ -6,8 +6,20 @@ use League\Fractal;
 
 class CategoryTransformer extends Fractal\TransformerAbstract
 {
-    public function transform(CategoryInterface $category)
+    private static $type = 'categories';
+
+    public static function createForItem(Category $category)
     {
-        return $category->extract();
+        return new Fractal\Resource\Item($category, new self(), self::$type);
+    }
+
+    public static function createForCollection(iterable $categories)
+    {
+        return new Fractal\Resource\Collection($categories, new self(), self::$type);
+    }
+
+    public function transform(Category $category)
+    {
+        return $category->toArray();
     }
 }

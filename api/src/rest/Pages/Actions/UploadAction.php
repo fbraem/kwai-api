@@ -12,8 +12,6 @@ use Core\Responders\JSONErrorResponder;
 use Core\Responders\HTTPCodeResponder;
 use Core\Responders\NotFoundResponder;
 
-use League\Fractal;
-
 use Intervention\Image\ImageManager;
 
 class UploadAction implements \Core\ActionInterface
@@ -27,13 +25,15 @@ class UploadAction implements \Core\ActionInterface
         $uploadedFilename = $files['image']->getClientFilename();
 
         $id = $request->getAttribute('route.id');
-        $db = $request->getAttribute('clubman.container')['db'];
-        $dbPages = new \Domain\Page\PagesTable($db);
 
         try {
-            $page = $dbPages->whereId($id)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new NotFoundResponder(new Responder(), _("Page doesn't exist.")))->respond();
+            $page = \Domain\Page\PagesTable::getTableFromRegistry()->get($id);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new NotFoundResponder(
+                    new Responder(),
+                    _("Page doesn't exist.")
+                ))->respond();
         }
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
@@ -50,14 +50,20 @@ class UploadAction implements \Core\ActionInterface
 
             $manager = new ImageManager();
             $image = $manager->make($originalFile);
-            $image = $image->crop($post['width'], $post['height'], $post['x'], $post['y'])->resize($image->width() * $post['scale'], $image->height() * $post['scale']);
+            $image = $image->crop(
+                $post['width'],
+                $post['height'],
+                $post['x'],
+                $post['y']
+            )->resize($image->width() * $post['scale'], $image->height() * $post['scale']);
+
             $filesystem->put('images/pages/' . $id . '/crop.' . $ext, $image->stream());
         } catch (\Exception $e) {
             echo $e;
             exit;
         }
 
-        $payload->setOutput(new Fractal\Resource\Item($page, new \Domain\Page\PageTransformer($filesystem), 'pages'));
+        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page, $filesystem));
         return (new JSONResponder(new Responder(), $payload))->respond();
     }
 }

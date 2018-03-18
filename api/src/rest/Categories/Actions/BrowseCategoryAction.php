@@ -9,16 +9,16 @@ use Aura\Payload\Payload;
 use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 
-use League\Fractal;
-
 class BrowseCategoryAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $db = $request->getAttribute('clubman.container')['db'];
-        $categories = (new \Domain\Category\CategoriesTable($db))->find();
-        $payload->setOutput(new Fractal\Resource\Collection($categories, new \Domain\Category\CategoryTransformer(), 'categories'));
-
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        $categories = \Domain\Category\CategoriesTable::getTableFromRegistry()->find()->all();
+        $payload->setOutput(\Domain\Category\CategoryTransformer::createForCollection($categories));
+        return (
+            new JSONResponder(
+                new Responder(),
+                $payload
+            ))->respond();
     }
 }

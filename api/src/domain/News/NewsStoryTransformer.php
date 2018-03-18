@@ -8,6 +8,18 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
 {
     private $filesystem;
 
+    private static $type = 'news_stories';
+
+    public static function createForItem(NewsStory $story, $filesystem)
+    {
+        return new Fractal\Resource\Item($story, new self($filesystem), self::$type);
+    }
+
+    public static function createForCollection(iterable $stories, $filesystem)
+    {
+        return new Fractal\Resource\Collection($stories, new self($filesystem), self::$type);
+    }
+
     protected $defaultIncludes = [
         'contents',
         'category'
@@ -18,12 +30,12 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
         $this->filesystem = $filesystem;
     }
 
-    public function transform(NewsStoryInterface $story)
+    public function transform(NewsStory $story)
     {
-        $result = $story->extract();
+        $result = $story->toArray();
 
         if ($this->filesystem) {
-            $images = $this->filesystem->listContents('images/news/' . $story->id());
+            $images = $this->filesystem->listContents('images/news/' . $story->id);
             foreach ($images as $image) {
                 $result[$image['filename']] = '/files/' . $image['path'];
             }
@@ -33,17 +45,17 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
 
     public function includeContents(NewsStory $story)
     {
-        $contents = $story->contents();
+        $contents = $story->contents;
         if ($contents) {
-            return $this->collection($contents->contents(), new \Domain\Content\ContentTransformer, 'contents');
+            return \Domain\Content\ContentTransformer::createForCollection($contents);
         }
     }
 
     public function includeCategory(NewsStory $story)
     {
-        $category = $story->category();
+        $category = $story->category;
         if ($category) {
-            return $this->item($category, new \Domain\Category\CategoryTransformer, 'categories');
+            return \Domain\Category\CategoryTransformer::createForItem($category);
         }
     }
 }

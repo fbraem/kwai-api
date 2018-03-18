@@ -6,20 +6,32 @@ use League\Fractal;
 
 class ContactTransformer extends Fractal\TransformerAbstract
 {
+    private static $type = 'contacts';
+
     protected $defaultIncludes = [
         'country'
     ];
 
-    public function transform(ContactInterface $contact)
+    public static function createForItem(Contact $contact)
     {
-        return $contact->extract();
+        return new Fractal\Resource\Item($contact, new self(), self::$type);
     }
 
-    public function includeCountry(ContactInterface $contact)
+    public static function createForCollection(iterable $contacts)
     {
-        $country = $contact->country();
+        return new Fractal\Resource\Collection($contacts, new self(), self::$type);
+    }
+
+    public function transform(Contact $contact)
+    {
+        return $contact->toArray();
+    }
+
+    public function includeCountry(Contact $contact)
+    {
+        $country = $contact->country;
         if ($country) {
-            return $this->item($country, new CountryTransformer, 'countries');
+            return CountryTransformer::createForItem($country);
         }
     }
 }

@@ -24,13 +24,17 @@ class AuthorityMiddleware implements MiddlewareInterface
             try {
                 $request = $server->validateAuthenticatedRequest($request);
                 $userId = $request->getAttribute('oauth_user_id');
-                $db = $request->getAttribute('clubman.container')['db'];
-                $users = (new \Domain\User\UsersTable($db))->whereId($userId)->find();
-                if (count($users) > 0) {
-                    $request = $request->withAttribute('clubman.user', reset($users));
-                } else {
-                    return (new HTTPResponder(new Responder(), 500, _('Unable to find user')))->respond();
+                try {
+                    $user = \Domain\User\UsersTable::getTableFromRegistry()->get($userId);
+                } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+                    return (
+                        new HTTPResponder(
+                            new Responder(),
+                            500,
+                            _('Unable to find user')
+                        ))->respond();
                 }
+                $request = $request->withAttribute('clubman.user', $user);
             } catch (OAuthServerException $exception) {
                 if ($route->name != 'auth.logout') {
                     $response = (new Responder())->respond();

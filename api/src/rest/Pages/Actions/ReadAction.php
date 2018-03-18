@@ -17,18 +17,25 @@ class ReadAction implements \Core\ActionInterface
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
         $id = $request->getAttribute('route.id');
-        $db = $request->getAttribute('clubman.container')['db'];
 
-        $pages = new \Domain\Page\PagesTable($db);
         try {
-            $page = $pages->whereId($id)->findOne();
-        } catch (\Domain\NotFoundException $nfe) {
-            return (new NotFoundResponder(new Responder(), _("Page doesn't exist.")))->respond();
+            $page = \Domain\Page\PagesTable::getTableFromRegistry()->get($id, [
+                'contain' => ['Contents', 'Category', 'Contents.User']
+            ]);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            return (
+                new NotFoundResponder(
+                    new Responder(),
+                    _("Page doesn't exist.")
+                ))->respond();
         }
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(new Fractal\Resource\Item($page, new \Domain\Page\PageTransformer($filesystem), 'pages'));
-
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page, $filesystem));
+        return (
+            new JSONResponder(
+                new Responder(),
+                $payload
+            ))->respond();
     }
 }

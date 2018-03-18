@@ -2,53 +2,46 @@
 
 namespace Domain\Content;
 
-class ContentsTable implements ContentsInterface
+class ContentsTable extends \Cake\ORM\Table
 {
-    private $db;
+    public static $registryName = 'Contents';
+    public static $tableName = 'contents';
+    public static $entityClass = 'Domain\Content\Content';
 
-    private $table;
+    use \Domain\DomainTableTrait;
 
-    private $select;
-
-    public function __construct($db)
+    public function initialize(array $config)
     {
-        $this->db = $db;
-        $this->table = new \Zend\Db\TableGateway\TableGateway('contents', $this->db);
-        $this->select = $this->table->getSql()->select();
+        $this->initializeTable();
+
+        $this->belongsTo('User', [
+                'className' => \Domain\User\UsersTable::class
+            ])
+            ->setForeignKey('user_id')
+            ->setProperty('user')
+        ;
     }
 
-    public function whereUser($userId)
+    protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
-        $this->select->where(['user_id' => $id]);
-    }
-
-    public function find() : iterable
-    {
-        $contents = $this->table->selectWith($this->select);
-
-        if (count($contents) > 0) {
-            $ids = array_unique(
-                array_map(function ($v) {
-                    return $v->user_id;
-                }, $contents)
-            );
-            $users = (new \Domain\User\UsersTable($this->db))->whereId($ids)->find();
-            foreach ($contents as $content) {
-                $content->user = $users[$content->user_id];
-            }
-        }
-
-        $result = [];
-        foreach ($contents as $content) {
-            $result[] = new Content($this->db, $content);
-        }
-        return $result;
-    }
-
-    public function count() : int
-    {
-        $this->select->columns(['c' => new \Zend\Db\Sql\Expression('COUNT(id)')]);
-        $resultSet = $this->table->selectWith($this->select);
-        return (int) $resultSet->current()->c;
+        $schema
+            ->addColumn('id', [ 'type' => 'integer' ])
+            ->addColumn('user_id', [ 'type' => 'integer' ])
+            ->addColumn('locale', [ 'type' => 'string' ])
+            ->addColumn('format', [ 'type' => 'string'])
+            ->addColumn('title', [ 'type' => 'string'])
+            ->addColumn('content', [ 'type' => 'text'])
+            ->addColumn('summary', [ 'type' => 'text'])
+            ->addColumn('created_at', [ 'type' => 'timestamp'])
+            ->addColumn('updated_at', [ 'type' => 'timestamp'])
+            ->addConstraint(
+                'primary',
+                [
+                    'type' => 'primary',
+                    'columns' => [
+                        'id'
+                    ]
+                ]
+        );
     }
 }

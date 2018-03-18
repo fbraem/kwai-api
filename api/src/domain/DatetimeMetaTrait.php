@@ -25,4 +25,20 @@ trait DatetimeMetaTrait
         }
         return null;
     }
+
+    public function _getCreatedAt($value)
+    {
+        if ($value) {
+            return (new \Carbon\Carbon($value))->toDateTimeString();
+        }
+        return null;
+    }
+
+    public function _getUpdatedAt($value)
+    {
+        if ($value) {
+            return (new \Carbon\Carbon($value))->toDateTimeString();
+        }
+        return null;
+    }
 }

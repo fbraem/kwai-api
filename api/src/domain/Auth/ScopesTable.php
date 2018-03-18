@@ -1,12 +1,11 @@
 <?php
+namespace Domain\Auth;
 
-namespace Domain\User;
-
-class UsersTable extends \Cake\ORM\Table
+class ScopesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'Users';
-    public static $tableName = 'users';
-    public static $entityClass = 'Domain\User\User';
+    public static $registryName = 'Scope';
+    public static $tableName = 'oauth_scopes';
+    public static $entityClass = 'Domain\Auth\Scope';
 
     use \Domain\DomainTableTrait;
 
@@ -19,12 +18,8 @@ class UsersTable extends \Cake\ORM\Table
     {
         $schema
             ->addColumn('id', [ 'type' => 'integer' ])
-            ->addColumn('email', [ 'type' => 'string' ])
-            ->addColumn('password', [ 'type' => 'string' ])
-            ->addColumn('last_login', [ 'type' => 'timestamp'])
-            ->addColumn('last_name', [ 'type' => 'string' ])
-            ->addColumn('first_name', [ 'type' => 'string' ])
-            ->addColumn('remark', [ 'type' => 'text' ])
+            ->addColumn('identifier', [ 'type' => 'string' ])
+            ->addColumn('description', [ 'type' => 'string' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(

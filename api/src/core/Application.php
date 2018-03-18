@@ -16,10 +16,10 @@ use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
-use Domain\Auth\AccessTokenTable;
-use Domain\Auth\ClientTable;
-use Domain\Auth\RefreshTokenTable;
-use Domain\Auth\ScopeTable;
+use Domain\Auth\AccessTokenRepository;
+use Domain\Auth\ClientRepository;
+use Domain\Auth\RefreshTokenRepository;
+use Domain\Auth\ScopeRepository;
 use Domain\Auth\UserRepository;
 
 /**
@@ -57,17 +57,15 @@ class Application
 
         $this->container = new \Pimple\Container();
 
-        $this->container['db'] = function ($c) use ($config) {
-            $dbConnection = $config->database->{$config->default_database};
-            return new \Zend\Db\Adapter\Adapter([
-                'driver' => 'Pdo_Mysql',
-                'database' => $dbConnection->name,
-                'username' => $dbConnection->user,
-                'password' => $dbConnection->pass,
-                'hostname' => $dbConnection->host,
-                'charset' =>  $dbConnection->charset
-            ]);
-        };
+        \Cake\Datasource\ConnectionManager::config('default', [
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'host' => $config->database->{$config->default_database}->host,
+            'username' => $config->database->{$config->default_database}->user,
+            'password' => $config->database->{$config->default_database}->pass,
+            'database' => $config->database->{$config->default_database}->name,
+            'encoding' => $config->database->{$config->default_database}->charset
+        ]);
 
         $this->container['filesystem'] = function ($c) use ($config) {
             $flyAdapter = new Local($config->files);
@@ -75,16 +73,16 @@ class Application
         };
         $this->container['authorizationServer'] = function ($c) use ($config) {
             $server = new AuthorizationServer(
-                new ClientTable($c['db']),
-                new AccessTokenTable($c['db']),
-                new ScopeTable($c['db']),
+                new ClientRepository(),
+                new AccessTokenRepository(),
+                new ScopeRepository(),
                 $config->oauth2->private_key,
                 $config->oauth2->encryption_key
             );
-            $refreshTokenRepo = new RefreshTokenTable($c['db']);
+            $refreshTokenRepo = new RefreshTokenRepository();
 
             $grant = new PasswordGrant(
-                new UserRepository($c['db']),
+                new UserRepository(),
                 $refreshTokenRepo
             );
             $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
@@ -99,7 +97,7 @@ class Application
             return $server;
         };
         $this->container['resourceServer'] = function ($c) use ($config) {
-            return new ResourceServer(new AccessTokenTable($c['db']), $config->oauth2->public_key);
+            return new ResourceServer(new AccessTokenRepository(), $config->oauth2->public_key);
         };
     }
 

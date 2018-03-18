@@ -20,14 +20,14 @@ class LogActionMiddleware implements MiddlewareInterface
         $user = $request->getAttribute('clubman.user');
         if ($user) {
             $route = $request->getAttribute('clubman.route');
-            $db = $request->getAttribute('clubman.container')['db'];
-            $log = new \Domain\User\UserLog($db, [
-                'user' => $user,
-                'action' => $route->name,
-                'rest' => $route->extras['rest'] ?? '',
-                'model_id' => $route->attributes['id'] ?? 0,
-            ]);
-            $log->store();
+
+            $logsTable = \Domain\User\UserLogsTable::getTableFromRegistry();
+            $log = $logsTable->newEntity();
+            $log->user = $user;
+            $log->action = $route->name;
+            $log->rest = $route->extras['rest'] ?? '';
+            $log->model_id = $route->attributes['id'] ?? 0;
+            $logsTable->save($log);
         }
         return $delegate->process($request);
     }

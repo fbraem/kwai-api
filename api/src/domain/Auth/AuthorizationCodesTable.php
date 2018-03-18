@@ -1,12 +1,11 @@
 <?php
+namespace Domain\Auth;
 
-namespace Domain\Category;
-
-class CategoriesTable extends \Cake\ORM\Table
+class AuthorizationCodesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'Categories';
-    public static $tableName = 'categories';
-    public static $entityClass = 'Domain\Category\Category';
+    public static $registryName = 'AuthorizationCode';
+    public static $tableName = 'oauth_auth_codes';
+    public static $entityClass = 'Domain\Auth\AuthorizationCode';
 
     use \Domain\DomainTableTrait;
 
@@ -20,16 +19,25 @@ class CategoriesTable extends \Cake\ORM\Table
             ->setForeignKey('user_id')
             ->setProperty('user')
         ;
+        $this->belongsTo('Client', [
+                'className' => ClientsTable::class
+            ])
+            ->setForeignKey('client_id')
+            ->setProperty('client')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
             ->addColumn('id', [ 'type' => 'integer' ])
+            ->addColumn('identifier', [ 'type' => 'string' ])
             ->addColumn('user_id', [ 'type' => 'integer' ])
-            ->addColumn('name', [ 'type' => 'string' ])
-            ->addColumn('description', [ 'type' => 'text' ])
-            ->addColumn('remark', [ 'type' => 'text'])
+            ->addColumn('client_id', [ 'type' => 'integer' ])
+            ->addColumn('expiration', [ 'type' => 'timestamp'])
+            ->addColumn('redirect_uri', [ 'type' => 'string'])
+            ->addColumn('revoked', [ 'type' => 'boolean' ])
+            ->addColumn('type', [ 'type' => 'integer' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(

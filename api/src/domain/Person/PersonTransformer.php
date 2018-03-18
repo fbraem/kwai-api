@@ -6,36 +6,48 @@ use League\Fractal;
 
 class PersonTransformer extends Fractal\TransformerAbstract
 {
+    private static $type = 'persons';
+
     protected $defaultIncludes = [
         'nationality',
         'contact',
         'user'
     ];
 
-    public function transform(PersonInterface $person)
+    public static function createForItem(Person $person)
     {
-        return $person->extract();
+        return new Fractal\Resource\Item($person, new self(), self::$type);
     }
 
-    public function includeNationality(PersonInterface $person)
+    public static function createForCollection(iterable $persons)
     {
-        $country = $person->nationality();
+        return new Fractal\Resource\Collection($persons, new self(), self::$type);
+    }
+
+    public function transform(Person $person)
+    {
+        return $person->toArray();
+    }
+
+    public function includeNationality(Person $person)
+    {
+        $country = $person->nationality;
         if ($country) {
-            return $this->item($country, new CountryTransformer, 'countries');
+            return CountryTransformer::createForItem($country);
         }
     }
 
-    public function includeContact(PersonInterface $person)
+    public function includeContact(Person $person)
     {
-        $contact = $person->contact();
+        $contact = $person->contact;
         if ($contact) {
-            return $this->item($contact, new ContactTransformer, 'contacts');
+            return ContactTransformer::createForItem($contact);
         }
     }
 
-    public function includeUser(PersonInterface $person)
+    public function includeUser(Person $person)
     {
-        $user = $person->user();
+        $user = $person->user;
         if ($user) {
             return $this->item($user, new \Domain\User\UserTransformer, 'users');
         }

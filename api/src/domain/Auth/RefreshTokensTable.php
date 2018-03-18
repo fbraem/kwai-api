@@ -1,12 +1,11 @@
 <?php
+namespace Domain\Auth;
 
-namespace Domain\Category;
-
-class CategoriesTable extends \Cake\ORM\Table
+class RefreshTokensTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'Categories';
-    public static $tableName = 'categories';
-    public static $entityClass = 'Domain\Category\Category';
+    public static $registryName = 'RefreshToken';
+    public static $tableName = 'oauth_refresh_tokens';
+    public static $entityClass = 'Domain\Auth\RefreshToken';
 
     use \Domain\DomainTableTrait;
 
@@ -14,11 +13,11 @@ class CategoriesTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsTo('User', [
-                'className' => \Domain\User\UsersTable::class
+        $this->belongsTo('AccessToken', [
+                'className' => \AccessTokensTable::class
             ])
-            ->setForeignKey('user_id')
-            ->setProperty('user')
+            ->setForeignKey('access_token_id')
+            ->setProperty('accesstoken')
         ;
     }
 
@@ -26,10 +25,10 @@ class CategoriesTable extends \Cake\ORM\Table
     {
         $schema
             ->addColumn('id', [ 'type' => 'integer' ])
-            ->addColumn('user_id', [ 'type' => 'integer' ])
-            ->addColumn('name', [ 'type' => 'string' ])
-            ->addColumn('description', [ 'type' => 'text' ])
-            ->addColumn('remark', [ 'type' => 'text'])
+            ->addColumn('identifier', [ 'type' => 'string' ])
+            ->addColumn('access_token_id', [ 'type' => 'integer' ])
+            ->addColumn('expiration', [ 'type' => 'timestamp'])
+            ->addColumn('revoked', [ 'type' => 'boolean' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(
