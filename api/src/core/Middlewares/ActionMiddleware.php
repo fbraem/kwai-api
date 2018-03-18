@@ -21,7 +21,7 @@ class ActionMiddleware implements MiddlewareInterface
         $payload = new Payload();
 
         $json = json_decode((string) $request->getBody(), true);
-        if (!$json['data']) {
+        if (!isset($json['data'])) {
             $json['data'] = [];
         }
         $payload->setInput($json);
