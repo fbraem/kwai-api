@@ -33,6 +33,7 @@ class PageTransformer extends Fractal\TransformerAbstract
     public function transform(Page $page)
     {
         $result = $page->toArray();
+        unset($result['_matchingData']);
 
         if ($this->filesystem) {
             $images = $this->filesystem->listContents('images/pages/' . $page->id);

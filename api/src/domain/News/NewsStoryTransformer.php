@@ -33,6 +33,7 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     public function transform(NewsStory $story)
     {
         $result = $story->toArray();
+        unset($result['_matchingData']);
 
         if ($this->filesystem) {
             $images = $this->filesystem->listContents('images/news/' . $story->id);
