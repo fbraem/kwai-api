@@ -16,7 +16,7 @@ class BrowseStoryAction implements \Core\ActionInterface
         $parameters = $request->getAttribute('parameters');
 
         $query = \Domain\News\NewsStoriesTable::getTableFromRegistry()->find();
-        $query->contain(['Contents', 'Contents.User', 'Category']);
+        $query->contain(['Contents', 'Category']);
         $query->order(['NewsStories.publish_date' => 'DESC']);
 
         if (isset($parameters['filter']['category'])) {
@@ -37,10 +37,6 @@ class BrowseStoryAction implements \Core\ActionInterface
                         });
                     }
                 );
-        }
-
-        if (isset($parameters['filter']['user'])) {
-            $query->where(['Contents.User.id' => $parameters['filter']['user']]);
         }
 
         if (isset($parameters['filter']['year'])) {
@@ -66,6 +62,14 @@ class BrowseStoryAction implements \Core\ActionInterface
                     ->gt('NewsStories.end_date', \Carbon\Carbon::now('UTC')->toDateTimeString());
             });
         });
+
+        if (isset($parameters['filter']['user'])) {
+            $query->matching('Contents.User', function ($q) use ($parameters) {
+                return $q->where(['User.id' => $parameters['filter']['user']]);
+            });
+        } else {
+            $query->contain('Contents.User');
+        }
 
         $count = $query->count();
 

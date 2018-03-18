@@ -18,9 +18,7 @@ class BrowseAction implements \Core\ActionInterface
         $parameters = $request->getAttribute('parameters');
 
         $query = \Domain\Page\PagesTable::getTableFromRegistry()->find();
-        $query->contain('Contents');
-        //TODO: contain Users
-        $query->contain('Category');
+        $query->contain(['Contents', 'Contents.User', 'Category']);
 
         if (isset($parameters['filter']['category'])) {
             $query->where(['Category.id' => $parameters['filter']['category']]);
@@ -32,7 +30,11 @@ class BrowseAction implements \Core\ActionInterface
         }
 
         if (isset($parameters['filter']['user'])) {
-            $query->where(['Contents.User.id' => $parameters['filter']['user']]);
+            $query->matching('Contents.User', function ($q) use ($parameters) {
+                return $q->where(['User.id' => $parameters['filter']['user']]);
+            });
+        } else {
+            $query->contain('Contents.User');
         }
 
         $query->order(['Pages.priority' => 'DESC']);
@@ -44,6 +46,14 @@ class BrowseAction implements \Core\ActionInterface
 
         $query->limit($limit);
         $query->offset($offset);
+
+        if (isset($parameters['filter']['user'])) {
+            $query->matching('Contents.User', function ($q) use ($parameters) {
+                return $q->where(['User.id' => $parameters['filter']['user']]);
+            });
+        } else {
+            $query->contain('Contents.User');
+        }
 
         $pages = $query->all();
 
