@@ -21,8 +21,8 @@ const i18n = new VueI18n({
     messages
 });
 
-import FlagIcon from 'vue-flag-icon';
-Vue.use(FlagIcon);
+//import FlagIcon from 'vue-flag-icon';
+//Vue.use(FlagIcon);
 
 import moment from 'moment';
 moment.locale('nl');

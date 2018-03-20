@@ -66,6 +66,6 @@ class JudoMemberMigration extends AbstractMigration
     {
         $this->table('sport_judo_members')->drop();
         $this->table('sport_judo_grades')->drop();
-        $this->table('sport_judo_members_grades')->drop();
+        $this->table('sport_judo_member_grades')->drop();
     }
 }

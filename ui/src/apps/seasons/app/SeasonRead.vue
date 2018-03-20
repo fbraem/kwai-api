@@ -1,0 +1,80 @@
+<template>
+    <v-container fluid>
+        <v-layout row wrap>
+            <v-flex v-if="season" xs12>
+                <v-card>
+                    <v-card-title>
+                        <div>
+                            {{ season.name }}
+                        </div>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-text-field readonly name="start_date" :label="$t('start_date')" :value="start" />
+                        <v-text-field readonly name="end_date" :label="$t('end_date')" :value="end" />
+                        <v-text-field readonly multi-line name="remark" :label="$t('remark')" :value="season.remark" />
+                        <div v-if="active">
+                            <v-icon v-if="active">fa-check</v-icon>
+                            <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('active_message') }}</span>
+                        </div>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn v-if="$isAllowed('update', season)" color="secondary" icon :to="{ name : 'season.update', params : { id : season.id }}" flat>
+                            <v-icon>fa-edit</v-icon>
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container>
+</template>
+
+<script>
+    import messages from '../lang/lang';
+    import moment from 'moment';
+
+    export default {
+        i18n : {
+            messages
+        },
+        computed : {
+            season() {
+                return this.$store.getters['seasonModule/season'](this.$route.params.id);
+            },
+            start() {
+                var date = moment(this.season.start_date, 'YYYY-MM-DD');
+                return date.format('L');
+            },
+            end() {
+                var date = moment(this.season.end_date, 'YYYY-MM-DD');
+                return date.format('L');
+            },
+            active() {
+                var today = moment();
+                var start = moment(this.season.start_date, 'YYYY-MM-DD');
+                var end = moment(this.season.end_date, 'YYYY-MM-DD');
+                return today.isBetween(start, end) || today.isSame(start) || today.isSame(end);
+            }
+        },
+        beforeRouteUpdate(to, from, next) {
+            this.fetchData(to.params.id);
+            next();
+        },
+        mounted() {
+            this.fetchData(this.$route.params.id);
+        },
+        watch : {
+            '$route'(to) {
+                this.fetchData(to.params.id);
+            }
+        },
+        methods : {
+            fetchData(id) {
+                this.$store.dispatch('seasonModule/read', { id : id })
+                    .catch((error) => {
+                        console.log(error);
+                });
+            }
+        }
+    };
+</script>

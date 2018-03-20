@@ -27,8 +27,7 @@
                                 <v-subheader :id="'letter-' + letter">{{letter}}</v-subheader>
                                 <v-list-tile avatar v-for="member in group" :key="member.id" @click="" style="break-inside:avoid;">
                                     <v-list-tile-action>
-                                        <flag v-if="member.person.nationality" :iso="member.person.nationality.iso_2.toLowerCase()">
-                                        </flag>
+                                        <span v-if="member.person.nationality">{{ member.person.nationality.iso_2 }}</span>
                                     </v-list-tile-action>
                                     <v-list-tile-content>
                                         <v-list-tile-title v-text="member.person.lastname + ' ' + member.person.firstname"></v-list-tile-title>
