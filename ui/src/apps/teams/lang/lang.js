@@ -28,7 +28,9 @@ export default {
         clear : "Maak Leeg",
         teams : "Teams",
         remark : 'Opmerking',
-        update : 'Wijzig Team',
+        team_update : 'Wijzig Team',
+        no_season : "Geen Seizoen",
+        no_type : "Geen Teamtype",
         team : {
             create_title : 'Maak nieuw team',
             details : "Team Details",
@@ -39,7 +41,15 @@ export default {
                 },
                 season : {
                     label : "Seizoen",
-                    hint : "Het seizoen waar dit team toebehoort"
+                    hint : "Een team dat niet gebonden is aan een seizoen kan gebruikt worden om leden te groeperen (bv. bij registratie trainingen). Een team dat bij een seizoen hoort kan gebruikt worden voor tornooien/wedstrijden."
+                },
+                team_type : {
+                    label : "Teamtype",
+                    hint : "Een type kan gebruikt worden om extra controles uit te voeren bij het toevoegen van leden (Bv. leeftijd)."
+                },
+                remark : {
+                    label : "Remark",
+                    hint : "A remark about this type."
                 }
             }
         }
@@ -73,7 +83,9 @@ export default {
         clear: "Clear",
         teams: "Teams",
         remark : 'Remark',
-        update : 'Edit Team',
+        team_update : 'Edit Team',
+        no_season : "No Season",
+        no_type : "No Teamtype",
         team : {
             create_title : 'Create new team',
             details : "Team Details",
@@ -84,7 +96,15 @@ export default {
                 },
                 season : {
                     label : "Season",
-                    hint : "The season that this team belongs to"
+                    hint : "A team that is not related to a season can be used to group members (to register the presence on a training for example). A team that is related to a season can be used for tournaments/games."
+                },
+                team_type : {
+                    label : "Teamtype",
+                    hint : "A type can be used to add more checks when a member is added to the team (Age for example)."
+                },
+                remark : {
+                    label : "Remark",
+                    hint : "A remark about this type."
                 }
             }
         }

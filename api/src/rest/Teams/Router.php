@@ -12,6 +12,13 @@ class Router extends \Core\Router
         $this->map->get('team.browse', '/teams', \REST\Teams\Actions\TeamBrowseAction::class)
         ;
 
+        $this->map->get('team.read', '/teams/{id}', \REST\Teams\Actions\TeamReadAction::class)
+        ;
+
+        $this->map->post('team.create', '/teams', \REST\Teams\Actions\TeamCreateAction::class)
+            ->auth(['login' => true])
+        ;
+
         $this->map->get('team_types.browse', '/teams/types', \REST\Teams\Actions\TypeBrowseAction::class)
         ;
 

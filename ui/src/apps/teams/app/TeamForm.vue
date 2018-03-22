@@ -30,6 +30,31 @@
                             </v-select>
                         </v-flex>
                     </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-select
+                                :items="teamtypes"
+                                v-model="form.team.team_type"
+                                @input="$v.form.team.team_type.$touch"
+                                :error-messages="teamtypeErrors"
+                                :label="$t('team.form.team_type.label')"
+                                :hint="$t('team.form.team_type.hint')">
+                            </v-select>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-text-field
+                                name="remark"
+                                :label="$t('team.form.remark.label')"
+                                :hint="$t('team.form.remark.hint')"
+                                v-model="form.team.remark"
+                                @input="$v.form.team.remark.$touch"
+                                :error-messages="remarkErrors"
+                                textarea>
+                            </v-text-field>
+                        </v-flex>
+                    </v-layout>
                 </v-container>
             </v-card-text>
             <v-card-actions>
@@ -50,6 +75,7 @@ var initError = function() {
     return {
         name : [],
         season : [],
+        teamtype : [],
         remark : []
     }
 };
@@ -58,6 +84,7 @@ var initForm = function() {
         team : {
             name : '',
             season : 0,
+            team_type : 0,
             remark : ''
         }
     };
@@ -86,7 +113,14 @@ export default {
             return this.$store.state.teamModule.status.error;
         },
         seasons() {
-            return this.$store.getters['seasonModule/seasons'].map((season) => ({value : season.id, text : season.name }));
+            var seasons = this.$store.getters['seasonModule/seasons'].map((season) => ({value : season.id, text : season.name }));
+            seasons.unshift({ value : 0, text : '< ' + this.$t('no_season') + ' >'});
+            return seasons;
+        },
+        teamtypes() {
+            var types = this.$store.getters['teamModule/types'].map((type) => ({value : type.id, text : type.name }));
+            types.unshift({ value : 0, text : '< ' + this.$t('no_type') + ' >'});
+            return types;
         },
         nameErrors() {
             const errors = [...this.errors.name];
@@ -99,6 +133,11 @@ export default {
             if (! this.$v.form.team.season.$dirty) return errors;
             return errors;
         },
+        teamtypeErrors() {
+            const errors = [...this.errors.teamtype];
+            if (! this.$v.form.team.team_type.$dirty) return errors;
+            return errors;
+        },
         remarkErrors() {
             const errors = [...this.errors.remark];
             if (! this.$v.form.team.remark.$dirty) return errors;
@@ -108,13 +147,10 @@ export default {
     validations : {
         form : {
             team : {
-                name : {
-                    required
-                },
-                season : {
-                },
-                remark : {
-                }
+                name : { required },
+                season : {},
+                team_type : {},
+                remark : {}
             }
         }
     },
@@ -126,7 +162,10 @@ export default {
     mounted() {
         this.$store.dispatch('seasonModule/browse')
             .then(() => {
-                if ( this.team ) this.fillForm(this.team);
+                this.$store.dispatch('teamModule/browseType')
+                    .then(() => {
+                        if ( this.team ) this.fillForm(this.team);
+                    });
             });
     },
     watch : {
@@ -163,10 +202,22 @@ export default {
         fillForm(model) {
             this.form.team.name = model.name;
             this.form.team.remark = model.remark;
+            if (model.season) {
+                this.form.team.season = model.season.id;
+            }
+            if (model.team_type) {
+                this.form.team.team_type = model.team_type.id;
+            }
         },
         fillModel(model) {
             model.addAttribute('name', this.form.team.name);
             model.addAttribute('remark', this.form.team.remark);
+            if (this.form.team.season) {
+                model.addRelation('season', new Model('seasons', this.form.team.season));
+            }
+            if (this.form.team.team_type) {
+                model.addRelation('teamtype', new Model('teamtypes', this.form.team.team_type));
+            }
         },
         submit() {
             this.errors = initError();

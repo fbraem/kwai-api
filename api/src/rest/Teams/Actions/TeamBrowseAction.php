@@ -13,7 +13,7 @@ class TeamBrowseAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $teams = \Domain\Team\TeamsTable::getTableFromRegistry()->find()->all();
+        $teams = \Domain\Team\TeamsTable::getTableFromRegistry()->find()->contain(['Season', 'TeamType'])->all();
 
         $payload->setOutput(\Domain\Team\TeamTransformer::createForCollection($teams));
 

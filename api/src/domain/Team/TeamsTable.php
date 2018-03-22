@@ -6,7 +6,7 @@ class TeamsTable extends \Cake\ORM\Table
 {
     public static $registryName = 'Teams';
     public static $tableName = 'teams';
-    public static $entityClass = 'Domain\Team\Teams';
+    public static $entityClass = 'Domain\Team\Team';
 
     use \Domain\DomainTableTrait;
 
@@ -21,7 +21,7 @@ class TeamsTable extends \Cake\ORM\Table
             ->setProperty('team_type')
         ;
         $this->belongsTo('Season', [
-                'className' => TeamTypesTable::class
+                'className' => \Domain\Game\SeasonsTable::class
             ])
             ->setForeignKey('season_id')
             ->setProperty('season')

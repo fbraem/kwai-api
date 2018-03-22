@@ -97,7 +97,7 @@ const actions = {
             oauth.get('api/teams', {
             }).then((res) => {
                 var api = new JSONAPI();
-                var types = api.parse(res.data);
+                var teams = api.parse(res.data);
                 context.commit('teams', {
                     teams : teams.data
                 });
@@ -105,6 +105,43 @@ const actions = {
             }).catch((error) => {
                 reject();
             });
+        });
+    },
+    create(context, payload) {
+        context.commit('loading');
+        return oauth.post('api/teams', {
+            data : payload
+        }).then((res) => {
+            var api = new JSONAPI();
+            var result = api.parse(res.data);
+            context.commit('addTeam', {
+                team : result.data
+            });
+            context.commit('success');
+            return result.data;
+        }).catch((error) => {
+            context.commit('error', error);
+        });
+    },
+    read(context, payload) {
+        context.commit('loading');
+        var team = context.getters['team'](payload.id);
+        if (team) { // already read
+            context.commit('success');
+            return;
+        }
+
+        oauth.get('api/teams/' + payload.id, {
+            data : payload
+        }).then((res) => {
+            var api = new JSONAPI();
+            var result = api.parse(res.data);
+            context.commit('addTeam', {
+                team : result.data
+            });
+            context.commit('success');
+        }).catch((error) => {
+            context.commit('error', error);
         });
     },
     browseType(context, payload) {
