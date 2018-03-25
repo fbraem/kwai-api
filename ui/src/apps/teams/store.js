@@ -65,7 +65,7 @@ const mutations = {
   addTeam(state, data) {
       state.teams.unshift(data.team);
   },
-  modifyType(state, data) {
+  modifyTeam(state, data) {
       state.teams = unionBy([data.team], state.teams, 'id');
   },
   loading(state) {
@@ -142,6 +142,25 @@ const actions = {
             context.commit('success');
         }).catch((error) => {
             context.commit('error', error);
+        });
+    },
+    update(context, payload) {
+        context.commit('loading');
+        return new Promise((resolve, reject) => {
+            oauth.patch('api/teams/' + payload.data.id, {
+                data : payload
+            }).then((res) => {
+                var api = new JSONAPI();
+                var result = api.parse(res.data);
+                context.commit('modifyTeam', {
+                    team : result.data
+                });
+                context.commit('success');
+                resolve();
+            }).catch((error) => {
+                context.commit('error', error);
+                reject();
+            });
         });
     },
     browseType(context, payload) {
