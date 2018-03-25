@@ -9,14 +9,18 @@ class Router extends \Core\Router
         $this->map->extras(['rest' => 'teams'])
             ->accepts(['application/vnd.api+json']);
 
-        $this->map->get('team.browse', '/teams', \REST\Teams\Actions\TeamBrowseAction::class)
+        $this->map->get('teams.browse', '/teams', \REST\Teams\Actions\TeamBrowseAction::class)
         ;
 
-        $this->map->get('team.read', '/teams/{id}', \REST\Teams\Actions\TeamReadAction::class)
+        $this->map->get('teams.read', '/teams/{id}', \REST\Teams\Actions\TeamReadAction::class)
         ;
 
-        $this->map->post('team.create', '/teams', \REST\Teams\Actions\TeamCreateAction::class)
+        $this->map->post('teams.create', '/teams', \REST\Teams\Actions\TeamCreateAction::class)
             ->auth(['login' => true])
+        ;
+
+        $this->map->patch('teams.update', '/teams/{id}', \REST\Teams\Actions\TeamUpdateAction::class)
+            ->auth(['login' => false])
         ;
 
         $this->map->get('team_types.browse', '/teams/types', \REST\Teams\Actions\TypeBrowseAction::class)
