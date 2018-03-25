@@ -6,20 +6,32 @@ use League\Fractal;
 
 class MemberTransformer extends Fractal\TransformerAbstract
 {
+    private static $type = 'sport_judo_members';
+
     protected $defaultIncludes = [
         'person'
     ];
 
-    public function transform(MemberInterface $member)
+    public static function createForItem(Member $member)
     {
-        return $member->extract();
+        return new Fractal\Resource\Item($member, new self(), self::$type);
     }
 
-    public function includePerson(MemberInterface $member)
+    public static function createForCollection(iterable $members)
     {
-        $person = $member->person();
+        return new Fractal\Resource\Collection($members, new self(), self::$type);
+    }
+
+    public function transform(Member $member)
+    {
+        return $member->toArray();
+    }
+
+    public function includePerson(Member $member)
+    {
+        $person = $member->person;
         if ($person) {
-            return $this->item($person, new \Domain\Person\PersonTransformer, 'persons');
+            return \Domain\Person\PersonTransformer::createForItem($person);
         }
     }
 }

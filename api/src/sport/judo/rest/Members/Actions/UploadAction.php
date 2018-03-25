@@ -10,8 +10,6 @@ use League\Csv\Reader;
 use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 
-use League\Fractal;
-
 class UploadAction implements \Core\ActionInterface
 {
     private $countries = [
@@ -22,14 +20,14 @@ class UploadAction implements \Core\ActionInterface
 
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $db = $request->getAttribute('clubman.container')['db'];
-        $db->getDriver()->getConnection()->beginTransaction();
+        $connection = \Cake\Datasource\ConnectionManager::get('default');
+        $connection->begin();
 
-        $countriesTable = new \Domain\Person\CountriesTable($db);
-        $countriesTable->whereIso3(array_values($this->countries));
-        $result = $countriesTable->find();
+        $countriesTable = \Domain\Person\CountriesTable::getTableFromRegistry();
+        $countriesTable->find()->where(['iso_3' => array_values($this->countries)]);
+        $result = $countriesTable->find()->all();
         foreach ($result as $country) {
-            $countryName = array_search($country->iso_3(), $this->countries);
+            $countryName = array_search($country->iso_3, $this->countries);
             if ($countryName !== false) {
                 $this->countries[$countryName] = $country;
             }
@@ -37,7 +35,12 @@ class UploadAction implements \Core\ActionInterface
 
         $files = $request->getUploadedFiles();
         if (!isset($files['csv'])) {
-            return (new HTTPCodeResponder(new Responder(), 400))->respond();
+            return (
+                new HTTPCodeResponder(
+                    new Responder(),
+                    400
+                )
+            )->respond();
         }
         $uploadedFilename = $files['csv']->getClientFilename();
 
@@ -48,12 +51,15 @@ class UploadAction implements \Core\ActionInterface
         $members = [];
         $records = $reader->getRecords();
 
+        $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
+
         foreach ($records as $offset => $record) {
-            try {
-                $member = (new \Judo\Domain\Member\MembersTable($db))->whereLicense($record['Vergunning'])->findOne();
+            $member = $membersTable
+                ->find()
+                ->where(['license' => $record['Vergunning']])
+                ->first();
+            if ($member) {
                 continue;
-            } catch (\Domain\NotFoundException $nfe) {
-                // Ignore
             }
 
             $city = null;
@@ -81,50 +87,55 @@ class UploadAction implements \Core\ActionInterface
                 $city = $parts[1];
             }
 
-            $contact = new \Domain\Person\Contact($db, [
-                'email' => $record['Email'],
-                'tel' => $record['Tel'],
-                'mobile' => $record['Gsm'],
-                'address' => $record['Straat'],
-                'postal_code' => $postal_code,
-                'city' => $city,
-                'county' => null,
-                'country' => $country,
-                'remark' => 'Imported'
-            ]);
+            $contactsTable = \Domain\Person\ContactsTable::getTableFromRegistry();
+            $contact = $contactsTable->newEntity();
+            $contact->email = $record['Email'];
+            $contact->tel = $record['Tel'];
+            $contact->mobile = $record['Gsm'];
+            $contact->address = $record['Straat'];
+            $contact->postal_code = $postal_code;
+            $contact->city = $city;
+            $contact->county = null;
+            $contact->country = $country;
+            $contact->remark = 'Imported';
+            $contactsTable->save($contact);
 
-            try {
-                $contact->store();
-            } catch (\Exception $e) {
-                echo var_dump($record);
-                exit;
-            }
+            $personsTable = \Domain\Person\PersonsTable::getTableFromRegistry();
+            $person = $personsTable->newEntity();
+            $person->firstname = utf8_encode($record['Voornaam']);
+            $person->lastname = utf8_encode($record['Naam']);
+            $person->birthdate = \Carbon\Carbon::createFromFormat(
+                'd/m/Y',
+                $record['Geb Datum']
+            )->format('Y-m-d');
+            $person->gender = $record['Geslacht'] == 'M' ? 1 : 2;
+            $person->nationality = $this->countries[$record['Nation.']] ?? null;
+            $person->contact = $contact;
+            $personsTable->save($person);
 
-            $person = new \Domain\Person\Person($db, [
-                'firstname' => utf8_encode($record['Voornaam']),
-                'lastname' => utf8_encode($record['Naam']),
-                'birthdate' => \Carbon\Carbon::createFromFormat('d/m/Y', $record['Geb Datum'])->format('Y-m-d'),
-                'gender' => $record['Geslacht'] == 'M' ? 1 : 2,
-                'nationality' => $this->countries[$record['Nation.']] ?? null,
-                'contact' => $contact
-            ]);
-            $person->store();
-
-            $member = new \Judo\Domain\Member\Member($db, [
-                'license' => $record['Vergunning'],
-                'license_end_date' => \Carbon\Carbon::createFromFormat('d/m/Y', $record['Geldig Tot'])->format('Y-m-d'),
-                'competition' => false,
-                'person' => $person
-            ]);
-            $member->store();
+            $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
+            $member = $membersTable->newEntity();
+            $member->license = $record['Vergunning'];
+            $member->license_end_date = \Carbon\Carbon::createFromFormat(
+                'd/m/Y',
+                $record['Geldig Tot']
+            )->format('Y-m-d');
+            $member->competition = false;
+            $member->person = $person;
+            $membersTable->save($member);
 
             $members[] = $member;
         }
 
-        $db->getDriver()->getConnection()->commit();
+        $connection->commit();
 
-        $payload->setOutput(new Fractal\Resource\Collection($members, new \Judo\Domain\Member\MemberTransformer(), 'sport_judo_members'));
+        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($members));
 
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        return (
+            new JSONResponder(
+                new Responder(),
+                $payload
+            )
+        )->respond();
     }
 }

@@ -15,8 +15,13 @@ class BrowseAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $db = $request->getAttribute('clubman.container')['db'];
-        $members = (new \Judo\Domain\Member\MembersTable($db))->orderByName()->find();
+        $members = \Judo\Domain\Member\MembersTable::getTableFromRegistry()
+            ->find()
+            ->contain(['Person', 'Person.Contact', 'Person.Nationality'])
+            ->order([
+                'Person.lastname' => 'ASC',
+                'Person.firstname' => 'ASC'])
+            ->all();
         $payload->setOutput(new Fractal\Resource\Collection($members, new \Judo\Domain\Member\MemberTransformer(), 'sport_judo_members'));
         return (new JSONResponder(new Responder(), $payload))->respond();
     }
