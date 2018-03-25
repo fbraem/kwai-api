@@ -31,6 +31,7 @@ class ContactsTable extends \Cake\ORM\Table
             ->addColumn('postal_code', [ 'type' => 'string' ])
             ->addColumn('city', [ 'type' => 'string' ])
             ->addColumn('county', [ 'type' => 'string' ])
+            ->addColumn('country_id', [ 'type' => 'integer' ])
             ->addColumn('remark', [ 'type' => 'text' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])

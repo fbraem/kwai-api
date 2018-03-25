@@ -39,6 +39,7 @@ class PersonsTable extends \Cake\ORM\Table
             ->addColumn('active', [ 'type' => 'boolean' ])
             ->addColumn('birthdate', [ 'type' => 'date' ])
             ->addColumn('code', [ 'type' => 'string' ])
+            ->addColumn('nationality_id', [ 'type' => 'integer' ])
             ->addColumn('remark', [ 'type' => 'text' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
