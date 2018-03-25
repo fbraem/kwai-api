@@ -9,8 +9,6 @@ use Aura\Payload\Payload;
 use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 
-use League\Fractal;
-
 class BrowseAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
@@ -22,7 +20,7 @@ class BrowseAction implements \Core\ActionInterface
                 'Person.lastname' => 'ASC',
                 'Person.firstname' => 'ASC'])
             ->all();
-        $payload->setOutput(new Fractal\Resource\Collection($members, new \Judo\Domain\Member\MemberTransformer(), 'sport_judo_members'));
+        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($members));
         return (new JSONResponder(new Responder(), $payload))->respond();
     }
 }
