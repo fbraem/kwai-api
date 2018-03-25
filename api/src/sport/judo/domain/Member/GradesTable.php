@@ -2,83 +2,37 @@
 
 namespace Judo\Domain\Member;
 
-use \Zend\Db\Sql\Expression;
-use \Zend\Db\TableGateway\TableGateway;
-
-class GradesTable implements GradesInterface
+class GradesTable extends \Cake\ORM\Table
 {
-    private $db;
+    public static $registryName = 'SportJudoGrades';
+    public static $tableName = 'sport_judo_grades';
+    public static $entityClass = 'Judo\Domain\Member\Grade';
 
-    private $table;
+    use \Domain\DomainTableTrait;
 
-    private $select;
-
-    public function __construct($db)
+    public function initialize(array $config)
     {
-        $this->db = $db;
-
-        $this->table = new TableGateway('sport_judo_grades', $this->db);
-        $this->select = $this->createSelect();
+        $this->initializeTable();
     }
 
-    private function createSelect()
+    protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
-        $select = $this->table->getSql()->select();
-        $select->columns([
-            'id',
-            'grade',
-            'name',
-            'color',
-            'position',
-            'min_age',
-            'prepare_time'
-        ]);
-
-        return $select;
-    }
-
-    public function whereId($id)
-    {
-        $this->select->where(['grades.id' => $id]);
-        return $this;
-    }
-
-    public function findOne() : GradeInterface
-    {
-        $result = $this->table->selectWith($this->select);
-        if ($result->count() > 0) {
-            return new Grade($this->db, $result->current());
-        }
-        throw new \Domain\NotFoundException("Grade not found");
-    }
-
-    public function find(?int $limit = null, ?int $offset = null) : iterable
-    {
-        $this->select->order('position ASC');
-
-        if ($limit) {
-            $this->select->limit($limit);
-        }
-        if ($offset) {
-            $this->select->offset($offset);
-        }
-
-        $grades = [];
-
-        $result = $this->table->selectWith($this->select);
-        if ($result->count() > 0) {
-            foreach ($result as $row) {
-                $grades[$row['id']] = new Grade($this->db, $row);
-            }
-        }
-        return $grades;
-    }
-
-    public function count() : int
-    {
-        $select = clone $this->select;
-        $select->columns(['c' => new Expression('COUNT(0)')]);
-        $resultSet = $this->table->selectWith($select);
-        return (int) $resultSet->current()->c;
+        $schema
+            ->addColumn('id', [ 'type' => 'integer' ])
+            ->addColumn('grade', [ 'type' => 'string' ])
+            ->addColumn('name', [ 'type' => 'string' ])
+            ->addColumn('color', [ 'type' => 'string' ])
+            ->addColumn('position', [ 'type' => 'integer' ])
+            ->addColumn('min_age', [ 'type' => 'integer' ])
+            ->addColumn('prepare_time', [ 'type' => 'integer' ])
+            ->addConstraint(
+                'primary',
+                [
+                    'type' => 'primary',
+                    'columns' => [
+                        'id'
+                    ]
+                ]
+        );
     }
 }

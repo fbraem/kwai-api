@@ -9,15 +9,12 @@ use Aura\Payload\Payload;
 use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 
-use League\Fractal;
-
 class BrowseAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
-        $db = $request->getAttribute('clubman.container')['db'];
-        $grades = (new \Judo\Domain\Member\GradesTable($db))->find();
-        $payload->setOutput(new Fractal\Resource\Collection($grades, new \Judo\Domain\Member\GradeTransformer(), 'sport_judo_grades'));
+        $grades = \Judo\Domain\Member\GradesTable::getTableFromRegistry()->find()->all();
+        $payload->setOutput(\Judo\Domain\Member\GradeTransformer::createForCollection($grades));
 
         return (new JSONResponder(new Responder(), $payload))->respond();
     }
