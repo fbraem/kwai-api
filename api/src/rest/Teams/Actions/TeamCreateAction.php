@@ -53,7 +53,7 @@ class TeamCreateAction implements \Core\ActionInterface
             }
         }
 
-        $teamTypeId = \JmesPath\search('data.relationships.teamtype.data.id', $data);
+        $teamTypeId = \JmesPath\search('data.relationships.team_type.data.id', $data);
         if (isset($teamTypeId)) {
             try {
                 $teamType = $teamsTable->TeamType->get($teamTypeId);

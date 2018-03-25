@@ -33,10 +33,10 @@
                     <v-layout row wrap>
                         <v-flex xs12>
                             <v-select
-                                :items="teamtypes"
+                                :items="team_types"
                                 v-model="form.team.team_type"
                                 @input="$v.form.team.team_type.$touch"
-                                :error-messages="teamtypeErrors"
+                                :error-messages="team_typeErrors"
                                 :label="$t('team.form.team_type.label')"
                                 :hint="$t('team.form.team_type.hint')">
                             </v-select>
@@ -75,7 +75,7 @@ var initError = function() {
     return {
         name : [],
         season : [],
-        teamtype : [],
+        team_type : [],
         remark : []
     }
 };
@@ -117,7 +117,7 @@ export default {
             seasons.unshift({ value : 0, text : '< ' + this.$t('no_season') + ' >'});
             return seasons;
         },
-        teamtypes() {
+        team_types() {
             var types = this.$store.getters['teamModule/types'].map((type) => ({value : type.id, text : type.name }));
             types.unshift({ value : 0, text : '< ' + this.$t('no_type') + ' >'});
             return types;
@@ -133,8 +133,8 @@ export default {
             if (! this.$v.form.team.season.$dirty) return errors;
             return errors;
         },
-        teamtypeErrors() {
-            const errors = [...this.errors.teamtype];
+        team_typeErrors() {
+            const errors = [...this.errors.team_type];
             if (! this.$v.form.team.team_type.$dirty) return errors;
             return errors;
         },
@@ -216,7 +216,7 @@ export default {
                 model.addRelation('season', new Model('seasons', this.form.team.season));
             }
             if (this.form.team.team_type) {
-                model.addRelation('teamtype', new Model('teamtypes', this.form.team.team_type));
+                model.addRelation('team_type', new Model('team_types', this.form.team.team_type));
             }
         },
         submit() {
