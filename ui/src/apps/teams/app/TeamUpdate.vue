@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-toolbar class="elevation-0">
             <v-icon>edit</v-icon>
-            <v-toolbar-title>{{ $t('team_update') }}</v-toolbar-title>
+            <v-toolbar-title>{{ $t('team.update_title') }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon dark color="primary" @click="$router.go(-1)"><v-icon>cancel</v-icon></v-btn>
         </v-toolbar>

@@ -4,31 +4,40 @@ export default [
             component : () => import(/* webpackChunkName: "teams_chunck" */ '@/apps/teams/App.vue'),
             children: [
                 {
-                    path : ':id(\\d+)',
+                    path : '',
                     components : {
-                        TeamContent : () => import(/* webpackChunkName: "teams_chunck" */ '@/apps/teams/app/TeamRead.vue')
+                        ListContent : () => import(/* webpackChunkName: "teams_chunck" */ '@/apps/teams/app/TeamBrowse.vue')
                     },
-                    name : 'team.read',
-                    props : {
-                        TeamContent : true
-                    }
-                },
-                {
-                    path : 'create',
-                    components : {
-                        TeamContent : () => import(/* webpackChunkName: "teams_admin" */ '@/apps/teams/app/TeamCreate.vue')
-                    },
-                    name : 'team.create'
-                },
-                {
-                    path : 'update/:id(\\d+)',
-                    components : {
-                        TeamContent : () => import(/* webpackChunkName: "teams_admin" */ '@/apps/teams/app/TeamUpdate.vue')
-                    },
-                    name : 'team.update',
-                    props : {
-                        TeamContent : true
-                    }
+                    name : 'team.browse',
+                    children : [
+                        {
+                            path : ':id(\\d+)',
+                            components : {
+                                TeamContent : () => import(/* webpackChunkName: "teams_chunck" */ '@/apps/teams/app/TeamRead.vue')
+                            },
+                            name : 'team.read',
+                            props : {
+                                TeamContent : true
+                            }
+                        },
+                        {
+                            path : 'create',
+                            components : {
+                                TeamContent : () => import(/* webpackChunkName: "teams_admin" */ '@/apps/teams/app/TeamCreate.vue')
+                            },
+                            name : 'team.create'
+                        },
+                        {
+                            path : 'update/:id(\\d+)',
+                            components : {
+                                TeamContent : () => import(/* webpackChunkName: "teams_admin" */ '@/apps/teams/app/TeamUpdate.vue')
+                            },
+                            name : 'team.update',
+                            props : {
+                                TeamContent : true
+                            }
+                        }
+                    ]
                 },
                 {
                     path : 'types/:id(\\d+)',
@@ -60,19 +69,12 @@ export default [
                 {
                     path : 'types',
                     components : {
-                        TeamContent : () => import(/* webpackChunkName: "teams_chunck" */ '@/apps/teams/app/TeamTypeBrowse.vue')
+                        ListContent : () => import(/* webpackChunkName: "teams_chunck" */ '@/apps/teams/app/TeamTypeBrowse.vue')
                     },
                     name : 'teamtype.browse',
                     props : {
                         TeamContent : true
                     }
-                },
-                {
-                    path : '',
-                    components : {
-                        TeamContent : () => import(/* webpackChunkName: "seasons_chunck" */ '@/apps/teams/app/TeamBrowse.vue')
-                    },
-                    name : 'team.browse'
                 }
             ]
         },

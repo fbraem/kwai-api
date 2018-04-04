@@ -8,7 +8,7 @@
                 </v-toolbar>
             </v-flex>
         </v-layout>
-        <router-view name="TeamContent"></router-view>
+        <router-view name="ListContent"></router-view>
     </v-container>
 </template>
 

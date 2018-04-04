@@ -77,13 +77,10 @@ class TeamCreateAction implements \Core\ActionInterface
 
         $team = $teamsTable->newEntity();
         $team->name = $attributes['name'];
-        $team->remark = $attributes['remark'];
-        if (isset($season)) {
-            $team->season = $season;
-        }
-        if (isset($teamType)) {
-            $team->team_type = $teamType;
-        }
+        $team->remark = $attributes['remark'] ?? null;
+        $team->active = $attribute['active'] ?? true;
+        $team->season = $season ?? null;
+        $team->team_type = $teamType ?? null;
         $teamsTable->save($team);
 
         $payload->setOutput(\Domain\Team\TeamTransformer::createForItem($team));

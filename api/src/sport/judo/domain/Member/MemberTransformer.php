@@ -24,7 +24,9 @@ class MemberTransformer extends Fractal\TransformerAbstract
 
     public function transform(Member $member)
     {
-        return $member->toArray();
+        $data = $member->toArray();
+        unset($data['_joinData']);
+        return $data;
     }
 
     public function includePerson(Member $member)

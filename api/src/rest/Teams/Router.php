@@ -15,6 +15,9 @@ class Router extends \Core\Router
         $this->map->get('teams.read', '/teams/{id}', \REST\Teams\Actions\TeamReadAction::class)
         ;
 
+        $this->map->get('teams.members.read', '/teams/{id}/members', \REST\Teams\Actions\TeamMembersReadAction::class)
+        ;
+
         $this->map->post('teams.create', '/teams', \REST\Teams\Actions\TeamCreateAction::class)
             ->auth(['login' => true])
         ;

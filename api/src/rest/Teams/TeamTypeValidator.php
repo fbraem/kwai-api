@@ -6,6 +6,7 @@ use Zend\Validator\Date;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 use Zend\Validator\Digits;
+use Zend\Validator\InArray;
 
 class TeamTypeValidator implements \Core\ValidatorInterface
 {
@@ -40,6 +41,16 @@ class TeamTypeValidator implements \Core\ValidatorInterface
             Digits::NOT_DIGITS
         );
         $this->validator->addValidator('data.attributes.end_age', $endAgeValidation);
+
+        $genderValidation = new InArray([
+            'haystack' => [ 0, 1, 2],
+            'strict' => InArray::COMPARE_NOT_STRICT_AND_PREVENT_STR_TO_INT_VULNERABILITY
+        ]);
+        $genderValidation->setMessage(
+            _('Not a valid gender'),
+            InArray::NOT_IN_ARRAY
+        );
+        $this->validator->addValidator('data.attributes.gender', $genderValidation);
 
         return $this->validator->validate($data);
     }

@@ -38,6 +38,11 @@ const getters = {
     team: (state) => (id) => {
         return find(state.teams, ['id', id]);
     },
+    members: (state) => (id) => {
+        var team = find(state.teams, ['id', id]);
+        if (team) return team.members;
+        return null;
+    },
     loading(state) {
         return state.status.loading;
     },
@@ -67,6 +72,10 @@ const mutations = {
   },
   modifyTeam(state, data) {
       state.teams = unionBy([data.team], state.teams, 'id');
+  },
+  members(state, data) {
+      var team = find(state.teams, ['id', data.team]);
+      if (team) Vue.set(team, 'members', data.members);
   },
   loading(state) {
       state.status = {
@@ -136,7 +145,7 @@ const actions = {
         }).then((res) => {
             var api = new JSONAPI();
             var result = api.parse(res.data);
-            context.commit('addTeam', {
+            context.commit('modifyTeam', {
                 team : result.data
             });
             context.commit('success');
@@ -161,6 +170,23 @@ const actions = {
                 context.commit('error', error);
                 reject();
             });
+        });
+    },
+    members(context, payload) {
+        context.commit('loading');
+
+        oauth.get('api/teams/' + payload.id + '/members', {
+            data : payload
+        }).then((res) => {
+            var api = new JSONAPI();
+            var result = api.parse(res.data);
+            context.commit('members', {
+                team : payload.id,
+                members : result.data
+            });
+            context.commit('success');
+        }).catch((error) => {
+            context.commit('error', error);
         });
     },
     browseType(context, payload) {

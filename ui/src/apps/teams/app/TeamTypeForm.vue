@@ -9,8 +9,8 @@
                     <v-layout row wrap>
                         <v-flex xs12>
                             <v-text-field name="name"
-                                :label="$t('type_name.label')"
-                                :hint="$t('type_name.hint')"
+                                :label="$t('type.form.name.label')"
+                                :hint="$t('type.form.name.hint')"
                                 v-model="form.teamtype.name"
                                 :error-messages="nameErrors"
                                 @input="$v.form.teamtype.name.$touch()"
@@ -21,8 +21,8 @@
                     <v-layout row wrap>
                         <v-flex xs12 sm6>
                             <v-text-field name="start_age"
-                                :label="$t('type_min_age.label')"
-                                :hint="$t('type_min_age.hint')"
+                                :label="$t('type.form.min_age.label')"
+                                :hint="$t('type.form.min_age.hint')"
                                 v-model="form.teamtype.start_age"
                                 :error-messages="startAgeErrors"
                                 @input="$v.form.teamtype.start_age.$touch()">
@@ -31,8 +31,8 @@
                         <v-spacer></v-spacer>
                         <v-flex xs12 sm6>
                             <v-text-field name="end_age"
-                                :label="$t('type_max_age.label')"
-                                :hint="$t('type_max_age.hint')"
+                                :label="$t('type.form.max_age.label')"
+                                :hint="$t('type.form.max_age.hint')"
                                 v-model="form.teamtype.end_age"
                                 :error-messages="endAgeErrors"
                                 @input="$v.form.teamtype.end_age.$touch()">
@@ -41,10 +41,22 @@
                     </v-layout>
                     <v-layout row wrap>
                         <v-flex xs12>
+                            <v-select
+                                :items="genders"
+                                v-model="form.teamtype.gender"
+                                @input="$v.form.teamtype.gender.$touch"
+                                :error-messages="genderErrors"
+                                :label="$t('type.form.gender.label')"
+                                :hint="$t('type.form.gender.hint')">
+                            </v-select>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <v-flex xs12>
                             <v-text-field
                                 name="remark"
-                                :label="$t('type_remark.label')"
-                                :hint="$t('type_remark.hint')"
+                                :label="$t('type.form.remark.label')"
+                                :hint="$t('type.form.remark.hint')"
                                 v-model="form.teamtype.remark"
                                 @input="$v.form.teamtype.remark.$touch"
                                 :error-messages="remarkErrors"
@@ -85,9 +97,10 @@ var initError = function() {
         name : [],
         start_age : [],
         end_age : [],
+        gender : [],
         active : [],
         competition : [],
-        remark : []
+        remark : [],
     }
 };
 var initForm = function() {
@@ -96,6 +109,7 @@ var initForm = function() {
             name : '',
             start_age : '',
             end_age : '',
+            gender : 0,
             active : true,
             competition : true,
             remark : ''
@@ -117,7 +131,12 @@ export default {
     data() {
         return {
             form : initForm(),
-            errors : initError()
+            errors : initError(),
+            genders : [
+                { value : 0, text : this.$t('no_restriction') },
+                { value : 1, text : this.$t('male') },
+                { value : 2, text : this.$t('female') }
+            ]
         }
     },
     computed : {
@@ -131,15 +150,21 @@ export default {
             return errors;
         },
         startAgeErrors() {
-            const errors = [...this.errors.name];
+            const errors = [...this.errors.start_age];
             if (! this.$v.form.teamtype.start_age.$dirty) return errors;
             ! this.$v.form.teamtype.start_age.numeric && errors.push('Start age must be numeric');
             return errors;
         },
         endAgeErrors() {
-            const errors = [...this.errors.name];
+            const errors = [...this.errors.end_age];
             if (! this.$v.form.teamtype.end_age.$dirty) return errors;
             ! this.$v.form.teamtype.start_age.numeric && errors.push('End age must be numeric');
+            return errors;
+        },
+        genderErrors() {
+            const errors = [...this.errors.gender];
+            if (! this.$v.form.teamtype.gender.$dirty) return errors;
+            //! this.$v.form.teamtype.gender.numeric && errors.push('End age must be numeric');
             return errors;
         },
         remarkErrors() {
@@ -159,6 +184,8 @@ export default {
                 },
                 end_age : {
                     numeric
+                },
+                gender : {
                 },
                 remark : {
                 }
@@ -203,6 +230,7 @@ export default {
             this.form.teamtype.name = model.name;
             this.form.teamtype.start_age = model.start_age;
             this.form.teamtype.end_age = model.end_age;
+            this.form.teamtype.gender = model.gender;
             this.form.teamtype.active = model.active;
             this.form.teamtype.competition = model.competition;
             this.form.teamtype.remark = model.remark;
@@ -211,6 +239,7 @@ export default {
             model.addAttribute('name', this.form.teamtype.name);
             model.addAttribute('start_age', this.form.teamtype.start_age);
             model.addAttribute('end_age', this.form.teamtype.end_age);
+            model.addAttribute('gender', this.form.teamtype.gender);
             model.addAttribute('active', this.form.teamtype.active);
             model.addAttribute('competition', this.form.teamtype.competition);
             model.addAttribute('remark', this.form.teamtype.remark);

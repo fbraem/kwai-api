@@ -59,6 +59,9 @@ class TypeUpdateAction implements \Core\ActionInterface
         if (isset($attributes['competition'])) {
             $type->competition = $attributes['competition'];
         }
+        if (isset($attributes['gender'])) {
+            $type->gender = $attributes['gender'];
+        }
         if (isset($attributes['active'])) {
             $type->active = $attributes['active'];
         }

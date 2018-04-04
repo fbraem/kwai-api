@@ -90,11 +90,14 @@ class TeamUpdateAction implements \Core\ActionInterface
         if (isset($attributes['name'])) {
             $team->name = $attributes['name'];
         }
-        if ($season) {
+        if (isset($season)) {
             $team->season = $season;
         }
-        if ($team_type) {
+        if (isset($team_type)) {
             $team->team_type = $team_type;
+        }
+        if (isset($attributes['active'])) {
+            $team->active = $attributes['active'];
         }
         if (isset($attributes['remark'])) {
             $team->remark = $attributes['remark'];

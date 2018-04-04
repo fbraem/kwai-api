@@ -5,42 +5,47 @@
                 <v-card>
                     <v-card-title>
                         <div class="headline mb-0">
-                            {{ teamtype.name }}
+                            {{ $t('type.details') }} : {{ teamtype.name }}
                         </div>
                     </v-card-title>
                     <v-card-text>
                         <v-container fluid grid-list-md>
                             <v-layout row wrap>
                                 <v-flex xs12 sm6>
-                                    <v-text-field name="start_age" readonly label="Min. Age" :value="teamtype.start_age" />
+                                    <v-text-field name="start_age" readonly :label="$t('type.form.min_age.label')" :hint="$t('type.form.min_age.hint')" persistent-hint :value="teamtype.start_age" />
                                 </v-flex>
                                 <v-spacer></v-spacer>
                                 <v-flex xs12 sm6>
-                                    <v-text-field name="end_age" label="Max. Age" :value="teamtype.end_age" />
+                                    <v-text-field name="end_age" :label="$t('type.form.max_age.label')" :hint="$t('type.form.max_age.hint')" persistent-hint :value="teamtype.end_age" />
                                 </v-flex>
                             </v-layout>
                             <v-layout row wrap>
                                 <v-flex xs12>
-                                    <v-text-field readonly multi-line name="remark" :value="teamtype.remark" label="Remark" />
+                                    <v-text-field name="gender" readonly :label="$t('type.form.gender.label')" :value="gender" :hint="$t('type.form.gender.hint')" persistent-hint />
+                                </v-flex>
+                            </v-layout>
+                            <v-layout row wrap>
+                                <v-flex xs12>
+                                    <v-text-field readonly multi-line name="remark" :value="teamtype.remark" :label="$t('type.form.remark.label')" />
                                 </v-flex>
                             </v-layout>
                             <v-layout row wrap>
                                 <v-flex xs6>
                                     <div v-if="teamtype.active">
                                         <v-icon>fa-check</v-icon>
-                                        <span style="vertical-align:bottom">&nbsp;&nbsp;Active</span>
+                                        <span style="vertical-align:bottom">&nbsp;&nbsp; {{ $t('active') }}</span>
                                     </div>
                                     <div v-else>
-                                        This type is not active
+                                        {{ $t('not_active') }}
                                     </div>
                                 </v-flex>
                                 <v-flex xs6>
                                     <div v-if="teamtype.competition">
                                         <v-icon>fa-check</v-icon>
-                                        <span style="vertical-align:bottom">&nbsp;&nbsp;This teamtype is used for competition</span>
+                                        <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('used_competition') }}</span>
                                     </div>
                                     <div v-else>
-                                        This teamtype is not used for competition
+                                        {{ $t('no_competition') }}
                                     </div>
                                 </v-flex>
                             </v-layout>
@@ -69,6 +74,17 @@
         computed : {
             teamtype() {
                 return this.$store.getters['teamModule/type'](this.$route.params.id);
+            },
+            gender() {
+                var gender = this.teamtype.gender;
+                if ( gender == 0 ) {
+                    return this.$t('no_restriction');
+                }
+                else if ( gender == 1 )  {
+                    return this.$t('male');
+                } else {
+                    return this.$t('female');
+                }
             }
         },
         beforeRouteUpdate(to, from, next) {

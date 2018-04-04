@@ -39,6 +39,7 @@ class TypeCreateAction implements \Core\ActionInterface
         $type->start_age = $attributes['start_age'];
         $type->end_age = $attributes['end_age'];
         $type->competition = $attributes['competition'];
+        $type->gender = $attributes['gender'];
         $type->active = $attributes['active'];
         $type->remark = $attributes['remark'];
         $typesTable->save($type);

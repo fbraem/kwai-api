@@ -3,7 +3,7 @@
         <v-flex>
             <v-toolbar class="elevation-0">
                 <v-icon>add</v-icon>
-                <v-toolbar-title>{{ $t('type_create') }}</v-toolbar-title>
+                <v-toolbar-title>{{ $t('type.create_title') }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon dark color="primary" @click="$router.go(-1)"><v-icon>cancel</v-icon></v-btn>
             </v-toolbar>

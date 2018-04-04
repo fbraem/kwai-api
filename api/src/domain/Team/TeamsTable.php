@@ -26,6 +26,16 @@ class TeamsTable extends \Cake\ORM\Table
             ->setForeignKey('season_id')
             ->setProperty('season')
         ;
+        //TODO: Remove sport dependency?
+        $this->belongsToMany('Members', [
+                'className' => \Judo\Domain\Member\MembersTable::class,
+                'joinTable' => 'team_members',
+                'through' => TeamMembersTable::getTableFromRegistry(),
+                'dependent' => true
+            ])
+            ->setForeignKey('team_id')
+            ->setProperty('members')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
@@ -35,6 +45,7 @@ class TeamsTable extends \Cake\ORM\Table
             ->addColumn('name', [ 'type' => 'string' ])
             ->addColumn('season_id', [ 'type' => 'integer' ])
             ->addColumn('team_type_id', [ 'type' => 'integer' ])
+            ->addColumn('active', ['type' => 'boolean'])
             ->addColumn('remark', [ 'type' => 'text'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
