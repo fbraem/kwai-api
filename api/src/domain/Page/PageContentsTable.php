@@ -12,7 +12,7 @@ class PageContentsTable extends \Cake\ORM\Table
 
     public function initialize(array $config)
     {
-        $this->initializeTable();
+        $this->initializeTable(false);
 
         $this->belongsTo('Page', [
             'className' => PagesTable::class
