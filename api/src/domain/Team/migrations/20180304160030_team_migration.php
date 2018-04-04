@@ -14,6 +14,7 @@ class TeamMigration extends AbstractMigration
             ->addColumn('start_age', 'integer', ['null' => true])
             ->addColumn('end_age', 'integer', ['null' => true])
             ->addColumn('competition', 'boolean', ['default' => false])
+            ->addColumn('gender', 'integer', ['default' => 0]) // 0 = Ignore, 1 = Male, 2 = Female
             ->addColumn('active', 'boolean', ['default' => true])
             ->addColumn('remark', 'text', ['null' => true])
             ->addTimestamps()
@@ -24,6 +25,7 @@ class TeamMigration extends AbstractMigration
             ->addColumn('name', 'string', ['null' => true])
             ->addColumn('season_id', 'integer', ['null' => true])
             ->addColumn('team_type_id', 'integer', ['null' => true])
+            ->addColumn('active', 'boolean', ['default' => true])
             ->addColumn('remark', 'text', ['null' => true])
             ->addTimestamps()
             ->create()

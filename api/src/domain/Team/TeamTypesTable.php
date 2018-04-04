@@ -23,6 +23,7 @@ class TeamTypesTable extends \Cake\ORM\Table
             ->addColumn('start_age', [ 'type' => 'integer' ])
             ->addColumn('end_age', [ 'type' => 'integer' ])
             ->addColumn('competition', [ 'type' => 'boolean' ])
+            ->addColumn('gender', [ 'type' => 'integer' ])
             ->addColumn('active', [ 'type' => 'boolean'])
             ->addColumn('remark', [ 'type' => 'text'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
