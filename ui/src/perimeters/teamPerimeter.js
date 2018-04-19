@@ -22,7 +22,13 @@ export default createPerimeter({
             }
             return false;
         },
-        addMember(team) {
+        attachMember(team) {
+            if (this.child.authenticated) {
+                return true;
+            }
+            return false;
+        },
+        detachMember(team) {
             if (this.child.authenticated) {
                 return true;
             }

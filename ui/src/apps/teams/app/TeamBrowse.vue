@@ -53,31 +53,25 @@
             return {
             };
         },
-        created() {
-            this.fetchData();
-        },
         computed : {
             items() {
                 var items = {};
                 var teams = this.$store.getters['teamModule/teams'];
-                teams.forEach((team) => {
-                    var seasonName = team.season ? team.season.name : 'No Season';
-                    var season = items[seasonName];
-                    if ( !season) {
-                        season = {
-                            open : false,
-                            teams : []
-                        };
-                        items[seasonName] = season;
-                    }
-                    season.teams.push(team);
-                });
+                if (teams) {
+                    teams.forEach((team) => {
+                        var seasonName = team.season ? team.season.name : 'No Season';
+                        var season = items[seasonName];
+                        if ( !season) {
+                            season = {
+                                open : false,
+                                teams : []
+                            };
+                            items[seasonName] = season;
+                        }
+                        season.teams.push(team);
+                    });
+                }
                 return items;
-            }
-        },
-        methods : {
-            fetchData() {
-                this.$store.dispatch('teamModule/browse');
             }
         }
     };

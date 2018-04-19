@@ -17,7 +17,8 @@ import JSONAPI from '@/js/JSONAPI';
 
 const state = {
     types : [],
-    teams : [],
+    teams : null,
+    availableMembers : [],
     status : {
         loading : false,
         success : false,
@@ -40,8 +41,13 @@ const getters = {
     },
     members: (state) => (id) => {
         var team = find(state.teams, ['id', id]);
-        if (team) return team.members;
+        if (team) {
+            return team.members;
+        }
         return null;
+    },
+    availableMembers(state) {
+        return state.availableMembers;
     },
     loading(state) {
         return state.status.loading;
@@ -75,7 +81,13 @@ const mutations = {
   },
   members(state, data) {
       var team = find(state.teams, ['id', data.team]);
-      if (team) Vue.set(team, 'members', data.members);
+      if (team) Vue.set(team, 'members',data.members);
+  },
+  availableMembers(state, data) {
+      state.availableMembers = data.members;
+  },
+  clearAvailableMembers(state) {
+      state.availableMembers = [];
   },
   loading(state) {
       state.status = {
@@ -173,6 +185,12 @@ const actions = {
         });
     },
     members(context, payload) {
+        var members = context.getters['members'](payload.id);
+        if (members) { // already read
+            context.commit('success');
+            return;
+        }
+
         context.commit('loading');
 
         oauth.get('api/teams/' + payload.id + '/members', {
@@ -181,6 +199,59 @@ const actions = {
             var api = new JSONAPI();
             var result = api.parse(res.data);
             context.commit('members', {
+                team : payload.id,
+                members : result.data
+            });
+            context.commit('success');
+        }).catch((error) => {
+            context.commit('error', error);
+        });
+    },
+    addMembers(context, payload) {
+        context.commit('loading');
+        oauth.post('api/teams/' + payload.id + '/members', {
+            data : {
+                data : payload.members
+            }
+        }).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+        });
+    },
+    deleteMembers(context, payload) {
+        context.commit('loading');
+        oauth.delete('api/teams/' + payload.id + '/members', {
+            data : {
+                data : payload.members
+            }
+        }).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            console.log(error);
+        });
+    },
+    availableMembers(context, payload) {
+        context.commit('loading');
+        context.commit('clearAvailableMembers');
+        let uri = new URI('api/teams/' + payload.id + '/available_members');
+        if (payload.filter) {
+            if (payload.filter.start_age) {
+                uri.addQuery('filter[start_age]', '>=' + payload.filter.start_age);
+            }
+            if (payload.filter.end_age) {
+                uri.addQuery('filter[end_age]', '<=' + payload.filter.end_age);
+            }
+            if (payload.filter.gender) {
+                uri.addQuery('filter[gender]', payload.filter.gender);
+            }
+        }
+        oauth.get(uri.href(), {
+            data : payload
+        }).then((res) => {
+            var api = new JSONAPI();
+            var result = api.parse(res.data);
+            context.commit('availableMembers', {
                 team : payload.id,
                 members : result.data
             });

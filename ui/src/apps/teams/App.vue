@@ -14,16 +14,12 @@
 
 <script>
     import messages from './lang/lang';
-    import teamStore from './store';
 
     export default {
         i18n : {
             messages
         },
         created() {
-            if (!this.$store.state.teamModule) {
-                this.$store.registerModule('teamModule', teamStore);
-            }
             this.$store.dispatch('setSubTitle', this.$t('teams'));
         }
     };

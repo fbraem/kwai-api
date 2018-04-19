@@ -1,7 +1,5 @@
 <template>
-    <v-list-tile avatar :key="member.id" @click="">
-        <v-list-tile-avatar>
-        </v-list-tile-avatar>
+    <v-list-tile :key="member.id" @click="">
         <v-list-tile-content>
             <v-list-tile-title>{{ name }}</v-list-tile-title>
             <v-list-tile-sub-title>{{ birthdate }} &ndash; {{ age }} {{ $t('age') }}</v-list-tile-sub-title>

@@ -69,7 +69,9 @@ export default {
             }
         },
         members : "Leden",
-        age : 'jaar'
+        age : 'jaar',
+        age_remark : 'Leeftijd is berekend op de einddatum van het seizoen {season} ({start} &ndash; {end})',
+        no_members : 'Dit team heeft geen leden'
     },
     en : {
         types : "Team Types",
@@ -141,6 +143,8 @@ export default {
             }
         },
         members : "Members",
-        age : 'years'
+        age : 'years',
+        age_remark : 'Age is determined on the end date of the season {season} ({start} &ndash; {end})',
+        no_members : "This team doesn't have members"
     }
 };
