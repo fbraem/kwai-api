@@ -32,9 +32,14 @@ class TeamMembersAddAction implements \Core\ActionInterface
 
         $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
         $json = $payload->getInput();
-        foreach ($json['data'] as $memberData) {
+        foreach ($json['members'] as $memberData) {
             try {
-                $member = $membersTable->get($memberData['id']);
+                $member = $membersTable->get(
+                    $memberData['id'],
+                    [
+                        'contain' => ['Person']
+                    ]
+                );
                 $team->members[] = $member;
             } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
                 //Skip this member

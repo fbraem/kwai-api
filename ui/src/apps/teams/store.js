@@ -80,7 +80,7 @@ const mutations = {
   },
   members(state, data) {
       var team = state.teams.find((team) => team.id == data.team);
-      if (team) Vue.set(team, 'members',data.members);
+      if (team) Vue.set(team, 'members', data.members);
   },
   availableMembers(state, data) {
       state.availableMembers = data.members;
@@ -210,10 +210,15 @@ const actions = {
         context.commit('loading');
         oauth.post('api/teams/' + payload.id + '/members', {
             data : {
-                data : payload.members
+                members : payload.members
             }
         }).then((res) => {
-            console.log(res);
+            var api = new JSONAPI();
+            var result = api.parse(res.data);
+            context.commit('members', {
+                team : payload.id,
+                members : result.data
+            });
         }).catch((error) => {
             console.log(error);
         });
