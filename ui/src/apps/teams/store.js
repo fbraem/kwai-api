@@ -7,9 +7,6 @@ import axios from 'axios';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import find from 'lodash/find';
-import unionBy from 'lodash/unionBy';
-
 import URI from 'urijs';
 import moment from 'moment';
 
@@ -31,16 +28,16 @@ const getters = {
         return state.types;
     },
     type: (state) => (id) => {
-        return find(state.types, ['id', id]);
+        return state.types.find((type) => type.id == id);
     },
     teams(state) {
         return state.teams;
     },
     team: (state) => (id) => {
-        return find(state.teams, ['id', id]);
+        return state.teams.find((team) => team.id == id);
     },
     members: (state) => (id) => {
-        var team = find(state.teams, ['id', id]);
+        var team = state.teams.find((team) => team.id == id);
         if (team) {
             return team.members;
         }
@@ -68,7 +65,8 @@ const mutations = {
       state.types.unshift(data.type);
   },
   modifyType(state, data) {
-      state.types = unionBy([data.type], state.types, 'id');
+      var index = state.types.findIndex((type) => type.id == data.type.id);
+      if (state.types[index]) state.types[index] = date.type;
   },
   teams(state, data) {
       state.teams = data.teams;
@@ -77,10 +75,11 @@ const mutations = {
       state.teams.unshift(data.team);
   },
   modifyTeam(state, data) {
-      state.teams = unionBy([data.team], state.teams, 'id');
+      var index = state.teams.findIndex((team) => team.id == data.team.id);
+      if (state.teams[index]) state.teams[index] = date.team;
   },
   members(state, data) {
-      var team = find(state.teams, ['id', data.team]);
+      var team = state.teams.find((team) => team.id == data.team);
       if (team) Vue.set(team, 'members',data.members);
   },
   availableMembers(state, data) {
