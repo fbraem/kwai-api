@@ -39,6 +39,7 @@ class Router extends \Core\Router
 
         $this->map->patch('teams.update', '/teams/{id}', \REST\Teams\Actions\TeamUpdateAction::class)
             ->auth(['login' => false])
+            ->allows(['PUT'])
         ;
 
         $this->map->get('team_types.browse', '/teams/types', \REST\Teams\Actions\TypeBrowseAction::class)

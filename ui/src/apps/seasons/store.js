@@ -1,19 +1,9 @@
 import Vue from 'vue';
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
-import axios from 'axios';
-
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import find from 'lodash/find';
-import unionBy from 'lodash/unionBy';
-
-import URI from 'urijs';
-import moment from 'moment';
-
-import JSONAPI from '@/js/JSONAPI';
+import Season from './models/Season';
 
 const state = {
     seasons : [],
@@ -29,7 +19,7 @@ const getters = {
         return state.seasons;
     },
     season: (state) => (id) => {
-        return find(state.seasons, ['id', id]);
+        return state.seasons.find((s) => s.id == id);
     },
     loading(state) {
         return state.status.loading;
@@ -43,14 +33,19 @@ const getters = {
 };
 
 const mutations = {
-  seasons(state, data) {
-      state.seasons = data.seasons;
+  seasons(state, seasons) {
+      state.seasons = seasons;
   },
-  addSeason(state, data) {
-      state.seasons.unshift(data.season);
+  addSeason(state, season) {
+      state.seasons.unshift(season);
   },
-  modifySeason(state, data) {
-      state.seasons = unionBy([data.season], state.seasons, 'id');
+  modifySeason(state, season) {
+      var index = state.seasons.findIndex((s) => s.id == season.id);
+      if (index != -1) {
+          state.seasons[index] = season;
+      } else {
+          state.seasons.push(season);
+      }
   },
   loading(state) {
       state.status = {
@@ -76,57 +71,44 @@ const mutations = {
 };
 
 const actions = {
-    browse(context, payload) {
-        return new Promise((resolve, reject) => {
-            oauth.get('api/seasons', {
-            }).then((res) => {
-                var api = new JSONAPI();
-                var seasons = api.parse(res.data);
-                context.commit('seasons', {
-                    seasons : seasons.data
-                });
-                resolve();
-            }).catch((error) => {
-                reject();
-            });
-        });
-    },
-    create(context, payload) {
+    async browse(context, payload) {
         context.commit('loading');
-        return oauth.post('api/seasons', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addSeason', {
-                season : result.data
-            });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        const season = new Season();
+        const fetchSeasons = async () => {
+            let seasons = await season.all();
+            context.commit('seasons', seasons.data);
+        };
+        season.call(fetchSeasons);
+        context.commit('success');
     },
-    update(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/seasons/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('modifySeason', {
-                    season : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
+    async create(context, season) {
+        var newSeason = null;
+        const create = async () => {
+            newSeason = await season.create();
+            context.commit('addSeason', newSeason);
+        }
+        await season.call(create)
+            .catch((error) => {
                 context.commit('error', error);
-                reject();
             });
-        });
+        return newSeason;
     },
-    read(context, payload) {
+    async update(context, season) {
+        context.commit('loading');
+        var updatedSeason = null;
+        const update = async () => {
+            updatedSeason = season.save();
+        };
+        await season.call(update)
+            .then(() => {
+                context.commit('success');
+            })
+            .catch((error) => {
+                context.commit('error', error);
+            });
+        return updatedSeason;
+    },
+    async read(context, payload) {
         context.commit('loading');
         var season = context.getters['season'](payload.id);
         if (season) { // already read
@@ -134,18 +116,14 @@ const actions = {
             return;
         }
 
-        oauth.get('api/seasons/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addSeason', {
-                season : result.data
-            });
+        context.commit('loading');
+        season = new Season();
+        const fetchSeason = async() => {
+            let data = await season.find(payload.id);
+            context.commit('modifySeason', data);
             context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        }
+        season.call(fetchSeason);
     }
 };
 

@@ -24,6 +24,7 @@
                             :errors="startDateErrors"
                             :$v="$v.form.season.start_date"
                             :allowedDates="allowedStartDates"
+                            required
                         />
                     </v-flex>
                     <v-flex xs12>
@@ -34,6 +35,7 @@
                             :errors="endDateErrors"
                             :$v="$v.form.season.end_date"
                             :allowedDates="allowedEndDates"
+                            required
                         />
                     </v-flex>
                     <v-flex xs12>
@@ -58,7 +60,7 @@
 
 <script>
 import moment from 'moment';
-import Model from '@/js/model';
+import Season from '../models/Season';
 
 import { required } from 'vuelidate/lib/validators';
 import { withParams } from 'vuelidate/lib';
@@ -194,22 +196,16 @@ export default {
         },
         fillForm(model) {
             this.form.season.name = model.name;
-            if (model.start_date) {
-                var date = moment(model.start_date, 'YYYY-MM-DD');
-                this.form.season.start_date = date.format('L');
-            }
-            if (model.end_date) {
-                var date = moment(model.end_date, 'YYYY-MM-DD');
-                this.form.season.end_date = date.format('L');
-            }
+            this.form.season.start_date = model.formatted_start_date;
+            this.form.season.end_date = model.formatted_end_date;
             this.form.season.remark = model.remark;
         },
         fillModel(model) {
-            model.addAttribute('name', this.form.season.name);
-            model.addAttribute('start_date', moment(this.form.season.start_date, 'L').format('YYYY-MM-DD'));
-            model.addAttribute('end_date', moment(this.form.season.end_date, 'L').format('YYYY-MM-DD'));
-            model.addAttribute('description', this.form.season.description);
-            model.addAttribute('remark', this.form.season.remark);
+            model.name = this.form.season.name;
+            model.start_date = moment(this.form.season.start_date, 'L');
+            model.end_date = moment(this.form.season.end_date, 'L');
+            model.description = this.form.season.description;
+            model.remark = this.form.season.remark;
         },
         allowedEndDates(date) {
             if (this.form.season.start_date && this.form.season.start_date.length > 0) {
@@ -231,16 +227,17 @@ export default {
                 this.$store.dispatch('seasonModule/update', this.season.serialize())
                     .then(() => {
                         this.$router.push({ name : 'season.read', params : { id : this.season.id }});
-                    }).catch(() => {
-                        console.log("Error occurred in seasonModule/update");
+                    }).catch((err) => {
+                        console.log("Error occurred in seasonModule/update", err);
                     });
             } else { // create
-                var season = new Model('seasons');
+                var season = new Season();
                 this.fillModel(season);
-                this.$store.dispatch('seasonModule/create', season.serialize())
+                this.$store.dispatch('seasonModule/create', season)
                     .then((newSeason) => {
                         this.$router.push({ name : 'season.read', params : { id : newSeason.id }});
-                    }).catch(err => {
+                    }).catch((err) => {
+                        console.log("Error occurred in seasonModule/create", err);
                     });
             }
         }

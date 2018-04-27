@@ -9,8 +9,8 @@
                         </div>
                     </v-card-title>
                     <v-card-text>
-                        <v-text-field readonly name="start_date" :label="$t('start_date')" :value="start" />
-                        <v-text-field readonly name="end_date" :label="$t('end_date')" :value="end" />
+                        <v-text-field readonly name="start" :label="$t('start_date')" :value="season.formatted_start_date" />
+                        <v-text-field readonly name="end" :label="$t('end_date')" :value="season.formatted_end_date" />
                         <v-text-field readonly multi-line name="remark" :label="$t('remark')" :value="season.remark" />
                         <div v-if="active">
                             <v-icon v-if="active">fa-check</v-icon>
@@ -41,19 +41,11 @@
             season() {
                 return this.$store.getters['seasonModule/season'](this.$route.params.id);
             },
-            start() {
-                var date = moment(this.season.start_date, 'YYYY-MM-DD');
-                return date.format('L');
-            },
-            end() {
-                var date = moment(this.season.end_date, 'YYYY-MM-DD');
-                return date.format('L');
-            },
             active() {
                 var today = moment();
-                var start = moment(this.season.start_date, 'YYYY-MM-DD');
-                var end = moment(this.season.end_date, 'YYYY-MM-DD');
-                return today.isBetween(start, end) || today.isSame(start) || today.isSame(end);
+                return today.isBetween(this.season.start_date, this.season.end_date)
+                    || today.isSame(this.season.start_date)
+                    || today.isSame(this.season.end_date);
             }
         },
         beforeRouteUpdate(to, from, next) {

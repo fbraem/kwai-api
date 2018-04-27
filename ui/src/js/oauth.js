@@ -87,6 +87,10 @@ class OAuth
         return this.access_token != null;
     }
 
+    getAccessToken() {
+        return this.access_token;
+    }
+
     refreshToken() {
         return new Promise((resolve, reject) => {
             var form = new FormData();

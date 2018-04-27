@@ -67,7 +67,7 @@
 
 <script>
 import moment from 'moment';
-import Model from '@/js/model';
+import Team from '../models/Team';
 
 import { required, numeric } from 'vuelidate/lib/validators';
 
@@ -199,44 +199,44 @@ export default {
             this.$v.$reset();
             this.form = initForm();
         },
-        fillForm(model) {
-            this.form.team.name = model.name;
-            this.form.team.remark = model.remark;
-            if (model.season) {
-                this.form.team.season = model.season.id;
+        fillForm(team) {
+            this.form.team.name = team.name;
+            this.form.team.remark = team.remark;
+            if (team.season) {
+                this.form.team.season = team.season.id;
             }
-            if (model.team_type) {
-                this.form.team.team_type = model.team_type.id;
+            if (team.team_type) {
+                this.form.team.team_type = team.team_type.id;
             }
         },
-        fillModel(model) {
-            model.addAttribute('name', this.form.team.name);
-            model.addAttribute('remark', this.form.team.remark);
+        fillModel(team) {
+            team.name = this.form.team.name;
+            team.remark = this.form.team.remark;
             if (this.form.team.season) {
-                model.addRelation('season', new Model('seasons', this.form.team.season));
+                team.addRelation('season', new Model('seasons', this.form.team.season));
             }
             if (this.form.team.team_type) {
-                model.addRelation('team_type', new Model('team_types', this.form.team.team_type));
+                team.addRelation('team_type', new Model('team_types', this.form.team.team_type));
             }
         },
         submit() {
             this.errors = initError();
 
             if (this.team) { // update
+                console.log(this.team);
                 this.fillModel(this.team);
-                this.$store.dispatch('teamModule/update', this.team.serialize())
+                this.$store.dispatch('teamModule/update', this.team)
                     .then(() => {
                         this.$router.push({ name : 'team.read', params : { id : this.team.id }});
-                    }).catch(() => {
-                        console.log("Error occurred in teamModule/update");
+                    }).catch((err) => {
+                        console.log(err);
                     });
             } else { // create
-                var team = new Model('teams');
-                this.fillModel(team);
-                this.$store.dispatch('teamModule/create', team.serialize())
+                const team = new Team();
+                team.name = this.form.team.name;
+                this.$store.dispatch('teamModule/create', team)
                     .then((newTeam) => {
                         this.$router.push({ name : 'team.read', params : { id : newTeam.id }});
-                    }).catch(err => {
                     });
             }
         }

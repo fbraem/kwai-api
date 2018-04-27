@@ -11,6 +11,7 @@ import URI from 'urijs';
 import moment from 'moment';
 
 import JSONAPI from '@/js/JSONAPI';
+import Team from './models/Team.js';
 
 const state = {
     types : [],
@@ -69,14 +70,14 @@ const mutations = {
       if (state.types[index]) state.types[index] = date.type;
   },
   teams(state, data) {
-      state.teams = data.teams;
+      state.teams = data.data;
   },
-  addTeam(state, data) {
-      state.teams.unshift(data.team);
+  addTeam(state, team) {
+      state.teams.unshift(team);
   },
-  modifyTeam(state, data) {
-      var index = state.teams.findIndex((team) => team.id == data.team.id);
-      if (state.teams[index]) state.teams[index] = date.team;
+  modifyTeam(state, team) {
+      var index = state.teams.findIndex((t) => t.id == team.id);
+      if (state.teams[index]) state.teams[index] = team;
   },
   members(state, data) {
       var team = state.teams.find((team) => team.id == data.team);
@@ -112,76 +113,55 @@ const mutations = {
 };
 
 const actions = {
-    browse(context, payload) {
-        return new Promise((resolve, reject) => {
-            oauth.get('api/teams', {
-            }).then((res) => {
-                var api = new JSONAPI();
-                var teams = api.parse(res.data);
-                context.commit('teams', {
-                    teams : teams.data
-                });
-                resolve();
-            }).catch((error) => {
-                reject();
-            });
-        });
+    async browse(context, payload) {
+        const team = new Team();
+        const fetchTeams = async () => {
+            let teams = await team.all();
+            context.commit('teams', teams);
+        };
+        team.call(fetchTeams);
     },
-    create(context, payload) {
-        context.commit('loading');
-        return oauth.post('api/teams', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addTeam', {
-                team : result.data
+    async create(context, team) {
+        var newTeam = null;
+        const create = async () => {
+            newTeam = team.create();
+            context.commit('addTeam', newTeam);
+        }
+        await team.call(create)
+            .catch((error) => {
+                context.commit('error', error);
             });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        return newTeam;
     },
-    read(context, payload) {
-        context.commit('loading');
+    async read(context, payload) {
         var team = context.getters['team'](payload.id);
         if (team) { // already read
             context.commit('success');
             return;
         }
 
-        oauth.get('api/teams/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
+        context.commit('loading');
+        team = new Team();
+        const fetchTeam = async() => {
+            let data = await team.find(payload.id);
             context.commit('modifyTeam', {
-                team : result.data
+                team : data
             });
             context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        }
+        team.call(fetchTeam);
     },
-    update(context, payload) {
+    async update(context, team) {
         context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/teams/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('modifyTeam', {
-                    team : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
+        var updatedTeam = null;
+        const update = async () => {
+            updatedTeam = team.save();
+        };
+        await team.call(update)
+            .catch((error) => {
                 context.commit('error', error);
-                reject();
             });
-        });
+        return updatedTeam;
     },
     members(context, payload) {
         var members = context.getters['members'](payload.id);

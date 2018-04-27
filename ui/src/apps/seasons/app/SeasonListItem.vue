@@ -5,7 +5,7 @@
         </v-list-tile-avatar>
         <v-list-tile-content>
             <v-list-tile-title>{{ season.name }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ start }} &ndash; {{ end }} <span v-if="season.remark">&ndash; {{ season.remark }}</span></v-list-tile-sub-title>
+            <v-list-tile-sub-title>{{ season.formatted_start_date }} &ndash; {{ season.formatted_end_date }} <span v-if="season.remark">&ndash; {{ season.remark }}</span></v-list-tile-sub-title>
         </v-list-tile-content>
     </v-list-tile>
 </template>
@@ -21,18 +21,10 @@
             }
         },
         computed : {
-            start() {
-                var date = moment(this.season.start_date, 'YYYY-MM-DD');
-                return date.format('L');
-            },
-            end() {
-                var date = moment(this.season.end_date, 'YYYY-MM-DD');
-                return date.format('L');
-            },
             active() {
                 var today = moment();
-                var start = moment(this.season.start_date, 'YYYY-MM-DD');
-                var end = moment(this.season.end_date, 'YYYY-MM-DD');
+                var start = this.season.start_date;
+                var end = this.season.end_date;
                 return today.isBetween(start, end) || today.isSame(start) || today.isSame(end);
             }
         }
