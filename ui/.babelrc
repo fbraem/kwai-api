@@ -8,6 +8,7 @@
         "transform-es2015-arrow-functions",
         "transform-es2015-spread",
         "syntax-dynamic-import",
+        "transform-async-to-generator",
         "lodash"
     ],
     "presets" : [
