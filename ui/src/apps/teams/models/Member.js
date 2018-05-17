@@ -1,28 +1,24 @@
 import Model from '@/js/JSONAPI/BaseModel';
 
-export default class TeamType extends Model {
-    baseURL() {
-      return super.baseURL() + '/teams';
-    }
+import Person from '@/apps/persons/models/Person';
 
+export default class Member extends Model {
     resourceName() {
-        return 'teamtypes';
+        //TODO: sport undependent
+        return 'sport_judo_members';
     }
 
     fields() {
         return [
-            'name',
-            'start_age',
-            'end_age',
             'competition',
-            'gender',
-            'active',
-            'remark'
+            'remark',
+            'license'
         ];
     }
 
     dates() {
         return {
+            'license_date' : 'YYYY-MM-DD',
             'created_at' : 'YYYY-MM-DD HH:mm:ss',
             'updated_at' : 'YYYY-MM-DD HH:mm:ss'
         }
@@ -30,7 +26,7 @@ export default class TeamType extends Model {
 
     relationships() {
         return {
-
+            person : new Person()
         };
     }
 }

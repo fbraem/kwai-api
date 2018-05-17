@@ -12,8 +12,8 @@
                         <v-text-field readonly name="start" :label="$t('start_date')" :value="season.formatted_start_date" />
                         <v-text-field readonly name="end" :label="$t('end_date')" :value="season.formatted_end_date" />
                         <v-text-field readonly multi-line name="remark" :label="$t('remark')" :value="season.remark" />
-                        <div v-if="active">
-                            <v-icon v-if="active">fa-check</v-icon>
+                        <div v-if="season.active">
+                            <v-icon>fa-check</v-icon>
                             <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('active_message') }}</span>
                         </div>
                     </v-card-text>
@@ -40,12 +40,6 @@
         computed : {
             season() {
                 return this.$store.getters['seasonModule/season'](this.$route.params.id);
-            },
-            active() {
-                var today = moment();
-                return today.isBetween(this.season.start_date, this.season.end_date)
-                    || today.isSame(this.season.start_date)
-                    || today.isSame(this.season.end_date);
             }
         },
         beforeRouteUpdate(to, from, next) {

@@ -6,7 +6,8 @@ export default {
         end_date : 'Eind Datum',
         remark : 'Opmerking',
         active_message : 'Dit seizoen is momenteel actief',
-        update : 'Wijzig Seizoen'
+        update : 'Wijzig Seizoen',
+        create : 'Maak Seizoen'
     },
     en : {
         seasons: "Seasons",
@@ -16,5 +17,6 @@ export default {
         remark : 'Remark',
         active_message : 'This season is currently active',
         update : 'Edit Season',
+        create : 'Create Season'
     }
 };

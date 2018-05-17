@@ -10,7 +10,8 @@ class TeamTransformer extends Fractal\TransformerAbstract
 
     protected $defaultIncludes = [
         'team_type',
-        'season'
+        'season',
+        'members'
     ];
 
     public static function createForItem(Team $team)
@@ -28,6 +29,15 @@ class TeamTransformer extends Fractal\TransformerAbstract
         $type = $team->team_type;
         if ($type) {
             return TeamTypeTransformer::createForItem($type);
+        }
+    }
+
+    public function includeMembers(Team $team)
+    {
+        $members = $team->members;
+        if ($members) {
+            //TODO: Remove sport dependency?
+            return \Judo\Domain\Member\MemberTransformer::createForCollection($members);
         }
     }
 

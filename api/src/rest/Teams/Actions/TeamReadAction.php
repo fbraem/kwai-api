@@ -16,9 +16,22 @@ class TeamReadAction implements \Core\ActionInterface
     {
         $id = $request->getAttribute('route.id');
 
+        $parameters = $request->getAttribute('parameters');
+        $contain = [
+            'Season',
+            'TeamType'
+        ];
+        if (isset($parameters['include'])) {
+            foreach ($parameters['include'] as $include) {
+                if ($include == 'members') {
+                    $contain[] = 'Members';
+                    $contain[] = 'Members.Person';
+                }
+            }
+        }
         try {
             $team = \Domain\Team\TeamsTable::getTableFromRegistry()->get($id, [
-                'contain' => ['Season', 'TeamType']
+                'contain' => $contain
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
             return (

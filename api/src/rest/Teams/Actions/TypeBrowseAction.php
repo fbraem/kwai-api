@@ -17,6 +17,6 @@ class TypeBrowseAction implements \Core\ActionInterface
 
         $payload->setOutput(\Domain\Team\TeamTypeTransformer::createForCollection($types));
 
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        return (new JSONResponder(new Responder(), $payload, '/api/teams'))->respond();
     }
 }

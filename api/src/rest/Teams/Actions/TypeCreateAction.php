@@ -52,7 +52,8 @@ class TypeCreateAction implements \Core\ActionInterface
                     new Responder(),
                     201
                 ),
-                $payload
+                $payload,
+                '/api/teams'
             )
         )->respond();
     }

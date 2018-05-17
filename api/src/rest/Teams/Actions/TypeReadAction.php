@@ -30,7 +30,8 @@ class TypeReadAction implements \Core\ActionInterface
         return (
             new JSONResponder(
                 new Responder(),
-                $payload
+                $payload,
+                '/api/teams'
             ))->respond();
     }
 }

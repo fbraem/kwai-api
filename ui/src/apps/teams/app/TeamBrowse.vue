@@ -1,11 +1,11 @@
 <template>
-    <v-container fluid>
+    <v-container class="pa-0">
         <v-layout row wrap>
-            <v-flex xs4>
+            <v-flex xs12 sm4>
                 <v-card>
-                    <v-card-title class="pb-0">
+                    <v-card-title>
                         <div>
-                            <h3 class="headline mb-0">{{ $t('teams') }}</h3>
+                            <h3 class="headline pb-0 mb-0">{{ $t('teams') }}</h3>
                         </div>
                     </v-card-title>
                     <v-card-text v-if="items">
@@ -30,7 +30,7 @@
                     </v-card-actions>
                 </v-card>
             </v-flex>
-            <v-flex xs8>
+            <v-flex xs12 sm8>
                 <router-view name="TeamContent"></router-view>
             </v-flex>
         </v-layout>

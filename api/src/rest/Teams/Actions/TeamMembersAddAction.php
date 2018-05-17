@@ -32,10 +32,10 @@ class TeamMembersAddAction implements \Core\ActionInterface
 
         $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
         $json = $payload->getInput();
-        foreach ($json['members'] as $memberData) {
+        foreach ($json['data'] as $memberData) {
             try {
                 $member = $membersTable->get(
-                    $memberData['id'],
+                    $memberData['data']['id'],
                     [
                         'contain' => ['Person']
                     ]

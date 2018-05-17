@@ -2,7 +2,6 @@ import Vue from 'vue';
 
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
-import axios from 'axios';
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
@@ -11,7 +10,9 @@ import URI from 'urijs';
 import moment from 'moment';
 
 import JSONAPI from '@/js/JSONAPI';
-import Team from './models/Team.js';
+import Team from './models/Team';
+import Member from './models/Member';
+import TeamType from './models/TeamType';
 
 const state = {
     types : [],
@@ -40,7 +41,9 @@ const getters = {
     members: (state) => (id) => {
         var team = state.teams.find((team) => team.id == id);
         if (team) {
-            return team.members;
+            if (team.members) {
+                return team.members;
+            }
         }
         return null;
     },
@@ -59,32 +62,32 @@ const getters = {
 };
 
 const mutations = {
-  types(state, data) {
-      state.types = data.types;
+  types(state, types) {
+      state.types = types;
   },
-  addType(state, data) {
-      state.types.unshift(data.type);
+  addType(state, type) {
+      state.types.unshift(type);
   },
-  modifyType(state, data) {
-      var index = state.types.findIndex((type) => type.id == data.type.id);
-      if (state.types[index]) state.types[index] = date.type;
+  modifyType(state, type) {
+      var index = state.types.findIndex((t) => t.id == type.id);
+      if (state.types[index]) state.types[index] = type;
   },
-  teams(state, data) {
-      state.teams = data.data;
+  teams(state, teams) {
+      state.teams = teams;
   },
   addTeam(state, team) {
       state.teams.unshift(team);
   },
-  modifyTeam(state, team) {
+  setTeam(state, team) {
       var index = state.teams.findIndex((t) => t.id == team.id);
-      if (state.teams[index]) state.teams[index] = team;
+      if (state.teams[index]) Vue.set(state.teams, index, team);
   },
-  members(state, data) {
-      var team = state.teams.find((team) => team.id == data.team);
-      if (team) Vue.set(team, 'members', data.members);
+  setMembers(state, data) {
+      var index = state.teams.findIndex((t) => t.id == data.id);
+      if (state.teams[index]) Vue.set(state.teams[index], 'members', data.members);
   },
-  availableMembers(state, data) {
-      state.availableMembers = data.members;
+  availableMembers(state, members) {
+      state.availableMembers = members;
   },
   clearAvailableMembers(state) {
       state.availableMembers = [];
@@ -116,7 +119,7 @@ const actions = {
     async browse(context, payload) {
         const team = new Team();
         const fetchTeams = async () => {
-            let teams = await team.all();
+            let teams = await team.get();
             context.commit('teams', teams);
         };
         team.call(fetchTeams);
@@ -124,7 +127,7 @@ const actions = {
     async create(context, team) {
         var newTeam = null;
         const create = async () => {
-            newTeam = team.create();
+            newTeam = team.save();
             context.commit('addTeam', newTeam);
         }
         await team.call(create)
@@ -144,9 +147,7 @@ const actions = {
         team = new Team();
         const fetchTeam = async() => {
             let data = await team.find(payload.id);
-            context.commit('modifyTeam', {
-                team : data
-            });
+            context.commit('setTeam', data);
             context.commit('success');
         }
         team.call(fetchTeam);
@@ -156,6 +157,8 @@ const actions = {
         var updatedTeam = null;
         const update = async () => {
             updatedTeam = team.save();
+            context.commit('setTeam', updatedTeam);
+            context.commit('success');
         };
         await team.call(update)
             .catch((error) => {
@@ -163,101 +166,96 @@ const actions = {
             });
         return updatedTeam;
     },
-    members(context, payload) {
-        var members = context.getters['members'](payload.id);
-        if (members) { // already read
-            context.commit('success');
-            return;
+    async members(context, payload) {
+        var team = new Team();
+        context.commit('loading');
+        const fetchMembers = async() => {
+            let teamWithMembers = await team.with(['members']).find(payload.id);
+            context.commit('setTeam', teamWithMembers);
         }
-
-        context.commit('loading');
-
-        oauth.get('api/teams/' + payload.id + '/members', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('members', {
-                team : payload.id,
-                members : result.data
+        team.call(fetchMembers)
+            .then(() => {
+                context.commit('success');
+            })
+            .catch((error) => {
+                context.commit('error', error);
             });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
     },
-    addMembers(context, payload) {
+    async addMembers(context, payload) {
         context.commit('loading');
-        oauth.post('api/teams/' + payload.id + '/members', {
-            data : {
-                members : payload.members
-            }
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('members', {
-                team : payload.id,
-                members : result.data
+
+        var team = context.getters['team'](payload.id);
+        const attachMembers = async() => {
+            let members = await team.attach(team.id, payload.members);
+            context.commit('setMembers', {
+                id : payload.id,
+                members : members
             });
-        }).catch((error) => {
-            console.log(error);
-        });
+        }
+        team.call(attachMembers)
+            .then(() => {
+                context.commit('success');
+            })
+            .catch((error) => {
+                context.commit('error', error);
+            });
     },
-    deleteMembers(context, payload) {
+    async deleteMembers(context, payload) {
         context.commit('loading');
-        oauth.delete('api/teams/' + payload.id + '/members', {
-            data : {
-                data : payload.members
-            }
-        }).then((res) => {
-            console.log(res);
-        }).catch((error) => {
-            console.log(error);
-        });
+
+        var team = context.getters['team'](payload.id);
+        const detachMembers = async() => {
+            let members = await team.detach(team.id, payload.members);
+            context.commit('setMembers', {
+                id : payload.id,
+                members : members
+            });
+        }
+        team.call(detachMembers)
+            .then(() => {
+                context.commit('success');
+            })
+            .catch((error) => {
+                context.commit('error', error);
+            });
     },
-    availableMembers(context, payload) {
+    async availableMembers(context, payload) {
         context.commit('loading');
         context.commit('clearAvailableMembers');
-        let uri = new URI('api/teams/' + payload.id + '/available_members');
-        if (payload.filter) {
-            if (payload.filter.start_age) {
-                uri.addQuery('filter[start_age]', '>=' + payload.filter.start_age);
+
+        const team = new Team();
+        const findAvailableMembers = async() => {
+            if (payload.filter) {
+                if (payload.filter.start_age) {
+                    team.where('start_age', '>=' + payload.filter.start_age);
+                }
+                if (payload.filter.end_age) {
+                    team.where('end_age', '<=' + payload.filter.end_age);
+                }
+                if (payload.filter.gender) {
+                    team.where('gender', payload.filter.gender);
+                }
             }
-            if (payload.filter.end_age) {
-                uri.addQuery('filter[end_age]', '<=' + payload.filter.end_age);
-            }
-            if (payload.filter.gender) {
-                uri.addQuery('filter[gender]', payload.filter.gender);
-            }
+            var members = await team.available(payload.id);
+            context.commit('availableMembers', members);
         }
-        oauth.get(uri.href(), {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('availableMembers', {
-                team : payload.id,
-                members : result.data
+        team.call(findAvailableMembers)
+            .then(() => {
+                context.commit('success');
+            })
+            .catch((error) => {
+                context.commit('error', error);
             });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
     },
     browseType(context, payload) {
-        return new Promise((resolve, reject) => {
-            oauth.get('api/teams/types', {
-            }).then((res) => {
-                var api = new JSONAPI();
-                var types = api.parse(res.data);
-                context.commit('types', {
-                    types : types.data
-                });
-                resolve();
-            }).catch((error) => {
-                reject();
-            });
-        });
+        context.commit('loading');
+        const type = new TeamType();
+        const fetchTypes = async () => {
+            let types = await type.all();
+            context.commit('types', types);
+        };
+        type.call(fetchTypes);
+        context.commit('success');
     },
     createType(context, payload) {
         context.commit('loading');

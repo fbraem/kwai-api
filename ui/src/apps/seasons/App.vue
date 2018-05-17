@@ -8,7 +8,9 @@
                 </v-toolbar>
             </v-flex>
         </v-layout>
-        <router-view name="SeasonContent"></router-view>
+        <v-container>
+            <router-view name="SeasonContent"></router-view>
+        </v-container>
     </v-container>
 </template>
 

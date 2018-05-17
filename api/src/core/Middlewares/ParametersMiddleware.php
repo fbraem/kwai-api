@@ -26,6 +26,10 @@ class ParametersMiddleware implements MiddlewareInterface
         if ($filterParameters !== null) {
             $parameters['filter'] = $filterParameters;
         }
+        $includeParameter = $this->getIncludeParameter($queryParameters);
+        if ($includeParameter !== null) {
+            $parameters['include'] = explode(',', $includeParameter);
+        }
 
         $request = $request->withAttribute('parameters', $parameters);
 
@@ -40,6 +44,11 @@ class ParametersMiddleware implements MiddlewareInterface
     private function getFilterParameters($parameters)
     {
         return $this->getArrayParameter($parameters, 'filter');
+    }
+
+    private function getIncludeParameter($parameters)
+    {
+        return $this->getParameter($parameters, 'include');
     }
 
     private function getArrayParameter($parameters, $name)

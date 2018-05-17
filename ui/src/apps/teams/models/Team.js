@@ -1,7 +1,8 @@
-import Model from '@/js/BaseModel';
+import Model from '@/js/JSONAPI/BaseModel';
 
-import TeamType from './TeamType.js';
-import Season from '@/apps/seasons/models/Season.js';
+import TeamType from './TeamType';
+import Member from './Member';
+import Season from '@/apps/seasons/models/Season';
 
 export default class Team extends Model {
     resourceName() {
@@ -10,14 +11,70 @@ export default class Team extends Model {
 
     fields() {
         return [
-            'name'
+            'name',
+            'active',
+            'remark'
         ];
+    }
+
+    dates() {
+        return {
+            'created_at' : 'YYYY-MM-DD HH:mm:ss',
+            'updated_at' : 'YYYY-MM-DD HH:mm:ss'
+        }
     }
 
     relationships() {
         return {
             team_type : new TeamType(),
-            season : new Season()
+            season : new Season(),
+            members : new Member()
         };
     }
+
+    async available(id) {
+        var segments = this._uri.segment();
+        segments.push(id);
+        segments.push('available_members');
+        this._uri.segment(segments);
+        const config = {
+          method: 'GET',
+          url : this._uri.href()
+        };
+        this.reset();
+        var member = new Member();
+        let response = await member.request(config);
+        return member.respond(response);
+    }
+
+    async attach(id, members) {
+        const requestConfig = {
+            method : 'POST',
+            url : `${this.resourceUrl()}/${id}/members`,
+            data : {
+                data : members.map((member) => {
+                    return member.serialize();
+                })
+            }
+        };
+        let response = await this.request(requestConfig);
+        var member = new Member();
+        return member.respond(response);
+    }
+
+    async detach(id, members) {
+        const requestConfig = {
+            method : 'DELETE',
+            url : `${this.resourceUrl()}/${id}/members`,
+            data : {
+                data : members.map((member) => {
+                    return member.serialize();
+                })
+            }
+        };
+        let response = await this.request(requestConfig);
+        var member = new Member();
+        return member.respond(response);
+    }
+
 }

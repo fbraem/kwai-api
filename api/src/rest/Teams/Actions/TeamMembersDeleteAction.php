@@ -33,14 +33,19 @@ class TeamMembersDeleteAction implements \Core\ActionInterface
         $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
         $json = $payload->getInput();
         $ids = [];
+
         foreach ($json['data'] as $memberData) {
-            $ids[] = $memberData['id'];
+            $ids[] = $memberData['data']['id'];
         }
         $members = $membersTable->find()->where(['id IN' => $ids])->toList();
         $teamsTable->Members->unlink($team, $members);
 
         $team->dirty('members', true);
         $teamsTable->save($team);
+
+        $team = \Domain\Team\TeamsTable::getTableFromRegistry()->get($id, [
+            'contain' => ['Members', 'Members.Person']
+        ]);
 
         $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($team->members));
         return (

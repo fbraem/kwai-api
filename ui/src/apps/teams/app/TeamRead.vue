@@ -1,10 +1,12 @@
 <template>
-    <v-container fluid class="pt-0">
+    <v-container class="pt-0">
         <v-card v-if="team">
-            <v-card-title class="pb-0" primary-title>
-                <h4 class="headline mb-0">{{ $t('team.details') }}</h4>
+            <v-card-title>
+                <div>
+                    <h4 class="headline mb-0">{{ $t('team.details') }}</h4>
+                </div>
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="pt-0">
                 <v-container fluid grid-list-md>
                     <v-layout row wrap>
                         <v-flex xs12>
@@ -51,19 +53,19 @@
                     <v-icon class="far">fa-trash-alt</v-icon>
                 </v-btn>
             </v-card-actions>
-            <v-divider></v-divider>
+            <v-divider v-if="members"></v-divider>
             <v-card-text v-if="members">
                 <MemberList v-model="selectedMembers" :team="team" :members="members" />
                 <div v-if="members.length == 0">
                     {{ $t('no_members') }}
                 </div>
             </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
+            <v-divider v-if="members"></v-divider>
+            <v-card-actions v-if="members">
                 <v-btn v-if="$isAllowed('attachMember', team)" icon fab small @click.native="showAddMemberDialog">
                     <v-icon>fa-plus</v-icon>
                 </v-btn>
-                <v-btn v-if="$isAllowed('detachMember', team) && selectedMembers.length > 0" icon fab small>
+                <v-btn v-if="$isAllowed('detachMember', team) && selectedMembers.length > 0" icon fab small @click.native="areYouSure">
                     <v-icon class="far">fa-trash-alt</v-icon>
                 </v-btn>
             </v-card-actions>
@@ -111,6 +113,31 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="showAreYouSure" max-width="290">
+            <v-card>
+                <v-card-text>
+                    <v-layout>
+                        <v-flex xs2>
+                            <v-icon color="error">fa-bell</v-icon>
+                        </v-flex>
+                        <v-flex xs10>
+                            <div>{{ $t('sure_to_delete') }}</div>
+                        </v-flex>
+                    </v-layout>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="error" @click="deleteMembers">
+                        <v-icon left>fa-trash</v-icon>
+                        {{ $t('delete') }}
+                    </v-btn>
+                    <v-btn @click="showAreYouSure = false">
+                        <v-icon left>fa-ban</v-icon>
+                        {{ $t('cancel') }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -121,6 +148,8 @@
 
     import MemberListItem from './MemberListItem.vue';
     import MemberList from './MemberList.vue';
+
+    import Member from '../models/Member';
 
     export default {
         props : [
@@ -138,7 +167,8 @@
                     { text : 'None', value : 0 },
                     { text : 'Male', value : 1 },
                     { text : 'Female', value : 2 }
-                ]
+                ],
+                showAreYouSure : false
             }
         },
         components : {
@@ -156,10 +186,10 @@
                 return this.$store.getters['teamModule/members'](this.id);
             },
             seasonStart() {
-                return moment(this.team.season.start_date, 'YYYY-MM-DD').format('L');
+                return this.team.season.start_date.format('L');
             },
             seasonEnd() {
-                return moment(this.team.season.end_date, 'YYYY-MM-DD').format('L');
+                return this.team.season.end_date.format('L');
             },
             availableMembers() {
                 return this.$store.getters['teamModule/availableMembers'];
@@ -219,10 +249,15 @@
                 });
                 this.addMemberDialog = true;
             },
-            areYouSure() {
+            areYouSure(id) {
+                this.showAreYouSure = true;
+            },
+            deleteMembers() {
                 var members = [];
                 this.selectedMembers.forEach((id) => {
-                    members.push(new Model('members', id));
+                    var member = new Member();
+                    member.id = id;
+                    members.push(member);
                 });
                 this.$store.dispatch('teamModule/deleteMembers', {
                     id : this.id,

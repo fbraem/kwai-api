@@ -15,10 +15,13 @@ class JSONResponder implements ResponderInterface
 
     private $payload;
 
-    public function __construct(ResponderInterface $responder, Payload $payload)
+    private $baseURL;
+
+    public function __construct(ResponderInterface $responder, Payload $payload, $baseURL = '/api')
     {
         $this->responder = $responder;
         $this->payload = $payload;
+        $this->baseURL = $baseURL;
     }
 
     public function respond() : ResponseInterface
@@ -33,7 +36,7 @@ class JSONResponder implements ResponderInterface
         }
 
         $fractal = new Manager();
-        $fractal->setSerializer(new JsonApiSerializer('/api'));
+        $fractal->setSerializer(new JsonApiSerializer($this->baseURL));
         $data = $fractal->createData($resource)->toJson();
         $response->getBody()->write($data);
 

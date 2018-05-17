@@ -1,7 +1,7 @@
 <template>
     <v-list-tile avatar :to="{ name : 'season.read', params : { 'id' : season.id } }">
         <v-list-tile-avatar>
-            <v-icon v-if="active">fa-check</v-icon>
+            <v-icon v-if="season.active">fa-check</v-icon>
         </v-list-tile-avatar>
         <v-list-tile-content>
             <v-list-tile-title>{{ season.name }}</v-list-tile-title>
@@ -18,14 +18,6 @@
             season : {
                 type : Object,
                 required : true
-            }
-        },
-        computed : {
-            active() {
-                var today = moment();
-                var start = this.season.start_date;
-                var end = this.season.end_date;
-                return today.isBetween(start, end) || today.isSame(start) || today.isSame(end);
             }
         }
     };

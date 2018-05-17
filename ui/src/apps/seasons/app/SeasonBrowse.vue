@@ -1,8 +1,8 @@
 <template>
     <v-container fluid>
         <v-card>
-            <v-card-text>
-                <v-list v-if="seasons && seasons.length > 0" two-line>
+            <v-card-text v-if="seasons">
+                <v-list v-if="seasons.length > 0" two-line>
                     <SeasonListItem v-for="season in seasons" :key="season.id" :season="season" />
                 </v-list>
                 <div v-else>

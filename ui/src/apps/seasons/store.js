@@ -71,12 +71,12 @@ const mutations = {
 };
 
 const actions = {
-    async browse(context, payload) {
+    browse(context, payload) {
         context.commit('loading');
         const season = new Season();
         const fetchSeasons = async () => {
             let seasons = await season.all();
-            context.commit('seasons', seasons.data);
+            context.commit('seasons', seasons);
         };
         season.call(fetchSeasons);
         context.commit('success');
@@ -84,7 +84,7 @@ const actions = {
     async create(context, season) {
         var newSeason = null;
         const create = async () => {
-            newSeason = await season.create();
+            newSeason = await season.save();
             context.commit('addSeason', newSeason);
         }
         await season.call(create)
@@ -97,7 +97,7 @@ const actions = {
         context.commit('loading');
         var updatedSeason = null;
         const update = async () => {
-            updatedSeason = season.save();
+            updatedSeason = await season.save();
         };
         await season.call(update)
             .then(() => {

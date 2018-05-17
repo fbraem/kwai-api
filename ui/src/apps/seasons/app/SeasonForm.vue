@@ -224,7 +224,7 @@ export default {
 
             if (this.season) { // update
                 this.fillModel(this.season);
-                this.$store.dispatch('seasonModule/update', this.season.serialize())
+                this.$store.dispatch('seasonModule/update', this.season)
                     .then(() => {
                         this.$router.push({ name : 'season.read', params : { id : this.season.id }});
                     }).catch((err) => {

@@ -236,20 +236,20 @@ export default {
             this.form.teamtype.remark = model.remark;
         },
         fillModel(model) {
-            model.addAttribute('name', this.form.teamtype.name);
-            model.addAttribute('start_age', this.form.teamtype.start_age);
-            model.addAttribute('end_age', this.form.teamtype.end_age);
-            model.addAttribute('gender', this.form.teamtype.gender);
-            model.addAttribute('active', this.form.teamtype.active);
-            model.addAttribute('competition', this.form.teamtype.competition);
-            model.addAttribute('remark', this.form.teamtype.remark);
+            model.name =this.form.teamtype.name;
+            model.start_age = this.form.teamtype.start_age;
+            model.end_age = this.form.teamtype.end_age;
+            model.gender = this.form.teamtype.gender;
+            model.active = this.form.teamtype.active;
+            model.competition = this.form.teamtype.competition;
+            model.remark =this.form.teamtype.remark;
         },
         submit() {
             this.errors = initError();
 
             if (this.teamtype) { // update
                 this.fillModel(this.teamtype);
-                this.$store.dispatch('teamModule/updateType', this.teamtype.serialize())
+                this.$store.dispatch('teamModule/updateType', this.teamtype)
                     .then(() => {
                         this.$router.push({ name : 'teamtype.read', params : { id : this.teamtype.id }});
                     }).catch(() => {
@@ -258,7 +258,7 @@ export default {
             } else { // create
                 var teamtype = new Model('team_types');
                 this.fillModel(teamtype);
-                this.$store.dispatch('teamModule/createType', teamtype.serialize())
+                this.$store.dispatch('teamModule/createType', teamtype)
                     .then((newType) => {
                         this.$router.push({ name : 'teamtype.read', params : { id : newType.id }});
                     }).catch(err => {

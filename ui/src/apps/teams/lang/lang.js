@@ -71,7 +71,10 @@ export default {
         members : "Leden",
         age : 'jaar',
         age_remark : 'Leeftijd is berekend op de einddatum van het seizoen {season} ({start} &ndash; {end})',
-        no_members : 'Dit team heeft geen leden'
+        no_members : 'Dit team heeft geen leden',
+        delete : 'Verwijder',
+        sure_to_delete : 'Bent u zeker om deze leden te verwijderen uit dit team?',
+        cancel : 'Annuleer'
     },
     en : {
         types : "Team Types",
@@ -145,6 +148,9 @@ export default {
         members : "Members",
         age : 'years',
         age_remark : 'Age is determined on the end date of the season {season} ({start} &ndash; {end})',
-        no_members : "This team doesn't have members"
+        no_members : "This team doesn't have members",
+        delete : 'Delete',
+        sure_to_delete : 'Are you sure to remove these members from this team?',
+        cancel : 'Cancel'
     }
 };

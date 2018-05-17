@@ -10,11 +10,11 @@ class Router extends \Core\Router
             ->accepts(['application/vnd.api+json']);
 
         $this->map->get('teams.browse', '/teams', \REST\Teams\Actions\TeamBrowseAction::class)
-            ->auth(['login' => true])
+        //    ->auth(['login' => true])
         ;
 
         $this->map->get('teams.read', '/teams/{id}', \REST\Teams\Actions\TeamReadAction::class)
-            ->auth(['login' => true])
+        //    ->auth(['login' => true])
         ;
 
         $this->map->get('teams.members.browse', '/teams/{id}/members', \REST\Teams\Actions\TeamMembersBrowseAction::class)
@@ -42,19 +42,19 @@ class Router extends \Core\Router
             ->allows(['PUT'])
         ;
 
-        $this->map->get('team_types.browse', '/teams/types', \REST\Teams\Actions\TypeBrowseAction::class)
+        $this->map->get('team_types.browse', '/teams/teamtypes', \REST\Teams\Actions\TypeBrowseAction::class)
             ->auth(['login' => true])
         ;
 
-        $this->map->get('team_types.read', '/teams/types/{id}', \REST\Teams\Actions\TypeReadAction::class)
+        $this->map->get('team_types.read', '/teams/teamtypes/{id}', \REST\Teams\Actions\TypeReadAction::class)
             ->auth(['login' => true])
         ;
 
-        $this->map->post('team_types.create', '/teams/types', \REST\Teams\Actions\TypeCreateAction::class)
+        $this->map->post('team_types.create', '/teams/teamtypes', \REST\Teams\Actions\TypeCreateAction::class)
             ->auth(['login' => true])
         ;
 
-        $this->map->patch('team_types.update', '/teams/types/{id}', \REST\Teams\Actions\TypeUpdateAction::class)
+        $this->map->patch('team_types.update', '/teams/teamtypes/{id}', \REST\Teams\Actions\TypeUpdateAction::class)
             ->auth(['login' => false])
         ;
     }
