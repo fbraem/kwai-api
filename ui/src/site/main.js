@@ -12,6 +12,11 @@ import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import 'vuetify/dist/vuetify.min.css';
 
+import UIkit from 'uikit';
+import UIkitIcons from 'uikit/dist/js/uikit-icons';
+UIkit.use(UIkitIcons);
+import css from 'uikit/dist/css/uikit.min.css';
+
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 import messages from './lang/nl';
@@ -23,20 +28,13 @@ const i18n = new VueI18n({
 
 //import FlagIcon from 'vue-flag-icon';
 //Vue.use(FlagIcon);
+import Icon from 'vue-awesome/components/Icon';
+Vue.component('fa-icon', Icon);
 
 import moment from 'moment';
 moment.locale('nl');
 
 import store from '@/js/store';
-
-import newsStore from '@/apps/news/store';
-store.registerModule('newsModule', newsStore);
-
-import categoryStore from '@/apps/categories/store';
-store.registerModule('categoryModule', categoryStore);
-
-import pageStore from '@/apps/pages/store';
-store.registerModule('pageModule', pageStore);
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {

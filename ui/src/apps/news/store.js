@@ -7,14 +7,12 @@ import axios from 'axios';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import find from 'lodash/find';
 import filter from 'lodash/filter';
-import unionBy from 'lodash/unionBy';
 
 import URI from 'urijs';
 import moment from 'moment';
 
-import JSONAPI from '@/js/JSONAPI';
+import Story from './models/Story';
 
 const state = {
     stories : [],
@@ -31,7 +29,7 @@ const getters = {
         return state.stories;
     },
     story: (state) => (id) => {
-        return find(state.stories, ['id', id]);
+        return state.stories.find((story) => story.id == id);
     },
     loading(state) {
         return state.status.loading;
@@ -48,11 +46,12 @@ const getters = {
 };
 
 const mutations = {
-  stories(state, data) {
-      state.stories = data.stories;
+  stories(state, stories) {
+      state.stories = stories;
   },
-  setStory(state, data) {
-      state.stories = unionBy([data.story], state.stories, 'id');
+  setStory(state, story) {
+      var index = state.stories.findIndex((s) => s.id == story.id);
+      if (state.stories[index]) Vue.set(state.stories, index, story);
   },
   deleteStory(state, data) {
       state.stories = filter(state.stories, (story) => {
@@ -97,39 +96,30 @@ const mutations = {
 };
 
 const actions = {
-    browse(context, payload) {
+    async browse(context, payload) {
         context.commit('loading');
-        var uri = new URI('api/news/stories');
-        var offset = payload.offset || 0;
-        uri.addQuery('page[offset]', offset);
-        if (payload.category) {
-            uri.addQuery('filter[category]', payload.category);
-        }
-        if (payload.year) {
-            uri.addQuery('filter[year]', payload.year);
-        }
-        if (payload.month) {
-            uri.addQuery('filter[month]', payload.month);
-        }
-        if (payload.featured) {
-            uri.addQuery('filter[featured]', true);
-        }
-        if (payload.user) {
-            uri.addQuery('filter[user]', payload.user);
-        }
-
-        oauth.get(uri.href(), {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var stories = api.parse(res.data);
-            context.commit('stories', {
-                stories : stories.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        const story = new Story();
+        const fetchStories = async () => {
+            if (payload.category) {
+                story.where('category', payload.category);
+            }
+            if (payload.year) {
+                story.where('year', payload.year);
+            }
+            if (payload.month) {
+                story.where('month', payload.month);
+            }
+            if (payload.featured) {
+                story.where('featured', true);
+            }
+            if (payload.user) {
+                story.where('user', payload.user);
+            }
+            let stories = await story.get();
+            context.commit('stories', stories);
+        };
+        story.call(fetchStories);
+        context.commit('success');
     },
     read(context, payload) {
         context.commit('loading');

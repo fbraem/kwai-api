@@ -1,231 +1,185 @@
 <template>
     <div>
-        <v-container>
-            <v-layout>
-                <v-flex xs12 xl10 offset-xl1>
-                    <v-card class="hidden-sm-and-up">
-                        <v-container>
-                            <v-layout row>
-                                <v-flex xs7>
-                                    <div>
-                                        <p style="padding:5px">
-                                            {{ $t("message.hello") }}
-                                        </p>
-                                        <p style="padding:5px;margin-bottom:0px;">
-                                            {{ $t("message.info") }}
-                                        </p>
-                                    </div>
-                                </v-flex>
-                                <v-flex xs5>
-                                    <v-card-media :src="require('./images/logo.jpg')" height="125" contain></v-card-media>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card>
-                    <v-card class="hidden-xs-only">
-                        <v-card-media :src="require('./images/judokwaikemzeke.jpg')" height="500">
-                            <v-container fill-height fluid>
-                                <v-layout fill-height>
-                                    <v-flex xs8 sm6 align-end flexbox>
-                                        <div class="white--text" style="padding:5px;background-color:rgba(34,34,34,0.8);min-height:181px">
-                                            <img :src="require('./images/logo.jpg')" style="width:171px;height:171px;float:left;margin-right:10px" />
-                                            <p style="padding:5px">
-                                                {{ $t("message.hello") }}
-                                            </p>
-                                            <p style="padding:5px;margin-bottom:0px;">
-                                                {{ $t("message.info") }}
-                                            </p>
-                                        </div>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                        </v-card-media>
-                    </v-card>
-                    <v-container fluid class="button-container">
-                        <v-layout row wrap>
-                            <v-flex xs6 sm4 md2 px-0>
-                                <v-btn :to="{ name : 'news.browse' }" style="width:100%">
-                                    <v-icon large color="red">fa-newspaper</v-icon>
-                                    Nieuws
-                                </v-btn>
-                            </v-flex>
-                            <v-flex xs6 sm4 md2 px-0>
-                                <v-btn :to="{ name : 'pages.category', params : { category_id : '2' } }" style="width:100%">
-                                    <v-icon large color="red">fa-university</v-icon>
-                                    Trainingen
-                                </v-btn>
-                            </v-flex>
-                            <v-flex xs6 sm4 md2 px-0>
-                                <v-btn :to="{ name : 'pages.category', params : { category_id : '3' } }" style="width:100%">
-                                    <v-icon large color="red">fa-trophy</v-icon>
-                                    Tornooien
-                                </v-btn>
-                            </v-flex>
-                            <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="/oud/kalender.htm" style="width:100%">
-                                    <v-icon large color="red">fa-calendar</v-icon>
-                                    Kalender
-                                </v-btn>
-                            </v-flex>
-                            <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="#" style="width:100%" disabled>
-                                    <v-icon large color="red">fa-shopping-basket</v-icon>
-                                    Materiaal
-                                </v-btn>
-                            </v-flex>
-                            <v-flex xs6 sm4 md2 px-0>
-                                <v-btn href="oud/training/trainers.htm" style="width:100%">
-                                    <v-icon large color="red">fa-users</v-icon>
-                                    Bestuur
-                                </v-btn>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-flex>
-            </v-layout>
-        </v-container>
-        <v-container fluid grid-list-xl class="ma-0 pa-0">
-            <NewsBrowse :featured="true"></NewsBrowse>
-        </v-container>
-        <v-container fluid grid-list-xl>
-            <v-layout row wrap>
-                <v-flex xs12 sm6 xl3 d-flex>
-                    <v-card color="blue-grey darken-2" class="white--text">
-                        <v-container>
-                            <v-layout row>
-                                <v-flex xs8>
-                                    <div>
-                                        <div class="headline">
-                                            Jeugdvriendelijke Judoclub
-                                        </div>
-                                        <div>
-                                            Voor het derde jaar op rij verdient onze club
-                                            goud bij de proclomatie van het jeugdjudofonds!
-                                        </div>
-                                    </div>
-                                </v-flex>
-                                <v-flex xs4>
-                                    <v-card-media :src="require('./images/goud_jeugdsport_2017.jpg')" height="125" contain></v-card-media>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card>
-                </v-flex>
-                <v-flex xs12 sm6 xl3 d-flex>
-                    <v-card color="blue-grey darken-2" class="white--text">
-                        <v-container>
-                            <v-layout row>
-                                <v-flex xs7>
-                                    <div>
-                                        <div class="headline">
-                                            Locatie
-                                        </div>
-                                        <div>
-                                            Wij trainen in de gevechtssportzaal van sportcentrum "De Sportstek" in Stekene,
-                                            Nieuwstraat 60D.
-                                        </div>
-                                    </div>
-                                </v-flex>
-                                <v-flex xs5>
-                                    <v-card-media :src="require('./images/sporthal.jpg')" height="125"></v-card-media>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card>
-                </v-flex>
-                <v-flex xs12 sm6 xl3 d-flex>
-                    <v-card color="blue-grey darken-2" class="white--text">
-                        <v-container>
-                            <v-layout row>
-                                <v-flex xs7>
-                                    <div>
-                                        <div class="headline">
-                                            Eens proberen?
-                                        </div>
-                                        <div>
-                                            De Vlaamse Judo Federatie en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.
-                                        </div>
-                                    </div>
-                                </v-flex>
-                                <v-flex xs5>
-                                    <v-card-media :src="require('./images/kim_ono.png')" height="125" contain></v-card-media>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card>
-                </v-flex>
-                <v-flex xs12 sm6 xl3 d-flex>
-                    <v-card color="blue-grey darken-2" class="white--text">
-                        <v-container>
-                            <v-layout row>
-                                <v-flex xs7>
-                                    <div>
-                                        <div class="headline">
-                                            Hartveilig
-                                        </div>
-                                        <div>
-                                            Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.
-                                        </div>
-                                    </div>
-                                </v-flex>
-                                <v-flex xs5>
-                                    <v-card-media :src="require('./images/hartveilig.jpg')" height="125" contain></v-card-media>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card>
-                </v-flex>
-            </v-layout>
-        </v-container>
+        <section class="uk-section uk-section-small uk-section-secondary">
+            <div class="uk-container uk-container-expand">
+                <div uk-grid>
+                    <div class="uk-width-1-1 uk-width-2-3@m">
+                        <img :src="require('./images/judokwaikemzeke.jpg')" alt="" />
+                    </div>
+                    <div class="uk-width-1-1 uk-width-1-3@m">
+                        <div uk-grid>
+                            <div class="uk-width-1-1">
+                                <img class="uk-align-center" :src="require('./images/logo2.png')" style="width:121px;height:121px;" />
+                            </div>
+                            <div class="uk-width-1-1">
+                                <h4 class="uk-margin-remove-top uk-text-center">Judokwai Kemzeke</h4>
+                                {{ $t("message.hello") }}
+                                <br />
+                                {{ $t("message.info") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="uk-section uk-section-small">
+            <div class="uk-grid-collapse uk-flex-center" uk-grid>
+                <div class="uk-width-small">
+                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                        <fa-icon name="newspaper" scale="2" style="color:#f44336" />
+                        Nieuws
+                    </a>
+                </div>
+                <div class="uk-width-small">
+                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                        <fa-icon name="university" scale="2" style="color:#f44336" />
+                        Trainingen
+                    </a>
+                </div>
+                <div class="uk-width-small">
+                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                        <fa-icon name="trophy" scale="2" style="color:#f44336" />
+                        Tornooien
+                    </a>
+                </div>
+                <div class="uk-width-small">
+                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                        <fa-icon name="calendar" scale="2" style="color:#f44336" />
+                        Kalender
+                    </a>
+                </div>
+                <div class="uk-width-small">
+                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                        <fa-icon name="shopping-basket" scale="2" style="color:#f44336" />
+                        Materiaal
+                    </a>
+                </div>
+                <div class="uk-width-small">
+                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                        <fa-icon name="users" scale="2" style="color:#f44336"/>
+                        Bestuur
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="uk-section uk-section-small uk-padding-remove-top">
+            <div class="uk-container uk-container-expand">
+                <h4 class="uk-heading-line uk-text-bold"><span>Belangrijk Nieuws</span></h4>
+                <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-3@l" uk-grid="masonry: true">
+                    <NewsFeaturedCard v-for="story in stories" :story="story" :key="story.id"></NewsFeaturedCard>
+                </div>
+            </div>
+        </section>
+        <section class="uk-section uk-section-small">
+            <div class="uk-container">
+                <div class="uk-child-width-1-2@m uk-grid-small uk-grid-match" uk-grid>
+                    <div>
+                        <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
+                            <h3 class="uk-card-title">Jeugdvriendelijke Judoclub</h3>
+                            <div class="uk-flex-center" uk-grid>
+                                <div>
+                                    <p>Voor het derde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
+                                </div>
+                                <div>
+                                    <img :src="require('./images/goud_jeugdsport_2017.jpg')" style="height:125px" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
+                            <h3 class="uk-card-title" style="color:white">Locatie</h3>
+                            <div class="uk-flex-center" uk-grid>
+                                <div>
+                                    <p>Wij trainen in de gevechtssportzaal van sportcentrum
+                                        <strong>"De Sportstek"</strong> in Stekene, Nieuwstraat 60D.</p>
+                                </div>
+                                <div>
+                                    <img :src="require('./images/sporthal.jpg')" style="height:125px" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
+                            <h3 class="uk-card-title">Eens proberen?</h3>
+                            <div class="uk-flex-center" uk-grid>
+                                <div>
+                                    <p>De Vlaamse Judo Federatie en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
+                                </div>
+                                <div>
+                                    <img :src="require('./images/kim_ono.png')" style="height:125px;" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
+                            <h3 class="uk-card-title">Hartveilig</h3>
+                            <div class="uk-flex-center" uk-grid>
+                                <div>
+                                    <p>Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.</p>
+                                </div>
+                                <div>
+                                    <img :src="require('./images/hartveilig.jpg')" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </template>
 
 <style>
-.button-container {
-    border-radius: 2px;
-    overflow: hidden;
-    margin: 0;
-}
-
-.button-container .btn {
+.btn {
     background-color:hsla(0,0%,94%,.9);
     height:9rem;
     margin:0;
     border-radius:0
 }
-
-.button-container .btn .icon {
-    font-size:2.5rem;
-    margin-bottom:.25rem;
-    color:#0279d7
+.message-card {
+    background-color:#607d8b;
 }
-
-.button-container .btn .btn__content {
-    -webkit-box-orient:vertical;
-    -webkit-box-direction:normal;
-    -ms-flex-direction:column;
-    flex-direction:column
-}
-
-@media screen and (max-width:959px) {
-    .button-container .btn {
-        height:6rem
-    }
+.message-card h3 {
+    color: white!important;
 }
 </style>
 
 <script>
-    import NewsBrowse from '@/apps/news/app/NewsBrowse.vue';
+    import 'vue-awesome/icons/newspaper';
+    import 'vue-awesome/icons/university';
+    import 'vue-awesome/icons/trophy';
+    import 'vue-awesome/icons/users';
+    import 'vue-awesome/icons/calendar';
+    import 'vue-awesome/icons/shopping-basket';
+
+    import NewsFeaturedCard from '@/apps/news/components/NewsFeaturedCard.vue';
+    import newsStore from '@/apps/news/store';
 
     export default {
         components : {
-            NewsBrowse
+            NewsFeaturedCard
         },
         data() {
             return {};
         },
-        mounted() {
+        computed : {
+            stories() {
+                return this.$store.getters['newsModule/stories'];
+            }
+        },
+        created() {
             this.$store.dispatch('setSubTitle', '');
+            if (!this.$store.state.newsModule) {
+                this.$store.registerModule('newsModule', newsStore);
+            }
+            this.$store.dispatch('newsModule/browse', {
+                featured : true
+            });
         }
     };
 </script>

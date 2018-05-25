@@ -69,6 +69,10 @@ export default class Model {
     return null;
   }
 
+  aliasURL() {
+      return null;
+  }
+
   fields() {
     return [];
   }
@@ -96,11 +100,12 @@ export default class Model {
 
   resourceUrl() {
       var uri = new URI('');
+      var alias = this.aliasURL();
       var base = this.baseURL();
       if (base) {
-        uri.segment([base, this._type]);
+        uri.segment([base, alias ? alias : this._type]);
       } else {
-        uri.segment(this._type);
+        uri.segment(alias ? alias : this._type);
       }
       return uri;
   }

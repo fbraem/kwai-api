@@ -1,40 +1,36 @@
 <template>
-    <v-app>
-        <!--
-        <v-navigation-drawer fixed v-model="drawer" app>
-        </v-navigation-drawer>
-        -->
-        <v-toolbar class="red" dark app>
-            <!--
-            <v-toolbar-side-icon @click.stop="clickDrawer"></v-toolbar-side-icon>
-            -->
-            <v-btn icon href="/">
-                <v-icon>home</v-icon>
-            </v-btn>
-            <v-toolbar-title>
-                {{ title }}
-                <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn icon v-if="facebook" :href="facebook">
-                <v-icon class="fab">fa-facebook</v-icon>
-            </v-btn>
-            <login></login>
-        </v-toolbar>
-        <v-content>
-            <router-view />
-        </v-content>
-        <v-footer class="red" app dark>
-            <span class="white--text">&copy; Judokwai Kemzeke</span>
-            <v-spacer></v-spacer>
-            <v-btn icon href="mailto:franky.braem@gmail.com">
-                <v-icon>fa-envelope</v-icon>
-            </v-btn>
-        </v-footer>
-    </v-app>
+    <div class="uk-offcanvas-content">
+        <div class="uk-container uk-container-expand uk-light" style="background-color:#f44336">
+            <nav class="uk-navbar">
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="/">{{ title }}</a>
+                    <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
+                </div>
+                <div class="uk-navbar-right">
+                    <a :href="facebook" class="uk-icon-button">
+                        <fa-icon name="brands/facebook-f" />
+                    </a>
+                    <login></login>
+                </div>
+            </nav>
+        </div>
+        <router-view />
+        <section class="uk-section uk-section-small uk-container uk-container-expand uk-section-secondary">
+            <nav class="uk-navbar">
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="/">&copy; Judokwai Kemzeke</a>
+                    <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
+                </div>
+                <div class="uk-navbar-right">
+                    <a href="mailto:franky.braem@gmail.com" class="uk-icon-button uk-margin-small-right" uk-icon="mail"></a>
+                </div>
+            </nav>
+        </section>
+    </div>
 </template>
 
 <script>
+  import 'vue-awesome/icons/brands/facebook-f';
   import Login from '@/apps/auth/components/login.vue';
 
   import config from 'config';

@@ -4,9 +4,9 @@
             <v-icon>lock</v-icon>
         </v-btn>
         <v-menu v-else offset-y right>
-            <v-btn icon slot="activator">
-                <v-icon>person</v-icon>
-            </v-btn>
+            <a class="uk-button uk-button-default">
+                <fa-icon name="user" />
+            </a>
             <v-list>
                 <v-list-tile @click="logout">
                     <v-list-tile-title>{{ $t('logout') }}</v-list-tile-title>
@@ -71,6 +71,8 @@
 </template>
 
 <script>
+    import 'vue-awesome/icons/user';
+
     import Model from '@/js/model';
 
     import { required, email } from 'vuelidate/lib/validators';
