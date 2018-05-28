@@ -16,15 +16,16 @@
         </div>
         <router-view />
         <section class="uk-section uk-section-small uk-container uk-container-expand uk-section-secondary">
-            <nav class="uk-navbar">
-                <div class="uk-navbar-left">
-                    <a class="uk-navbar-item uk-logo" href="/">&copy; Judokwai Kemzeke</a>
-                    <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
+            <div uk-grid>
+                <div>
+                    <a class="uk-link-reset" href="/">&copy; Judokwai Kemzeke</a>
                 </div>
-                <div class="uk-navbar-right">
-                    <a href="mailto:franky.braem@gmail.com" class="uk-icon-button uk-margin-small-right" uk-icon="mail"></a>
+                <div class="uk-width-expand">
+                    <span class="uk-float-right">
+                        <a href="mailto:franky.braem@gmail.com" class="uk-icon-button uk-margin-small-right" uk-icon="mail"></a>
+                    </span>
                 </div>
-            </nav>
+            </div>
         </section>
     </div>
 </template>
