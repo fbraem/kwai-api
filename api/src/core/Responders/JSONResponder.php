@@ -36,7 +36,7 @@ class JSONResponder implements ResponderInterface
         }
 
         $fractal = new Manager();
-        $fractal->setSerializer(new JsonApiSerializer($this->baseURL));
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
         $data = $fractal->createData($resource)->toJson();
         $response->getBody()->write($data);
 
