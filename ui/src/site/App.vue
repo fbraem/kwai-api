@@ -65,7 +65,7 @@
         <section class="uk-section uk-section-small uk-padding-remove-top">
             <div class="uk-container uk-container-expand">
                 <h4 class="uk-heading-line uk-text-bold"><span>Belangrijk Nieuws</span></h4>
-                <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-3@l" uk-grid="masonry: true">
+                <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-3@xl" uk-grid="masonry: true">
                     <NewsFeaturedCard v-for="story in stories" :story="story" :key="story.id"></NewsFeaturedCard>
                 </div>
             </div>
