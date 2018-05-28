@@ -20,7 +20,10 @@ export default class Story extends Model {
             'featured_end_date_timezone',
             'publish_date_timezone',
             'end_date_timezone',
-            'remark'
+            'remark',
+            'header_detail_crop',
+            'header_original',
+            'header_overview_crop'
         ];
     }
 
