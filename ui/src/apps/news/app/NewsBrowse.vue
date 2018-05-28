@@ -1,11 +1,30 @@
 <template>
-    <v-container v-if="loading">
-        <v-layout row justify-space-around>
-            <v-flex xs1>
-                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <div class="uk-container">
+        <div v-if="loading" class="uk-flex-center" uk-grid>
+            <div class="uk-text-center">
+                <fa-icon name="spinner" scale="2" spin />
+            </div>
+        </div>
+        <div v-else uk-grid class="uk-flex">
+            <div v-if="category" class="uk-width-1-1">
+                <div class="uk-tile uk-tile-muted uk-padding-small" style="border:1px solid rgba(0,0,0,0.075)">
+                    <h3>{{ category.name }}</h3>
+                    <div class="uk-text-meta">
+                        {{ category.description }}
+                    </div>
+                </div>
+            </div>
+            <div v-if="year && month" class="uk-width-1-1">
+                <div class="uk-tile uk-tile-muted uk-padding-small" style="border:1px solid rgba(0,0,0,0.075)">
+                    <h3>{{ $t('archive_title', { monthName : monthName, year : year }) }}</h3>
+                </div>
+            </div>
+            <div class="uk-child-width-1-1 uk-child-width-1-2@l" uk-grid="masonry: true">
+                <NewsFeaturedCard v-for="story in stories" :story="story" :key="story.id"></NewsFeaturedCard>
+            </div>
+        </div>
+    </div>
+<!--
     <v-container style="padding-top:0px" v-else>
         <v-layout v-if="category">
             <v-flex xs12>
@@ -56,28 +75,28 @@
             </v-card>
         </v-dialog>
     </v-container>
+-->
 </template>
 
 <script>
+    import 'vue-awesome/icons/spinner';
+
     import moment from 'moment';
-    import NewsCard from '../components/NewsCard.vue';
+    import NewsFeaturedCard from '../components/NewsFeaturedCard.vue';
     import Paginator from '@/components/Paginator.vue';
 
-    import messages from '../lang/NewsBrowse';
+    import messages from '../lang';
 
     export default {
-        i18n : {
-            messages : messages
-        },
+        i18n : messages,
         components : {
-            NewsCard,
+            NewsFeaturedCard,
             Paginator
         },
         props : [
             'year',
             'month',
-            'category_id',
-            'featured'
+            'category_id'
         ],
         data() {
             return {

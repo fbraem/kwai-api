@@ -1,91 +1,74 @@
 <template>
-    <v-container fluid :class="{ 'pa-1' : $vuetify.breakpoint.name == 'xs' }">
-        <v-layout row wrap>
-            <v-flex xs12 class="hidden-md-and-up">
-                <v-menu offset-y>
-                    <v-btn color="red" flat @click="drawer = !drawer" slot="activator">
-                        <v-icon left>fa-bars</v-icon> {{ $t('news') }}
-                    </v-btn>
-                    <NewsSideBar :categories="categories" :archive="archive"></NewsSideBar>
-                </v-menu>
-            </v-flex>
-            <v-flex md3 class="hidden-sm-and-down pl-3">
-                <NewsSideBar :categories="categories" :archive="archive"></NewsSideBar>
-            </v-flex>
-            <v-flex xs12 md9>
-                <v-container grid-list-xl class="pa-0" style="margin-top:10px;">
-                    <v-layout row wrap>
-                        <v-flex xs12 :class="{ 'pt-0' : $vuetify.breakpoint.name != 'xs' }">
-                            <router-view name="NewsContent"></router-view>
-                        </v-flex>
-                        <v-flex xs12>
-                            <v-btn v-if="$isAllowed('create')" icon :to="{ name : 'news.create' }" fab small>
-                                <v-icon>fa-plus</v-icon>
-                            </v-btn>
-                        </v-flex>
-                    </v-layout>
-                </v-container>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <section class="uk-section uk-section-default uk-section-small">
+        <div class="uk-container uk-container-expand">
+            <div uk-grid>
+                <div class="uk-width-2-3@m">
+                    <div uk-grid class="uk-grid-small uk-child-width-1-1">
+                        <div>
+                            <h4 class="uk-heading-line">
+                                <span>{{ $t('news') }}</span>
+                            </h4>
+                        </div>
+                        <div>
+                            <router-link :to="{ name : 'news.browse' }" class="uk-icon-button">
+                                <fa-icon name="home" />
+                            </router-link>
+                        </div>
+                        <div>
+                            <router-view name="NewsContent" />
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-width-1-3@m">
+                    <div uk-grid class="uk-grid-small uk-child-width-1-1">
+                        <div>
+                            <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('category') }}</span></h4>
+                        </div>
+                        <div>
+                            <router-link :to="{ name : 'news.browse' }" class="uk-icon-button">
+                                <fa-icon name="home" />
+                            </router-link>
+                        </div>
+                        <div>
+                            <ul class="uk-list uk-list-divider">
+                                <li v-for="(category, index) in categories">
+                                    <router-link :to="{ name : 'news.category', params : { category_id : category.id }}">
+                                        {{ category.name }}
+                                    </router-link>
+                                    <div class="uk-text-meta">
+                                        {{ category.description }}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('archive') }}</span></h4>
+                    <template v-for="(months, year) in archive">
+                        <h5>{{ year }}</h5>
+                        <ul class="uk-list">
+                            <li v-for="(month) in months" :key="month.month">
+                                <router-link :to="{ name : 'news.archive', params : { year : year, month : month.month }}">
+                                    {{ month.monthName }} {{ year }} <span class="uk-badge uk-float-right">{{ month.count }}</span>
+                                </router-link>
+                            </li>
+                        </ul>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
-<style>
-.category-description {
-    font-size: 12px;
-    color: #999;
-}
-
-.button-container {
-    border-radius: 2px;
-    overflow: hidden;
-    margin: 0;
-}
-
-.button-container .btn {
-    background-color:hsla(0,0%,94%,.9);
-    height:9rem;
-    margin:0;
-    border-radius:0
-}
-
-.button-container .btn .icon {
-    font-size:2.5rem;
-    margin-bottom:.25rem;
-    color:#0279d7
-}
-
-.button-container .btn .btn__content {
-    -webkit-box-orient:vertical;
-    -webkit-box-direction:normal;
-    -ms-flex-direction:column;
-    flex-direction:column
-}
-
-@media screen and (max-width:959px) {
-    .button-container .btn {
-        height:6rem
-    }
-}
-</style>
-
 <script>
-    import messages from './lang/App'
+    import 'vue-awesome/icons/home';
 
-    import NewsSideBar from './app/SideBar.vue';
+    import messages from './lang';
+
+    import newsStore from './store';
+    import categoryStore from '@/apps/categories/store';
 
     export default {
-        components : {
-            NewsSideBar
-        },
-        i18n : {
-            messages
-        },
-        data() {
-            return {
-                drawer : true
-            };
-        },
+        i18n : messages,
         computed : {
             categories() {
                 return this.$store.getters['categoryModule/categories'];
@@ -95,6 +78,12 @@
             }
           },
         created() {
+            if (!this.$store.state.newsModule) {
+                this.$store.registerModule('newsModule', newsStore);
+            }
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
+            }
             this.$store.dispatch('setSubTitle', this.$t('news'));
             this.$store.dispatch('categoryModule/browse');
             this.$store.dispatch('newsModule/loadArchive');

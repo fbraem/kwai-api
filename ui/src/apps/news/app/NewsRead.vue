@@ -1,60 +1,77 @@
 <template>
-    <v-container v-if="loading">
-        <v-layout row justify-space-around>
-            <v-flex xs1>
-                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
-            </v-flex>
-        </v-layout>
-    </v-container>
-    <v-container :class="{ 'pa-1' : $vuetify.breakpoint.name == 'xs' }" v-else>
-        <v-layout>
-            <v-flex xs12 style="padding-top:0px">
-                <NewsCard v-if="story" :story="story" :complete="true" @delete="areYouSure(story.id)" />
-                <v-alert v-if="!story && !loading" color="error" value="true" icon="fa-exclamation-triangle">
-                    {{ $t('not_found') }}
-                </v-alert>
-            </v-flex>
-        </v-layout>
-        <v-dialog v-model="showAreYouSure" max-width="290">
-            <v-card>
-                <v-card-text>
-                    <v-layout>
-                        <v-flex xs2>
-                            <v-icon color="error">fa-bell</v-icon>
-                        </v-flex>
-                        <v-flex xs10>
-                            <div>{{ $t('sure_to_delete') }}</div>
-                        </v-flex>
-                    </v-layout>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" @click="deleteStory">
-                        <v-icon left>fa-trash</v-icon>
-                        {{ $t('delete') }}
-                    </v-btn>
-                    <v-btn @click="showAreYouSure = false">
-                        <v-icon left>fa-ban</v-icon>
-                        {{ $t('cancel') }}
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-container>
+    <div class="uk-container">
+        <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
+            <header>
+                <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">{{ story.category.name }}</span>
+                <h2 class="uk-margin-remove-adjacent uk-text-bold uk-margin-small-bottom">{{ story.title }}</h2>
+                <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
+                <blockquote v-html="story.summary">
+                </blockquote>
+            </header>
+            <figure v-if="story.header_detail_crop">
+                <img :src="story.header_detail_crop"  />
+            </figure>
+            <div class="news-content" v-html="story.content">
+            </div>
+        </article>
+    </div>
 </template>
 
-<script>
-    import NewsCard from '../components/NewsCard.vue';
+<style>
+    .news-content ul {
+        list-style-position: inside;
+        margin-bottom: 20px;
+    }
 
-    import messages from '../lang/NewsRead';
+    blockquote {
+      background: #f9f9f9;
+      border-left: 10px solid #ccc;
+      margin: 1.5em 10px;
+      padding: 0.5em 10px;
+      quotes: "\201C""\201D""\2018""\2019";
+    }
+    .gallery {
+        background: #eee;
+        column-count: 4;
+        column-gap: 1em;
+        padding-left: 1em;
+        padding-top: 1em;
+        padding-right: 1em;
+    }
+    .gallery .item {
+        background: white;
+        display: inline-block;
+        margin: 0 0 1em;
+        width: 100%;
+        padding: 1em;
+    }
+    @media (max-width: 1200px) {
+      .gallery {
+      column-count: 4;
+      }
+    }
+    @media (max-width: 1000px) {
+      .gallery {
+          column-count: 3;
+      }
+    }
+    @media (max-width: 800px) {
+      .gallery {
+          column-count: 2;
+      }
+    }
+    @media (max-width: 400px) {
+      .gallery {
+          column-count: 1;
+      }
+    }
+</style>
+
+<script>
+    import messages from '../lang';
 
     export default {
-        i18n : {
-            messages
-        },
-        components : {
-            NewsCard
-        },
+        i18n : messages,
         data() {
             return {
                 showAreYouSure : false,
@@ -62,9 +79,6 @@
             }
         },
         computed : {
-            loading() {
-                return this.$store.getters['newsModule/loading'];
-            },
             story() {
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
             },
