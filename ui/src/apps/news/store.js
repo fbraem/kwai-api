@@ -49,9 +49,13 @@ const mutations = {
   stories(state, stories) {
       state.stories = stories;
   },
-  setStory(state, story) {
+  story(state, story) {
       var index = state.stories.findIndex((s) => s.id == story.id);
-      if (state.stories[index]) Vue.set(state.stories, index, story);
+      if (index != -1) {
+          Vue.set(state.stories, index, story);
+      } else {
+          state.stories.push(story);
+      }
   },
   deleteStory(state, data) {
       state.stories = filter(state.stories, (story) => {
@@ -121,7 +125,7 @@ const actions = {
         story.call(fetchStories);
         context.commit('success');
     },
-    read(context, payload) {
+    async read(context, payload) {
         context.commit('loading');
         var story = context.getters['story'](payload.id);
         if (story) { // already read
@@ -129,18 +133,13 @@ const actions = {
             return;
         }
 
-        oauth.get('api/news/stories/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setStory', {
-                story : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        let model = new Story();
+        const fetchStory = async () => {
+            var story = await model.find(payload.id);
+            context.commit('story', story);
+        }
+        model.call(fetchStory);
+        context.commit('success');
     },
     create(context, payload) {
         context.commit('loading');
