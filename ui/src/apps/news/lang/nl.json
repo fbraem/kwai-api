@@ -1,0 +1,7 @@
+{
+    "published" : "Geschreven op {publishDate} - {publishDateFromNow}",
+    "news" : "Nieuws",
+    "archive" : "Archief",
+    "category" : "Categorie",
+    "archive_title" : "Archief van {monthName} {year}"
+}

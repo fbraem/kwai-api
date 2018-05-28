@@ -1,0 +1,7 @@
+{
+    "published" : "Published on {publishDate} - {publishDateFromNow}",
+    "news" : "News",
+    "archive" : "Archive",
+    "category" : "Category",
+    "archive_title" : "Archive of {monthName} {year}"
+}
