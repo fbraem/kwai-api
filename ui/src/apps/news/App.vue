@@ -13,6 +13,9 @@
                             <router-link :to="{ name : 'news.browse' }" class="uk-icon-button">
                                 <fa-icon name="home" />
                             </router-link>
+                            <router-link v-if="$story.isAllowed('create')" :to="{ name : 'news.create' }" class="uk-icon-button">
+                                <fa-icon name="plus" />
+                            </router-link>
                         </div>
                         <div>
                             <router-view name="NewsContent" />
@@ -61,6 +64,7 @@
 
 <script>
     import 'vue-awesome/icons/home';
+    import 'vue-awesome/icons/plus';
 
     import messages from './lang';
 

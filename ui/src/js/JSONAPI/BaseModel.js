@@ -25,18 +25,19 @@ export default class BaseModel extends Model {
 
   async call(method, retry) {
       if (!retry) retry = true;
-      let result = await method().catch((error) => {
+      let result = null;
+      try {
+          let result = await method();
+      } catch(error) {
           if (error.response) { // axios problem
               if (error.response.status == 401 && retry) { // Unauthorized
                   var oauth = new OAuth();
-                  oauth.refreshToken().then((response) => {
-                      this.call(method, false);
-                  });
+                  await oauth.refreshToken();
+                  return this.call(method, false);
               }
-          } else { // Another problem, rethrow it
               throw error;
           }
-      });
+      };
       return result;
   }
 };

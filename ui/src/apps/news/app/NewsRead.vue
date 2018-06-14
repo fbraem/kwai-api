@@ -3,9 +3,19 @@
         <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
             <header>
                 <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">{{ story.category.name }}</span>
-                <h2 class="uk-margin-remove-adjacent uk-text-bold uk-margin-small-bottom">{{ story.title }}</h2>
+                <h2 class="uk-margin-remove-adjacent uk-text-bold uk-margin-small-bottom">
+                    {{ story.title }}
+                </h2>
+                <div>
+                    <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+                        <fa-icon name="edit" />
+                    </router-link>
+                    <router-link v-if="$story.isAllowed('remove', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+                        <fa-icon name="trash" />
+                    </router-link>
+                </div>
                 <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
-                <blockquote v-html="story.summary">
+                <blockquote v-if="story.summary" v-html="story.summary">
                 </blockquote>
             </header>
             <figure v-if="story.header_detail_crop">
@@ -68,6 +78,9 @@
 </style>
 
 <script>
+    import 'vue-awesome/icons/edit';
+    import 'vue-awesome/icons/trash';
+
     import messages from '../lang';
 
     export default {
@@ -87,12 +100,20 @@
             }
         },
         mounted() {
-          this.$store.dispatch('newsModule/read', { id : this.$route.params.id })
-            .catch((error) => {
-              console.log(error);
-          });
+            this.fetchData();
+        },
+        watch : {
+            '$route'() {
+                this.fetchData();
+            }
         },
         methods : {
+            fetchData() {
+                this.$store.dispatch('newsModule/read', { id : this.$route.params.id })
+                  .catch((error) => {
+                    console.log(error);
+                });
+            },
             areYouSure(id) {
                 this.showAreYouSure = true;
                 this.storyToDelete = id;

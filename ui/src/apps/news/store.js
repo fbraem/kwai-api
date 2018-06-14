@@ -57,10 +57,22 @@ const mutations = {
           state.stories.push(story);
       }
   },
+  addStory(state, story) {
+      state.stories.push(story);
+  },
   deleteStory(state, data) {
       state.stories = filter(state.stories, (story) => {
          return story.id != data.id;
       });
+  },
+  attachContent(state, data) {
+      var index = state.stories.findIndex((s) => s.id == data.story.id);
+      if (index != -1) {
+          if (state.stories[index].contents == null) {
+              state.stories[index].contents = [];
+          }
+          state.stories[index].contents.push(data.content);
+      }
   },
   archive(state, data) {
       state.archive = {};
@@ -141,40 +153,31 @@ const actions = {
         model.call(fetchStory);
         context.commit('success');
     },
-    create(context, payload) {
-        context.commit('loading');
-        return oauth.post('api/news/stories', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setStory', {
-                story : result.data
-            });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
-    },
-    update(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/news/stories/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('setStory', {
-                    story : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
+    async save(context, story) {
+        var newStory = null;
+        const create = async () => {
+            newStory = await story.save();
+            context.commit('story', newStory);
+        }
+        await story.call(create)
+            .catch((error) => {
                 context.commit('error', error);
-                reject();
+                throw(error);
             });
-        });
+        return newStory;
+    },
+    async attachContent(context, payload) {
+        var newStory = null;
+        const create = async () => {
+            newStory = await payload.story.attach(payload.content);
+            context.commit('story', newStory);
+        }
+        await payload.story.call(create)
+            .catch((error) => {
+                context.commit('error', error);
+                throw(error);
+            });
+        return newStory;
     },
     delete(context, payload) {
         context.commit('loading');
@@ -190,28 +193,11 @@ const actions = {
             });
         });
     },
-    uploadImage(context, payload) {
-        //return axios.post('/api/news/image/' + payload.story.id, payload.formData);
-        return oauth.post('/api/news/image/' + payload.story.id, {
-            data : payload.formData
-        });
-    },
-    embeddImage(context, payload) {
-        return oauth.post('/api/news/embedded_image/' + payload.story.id, {
-            data : payload.formData
-        });
-    },
-    loadArchive(context, payload) {
+    async loadArchive(context, payload) {
         context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.get('api/news/archive', {
-            }).then((res) => {
-                context.commit('success');
-                context.commit('archive', res.data);
-            }).catch((error) => {
-                context.commit('error', error);
-            });
-        });
+        var response = await oauth.get('api/news/archive');
+        context.commit('archive', response.data);
+        context.commit('success');
     }
 };
 

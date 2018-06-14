@@ -73,6 +73,10 @@ export default class Model {
       return null;
   }
 
+  bulk() {
+      return null;
+  }
+
   fields() {
     return [];
   }
@@ -159,11 +163,48 @@ export default class Model {
           segments.push(this.id);
           this._uri.segment(segments);
       }
+
+      var ourData = this.serialize();
+      var bulk = this.bulk();
+      var data;
+      if (bulk) {
+          data = [ ourData ];
+          bulk.forEach((b) => {
+             if (this[b]) {
+                 if (Array.isArray(this[b])) {
+                     this[b].forEach((e) => {
+                        data.push(e.serialize());
+                     });
+                 } else {
+                     data.push(this[b].serialize());
+                 }
+             }
+          });
+      } else {
+          data = ourData;
+      }
       let config = {
           url : this._uri.href(),
-          data : this.serialize(),
+          data : data,
          method : this.id ? 'PATCH' : 'POST'
+     };
+      let response = await this.request(config);
+      return this.respond(response);
+  }
+
+  async attach(model) {
+      this.reset();
+
+      var url = this._uri.href() + '/' + this.id + '/' + model._type;
+      if ( model.id ) {
+          url += '/' + model.id;
       }
+
+      let config = {
+          url : url,
+          data : model.serialize(),
+          method : 'POST'
+      };
       let response = await this.request(config);
       return this.respond(response);
   }

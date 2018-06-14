@@ -66,7 +66,7 @@
             <div class="uk-container uk-container-expand">
                 <h4 class="uk-heading-line uk-text-bold"><span>Belangrijk Nieuws</span></h4>
                 <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-3@xl" uk-grid="masonry: true">
-                    <NewsFeaturedCard v-for="story in stories" :story="story" :key="story.id"></NewsFeaturedCard>
+                    <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
                 </div>
             </div>
         </section>
@@ -157,12 +157,12 @@
     import 'vue-awesome/icons/calendar';
     import 'vue-awesome/icons/shopping-basket';
 
-    import NewsFeaturedCard from '@/apps/news/components/NewsFeaturedCard.vue';
+    import NewsCard from '@/apps/news/components/NewsCard.vue';
     import newsStore from '@/apps/news/store';
 
     export default {
         components : {
-            NewsFeaturedCard
+            NewsCard
         },
         data() {
             return {};

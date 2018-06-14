@@ -1,42 +1,45 @@
 <template>
-    <v-container>
-        <v-layout>
-            <v-flex xs12>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                        <v-toolbar class="elevation-0">
-                            <v-icon>mode_edit</v-icon>
-                            <v-toolbar-title>Update News <span v-if="story"> - {{ story.title }}</span></v-toolbar-title>
-                            <v-spacer></v-spacer>
-                            <v-btn icon dark color="primary" @click="$router.go(-1)"><v-icon>cancel</v-icon></v-btn>
-                        </v-toolbar>
-                    </v-flex>
-                    <v-flex xs12>
-                        <NewsForm :story="story"></NewsForm>
-                    </v-flex>
-                </v-layout>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <section class="uk-section uk-section-default uk-section-small">
+        <div class="uk-container uk-container-expand">
+            <div uk-grid>
+                <div class="uk-width-1-1">
+                    <h4 class="uk-heading-line">
+                        <span>{{ $t('news') }} &ndash; {{ $t('update') }}</span>
+                    </h4>
+                </div>
+                <NewsForm :story="story" />
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
-    import NewsForm from './NewsForm.vue';
+    import messages from '../lang';
 
+    import newsStore from '../store';
+    import categoryStore from '@/apps/categories/store';
+
+    import NewsForm from './NewsForm.vue';
     export default {
+        i18n : messages,
         components : {
             NewsForm
-        },
-        data() {
-            return {};
-        },
-        mounted() {
-            this.fetchData(this.$route.params.id);
         },
         computed : {
             story() {
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
             }
+        },
+        beforeCreate() {
+            if (!this.$store.state.newsModule) {
+                this.$store.registerModule('newsModule', newsStore);
+            }
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
+            }
+        },
+        mounted() {
+            this.fetchData(this.$route.params.id);
         },
         beforeRouteUpdate(to, from, next) {
             this.fetchData(to.params.id);

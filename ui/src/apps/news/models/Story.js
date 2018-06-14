@@ -2,7 +2,7 @@ import Model from '@/js/JSONAPI/BaseModel';
 
 import Category from '@/apps/categories/models/Category';
 import Content from '@/apps/contents/models/Content';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 export default class Story extends Model {
     resourceName() {
@@ -15,6 +15,7 @@ export default class Story extends Model {
 
     fields() {
         return [
+            'name',
             'enabled',
             'featured',
             'featured_end_date_timezone',
@@ -73,13 +74,48 @@ export default class Story extends Model {
                 return "";
             },
             localPublishDate(story) {
-                return moment.utc(story.publish_date).local().format('L');
+                var utc = story.publish_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().format('L');
+            },
+            localPublishTime(story) {
+                var utc = story.publish_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().format('HH:mm');
             },
             publishDateFromNow(story) {
-                return moment.utc(story.publish_date).local().fromNow();
+                var utc = story.publish_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().fromNow();
             },
             isNew(story) {
-                return moment().diff(moment.utc(story.publish_date).local(), 'weeks') < 1;
+                var utc = story.publish_date.clone();
+                utc.utcOffset('+00:00', true);
+                return moment().diff(utc.local(), 'weeks') < 1;
+            },
+            localEndDate(story) {
+                if (!story.end_date) return null;
+                var utc = story.end_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().format('L');
+            },
+            localEndTime(story) {
+                if (!story.end_date) return null;
+                var utc = story.end_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().format('HH:mm');
+            },
+            localFeaturedEndDate(story) {
+                if (!story.featured_end_date) return null;
+                var utc = story.featured_end_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().format('L');
+            },
+            localFeaturedEndTime(story) {
+                if (!story.featured_end_date) return null;
+                var utc = story.featured_end_date.clone();
+                utc.utcOffset('+00:00', true);
+                return utc.local().format('HH:mm');
             },
             authorName(story) {
                 if (story.contents) {
