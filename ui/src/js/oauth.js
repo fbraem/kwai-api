@@ -91,23 +91,16 @@ class OAuth
         return this.access_token;
     }
 
-    refreshToken() {
-        return new Promise((resolve, reject) => {
-            var form = new FormData();
-            form.append('grant_type', 'refresh_token');
-            form.append('client_id', CLIENT_ID);
-            form.append('refresh_token', this.refresh_token);
-            this.post('api/auth/access_token', {
-                data : form,
-                dontRetry : true
-            }).then((response) => {
-                this.setTokens(response.data.access_token, response.data.refresh_token);
-                resolve(response);
-            }).catch((err) => {
-                console.log(err);
-                reject(err);
-            });
-        })
+    async refreshToken() {
+        var form = new FormData();
+        form.append('grant_type', 'refresh_token');
+        form.append('client_id', CLIENT_ID);
+        form.append('refresh_token', this.refresh_token);
+        var response = await this.post('api/auth/access_token', {
+            data : form,
+            dontRetry : true
+        });
+        this.setTokens(response.data.access_token, response.data.refresh_token);
     }
 
     login(username, password) {
