@@ -332,10 +332,8 @@
                             return true;
                         },
                         after(value) {
-                            if (isDate(value) && isDate(this.form.story.publish_date)) {
-                                var publishDate = moment(this.form.story.publish_date, 'L');
-                                var endDate = moment(this.form.story.end_date, 'L');
-                                return publishDate.isSameOrBefore(endDate);
+                            if (isDate(value) && this.publishDatetime.isValid() && this.endDatetime.isValid()) {
+                                return this.publishDatetime.isSameOrBefore(this.endDatetime);
                             }
                             return true;
                         }
@@ -360,7 +358,7 @@
                             return true;
                         },
                         between(value) {
-                            if (isDate(value) && this.publishDatetime.isValid()) {
+                            if (isDate(value) && this.publishDatetime.isValid() && this.featuredEndDatetime.isValid()) {
                                 if (this.endDatetime.isValid()) {
                                     return this.featuredEndDatetime.between(this.publishDatetime, this.endDatetime);
                                 }
