@@ -21,7 +21,7 @@ class UpdateStoryAction implements \Core\ActionInterface
         $storiesTable = \Domain\News\NewsStoriesTable::getTableFromRegistry();
         try {
             $story = $storiesTable->get($id, [
-                'contain' => ['Contents', 'Category', 'Contents.User']
+                'contain' => ['Category']
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
             return (
@@ -100,23 +100,6 @@ class UpdateStoryAction implements \Core\ActionInterface
             $story->remark = $attributes['remark'];
         }
 
-        //TODO: for now we only support one content.
-        // In the future we will support multi lingual
-        $content = $story->contents[0];
-        if (isset($attributes['title'])) {
-            $content->title = $attributes['title'];
-        }
-        if (isset($attributes['summary'])) {
-            $content->summary = $attributes['summary'];
-        }
-        if (isset($attributes['content'])) {
-            $content->content = $attributes['content'];
-        }
-        if ($content->isDirty()) {
-            $content->user = $request->getAttribute('clubman.user');
-            $story->contents = [ $content ];
-        }
-
         $storiesTable->save($story);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
@@ -126,7 +109,7 @@ class UpdateStoryAction implements \Core\ActionInterface
             new JSONResponder(
                 new HTTPCodeResponder(
                     new Responder(),
-                    201
+                    200
                 ),
                 $payload
             )

@@ -80,19 +80,7 @@ class CreateStoryAction implements \Core\ActionInterface
         $story->enabled = $attributes['enabled'];
         $story->remark = $attributes['remark'] ?? null;
 
-        $contentsTable = \Domain\Content\ContentsTable::getTableFromRegistry();
-        $content = $contentsTable->newEntity();
-        $content->locale = 'nl';
-        $content->format = 'md';
-        $content->title = $attributes['title'];
-        $content->summary = $attributes['summary'];
-        $content->content = $attributes['content'];
-        $content->user = $request->getAttribute('clubman.user');
-
-        $story->contents = [ $content ];
-
         $storiesTable->save($story);
-
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
         $payload->setOutput(\Domain\News\NewsStoryTransformer::createForItem($story, $filesystem));
 
