@@ -10,7 +10,7 @@ class NewsRemoveUserMigration extends AbstractMigration
     public function up()
     {
         $this->table('news_stories')
-            ->removeColumn('user_id', 'integer')
+            ->removeColumn('user_id')
             ->save()
         ;
     }
