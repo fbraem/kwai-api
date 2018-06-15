@@ -454,26 +454,21 @@
                 }
             },
             fillStory(story) {
+                var tz = moment.tz.guess();
                 story.enabled = this.form.story.enabled;
                 story.remark = this.form.story.remark;
                 story.category = new Category();
                 story.category.id = this.form.story.category;
-                story.publish_date = moment(moment(this.form.story.publish_date, 'L').format('YYYY-MM-DD') + " " + this.form.story.publish_time + ":00").utc();
-                story.publish_date_timezone = moment.tz.guess();
+                story.publish_date = this.publishDatetime.utc();
+                story.publish_date_timezone = tz;
                 if ( this.form.story.end_date ) {
-                    var time = this.form.story.end_time;
-                    if (time == null || time.length == 0) time = '00:00';
-                    story.end_date = moment(moment(this.form.story.end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00").utc();
-                    story.end_date_timezone = moment.tz.guess();
+                    story.end_date = this.endDatetime.utc();
+                    story.end_date_timezone = tz;
                 }
-                if (this.form.story.featured.length > 0 ) {
-                    story.featured = this.form.story.featured;
-                }
+                story.featured = this.form.story.featured;
                 if ( this.form.story.featured_end_date ) {
-                    var time = this.form.story.featured_end_time;
-                    if (time == null || time.length == 0) time = '00:00';
-                    story.featured_end_date = moment(moment(this.form.story.featured_end_date, 'L').format('YYYY-MM-DD') + " " + time + ":00").utc();
-                    story.featured_date_timezone = moment.tz.guess();
+                    story.featured_end_date = this.featuredEndDatetime.utc();
+                    story.featured_date_timezone = tz;
                 }
             },
             fillContent(content) {
