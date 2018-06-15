@@ -222,7 +222,7 @@
             categoryErrors() {
                 const errors = [...this.errors.category];
                 if (! this.$v.form.story.category.$dirty) return errors;
-                ! this.$v.form.story.category.required && errors.push('Category is required');
+                ! this.$v.form.story.category.required && errors.push(this.$t('required'));
                 return errors;
             },
             remarkErrors() {
@@ -235,15 +235,15 @@
             publishDateErrors() {
                 var errors = [...this.errors.publish_date];
                 if (! this.$v.form.story.publish_date.$dirty) return errors;
-                ! this.$v.form.story.publish_date.required && errors.push('Publish date is required');
-                if (!this.$v.form.story.publish_date.date) errors.push('Publish date is not a valid date. Format must be ' + moment.localeData().longDateFormat('L'));
+                ! this.$v.form.story.publish_date.required && errors.push(this.$t('required'));
+                if (!this.$v.form.story.publish_date.date) errors.push(this.$t('invalid_date', { format : moment.localeData().longDateFormat('L') }));
                 return errors;
             },
             publishTimeErrors() {
                 const errors = [];
                 if (! this.$v.form.story.publish_time.$dirty) return errors;
-                ! this.$v.form.story.publish_time.required && errors.push('Publish time is required');
-                ! this.$v.form.story.publish_time.time && errors.push('Time is not valid. Format must be HH:MM');
+                ! this.$v.form.story.publish_time.required && errors.push(this.$t('required'));
+                ! this.$v.form.story.publish_time.time && errors.push(this.$t('invalid_time', { format : 'HH:MM'}));
                 return errors;
             },
             endDatetime() {
@@ -252,21 +252,21 @@
             endDateErrors() {
                 const errors = [...this.errors.end_date];
                 if (! this.$v.form.story.end_date.$dirty) return errors;
-                ! this.$v.form.story.end_date.date && errors.push('End date is not a valid date. Format must be ' + moment.localeData().longDateFormat('L'));
-                ! this.$v.form.story.end_date.after && errors.push('End date must be after publish date');
+                ! this.$v.form.story.end_date.date && errors.push(this.$t('invalid_date', { format : moment.localeData().longDateFormat('L') }));
+                ! this.$v.form.story.end_date.after && errors.push(this.$t('invalid_end_date'));
                 return errors;
             },
             endTimeErrors() {
                 const errors = [];
                 if (! this.$v.form.story.end_time.$dirty) return errors;
-                ! this.$v.form.story.end_time.time && errors.push('Time is not valid. Format must be HH:MM');
+                ! this.$v.form.story.end_time.time && errors.push(this.$t('invalid_time', { format : 'HH:MM'}));
                 return errors;
             },
             featuredErrors() {
                 const errors = [...this.errors.featured];
                 if (! this.$v.form.story.featured.$dirty) return errors;
-                ! this.$v.form.story.featured.required && errors.push('Featured priority is required');
-                ! this.$v.form.story.featured.numeric && errors.push('Featured priority must be numeric');
+                ! this.$v.form.story.featured.required && errors.push(this.$t('required'));
+                ! this.$v.form.story.featured.numeric && errors.push(this.$t('invalid_numeric'));
                 return errors;
             },
             featuredEndDatetime() {
@@ -275,26 +275,26 @@
             featuredEndDateErrors() {
                 const errors = [...this.errors.featured_end_date];
                 if (! this.$v.form.story.featured_end_date.$dirty) return errors;
-                ! this.$v.form.story.featured_end_date.date && errors.push('Feature end date is not a valid date. Format must be ' + moment.localeData().longDateFormat('L'));
-                ! this.$v.form.story.featured_end_date.between && errors.push('Feature end date must be between publish date and end date');
+                ! this.$v.form.story.featured_end_date.date && errors.push(this.$t('invalid_date', { format : moment.localeData().longDateFormat('L') }));
+                ! this.$v.form.story.featured_end_date.between && errors.push(this.$t('invalid_featured_date'));
                 return errors;
             },
             featuredEndTimeErrors() {
                 const errors = [];
                 if (! this.$v.form.story.featured_end_time.$dirty) return errors;
-                ! this.$v.form.story.featured_end_time.time && errors.push('Time is not valid. Format must be HH:MM');
+                ! this.$v.form.story.featured_end_time.time && errors.push(this.$t('invalid_time', { format : 'HH:MM'}));
                 return errors;
             },
             titleErrors() {
                 const errors = [...this.errors.title];
                 if (! this.$v.form.content.title.$dirty) return errors;
-                ! this.$v.form.content.title.required && errors.push('Title is required');
+                ! this.$v.form.content.title.required && errors.push(this.$t('required'));
                 return errors;
             },
             summaryErrors() {
                 const errors = [...this.errors.summary];
                 if (! this.$v.form.content.summary.$dirty) return errors;
-                ! this.$v.form.content.summary.required && errors.push('Summary is required');
+                ! this.$v.form.content.summary.required && errors.push(this.$t('required'));
                 return errors;
             },
             contentErrors() {

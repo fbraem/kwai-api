@@ -33,5 +33,11 @@
     "featured_end_time" : "Featured End Time",
     "featured_end_time_placeholder" : "Enter the end time of the period {format}",
     "save" : "Save",
-    "update" : "Update"
+    "update" : "Update",
+    "required" : "This is a required field.",
+    "invalid_date" : "Invalid date. The format is {format}.",
+    "invalid_time" : "Invalid time. The format is {format}",
+    "invalid_end_date" : "Enddate must be after the publicationdate.",
+    "invalid_featured_date" : "Date must be between publicationdate and enddate.",
+    "invalid_numeric" : "Invalid value. Enter a number."
 }

@@ -33,5 +33,11 @@
     "featured_end_time" : "Eindtijd aanbevolen periode",
     "featured_end_time_placeholder" : "Geef de eindtijd van de periode in {format}",
     "save" : "Bewaar",
-    "update" : "Wijzig het nieuwsbericht"
+    "update" : "Wijzig het nieuwsbericht",
+    "required" : "Dit veld is verplicht in te vullen.",
+    "invalid_date" : "Ongeldige datum. Het formaat is {format}.",
+    "invalid_time" : "Ongeldige tijd. Het formaat is {format}.",
+    "invalid_end_date" : "Einddatum moet na publicatiedatum liggen.",
+    "invalid_featured_date" : "Datum moet tussen publicatie en einddatum liggen.",
+    "invalid_numeric" : "Ongeldige waarde. Geef een getal in."
 }
