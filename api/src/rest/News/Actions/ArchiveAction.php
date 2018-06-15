@@ -23,6 +23,14 @@ class ArchiveAction implements \Core\ActionInterface
             ]),
             'count' => $query->func()->count('id')
         ]);
+
+        // Don't count news stories which are not yet published
+        $query->where(function ($exp, $q) {
+            return $exp->lt('publish_date', \Carbon\Carbon::now('UTC')->toDateTimeString());
+        });
+        // News stories must be enabled
+        $query->where(['NewsStories.enabled' => true]);
+
         $query->group(['year', 'month']);
         $query->order(['year' => 'DESC', 'month' => 'DESC']);
 
