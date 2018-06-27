@@ -6,27 +6,50 @@
                     <img :src="story.header_overview_crop" alt="" />
                 </div>
                 <div :class="widthClass">
-                    <span class="uk-label uk-label-warning" style="font-size: 0.75rem">{{ story.category.name }}</span>
+                    <span class="uk-label uk-label-warning" style="font-size: 0.75rem">
+                        <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
+                            {{ story.category.name }}
+                        </router-link>
+                    </span>
                     <h3 class="uk-card-title uk-margin-small-top uk-margin-remove-bottom uk-text-break">
                         <router-link v-if="story.content" class="uk-link-reset" :to="contentLink">{{ story.title }}</router-link>
                         <span v-else>{{ story.title }}</span>
                     </h3>
-                    <span class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</span>
+                    <span class="uk-article-meta" v-if="story.publish_date">
+                        {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
+                    </span>
                     <div class="uk-margin-small" v-html="story.summary"></div>
-                    <router-link v-if="story.content" class="uk-icon-button uk-float-right" :to="contentLink">
-                        <fa-icon name="ellipsis-h" />
-                    </router-link>
                 </div>
             </div>
+            <span class="uk-float-right">
+                <router-link v-if="story.content" class="uk-icon-button" :to="contentLink">
+                    <fa-icon name="ellipsis-h" />
+                </router-link>
+                <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+                    <fa-icon name="edit" />
+                </router-link>
+                <a v-if="$story.isAllowed('remove', story)" uk-toggle="target: #delete-story" class="uk-icon-button">
+                    <fa-icon name="trash" />
+                </a>
+            </span>
         </div>
+        <NewsDelete @deleteStoryEvent="deleteStory" />
     </div>
 </template>
 
 <script>
     import 'vue-awesome/icons/ellipsis-h';
+    import 'vue-awesome/icons/edit';
+    import 'vue-awesome/icons/trash';
+
+    import NewsDelete from '../app//NewsDelete.vue';
+
     import messages from '../lang';
 
     export default {
+        components : {
+            NewsDelete
+        },
         i18n : messages,
         props : {
             story : {
@@ -56,6 +79,15 @@
                 return {
                     'uk-width-1-1' : true
                 };
+            }
+        },
+        methods : {
+            deleteStory() {
+                this.$store.dispatch('newsModule/delete', {
+                    story : this.story
+                }).then(() => {
+                    //this.$router.go(-1);
+                });
             }
         }
     }
