@@ -143,6 +143,20 @@ export default class Model {
     return this.respond(response);
   }
 
+  async delete() {
+      var segments = this._uri.segment();
+      segments.push(this.id);
+      this._uri.segment(segments);
+      const config = {
+          method : 'DELETE',
+          url : this._uri.href()
+      }
+      this.reset();
+
+      let response = await this.request(config);
+      return this.respond(respond);
+  }
+
   async find(id) {
       var segments = this._uri.segment();
       segments.push(id);

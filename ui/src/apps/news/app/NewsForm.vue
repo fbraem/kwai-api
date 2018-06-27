@@ -114,9 +114,12 @@
 <script>
     import 'vue-awesome/icons/save';
 
-    import messages from '../lang';
     import moment from 'moment';
     import 'moment-timezone';
+
+    import { validationMixin } from 'vuelidate';
+
+    import messages from '../lang';
 
     import Category from '@/apps/categories/models/Category';
     import Content from '@/apps/contents/models/Content';
@@ -196,6 +199,9 @@
                 type : Object
             }
         },
+        mixins: [
+            validationMixin
+        ],
         components : {
             UikitInputText,
             UikitSelect,
