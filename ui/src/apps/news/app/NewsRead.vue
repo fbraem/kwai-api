@@ -10,9 +10,9 @@
                     <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
                         <fa-icon name="edit" />
                     </router-link>
-                    <router-link v-if="$story.isAllowed('remove', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+                    <a v-if="$story.isAllowed('remove', story)" uk-toggle="target: #delete-story" class="uk-icon-button">
                         <fa-icon name="trash" />
-                    </router-link>
+                    </a>
                 </div>
                 <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
                 <blockquote v-if="story.summary" v-html="story.summary">
@@ -24,6 +24,7 @@
             <div class="news-content" v-html="story.content">
             </div>
         </article>
+        <NewsDelete @deleteStoryEvent="deleteStory" />
     </div>
 </template>
 
@@ -83,14 +84,13 @@
 
     import messages from '../lang';
 
+    import NewsDelete from './NewsDelete.vue';
+
     export default {
-        i18n : messages,
-        data() {
-            return {
-                showAreYouSure : false,
-                storyToDelete : null
-            }
+        components : {
+            NewsDelete
         },
+        i18n : messages,
         computed : {
             story() {
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
@@ -109,21 +109,19 @@
         },
         methods : {
             fetchData() {
-                this.$store.dispatch('newsModule/read', { id : this.$route.params.id })
-                  .catch((error) => {
-                    console.log(error);
-                });
-            },
-            areYouSure(id) {
-                this.showAreYouSure = true;
-                this.storyToDelete = id;
+                try {
+                    this.$store.dispatch('newsModule/read', { id : this.$route.params.id });
+                }
+                catch(error) {
+                  console.log('error');
+                  console.log(error);
+                }
             },
             deleteStory() {
-                this.showAreYouSure = false;
                 this.$store.dispatch('newsModule/delete', {
-                    id : this.storyToDelete
+                    story : this.story
                 }).then(() => {
-                    this.$router.go(-1);
+                    //this.$router.go(-1);
                 });
             }
         }

@@ -39,5 +39,9 @@
     "invalid_time" : "Ongeldige tijd. Het formaat is {format}.",
     "invalid_end_date" : "Einddatum moet na publicatiedatum liggen.",
     "invalid_featured_date" : "Datum moet tussen publicatie en einddatum liggen.",
-    "invalid_numeric" : "Ongeldige waarde. Geef een getal in."
+    "invalid_numeric" : "Ongeldige waarde. Geef een getal in.",
+    "delete_story" : "Nieuwsbericht verwijderen",
+    "are_you_sure" : "Ben je zeker om dit nieuwsbericht te verwijderen?",
+    "cancel" : "Annuleer",
+    "delete" : "Verwijder"
 }

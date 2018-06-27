@@ -5,7 +5,7 @@
                 <fa-icon name="spinner" scale="2" spin />
             </div>
         </div>
-        <div v-else uk-grid class="uk-flex">
+        <div v-else uk-grid class="uk-flex uk-margin">
             <div v-if="category" class="uk-width-1-1">
                 <div class="uk-tile uk-tile-muted uk-padding-small" style="border:1px solid rgba(0,0,0,0.075)">
                     <h3>{{ category.name }}</h3>
@@ -19,13 +19,13 @@
                     <h3>{{ $t('archive_title', { monthName : monthName, year : year }) }}</h3>
                 </div>
             </div>
-            <div class="uk-child-width-1-1 uk-child-width-1-2@l" uk-grid="masonry: true">
-                <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
-            </div>
-            <div v-if="newsCount == 0">
-                <div uk-alert>
-                    {{ $t('no_news') }}
-                </div>
+        </div>
+        <div class="uk-child-width-1-1 uk-child-width-1-2@l" uk-grid="masonry: true">
+            <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
+        </div>
+        <div v-if="newsCount == 0">
+            <div uk-alert>
+                {{ $t('no_news') }}
             </div>
         </div>
     </div>

@@ -39,5 +39,9 @@
     "invalid_time" : "Invalid time. The format is {format}",
     "invalid_end_date" : "Enddate must be after the publicationdate.",
     "invalid_featured_date" : "Date must be between publicationdate and enddate.",
-    "invalid_numeric" : "Invalid value. Enter a number."
+    "invalid_numeric" : "Invalid value. Enter a number.",
+    "delete_story" : "Delete Newsstory",
+    "are_you_sure" : "Are you sure to delete this newsstory?",
+    "cancel" : "Cancel",
+    "delete" : "Delete"
 }
