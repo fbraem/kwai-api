@@ -7,37 +7,31 @@ export default class BaseModel extends Model {
     return 'api';
   }
 
-  request(config) {
+  async request(config) {
       var oauth = new OAuth();
       config.headers = config.headers || {
           'Accept' : 'application/vnd.api+json',
           'Content-Type' : 'application/vnd.api+json'
       };
+      var token = oauth.getAccessToken();
       if (oauth.isAuthenticated()) {
           config.withCredentials = true;
-          var token = oauth.getAccessToken();
           if ( token ) {
               config.headers['Authorization'] = `Bearer ${token}`
           }
       }
-      return axios.request(config);
-  }
-
-  async call(method, retry) {
-      if (!retry) retry = true;
-      let result = null;
       try {
-          let result = await method();
+          return await axios.request(config);
       } catch(error) {
-          if (error.response) { // axios problem
-              if (error.response.status == 401 && retry) { // Unauthorized
-                  var oauth = new OAuth();
-                  await oauth.refreshToken();
-                  return this.call(method, false);
+          if (error.response.status == 401 && error.response.config && token) {
+              await oauth.refreshToken();
+              token = oauth.getAccessToken();
+              if (token) {
+                  error.response.config.headers['Authorization'] = `Bearer ${token}`;
+                  return await axios.request(error.response.config);
               }
-              throw error;
+              throw(error);
           }
-      };
-      return result;
+      }
   }
 };

@@ -112,92 +112,80 @@ const mutations = {
 };
 
 const actions = {
-    async browse(context, payload) {
-        context.commit('loading');
+    async browse({ state, getters, commit, context }, payload) {
+        commit('loading');
         const story = new Story();
-        const fetchStories = async () => {
-            if (payload.category) {
-                story.where('category', payload.category);
-            }
-            if (payload.year) {
-                story.where('year', payload.year);
-            }
-            if (payload.month) {
-                story.where('month', payload.month);
-            }
-            if (payload.featured) {
-                story.where('featured', true);
-            }
-            if (payload.user) {
-                story.where('user', payload.user);
-            }
-            let stories = await story.get();
-            context.commit('stories', stories);
-        };
-        story.call(fetchStories);
-        context.commit('success');
+        if (payload.category) {
+            story.where('category', payload.category);
+        }
+        if (payload.year) {
+            story.where('year', payload.year);
+        }
+        if (payload.month) {
+            story.where('month', payload.month);
+        }
+        if (payload.featured) {
+            story.where('featured', true);
+        }
+        if (payload.user) {
+            story.where('user', payload.user);
+        }
+        let stories = await story.get();
+        commit('stories', stories);
+        commit('success');
     },
-    async read(context, payload) {
-        context.commit('loading');
-        var story = context.getters['story'](payload.id);
+    async read({ state, getters, commit, context }, payload) {
+        commit('loading');
+        var story = getters['story'](payload.id);
         if (story) { // already read
-            context.commit('success');
+            commit('success');
             return;
         }
 
         let model = new Story();
-        const fetchStory = async () => {
-            var story = await model.find(payload.id);
-            context.commit('story', story);
-        }
-        model.call(fetchStory);
-        context.commit('success');
+        var story = await model.find(payload.id).catch((error) => console.log('find', error));
+        commit('story', story);
+        commit('success');
     },
-    async save(context, story) {
+    async save({ state, getters, commit, context }, story) {
         var newStory = null;
-        const create = async () => {
+        try  {
             newStory = await story.save();
-            context.commit('story', newStory);
+            commit('story', newStory);
+            return newStory;
+        } catch(error) {
+            commit('error', error);
+            throw error;
         }
-        await story.call(create)
-            .catch((error) => {
-                context.commit('error', error);
-                throw(error);
-            });
-        return newStory;
     },
-    async attachContent(context, payload) {
-        var newStory = null;
-        const create = async () => {
-            newStory = await payload.story.attach(payload.content);
-            context.commit('story', newStory);
+    async attachContent({ state, getters, commit, context }, payload) {
+        try {
+            var newStory = await payload.story.attach(payload.content);
+            commit('story', newStory);
+            return newStory;
         }
-        await payload.story.call(create)
-            .catch((error) => {
-                context.commit('error', error);
-                throw(error);
-            });
-        return newStory;
+        catch(error)
+        {
+            commit('error', error);
+            throw(error);
+        }
     },
-    delete(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.delete('api/news/stories/' + payload.id)
-            .then((res) => {
-                context.commit('deleteStory', { id : payload.id });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
+    async delete({ state, getters, commit, context }, payload) {
+        commit('loading');
+        try {
+            await payload.story.delete();
+            commit('deleteStory', { id : payload.story.id });
+            commit('success');
+        } catch(error) {
+            commit('error', error);
+            throw(error);
+        }
     },
-    async loadArchive(context, payload) {
-        context.commit('loading');
+    async loadArchive({ state, getters, commit, context }, payload) {
+        commit('loading');
         var response = await oauth.get('api/news/archive');
-        context.commit('archive', response.data);
-        context.commit('success');
+        commit('archive', response.data);
+        commit('success');
     }
 };
 
