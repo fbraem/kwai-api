@@ -2,7 +2,11 @@
     <div class="uk-container">
         <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
             <header>
-                <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">{{ story.category.name }}</span>
+                <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">
+                    <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
+                        {{ story.category.name }}
+                    </router-link>
+                </span>
                 <h2 class="uk-margin-remove-adjacent uk-text-bold uk-margin-small-bottom">
                     {{ story.title }}
                 </h2>
