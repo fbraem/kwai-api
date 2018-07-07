@@ -8,7 +8,7 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
 {
     private $filesystem;
 
-    private static $type = 'news_stories';
+    private static $type = 'stories';
 
     public static function createForItem(NewsStory $story, $filesystem)
     {
