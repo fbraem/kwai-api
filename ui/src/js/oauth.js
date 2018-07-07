@@ -39,6 +39,13 @@ class OAuth
         return this.call(url, opt);
     }
 
+    clear() {
+        this.access_token = null;
+        Lockr.rm(ACCESSTOKEN_KEY);
+        this.refresh_token = null;
+        Lockr.rm(REFRESHTOKEN_KEY);
+    }
+
     call(url, options) {
         var opts = options || Object.create(null);
         opts.headers = opts.headers || {
@@ -103,25 +110,18 @@ class OAuth
         this.setTokens(response.data.access_token, response.data.refresh_token);
     }
 
-    login(username, password) {
-        return new Promise((resolve, reject) => {
-            var form = new FormData();
-            form.append('grant_type', 'password');
-            form.append('client_id', CLIENT_ID);
-            form.append('username', username);
-            form.append('password', password);
-            form.append('scope', 'basic');
-            this.post('api/auth/access_token', {
-                data : form,
-                dontRetry : true
-            }).then((response) => {
-                this.setTokens(response.data.access_token, response.data.refresh_token);
-                resolve(response);
-            }).catch((err) => {
-                console.log(err.response.status);
-                reject(err);
-            });
+    async login(username, password) {
+        var form = new FormData();
+        form.append('grant_type', 'password');
+        form.append('client_id', CLIENT_ID);
+        form.append('username', username);
+        form.append('password', password);
+        form.append('scope', 'basic');
+        var response = await this.post('api/auth/access_token', {
+            data : form,
+            dontRetry : true
         });
+        this.setTokens(response.data.access_token, response.data.refresh_token);
     }
 
     setTokens(access, refresh) {
@@ -139,25 +139,14 @@ class OAuth
         }
     }
 
-    logout() {
-        return new Promise((resolve, reject) => {
-            var form = new FormData();
-            form.append('refresh_token', this.refresh_token);
-            this.post('api/auth/logout', {
-                data : form,
-                dontRetry : true
-            }).then((response) => {
-                this.access_token = null;
-                Lockr.rm(ACCESSTOKEN_KEY);
-                this.refresh_token = null;
-                Lockr.rm(REFRESHTOKEN_KEY);
-                resolve(response)
-            }).catch((err) => {
-                if ( err.response.status != 401 ) {
-                    reject(err);
-                }
-            });
+    async logout() {
+        var form = new FormData();
+        form.append('refresh_token', this.refresh_token);
+        var response = await this.post('api/auth/logout', {
+            data : form,
+            dontRetry : true
         });
+        this.clear();
     }
 }
 
