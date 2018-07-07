@@ -6,11 +6,11 @@ import moment from 'moment-timezone';
 
 export default class Story extends Model {
     resourceName() {
-        return 'news_stories';
+        return 'stories';
     }
 
-    aliasURL() {
-        return '/news/stories';
+    namespace() {
+        return 'news';
     }
 
     fields() {

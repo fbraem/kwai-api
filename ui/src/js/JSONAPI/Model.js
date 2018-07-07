@@ -69,7 +69,7 @@ export default class Model {
     return null;
   }
 
-  aliasURL() {
+  namespace() {
       return null;
   }
 
@@ -104,13 +104,11 @@ export default class Model {
 
   resourceUrl() {
       var uri = new URI('');
-      var alias = this.aliasURL();
-      var base = this.baseURL();
-      if (base) {
-        uri.segment([base, alias ? alias : this._type]);
-      } else {
-        uri.segment(alias ? alias : this._type);
-      }
+      var segment = [this.baseURL()];
+      var ns = this.namespace();
+      if (ns) segment.push(ns);
+      segment.push(this._type);
+      uri.segment(segment);
       return uri;
   }
 
