@@ -10,7 +10,7 @@
                     <a :href="facebook" class="uk-icon-button">
                         <fa-icon name="brands/facebook-f" />
                     </a>
-                    <login></login>
+                    <Login />
                 </div>
             </nav>
         </div>
@@ -32,7 +32,7 @@
 
 <script>
   import 'vue-awesome/icons/brands/facebook-f';
-  import Login from '@/apps/auth/components/login.vue';
+  import Login from '@/apps/auth/components/Login.vue';
 
   import config from 'config';
 

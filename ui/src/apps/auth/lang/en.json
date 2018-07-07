@@ -1,0 +1,22 @@
+{
+    "welcome" : "Fill in all fields to login to the website.",
+    "email" : {
+        "label" : "Email",
+        "required" : "Email is required",
+        "invalid" : "Email is invalid",
+        "placeholder" : "Enter your email"
+    },
+    "password" : {
+        "label" : "Password",
+        "required" : "Password is required",
+        "placeholder" : "Enter your password"
+    },
+    "submit" : "Login",
+    "clear" : "Clear",
+    "not_authorized" : "Your email address and/or password are incorrect.",
+    "logout" : "Logout",
+    "login" : "Login",
+    "cancel" : "Cancel",
+    "user" : "User",
+    "invalid_credentials" : "Invalid email and/or password"
+}

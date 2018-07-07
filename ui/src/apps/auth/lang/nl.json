@@ -1,0 +1,22 @@
+{
+    "welcome" : "Vul alle gegevens in om in te loggen op onze website.",
+    "email" : {
+        "label" : "Email",
+        "required" : "Het emailadres is verplicht in te vullen",
+        "invalid" : "Het emailadres is niet geldig",
+        "placeholder" : "Geef uw emailadres in"
+    },
+    "password" : {
+        "label" : "Paswoord",
+        "required" : "Het paswoord is verplicht in te vullen",
+        "placeholder" : "Geef uw passwoord in"
+    },
+    "submit" : "Inloggen",
+    "clear" : "Wis",
+    "not_authorized" : "Uw email en/of paswoord zijn niet correct.",
+    "logout" : "Uitloggen",
+    "login" : "Inloggen",
+    "cancel" : "Annuleer",
+    "user" : "Gebruiker",
+    "invalid_credentials" : "Ongeldig email en/of paswoord"
+}
