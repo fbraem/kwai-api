@@ -10,9 +10,6 @@ import config from 'config';
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
 
-import Model from './model';
-import JSONAPI from './JSONAPI';
-
 const state = {
     user : {
         authenticated : oauth.isAuthenticated()
@@ -81,24 +78,20 @@ const mutations = {
 };
 
 const actions = {
-    login(context, payload) {
+    async login(context, payload) {
         context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.login(payload.data.attributes.email, payload.data.attributes.password)
-                .then((response) => {
-                    context.commit('success');
-                    context.commit('authenticated', true);
-                    resolve(response);
-                })
-                .catch((response) => {
-                    context.commit('error', response);
-                    context.commit('authenticated', false);
-                    reject(response);
-                });
-        });
+        try {
+            var response = await oauth.login(payload.email, payload.password);
+            context.commit('success');
+            context.commit('authenticated', true);
+        } catch(error) {
+            context.commit('error', error);
+            context.commit('authenticated', false);
+            throw(error);
+        }
     },
-    logout(context) {
-        oauth.logout();
+    async logout(context) {
+        await oauth.logout();
         context.commit('authenticated', false);
     },
     setTitle(context, text) {
