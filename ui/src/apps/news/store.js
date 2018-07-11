@@ -7,8 +7,6 @@ import axios from 'axios';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import filter from 'lodash/filter';
-
 import URI from 'urijs';
 import moment from 'moment';
 
@@ -61,7 +59,7 @@ const mutations = {
       state.stories.push(story);
   },
   deleteStory(state, data) {
-      state.stories = filter(state.stories, (story) => {
+      state.stories = state.stories.filter((story) => {
          return story.id != data.id;
       });
   },
@@ -139,13 +137,19 @@ const actions = {
         var story = getters['story'](payload.id);
         if (story) { // already read
             commit('success');
-            return;
+            return story;
         }
 
         let model = new Story();
-        var story = await model.find(payload.id).catch((error) => console.log('find', error));
-        commit('story', story);
-        commit('success');
+        try {
+            story = await model.find(payload.id);
+            console.log(story);
+            commit('story', story);
+            commit('success');
+        } catch(error) {
+            commit('error', error);
+        }
+        return story;
     },
     async save({ state, getters, commit, context }, story) {
         var newStory = null;
