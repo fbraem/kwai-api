@@ -1,5 +1,8 @@
 <template>
     <div class="uk-container">
+        <div v-if="error">
+            {{ error.response.statusText }}
+        </div>
         <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
             <header>
                 <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">
@@ -101,6 +104,9 @@
             },
             loading() {
                 return this.$store.getters['newsModule/loading'];
+            },
+            error() {
+                return this.$store.getters['newsModule/error'];
             }
         },
         mounted() {
