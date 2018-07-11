@@ -152,7 +152,7 @@ export default class Model {
       this.reset();
 
       let response = await this.request(config);
-      return this.respond(respond);
+      return this.respond(response);
   }
 
   async find(id) {
@@ -165,7 +165,7 @@ export default class Model {
       };
       this.reset();
       let response = await this.request(config);
-      return this.respond(response);
+      if (response) return this.respond(response);
   }
 
   async save() {
@@ -208,14 +208,16 @@ export default class Model {
       this.reset();
 
       var url = this._uri.href() + '/' + this.id + '/' + model._type;
+      var method = 'POST';
       if ( model.id ) {
           url += '/' + model.id;
+          method = 'PATCH';
       }
 
       let config = {
           url : url,
           data : model.serialize(),
-          method : 'POST'
+          method : method
       };
       let response = await this.request(config);
       return this.respond(response);
