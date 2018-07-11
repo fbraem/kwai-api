@@ -44,12 +44,12 @@ export default [
         },
         {
             path : '/news/create',
-            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsCreate.vue'),
+            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsForm.vue'),
             name : 'news.create'
         },
         {
             path : '/news/update/:id(\\d+)',
-            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsUpdate.vue'),
+            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsForm.vue'),
             name : 'news.update'
         }
 ];
