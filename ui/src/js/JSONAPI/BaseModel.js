@@ -32,6 +32,7 @@ export default class BaseModel extends Model {
               }
               throw(error);
           }
+          throw(error);
       }
   }
 };
