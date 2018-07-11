@@ -1,107 +1,120 @@
 <template>
-    <div uk-grid>
-        <div class="uk-width-1-1">
-            <form class="uk-form-stacked">
-                <uikit-checkbox v-model="form.story.enabled">
-                    {{ $t('enabled') }}
-                </uikit-checkbox>
-                <uikit-select
-                    v-model="form.story.category"
-                    :items="categories"
-                    :validator="$v.form.story.category"
-                    :errors="categoryErrors"
-                    id="category"
-                    empty="Please select a category">
-                    {{ $t('category') }}:
-                </uikit-select>
-                <div uk-grid>
-                    <div class="uk-width-1-2">
-                        <uikit-input-text v-model="form.story.publish_date" :validator="$v.form.story.publish_date" :errors="publishDateErrors" id="publish_date" :placeholder="$t('publish_date_placeholder', { format : dateFormat })">
-                            {{ $t('publish_date') }}:
-                        </uikit-input-text>
-                    </div>
-                    <div class="uk-width-1-2">
-                        <uikit-input-text v-model="form.story.publish_time" :validator="$v.form.story.publish_time" :errors="publishTimeErrors" id="publish_time" :placeholder="$t('publish_time_placeholder', { format :'(HH:MM)' })">
-                            {{ $t('publish_time') }}:
-                        </uikit-input-text>
-                    </div>
+    <section class="uk-section uk-section-default uk-section-small">
+        <div class="uk-container uk-container-expand">
+            <div uk-grid>
+                <div class="uk-width-1-1">
+                    <h4 class="uk-heading-line">
+                        {{ $t('news') }} &ndash;
+                        <span v-if="creating">{{ $t('create') }}</span>
+                        <span v-else>{{ $t('update') }}</span>
+                    </h4>
                 </div>
-                <div uk-grid>
-                    <div class="uk-width-1-2">
-                        <uikit-input-text v-model="form.story.end_date" :validator="$v.form.story.end_date" :errors="endDateErrors" id="end_date" :placeholder="$t('end_date_placeholder', { format : dateFormat })">
-                            {{ $t('end_date') }}:
-                        </uikit-input-text>
-                    </div>
-                    <div class="uk-width-1-2">
-                        <uikit-input-text v-model="form.story.end_time" :validator="$v.form.story.end_time" :errors="endTimeErrors" id="end_time" :placeholder="$t('end_time_placeholder', { format :'(HH:MM)' })">
-                            {{ $t('end_time') }}:
-                        </uikit-input-text>
-                    </div>
-                </div>
-                <uikit-textarea v-model="form.story.remark" :validator="$v.form.story.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
-                    {{ $t('remark') }}:
-                </uikit-textarea>
                 <div uk-grid>
                     <div class="uk-width-1-1">
-                        <div class="uk-tile uk-tile-default uk-tile-muted uk-padding-small">
+                        <form class="uk-form-stacked">
+                            <uikit-checkbox v-model="form.story.enabled">
+                                {{ $t('enabled') }}
+                            </uikit-checkbox>
+                            <uikit-select
+                                v-model="form.story.category"
+                                :items="categories"
+                                :validator="$v.form.story.category"
+                                :errors="categoryErrors"
+                                id="category"
+                                empty="Please select a category">
+                                {{ $t('category') }}:
+                            </uikit-select>
                             <div uk-grid>
-                                <div class="uk-width-1-1">
-                                    <h3>{{ $t('featured') }}</h3>
-                                    <blockquote class="uk-text-meta">
-                                        {{ $t('featured_hint') }}
-                                    </blockquote>
-                                </div>
-                                <div class="uk-width-1-1">
-                                    <div uk-grid>
-                                        <div class="uk-width-expand">
-                                            <uikit-range v-model="form.story.featured" :validator="$v.form.story.featured" :errors="featuredErrors" id="featured">
-                                                {{ $t('featured_priority') }}
-                                            </uikit-range>
-                                        </div>
-                                        <div>
-                                            {{ form.story.featured }}
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="uk-width-1-2">
-                                    <uikit-input-text v-model="form.story.featured_end_date" :validator="$v.form.story.featured_end_date" :errors="featuredEndDateErrors" id="featured_end_date" :placeholder="$t('featured_end_date_placeholder', { format : dateFormat })">
-                                        {{ $t('featured_end_date') }}:
+                                    <uikit-input-text v-model="form.story.publish_date" :validator="$v.form.story.publish_date" :errors="publishDateErrors" id="publish_date" :placeholder="$t('publish_date_placeholder', { format : dateFormat })">
+                                        {{ $t('publish_date') }}:
                                     </uikit-input-text>
                                 </div>
                                 <div class="uk-width-1-2">
-                                    <uikit-input-text v-model="form.story.featured_end_time" :validator="$v.form.story.featured_end_time" :errors="featuredEndTimeErrors" id="featured_end_time" :placeholder="$t('featured_end_time_placeholder', { format :'(HH:MM)' })">
-                                        {{ $t('featured_end_time') }}:
+                                    <uikit-input-text v-model="form.story.publish_time" :validator="$v.form.story.publish_time" :errors="publishTimeErrors" id="publish_time" :placeholder="$t('publish_time_placeholder', { format :'(HH:MM)' })">
+                                        {{ $t('publish_time') }}:
                                     </uikit-input-text>
                                 </div>
                             </div>
+                            <div uk-grid>
+                                <div class="uk-width-1-2">
+                                    <uikit-input-text v-model="form.story.end_date" :validator="$v.form.story.end_date" :errors="endDateErrors" id="end_date" :placeholder="$t('end_date_placeholder', { format : dateFormat })">
+                                        {{ $t('end_date') }}:
+                                    </uikit-input-text>
+                                </div>
+                                <div class="uk-width-1-2">
+                                    <uikit-input-text v-model="form.story.end_time" :validator="$v.form.story.end_time" :errors="endTimeErrors" id="end_time" :placeholder="$t('end_time_placeholder', { format :'(HH:MM)' })">
+                                        {{ $t('end_time') }}:
+                                    </uikit-input-text>
+                                </div>
+                            </div>
+                            <uikit-textarea v-model="form.story.remark" :validator="$v.form.story.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
+                                {{ $t('remark') }}:
+                            </uikit-textarea>
+                            <div uk-grid>
+                                <div class="uk-width-1-1">
+                                    <div class="uk-tile uk-tile-default uk-tile-muted uk-padding-small">
+                                        <div uk-grid>
+                                            <div class="uk-width-1-1">
+                                                <h3>{{ $t('featured') }}</h3>
+                                                <blockquote class="uk-text-meta">
+                                                    {{ $t('featured_hint') }}
+                                                </blockquote>
+                                            </div>
+                                            <div class="uk-width-1-1">
+                                                <div uk-grid>
+                                                    <div class="uk-width-expand">
+                                                        <uikit-range v-model="form.story.featured" :validator="$v.form.story.featured" :errors="featuredErrors" id="featured">
+                                                            {{ $t('featured_priority') }}
+                                                        </uikit-range>
+                                                    </div>
+                                                    <div>
+                                                        {{ form.story.featured }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="uk-width-1-2">
+                                                <uikit-input-text v-model="form.story.featured_end_date" :validator="$v.form.story.featured_end_date" :errors="featuredEndDateErrors" id="featured_end_date" :placeholder="$t('featured_end_date_placeholder', { format : dateFormat })">
+                                                    {{ $t('featured_end_date') }}:
+                                                </uikit-input-text>
+                                            </div>
+                                            <div class="uk-width-1-2">
+                                                <uikit-input-text v-model="form.story.featured_end_time" :validator="$v.form.story.featured_end_time" :errors="featuredEndTimeErrors" id="featured_end_time" :placeholder="$t('featured_end_time_placeholder', { format :'(HH:MM)' })">
+                                                    {{ $t('featured_end_time') }}:
+                                                </uikit-input-text>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="uk-width-1-1">
+                        <form class="uk-form-stacked">
+                            <uikit-input-text v-model="form.content.title" :validator="$v.form.content.title" :errors="titleErrors" id="title" :placeholder="$t('title_placeholder')">
+                                {{ $t('title') }}:
+                            </uikit-input-text>
+                            <uikit-textarea v-model="form.content.summary" :validator="$v.form.content.summary" :rows="5" id="summary" :errors="summaryErrors" :placeholder="$t('summary_placeholder')">
+                                {{ $t('summary') }}:
+                            </uikit-textarea>
+                            <uikit-textarea v-model="form.content.content" :validator="$v.form.content.content" :rows="10" id="content" :errors="contentErrors" :placeholder="$t('content_placeholder')">
+                                {{ $t('content') }}:
+                            </uikit-textarea>
+                        </form>
+                    </div>
+                    <div uk-grid class="uk-width-1-1">
+                        <div class="uk-width-expand">
+                        </div>
+                        <div class="uk-width-auto">
+                            <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
+                                <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                            </button>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="uk-width-1-1">
-            <form class="uk-form-stacked">
-                <uikit-input-text v-model="form.content.title" :validator="$v.form.content.title" :errors="titleErrors" id="title" :placeholder="$t('title_placeholder')">
-                    {{ $t('title') }}:
-                </uikit-input-text>
-                <uikit-textarea v-model="form.content.summary" :validator="$v.form.content.summary" :rows="5" id="summary" :errors="summaryErrors" :placeholder="$t('summary_placeholder')">
-                    {{ $t('summary') }}:
-                </uikit-textarea>
-                <uikit-textarea v-model="form.content.content" :validator="$v.form.content.content" :rows="10" id="content" :errors="contentErrors" :placeholder="$t('content_placeholder')">
-                    {{ $t('content') }}:
-                </uikit-textarea>
-            </form>
-        </div>
-        <div uk-grid class="uk-width-1-1">
-            <div class="uk-width-expand">
-            </div>
-            <div class="uk-width-auto">
-                <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                    <fa-icon name="save" />&nbsp; {{ $t('save') }}
-                </button>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <style scoped>
@@ -120,6 +133,9 @@
     import { validationMixin } from 'vuelidate';
 
     import messages from '../lang';
+
+    import newsStore from '../store';
+    import categoryStore from '@/apps/categories/store';
 
     import Category from '@/apps/categories/models/Category';
     import Content from '@/apps/contents/models/Content';
@@ -194,11 +210,6 @@
 
     export default {
         i18n : messages,
-        props : {
-            story : {
-                type : Object
-            }
-        },
         mixins: [
             validationMixin
         ],
@@ -211,11 +222,15 @@
         },
         data() {
             return {
+                story : new Story(),
                 form : initForm(),
                 errors : initError()
             }
         },
         computed : {
+            creating() {
+                return this.story != null && this.story.id == null;
+            },
             error() {
                 return this.$store.state.newsModule.status.error;
             },
@@ -392,19 +407,26 @@
                 }
             }
         },
-        mounted() {
-            this.$store.dispatch('categoryModule/browse')
-                .then(() => {
-                    if (this.story) this.fillForm(this.story);
-                })
-
+        beforeCreate() {
+            if (!this.$store.state.newsModule) {
+                this.$store.registerModule('newsModule', newsStore);
+            }
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
+            }
+        },
+        created() {
+            this.$store.dispatch('categoryModule/browse').then(() => {
+                if (this.$route.params.id) {
+                    this.fetchData(this.$route.params.id);
+                }
+            });
+        },
+        beforeRouteUpdate(to, from, next) {
+        	if (to.params.id) this.fetchData(to.params.id);
+        	next();
         },
         watch : {
-            story(nv) {
-                if (nv) {
-                    this.fillForm(nv);
-                }
-            },
             error(nv) {
                 if (nv) {
                     if ( nv.response.status == 422 ) {
@@ -426,79 +448,76 @@
             }
         },
         methods : {
-            allowedDates(date) {
-                if (this.form.story.publish_date) {
-                    return moment(this.form.story.publish_date, 'L').isSameOrBefore(date);
-                }
-                return false;
+            async fetchData(id) {
+                this.story = await this.$store.dispatch('newsModule/read', {
+                    id : id
+                });
+                this.fillForm();
             },
             clear() {
                 this.$v.$reset();
                 this.form = initForm();
             },
-            fillForm(story) {
-                this.form.story.category = story.category.id;
-                this.form.story.enabled = story.enabled == 1;
-                if (story.publish_date) {
-                    this.form.story.publish_date = story.localPublishDate;
-                    this.form.story.publish_time = story.localPublishTime;
+            fillForm() {
+                this.form.story.category = this.story.category.id;
+                this.form.story.enabled = this.story.enabled == 1;
+                if (this.story.publish_date) {
+                    this.form.story.publish_date = this.story.localPublishDate;
+                    this.form.story.publish_time = this.story.localPublishTime;
                 }
-                if (story.end_date) {
-                    this.form.story.end_date = story.localEndDate;
-                    this.form.story.end_time = story.localEndTime;
+                if (this.story.end_date) {
+                    this.form.story.end_date = this.story.localEndDate;
+                    this.form.story.end_time = this.story.localEndTime;
                 }
-                this.form.story.featured = story.featured;
-                if (story.featured_end_date) {
-                    this.form.story.featured_end_date = story.localFeaturedEndDate;
-                    this.form.story.featured_end_time = story.localFeaturedEndTime;
+                this.form.story.featured = this.story.featured;
+                if (this.story.featured_end_date) {
+                    this.form.story.featured_end_date = this.story.localFeaturedEndDate;
+                    this.form.story.featured_end_time = this.story.localFeaturedEndTime;
                 }
-                this.form.story.remark = story.remark;
-                if (story.contents && story.contents.length > 0) {
-                    this.form.content.title = story.contents[0].title;
-                    this.form.content.summary = story.contents[0].summary;
-                    this.form.content.content = story.contents[0].content;
+                this.form.story.remark = this.story.remark;
+                if (this.story.contents && this.story.contents.length > 0) {
+                    this.form.content.title = this.story.contents[0].title;
+                    this.form.content.summary = this.story.contents[0].summary;
+                    this.form.content.content = this.story.contents[0].content;
                 }
             },
-            fillStory(story) {
+            fillStory() {
                 var tz = moment.tz.guess();
-                story.enabled = this.form.story.enabled;
-                story.remark = this.form.story.remark;
-                story.category = new Category();
-                story.category.id = this.form.story.category;
-                story.publish_date = this.publishDatetime.utc();
-                story.publish_date_timezone = tz;
+                this.story.enabled = this.form.story.enabled;
+                this.story.remark = this.form.story.remark;
+                this.story.category = new Category();
+                this.story.category.id = this.form.story.category;
+                this.story.publish_date = this.publishDatetime.utc();
+                this.story.publish_date_timezone = tz;
                 if ( this.form.story.end_date ) {
-                    story.end_date = this.endDatetime.utc();
-                    story.end_date_timezone = tz;
+                    this.story.end_date = this.endDatetime.utc();
+                    this.story.end_date_timezone = tz;
                 }
-                story.featured = this.form.story.featured;
+                this.story.featured = this.form.story.featured;
                 if ( this.form.story.featured_end_date ) {
-                    story.featured_end_date = this.featuredEndDatetime.utc();
-                    story.featured_date_timezone = tz;
+                    this.story.featured_end_date = this.featuredEndDatetime.utc();
+                    this.story.featured_date_timezone = tz;
                 }
             },
             fillContent(content) {
                 content.title = this.form.content.title;
                 content.summary = this.form.content.summary;
                 content.content = this.form.content.content;
+                if (this.story && this.story.contents && this.story.contents.length > 0) content.id = this.story.contents[0].id;
             },
             submit() {
                 this.errors = initError();
-                var story = new Story();
-                this.fillStory(story);
-                if (this.story) story.id = this.story.id;
-                this.$store.dispatch('newsModule/save', story)
+                this.fillStory(this.story);
+                this.$store.dispatch('newsModule/save', this.story)
                     .then((newStory) => {
                         this.story.id = newStory.id;
-                        story = newStory;
                         var content = new Content();
                         this.fillContent(content);
-                        if (this.story && this.story.contents && this.story.contents.length > 0) content.id = this.story.contents[0].id;
                         this.$store.dispatch('newsModule/attachContent', {
-                            story : story,
+                            story : this.story,
                             content : content
                         }).then((newStory) => {
-                            this.$router.push({ name : 'news.story', params : { id : newStory.id }});
+                            this.$router.push({ name : 'news.story', params : { id : this.story.id }});
                         }).catch((err) => {
                             console.log(err);
                         })
