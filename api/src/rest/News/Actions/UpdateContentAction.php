@@ -21,7 +21,7 @@ class UpdateContentAction implements \Core\ActionInterface
         $storiesTable = \Domain\News\NewsStoriesTable::getTableFromRegistry();
         try {
             $story = $storiesTable->get($id, [
-                'contain' => ['Contents', 'Contents.User']
+                'contain' => ['Category', 'Contents', 'Contents.User']
             ]);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
             return (
