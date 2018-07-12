@@ -54,9 +54,6 @@ const mutations = {
           state.stories.push(story);
       }
   },
-  addStory(state, story) {
-      state.stories.push(story);
-  },
   deleteStory(state, data) {
       state.stories = state.stories.filter((story) => {
          return story.id != data.id;
