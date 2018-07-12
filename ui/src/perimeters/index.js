@@ -2,6 +2,7 @@ import basePerimeter from './basePerimeter';
 import authPerimeter from './authPerimeter';
 import categoryPerimeter from './categoryPerimeter';
 import newsPerimeter from './newsPerimeter';
+import pagePerimeter from './pagePerimeter';
 import memberPerimeter from './memberPerimeter';
 import teamPerimeter from './teamPerimeter';
 
@@ -11,6 +12,7 @@ function perimeters() {
         authPerimeter,
         categoryPerimeter,
         newsPerimeter,
+        pagePerimeter,
         memberPerimeter,
         teamPerimeter
     ];
