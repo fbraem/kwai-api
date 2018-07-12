@@ -6,7 +6,6 @@ const oauth = new OAuth();
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import URI from 'urijs';
 import moment from 'moment';
 
 import Story from './models/Story';
