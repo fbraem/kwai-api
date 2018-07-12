@@ -2,7 +2,6 @@ import Vue from 'vue';
 
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
-import axios from 'axios';
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
