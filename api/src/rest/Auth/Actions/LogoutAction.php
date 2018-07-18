@@ -13,7 +13,7 @@ use Core\Responders\HTTPCodeResponder;
 
 class LogoutAction implements \Core\ActionInterface
 {
-    use \League\Oauth2\Server\CryptTrait;
+    use \League\OAuth2\Server\CryptTrait;
 
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
