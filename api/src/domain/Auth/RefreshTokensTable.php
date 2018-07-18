@@ -14,7 +14,7 @@ class RefreshTokensTable extends \Cake\ORM\Table
         $this->initializeTable();
 
         $this->belongsTo('AccessToken', [
-                'className' => \AccessTokensTable::class
+                'className' => AccessTokensTable::class
             ])
             ->setForeignKey('access_token_id')
             ->setProperty('accesstoken')
