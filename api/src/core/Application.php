@@ -57,7 +57,7 @@ class Application
 
         $this->container = new \Pimple\Container();
 
-        \Cake\Datasource\ConnectionManager::config('default', [
+        \Cake\Datasource\ConnectionManager::setConfig('default', [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
             'host' => $config->database->{$config->default_database}->host,
