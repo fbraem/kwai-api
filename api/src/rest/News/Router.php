@@ -35,8 +35,8 @@ class Router extends \Core\Router
         $this->map->patch('updateContent', '/news/stories/{id}/contents/{contentId}', \REST\News\Actions\UpdateContentAction::class)
             ->auth(['login' => true])
         ;
-        $this->map->delete('deleteContent', '/news/stories/{id}/contents/{contentId}', \REST\News\Actions\DeleteContentAction::class)
-            ->auth(['login' => true])
-        ;
+        //$this->map->delete('deleteContent', '/news/stories/{id}/contents/{contentId}', \REST\News\Actions\DeleteContentAction::class)
+        //    ->auth(['login' => true])
+        //;
     }
 }
