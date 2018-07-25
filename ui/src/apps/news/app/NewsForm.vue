@@ -507,7 +507,7 @@
             },
             submit() {
                 this.errors = initError();
-                this.fillStory(this.story);
+                this.fillStory();
                 this.$store.dispatch('newsModule/save', this.story)
                     .then((newStory) => {
                         this.story.id = newStory.id;
