@@ -1,0 +1,22 @@
+{
+    "page" : "Information",
+    "pages" : "Information",
+    "category" : "Category",
+    "no_pages" : "No information found",
+    "are_you_sure" : "Are you sure to delete this page?",
+    "cancel" : "Cancel",
+    "delete" : "Delete",
+    "delete_page" : "Delete Page",
+    "create" : "Create a page",
+    "update" : "Edit a page",
+    "title" : "Title",
+    "title_placeholder" : "Enter a title",
+    "summary" : "Summary",
+    "summary_placeholder" : "Enter a summary",
+    "content" : "Content",
+    "content_placeholder" : "Enter content",
+    "remark" : "Remark",
+    "remark_placeholder" : "Enter a remark",
+    "save" : "Saver",
+    "enabled" : "Active"
+}

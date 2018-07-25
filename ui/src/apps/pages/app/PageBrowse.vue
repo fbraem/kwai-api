@@ -1,47 +1,45 @@
 <template>
-    <v-container v-if="loading">
-        <v-layout row justify-space-around>
-            <v-flex xs1>
-                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
-            </v-flex>
-        </v-layout>
-    </v-container>
-    <v-container v-else grid-list-xl class="pt-0">
-        <v-layout v-if="category">
-            <v-flex xs12>
-                <h1 class="display-1">{{ category.name }}</h1>
-                <div class="category-description">
-                    {{ category.description }}
+    <div class="uk-container">
+        <div v-if="loading" class="uk-flex-center" uk-grid>
+            <div class="uk-text-center">
+                <fa-icon name="spinner" scale="2" spin />
+            </div>
+        </div>
+        <div v-else uk-grid class="uk-flex uk-margin">
+            <div v-if="category" class="uk-width-1-1">
+                <div class="uk-tile uk-tile-muted uk-padding-small" style="border:1px solid rgba(0,0,0,0.075)">
+                    <h3>{{ category.name }}</h3>
+                    <div class="uk-text-meta">
+                        {{ category.description }}
+                    </div>
                 </div>
-            </v-flex>
-        </v-layout>
-        <v-layout v-if="noPages" row wrap>
-            <v-flex xs12>
+            </div>
+        </div>
+        <div class="uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match" uk-grid="masonry: true">
+            <PageSummary v-for="page in pages" :page="page" :key="page.id"></PageSummary>
+        </div>
+        <div v-if="pageCount == 0">
+            <div uk-alert>
                 {{ $t('no_pages') }}
-            </v-flex>
-        </v-layout>
-        <v-layout v-else row wrap>
-            <v-flex v-for="page in pages" :key="page.id" xs12 md6 d-flex>
-                <PageSummary :page="page"></PageSummary>
-            </v-flex>
-        </v-layout>
-    </v-container>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+    import 'vue-awesome/icons/spinner';
+
     import moment from 'moment';
     import PageSummary from './PageSummary.vue';
-    import Paginator from '@/components/Paginator.vue';
+    //import Paginator from '@/components/Paginator.vue';
 
-    import messages from '../lang/PageBrowse';
+    import messages from '../lang';
 
     export default {
-        i18n : {
-            messages : messages
-        },
+        i18n : messages,
         components : {
             PageSummary,
-            Paginator
+            //Paginator
         },
         props : [
             'category_id'
@@ -57,8 +55,9 @@
             pages() {
                 return this.$store.getters['pageModule/pages'];
             },
-            noPages() {
-                return !this.pages || this.pages.length == 0;
+            pageCount() {
+                if ( this.pages ) return this.pages.length;
+                return -1;
             },
             category() {
                 if (this.category_id) {
@@ -67,7 +66,7 @@
                 return null;
             }
           },
-        mounted() {
+        created() {
             var categories = this.$store.getters['categoryModule/categories'];
             if (categories.length == 0) {
                 this.$store.dispatch('categoryModule/browse');

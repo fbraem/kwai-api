@@ -1,144 +1,93 @@
 <template>
-    <v-container fluid>
-        <v-card class="mb-5">
-            <v-card-title primary-title>
-                <h4 class="headline mb-0">Page Details</h4>
-            </v-card-title>
-            <v-card-text>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                        <v-text-field name="title"
-                            label="Title of the page"
-                            v-model="form.page.title"
-                            :error-messages="titleErrors"
-                            @input="$v.form.page.title.$touch()"
-                            required
-                            >
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-select
-                            :items="categories"
+    <section class="uk-section uk-section-default uk-section-small">
+        <div class="uk-container uk-container-expand">
+            <div uk-grid>
+                <div class="uk-width-1-1">
+                    <h4 class="uk-heading-line">
+                        {{ $t('page') }} &ndash;
+                        <span v-if="creating">{{ $t('create') }}</span>
+                        <span v-else>{{ $t('update') }}</span>
+                    </h4>
+                </div>
+                <div class="uk-width-1-1">
+                    <form class="uk-form-stacked">
+                        <uikit-checkbox v-model="form.page.enabled">
+                            {{ $t('enabled') }}
+                        </uikit-checkbox>
+                        <uikit-select
                             v-model="form.page.category"
-                            @input="$v.form.page.category.$touch"
-                            :error-messages="categoryErrors"
-                            label="Category"
-                            required>
-                        </v-select>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-switch :label="form.page.enabled ? $t('enabled') : $t('disabled')" v-model="form.page.enabled">
-                        </v-switch>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field
-                            name="priority"
-                            v-model="form.page.priority"
-                            @input="$v.form.page.priority.$touch"
-                            :error-messages="priorityErrors"
-                            label="Priority"
-                            hint="A list of pages can be sorted based on the priority"
-                            required>
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field style="font-family:monospace"
-                            name="summary"
-                            v-model="form.page.summary"
-                            @input="$v.form.page.summary.$touch"
-                            :error-messages="summaryErrors"
-                            label="Summary"
-                            textarea
-                            required>
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field style="font-family:monospace"
-                            name="content"
-                            v-model="form.page.content"
-                            @input="$v.form.page.content.$touch"
-                            :error-messages="contentErrors"
-                            label="Content"
-                            multi-line
-                            :rows="30"
-                            textarea>
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field
-                            name="remark"
-                            v-model="form.page.remark"
-                            @input="$v.form.page.remark.$touch"
-                            :error-messages="remarkErrors"
-                            label="Remark"
-                            textarea
-                            hint="Enter a remark about this page">
-                        </v-text-field>
-                    </v-flex>
-                </v-layout>
-                <v-flex xs12>
-                    <v-layout row justify-center>
-                        <v-flex xs2>
-                            <v-btn @click="upload">Upload</v-btn>
-                        </v-flex>
-                    </v-layout>
-                </v-flex>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                        <div class="headline">Overview Image</div>
-                        <p>
-                            This is the image that will be shown in the header on the page.
-                        </p>
-                    </v-flex>
-                </v-layout>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                        <VueCroppie v-model="imageCrop" :url="imageURL" @result="cropResult" :boundary="{ height : 600 }" :viewport="{ width: 800, height : 400 }"/>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-layout justify-center>
-                            <img class="text-xs-center" v-if="imagePreview" :src="imagePreview" />
-                        </v-layout>
-                    </v-flex>
-                </v-layout>
-            </v-card-text>
-        </v-card>
-        <v-btn color="primary" :disabled="$v.$invalid" @click="submit">Submit</v-btn>
-        <v-btn flat @click="clear">Clear</v-btn>
-        <form enctype="multipart/form-data" novalidate>
-            <input type="file" accept="image/*" ref="fileInput" @change="onFileChange"/>
-        </form>
-    </v-container>
+                            :items="categories"
+                            :validator="$v.form.page.category"
+                            :errors="categoryErrors"
+                            id="category"
+                            empty="Please select a category">
+                            {{ $t('category') }}:
+                        </uikit-select>
+                        <uikit-textarea v-model="form.page.remark" :validator="$v.form.page.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
+                            {{ $t('remark') }}:
+                        </uikit-textarea>
+                    </form>
+                </div>
+                <div class="uk-width-1-1">
+                    <form class="uk-form-stacked">
+                        <uikit-input-text v-model="form.content.title" :validator="$v.form.content.title" :errors="titleErrors" id="title" :placeholder="$t('title_placeholder')">
+                            {{ $t('title') }}:
+                        </uikit-input-text>
+                        <uikit-textarea v-model="form.content.summary" :validator="$v.form.content.summary" :rows="5" id="summary" :errors="summaryErrors" :placeholder="$t('summary_placeholder')">
+                            {{ $t('summary') }}:
+                        </uikit-textarea>
+                        <uikit-textarea v-model="form.content.content" :validator="$v.form.content.content" :rows="10" id="content" :errors="contentErrors" :placeholder="$t('content_placeholder')">
+                            {{ $t('content') }}:
+                        </uikit-textarea>
+                    </form>
+                </div>
+                <div uk-grid class="uk-width-1-1">
+                    <div class="uk-width-expand">
+                    </div>
+                    <div class="uk-width-auto">
+                        <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
+                            <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
-<style scoped>
-    input[type=file] {
-        position: absolute;
-        left: -99999px;
-    }
-</style>
-
 <script>
-    import Model from '@/js/model';
-    import moment from 'moment';
-    import 'moment-timezone';
+    import 'vue-awesome/icons/save';
 
+    import { validationMixin } from 'vuelidate';
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
 
-    import VueCroppie from "@/components/Croppie.vue";
+    import pageStore from '../store';
+    import categoryStore from '@/apps/categories/store';
 
-    import messages from '../lang/PageForm.js';
+    import Category from '@/apps/categories/models/Category';
+    import Content from '@/apps/contents/models/Content';
+    import Page from '../models/Page';
+
+    import messages from '../lang';
+
+    import UikitCheckbox from '@/components/uikit/Checkbox.vue';
+    import UikitInputText from '@/components/uikit/InputText.vue';
+    import UikitSelect from '@/components/uikit/Select.vue';
+    import UikitTextarea from '@/components/uikit/Textarea.vue';
 
     var initForm = function() {
         return {
             page : {
-                title : '',
+                enabled : true,
                 category : 0,
                 priority : 0,
+                remark : ''
+            },
+            content : {
+                title : '',
                 summary : '',
                 content : '',
-                enabled : true,
                 remark : ''
             }
         };
@@ -157,27 +106,27 @@
     };
 
     export default {
-        props : {
-            page : {
-                type : Object
-            }
-        },
-        i18n : {
-            messages
-        },
+        i18n : messages,
+        mixins: [
+            validationMixin
+        ],
         components : {
-            VueCroppie
+            UikitInputText,
+            UikitSelect,
+            UikitTextarea,
+            UikitCheckbox
         },
         data() {
             return {
+                page : new Page(),
                 form : initForm(),
-                errors : initError(),
-                imageCrop : null,
-                imageURL : null,
-                imagePreview : null
+                errors : initError()
             }
         },
         computed : {
+            creating() {
+                return this.page.id == null;
+            },
             error() {
                 return this.$store.state.pageModule.status.error;
             },
@@ -189,8 +138,8 @@
             },
             titleErrors() {
                 const errors = [...this.errors.title];
-                if (! this.$v.form.page.title.$dirty) return errors;
-                ! this.$v.form.page.title.required && errors.push('Title is required');
+                if (! this.$v.form.content.title.$dirty) return errors;
+                ! this.$v.form.content.title.required && errors.push('Title is required');
                 return errors;
             },
             categoryErrors() {
@@ -208,8 +157,8 @@
             },
             summaryErrors() {
                 const errors = [...this.errors.summary];
-                if (! this.$v.form.page.summary.$dirty) return errors;
-                ! this.$v.form.page.summary.required && errors.push('Summary is required');
+                if (! this.$v.form.content.summary.$dirty) return errors;
+                ! this.$v.form.content.summary.required && errors.push('Summary is required');
                 return errors;
             },
             contentErrors() {
@@ -224,9 +173,6 @@
         validations : {
             form : {
                 page : {
-                    title : {
-                        required
-                    },
                     category : {
                         required
                     },
@@ -234,30 +180,41 @@
                         required,
                         numeric
                     },
+                    remark : {
+                    }
+                },
+                content : {
+                    title : {
+                        required
+                    },
                     summary : {
                         required
                     },
                     content : {
                     },
-                    remark : {
-                    }
                 }
             }
         },
-        mounted() {
-            this.$store.dispatch('categoryModule/browse').
-                then(() => {
-                    if ( this.page ) this.fillForm(this.page);
-                });
+        beforeCreate() {
+            if (!this.$store.state.pageModule) {
+                this.$store.registerModule('pageModule', pageStore);
+            }
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
+            }
+        },
+        created() {
+            this.$store.dispatch('categoryModule/browse').then(() => {
+                if (this.$route.params.id) {
+                    this.fetchData(this.$route.params.id);
+                }
+            });
+        },
+        beforeRouteUpdate(to, from, next) {
+        	if (to.params.id) this.fetchData(to.params.id);
+        	next();
         },
         watch : {
-            image(nv) {
-            },
-            page(nv) {
-                if (nv) {
-                    this.fillForm(nv);
-                }
-            },
             error(nv) {
                 if (nv) {
                     if ( nv.response.status == 422 ) {
@@ -279,111 +236,58 @@
             }
         },
         methods : {
-            cropResult(result) {
-                this.imagePreview = result;
-            },
-            formatDate(date) {
-                if (date != null) {
-                    return moment(date).format('L');
-                }
-                return '';
+            async fetchData(id) {
+                this.page = await this.$store.dispatch('pageModule/read', {
+                    id : id
+                });
+                this.fillForm();
             },
             clear() {
                 this.$v.$reset();
                 this.form = initForm();
             },
-            fillForm(model) {
-                this.form.page.title = model.contents[0].title;
-                this.form.page.category = model.category.id;
-                this.form.page.priority = model.priority;
-                this.form.page.summary = model.contents[0].summary;
-                this.form.page.content = model.contents[0].content;
-                this.form.page.enabled = model.enabled == 1;
-                this.form.page.remark = model.remark;
+            fillForm() {
+                this.form.page.enabled = this.page.enabled == 1;
+                this.form.page.remark = this.page.remark;
+                this.form.page.category = this.page.category.id;
+                this.form.page.priority = this.page.priority;
+                this.form.content.summary = this.page.contents[0].summary;
+                this.form.content.content = this.page.contents[0].content;
+                this.form.content.title = this.page.contents[0].title;
             },
-            fillModel(model) {
-                model.addAttribute('title', this.form.page.title);
-                model.addAttribute('priority', this.form.page.priority);
-                model.addAttribute('summary', this.form.page.summary);
-                model.addAttribute('content', this.form.page.content);
-                model.addAttribute('enabled', this.form.page.enabled);
-                model.addAttribute('remark', this.form.page.remark);
-                model.addRelation('category', new Model('category', this.form.page.category));
+            fillPage() {
+                this.page.enabled = this.form.page.enabled;
+                this.page.remark = this.form.page.remark;
+                this.page.category = new Category();
+                this.page.category.id = this.form.page.category;
+                this.page.priority = this.form.page.priority;
+            },
+            fillContent(content) {
+                content.title = this.form.content.title;
+                content.summary = this.form.content.summary;
+                content.content = this.form.content.content;
+                if (this.page && this.page.contents && this.page.contents.length > 0) content.id = this.page.contents[0].id;
             },
             submit() {
                 this.errors = initError();
-
-                if (this.page) { // update
-                    this.fillModel(this.page);
-                    this.$store.dispatch('pageModule/update', this.page.serialize())
-                        .then(() => {
-                            if (this.imageURL) {
-                                this.uploadImage(this.page.id)
-                                    .then(() => {
-                                        this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
-                                    }).catch(err => {
-                                        console.log(err);
-                                    });
-                            } else {
-                                this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
-                            }
-                        }).catch(err => {
+                this.fillPage();
+                this.$store.dispatch('pageModule/save', this.page)
+                    .then((newPage) => {
+                        this.page.id = newPage.id;
+                        var content = new Content();
+                        this.fillContent(content);
+                        this.$store.dispatch('pageModule/attachContent', {
+                            page : this.page,
+                            content : content
+                        }).then((newPage) => {
+                            this.$router.push({ name : 'pages.read', params : { id : this.page.id }});
+                        }).catch((err) => {
                             console.log(err);
-                        });
-                } else { // create
-                    var page = new Model('pages');
-                    this.fillModel(page);
-                    this.$store.dispatch('pageModule/create', page.serialize())
-                        .then((newPage) => {
-                            if (this.imageURL) {
-                                this.uploadImage(newPage.id)
-                                    .then(() => {
-                                        this.$router.push({ name : 'pages.read', params : { id : newPage.id }});
-                                    }).catch(err => {
-                                        console.log(err);
-                                    });
-                            } else {
-                                this.$router.push({ name : 'pages.read', params : { id : newPage.id }});
-                            }
-                        }).catch(err => {
-                            console.log(err);
-                        });
-                }
-            },
-            uploadImage(pageId) {
-                var formData = new FormData();
-                formData.append('image', this.$refs.fileInput.files[0]);
-                formData.append('x', this.imageCrop.points[0]);
-                formData.append('y', this.imageCrop.points[1]);
-                formData.append('width', this.imageCrop.points[2] - this.imageCrop.points[0]);
-                formData.append('height', this.imageCrop.points[3] - this.imageCrop.points[1]);
-                formData.append('scale', this.imageCrop.zoom);
-                return this.$store.dispatch('pageModule/uploadImage', {
-                    page : {
-                        id : pageId
-                    },
-                    formData : formData
-                });
-            },
-            upload() {
-                this.$refs.fileInput.click();
-            },
-            onFileChange($event) {
-                const files = $event.target.files || $event.dataTransfer.files
-                if (files) {
-                    if (files.length > 0) {
-                        this.filename = [...files].map(file => file.name).join(', ');
-                    } else {
-                        this.filename = null;
-                    }
-                } else {
-                    this.filename = $event.target.value.split('\\').pop();
-                }
-                var reader = new FileReader();
-                reader.onload = (e) => {
-                    this.imageURL = e.target.result;
-                };
-                reader.readAsDataURL(files[0]);
+                        })
+                        ;
+                    }).catch(err => {
+                        console.log(err);
+                    });
             }
         }
     };

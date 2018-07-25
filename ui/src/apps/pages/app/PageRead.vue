@@ -1,90 +1,37 @@
 <template>
-    <v-container v-if="loading">
-        <v-layout row justify-space-around>
-            <v-flex xs1>
-                <v-progress-circular class="text-xs-center" indeterminate color="red" :size="50" :width="7"></v-progress-circular>
-            </v-flex>
-        </v-layout>
-    </v-container>
-    <v-container v-else class="pt-0">
-        <v-layout>
-            <v-flex xs12>
-                <v-card v-if="page" flat style="flex:1">
-                    <v-card-media v-if="page.crop" :src="page.crop" :height="imageHeight" class="no-print">
-                        <v-container fill-height fluid>
-                            <v-layout fill-height>
-                                <v-flex align-end flexbox>
-                                    <span class="pa-2 headline" style="background-color:rgba(255,255,255,0.7)">
-                                        {{ title }}
-                                    </span>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card-media>
-                    <v-card-title>
-                        <div>
-                            <h3 v-if="!page.crop" class="headline mb-0">
-                                {{ title }}
-                            </h3>
-                            <div class="page-mini-meta">
-                                <span v-if="category">
-                                    <router-link :to="{ name: 'pages.category', params: { category_id : category.id} }">{{ category.name }}</router-link>
-                                </span>
-                                <span v-if="authorName.length > 0">{{ authorName }} &bull; </span>
-                            </div>
-                            <div v-html="summary" style="margin-top:10px" class="page-meta">
-                            </div>
-                        </div>
-                    </v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text>
-                        <div class="page-content" v-html="content">
-                        </div>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn icon :to="{ name : 'pages' }" flat>
-                            <v-icon>view_list</v-icon>
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                        <v-btn v-if="$isAllowed('update', page)" color="secondary" icon :to="{ name : 'pages.update', params : { id : page.id }}" flat>
-                            <v-icon>fa-edit</v-icon>
-                        </v-btn>
-                        <v-btn v-if="$isAllowed('remove', page)" color="secondary" icon @click="areYouSure()" flat>
-                            <v-icon>fa-trash</v-icon>
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-                <v-alert v-if="!page && !loading" color="error" value="true" icon="fa-exclamation-triangle">
-                    {{ $t('not_found') }}
-                </v-alert>
-            </v-flex>
-        </v-layout>
-        <v-dialog v-model="showAreYouSure" max-width="290">
-            <v-card>
-                <v-card-text>
-                    <v-layout>
-                        <v-flex xs2>
-                            <v-icon color="error">fa-bell</v-icon>
-                        </v-flex>
-                        <v-flex xs10>
-                            <div>{{ $t('sure_to_delete') }}</div>
-                        </v-flex>
-                    </v-layout>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" @click="deletePage">
-                        <v-icon left>fa-trash</v-icon>
-                        {{ $t('delete') }}
-                    </v-btn>
-                    <v-btn @click="showAreYouSure = false">
-                        <v-icon left>fa-ban</v-icon>
-                        {{ $t('cancel') }}
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-container>
+    <div class="uk-container">
+        <div v-if="error">
+            {{ error.response.statusText }}
+        </div>
+        <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
+            <header>
+                <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">
+                    <router-link :to="{ name : 'pages.category', params : { category_id : page.category.id }}" class="uk-link-reset">
+                        {{ page.category.name }}
+                    </router-link>
+                </span>
+                <h2 class="uk-margin-remove-adjacent uk-text-bold uk-margin-small-bottom">
+                    {{ page.title }}
+                </h2>
+                <div>
+                    <router-link v-if="$page.isAllowed('update', page)" :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
+                        <fa-icon name="edit" />
+                    </router-link>
+                    <a v-if="$page.isAllowed('remove', page)" uk-toggle="target: #delete-page" class="uk-icon-button">
+                        <fa-icon name="trash" />
+                    </a>
+                </div>
+                <blockquote v-if="page.summary" v-html="page.summary" class="uk-text-meta">
+                </blockquote>
+            </header>
+            <figure v-if="page.header_detail_crop">
+                <img :src="page.header_detail_crop" />
+            </figure>
+            <article class="page-content uk-article" v-html="page.content">
+            </article>
+        </article>
+        <PageDelete @deletePageEvent="deletePage" />
+    </div>
 </template>
 
 <style>
@@ -163,82 +110,27 @@
 </style>
 
 <script>
-    import find from 'lodash/find';
-    import filter from 'lodash/filter';
+    import 'vue-awesome/icons/edit';
+    import 'vue-awesome/icons/trash';
 
-    import messages from '../lang/PageRead';
+    import messages from '../lang';
+
+    import PageDelete from './PageDelete.vue';
 
     export default {
-        i18n : {
-            messages
-        },
         components : {
+            PageDelete
         },
-        data() {
-            return {
-                showAreYouSure : false
-            }
-        },
+        i18n : messages,
         computed : {
-            loading() {
-                return this.$store.getters['pageModule/loading'];
-            },
-            imageHeight() {
-                switch(this.$vuetify.breakpoint.name) {
-                    case 'xs':
-                        return '200px';
-                    case 'sm':
-                        return '250px';
-                    case 'md':
-                        return '300px';
-                    case 'lg':
-                        return '400px';
-                    case 'xl':
-                        return '400px';
-                }
-            },
             page() {
                 return this.$store.getters['pageModule/page'](this.$route.params.id);
             },
-            summary() {
-                var content = find(this.page.contents, function(o) {
-                    return o.locale == 'nl';
-                });
-                if (content) {
-                    return content.html_summary;
-                }
-                return "";
-            },
-            content() {
-                var content = find(this.page.contents, function(o) {
-                    return o.locale == 'nl';
-                });
-                if (content) {
-                    return content.html_content;
-                }
-                return "";
-            },
-            title() {
-                var content = find(this.page.contents, function(o) {
-                    return o.locale == 'nl';
-                });
-                if (content) {
-                    return content.title;
-                }
-                return "";
-            },
-            authorName() {
-                var author = this.page.author;
-                if (author) {
-                    return filter([author.first_name, author.last_name]).join(' ');
-                }
-                return "";
-            },
             loading() {
                 return this.$store.getters['pageModule/loading'];
             },
-            category() {
-                return this.$store.getters['categoryModule/category'](this.page.category.id);
+            error() {
+                return this.$store.getters['pageModule/error'];
             }
         },
         mounted() {
@@ -251,20 +143,19 @@
         },
         methods : {
             fetchData() {
-                this.$store.dispatch('pageModule/read', { id : this.$route.params.id })
-                  .catch((error) => {
-                    console.log(error);
-                });
-            },
-            areYouSure() {
-                this.showAreYouSure = true;
+                try {
+                    this.$store.dispatch('pageModule/read', { id : this.$route.params.id });
+                }
+                catch(error) {
+                  console.log('error');
+                  console.log(error);
+                }
             },
             deletePage() {
-                this.showAreYouSure = false;
                 this.$store.dispatch('pageModule/delete', {
-                    id : this.page.id
+                    page : this.page
                 }).then(() => {
-                    this.$router.go(-1);
+                    //this.$router.go(-1);
                 });
             }
         }

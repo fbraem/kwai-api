@@ -10,14 +10,13 @@ use Core\Responders\Responder;
 use Core\Responders\JSONResponder;
 use Core\Responders\JSONErrorResponder;
 use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
 
-use League\Fractal;
-
-class UpdateAction implements \Core\ActionInterface
+class CreateContentAction implements \Core\ActionInterface
 {
     public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
     {
+        $data = $payload->getInput();
+
         $id = $request->getAttribute('route.id');
 
         $pagesTable = \Domain\Page\PagesTable::getTableFromRegistry();
@@ -33,9 +32,7 @@ class UpdateAction implements \Core\ActionInterface
                 ))->respond();
         }
 
-        $data = $payload->getInput();
-
-        $validator = new \REST\Pages\PageValidator();
+        $validator = new \REST\Contents\ContentValidator();
         $errors = $validator->validate($data);
         if (count($errors) > 0) {
             return (
@@ -45,44 +42,23 @@ class UpdateAction implements \Core\ActionInterface
                         422
                     ),
                     $errors
-                ))->respond();
+                )
+            )->respond();
         }
 
-        $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
-        if (isset($categoryId)) {
-            try {
-                $category = \Domain\Category\CategoriesTable::getTableFromRegistry()->get($categoryId);
-            } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-                return (
-                    new JSONErrorResponder(
-                        new HTTPCodeResponder(
-                            new Responder(),
-                            422
-                        ),
-                        [
-                            '/data/relationships/category' => [
-                                _('Category doesn\'t exist')
-                            ]
-                        ]
-                    ))->respond();
-            }
-        }
 
+        $contentsTable = \Domain\Content\ContentsTable::getTableFromRegistry();
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        if (isset($category)) {
-            $page->catgory = $category;
-        }
-        if (isset($attributes['priority'])) {
-            $page->priority = $attributes['priority'];
-        }
-        if (isset($attributes['enabled'])) {
-            $page->enabled = $attributes['enabled'];
-        }
-        if (isset($attributes['remark'])) {
-            $page->remark = $attributes['remark'];
-        }
+        $content = $contentsTable->newEntity();
+        $content->locale = 'nl';
+        $content->format = 'md';
+        $content->title = $attributes['title'];
+        $content->summary = $attributes['summary'];
+        $content->content = $attributes['content'];
+        $content->user = $request->getAttribute('clubman.user');
 
+        $page->contents = [ $content ];
         $pagesTable->save($page);
 
         $filesystem = $request->getAttribute('clubman.container')['filesystem'];
@@ -95,6 +71,7 @@ class UpdateAction implements \Core\ActionInterface
                     201
                 ),
                 $payload
-            ))->respond();
+            )
+        )->respond();
     }
 }

@@ -17,8 +17,19 @@ class Router extends \Core\Router
             ->auth(['login' => true]);
         $this->map->delete('pages.delete', '/pages/{id}', \REST\Pages\Actions\DeleteAction::class)
             ->auth(['login' => true]);
-        $this->map->post('pages.upload', '/pages/image/{id}', \REST\Pages\Actions\UploadAction::class)
+
+        //$this->map->post('pages.upload', '/pages/image/{id}', \REST\Pages\Actions\UploadAction::class)
+        //    ->auth(['login' => true])
+        //    ->accepts(['image/*']);
+
+        $this->map->post('createContent', '/pages/{id}/contents', \REST\Pages\Actions\CreateContentAction::class)
             ->auth(['login' => true])
-            ->accepts(['image/*']);
+        ;
+        $this->map->patch('updateContent', '/pages/{id}/contents/{contentId}', \REST\Pages\Actions\UpdateContentAction::class)
+            ->auth(['login' => true])
+        ;
+        //$this->map->delete('deleteContent', '/pages/{id}/contents/{contentId}', \REST\Pages\Actions\DeleteContentAction::class)
+        //    ->auth(['login' => true])
+        //;
     }
 }

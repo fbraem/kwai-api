@@ -75,20 +75,10 @@ class CreateAction implements \Core\ActionInterface
         $page->remark = $attributes['remark'];
         $page->enabled = $attributes['enabled'];
         $page->priority = $attributes['priority'];
-
-        $contentsTable = \Domain\Content\ContentsTable::getTableFromRegistry();
-        $content = $contentsTable->newEntity();
-        $content->locale = 'nl';
-        $content->format = 'md';
-        $content->title = $attributes['title'];
-        $content->summary = $attributes['summary'];
-        $content->content = $attributes['content'];
-        $content->user = $request->getAttribute('clubman.user');
-        $page->contents = [ $content ];
-
         $pagesTable->save($page);
 
-        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page));
+        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
+        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page, $filesystem));
 
         return (
             new JSONResponder(

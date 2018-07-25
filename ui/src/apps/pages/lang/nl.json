@@ -1,0 +1,22 @@
+{
+    "page" : "Informatie",
+    "pages" : "Informatie",
+    "category" : "Categorie",
+    "no_pages" : "Geen informatie gevonden",
+    "are_you_sure" : "Ben je zeker om deze pagina te verwijderen?",
+    "cancel" : "Annuleer",
+    "delete" : "Verwijder",
+    "delete_page" : "Pagina verwijderen",
+    "create" : "Maak een pagina",
+    "update" : "Wijzig de pagina",
+    "title" : "Titel",
+    "title_placeholder" : "Geef een titel in",
+    "summary" : "Samenvatting",
+    "summary_placeholder" : "Geef een samenvatting in",
+    "content" : "Inhoud",
+    "content_placeholder" : "Geef de inhoud van het bericht in",
+    "remark" : "Opmerking",
+    "remark_placeholder" : "Geef een opmerking in",
+    "save" : "Bewaar",
+    "enabled" : "Actief"
+}

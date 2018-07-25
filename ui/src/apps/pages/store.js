@@ -2,19 +2,11 @@ import Vue from 'vue';
 
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
-import axios from 'axios';
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import find from 'lodash/find';
-import filter from 'lodash/filter';
-import unionBy from 'lodash/unionBy';
-
-import URI from 'urijs';
-import moment from 'moment';
-
-import JSONAPI from '@/js/JSONAPI';
+import Page from './models/Page';
 
 const state = {
     pages : [],
@@ -22,8 +14,7 @@ const state = {
         loading : false,
         success : false,
         error : false
-    },
-    archive : {}
+    }
 };
 
 const getters = {
@@ -31,7 +22,7 @@ const getters = {
         return state.pages;
     },
     page: (state) => (id) => {
-        return find(state.pages, ['id', id]);
+        return state.pages.find((page) => page.id == id);
     },
     loading(state) {
         return state.status.loading;
@@ -45,16 +36,30 @@ const getters = {
 };
 
 const mutations = {
-  pages(state, data) {
-      state.pages = data.pages;
+  pages(state, pages) {
+      state.pages = pages;
   },
-  setPage(state, data) {
-      state.pages = unionBy([data.page], state.page, 'id');
+  page(state, page) {
+      var index = state.pages.findIndex((p) => p.id == page.id);
+      if (index != -1) {
+          Vue.set(state.pages, index, page);
+      } else {
+          state.pages.push(page);
+      }
   },
-  deletePage(state, data) {
-      state.pages = filter(state.pages, (page) => {
-         return page.id != data.id;
+  deletePage(state, page) {
+      state.pages = state.pages.filter((p) => {
+         return page.id != p.id;
       });
+  },
+  attachContent(state, data) {
+      var index = state.pages.findIndex((p) => p.id == data.page.id);
+      if (index != -1) {
+          if (state.pages[index].contents == null) {
+              state.pages[index].contents = [];
+          }
+          state.pages[index].contents.push(data.content);
+      }
   },
   loading(state) {
       state.status = {
@@ -80,106 +85,72 @@ const mutations = {
 };
 
 const actions = {
-    browse(context, payload) {
-        context.commit('loading');
-        var uri = new URI('api/pages');
-        var offset = payload.offset || 0;
-        uri.addQuery('page[offset]', offset);
+    async browse({ state, getters, commit, context }, payload) {
+        commit('loading');
+        const page = new Page();
+        //var offset = payload.offset || 0;
+        //uri.addQuery('page[offset]', offset);
         if (payload.category) {
-            uri.addQuery('filter[category]', payload.category);
+            page.where('category', payload.category);
         }
         if (payload.user) {
-            uri.addQuery('filter[user]', payload.user);
+            page.where('user', payload.user);
         }
-
-        oauth.get(uri.href(), {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var pages = api.parse(res.data);
-            context.commit('pages', {
-                pages : pages.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        let pages = await page.get();
+        commit('pages', pages);
+        commit('success');
     },
-    read(context, payload) {
-        context.commit('loading');
-        var page = context.getters['page'](payload.id);
+    async read({ state, getters, commit, context }, payload) {
+        commit('loading');
+        var page = getters['page'](payload.id);
         if (page) { // already read
-            context.commit('success');
-            return;
+            commit('success');
         }
-
-        oauth.get('api/pages/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setPage', {
-                page : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        else {
+            let model = new Page();
+            try {
+                page = await model.find(payload.id);
+                commit('page', page);
+                commit('success');
+            } catch(error) {
+                commit('error', error);
+            }
+        }
+        return page;
     },
-    create(context, payload) {
-        context.commit('loading');
-        return oauth.post('api/pages', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setPage', {
-                page : result.data
-            });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+    async save({ state, getters, commit, context }, page) {
+        try  {
+            var newPage = await page.save();
+            commit('page', newPage);
+            return newPage;
+        } catch(error) {
+            commit('error', error);
+            throw error;
+        }
     },
-    update(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/pages/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('setPage', {
-                    page : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
+    async attachContent({ state, getters, commit, context }, payload) {
+        try {
+            var newPage = await payload.page.attach(payload.content);
+            commit('page', newPage);
+            return newPage;
+        }
+        catch(error)
+        {
+            commit('error', error);
+            throw(error);
+        }
     },
-    delete(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.delete('api/pages/' + payload.id)
-            .then((res) => {
-                context.commit('deletePage', { id : payload.id });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
+    async delete({ state, getters, commit, context }, payload) {
+        commit('loading');
+        try {
+            await payload.page.delete();
+            commit('deletePage', { id : payload.page.id });
+            commit('success');
+        } catch(error) {
+            commit('error', error);
+            throw(error);
+        }
     },
-    uploadImage(context, payload) {
-        return oauth.post('/api/pages/image/' + payload.page.id, {
-            data : payload.formData
-        });
-    }
 };
 
 export default {

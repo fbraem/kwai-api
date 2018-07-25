@@ -1,63 +1,40 @@
 <template>
-    <v-card :to="{ name : 'pages.read' , params : { id : page.id }}">
-        <span style="float:right;">
-            <v-icon style="margin:10px;">fa-ellipsis-h</v-icon>
-        </span>
-        <v-card-title>
-            <div class="headline">
-                {{ title }}
+    <div>
+        <div class="uk-card uk-card-small uk-card-default">
+            <div v-if="page.header_overview_crop" class="uk-card-media">
+                <div class="uk-inline-clip">
+                    <img :src="page.header_overview_crop" />
+                </div>
             </div>
-        </v-card-title>
-        <v-card-text>
-            <div v-html="summary">
+            <div class="uk-card-body">
+                <h5 class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold">{{ page.title }}</h5>
+                <p class="uk-text-small uk-text-muted" v-html="page.summary"></p>
+                <span class="uk-float-right">
+                    <router-link class="uk-icon-button" :to="contentLink">
+                        <fa-icon name="ellipsis-h" />
+                    </router-link>
+                </span>
             </div>
-        </v-card-text>
-    </v-card>
+        </div>
+    </div>
 </template>
 
 <script>
-    import find from 'lodash/find';
-    import filter from 'lodash/filter';
+    import 'vue-awesome/icons/ellipsis-h';
 
     export default {
         props : [
             'page'
         ],
         computed : {
-            summary() {
-                var content = find(this.page.contents, function(o) {
-                    return o.locale == 'nl';
-                });
-                if (content) {
-                    return content.html_summary;
-                }
-                return "";
+            contentLink() {
+                return {
+                    name : 'pages.read',
+                    params : {
+                        id : this.page.id
+                    }
+                };
             },
-            content() {
-                var content = find(this.page.contents, function(o) {
-                    return o.locale == 'nl';
-                });
-                if (content) {
-                    return content.html_content;
-                }
-                return "";
-            },
-            title() {
-                var content = find(this.page.contents, function(o) {
-                    return o.locale == 'nl';
-                });
-                if (content) {
-                    return content.title;
-                }
-                return "";
-            },
-            authorName() {
-                var author = this.page.author;
-                if (author) {
-                    return filter([author.first_name, author.last_name]).join(' ');
-                }
-                return "";
-            }
         }
     };
 </script>
