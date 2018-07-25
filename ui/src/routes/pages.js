@@ -30,18 +30,18 @@ export default [
                     components : {
                         PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageBrowse.vue')
                     },
-                    name : 'pages'
+                    name : 'pages.browse'
                 }
             ]
         },
         {
             path : '/pages/create',
-            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageCreate.vue'),
+            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageForm.vue'),
             name : 'pages.create'
         },
         {
             path : '/pages/update/:id(\\d+)',
-            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageUpdate.vue'),
+            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageForm.vue'),
             name : 'pages.update'
         }
 ];
