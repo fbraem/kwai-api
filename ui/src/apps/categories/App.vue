@@ -1,37 +1,19 @@
 <template>
-    <v-container grid-list-xl ma-0 pa-0>
-    </v-container>
+    <router-view name="CategoryContent" />
 </template>
 
-<style>
-.category-description {
-    font-size: 12px;
-    color: #999;
-}
-</style>
-
 <script>
-    import moment from 'moment';
+    import categoryStore from './store';
 
-    import messages from './lang/lang';
+    import messages from './lang';
 
     export default {
-        i18n : {
-            messages
-        },
-        computed : {
-            categories() {
-                return this.$store.getters['categoryModule/categories'];
-            }
-          },
+        i18n : messages,
         created() {
-            this.$store.dispatch('setSubTitle', this.$t('categories'));
-            this.$store.dispatch('categoryModule/browse');
-        },
-        methods : {
-            selectCategory(id) {
-                this.$router.push({ name : 'categories.read', params : { id : id }});
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
             }
+            //this.$store.dispatch('setSubTitle', this.$t('categories'));
         }
     };
 </script>

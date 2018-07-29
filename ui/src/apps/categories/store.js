@@ -2,16 +2,11 @@ import Vue from 'vue';
 
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
-import axios from 'axios';
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import find from 'lodash/find';
-import URI from 'urijs';
-import moment from 'moment';
-
-import JSONAPI from '@/js/JSONAPI';
+import Category from './models/Category';
 
 const state = {
     categories : [],
@@ -27,7 +22,7 @@ const getters = {
         return state.categories;
     },
     category: (state) => (id) => {
-        return find(state.categories, ['id', id]);
+        return state.categories.find((category) => category.id == id);
     },
     loading(state) {
         return state.status.loading;
@@ -41,11 +36,21 @@ const getters = {
 };
 
 const mutations = {
-  categories(state, data) {
-      state.categories = data.categories;
+  categories(state, categories) {
+    state.categories = categories;
   },
-  addCategory(state, data) {
-      state.categories.unshift(data.category);
+  category(state, category) {
+    var index = state.categories.findIndex((c) => s.id == category.id);
+    if (index != -1) {
+        Vue.set(state.categories, index, category);
+    } else {
+        state.categories.push(category);
+    }
+  },
+  deleteCategory(state, category) {
+    state.categories = state.categories.filter((c) => {
+           return category.id != c.id;
+    });
   },
   loading(state) {
       state.status = {
@@ -71,76 +76,41 @@ const mutations = {
 };
 
 const actions = {
-    browse(context, payload) {
-        return new Promise((resolve, reject) => {
-            oauth.get('api/categories', {
-            }).then((res) => {
-                var api = new JSONAPI();
-                var categories = api.parse(res.data);
-                context.commit('categories', {
-                    categories : categories.data
-                });
-                resolve();
-            }).catch((error) => {
-                reject();
-            });
-        });
+    async browse({ state, getters, commit, context }, payload) {
+        commit('loading');
+        const category = new Category();
+        let categories = await category.get();
+        commit('categories', categories);
+        commit('success');
     },
-    create(context, payload) {
-        context.commit('loading');
-        return oauth.post('api/categories', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addCategory', {
-                category : result.data
-            });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
-    },
-    update(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/categories/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('modifyCategory', {
-                    category : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
-    },
-    read(context, payload) {
-        context.commit('loading');
-        var category = context.getters['category'](payload.id);
+    async read({ state, getters, commit, context }, payload) {
+        commit('loading');
+        var category = getters['category'](payload.id);
         if (category) { // already read
-            context.commit('success');
-            return;
+            commit('success');
+            return category;
         }
 
-        oauth.get('api/categories/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addCategory', {
-                category : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        let model = new Category();
+        try {
+            category = await model.find(payload.id);
+            commit('category', category);
+            commit('success');
+        } catch(error) {
+            commit('error', error);
+        }
+        return category;
+    },
+    async save({ state, getters, commit, context }, category) {
+        var newCategory = null;
+        try  {
+            newCategory = await category.save();
+            commit('story', newStory);
+            return newCategory;
+        } catch(error) {
+            commit('error', error);
+            throw error;
+        }
     }
 };
 
