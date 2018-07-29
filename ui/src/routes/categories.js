@@ -1,8 +1,26 @@
 export default [
     {
         path : '/categories/',
-        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/App.vue'),
-        name : 'categories'
+        component : () => import(/* webpackChunkName: "category_chunk" */ '@/apps/categories/App.vue'),
+        children : [
+            {
+                path : ':id(\\d+)',
+                components : {
+                    CategoryContent : () => import(/* webpackChunkName: "category_chunk" */ '@/apps/categories/app/CategoryRead.vue')
+                },
+                name : 'categories.read',
+                props : {
+                    CategoryComponent : true
+                }
+            },
+            {
+                path : '',
+                components : {
+                    CategoryContent : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/app/CategoryBrowse.vue')
+                },
+                name : 'categories.browse'
+            }
+        ]
     },
     {
         path : '/categories/create',
@@ -13,10 +31,5 @@ export default [
         path : '/categories/update/:id(\\d+)',
         component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryUpdate.vue'),
         name : 'categories.update'
-    },
-    {
-        path : '/categories/:id(\\d+)',
-        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryRead.vue'),
-        name : 'categories.read'
     }
 ];
