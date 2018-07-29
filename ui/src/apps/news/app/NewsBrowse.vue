@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="uk-child-width-1-1 uk-child-width-1-2@l" uk-grid="masonry: true">
+        <div class="uk-child-width-1-1 uk-child-width-1-2@l uk-grid" uk-grid="masonry: true">
             <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
         </div>
         <div v-if="newsCount == 0">
