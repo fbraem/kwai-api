@@ -30,7 +30,7 @@
     import 'vue-awesome/icons/spinner';
 
     import moment from 'moment';
-    import PageSummary from './PageSummary.vue';
+    import PageSummary from '../components/PageSummary.vue';
     //import Paginator from '@/components/Paginator.vue';
 
     import messages from '../lang';
