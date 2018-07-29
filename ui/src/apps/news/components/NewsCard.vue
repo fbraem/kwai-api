@@ -1,39 +1,44 @@
 <template>
     <div>
-        <div class="uk-card uk-card-body uk-card-default uk-card-small" style="border:1px solid rgba(0,0,0,0.075);">
-            <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" uk-grid>
-                <div v-if="story.header_overview_crop" class="uk-width-1-3@s uk-width-2-5@m uk-height-1-1">
-                    <img :src="story.header_overview_crop" alt="" />
+        <div class="uk-card uk-card-body uk-card-default uk-card-small uk-flex uk-flex-middle uk-border-rounded">
+            <div class="uk-child-width-1" uk-grid>
+                <div>
+                    <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" uk-grid>
+                        <div v-if="story.header_overview_crop" class="uk-width-1-3@s uk-width-2-5@m uk-height-1-1">
+                            <img :src="story.header_overview_crop" alt="" />
+                        </div>
+                        <div :class="widthClass">
+                            <span v-if="showCategory" class="uk-label uk-label-warning" style="font-size: 0.75rem">
+                                <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
+                                    {{ story.category.name }}
+                                </router-link>
+                            </span>
+                            <h3 class="uk-card-title uk-margin-small-top uk-margin-remove-bottom uk-text-break">
+                                <router-link v-if="story.content" class="uk-link-reset" :to="contentLink">{{ story.title }}</router-link>
+                                <span v-else>{{ story.title }}</span>
+                            </h3>
+                            <span class="uk-article-meta" v-if="story.publish_date">
+                                {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
+                            </span>
+                            <div class="uk-margin-small uk-text-small" v-html="story.summary"></div>
+                        </div>
+                    </div>
                 </div>
-                <div :class="widthClass">
-                    <span class="uk-label uk-label-warning" style="font-size: 0.75rem">
-                        <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
-                            {{ story.category.name }}
+                <div>
+                    <span class="uk-float-right">
+                        <router-link v-if="story.content" class="uk-icon-button" :to="contentLink">
+                            <fa-icon name="ellipsis-h" />
                         </router-link>
+                        <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+                            <fa-icon name="edit" />
+                        </router-link>
+                        <a v-if="$story.isAllowed('remove', story)" uk-toggle="target: #delete-story" class="uk-icon-button">
+                            <fa-icon name="trash" />
+                        </a>
                     </span>
-                    <h3 class="uk-card-title uk-margin-small-top uk-margin-remove-bottom uk-text-break">
-                        <router-link v-if="story.content" class="uk-link-reset" :to="contentLink">{{ story.title }}</router-link>
-                        <span v-else>{{ story.title }}</span>
-                    </h3>
-                    <span class="uk-article-meta" v-if="story.publish_date">
-                        {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
-                    </span>
-                    <div class="uk-margin-small" v-html="story.summary"></div>
                 </div>
             </div>
-            <span class="uk-float-right">
-                <router-link v-if="story.content" class="uk-icon-button" :to="contentLink">
-                    <fa-icon name="ellipsis-h" />
-                </router-link>
-                <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
-                    <fa-icon name="edit" />
-                </router-link>
-                <a v-if="$story.isAllowed('remove', story)" uk-toggle="target: #delete-story" class="uk-icon-button">
-                    <fa-icon name="trash" />
-                </a>
-            </span>
         </div>
-        <NewsDelete @deleteStoryEvent="deleteStory" />
     </div>
 </template>
 
@@ -55,6 +60,10 @@
             story : {
                 type : Object,
                 required : true
+            },
+            showCategory : {
+                type : Boolean,
+                default : true
             }
         },
         computed : {
