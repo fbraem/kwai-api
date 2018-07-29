@@ -106,6 +106,7 @@ const mutations = {
 
 const actions = {
     async browse({ state, getters, commit, context }, payload) {
+        payload = payload || {};
         commit('loading');
         const story = new Story();
         if (payload.category) {
