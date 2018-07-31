@@ -97,6 +97,7 @@ const actions = {
             commit('category', category);
             commit('success');
         } catch(error) {
+            console.log(error);
             commit('error', error);
         }
         return category;
