@@ -23,42 +23,56 @@
             </div>
         </section>
         <section class="uk-section uk-section-small">
-            <div class="uk-grid-collapse uk-flex-center" uk-grid>
-                <div class="uk-width-small">
-                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                        <fa-icon name="newspaper" scale="2" style="color:#f44336" />
-                        Nieuws
-                    </a>
-                </div>
-                <div class="uk-width-small">
-                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                        <fa-icon name="university" scale="2" style="color:#f44336" />
-                        Trainingen
-                    </a>
-                </div>
-                <div class="uk-width-small">
-                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                        <fa-icon name="trophy" scale="2" style="color:#f44336" />
-                        Tornooien
-                    </a>
-                </div>
-                <div class="uk-width-small">
-                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                        <fa-icon name="calendar" scale="2" style="color:#f44336" />
-                        Kalender
-                    </a>
-                </div>
-                <div class="uk-width-small">
-                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                        <fa-icon name="shopping-basket" scale="2" style="color:#f44336" />
-                        Materiaal
-                    </a>
-                </div>
-                <div class="uk-width-small">
-                    <a :to="{ name : 'news.browse' }" class="uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                        <fa-icon name="users" scale="2" style="color:#f44336"/>
-                        Bestuur
-                    </a>
+            <div class="uk-container">
+                <div class="uk-grid-small uk-flex-center uk-child-width-1-3@s uk-child-width-1-6@l" uk-grid>
+                    <div>
+                        <router-link :to="{ name : 'news.browse' }" class="uk-link-reset">
+                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
+                                <fa-icon name="newspaper" scale="2" style="color:#f44336;height:32px;" />
+                                <div class="uk-text-uppercase uk-margin-top">Nieuws</div>
+                            </div>
+                        </router-link>
+                    </div>
+                    <div>
+                        <router-link :to="{ name : 'categories.read', params : { id : '2' } }" class="uk-link-reset">
+                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
+                                <fa-icon name="university" scale="2" style="color:#f44336;height:32px;" />
+                                <div class="uk-text-uppercase uk-margin-top">Trainingen</div>
+                            </div>
+                        </router-link>
+                    </div>
+                    <div>
+                        <router-link :to="{ name : 'categories.read', params : { id : '3'} }" class="uk-link-reset">
+                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
+                                <fa-icon name="trophy" scale="2" style="color:#f44336;height:32px;" />
+                                <div class="uk-text-uppercase uk-margin-top">Tornooien</div>
+                            </div>
+                        </router-link>
+                    </div>
+                    <div>
+                        <a href="https://www.judokwaikemzeke.be/oud/kalender.htm" class="uk-link-reset">
+                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
+                                <fa-icon name="calendar" scale="2" style="color:#f44336;height:32px;" />
+                                <div class="uk-text-uppercase uk-margin-top">Kalender</div>
+                            </div>
+                        </a>
+                    </div>
+    <!--
+                    <div class="uk-width-small">
+                        <a class="uk-link-muted uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
+                            <fa-icon name="shopping-basket" scale="2" style="color:#f44336" />
+                            Materiaal
+                        </a>
+                    </div>
+    -->
+                    <div>
+                        <a href="https://www.judokwaikemzeke.be/oud/training/trainers.htm" class="uk-link-reset">
+                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
+                                <fa-icon name="users" scale="2" style="color:#f44336;height:32px;"/>
+                                <div class="uk-text-uppercase uk-margin-top">Bestuur</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -135,12 +149,6 @@
 </template>
 
 <style>
-.btn {
-    background-color:hsla(0,0%,94%,.9);
-    height:9rem;
-    margin:0;
-    border-radius:0
-}
 .message-card {
     background-color:#607d8b;
 }
