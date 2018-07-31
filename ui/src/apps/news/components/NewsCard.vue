@@ -81,7 +81,7 @@
             widthClass() {
                 if ( this.story.header_overview_crop ) {
                     return {
-                        'uk-width-1-3@s' : true,
+                        'uk-width-2-3@s' : true,
                         'uk-width-3-5@m' : true
                     };
                 }
