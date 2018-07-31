@@ -20,7 +20,7 @@
                         <div v-if="storyCount > 0" uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true; sets: true">
                             <div class="uk-position-relative">
                                 <div class="uk-slider-container">
-                                    <ul class="uk-slider-items uk-child-width-1-1@s uk-child-width-1-2@m uk-child-width-1-3@l uk-grid-medium" uk-grid uk-height-match="target: > li > div > .uk-card">
+                                    <ul class="uk-slider-items uk-child-width-1-1@s uk-child-width-1-2@m uk-child-width-1-3@l uk-grid-medium uk-grid" uk-height-match="target: > li > div > .uk-card">
                                         <li v-for="story in stories">
                                             <NewsCard :story="story" :showCategory="false"></NewsCard>
                                         </li>
@@ -107,10 +107,19 @@
                 this.$store.registerModule('pageModule', pageStore);
             }
         },
+        beforeRouteUpdate(to, from, next) {
+            this.fetchData();
+        	next();
+        },
         mounted() {
-          this.$store.dispatch('categoryModule/read', { id : this.$route.params.id });
-          this.$store.dispatch('newsModule/browse', { category : this.$route.params.id, featured : true });
-          this.$store.dispatch('pageModule/browse', { category : this.$route.params.id });
+            this.fetchData();
+        },
+        methods : {
+            fetchData() {
+                this.$store.dispatch('categoryModule/read', { id : this.$route.params.id });
+                this.$store.dispatch('newsModule/browse', { category : this.$route.params.id, featured : true });
+                this.$store.dispatch('pageModule/browse', { category : this.$route.params.id });
+            }
         }
     };
 </script>

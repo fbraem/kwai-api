@@ -7,20 +7,47 @@
         </div>
         <div v-else uk-grid class="uk-flex uk-margin">
             <div v-if="category" class="uk-width-1-1">
-                <div class="uk-tile uk-tile-muted uk-padding-small" style="border:1px solid rgba(0,0,0,0.075)">
-                    <h3>{{ category.name }}</h3>
-                    <div class="uk-text-meta">
-                        {{ category.description }}
+                <section class="uk-section uk-section-small uk-section-secondary">
+                    <div class="uk-container uk-container-expand">
+                        <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
+                            <div v-if="category">
+                                <h1 class="uk-margin-remove">{{ category.name }}</h1>
+                                <h3 class="uk-margin-remove">{{ $t('news') }}</h3>
+                                <p>
+                                    {{ category.description }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
             </div>
-            <div v-if="year && month" class="uk-width-1-1">
-                <div class="uk-tile uk-tile-muted uk-padding-small" style="border:1px solid rgba(0,0,0,0.075)">
-                    <h3>{{ $t('archive_title', { monthName : monthName, year : year }) }}</h3>
-                </div>
+            <div v-else-if="year && month" class="uk-width-1-1">
+                <section class="uk-section uk-section-small uk-section-secondary">
+                    <div class="uk-container uk-container-expand">
+                        <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
+                            <div>
+                                <h1 class="uk-margin-remove">{{ $t('archive_title', { monthName : monthName, year : year }) }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div v-else class="uk-width-1-1">
+                <section class="uk-section uk-section-small uk-section-secondary">
+                    <div class="uk-container uk-container-expand">
+                        <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
+                            <div>
+                                <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
+                                <p>
+                                    {{ $t('all_news') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
-        <div class="uk-child-width-1-1 uk-child-width-1-2@l uk-grid" uk-grid="masonry: true">
+        <div class="uk-child-width-1-1 uk-child-width-1-2@l uk-grid" uk-grid>
             <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
         </div>
         <div v-if="newsCount == 0">

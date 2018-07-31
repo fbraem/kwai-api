@@ -5,11 +5,6 @@
                 <div class="uk-width-2-3@m">
                     <div uk-grid class="uk-grid-small uk-child-width-1-1">
                         <div>
-                            <h4 class="uk-heading-line">
-                                <span>{{ $t('news') }}</span>
-                            </h4>
-                        </div>
-                        <div>
                             <router-link :to="{ name : 'news.browse' }" class="uk-icon-button">
                                 <fa-icon name="home" />
                             </router-link>
@@ -88,7 +83,7 @@
             if (!this.$store.state.categoryModule) {
                 this.$store.registerModule('categoryModule', categoryStore);
             }
-            this.$store.dispatch('setSubTitle', this.$t('news'));
+            //this.$store.dispatch('setSubTitle', this.$t('news'));
             this.$store.dispatch('categoryModule/browse');
             this.$store.dispatch('newsModule/loadArchive');
         }
