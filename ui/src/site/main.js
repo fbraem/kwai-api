@@ -8,10 +8,6 @@ Vue.use(VueRouter);
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import Vuetify from 'vuetify';
-Vue.use(Vuetify);
-import 'vuetify/dist/vuetify.min.css';
-
 import UIkit from 'uikit';
 import UIkitIcons from 'uikit/dist/js/uikit-icons';
 UIkit.use(UIkitIcons);
