@@ -27,6 +27,10 @@
         },
         created() {
             this.$store.dispatch('categoryModule/browse');
-        }
+        },
+        beforeRouteUpdate(to, from, next) {
+        	this.$store.dispatch('categoryModule/browse');
+        	next();
+        },
     };
 </script>
