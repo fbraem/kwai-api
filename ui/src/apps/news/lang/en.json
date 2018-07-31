@@ -1,6 +1,7 @@
 {
     "published" : "Published on {publishDate} - {publishDateFromNow}",
     "news" : "News",
+    "all_news" : "All news on one page ...",
     "archive" : "Archive",
     "category" : "Category",
     "archive_title" : "Archive of {monthName} {year}",
