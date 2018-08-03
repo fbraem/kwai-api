@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="uk-container uk-margin-top">
         <section class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container uk-container-expand">
+            <div class="uk-container uk-margin-left uk-margin-right">
                 <div uk-grid>
                     <div class="uk-width-1-1 uk-width-2-3@m">
                         <img :src="require('./images/judokwaikemzeke.jpg')" alt="" />
@@ -79,7 +79,7 @@
         <section class="uk-section uk-section-small uk-padding-remove-top">
             <div class="uk-container uk-container-expand">
                 <h4 class="uk-heading-line uk-text-bold"><span>Belangrijk Nieuws</span></h4>
-                <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-3@xl" uk-grid="masonry: true">
+                <div class="uk-child-width-1-1 uk-child-width-1-2@m" uk-grid="masonry: true">
                     <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
                 </div>
             </div>

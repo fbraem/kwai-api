@@ -47,7 +47,7 @@
                 </section>
             </div>
         </div>
-        <div class="uk-child-width-1-1 uk-child-width-1-2@l uk-grid" uk-grid>
+        <div class="uk-child-width-1-1" uk-grid>
             <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
         </div>
         <div v-if="newsCount == 0">

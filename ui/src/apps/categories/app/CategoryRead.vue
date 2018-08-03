@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="uk-container uk-margin-top">
         <section class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container uk-container-expand">
+            <div class="uk-container">
                 <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
                     <div v-if="category">
                         <h1>{{ category.name }}</h1>
@@ -13,14 +13,14 @@
             </div>
         </section>
         <section class="uk-section uk-section-default uk-section-small">
-            <div class="uk-container uk-container-expand">
+            <div class="uk-container">
                 <div uk-grid class="uk-flex uk-margin">
                     <div class="uk-width-1-1">
                         <h4 class="uk-heading-line"><span>Nieuws</span></h4>
-                        <div v-if="storyCount > 0" uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true; sets: true">
+                        <div v-if="storyCount > 0" uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true;">
                             <div class="uk-position-relative">
                                 <div class="uk-slider-container">
-                                    <ul class="uk-slider-items uk-child-width-1-1@s uk-child-width-1-2@m uk-child-width-1-3@l uk-grid-medium uk-grid" uk-height-match="target: > li > div > .uk-card">
+                                    <ul class="uk-slider-items uk-child-width-1-2@m uk-grid-medium uk-grid" uk-height-match="target: > li > div > .uk-card">
                                         <li v-for="story in stories">
                                             <NewsCard :story="story" :showCategory="false"></NewsCard>
                                         </li>

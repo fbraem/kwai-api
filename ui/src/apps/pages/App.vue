@@ -1,13 +1,11 @@
 <template>
     <section class="uk-section uk-section-default uk-section-small">
-        <div class="uk-container uk-container-expand">
+        <div class="uk-container">
             <div uk-grid>
                 <div class="uk-width-2-3@m">
                     <div uk-grid class="uk-grid-small uk-child-width-1-1">
                         <div>
-                            <h4 class="uk-heading-line">
-                                <span>{{ $t('page') }}</span>
-                            </h4>
+                            <router-view name="PageContent" />
                         </div>
                         <div>
                             <router-link :to="{ name : 'pages.browse' }" class="uk-icon-button">
@@ -16,9 +14,6 @@
                             <router-link v-if="$story.isAllowed('create')" :to="{ name : 'pages.create' }" class="uk-icon-button">
                                 <fa-icon name="plus" />
                             </router-link>
-                        </div>
-                        <div>
-                            <router-view name="PageContent" />
                         </div>
                     </div>
                 </div>
@@ -74,7 +69,7 @@
             if (!this.$store.state.categoryModule) {
                 this.$store.registerModule('categoryModule', categoryStore);
             }
-            this.$store.dispatch('setSubTitle', this.$t('pages'));
+            //this.$store.dispatch('setSubTitle', this.$t('pages'));
             this.$store.dispatch('categoryModule/browse');
         }
     };

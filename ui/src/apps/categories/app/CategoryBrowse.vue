@@ -1,6 +1,6 @@
 <template>
     <section class="uk-section uk-section-default uk-section-small">
-        <div class="uk-container uk-container-expand">
+        <div class="uk-container">
             <div class="uk-child-width-1-1 uk-child-width-1-2@l" uk-grid="masonry: true">
                 <div v-for="category in categories">
                     <router-link :to="{ name: 'categories.read', params: { id : category.id } }" class="uk-link-reset">

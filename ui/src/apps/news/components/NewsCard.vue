@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="uk-card uk-card-body uk-card-default uk-card-small uk-flex uk-flex-middle uk-border-rounded">
-            <div class="uk-child-width-1" uk-grid>
+        <div class="uk-card uk-card-body uk-card-default uk-card-small uk-border-rounded" style="box-shadow:none;border:  1px solid rgba(0,0,0,0.075);">
+            <div class="uk-child-width-1-1" uk-grid>
                 <div>
                     <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" uk-grid>
                         <div v-if="story.header_overview_crop" class="uk-width-1-3@s uk-width-2-5@m uk-height-1-1">

@@ -3,27 +3,31 @@
         <div v-if="error">
             {{ error.response.statusText }}
         </div>
-        <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
-            <header>
-                <span class="uk-label uk-label-warning uk-float-right" style="font-size: 0.75rem">
-                    <router-link :to="{ name : 'pages.category', params : { category_id : page.category.id }}" class="uk-link-reset">
-                        {{ page.category.name }}
-                    </router-link>
-                </span>
-                <h2 class="uk-margin-remove-adjacent uk-text-bold uk-margin-small-bottom">
-                    {{ page.title }}
-                </h2>
-                <div>
-                    <router-link v-if="$page.isAllowed('update', page)" :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
-                        <fa-icon name="edit" />
-                    </router-link>
-                    <a v-if="$page.isAllowed('remove', page)" uk-toggle="target: #delete-page" class="uk-icon-button">
-                        <fa-icon name="trash" />
-                    </a>
+        <div v-if="page" class="uk-label uk-label-warning uk-float-right uk-margin-small-top uk-margin-small-right" style="font-size: 0.75rem">
+            <router-link :to="{ name : 'pages.category', params : { category_id : page.category.id }}" class="uk-link-reset">
+                {{ page.category.name }}
+            </router-link>
+        </div>
+        <section v-if="page" class="uk-section uk-section-small uk-section-secondary">
+            <div class="uk-container">
+                <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
+                    <div>
+                        <h2>{{ page.title }}</h2>
+                        <p class="uk-margin-small-left uk-margin-small-right" v-html="page.summary">
+                        </p>
+                    </div>
                 </div>
-                <blockquote v-if="page.summary" v-html="page.summary" class="uk-text-meta">
-                </blockquote>
-            </header>
+            </div>
+        </section>
+        <article v-if="page" class="uk-section uk-section-small">
+            <div class="uk-flex uk-flex-center">
+                <router-link v-if="$page.isAllowed('update', page)" :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
+                    <fa-icon name="edit" />
+                </router-link>
+                <a v-if="$page.isAllowed('remove', page)" uk-toggle="target: #delete-page" class="uk-icon-button">
+                    <fa-icon name="trash" />
+                </a>
+            </div>
             <figure v-if="page.header_detail_crop">
                 <img :src="page.header_detail_crop" />
             </figure>
@@ -35,6 +39,14 @@
 </template>
 
 <style>
+    blockquote {
+      background: #f9f9f9;
+      border-left: 10px solid #ccc;
+      margin: 1.5em 10px;
+      padding: 0.5em 10px;
+      quotes: "\201C""\201D""\2018""\2019";
+    }
+
     .page-mini-meta {
         font-size: 12px;
         color: #999;

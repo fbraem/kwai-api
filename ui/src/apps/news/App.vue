@@ -1,9 +1,12 @@
 <template>
     <section class="uk-section uk-section-default uk-section-small">
-        <div class="uk-container uk-container-expand">
+        <div class="uk-container">
             <div uk-grid>
                 <div class="uk-width-2-3@m">
                     <div uk-grid class="uk-grid-small uk-child-width-1-1">
+                        <div>
+                            <router-view name="NewsContent" />
+                        </div>
                         <div>
                             <router-link :to="{ name : 'news.browse' }" class="uk-icon-button">
                                 <fa-icon name="home" />
@@ -11,9 +14,6 @@
                             <router-link v-if="$story.isAllowed('create')" :to="{ name : 'news.create' }" class="uk-icon-button">
                                 <fa-icon name="plus" />
                             </router-link>
-                        </div>
-                        <div>
-                            <router-view name="NewsContent" />
                         </div>
                     </div>
                 </div>
