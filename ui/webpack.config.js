@@ -14,13 +14,10 @@ var environment = process.argv.indexOf('-p') !== -1 ? 'production' : 'developmen
 var config = {
     entry : {
         "vendor" : [
-            "lockr", "moment", "axios", "lodash", "urijs", "babel-polyfill"
+            "lockr", "moment", "axios", "urijs", "babel-polyfill", "uikit"
         ],
         "vue" : [
             "vuex", "vue", "vue-router", "vuelidate", "vue-kindergarten", "vue-extend-layout", "vue-i18n"
-        ],
-        "vuetify" : [
-            "vuetify"
         ],
         "site" : "./src/site/main.js"
     },
@@ -65,9 +62,11 @@ var config = {
                     }
                 ]
             },
+/*
             { test: /\.svg$/,
                 loader : 'svg-url-loader'
             }
+*/            
         ]
     },
     resolve : {
@@ -81,7 +80,7 @@ var config = {
     plugins : [
 //        new BundleAnalyzerPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
-            names : ['vendor', 'vue', 'vuetify'],
+            names : ['vendor', 'vue'],
             minChunks : Infinity
         }),
         new webpack.optimize.CommonsChunkPlugin({
