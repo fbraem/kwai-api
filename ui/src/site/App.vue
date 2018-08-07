@@ -168,6 +168,8 @@
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import newsStore from '@/apps/news/store';
 
+    import UIKit from 'uikit';
+
     export default {
         components : {
             NewsCard
@@ -188,6 +190,9 @@
             this.$store.dispatch('newsModule/browse', {
                 featured : true
             });
+        },
+        updated() {
+            UIKit.update();
         }
     };
 </script>
