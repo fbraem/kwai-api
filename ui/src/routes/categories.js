@@ -1,12 +1,12 @@
 export default [
     {
         path : '/categories/',
-        component : () => import(/* webpackChunkName: "category_chunk" */ '@/apps/categories/App.vue'),
+        component : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/App.vue'),
         children : [
             {
                 path : ':id(\\d+)',
                 components : {
-                    CategoryContent : () => import(/* webpackChunkName: "category_chunk" */ '@/apps/categories/app/CategoryRead.vue')
+                    CategoryContent : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/app/CategoryRead.vue')
                 },
                 name : 'categories.read',
                 props : {
