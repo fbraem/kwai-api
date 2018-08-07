@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import config from 'config';
 
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
@@ -183,7 +184,7 @@ const actions = {
     },
     async loadArchive({ state, getters, commit, context }, payload) {
         commit('loading');
-        var response = await oauth.get('api/news/archive');
+        var response = await oauth.get(config.api + '/news/archive');
         commit('archive', response.data);
         commit('success');
     }
