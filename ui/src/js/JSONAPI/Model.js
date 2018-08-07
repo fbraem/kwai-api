@@ -6,14 +6,14 @@ class Cache {
     this._cache = Object.create(null);
   }
 
-  getModel(ctor, id, data, includes) {
-    this._cache[ctor.name] = this._cache[ctor.name] || Object.create(null);
-    this._cache[ctor.name][id] = this._cache[ctor.name][id] || this.createModel(ctor, id, data, includes);
-    return this._cache[ctor.name][id];
+  getModel(model, id, data, includes) {
+      this._cache[model.resourceName()] = this._cache[model.resourceName()] || Object.create(null);
+      this._cache[model.resourceName()][id] = this._cache[model.resourceName()][id] || this.createModel(model, id, data, includes);
+      return this._cache[model.resourceName()][id];
   }
 
-  createModel(ctor, id, data, includes) {
-    var model = new ctor();
+  createModel(m, id, data, includes) {
+    var model = new m.constructor();
     model.id = id;
 
     if (!data) return model;
@@ -39,12 +39,10 @@ class Cache {
             if (Array.isArray(relatedData)) {
               model[relationName] = [];
               relatedData.forEach((r) => {
-                var included = includes[relatedModel.resourceName()][r.id];
-                model[relationName].push(this.getModel(relatedModel.constructor, r.id, included, includes));
+                model[relationName].push(this.getModel(relatedModel, r.id, includes[relatedModel.resourceName()][r.id], includes));
               });
             } else {
-              var included = includes[relatedModel.resourceName()][relatedData.id];
-              model[relationName] = this.getModel(relatedModel.constructor, relatedData.id, included, includes);
+              model[relationName] = this.getModel(relatedModel, relatedData.id, includes[relatedModel.resourceName()][relatedData.id], includes);
             }
           }
       }
@@ -241,7 +239,7 @@ export default class Model {
       let included = {};
       if (json.included) {
         json.included.forEach((data) => {
-          var includedModel = data;
+          let includedModel = data;
           if (!included[includedModel.type]) {
             included[includedModel.type] = {};
           }
@@ -254,11 +252,11 @@ export default class Model {
       if (Array.isArray(json.data)) {
         result = [];
         json.data.forEach((element) => {
-          var model = cache.getModel(this.constructor, element.id, element, included);
+          var model = cache.getModel(this, element.id, element, included);
           result.push(model);
         });
       } else {
-          result = cache.getModel(this.constructor, json.data.id, json.data, included);
+          result = cache.getModel(this, json.data.id, json.data, included);
       }
       return result;
     }
