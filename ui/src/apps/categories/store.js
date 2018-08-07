@@ -40,7 +40,7 @@ const mutations = {
     state.categories = categories;
   },
   category(state, category) {
-    var index = state.categories.findIndex((c) => s.id == category.id);
+    var index = state.categories.findIndex((c) => c.id == category.id);
     if (index != -1) {
         Vue.set(state.categories, index, category);
     } else {
