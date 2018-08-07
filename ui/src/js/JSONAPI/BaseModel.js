@@ -1,10 +1,11 @@
 import Model from './Model';
 import axios from 'axios';
 import OAuth from '@/js/oauth';
+import config from 'config';
 
 export default class BaseModel extends Model {
   baseURL() {
-    return 'api';
+    return config.api;
   }
 
   async request(config) {
