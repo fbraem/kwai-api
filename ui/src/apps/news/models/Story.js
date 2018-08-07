@@ -15,7 +15,6 @@ export default class Story extends Model {
 
     fields() {
         return [
-            'name',
             'enabled',
             'featured',
             'featured_end_date_timezone',
@@ -42,7 +41,7 @@ export default class Story extends Model {
         return {
             summary(story) {
                 if (story.contents) {
-                    var content = story.contents.find((o) => {
+                    let content = story.contents.find((o) => {
                         return o.locale == 'nl';
                     });
                     if (content) {
@@ -53,7 +52,7 @@ export default class Story extends Model {
             },
             content(story) {
                 if (story.contents) {
-                    var content = story.contents.find((o) => {
+                    let content = story.contents.find((o) => {
                         return o.locale == 'nl';
                     });
                     if (content) {
@@ -64,7 +63,7 @@ export default class Story extends Model {
             },
             title(story) {
                 if (story.contents) {
-                    var content = story.contents.find((o) => {
+                    let content = story.contents.find((o) => {
                         return o.locale == 'nl';
                     });
                     if (content) {
