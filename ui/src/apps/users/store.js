@@ -6,8 +6,8 @@ Vue.use(Vuex);
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
 
-import find from 'lodash/find';
-import unionBy from 'lodash/unionBy';
+//import find from 'lodash/find';
+//import unionBy from 'lodash/unionBy';
 import URI from 'urijs';
 
 import JSONAPI from '@/js/JSONAPI';
