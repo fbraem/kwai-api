@@ -4,6 +4,8 @@ namespace Domain\News;
 
 class NewsStory extends \Cake\ORM\Entity
 {
+    protected $_hidden = [ 'contents' ];
+
     public function _getFeaturedEndDate($value)
     {
         if ($value) {
