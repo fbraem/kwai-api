@@ -1,5 +1,6 @@
 import Lockr from 'lockr';
 import axios from 'axios';
+import config from 'config';
 
 const USER_KEY = 'user';
 const ACCESSTOKEN_KEY = 'access_token';
@@ -103,7 +104,7 @@ class OAuth
         form.append('grant_type', 'refresh_token');
         form.append('client_id', CLIENT_ID);
         form.append('refresh_token', this.refresh_token);
-        var response = await this.post('api/auth/access_token', {
+        var response = await this.post(config.api + '/auth/access_token', {
             data : form,
             dontRetry : true
         });
@@ -117,7 +118,7 @@ class OAuth
         form.append('username', username);
         form.append('password', password);
         form.append('scope', 'basic');
-        var response = await this.post('api/auth/access_token', {
+        var response = await this.post(config.api + '/auth/access_token', {
             data : form,
             dontRetry : true
         });
@@ -142,7 +143,7 @@ class OAuth
     async logout() {
         var form = new FormData();
         form.append('refresh_token', this.refresh_token);
-        var response = await this.post('api/auth/logout', {
+        var response = await this.post(config.api + '/auth/logout', {
             data : form,
             dontRetry : true
         });
