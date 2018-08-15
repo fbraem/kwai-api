@@ -3,17 +3,8 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
-
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-
-use League\CommonMark\Converter;
-use League\CommonMark\DocParser;
-use League\CommonMark\Environment;
-use League\CommonMark\HtmlRenderer;
-use Webuni\CommonMark\TableExtension\TableExtension;
 
 use League\Plates\Engine;
 
