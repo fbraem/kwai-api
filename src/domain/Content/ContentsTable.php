@@ -34,6 +34,7 @@ class ContentsTable extends \Cake\ORM\Table
             ->addColumn('summary', [ 'type' => 'text'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
+            ->addColumn('social_media', [ 'type' => 'text'])
             ->addConstraint(
                 'primary',
                 [

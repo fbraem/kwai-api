@@ -9,7 +9,7 @@ class Clubman
     public static function getApplication()
     {
         if (self::$application == null) {
-            self::$application = new Application(new \Zend\Config\Config(include __DIR__ . '/../../config.php'));
+            self::$application = new Application(new \Zend\Config\Config(include __DIR__ . '/../../api/config.php'));
         }
         return self::$application;
     }
