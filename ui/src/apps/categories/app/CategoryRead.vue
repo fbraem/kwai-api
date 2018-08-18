@@ -12,8 +12,13 @@
                 </div>
             </div>
         </section>
-        <section class="uk-section uk-section-default uk-section-small">
+        <section v-if="category" class="uk-section uk-section-default uk-section-small">
             <div class="uk-container">
+                <div class="uk-flex uk-flex-center">
+                    <router-link v-if="$category.isAllowed('update', category)" :to="{ name : 'categories.update', params : { id : category.id }}" class="uk-icon-button">
+                        <fa-icon name="edit" />
+                    </router-link>
+                </div>
                 <div uk-grid class="uk-flex uk-margin">
                     <div class="uk-width-1-1">
                         <h4 class="uk-heading-line"><span>Nieuws</span></h4>
@@ -62,6 +67,7 @@
     import pageStore from '@/apps/pages/store';
 
     import 'vue-awesome/icons/ellipsis-h';
+    import 'vue-awesome/icons/edit';
 
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import PageSummary from '@/apps/pages/components/PageSummary.vue';
