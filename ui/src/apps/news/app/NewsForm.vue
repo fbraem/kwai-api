@@ -130,8 +130,6 @@
     import moment from 'moment';
     import 'moment-timezone';
 
-    import { validationMixin } from 'vuelidate';
-
     import messages from '../lang';
 
     import newsStore from '../store';
@@ -141,6 +139,7 @@
     import Content from '@/apps/contents/models/Content';
     import Story from '../models/Story';
 
+    import { validationMixin } from 'vuelidate';
     import { required, numeric, and } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
 
