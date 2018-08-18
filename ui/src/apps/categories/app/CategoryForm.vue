@@ -37,53 +37,6 @@
             </div>
         </div>
     </section>
-<!--
-    <v-container fluid>
-        <v-card class="mb-5">
-            <v-card-title primary-title>
-                <h4 class="headline mb-0">Category Details</h4>
-            </v-card-title>
-            <v-card-text>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                        <v-text-field name="name"
-                            label="Name of the category"
-                            v-model="form.category.name"
-                            :error-messages="nameErrors"
-                            @input="$v.form.category.name.$touch()"
-                            required
-                            >
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field
-                            name="description"
-                            v-model="form.category.description"
-                            @input="$v.form.category.description.$touch"
-                            :error-messages="descriptionErrors"
-                            label="Description"
-                            textarea>
-                        </v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field
-                            name="remark"
-                            v-model="form.category.remark"
-                            @input="$v.form.category.remark.$touch"
-                            :error-messages="remarkErrors"
-                            label="Remark"
-                            textarea>
-                        </v-text-field>
-                    </v-flex>
-                </v-layout>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" :disabled="$v.$invalid" @click="submit">Submit</v-btn>
-                <v-btn flat @click="clear">Clear</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-container>
--->
 </template>
 
 <script>
