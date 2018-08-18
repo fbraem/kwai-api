@@ -1,4 +1,14 @@
 {
     "categories" : "Categorieën",
-    "published" : "Geschreven op {publishDate} - {publishDateFromNow}"
+    "published" : "Geschreven op {publishDate} - {publishDateFromNow}",
+    "category" : "Categorie",
+    "create" : "Maak een nieuwe categorie",
+    "update" : "Wijzig een categorie",
+    "name_placeholder" : "Geef een naam in",
+    "name" : "Naam",
+    "description_placeholder" : "Geef een omschrijving in",
+    "description" : "Omschrijving",
+    "remark_placeholder" : "Geef een opmerking in",
+    "remark" : "Opmerking",
+    "save" : "Bewaar"
 }

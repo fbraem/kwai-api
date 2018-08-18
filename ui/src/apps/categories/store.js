@@ -106,7 +106,7 @@ const actions = {
         var newCategory = null;
         try  {
             newCategory = await category.save();
-            commit('story', newStory);
+            commit('category', newCategory);
             return newCategory;
         } catch(error) {
             commit('error', error);

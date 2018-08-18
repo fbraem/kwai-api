@@ -1,4 +1,14 @@
 {
     "categories" : "Categories",
-    "published" : "Written on {publishDate} - {publishDateFromNow}"
+    "published" : "Written on {publishDate} - {publishDateFromNow}",
+    "category" : "Category",
+    "create" : "Create a new category",
+    "update" : "Edit a category",
+    "name_placeholder" : "Enter a name",
+    "name" : "Name",
+    "description_placeholder" : "Enter a description",
+    "description" : "Description",
+    "remark_placeholder" : "Enter a remark",
+    "remark" : "Remark",
+    "save" : "Save"
 }

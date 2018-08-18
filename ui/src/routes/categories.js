@@ -24,12 +24,12 @@ export default [
     },
     {
         path : '/categories/create',
-        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryCreate.vue'),
+        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryForm.vue'),
         name : 'categories.create'
     },
     {
         path : '/categories/update/:id(\\d+)',
-        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryUpdate.vue'),
+        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryForm.vue'),
         name : 'categories.update'
     }
 ];
