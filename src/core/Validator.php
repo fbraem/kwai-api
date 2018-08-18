@@ -6,6 +6,8 @@ class Validator implements ValidatorInterface
 {
     protected $validators;
 
+    protected $errors;
+
     public function __construct()
     {
         $this->validators = [];
@@ -18,7 +20,7 @@ class Validator implements ValidatorInterface
 
     public function validate($data)
     {
-        $errors = [];
+        $this->errors = [];
 
         foreach ($this->validators as $path => $validator) {
             $value = \JmesPath\search($path, $data);
@@ -27,13 +29,29 @@ class Validator implements ValidatorInterface
                 foreach ($validator->getMessages() as $messageId => $message) {
                     $pointer = '/' . str_replace('.', '/', $path);
                     if (!isset($this->errors[$pointer])) {
-                        $errors[$pointer] = [];
+                        $this->errors[$pointer] = [];
                     }
-                    $errors[$pointer][] = $message;
+                    $this->errors[$pointer][] = $message;
                 }
             }
         }
 
-        return $errors;
+        return count($this->errors) == 0;
+    }
+
+    public function toJSON()
+    {
+        $errors = [];
+        foreach ($this->errors as $pointer => $messages) {
+            foreach ($messages as $message) {
+                $errors[] = [
+                    'source' => [
+                        'pointer' => $pointer
+                    ],
+                    'title' => $message
+                ];
+            }
+        }
+        return json_encode(['errors' => $errors]);
     }
 }

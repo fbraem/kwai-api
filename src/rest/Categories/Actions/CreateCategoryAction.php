@@ -2,37 +2,45 @@
 
 namespace REST\Categories\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class CreateCategoryAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Domain\Category\CategoriesTable;
+use Domain\Category\CategoryTransformer;
+use REST\Categories\CategoryValidator;
+
+class CreateCategoryAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $data = $payload->getInput();
+    private $container;
 
-        $validator = new \REST\Categories\CategoryValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                ))->respond();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $data = $request->getParsedBody();
+
+        $validator = new CategoryValidator();
+        if (! $validator->validate($data)) {
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($validator->toJSON());
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $categoriesTable = \Domain\Category\CategoriesTable::getTableFromRegistry();
+        $categoriesTable = CategoriesTable::getTableFromRegistry();
         $category = $categoriesTable->newEntity();
         $category->name = $attributes['name'];
         $category->description = $attributes['description'];
@@ -40,15 +48,16 @@ class CreateCategoryAction implements \Core\ActionInterface
         $category->user = $request->getAttribute('clubman.user');
         $categoriesTable->save($category);
 
-        $payload->setOutput(\Domain\Category\CategoryTransformer::createForItem($category));
+        $resource = CategoryTransformer::createForItem($category);
 
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload
-            ))->respond();
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withStatus(201)
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

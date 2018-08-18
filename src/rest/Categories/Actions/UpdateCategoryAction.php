@@ -2,45 +2,47 @@
 
 namespace REST\Categories\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class UpdateCategoryAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Domain\Category\CategoriesTable;
+use Domain\Category\CategoryTransformer;
+use REST\Categories\CategoryValidator;
+
+class UpdateCategoryAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $categoriesTable = CategoriesTable::getTableFromRegistry();
         try {
-            $category = \Domain\Category\CategoriesTable::getTableFromRegistry()->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Category doesn't exist.")
-                ))->respond();
+            $category = $categoriesTable->get($args['id']);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response.withStatus(404, _("Category doesn't exist"));
         }
 
-        $data = $payload->getInput();
+        $data = $request->getParsedBody();
 
-        $validator = new \REST\Categories\CategoryValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                ))->respond();
+        $validator = new CategoryValidator();
+        if (! $validator->validate($data)) {
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($validator->toJSON());
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
@@ -56,17 +58,18 @@ class UpdateCategoryAction implements \Core\ActionInterface
         }
         $category->user = $request->getAttribute('clubman.user');
 
-        $CategoriesTable->save($category);
+        $categoriesTable->save($category);
 
-        $payload->setOutput(\Domain\Category\CategoryTransformer::createForItem($category));
+        $resource = CategoryTransformer::createForItem($category);
 
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload
-            ))->respond();
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withStatus(201)
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

@@ -2,34 +2,46 @@
 
 namespace REST\Categories\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class ReadCategoryAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Domain\Category\CategoriesTable;
+use Domain\Category\CategoryTransformer;
+
+class ReadCategoryAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
         try {
-            $category = \Domain\Category\CategoriesTable::getTableFromRegistry()->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Season doesn't exist.")
-                ))->respond();
+            $category = CategoriesTable::getTableFromRegistry()->get($args['id']);
+            $resource = CategoryTransformer::createForItem($category);
+
+            $fractal = new Manager();
+            $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+            $data = $fractal->createData($resource)->toJson();
+
+            $response = $response
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($data);
+        } catch (RecordNotFoundException $rnfe) {
+            $response = $response.withStatus(404, _("Category doesn't exist"));
         }
-        $payload->setOutput(\Domain\Category\CategoryTransformer::createForItem($category));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+
+        return $response;
     }
 }

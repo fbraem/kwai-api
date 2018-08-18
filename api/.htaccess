@@ -8,9 +8,9 @@
     RewriteCond %{HTTP:Authorization} ^(.*)
     RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
-#    RewriteCond %{REQUEST_FILENAME} !-f
-#    RewriteCond %{REQUEST_FILENAME} !-d
-#    RewriteRule ^facebook(/.*)?$ /api/facebook.php$1 [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^categories(/.*)?$ /api/categories.php$1 [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]

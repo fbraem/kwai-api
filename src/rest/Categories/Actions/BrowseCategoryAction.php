@@ -2,23 +2,37 @@
 
 namespace REST\Categories\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseCategoryAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+class BrowseCategoryAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
     {
         $categories = \Domain\Category\CategoriesTable::getTableFromRegistry()->find()->all();
-        $payload->setOutput(\Domain\Category\CategoryTransformer::createForCollection($categories));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+        $resource = \Domain\Category\CategoryTransformer::createForCollection($categories);
+
+        $response = $response->withHeader('content-type', 'application/vnd.api+json');
+
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }
