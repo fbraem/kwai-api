@@ -39,7 +39,7 @@ class ReadCategoryAction
                 ->getBody()
                 ->write($data);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response.withStatus(404, _("Category doesn't exist"));
+            $response = $response->withStatus(404, _("Category doesn't exist"));
         }
 
         return $response;

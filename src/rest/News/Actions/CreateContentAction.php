@@ -37,7 +37,7 @@ class CreateContentAction
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
         } catch (RecordNotFoundException $rnfe) {
-            return $response.withStatus(404, _("Story doesn't exist"));
+            return $response->withStatus(404, _("Story doesn't exist"));
         }
 
         $validator = new ContentValidator();

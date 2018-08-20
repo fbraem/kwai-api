@@ -43,7 +43,7 @@ class ReadStoryAction
                 ->getBody()
                 ->write($data);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response.withStatus(404, _("Story doesn't exist"));
+            $response = $response->withStatus(404, _("Story doesn't exist"));
         }
 
         return $response;

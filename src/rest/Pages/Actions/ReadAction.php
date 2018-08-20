@@ -31,7 +31,7 @@ class ReadAction
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response.withStatus(404, _("Story doesn't exist"));
+            return $response->withStatus(404, _("Story doesn't exist"));
         }
 
         $filesystem = $this->container->get('filesystem');

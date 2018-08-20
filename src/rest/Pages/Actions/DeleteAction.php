@@ -44,7 +44,9 @@ class DeleteAction
 
             $response = $response->withStatus(200);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response.withStatus(404, _("Story doesn't exist"));
+            $response = $response->withStatus(404, _("Page doesn't exist"));
         }
+
+        return $response;
     }
 }

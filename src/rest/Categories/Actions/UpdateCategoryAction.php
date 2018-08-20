@@ -31,7 +31,7 @@ class UpdateCategoryAction
         try {
             $category = $categoriesTable->get($args['id']);
         } catch (RecordNotFoundException $rnfe) {
-            return $response.withStatus(404, _("Category doesn't exist"));
+            return $response->withStatus(404, _("Category doesn't exist"));
         }
 
         $data = $request->getParsedBody();

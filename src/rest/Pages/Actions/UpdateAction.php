@@ -33,7 +33,7 @@ class UpdateAction
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
         } catch (RecordNotFoundException $rnfe) {
-            return $response.withStatus(404, _("Page doesn't exist"));
+            return $response->withStatus(404, _("Page doesn't exist"));
         }
 
         $data = $request->getParsedBody();

@@ -37,7 +37,7 @@ class AuthenticationMiddleware
                 try {
                     $user = UsersTable::getTableFromRegistry()->get($userId);
                 } catch (RecordNotFoundException $rnfe) {
-                    return $response.withStatus(500, _('Unable to find user'));
+                    return $response->withStatus(500, _('Unable to find user'));
                 }
                 $request = $request->withAttribute('clubman.user', $user);
             } catch (OAuthServerException $exception) {
