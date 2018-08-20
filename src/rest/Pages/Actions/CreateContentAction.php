@@ -2,52 +2,51 @@
 
 namespace REST\Pages\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class CreateContentAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\Page\PageTransformer;
+use Domain\Page\PagesTable;
+use REST\Contents\ContentValidator;
+use Domain\Content\ContentsTable;
+
+class CreateContentAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $data = $payload->getInput();
+        $this->container = $container;
+    }
 
-        $id = $request->getAttribute('route.id');
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $data = $request->getParsedBody();
 
-        $pagesTable = \Domain\Page\PagesTable::getTableFromRegistry();
+        $pagesTable = PagesTable::getTableFromRegistry();
         try {
-            $page = $pagesTable->get($id, [
+            $page = $pagesTable->get($args['id'], [
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Page doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            return $response.withStatus(404, _("Page doesn't exist"));
         }
 
-        $validator = new \REST\Contents\ContentValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                )
-            )->respond();
+        $validator = new ContentValidator();
+        if (! $validator->validate($data)) {
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($validator->toJSON());
         }
 
-
-        $contentsTable = \Domain\Content\ContentsTable::getTableFromRegistry();
+        $contentsTable = ContentsTable::getTableFromRegistry();
         $attributes = \JmesPath\search('data.attributes', $data);
 
         $content = $contentsTable->newEntity();
@@ -61,17 +60,16 @@ class CreateContentAction implements \Core\ActionInterface
         $page->contents = [ $content ];
         $pagesTable->save($page);
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page, $filesystem));
+        $filesystem = $this->container->get('filesystem');
+        $resource = PageTransformer::createForItem($page, $filesystem);
 
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload
-            )
-        )->respond();
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

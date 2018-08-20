@@ -2,22 +2,31 @@
 
 namespace REST\Pages\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal;
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
 
-class BrowseAction implements \Core\ActionInterface
+use Domain\Page\PageTransformer;
+use Domain\Page\PagesTable;
+
+class BrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
     {
         $parameters = $request->getAttribute('parameters');
 
-        $query = \Domain\Page\PagesTable::getTableFromRegistry()->find();
+        $query = PagesTable::getTableFromRegistry()->find();
         $query->contain(['Contents', 'Contents.User', 'Category']);
 
         if (isset($parameters['filter']['category'])) {
@@ -48,15 +57,21 @@ class BrowseAction implements \Core\ActionInterface
 
         $pages = $query->all();
 
-        $payload->setExtras([
+        $filesystem = $this->container->get('filesystem');
+        $resource = PageTransformer::createForCollection($pages, $filesystem);
+        $resource->setMeta([
             'limit' => $limit,
             'offset' => $offset,
             'count' => $count
         ]);
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(new Fractal\Resource\Collection($pages, new \Domain\Page\PageTransformer($filesystem), 'pages'));
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
 
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

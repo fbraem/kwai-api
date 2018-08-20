@@ -2,68 +2,71 @@
 
 namespace REST\News\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class UpdateStoryAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\News\NewsStoryTransformer;
+use Domain\News\NewsStoriesTable;
+use REST\News\NewsStoryValidator;
+use Domain\Category\CategoriesTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class UpdateStoryAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $storiesTable = \Domain\News\NewsStoriesTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $storiesTable = NewsStoriesTable::getTableFromRegistry();
         try {
-            $story = $storiesTable->get($id, [
+            $story = $storiesTable->get($args['id'], [
                 'contain' => ['Category']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Story doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            $response->withStatus(404, _("Story doesn't exist."));
         }
 
-        $data = $payload->getInput();
+        $data = $request->getParsedBody();
 
-        $validator = new \REST\News\NewsStoryValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                $errors
-                )
-            )->respond();
+        $validator = new NewsStoryValidator();
+        if (! $validator->validate($data)) {
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($validator->toJSON());
         }
 
         $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
         if (isset($categoryId)) {
             try {
-                $category = \Domain\Category\CategoriesTable::getTableFromRegistry()->get($categoryId);
-            } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-                return (
-                    new JSONErrorResponder(
-                        new HTTPCodeResponder(
-                            new Responder(),
-                            422
-                        ),
-                        [
-                            '/data/relationships/category' => [
-                                _('Category doesn\'t exist')
+                $category = CategoriesTable::getTableFromRegistry()->get($categoryId);
+            } catch (RecordNotFoundException $rnfe) {
+                return $response
+                    ->withStatus(422)
+                    ->withHeader('content-type', 'application/vnd.api+json')
+                    ->getBody()
+                    ->write(
+                        json_encode([
+                            'errors' => [
+                                'source' => [
+                                    'pointer' => '/data/relationships/category'
+                                ],
+                                'title' => _('Category doesn\'t exist')
                             ]
-                        ]
-                    ))->respond();
+                        ])
+                    );
             }
         }
 
@@ -102,17 +105,16 @@ class UpdateStoryAction implements \Core\ActionInterface
 
         $storiesTable->save($story);
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(\Domain\News\NewsStoryTransformer::createForItem($story, $filesystem));
+        $filesystem = $this->container->get('filesystem');
+        $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    200
-                ),
-                $payload
-            )
-        )->respond();
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

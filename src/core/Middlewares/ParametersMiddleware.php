@@ -2,19 +2,16 @@
 
 namespace Core\Middlewares;
 
-use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 /**
  * Middleware that is responsible of setting all parameter attributes.
  */
-class ParametersMiddleware implements MiddlewareInterface
+class ParametersMiddleware
 {
-    public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $delegate
-    ) {
+    public function __invoke(Request $request, Response $response, $next)
+    {
         $parameters = [];
         $queryParameters = $request->getQueryParams();
 
@@ -33,7 +30,7 @@ class ParametersMiddleware implements MiddlewareInterface
 
         $request = $request->withAttribute('parameters', $parameters);
 
-        return $delegate->process($request);
+        return $next($request, $response);
     }
 
     private function getPageParameters($parameters)

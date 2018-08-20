@@ -2,20 +2,31 @@
 
 namespace REST\News\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseStoryAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\News\NewsStoryTransformer;
+use Domain\News\NewsStoriesTable;
+
+class BrowseStoryAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
     {
         $parameters = $request->getAttribute('parameters');
 
-        $query = \Domain\News\NewsStoriesTable::getTableFromRegistry()->find();
+        $query = NewsStoriesTable::getTableFromRegistry()->find();
         $query->contain(['Contents', 'Category', 'Contents.User']);
         $query->order(['NewsStories.publish_date' => 'DESC']);
 
@@ -79,20 +90,21 @@ class BrowseStoryAction implements \Core\ActionInterface
 
         $stories = $query->all();
 
-        $payload->setExtras([
+        $filesystem = $this->container->get('filesystem');
+        $resource = NewsStoryTransformer::createForCollection($stories, $filesystem);
+        $resource->setMeta([
             'limit' => $limit,
             'offset' => $offset,
             'count' => $count
         ]);
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(\Domain\News\NewsStoryTransformer::createForCollection($stories, $filesystem));
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
 
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            )
-        )->respond();
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

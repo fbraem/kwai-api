@@ -2,25 +2,31 @@
 
 namespace REST\Auth\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
+
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 use League\OAuth2\Server\Exception\OAuthServerException;
 
-use Core\Responders\Responder;
+use Domain\User\UsersTable;
 
-class AuthorizeAction implements \Core\ActionInterface
+class AuthorizeAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $server = $request->getAttribute('clubman.container')['authorizationServer'];
-        $response = (new Responder())->respond();
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $server = $this->container->get('authorizationServer');
         try {
             $authRequest = $server->validateAuthorizationRequest($request);
 
-            $db = $request->getAttribute('clubman.container')['db'];
-            $authRequest->setUser((new \Domain\User\UsersTable($db))->whereId(1)->findOne());
+            //$authRequest->setUser((new UsersTable($db))->whereId(1)->findOne());
             $authRequest->setAuthorizationApproved(true);
             return $server->completeAuthorizationRequest($authRequest, $response);
         } catch (OAuthServerException $exception) {

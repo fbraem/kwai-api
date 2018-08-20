@@ -1,17 +1,23 @@
 <?php
 require '../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getSlimApplication();
-
-$app->add(new \Core\Middlewares\AuthenticationMiddleware($app->getContainer()));
+$app = \Core\Clubman::getApplication();
 
 $app->group('/categories', function () {
-    $this->get('', \REST\Categories\Actions\BrowseCategoryAction::class);
-    $this->get('/{id:[0-9]+}', \REST\Categories\Actions\ReadCategoryAction::class);
+    $this->get('', \REST\Categories\Actions\BrowseCategoryAction::class)
+        ->setName('categories.browse')
+    ;
+    $this->get('/{id:[0-9]+}', \REST\Categories\Actions\ReadCategoryAction::class)
+        ->setName('categories.read')
+    ;
     $this->post('', \REST\Categories\Actions\CreateCategoryAction::class)
-        ->setArgument('auth', true);
+        ->setName('categories.create')
+        ->setArgument('auth', true)
+    ;
     $this->patch('/{id:[0-9]+}', \REST\Categories\Actions\UpdateCategoryAction::class)
-        ->setArgument('auth', true);
+        ->setName('categories.update')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();

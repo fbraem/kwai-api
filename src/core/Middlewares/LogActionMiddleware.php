@@ -2,33 +2,42 @@
 
 namespace Core\Middlewares;
 
-use Interop\Http\Server\RequestHandlerInterface;
-use Interop\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use Aura\Payload\Payload;
+use Domain\User\UserLogsTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 /**
  * Middleware that is responsible for logging the action
  */
-class LogActionMiddleware implements MiddlewareInterface
+class LogActionMiddleware
 {
-    public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $delegate
-    ) {
-        $user = $request->getAttribute('clubman.user');
-        if ($user) {
-            $route = $request->getAttribute('clubman.route');
+    private $container;
 
-            $logsTable = \Domain\User\UserLogsTable::getTableFromRegistry();
-            $log = $logsTable->newEntity();
-            $log->user = $user;
-            $log->action = $route->name;
-            $log->rest = $route->extras['rest'] ?? '';
-            $log->model_id = $route->attributes['id'] ?? 0;
-            $logsTable->save($log);
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $next)
+    {
+        $route = $request->getAttribute('route');
+        if (! empty($route)) {
+            $user = $request->getAttribute('clubman.user');
+            if ($user) {
+                $logsTable = UserLogsTable::getTableFromRegistry();
+                $log = $logsTable->newEntity();
+                $log->user = $user;
+                $log->action = $route->getName();
+                $log->rest = '';
+                $log->model_id = $route->getArguments()['id'] ?? 0;
+                $logsTable->save($log);
+            }
         }
-        return $delegate->process($request);
+        return $next($request, $response);
     }
 }

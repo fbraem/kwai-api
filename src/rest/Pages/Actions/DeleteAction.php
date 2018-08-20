@@ -2,47 +2,49 @@
 
 namespace REST\Pages\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class DeleteAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\Page\PageTransformer;
+use Domain\Page\PagesTable;
+use Domain\Content\ContentsTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class DeleteAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $pageTable = \Domain\Page\PagesTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $pageTable = PagesTable::getTableFromRegistry();
         try {
-            $page = $pageTable->get($id, [
+            $page = $pageTable->get($args['id'], [
                 'contain' => ['Contents']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Page doesn't exist.")
-                ))->respond();
+            $contentTable = ContentsTable::getTableFromRegistry();
+            foreach ($page->contents as $content) {
+                $contentTable->delete($content);
+            }
+            $pageTable->delete($page);
+
+            $filesystem = $this->container->get('filesystem');
+            $folder = 'images/pages/' . $id;
+            $filesystem->deleteDir($folder);
+
+            $response = $response->withStatus(200);
+        } catch (RecordNotFoundException $rnfe) {
+            $response = $response.withStatus(404, _("Story doesn't exist"));
         }
-
-        $contentTable = \Domain\Content\ContentsTable::getTableFromRegistry();
-        foreach ($page->contents as $content) {
-            $contentTable->delete($content);
-        }
-        $pageTable->delete($page);
-
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $folder = 'images/pages/' . $id;
-        $filesystem->deleteDir($folder);
-
-        return (
-            new HTTPCodeResponder(
-                new Responder(),
-                200
-            ))->respond();
     }
 }

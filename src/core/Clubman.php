@@ -20,51 +20,53 @@ use Domain\Auth\RefreshTokenRepository;
 use Domain\Auth\ScopeRepository;
 use Domain\Auth\UserRepository;
 
+use Core\Middlewares\ParametersMiddleware;
+use Core\Middlewares\LogActionMiddleware;
+use Core\Middlewares\AuthenticationMiddleware;
+
 class Clubman
 {
     private static $application;
 
-    private static $slimApplication;
-
     public static function getApplication()
     {
         if (self::$application == null) {
-            self::$application = new Application(new \Zend\Config\Config(include __DIR__ . '/../../api/config.php'));
-        }
-        return self::$application;
-    }
+            $container = new \Slim\Container();
 
-    public static function getSlimApplication()
-    {
-        if (self::$slimApplication == null) {
-            $config = include __DIR__ . '/../../api/config.php';
-            $config['displayErrorDetails'] = true;
-            $config['determineRouteBeforeAppMiddleware'] = true;
-            $app = new \Slim\App([
-                'settings' => $config
-            ]);
+            $container['settings'] = function ($c) {
+                $config = include __DIR__ . '/../../api/config.php';
+                $config['displayErrorDetails'] = true;
+                $config['determineRouteBeforeAppMiddleware'] = true;
+                $config['outputBuffering'] = 'append';
+                $config['httpVersion'] = '1.1';
+                $config['responseChunkSize'] = 4096;
+                return $config;
+            };
+            $app = new \Slim\App($container);
 
+            $dbConfig = $container->get('settings')['database'];
+            $dbDefault = $container->get('settings')['default_database'];
             \Cake\Datasource\ConnectionManager::setConfig('default', [
                 'className' => 'Cake\Database\Connection',
                 'driver' => 'Cake\Database\Driver\Mysql',
-                'host' => $config['database'][$config['default_database']]['host'],
-                'username' => $config['database'][$config['default_database']]['user'],
-                'password' => $config['database'][$config['default_database']]['pass'],
-                'database' => $config['database'][$config['default_database']]['name'],
-                'encoding' => $config['database'][$config['default_database']]['charset']
+                'host' => $dbConfig[$dbDefault]['host'],
+                'username' => $dbConfig[$dbDefault]['user'],
+                'password' => $dbConfig[$dbDefault]['pass'],
+                'database' => $dbConfig[$dbDefault]['name'],
+                'encoding' => $dbConfig[$dbDefault]['charset']
             ]);
 
-            $app->getContainer()['filesystem'] = function ($c) {
+            $container['filesystem'] = function ($c) {
                 $settings = $c->get('settings');
                 $flyAdapter = new Local($settings['files']);
                 return new Filesystem($flyAdapter);
             };
 
-            $app->getContainer()['template'] = function ($c) {
+            $container['template'] = function ($c) {
                 return new League\Plates\Engine(__DIR__ . '../../templates');
             };
 
-            $app->getContainer()['authorizationServer'] = function ($c) {
+            $container['authorizationServer'] = function ($c) {
                 $config = $c->get('settings');
                 $server = new AuthorizationServer(
                     new ClientRepository(),
@@ -90,13 +92,17 @@ class Clubman
 
                 return $server;
             };
-            $app->getContainer()['resourceServer'] = function ($c) {
+            $container['resourceServer'] = function ($c) {
                 $config = $c->get('settings');
                 return new ResourceServer(new AccessTokenRepository(), $config['oauth2']['public_key']);
             };
 
-            self::$slimApplication = $app;
+            $app->add(new ParametersMiddleware());
+            $app->add(new LogActionMiddleware($container));
+            $app->add(new AuthenticationMiddleware($container));
+
+            self::$application = $app;
         }
-        return self::$slimApplication;
+        return self::$application;
     }
 }

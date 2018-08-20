@@ -2,36 +2,49 @@
 
 namespace REST\Pages\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class UpdateContentAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\Page\PageTransformer;
+use Domain\Page\PagesTable;
+use REST\Contents\ContentValidator;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class UpdateContentAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $pagesTable = \Domain\Page\PagesTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $pagesTable = PagesTable::getTableFromRegistry();
         try {
-            $page = $pagesTable->get($id, [
+            $page = $pagesTable->get($args['id'], [
                 'contain' => ['Category', 'Contents', 'Contents.User']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Page doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            return $response.withStatus(404, _("Page doesn't exist"));
         }
 
-        $data = $payload->getInput();
+        $data = $request->getParsedBody();
+        $validator = new ContentValidator();
+        if (! $validator->validate($data)) {
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($validator->toJSON());
+        }
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
@@ -54,17 +67,16 @@ class UpdateContentAction implements \Core\ActionInterface
 
         $pagesTable->save($page);
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page, $filesystem));
+        $filesystem = $this->container->get('filesystem');
+        $resource = PageTransformer::createForItem($page, $filesystem);
 
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload
-            )
-        )->respond();
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

@@ -2,40 +2,48 @@
 
 namespace REST\Pages\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal;
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
 
-class ReadAction implements \Core\ActionInterface
+use Domain\Page\PageTransformer;
+use Domain\Page\PagesTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class ReadAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
         try {
-            $page = \Domain\Page\PagesTable::getTableFromRegistry()->get($id, [
+            $page = PagesTable::getTableFromRegistry()->get($args['id'], [
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Page doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            $response = $response.withStatus(404, _("Story doesn't exist"));
         }
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(\Domain\Page\PageTransformer::createForItem($page, $filesystem));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+        $filesystem = $this->container->get('filesystem');
+        $resource = PageTransformer::createForItem($page, $filesystem);
+
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data);
     }
 }

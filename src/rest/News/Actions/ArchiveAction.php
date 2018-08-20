@@ -2,18 +2,29 @@
 
 namespace REST\News\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\SimpleJSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class ArchiveAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\News\NewsStoryTransformer;
+use Domain\News\NewsStoriesTable;
+
+class ArchiveAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $query = \Domain\News\NewsStoriesTable::getTableFromRegistry()->find();
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $query = NewsStoriesTable::getTableFromRegistry()->find();
         $query->select([
             'year' => $query->func()->year([
                 'publish_date' => 'identifier'
@@ -36,11 +47,10 @@ class ArchiveAction implements \Core\ActionInterface
 
         $archive = $query->all();
 
-        return (
-            new SimpleJSONResponder(
-                new Responder(),
-                $archive
-            )
-        )->respond();
+        return $response
+            ->withHeader('content-type', 'application/json')
+            ->getBody()
+            ->write(json_encode($archive))
+        ;
     }
 }

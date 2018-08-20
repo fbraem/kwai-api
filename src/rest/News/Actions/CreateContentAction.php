@@ -2,52 +2,54 @@
 
 namespace REST\News\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class CreateContentAction implements \Core\ActionInterface
+use League\Fractal\Manager;
+use League\Fractal\Serializer\JsonApiSerializer;
+
+use Domain\News\NewsStoryTransformer;
+use Domain\News\NewsStoriesTable;
+
+use REST\Contents\ContentValidator;
+use Domain\Content\ContentsTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class CreateContentAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $data = $payload->getInput();
+        $this->container = $container;
+    }
 
-        $id = $request->getAttribute('route.id');
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $data = $request->getParsedBody();
 
-        $storiesTable = \Domain\News\NewsStoriesTable::getTableFromRegistry();
+        $storiesTable = NewsStoriesTable::getTableFromRegistry();
         try {
-            $story = $storiesTable->get($id, [
+            $story = $storiesTable->get($args['id'], [
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Story doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            return $response.withStatus(404, _("Story doesn't exist"));
         }
 
-        $validator = new \REST\Contents\ContentValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                )
-            )->respond();
+        $validator = new ContentValidator();
+        if (! $validator->validate($data)) {
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+                ->getBody()
+                ->write($validator->toJSON());
         }
 
-
-        $contentsTable = \Domain\Content\ContentsTable::getTableFromRegistry();
+        $contentsTable = ContentsTable::getTableFromRegistry();
         $attributes = \JmesPath\search('data.attributes', $data);
 
         $content = $contentsTable->newEntity();
@@ -61,17 +63,17 @@ class CreateContentAction implements \Core\ActionInterface
         $story->contents = [ $content ];
         $storiesTable->save($story);
 
-        $filesystem = $request->getAttribute('clubman.container')['filesystem'];
-        $payload->setOutput(\Domain\News\NewsStoryTransformer::createForItem($story, $filesystem));
+        $filesystem = $this->container->get('filesystem');
+        $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload
-            )
-        )->respond();
+        $fractal = new Manager();
+        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
+        $data = $fractal->createData($resource)->toJson();
+
+        return $response
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write($data)
+        ;
     }
 }

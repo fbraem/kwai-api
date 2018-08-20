@@ -2,33 +2,31 @@
 
 namespace REST\Auth\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
+
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 use League\OAuth2\Server\Exception\OAuthServerException;
 
-use Core\Responders\Responder;
-
-class AccessTokenAction implements \Core\ActionInterface
+class AccessTokenAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $server = $request->getAttribute('clubman.container')['authorizationServer'];
-        $response = (new Responder())->respond();
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $server = $this->container->get('authorizationServer');
         try {
             $application = \Core\Clubman::getApplication();
-            $request = $request->withAttribute('client_secret', $application->getConfig()->oauth2->client->secret);
+            $request = $request->withAttribute('client_secret', $this->container->get('settings')['oauth2']['client']['secret']);
             return $server->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $exception) {
             return $exception->generateHttpResponse($response);
-            /*
-                    } catch (\Exception $exception) {
-                        // Catch unexpected exceptions
-                        $body = $response->getBody();
-                        $body->write($exception->getMessage());
-                        return $response->withStatus(500)->withBody($body);
-            */
         }
     }
 }
