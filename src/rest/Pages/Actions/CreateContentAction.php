@@ -7,15 +7,12 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
-
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 use REST\Contents\ContentValidator;
 use Domain\Content\ContentsTable;
 
-class CreateContentAction
+class CreateContentAction extends \Core\Action
 {
     private $container;
 
@@ -59,13 +56,6 @@ class CreateContentAction
         $filesystem = $this->container->get('filesystem');
         $resource = PageTransformer::createForItem($page, $filesystem);
 
-        $fractal = new Manager();
-        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
-        $data = $fractal->createData($resource)->toJson();
-
-        return $response
-            ->withHeader('content-type', 'application/vnd.api+json')
-            ->getBody()
-            ->write($data);
+        return $this->createJSONResponse($response, $resource, 201);
     }
 }

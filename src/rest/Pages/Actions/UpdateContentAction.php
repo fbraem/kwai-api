@@ -7,16 +7,13 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
-
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 use REST\Contents\ContentValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class UpdateContentAction
+class UpdateContentAction extends \Core\Action
 {
     private $container;
 
@@ -66,13 +63,6 @@ class UpdateContentAction
         $filesystem = $this->container->get('filesystem');
         $resource = PageTransformer::createForItem($page, $filesystem);
 
-        $fractal = new Manager();
-        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
-        $data = $fractal->createData($resource)->toJson();
-
-        return $response
-            ->withHeader('content-type', 'application/vnd.api+json')
-            ->getBody()
-            ->write($data);
+        return $this->createJSONResponse($response, $resource);
     }
 }
