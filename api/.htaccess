@@ -12,6 +12,7 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^auth(/.*)?$ /api/auth.php$1 [L]
     RewriteRule ^categories(/.*)?$ /api/categories.php$1 [L]
+    RewriteRule ^countries(/.*)?$ /api/countries.php$1 [L]
     RewriteRule ^news(/.*)?$ /api/news.php$1 [L]
     RewriteRule ^pages(/.*)?$ /api/pages.php$1 [L]
 

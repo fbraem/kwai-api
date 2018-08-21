@@ -2,19 +2,28 @@
 
 namespace REST\Countries\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseAction implements \Core\ActionInterface
+use Domain\Person\CountryTransformer;
+use Domain\Person\CountriesTable;
+
+class BrowseAction extends \Core\Action
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $countries = \Domain\Person\CountriesTable::getTableFromRegistry()->find()->all();
-        $payload->setOutput(\Domain\Person\CountryTransformer::createForCollection($countries));
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $countries = CountriesTable::getTableFromRegistry()->find()->all();
+        $resource = CountryTransformer::createForCollection($countries);
+
+        return $this->createJSONResponse($response, $resource);
     }
 }
