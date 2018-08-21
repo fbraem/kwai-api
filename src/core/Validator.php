@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Psr\Http\Message\ResponseInterface as Response;
+
 class Validator implements ValidatorInterface
 {
     protected $validators;
@@ -39,7 +41,7 @@ class Validator implements ValidatorInterface
         return count($this->errors) == 0;
     }
 
-    public function toJSON()
+    public function unprocessableEntityResponse(Response $response) : Response
     {
         $errors = [];
         foreach ($this->errors as $pointer => $messages) {
@@ -52,6 +54,10 @@ class Validator implements ValidatorInterface
                 ];
             }
         }
-        return json_encode(['errors' => $errors]);
+        return $response
+            ->withStatus(422)
+            ->withHeader('content-type', 'application/vnd.api+json')
+            ->getBody()
+            ->write(json_encode(['errors' => $errors]));
     }
 }

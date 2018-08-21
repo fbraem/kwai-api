@@ -39,11 +39,7 @@ class UpdateContentAction
         $data = $request->getParsedBody();
         $validator = new ContentValidator();
         if (! $validator->validate($data)) {
-            return $response
-                ->withStatus(422)
-                ->withHeader('content-type', 'application/vnd.api+json')
-                ->getBody()
-                ->write($validator->toJSON());
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);

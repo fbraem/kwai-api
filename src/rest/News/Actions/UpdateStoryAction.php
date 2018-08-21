@@ -41,11 +41,7 @@ class UpdateStoryAction
 
         $validator = new NewsStoryValidator();
         if (! $validator->validate($data)) {
-            return $response
-                ->withStatus(422)
-                ->withHeader('content-type', 'application/vnd.api+json')
-                ->getBody()
-                ->write($validator->toJSON());
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
