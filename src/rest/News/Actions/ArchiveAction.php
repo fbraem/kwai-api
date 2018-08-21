@@ -47,10 +47,8 @@ class ArchiveAction
 
         $archive = $query->all();
 
-        return $response
-            ->withHeader('content-type', 'application/json')
-            ->getBody()
-            ->write(json_encode($archive))
-        ;
+        $response->getBody()->write(json_encode($archive));
+
+        return $response->withHeader('content-type', 'application/json');
     }
 }
