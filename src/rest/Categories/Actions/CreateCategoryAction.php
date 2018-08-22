@@ -7,16 +7,13 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
-
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
 use REST\Categories\CategoryValidator;
 
-class CreateCategoryAction
+class CreateCategoryAction extends \Core\Action
 {
     private $container;
 
@@ -46,14 +43,6 @@ class CreateCategoryAction
 
         $resource = CategoryTransformer::createForItem($category);
 
-        $fractal = new Manager();
-        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
-        $data = $fractal->createData($resource)->toJson();
-
-        return $response
-            ->withStatus(201)
-            ->withHeader('content-type', 'application/vnd.api+json')
-            ->getBody()
-            ->write($data);
+        return $this->createJSONResponse($response, $resource, 201);
     }
 }

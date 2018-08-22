@@ -7,10 +7,10 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
+use Domain\Category\CategoriesTable;
+use Domain\Category\CategoryTransformer;
 
-class BrowseCategoryAction
+class BrowseCategoryAction extends \Core\Action
 {
     private $container;
 
@@ -21,18 +21,9 @@ class BrowseCategoryAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $categories = \Domain\Category\CategoriesTable::getTableFromRegistry()->find()->all();
-        $resource = \Domain\Category\CategoryTransformer::createForCollection($categories);
+        $categories = CategoriesTable::getTableFromRegistry()->find()->all();
+        $resource = CategoryTransformer::createForCollection($categories);
 
-        $response = $response->withHeader('content-type', 'application/vnd.api+json');
-
-        $fractal = new Manager();
-        $fractal->setSerializer(new JsonApiSerializer(/*$this->baseURL*/));
-        $data = $fractal->createData($resource)->toJson();
-
-        return $response
-            ->withHeader('content-type', 'application/vnd.api+json')
-            ->getBody()
-            ->write($data);
+        return $this->createJSONResponse($response, $resource);
     }
 }
