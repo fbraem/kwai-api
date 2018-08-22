@@ -22,7 +22,8 @@
         "cakephp/orm": "^3.5",
         "cakephp/i18n": "^3.5",
         "slim/slim": "^3.0",
-        "league/plates": "^3.3"
+        "league/plates": "^3.3",
+        "zendframework/zend-filter": "^2.8"
     },
     "require-dev": {
     },
