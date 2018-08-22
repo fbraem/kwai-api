@@ -8,6 +8,8 @@ class Person extends \Cake\ORM\Entity
         'age'
     ];
 
+    protected $_hidden = [ 'nationality', 'nationality_id' ];
+
     use \Domain\DatetimeMetaTrait;
 
     protected function _getBirthdate($value)
