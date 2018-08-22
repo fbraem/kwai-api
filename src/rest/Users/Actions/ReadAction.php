@@ -2,35 +2,36 @@
 
 namespace REST\Users\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class ReadAction implements \Core\ActionInterface
+use Domain\User\UsersTable;
+use Domain\User\UserTransformer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class ReadAction extends \Core\Action
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    public function __construct(ContainerInterface $container)
     {
-        $id = $request->getAttribute('route.id');
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
         try {
-            $user = \Domain\User\UsersTable::getTableFromRegistry()->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("User doesn't exist.")
+            $response = $this->createJSONResponse(
+                $response,
+                UserTransformer::createForItem(
+                    UsersTable::getTableFromRegistry()->get($args['id'])
                 )
-            )->respond();
+            );
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            $response = $response->withStatus(404, _("User doesn't exist."));
         }
 
-        $payload->setOutput(\Domain\User\UserTransformer::createForItem($user));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            )
-        )->respond();
+        return $response;
     }
 }

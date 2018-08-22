@@ -2,24 +2,30 @@
 
 namespace REST\Users\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseAction implements \Core\ActionInterface
+use Domain\User\UsersTable;
+use Domain\User\UserTransformer;
+
+class BrowseAction extends \Core\Action
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $users = \Domain\User\UsersTable::getTableFromRegistry()->find()->all();
-        $payload->setOutput(\Domain\User\UserTransformer::createForCollection($users));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return $this->createJSONResponse(
+            $response,
+            UserTransformer::createForCollection(
+                UsersTable::getTableFromRegistry()->find()->all()
             )
-        )->respond();
+        );
     }
 }
