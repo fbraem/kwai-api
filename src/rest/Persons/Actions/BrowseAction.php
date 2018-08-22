@@ -2,22 +2,33 @@
 
 namespace REST\Persons\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseAction implements \Core\ActionInterface
+use Domain\Person\PersonsTable;
+use Domain\Person\PersonTransformer;
+
+class BrowseAction extends \Core\Action
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $persons = \Domain\Person\PersonsTable::getTableFromRegistry()
-            ->find()
-            ->contain(['Nationality', 'Contact', 'Contact.Country'])
-            ->all();
-        $payload->setOutput(\Domain\Person\PersonTransformer::createForCollection($persons));
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return $this->createJSONResponse(
+            $response,
+            PersonTransformer::createForCollection(
+                PersonsTable::getTableFromRegistry()
+                    ->find()
+                    ->contain(['Nationality', 'Contact', 'Contact.Country'])
+                    ->all()
+            )
+        );
     }
 }
