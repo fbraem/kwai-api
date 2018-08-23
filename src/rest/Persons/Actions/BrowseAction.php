@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Person\PersonsTable;
 use Domain\Person\PersonTransformer;
 
-class BrowseAction extends \Core\Action
+class BrowseAction
 {
     private $container;
 
@@ -21,14 +21,13 @@ class BrowseAction extends \Core\Action
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return $this->createJSONResponse(
-            $response,
+        return (new \Core\ResourceResponse(
             PersonTransformer::createForCollection(
                 PersonsTable::getTableFromRegistry()
                     ->find()
                     ->contain(['Nationality', 'Contact', 'Contact.Country'])
                     ->all()
             )
-        );
+        ))($response);
     }
 }

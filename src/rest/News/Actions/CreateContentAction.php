@@ -15,7 +15,7 @@ use Domain\Content\ContentsTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class CreateContentAction extends \Core\Action
+class CreateContentAction
 {
     private $container;
 
@@ -57,8 +57,9 @@ class CreateContentAction extends \Core\Action
         $storiesTable->save($story);
 
         $filesystem = $this->container->get('filesystem');
-        $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-        return $this->createJSONResponse($response, $resource, 201);
+        return (new \Core\ResourceResponse(
+            NewsStoryTransformer::createForItem($story, $filesystem)
+        ))($response)->withStatus(201);
     }
 }

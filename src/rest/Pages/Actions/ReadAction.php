@@ -12,7 +12,7 @@ use Domain\Page\PagesTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class ReadAction extends \Core\Action
+class ReadAction
 {
     private $container;
 
@@ -32,8 +32,9 @@ class ReadAction extends \Core\Action
         }
 
         $filesystem = $this->container->get('filesystem');
-        $resource = PageTransformer::createForItem($page, $filesystem);
 
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse(
+            PageTransformer::createForItem($page, $filesystem)
+        ))($response);
     }
 }

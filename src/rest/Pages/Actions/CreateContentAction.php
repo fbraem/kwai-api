@@ -12,7 +12,7 @@ use Domain\Page\PagesTable;
 use REST\Contents\ContentValidator;
 use Domain\Content\ContentsTable;
 
-class CreateContentAction extends \Core\Action
+class CreateContentAction
 {
     private $container;
 
@@ -54,8 +54,10 @@ class CreateContentAction extends \Core\Action
         $pagesTable->save($page);
 
         $filesystem = $this->container->get('filesystem');
-        $resource = PageTransformer::createForItem($page, $filesystem);
 
-        return $this->createJSONResponse($response, $resource, 201);
+        return (new \Core\ResourceResponse(PageTransformer::createForItem(
+            $page,
+            $filesystem
+        )))($response)->withStatus(201);
     }
 }

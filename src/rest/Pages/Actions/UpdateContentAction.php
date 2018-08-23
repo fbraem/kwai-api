@@ -13,7 +13,7 @@ use REST\Contents\ContentValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class UpdateContentAction extends \Core\Action
+class UpdateContentAction
 {
     private $container;
 
@@ -61,8 +61,9 @@ class UpdateContentAction extends \Core\Action
         $pagesTable->save($page);
 
         $filesystem = $this->container->get('filesystem');
-        $resource = PageTransformer::createForItem($page, $filesystem);
 
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse(
+            PageTransformer::createForItem($page, $filesystem)
+        ))($response);
     }
 }

@@ -13,7 +13,7 @@ use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
 use REST\Categories\CategoryValidator;
 
-class UpdateCategoryAction extends \Core\Action
+class UpdateCategoryAction
 {
     private $container;
 
@@ -53,8 +53,8 @@ class UpdateCategoryAction extends \Core\Action
 
         $categoriesTable->save($category);
 
-        $resource = CategoryTransformer::createForItem($category);
-
-        return $this->createJSONResponse($response, $resource, 201);
+        return (new \Core\ResourceResponse(
+            CategoryTransformer::createForItem($category)
+        ))($response);
     }
 }

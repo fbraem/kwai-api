@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Person\CountryTransformer;
 use Domain\Person\CountriesTable;
 
-class BrowseAction extends \Core\Action
+class BrowseAction
 {
     private $container;
 
@@ -21,9 +21,10 @@ class BrowseAction extends \Core\Action
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $countries = CountriesTable::getTableFromRegistry()->find()->all();
-        $resource = CountryTransformer::createForCollection($countries);
-
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse(
+            CountryTransformer::createForCollection(
+                CountriesTable::getTableFromRegistry()->find()->all()
+            )
+        ))($response);
     }
 }

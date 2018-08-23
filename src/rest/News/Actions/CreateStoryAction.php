@@ -12,7 +12,7 @@ use Domain\News\NewsStoriesTable;
 
 use REST\News\NewsStoryValidator;
 
-class CreateStoryAction extends \Core\Action
+class CreateStoryAction
 {
     private $container;
 
@@ -84,8 +84,9 @@ class CreateStoryAction extends \Core\Action
 
         $storiesTable->save($story);
         $filesystem = $this->container->get('filesystem');
-        $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-        return $this->createJSONResponse($response, $resource, 201);
+        return (new \Core\ResourceResponse(
+            NewsStoryTransformer::createForItem($story, $filesystem)
+        ))($response)->withStatus(201);
     }
 }

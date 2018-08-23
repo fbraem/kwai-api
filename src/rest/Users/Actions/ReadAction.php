@@ -12,7 +12,7 @@ use Domain\User\UserTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class ReadAction extends \Core\Action
+class ReadAction
 {
     public function __construct(ContainerInterface $container)
     {
@@ -22,16 +22,13 @@ class ReadAction extends \Core\Action
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $response = $this->createJSONResponse(
-                $response,
+            return (new \Core\ResourceResponse(
                 UserTransformer::createForItem(
                     UsersTable::getTableFromRegistry()->get($args['id'])
                 )
-            );
+            ))($response);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            $response = $response->withStatus(404, _("User doesn't exist."));
+            return $response->withStatus(404, _("User doesn't exist."));
         }
-
-        return $response;
     }
 }

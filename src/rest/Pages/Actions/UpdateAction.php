@@ -13,7 +13,7 @@ use REST\Pages\PageValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class UpdateAction extends \Core\Action
+class UpdateAction
 {
     private $container;
 
@@ -79,8 +79,9 @@ class UpdateAction extends \Core\Action
         $pagesTable->save($page);
 
         $filesystem = $this->container->get('filesystem');
-        $resource = PageTransformer::createForItem($page, $filesystem);
 
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse(
+            PageTransformer::createForItem($page, $filesystem)
+        ))($response);
     }
 }

@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\User\UsersTable;
 use Domain\User\UserTransformer;
 
-class BrowseAction extends \Core\Action
+class BrowseAction
 {
     private $container;
 
@@ -21,11 +21,10 @@ class BrowseAction extends \Core\Action
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return $this->createJSONResponse(
-            $response,
+        return (new \Core\ResourceResponse(
             UserTransformer::createForCollection(
                 UsersTable::getTableFromRegistry()->find()->all()
             )
-        );
+        ))($response);
     }
 }

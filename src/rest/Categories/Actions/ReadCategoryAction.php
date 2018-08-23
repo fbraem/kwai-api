@@ -12,7 +12,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
 
-class ReadCategoryAction extends \Core\Action
+class ReadCategoryAction
 {
     private $container;
 
@@ -24,9 +24,11 @@ class ReadCategoryAction extends \Core\Action
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $category = CategoriesTable::getTableFromRegistry()->get($args['id']);
-            $resource = CategoryTransformer::createForItem($category);
-            $response = $this->createJSONResponse($response, $resource);
+            $response = (new \Core\ResourceResponse(
+                CategoryTransformer::createForItem(
+                    CategoriesTable::getTableFromRegistry()->get($args['id'])
+                )
+            ))($response);
         } catch (RecordNotFoundException $rnfe) {
             $response = $response->withStatus(404, _("Category doesn't exist"));
         }

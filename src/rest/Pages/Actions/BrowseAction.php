@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 
-class BrowseAction extends \Core\Action
+class BrowseAction
 {
     private $container;
 
@@ -62,6 +62,6 @@ class BrowseAction extends \Core\Action
             'count' => $count
         ]);
 
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse($resource))($response);
     }
 }

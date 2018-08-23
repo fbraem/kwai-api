@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
 
-class BrowseStoryAction extends \Core\Action
+class BrowseStoryAction
 {
     private $container;
 
@@ -95,6 +95,8 @@ class BrowseStoryAction extends \Core\Action
             'count' => $count
         ]);
 
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse(
+            $resource
+        ))($response);
     }
 }

@@ -12,7 +12,7 @@ use Domain\News\NewsStoriesTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class ReadStoryAction extends \Core\Action
+class ReadStoryAction
 {
     private $container;
 
@@ -31,7 +31,9 @@ class ReadStoryAction extends \Core\Action
             $filesystem = $this->container->get('filesystem');
             $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-            return $this->createJSONResponse($response, $resource);
+            $response = (new \Core\ResourceResponse(
+                NewsStoryTransformer::createForItem($story, $filesystem)
+            ))($response);
         } catch (RecordNotFoundException $rnfe) {
             $response = $response->withStatus(404, _("Story doesn't exist"));
         }

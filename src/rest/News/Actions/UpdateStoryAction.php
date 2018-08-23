@@ -14,7 +14,7 @@ use Domain\Category\CategoriesTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-class UpdateStoryAction extends \Core\Action
+class UpdateStoryAction
 {
     private $container;
 
@@ -99,8 +99,9 @@ class UpdateStoryAction extends \Core\Action
         $storiesTable->save($story);
 
         $filesystem = $this->container->get('filesystem');
-        $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-        return $this->createJSONResponse($response, $resource);
+        return (new \Core\ResourceResponse(
+            NewsStoryTransformer::createForItem($story, $filesystem)
+        ))($response);
     }
 }

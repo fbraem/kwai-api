@@ -13,7 +13,7 @@ use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
 use REST\Categories\CategoryValidator;
 
-class CreateCategoryAction extends \Core\Action
+class CreateCategoryAction
 {
     private $container;
 
@@ -41,8 +41,8 @@ class CreateCategoryAction extends \Core\Action
         $category->user = $request->getAttribute('clubman.user');
         $categoriesTable->save($category);
 
-        $resource = CategoryTransformer::createForItem($category);
-
-        return $this->createJSONResponse($response, $resource, 201);
+        return (new \Core\ResourceResponse(
+            CategoryTransformer::createForItem($category)
+        ))($response)->withStatus(201);
     }
 }
