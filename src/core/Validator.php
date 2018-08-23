@@ -54,10 +54,14 @@ class Validator implements ValidatorInterface
                 ];
             }
         }
+        $response
+            ->getBody()
+            ->write(json_encode(['errors' => $errors]))
+        ;
+
         return $response
             ->withStatus(422)
             ->withHeader('content-type', 'application/vnd.api+json')
-            ->getBody()
-            ->write(json_encode(['errors' => $errors]));
+        ;
     }
 }
