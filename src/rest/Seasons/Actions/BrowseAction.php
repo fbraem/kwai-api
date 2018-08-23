@@ -2,24 +2,32 @@
 
 namespace REST\Seasons\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseAction implements \Core\ActionInterface
+use Domain\Game\SeasonsTable;
+use Domain\Game\SeasonTransformer;
+
+class BrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $seasons = \Domain\Game\SeasonsTable::getTableFromRegistry()
-            ->find()
-            ->order(['start_date' => 'DESC'])
-            ->all();
+        $this->container = $container;
+    }
 
-        $payload->setOutput(\Domain\Game\SeasonTransformer::createForCollection($seasons));
-
-        return (new JSONResponder(new Responder(), $payload))->respond();
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return (new \Core\ResourceResponse(
+            SeasonTransformer::createForCollection(
+                SeasonsTable::getTableFromRegistry()
+                    ->find()
+                    ->order(['start_date' => 'DESC'])
+                    ->all()
+            )
+        ))($response);
     }
 }

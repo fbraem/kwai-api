@@ -1,0 +1,20 @@
+<?php
+
+namespace REST\Seasons;
+
+class SeasonEmptyValidator extends \Core\EmptyValidator
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function validate($data)
+    {
+        $this->addValidator('data.attributes.name');
+        $this->addValidator('data.attributes.start_date', \Zend\Validator\NotEmpty::INTEGER | \Zend\Validator\NotEmpty::NULL);
+        $this->addValidator('data.attributes.end_date', \Zend\Validator\NotEmpty::INTEGER | \Zend\Validator\NotEmpty::NULL);
+
+        return parent::validate($data);
+    }
+}

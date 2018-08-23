@@ -2,32 +2,41 @@
 
 namespace REST\Seasons\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal;
+use Domain\Game\SeasonsTable;
+use Domain\Game\SeasonTransformer;
+use REST\Seasons\SeasonValidator;
+use REST\Seasons\SeasonEmptyValidator;
 
-class CreateAction implements \Core\ActionInterface
+class CreateAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $data = $payload->getInput();
+    private $container;
 
-        $validator = new \REST\Seasons\SeasonValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $data = $request->getParsedBody();
+
+        $validator = new SeasonValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
+        }
+        $validator = new SeasonEmptyValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $seasonsTable = \Domain\Game\SeasonsTable::getTableFromRegistry();
+        $seasonsTable = SeasonsTable::getTableFromRegistry();
         $season = $seasonsTable->newEntity();
         $season->name = $attributes['name'];
         $season->start_date = $attributes['start_date'];
@@ -35,7 +44,8 @@ class CreateAction implements \Core\ActionInterface
         $season->remark = $attributes['remark'];
         $seasonsTable->save($season);
 
-        $payload->setOutput(\Domain\Game\SeasonTransformer::createForItem($season));
-        return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
+        return (new \Core\ResourceResponse(
+            SeasonTransformer::createForItem($season)
+        ))($response)->withStatus(201);
     }
 }

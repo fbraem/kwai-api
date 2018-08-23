@@ -2,35 +2,40 @@
 
 namespace REST\Seasons\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class UpdateAction implements \Core\ActionInterface
+use Domain\Game\SeasonsTable;
+use Domain\Game\SeasonTransformer;
+use REST\Seasons\SeasonValidator;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class UpdateAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $seasonsTable = \Domain\Game\SeasonsTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $seasonsTable = SeasonsTable::getTableFromRegistry();
         try {
-            $season = $seasonsTable->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (new NotFoundResponder(new Responder(), _("Season doesn't exist.")))->respond();
+            $season = $seasonsTable->get($args['id']);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Season doesn't exist"));
         }
 
-        $data = $payload->getInput();
+        $data = $request->getParsedBody();
 
-        $validator = new \REST\Seasons\SeasonValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (new JSONErrorResponder(new HTTPCodeResponder(new Responder(), 422), $errors))->respond();
+        $validator = new SeasonValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
@@ -49,7 +54,8 @@ class UpdateAction implements \Core\ActionInterface
         }
         $seasonsTable->save($season);
 
-        $payload->setOutput(\Domain\Game\SeasonTransformer::createForItem($season));
-        return (new JSONResponder(new HTTPCodeResponder(new Responder(), 201), $payload))->respond();
+        return (new \Core\ResourceResponse(
+            SeasonTransformer::createForItem($season)
+        ))($response);
     }
 }

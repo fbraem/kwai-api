@@ -2,35 +2,35 @@
 
 namespace REST\Seasons\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class ReadAction implements \Core\ActionInterface
+use Domain\Game\SeasonsTable;
+use Domain\Game\SeasonTransformer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class ReadAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $id = $request->getAttribute('route.id');
+        $this->container = $container;
+    }
 
+    public function __invoke(Request $request, Response $response, $args)
+    {
         try {
-            $season = \Domain\Game\SeasonsTable::getTableFromRegistry()->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Season doesn't exist.")
-                ))->respond();
+            return (new \Core\ResourceResponse(
+                SeasonTransformer::createForItem(
+                    SeasonsTable::getTableFromRegistry()->get($args['id'])
+                )
+            ))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Season doesn't exist"));
         }
-
-        $payload->setOutput(\Domain\Game\SeasonTransformer::createForItem($season));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
     }
 }
