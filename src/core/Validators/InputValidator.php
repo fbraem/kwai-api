@@ -1,10 +1,10 @@
 <?php
 
-namespace Core;
+namespace Core\Validators;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-class Validator implements ValidatorInterface
+class InputValidator implements ValidatorInterface
 {
     protected $validators;
 

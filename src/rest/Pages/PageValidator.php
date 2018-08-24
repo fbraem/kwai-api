@@ -4,24 +4,17 @@ namespace REST\Pages;
 
 use Zend\Validator\Digits;
 
-class PageValidator implements \Core\ValidatorInterface
+class PageValidator extends \Core\Validators\InputValidator
 {
-    private $validator;
-
     public function __construct()
     {
-        $this->validator = new \Core\Validator();
-    }
+        parent::__construct();
 
-    public function validate($data)
-    {
         $priorityValidation = new Digits();
         $priorityValidation->setMessage(
             _('Priority must be a number'),
             Digits::NOT_DIGITS
         );
-        $this->validator->addValidator('data.attributes.priority', $priorityValidation);
-
-        return $this->validator->validate($data);
+        $this-addValidator('data.attributes.priority', $priorityValidation);
     }
 }

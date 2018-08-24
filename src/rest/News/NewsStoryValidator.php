@@ -5,33 +5,26 @@ namespace REST\News;
 use Zend\Validator\Digits;
 use Zend\Validator\Date;
 
-class NewsStoryValidator implements \Core\ValidatorInterface
+class NewsStoryValidator extends \Core\Validators\InputValidator
 {
-    private $validator;
-
     public function __construct()
     {
-        $this->validator = new \Core\Validator();
-    }
+        parent::__construct();
 
-    public function validate($data)
-    {
         $featuredValidation = new Digits();
         $featuredValidation->setMessage(
             _('featured must be a number'),
             Digits::NOT_DIGITS
         );
-        $this->validator->addValidator('data.attributes.featured', $featuredValidation);
+        $this->addValidator('data.attributes.featured', $featuredValidation);
 
         $dateValidator = new Date(['format' => 'Y-m-d H:i:s']);
         $dateValidator->setMessage(
             _('Invalid date'),
             Date::INVALID_DATE
         );
-        $this->validator->addValidator('data.attributes.publish_date', $dateValidator);
-        $this->validator->addValidator('data.attributes.featured_end_date', $dateValidator);
-        $this->validator->addValidator('data.attributes.end_date', $dateValidator);
-
-        return $this->validator->validate($data);
+        $this->addValidator('data.attributes.publish_date', $dateValidator);
+        $this->addValidator('data.attributes.featured_end_date', $dateValidator);
+        $this->addValidator('data.attributes.end_date', $dateValidator);
     }
 }

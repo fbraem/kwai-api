@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Zend\Validator\Callback;
 use Carbon\Carbon;
 
-class SeasonValidator extends \Core\EntityValidator
+class SeasonValidator extends \Core\Validators\EntityValidator
 {
     public function __construct()
     {

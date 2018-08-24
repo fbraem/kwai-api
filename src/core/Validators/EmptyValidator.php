@@ -1,10 +1,10 @@
 <?php
 
-namespace Core;
+namespace Core\Validators;
 
 use Zend\Validator\NotEmpty;
 
-class EmptyValidator extends Validator
+class EmptyValidator extends InputValidator
 {
     public function __construct()
     {

@@ -8,39 +8,32 @@ use Zend\Validator\StringLength;
 use Zend\Validator\Digits;
 use Zend\Validator\InArray;
 
-class TeamTypeValidator implements \Core\ValidatorInterface
+class TeamTypeValidator extends \Core\Validators\InputValidator
 {
-    private $validator;
-
     public function __construct()
     {
-        $this->validator = new \Core\Validator();
-    }
-
-    public function validate($data)
-    {
-        $validators = [];
+        parent::_construct();
 
         $nameValidation = new StringLength(['max' => 255]);
         $nameValidation->setMessage(
             _('name can\'t contain more then 255 characters'),
             StringLength::TOO_LONG
         );
-        $this->validator->addValidator('data.attributes.name', $nameValidation);
+        $this->addValidator('data.attributes.name', $nameValidation);
 
         $startAgeValidation = new Digits();
         $startAgeValidation->setMessage(
             _('start age must be a number'),
             Digits::NOT_DIGITS
         );
-        $this->validator->addValidator('data.attributes.start_age', $startAgeValidation);
+        $this->addValidator('data.attributes.start_age', $startAgeValidation);
 
         $endAgeValidation = new Digits();
         $endAgeValidation->setMessage(
             _('End age must be a number'),
             Digits::NOT_DIGITS
         );
-        $this->validator->addValidator('data.attributes.end_age', $endAgeValidation);
+        $this->addValidator('data.attributes.end_age', $endAgeValidation);
 
         $genderValidation = new InArray([
             'haystack' => [ 0, 1, 2],
@@ -50,8 +43,6 @@ class TeamTypeValidator implements \Core\ValidatorInterface
             _('Not a valid gender'),
             InArray::NOT_IN_ARRAY
         );
-        $this->validator->addValidator('data.attributes.gender', $genderValidation);
-
-        return $this->validator->validate($data);
+        $this->addValidator('data.attributes.gender', $genderValidation);
     }
 }

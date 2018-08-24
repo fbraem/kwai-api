@@ -5,7 +5,7 @@ namespace REST\Seasons;
 use Zend\Validator\Date;
 use Zend\Validator\StringLength;
 
-class SeasonInputValidator extends \Core\Validator
+class SeasonInputValidator extends \Core\Validators\InputValidator
 {
     public function __construct()
     {

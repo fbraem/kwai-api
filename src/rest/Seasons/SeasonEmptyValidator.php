@@ -2,7 +2,7 @@
 
 namespace REST\Seasons;
 
-class SeasonEmptyValidator extends \Core\EmptyValidator
+class SeasonEmptyValidator extends \Core\Validators\EmptyValidator
 {
     public function __construct()
     {

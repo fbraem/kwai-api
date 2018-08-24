@@ -1,5 +1,5 @@
 <?php
-namespace Core;
+namespace Core\Validators;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
