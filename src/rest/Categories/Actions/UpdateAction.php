@@ -13,7 +13,7 @@ use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
 use REST\Categories\CategoryValidator;
 
-class CreateCategoryAction
+class UpdateAction
 {
     private $container;
 
@@ -24,6 +24,13 @@ class CreateCategoryAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        $categoriesTable = CategoriesTable::getTableFromRegistry();
+        try {
+            $category = $categoriesTable->get($args['id']);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Category doesn't exist"));
+        }
+
         $data = $request->getParsedBody();
 
         $validator = new CategoryValidator();
@@ -33,16 +40,21 @@ class CreateCategoryAction
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $categoriesTable = CategoriesTable::getTableFromRegistry();
-        $category = $categoriesTable->newEntity();
-        $category->name = $attributes['name'];
-        $category->description = $attributes['description'];
-        $category->remark = $attributes['remark'];
+        if (array_key_exists('name', $attributes)) {
+            $category->name = $attributes['name'];
+        }
+        if (array_key_exists('description', $attributes)) {
+            $category->description = $attributes['description'];
+        }
+        if (array_key_exists('remark', $attributes)) {
+            $category->remark = $attributes['remark'];
+        }
         $category->user = $request->getAttribute('clubman.user');
+
         $categoriesTable->save($category);
 
         return (new \Core\ResourceResponse(
             CategoryTransformer::createForItem($category)
-        ))($response)->withStatus(201);
+        ))($response);
     }
 }

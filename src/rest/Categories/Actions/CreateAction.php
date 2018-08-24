@@ -11,9 +11,9 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
-use REST\Categories\CategoryValidator;
+use REST\Categories\CategoryInputValidator;
 
-class UpdateCategoryAction
+class CreateAction
 {
     private $container;
 
@@ -24,37 +24,25 @@ class UpdateCategoryAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $categoriesTable = CategoriesTable::getTableFromRegistry();
-        try {
-            $category = $categoriesTable->get($args['id']);
-        } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Category doesn't exist"));
-        }
-
         $data = $request->getParsedBody();
 
-        $validator = new CategoryValidator();
+        $validator = new CategoryInputValidator();
         if (! $validator->validate($data)) {
             return $validator->unprocessableEntityResponse($response);
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        if (array_key_exists('name', $attributes)) {
-            $category->name = $attributes['name'];
-        }
-        if (array_key_exists('description', $attributes)) {
-            $category->description = $attributes['description'];
-        }
-        if (array_key_exists('remark', $attributes)) {
-            $category->remark = $attributes['remark'];
-        }
+        $categoriesTable = CategoriesTable::getTableFromRegistry();
+        $category = $categoriesTable->newEntity();
+        $category->name = $attributes['name'];
+        $category->description = $attributes['description'];
+        $category->remark = $attributes['remark'];
         $category->user = $request->getAttribute('clubman.user');
-
         $categoriesTable->save($category);
 
         return (new \Core\ResourceResponse(
             CategoryTransformer::createForItem($category)
-        ))($response);
+        ))($response)->withStatus(201);
     }
 }

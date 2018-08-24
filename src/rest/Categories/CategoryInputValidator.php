@@ -4,7 +4,7 @@ namespace REST\Categories;
 
 use Zend\Validator\StringLength;
 
-class CategoryValidator extends \Core\Validators\InputValidator
+class CategoryInputValidator extends \Core\Validators\InputValidator
 {
     public function __construct()
     {
