@@ -2,21 +2,31 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TypeBrowseAction implements \Core\ActionInterface
+use Domain\Team\TeamTypesTable;
+use Domain\Team\TeamTypeTransformer;
+
+class TypeBrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $types = \Domain\Team\TeamTypesTable::getTableFromRegistry()->find()->all();
+        $this->container = $container;
+    }
 
-        $payload->setOutput(\Domain\Team\TeamTypeTransformer::createForCollection($types));
-
-        return (new JSONResponder(new Responder(), $payload, '/api/teams'))->respond();
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return (new \Core\ResourceResponse(
+            TeamTypeTransformer::createForCollection(
+                TeamTypesTable::getTableFromRegistry()
+                    ->find()
+                    ->all()
+            )
+        ))($response);
     }
 }

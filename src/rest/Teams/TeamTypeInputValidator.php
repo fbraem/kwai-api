@@ -7,12 +7,13 @@ use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 use Zend\Validator\Digits;
 use Zend\Validator\InArray;
+use Zend\Validator\Callback;
 
-class TeamTypeValidator extends \Core\Validators\InputValidator
+class TeamTypeInputValidator extends \Core\Validators\InputValidator
 {
     public function __construct()
     {
-        parent::_construct();
+        parent::__construct();
 
         $nameValidation = new StringLength(['max' => 255]);
         $nameValidation->setMessage(
@@ -20,6 +21,14 @@ class TeamTypeValidator extends \Core\Validators\InputValidator
             StringLength::TOO_LONG
         );
         $this->addValidator('data.attributes.name', $nameValidation);
+
+        $boolValidation = new Callback(is_bool);
+        $boolValidation->setMessage(
+            _('Invalid value'),
+            Callback::INVALID_VALUE
+        );
+        $this->addValidator('data.attributes.competition', $boolValidation);
+        $this->addValidator('data.attributes.active', $boolValidation);
 
         $startAgeValidation = new Digits();
         $startAgeValidation->setMessage(

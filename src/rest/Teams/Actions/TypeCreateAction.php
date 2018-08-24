@@ -2,33 +2,37 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TypeCreateAction implements \Core\ActionInterface
+use Domain\Team\TeamTypesTable;
+use Domain\Team\TeamTypeTransformer;
+
+use REST\Teams\TeamTypeInputValidator;
+use REST\Teams\TeamTypeEmptyValidator;
+
+class TypeCreateAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $data = $payload->getInput();
+    private $container;
 
-        $validator = new \REST\Teams\TeamTypeValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                )
-            )->respond();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $data = $request->getParsedBody();
+
+        $validator = new TeamTypeInputValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
+        }
+        $validator = new TeamTypeEmptyValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
@@ -44,17 +48,8 @@ class TypeCreateAction implements \Core\ActionInterface
         $type->remark = $attributes['remark'];
         $typesTable->save($type);
 
-        $payload->setOutput(\Domain\Team\TeamTypeTransformer::createForItem($type));
-
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload,
-                '/api/teams'
-            )
-        )->respond();
+        return (new \Core\ResourceResponse(
+            TeamTypeTransformer::createForItem($type)
+        ))($response)->withStatus(201);
     }
 }

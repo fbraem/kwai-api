@@ -2,36 +2,35 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TypeReadAction implements \Core\ActionInterface
+use Domain\Team\TeamTypesTable;
+use Domain\Team\TeamTypeTransformer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class TypeReadAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $id = $request->getAttribute('route.id');
+        $this->container = $container;
+    }
 
+    public function __invoke(Request $request, Response $response, $args)
+    {
         try {
-            $type = \Domain\Team\TeamTypesTable::getTableFromRegistry()->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Type doesn't exist.")
-                ))->respond();
+            return (new \Core\ResourceResponse(
+                TeamTypeTransformer::createForItem(
+                    TeamTypesTable::getTableFromRegistry()->get($args['id'])
+                )
+            ))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Teamtype doesn't exist"));
         }
-
-        $payload->setOutput(\Domain\Team\TeamTypeTransformer::createForItem($type));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload,
-                '/api/teams'
-            ))->respond();
     }
 }
