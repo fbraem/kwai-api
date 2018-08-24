@@ -16,6 +16,10 @@ $app->group('/seasons', function () {
         ->setName('seasons.create')
         ->setArgument('auth', true)
     ;
+    $this->patch('/{id:[0-9]+}', \REST\Seasons\Actions\UpdateAction::class)
+        ->setName('seasons.create')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();
