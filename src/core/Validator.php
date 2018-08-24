@@ -15,7 +15,7 @@ class Validator implements ValidatorInterface
         $this->validators = [];
     }
 
-    public function addValidator($path, $validator)
+    public function addValidator($path, \Zend\Validator\ValidatorInterface $validator)
     {
         $this->validators[$path] = $validator;
     }
