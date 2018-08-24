@@ -11,7 +11,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
-use REST\Categories\CategoryValidator;
+use REST\Categories\CategoryInputValidator;
 
 class UpdateAction
 {
@@ -33,7 +33,7 @@ class UpdateAction
 
         $data = $request->getParsedBody();
 
-        $validator = new CategoryValidator();
+        $validator = new CategoryInputValidator();
         if (! $validator->validate($data)) {
             return $validator->unprocessableEntityResponse($response);
         }
