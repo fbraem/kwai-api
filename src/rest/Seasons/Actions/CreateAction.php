@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Game\SeasonsTable;
 use Domain\Game\SeasonTransformer;
 use REST\Seasons\SeasonValidator;
+use REST\Seasons\SeasonInputValidator;
 use REST\Seasons\SeasonEmptyValidator;
 
 class CreateAction
@@ -25,7 +26,7 @@ class CreateAction
     {
         $data = $request->getParsedBody();
 
-        $validator = new SeasonValidator();
+        $validator = new SeasonInputValidator();
         if (! $validator->validate($data)) {
             return $validator->unprocessableEntityResponse($response);
         }
@@ -43,6 +44,11 @@ class CreateAction
         $season->end_date = $attributes['end_date'];
         $season->remark = $attributes['remark'];
         $seasonsTable->save($season);
+
+        $validator = new SeasonValidator();
+        if (! $validator->validate($season)) {
+            return $validator->unprocessableEntityResponse($response);
+        }
 
         return (new \Core\ResourceResponse(
             SeasonTransformer::createForItem($season)

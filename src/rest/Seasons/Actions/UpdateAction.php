@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Game\SeasonsTable;
 use Domain\Game\SeasonTransformer;
 use REST\Seasons\SeasonValidator;
+use REST\Seasons\SeasonInputValidator;
+use REST\Seasons\SeasonEmptyValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
@@ -33,7 +35,7 @@ class UpdateAction
 
         $data = $request->getParsedBody();
 
-        $validator = new SeasonValidator();
+        $validator = new SeasonInputValidator();
         if (! $validator->validate($data)) {
             return $validator->unprocessableEntityResponse($response);
         }
@@ -52,6 +54,12 @@ class UpdateAction
         if (array_key_exists('remark', $attributes)) {
             $season->remark = $attributes['remark'];
         }
+
+        $validator = new SeasonValidator();
+        if (! $validator->validate($season)) {
+            return $validator->unprocessableEntityResponse($response);
+        }
+
         $seasonsTable->save($season);
 
         return (new \Core\ResourceResponse(
