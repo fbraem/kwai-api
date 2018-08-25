@@ -2,46 +2,51 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TeamMembersAddAction implements \Core\ActionInterface
+use Domain\Team\TeamsTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+//TODO: Remove sport dependency?
+use Judo\Domain\Member\MembersTable;
+use Judo\Domain\Member\MemberTransformer;
+
+class TeamMembersAddAction
 {
-    //TODO: Remove sport dependency?
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
         $teamsTable = \Domain\Team\TeamsTable::getTableFromRegistry();
         try {
-            $team = $teamsTable->get($id, [
+            $team = $teamsTable->get($args['id'], [
                 'contain' => ['Members', 'Members.Person']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Team doesn't exist"));
         }
 
-        $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
-        $json = $payload->getInput();
+        $membersTable = MembersTable::getTableFromRegistry();
+        $json = $request->getParsedBody();
         foreach ($json['data'] as $memberData) {
             try {
                 $member = $membersTable->get(
-                    $memberData['data']['id'],
+                    $memberData['id'],
                     [
                         'contain' => ['Person']
                     ]
                 );
                 $team->members[] = $member;
-            } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+            } catch (RecordNotFoundException $rnfe) {
                 //Skip this member
             }
         }
@@ -49,11 +54,8 @@ class TeamMembersAddAction implements \Core\ActionInterface
         $team->dirty('members', true);
         $teamsTable->save($team);
 
-        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($team->members));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+        return (new \Core\ResourceResponse(
+            MemberTransformer::createForCollection($team->members)
+        ))($response);
     }
 }

@@ -28,6 +28,14 @@ $app->group('/teams', function () {
         ->setName('teams.available_members.browse')
         ->setArgument('auth', true)
     ;
+    $this->post('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersAddAction::class)
+        ->setName('teams.members.add')
+        ->setArgument('auth', true)
+    ;
+    $this->delete('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersDeleteAction::class)
+        ->setName('teams.members.delete')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();

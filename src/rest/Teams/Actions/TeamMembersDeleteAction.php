@@ -2,56 +2,58 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TeamMembersDeleteAction implements \Core\ActionInterface
+use Domain\Team\TeamsTable;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+//TODO: Remove sport dependency?
+use Judo\Domain\Member\MembersTable;
+use Judo\Domain\Member\MemberTransformer;
+
+class TeamMembersDeleteAction
 {
-    //TODO: Remove sport dependency?
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $teamsTable = \Domain\Team\TeamsTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $teamsTable = TeamsTable::getTableFromRegistry();
         try {
-            $team = $teamsTable->get($id, [
+            $team = $teamsTable->get($args['id'], [
                 'contain' => ['Members', 'Members.Person']
             ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team doesn't exist.")
-                ))->respond();
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Team doesn't exist"));
         }
 
-        $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
-        $json = $payload->getInput();
+        $membersTable = MembersTable::getTableFromRegistry();
+        $json = $request->getParsedBody();
         $ids = [];
 
         foreach ($json['data'] as $memberData) {
-            $ids[] = $memberData['data']['id'];
+            $ids[] = $memberData['id'];
         }
         $members = $membersTable->find()->where(['id IN' => $ids])->toList();
-        $teamsTable->Members->unlink($team, $members);
+        if (count($members) > 0) {
+            $teamsTable->Members->unlink($team, $members);
+            $team->dirty('members', true);
+            $teamsTable->save($team);
+            $team = TeamsTable::getTableFromRegistry()->get($args['id'], [
+                'contain' => ['Members', 'Members.Person']
+            ]);
+        }
 
-        $team->dirty('members', true);
-        $teamsTable->save($team);
-
-        $team = \Domain\Team\TeamsTable::getTableFromRegistry()->get($id, [
-            'contain' => ['Members', 'Members.Person']
-        ]);
-
-        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($team->members));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+        return (new \Core\ResourceResponse(
+            MemberTransformer::createForCollection($team->members)
+        ))($response);
     }
 }
