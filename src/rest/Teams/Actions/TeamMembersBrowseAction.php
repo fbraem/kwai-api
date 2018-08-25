@@ -23,7 +23,7 @@ class TeamMembersBrowseAction
             $team = TeamsTable::getTableFromRegistry()->get(
                 $args['id'],
                 [
-                    'contain' => ['Members', 'Members.Person']
+                    'contain' => ['Members', 'Members.Person', 'Members.Person.Nationality']
                 ]
             );
 
