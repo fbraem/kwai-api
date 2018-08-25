@@ -20,6 +20,10 @@ $app->group('/teams', function () {
         ->setName('teams.update')
         ->setArgument('auth', true)
     ;
+    $this->get('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersBrowseAction::class)
+        ->setName('teams.members.browse')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();

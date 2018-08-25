@@ -1,39 +1,38 @@
 <?php
-
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TeamMembersBrowseAction implements \Core\ActionInterface
+use Domain\Team\TeamsTable;
+
+class TeamMembersBrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $id = $request->getAttribute('route.id');
+        $this->container = $container;
+    }
 
+    public function __invoke(Request $request, Response $response, $args)
+    {
         try {
-            $team = \Domain\Team\TeamsTable::getTableFromRegistry()->get($id, [
-                'contain' => ['Members', 'Members.Person']
-            ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team doesn't exist.")
-                ))->respond();
-        }
+            $team = TeamsTable::getTableFromRegistry()->get(
+                $args['id'],
+                [
+                    'contain' => ['Members', 'Members.Person']
+                ]
+            );
 
-        //TODO: Remove sport dependency?
-        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($team->members));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+            //TODO: Remove sport dependency?
+            return (new \Core\ResourceResponse(
+                \Judo\Domain\Member\MemberTransformer::createForCollection($team->members)
+            ))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Team doesn't exist"));
+        }
     }
 }
