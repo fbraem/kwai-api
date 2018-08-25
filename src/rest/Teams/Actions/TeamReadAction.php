@@ -2,20 +2,27 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TeamReadAction implements \Core\ActionInterface
+use Domain\Team\TeamsTable;
+use Domain\Team\TeamTransformer;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class TeamReadAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
         $parameters = $request->getAttribute('parameters');
         $contain = [
             'Season',
@@ -30,22 +37,18 @@ class TeamReadAction implements \Core\ActionInterface
             }
         }
         try {
-            $team = \Domain\Team\TeamsTable::getTableFromRegistry()->get($id, [
-                'contain' => $contain
-            ]);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team doesn't exist.")
-                ))->respond();
+            return (new \Core\ResourceResponse(
+                TeamTransformer::createForItem(
+                    TeamsTable::getTableFromRegistry()->get(
+                        $args['id'],
+                        [
+                            'contain' => $contain
+                        ]
+                    )
+                )
+            ))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Team doesn't exist"));
         }
-
-        $payload->setOutput(\Domain\Team\TeamTransformer::createForItem($team));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
     }
 }

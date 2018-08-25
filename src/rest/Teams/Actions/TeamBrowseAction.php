@@ -2,28 +2,36 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TeamBrowseAction implements \Core\ActionInterface
+use Domain\Team\TeamsTable;
+use Domain\Team\TeamTransformer;
+
+class TeamBrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $teams = \Domain\Team\TeamsTable::getTableFromRegistry()
-            ->find()
-            ->contain(['Season', 'TeamType'])
-            ->order([
-                'Season.name' => 'DESC',
-                'Teams.name' => 'ASC'
-            ])
-            ->all();
+        $this->container = $container;
+    }
 
-        $payload->setOutput(\Domain\Team\TeamTransformer::createForCollection($teams));
-
-        return (new JSONResponder(new Responder(), $payload))->respond();
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return (new \Core\ResourceResponse(
+            TeamTransformer::createForCollection(
+                TeamsTable::getTableFromRegistry()
+                    ->find()
+                    ->contain(['Season', 'TeamType'])
+                    ->order([
+                        'Season.name' => 'DESC',
+                        'Teams.name' => 'ASC'
+                    ])
+                    ->all()
+            )
+        ))($response);
     }
 }

@@ -18,6 +18,7 @@
     RewriteRule ^persons(/.*)?$ /api/persons.php$1 [L]
     RewriteRule ^seasons(/.*)?$ /api/seasons.php$1 [L]
     RewriteRule ^team_types(/.*)?$ /api/team_types.php$1 [L]
+    RewriteRule ^teams(/.*)?$ /api/teams.php$1 [L]
     RewriteRule ^users(/.*)?$ /api/users.php$1 [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
