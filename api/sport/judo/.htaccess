@@ -11,6 +11,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^grades(/.*)?$ ./grades.php$1 [L]
+    RewriteRule ^members(/.*)?$ ./members.php$1 [L]
 
 </IfModule>
 

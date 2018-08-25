@@ -2,25 +2,35 @@
 
 namespace Judo\REST\Members\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseAction implements \Core\ActionInterface
+use Judo\Domain\Member\MembersTable;
+use Judo\Domain\Member\MemberTransformer;
+
+class BrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    private $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $members = \Judo\Domain\Member\MembersTable::getTableFromRegistry()
-            ->find()
-            ->contain(['Person', 'Person.Contact', 'Person.Nationality'])
-            ->order([
-                'Person.lastname' => 'ASC',
-                'Person.firstname' => 'ASC'])
-            ->all();
-        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($members));
-        return (new JSONResponder(new Responder(), $payload))->respond();
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return (new \Core\ResourceResponse(
+            MemberTransformer::createForCollection(
+                MembersTable::getTableFromRegistry()
+                    ->find()
+                    ->contain(['Person', 'Person.Contact', 'Person.Nationality'])
+                    ->order([
+                        'Person.lastname' => 'ASC',
+                        'Person.firstname' => 'ASC'])
+                    ->all()
+            )
+        ))($response);
     }
 }
