@@ -2,20 +2,29 @@
 
 namespace Judo\REST\Grades\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class BrowseAction implements \Core\ActionInterface
+use Judo\Domain\Member\GradesTable;
+use Judo\Domain\Member\GradeTransformer;
+
+class BrowseAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $grades = \Judo\Domain\Member\GradesTable::getTableFromRegistry()->find()->all();
-        $payload->setOutput(\Judo\Domain\Member\GradeTransformer::createForCollection($grades));
+    private $container;
 
-        return (new JSONResponder(new Responder(), $payload))->respond();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        return (new \Core\ResourceResponse(
+            GradeTransformer::createForCollection(
+                GradesTable::getTableFromRegistry()->find()->all()
+            )
+        ))($response);
     }
 }
