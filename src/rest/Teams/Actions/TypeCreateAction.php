@@ -12,6 +12,7 @@ use Domain\Team\TeamTypeTransformer;
 
 use REST\Teams\TeamTypeInputValidator;
 use REST\Teams\TeamTypeEmptyValidator;
+use REST\Teams\TeamTypeValidator;
 
 class TypeCreateAction
 {
@@ -37,7 +38,7 @@ class TypeCreateAction
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        $typesTable = \Domain\Team\TeamTypesTable::getTableFromRegistry();
+        $typesTable = TeamTypesTable::getTableFromRegistry();
         $type = $typesTable->newEntity();
         $type->name = $attributes['name'];
         $type->start_age = $attributes['start_age'];
@@ -46,6 +47,12 @@ class TypeCreateAction
         $type->gender = $attributes['gender'];
         $type->active = $attributes['active'];
         $type->remark = $attributes['remark'];
+
+        $validator = new TeamTypeValidator();
+        if (! $validator->validate($type)) {
+            return $validator->unprocessableEntityResponse($response);
+        }
+
         $typesTable->save($type);
 
         return (new \Core\ResourceResponse(
