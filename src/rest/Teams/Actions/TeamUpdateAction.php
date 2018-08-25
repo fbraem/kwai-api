@@ -2,66 +2,68 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TeamUpdateAction implements \Core\ActionInterface
+use Domain\Team\TeamsTable;
+use Domain\Team\TeamTransformer;
+use Domain\Team\TeamTypesTable;
+
+use REST\Teams\TeamInputValidator;
+use REST\Teams\TeamEmptyValidator;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class TeamUpdateAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $teamsTable = \Domain\Team\TeamsTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $teamsTable = TeamsTable::getTableFromRegistry();
         try {
-            $team = $teamsTable->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team doesn't exist.")
-                ))->respond();
+            $team = $teamsTable->get($args['id']);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Team doesn't exist"));
         }
 
-        $data = $payload->getInput();
+        $data = $request->getParsedBody();
 
-        $validator = new \REST\Teams\TeamTypeValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                )
-            )->respond();
+        $validator = new TeamInputValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $seasonId = \JmesPath\search('data.relationships.season.data.id', $data);
         if (isset($seasonId)) {
             try {
                 $season = $teamsTable->Season->get($seasonId);
-            } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-                return (
-                    new JSONErrorResponder(
-                        new HTTPCodeResponder(
-                            new Responder(),
-                            422
-                        ),
-                        [
-                            '/data/relationships/season' => [
-                                _('Season doesn\'t exist')
+            } catch (RecordNotFoundException $rnfe) {
+                $response
+                    ->getBody()
+                    ->write(
+                        json_encode([
+                            'errors' => [
+                                'source' => [
+                                    'pointer' => '/data/relationships/season'
+                                ],
+                                'title' => _("Season doesn't exist")
                             ]
-                        ]
-                    ))->respond();
+                        ])
+                    )
+                ;
+
+                return $response
+                    ->withStatus(422)
+                    ->withHeader('content-type', 'application/vnd.api+json')
+                ;
             }
         }
 
@@ -69,19 +71,25 @@ class TeamUpdateAction implements \Core\ActionInterface
         if (isset($teamTypeId)) {
             try {
                 $team_type = $teamsTable->TeamType->get($teamTypeId);
-            } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-                return (
-                    new JSONErrorResponder(
-                        new HTTPCodeResponder(
-                            new Responder(),
-                            422
-                        ),
-                        [
-                            '/data/relationships/team_type' => [
-                                _('Teamtype doesn\'t exist')
+            } catch (RecordNotFoundException $rnfe) {
+                $response
+                    ->getBody()
+                    ->write(
+                        json_encode([
+                            'errors' => [
+                                'source' => [
+                                    'pointer' => '/data/relationships/team_type'
+                                ],
+                                'title' => _("Teamtype doesn't exist")
                             ]
-                        ]
-                    ))->respond();
+                        ])
+                    )
+                ;
+
+                return $response
+                    ->withStatus(422)
+                    ->withHeader('content-type', 'application/vnd.api+json')
+                ;
             }
         }
 
@@ -105,15 +113,8 @@ class TeamUpdateAction implements \Core\ActionInterface
 
         $teamsTable->save($team);
 
-        $payload->setOutput(\Domain\Team\TeamTransformer::createForItem($team));
-
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload
-            ))->respond();
+        return (new \Core\ResourceResponse(
+            TeamTransformer::createForItem($team)
+        ))($response);
     }
 }

@@ -4,7 +4,7 @@ namespace REST\Teams;
 
 use Zend\Validator\StringLength;
 
-class TeamValidator extends \Core\Validators\InputValidator
+class TeamInputValidator extends \Core\Validators\InputValidator
 {
     public function __construct()
     {
