@@ -2,19 +2,21 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-use \Cake\Database\Expression\QueryExpression;
-use \Cake\ORM\Query;
-use \Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
-class TeamAvailableMembersBrowseAction implements \Core\ActionInterface
+use Domain\Team\TeamMembersTable;
+//TODO: Remove sport dependency?
+use Judo\Domain\Member\MembersTable;
+use Judo\Domain\Member\MemberTransformer;
+
+class TeamAvailableMembersBrowseAction
 {
     private static $_logicExpressions = [
         '>' => 'gt',
@@ -25,32 +27,31 @@ class TeamAvailableMembersBrowseAction implements \Core\ActionInterface
         '=' => 'eq'
     ];
 
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
         $teamTable = \Domain\Team\TeamsTable::getTableFromRegistry();
         try {
-            $team = $teamTable->get($id, [
+            $team = $teamTable->get($args['id'], [
                 'contain' => ['TeamType', 'Season']
             ]);
         } catch (RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team doesn't exist.")
-                ))->respond();
+            return $response->withStatus(404, _("Team doesn't exist"));
         }
 
-        //TODO: Remove sport dependency?
-
-        $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
+        $membersTable = MembersTable::getTableFromRegistry();
         $query =$membersTable
             ->find()
             ->contain('Person')
         ;
 
-        $members = \Domain\Team\TeamMembersTable::getTableFromRegistry()
+        $members = TeamMembersTable::getTableFromRegistry()
             ->find()
             ->select(['member_id'])
             ->where(['team_id' => $team->id])
@@ -125,11 +126,9 @@ class TeamAvailableMembersBrowseAction implements \Core\ActionInterface
 
         $members = $query->all();
 
-        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($members));
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            ))->respond();
+        //TODO: Remove sport dependency?
+        return (new \Core\ResourceResponse(
+            MemberTransformer::createForCollection($members)
+        ))($response);
     }
 }

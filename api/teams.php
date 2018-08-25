@@ -24,6 +24,10 @@ $app->group('/teams', function () {
         ->setName('teams.members.browse')
         ->setArgument('auth', true)
     ;
+    $this->get('/{id:[0-9]+}/available_members', \REST\Teams\Actions\TeamAvailableMembersBrowseAction::class)
+        ->setName('teams.available_members.browse')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();
