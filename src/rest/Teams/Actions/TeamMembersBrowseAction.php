@@ -8,6 +8,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Team\TeamsTable;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+//TODO: Remove sport dependency?
+use Judo\Domain\Member\MemberTransformer;
+
 class TeamMembersBrowseAction
 {
     private $container;
@@ -29,7 +34,7 @@ class TeamMembersBrowseAction
 
             //TODO: Remove sport dependency?
             return (new \Core\ResourceResponse(
-                \Judo\Domain\Member\MemberTransformer::createForCollection($team->members)
+                MemberTransformer::createForCollection($team->members)
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
             return $response->withStatus(404, _("Team doesn't exist"));
