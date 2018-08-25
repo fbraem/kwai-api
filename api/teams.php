@@ -16,7 +16,7 @@ $app->group('/teams', function () {
         ->setName('teams.create')
         ->setArgument('auth', true)
     ;
-    $this->patch('/{id:[0-9]+}', \REST\Teams\Actions\TeamsUpdateAction::class)
+    $this->patch('/{id:[0-9]+}', \REST\Teams\Actions\TeamUpdateAction::class)
         ->setName('teams.update')
         ->setArgument('auth', true)
     ;
