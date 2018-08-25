@@ -16,12 +16,10 @@ $app->group('/team_types', function () {
         ->setName('team_types.create')
         ->setArgument('auth', true)
     ;
-    /*
-    $this->patch('/{id:[0-9]+}', \REST\Seasons\Actions\UpdateAction::class)
-        ->setName('seasons.create')
+    $this->patch('/{id:[0-9]+}', \REST\Teams\Actions\TypeUpdateAction::class)
+        ->setName('team_types.update')
         ->setArgument('auth', true)
     ;
-    */
 });
 
 $app->run();

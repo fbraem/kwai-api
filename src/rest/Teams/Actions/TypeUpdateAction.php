@@ -2,47 +2,42 @@
 
 namespace REST\Teams\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
-use Core\Responders\JSONErrorResponder;
-use Core\Responders\HTTPCodeResponder;
-use Core\Responders\NotFoundResponder;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class TypeUpdateAction implements \Core\ActionInterface
+use Domain\Team\TeamTypesTable;
+use Domain\Team\TeamTypeTransformer;
+
+use REST\Teams\TeamTypeInputValidator;
+use REST\Teams\TeamTypeValidator;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+
+class TypeUpdateAction
 {
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
-    {
-        $id = $request->getAttribute('route.id');
+    private $container;
 
-        $table = \Domain\Team\TeamTypesTable::getTableFromRegistry();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $table = TeamTypesTable::getTableFromRegistry();
         try {
-            $type = $table->get($id);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
-            return (
-                new NotFoundResponder(
-                    new Responder(),
-                    _("Team type doesn't exist.")
-                ))->respond();
+            $type = $table->get($args['id']);
+        } catch (RecordNotFoundException $rnfe) {
+            return $response->withStatus(404, _("Teamtype doesn't exist"));
         }
 
-        $data = $payload->getInput();
+        $data = $request->getParsedBody();
 
-        $validator = new \REST\Teams\TeamTypeValidator();
-        $errors = $validator->validate($data);
-        if (count($errors) > 0) {
-            return (
-                new JSONErrorResponder(
-                    new HTTPCodeResponder(
-                        new Responder(),
-                        422
-                    ),
-                    $errors
-                )
-            )->respond();
+        $validator = new TeamTypeInputValidator();
+        if (! $validator->validate($data)) {
+            return $validator->unprocessableEntityResponse($response);
         }
 
         $attributes = \JmesPath\search('data.attributes', $data);
@@ -69,18 +64,15 @@ class TypeUpdateAction implements \Core\ActionInterface
             $type->remark = $attributes['remark'];
         }
 
+        $validator = new TeamTypeValidator();
+        if (! $validator->validate($type)) {
+            return $validator->unprocessableEntityResponse($response);
+        }
+
         $table->save($type);
 
-        $payload->setOutput(\Domain\Team\TeamTypeTransformer::createForItem($type));
-
-        return (
-            new JSONResponder(
-                new HTTPCodeResponder(
-                    new Responder(),
-                    201
-                ),
-                $payload,
-                '/api/teams'
-            ))->respond();
+        return (new \Core\ResourceResponse(
+            TeamTypeTransformer::createForItem($type)
+        ))($response)->withStatus(201);
     }
 }
