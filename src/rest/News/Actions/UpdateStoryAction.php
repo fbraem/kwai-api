@@ -46,9 +46,7 @@ class UpdateStoryAction
             try {
                 $category = CategoriesTable::getTableFromRegistry()->get($categoryId);
             } catch (RecordNotFoundException $rnfe) {
-                return $response
-                    ->withStatus(422)
-                    ->withHeader('content-type', 'application/vnd.api+json')
+                $response
                     ->getBody()
                     ->write(
                         json_encode([
@@ -56,10 +54,16 @@ class UpdateStoryAction
                                 'source' => [
                                     'pointer' => '/data/relationships/category'
                                 ],
-                                'title' => _('Category doesn\'t exist')
+                                'title' => _("Category doesn't exist")
                             ]
                         ])
-                    );
+                    )
+                ;
+
+                return $response
+                    ->withStatus(422)
+                    ->withHeader('content-type', 'application/vnd.api+json')
+                ;
             }
         }
 

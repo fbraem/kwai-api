@@ -32,9 +32,7 @@ class CreateStoryAction
 
         $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
         if (!isset($categoryId)) {
-            return $response
-                ->withStatus(422)
-                ->withHeader('content-type', 'application/vnd.api+json')
+            $response
                 ->getBody()
                 ->write(
                     json_encode([
@@ -45,7 +43,13 @@ class CreateStoryAction
                             'title' => _('Category is required')
                         ]
                     ])
-                );
+                )
+            ;
+
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+            ;
         }
 
         $storiesTable = NewsStoriesTable::getTableFromRegistry();
