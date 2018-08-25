@@ -2,15 +2,23 @@
 
 namespace Judo\REST\Members\Actions;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Aura\Payload\Payload;
+use Interop\Container\ContainerInterface;
+
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
 use League\Csv\Reader;
 
-use Core\Responders\Responder;
-use Core\Responders\JSONResponder;
+use Cake\Datasource\ConnectionManager;
 
-class UploadAction implements \Core\ActionInterface
+use Judo\Domain\Member\MembersTable;
+use Judo\Domain\Member\MemberTransformer;
+
+use Domain\Person\CountriesTable;
+use Domain\Person\ContactsTable;
+use Domain\Person\PersonsTable;
+
+class UploadAction
 {
     private $countries = [
         'Belgie' => 'BEL',
@@ -18,12 +26,17 @@ class UploadAction implements \Core\ActionInterface
         'Nederland' => 'NLD'
     ];
 
-    public function __invoke(RequestInterface $request, Payload $payload) : ResponseInterface
+    public function __construct(ContainerInterface $container)
     {
-        $connection = \Cake\Datasource\ConnectionManager::get('default');
+        $this->container = $container;
+    }
+
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $connection = ConnectionManager::get('default');
         $connection->begin();
 
-        $countriesTable = \Domain\Person\CountriesTable::getTableFromRegistry();
+        $countriesTable = CountriesTable::getTableFromRegistry();
         $countriesTable->find()->where(['iso_3' => array_values($this->countries)]);
         $result = $countriesTable->find()->all();
         foreach ($result as $country) {
@@ -35,12 +48,7 @@ class UploadAction implements \Core\ActionInterface
 
         $files = $request->getUploadedFiles();
         if (!isset($files['csv'])) {
-            return (
-                new HTTPCodeResponder(
-                    new Responder(),
-                    400
-                )
-            )->respond();
+            return $response->withStatus(400);
         }
         $uploadedFilename = $files['csv']->getClientFilename();
 
@@ -51,7 +59,7 @@ class UploadAction implements \Core\ActionInterface
         $members = [];
         $records = $reader->getRecords();
 
-        $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
+        $membersTable = MembersTable::getTableFromRegistry();
 
         foreach ($records as $offset => $record) {
             $member = $membersTable
@@ -87,7 +95,7 @@ class UploadAction implements \Core\ActionInterface
                 $city = $parts[1];
             }
 
-            $contactsTable = \Domain\Person\ContactsTable::getTableFromRegistry();
+            $contactsTable = ContactsTable::getTableFromRegistry();
             $contact = $contactsTable->newEntity();
             $contact->email = $record['Email'];
             $contact->tel = $record['Tel'];
@@ -100,7 +108,7 @@ class UploadAction implements \Core\ActionInterface
             $contact->remark = 'Imported';
             $contactsTable->save($contact);
 
-            $personsTable = \Domain\Person\PersonsTable::getTableFromRegistry();
+            $personsTable = PersonsTable::getTableFromRegistry();
             $person = $personsTable->newEntity();
             $person->firstname = utf8_encode($record['Voornaam']);
             $person->lastname = utf8_encode($record['Naam']);
@@ -113,7 +121,7 @@ class UploadAction implements \Core\ActionInterface
             $person->contact = $contact;
             $personsTable->save($person);
 
-            $membersTable = \Judo\Domain\Member\MembersTable::getTableFromRegistry();
+            $membersTable = MembersTable::getTableFromRegistry();
             $member = $membersTable->newEntity();
             $member->license = $record['Vergunning'];
             $member->license_end_date = \Carbon\Carbon::createFromFormat(
@@ -129,13 +137,8 @@ class UploadAction implements \Core\ActionInterface
 
         $connection->commit();
 
-        $payload->setOutput(\Judo\Domain\Member\MemberTransformer::createForCollection($members));
-
-        return (
-            new JSONResponder(
-                new Responder(),
-                $payload
-            )
-        )->respond();
+        return (new \Core\ResourceResponse(
+            MemberTransformer::createForCollection($members)
+        ))($response);
     }
 }
