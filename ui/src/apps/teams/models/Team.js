@@ -53,7 +53,7 @@ export default class Team extends Model {
             url : `${this.resourceUrl()}/${id}/members`,
             data : {
                 data : members.map((member) => {
-                    return member.serialize();
+                    return member.serialize().data;
                 })
             }
         };
@@ -68,7 +68,7 @@ export default class Team extends Model {
             url : `${this.resourceUrl()}/${id}/members`,
             data : {
                 data : members.map((member) => {
-                    return member.serialize();
+                    return member.serialize().data;
                 })
             }
         };

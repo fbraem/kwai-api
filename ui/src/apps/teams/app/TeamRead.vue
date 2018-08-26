@@ -142,7 +142,6 @@
 </template>
 
 <script>
-    import Model from '@/js/model';
     import messages from '../lang/lang';
     import moment from 'moment';
 

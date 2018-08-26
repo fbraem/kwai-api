@@ -7,14 +7,8 @@ import axios from 'axios';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-//import find from 'lodash/find';
-//import filter from 'lodash/filter';
-//import unionBy from 'lodash/unionBy';
-
 import URI from 'urijs';
 import moment from 'moment';
-
-import JSONAPI from '@/js/JSONAPI';
 
 const state = {
     members : [],

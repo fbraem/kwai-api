@@ -9,7 +9,6 @@ Vue.use(Vuex);
 import URI from 'urijs';
 import moment from 'moment';
 
-import JSONAPI from '@/js/JSONAPI';
 import Team from './models/Team';
 import Member from './models/Member';
 import TeamType from './models/TeamType';

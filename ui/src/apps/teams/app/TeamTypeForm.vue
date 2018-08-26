@@ -88,7 +88,6 @@
 
 <script>
 import moment from 'moment';
-import Model from '@/js/model';
 
 import { required, numeric } from 'vuelidate/lib/validators';
 
