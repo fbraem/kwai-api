@@ -18,6 +18,7 @@ const state = {
         success : false,
         error : false
     },
+    meta : null,
     archive : {}
 };
 
@@ -39,11 +40,15 @@ const getters = {
     },
     archive(state) {
         return state.archive;
+    },
+    meta(state) {
+        return state.meta;
     }
 };
 
 const mutations = {
   stories(state, stories) {
+      state.meta = stories.meta();
       state.stories = stories;
   },
   story(state, story) {
@@ -124,6 +129,9 @@ const actions = {
         }
         if (payload.user) {
             story.where('user', payload.user);
+        }
+        if (payload.offset) {
+            story.paginate(payload.offset, payload.limit);
         }
         let stories = await story.get();
         commit('stories', stories);
