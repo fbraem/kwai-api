@@ -1,0 +1,13 @@
+{
+    "id" : "ID",
+    "email" : "Email",
+    "users" : "Gebruikers",
+    "firstname" : "Voornaam",
+    "lastname" : "Familienaam",
+    "last_login" : "Laatste login",
+    "news" : "Nieuws",
+    "news_info" : "Nieuwsberichten geschreven door deze gebruiker",
+    "information" :  "Informatie",
+    "information_info" : "Artikels geschreven door deze gebruiker",
+    "title" : "Titel"
+}

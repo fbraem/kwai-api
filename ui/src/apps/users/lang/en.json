@@ -1,0 +1,13 @@
+{
+    "id" : "ID",
+    "email" : "Email",
+    "users" : "Users",
+    "firstname" : "Firstname",
+    "lastname" : "Lastname",
+    "last_login" : "Last login",
+    "news" : "News",
+    "news_info" : "News written by this user",
+    "information" : "Information",
+    "information_info" : "Articles written by tis user",
+    "title" : "Title"
+}
