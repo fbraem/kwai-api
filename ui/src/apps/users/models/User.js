@@ -29,6 +29,12 @@ export default class User extends Model {
         return {
             name(user) {
                 return user.first_name + " " + user.last_name;
+            },
+            lastLoginFormatted(story) {
+                if (story.last_login) {
+                    return story.last_login.format('L HH:mm');
+                }
+                return "";
             }
         };
     }
