@@ -28,7 +28,7 @@ export default class User extends Model {
     computed() {
         return {
             name(user) {
-                return "";
+                return user.first_name + " " + user.last_name;
             }
         };
     }
