@@ -1,13 +1,13 @@
 <template>
-    <div class="text-xs-center">
-        <v-container>
-            <v-layout justify-center>
-                <v-flex xs8>
-                    <v-pagination :length.number="pageCount" :total-visible="maxPagesToShow" v-model="currentPage"></v-pagination>
-                </v-flex>
-            </v-layout>
-        </v-container>
-    </div>
+    <ul class="uk-pagination uk-flex-center">
+        <li v-if="currentPage > 1"><a @click="currentPage -= 1"><span uk-pagination-previous></span></a></li>
+        <template v-for="page in pages">
+            <li :class="{ 'uk-disabled' : page == '...' || page == currentPage }">
+                <a @click="currentPage = page"><span :class="{ 'uk-text-bold' : page == currentPage }">{{ page }}</span></a>
+            </li>
+        </template>
+        <li v-if="currentPage < pageCount"><a @click="currentPage += 1"><span uk-pagination-next></span></a></li>
+    </ul>
 </template>
 
 <script>
@@ -26,9 +26,11 @@
             for(var offset = 0; offset < this.offset; currentPage++) {
                  offset += this.limit;
             }
+            var pageCount = Math.ceil(this.count / this.limit);
             return {
                 currentPage : currentPage,
-                pageCount : Math.ceil(this.count / this.limit)
+                pageCount : pageCount,
+                pages : this.pagination(currentPage, pageCount)
             };
         },
         watch : {
@@ -38,8 +40,30 @@
                     for(var page = 1; page < nv; page++) {
                          offset += this.limit;
                     }
+                    this.pages = this.pagination(nv, this.pageCount);
                     this.$emit('page', offset);
                 }
+            }
+        },
+        methods : {
+            pagination(currentPage, pageCount) {
+                const delta = 2;
+
+                let range = [];
+                for (let i = Math.max(2, currentPage - delta); i <= Math.min(pageCount - 1, currentPage + delta); i++) {
+                    range.push(i);
+                }
+                if (currentPage - delta > 2) {
+                    range.unshift("...")
+                }
+                if (currentPage + delta < pageCount - 1) {
+                    range.push("...")
+                }
+
+                range.unshift(1);
+                range.push(pageCount);
+
+                return range;
             }
         }
     }
