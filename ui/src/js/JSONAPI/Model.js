@@ -129,6 +129,14 @@ export default class Model {
       return this;
   }
 
+  paginate(offset, limit) {
+      let q = this._uri.search(true);
+      q['page[offset]'] = offset || 0;
+      q['page[limit]'] = limit || 10;
+      this._uri.search(q);
+      return this;
+  }
+
   async get() {
     const config = {
       method: 'GET',
@@ -183,10 +191,10 @@ export default class Model {
              if (this[b]) {
                  if (Array.isArray(this[b])) {
                      this[b].forEach((e) => {
-                        data.push(e.serialize());
+                        data.push(e.serialize().data);
                      });
                  } else {
-                     data.push(this[b].serialize());
+                     data.push(this[b].serialize().data);
                  }
              }
           });
@@ -257,6 +265,9 @@ export default class Model {
         });
       } else {
           result = cache.getModel(this, json.data.id, json.data, included);
+      }
+      result.meta = function() {
+          return json.meta;
       }
       return result;
     }
