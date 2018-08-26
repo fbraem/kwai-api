@@ -1,39 +1,49 @@
 <template>
-    <v-container fluid>
-        <v-layout row wrap>
-            <v-card v-for="user in users" :key="user.id" class="ma-3 pa-3" style="width:300px;" :to="{ name : 'users.read', params : { id : user.id }}">
-                <v-card-title  v-if="user.first_name || user.last_name">
-                    <div class="headline mb-0">
-                        {{ user.first_name }} {{ user.last_name }}
-                    </div>
-                </v-card-title>
-                <v-divider></v-divider>
-                <v-card-media :src="noAvatarImage" class="mt-2 mb-2" height="300px">
-                </v-card-media>
-                <v-divider></v-divider>
-                <v-card-text>
-                    <v-layout row wrap>
-                        <v-flex xs2 class="pr-1">
-                            <v-icon>fa-envelope</v-icon>
-                        </v-flex>
-                        <v-flex xs10>
-                            {{ user.email }}
-                        </v-flex>
-                    </v-layout>
-                </v-card-text>
-            </v-card>
-        </v-layout>
-    </v-container>
+    <div class="uk-container">
+        <div v-if="loading" class="uk-flex-center" uk-grid>
+            <div class="uk-text-center">
+                <fa-icon name="spinner" scale="2" spin />
+            </div>
+        </div>
+        <div v-else uk-grid>
+            <div v-for="user in users" :key="user.id" class="uk-width-1-2@m">
+                <UserCard :user="user"></UserCard>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+    import 'vue-awesome/icons/envelope';
+    import 'vue-awesome/icons/spinner';
+    import 'vue-awesome/icons/ellipsis-h';
+
+    import messages from '../lang';
+
+    import UserCard from '../components/UserCard.vue';
+
     export default {
+        i18n : messages,
+        components : {
+            UserCard
+        },
         computed : {
+            loading() {
+                return this.$store.getters['userModule/loading'];
+            },
             noAvatarImage() {
                 return require('@/apps/users/images/no_avatar.png');
             },
             users() {
                 return this.$store.getters['userModule/users'];
+            },
+            userLink() {
+                return {
+                    name : 'users.read',
+                    params : {
+                        id : id
+                    }
+                };
             }
         },
         mounted() {

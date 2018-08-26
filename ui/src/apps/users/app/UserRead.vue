@@ -1,110 +1,95 @@
 <template>
-    <v-container fluid grid-list-xl :class=" { 'pa-2' : $vuetify.breakpoint.name == 'xs' }">
-        <v-layout v-if="user" row wrap>
-            <v-flex xs12 sm6 md4>
-                <v-card>
-                    <v-card-text>
-                        <v-layout column>
-                            <v-flex xs12 class="text-xs-center pa-1">
-                                <img :src="noAvatarImage" style="border-radius:50%;width:150px;height:150px"/>
-                            </v-flex>
-                            <v-flex xs12 v-if="user.first_name || user.last_name" class="text-xs-center pa-1">
-                                {{ user.first_name }}&nbsp;{{ user.last_name }}
-                            </v-flex>
-                            <v-flex xs12 class="text-xs-center pa-1">
-                                {{ user.email }}
-                            </v-flex>
-                            <v-divider></v-divider>
-                            <v-card-actions>
-                                <v-btn icon :href="'mailto:' + user.email">
-                                    <v-icon>fa-envelope</v-icon>
-                                </v-btn>
-                            </v-card-actions>
-                        </v-layout>
-                    </v-card-text>
-                </v-card>
-            </v-flex>
-            <v-flex xs12 sm6 md8>
-                <v-card>
-                    <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0">{{ $t('profile') }}</h3>
-                        </div>
-                    </v-card-title>
-                </v-card>
-            </v-flex>
-        </v-layout>
-        <v-layout>
-            <v-flex xs12 sm6>
-                <v-card>
-                    <v-card-title>
-                        <div class="headline mb-0">
-                            Your Newsstories
-                        </div>
-                    </v-card-title>
-                    <v-card-text v-if="stories">
-                        <div v-if="stories.length == 0">
-                            No news stories
-                        </div>
-                        <v-list v-else two-line>
-                            <template v-for="story in stories">
-                                <v-divider></v-divider>
-                                <v-list-tile :key="story.id" @click="showNews(story.id)">
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>{{ story.contents[0].title}}</v-list-tile-title>
-                                        <v-list-tile-sub-title v-html="story.contents[0].summary"></v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </template>
-                        </v-list>
-                    </v-card-text>
-                </v-card>
-            </v-flex>
-            <v-flex xs12 sm6>
-                <v-card>
-                    <v-card-title>
-                        <div class="headline mb-0">
-                            Your pages
-                        </div>
-                    </v-card-title>
-                    <v-card-text v-if="pages">
-                        <div v-if="pages.length == 0">
-                            No pages
-                        </div>
-                        <v-list v-else two-line>
-                            <template v-for="page in pages">
-                                <v-divider></v-divider>
-                                <v-list-tile :key="page.id" @click="showPage(page.id)">
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>{{ page.contents[0].title}}</v-list-tile-title>
-                                        <v-list-tile-sub-title v-html="page.contents[0].summary"></v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </template>
-                        </v-list>
-                    </v-card-text>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <div class="uk-container">
+        <div v-if="user" class="uk-card uk-card-default">
+            <div class="uk-card-header">
+                <div class="uk-grid-small uk-flex-center" uk-grid>
+                    <div>
+                        <img :src="noAvatarImage" />
+                    </div>
+                </div>
+                <div class="uk-grid-small uk-flex-center" uk-grid>
+                    <div>
+                        {{ user.name }}
+                    </div>
+                </div>
+            </div>
+            <div class="uk-card-footer">
+                <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
+            </div>
+        </div>
+        <section class="uk-section uk-section-small">
+            <div class="uk-container uk-container-expand">
+                <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('news') }}</span></h4>
+                <p class="uk-text-meta">
+                    {{ $t('news_info') }}
+                </p>
+            </div>
+            <table v-if="hasStories" class="uk-table uk-table-striped">
+                <thead>
+                    <tr><th>{{ $t('title') }}</th></tr>
+                </thead>
+                <tbody>
+                    <tr v-for="story in stories">
+                        <td>
+                            <router-link :to="{ name: 'news.story', params: { id : story.id } }">
+                                {{ story.title }}
+                            </router-link>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
+        </section>
+        <section class="uk-section uk-section-small">
+            <div class="uk-container uk-container-expand">
+                <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('information') }}</span></h4>
+                <p class="uk-text-meta">
+                    {{ $t('information_info') }}
+                </p>
+            </div>
+            <table v-if="hasPages" class="uk-table uk-table-striped">
+                <thead>
+                    <tr><th>{{ $t('title') }}</th></tr>
+                </thead>
+                <tbody>
+                    <tr v-for="page in pages">
+                        <td>
+                            <router-link :to="{ name: 'pages.read', params: { id : page.id } }">
+                                {{ page.title }}
+                            </router-link>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
 </template>
 
 <script>
-    import messages from '../lang/UserRead';
+    import 'vue-awesome/icons/envelope';
+    import 'vue-awesome/icons/ellipsis-h';
+
+    import messages from '../lang';
 
     import NewsStore from '@/apps/news/store.js'
     import PageStore from '@/apps/pages/store.js'
 
+    import Paginator from '@/components/Paginator.vue';
+
     export default {
-        i18n : {
-            messages
+        components : {
+            Paginator
         },
+        i18n : messages,
         computed : {
             user() {
                 return this.$store.getters['userModule/user'](this.$route.params.id);
             },
             stories() {
                 return this.$store.getters['newsModule/stories'];
+            },
+            storiesMeta() {
+                return this.$store.getters['newsModule/meta'];
             },
             pages() {
                 return this.$store.getters['pageModule/pages'];
@@ -114,6 +99,12 @@
             },
             loading() {
                 return this.$store.getters['userModule/loading'];
+            },
+            hasStories() {
+                return this.stories && this.stories.length > 0;
+            },
+            hasPages() {
+                return this.pages && this.pages.length > 0;
             }
         },
         created() {
@@ -125,28 +116,44 @@
             }
         },
         mounted() {
-          this.$store.dispatch('userModule/read', { id : this.$route.params.id })
-            .catch((error) => {
-              console.log(error);
-          });
-          this.$store.dispatch('newsModule/browse', {
-              user : this.$route.params.id
-           }).catch((error) => {
-              console.log(error);
-          });
-          this.$store.dispatch('pageModule/browse', {
-              user : this.$route.params.id
-           }).catch((error) => {
-              console.log(error);
-          });
-      },
-      methods : {
-          showNews(id) {
-              this.$router.push({ name : 'news.story', params : { id : id }});
-          },
-          showPage(id) {
-              this.$router.push({ name : 'pages.read', params : { id : id }});
-          }
-      }
+            this.fetchData();
+        },
+        watch : {
+            '$route'() {
+                this.fetchData();
+            }
+        },
+        methods : {
+            fetchData() {
+                this.$store.dispatch('userModule/read', { id : this.$route.params.id })
+                  .catch((error) => {
+                    console.log(error);
+                });
+                this.$store.dispatch('newsModule/browse', {
+                    user : this.$route.params.id
+                 }).catch((error) => {
+                    console.log(error);
+                });
+                this.$store.dispatch('pageModule/browse', {
+                    user : this.$route.params.id
+                 }).catch((error) => {
+                    console.log(error);
+                });
+            },
+            loadStories(offset) {
+                this.$store.dispatch('newsModule/browse', {
+                    user : this.$route.params.id,
+                    offset : offset
+                 }).catch((error) => {
+                    console.log(error);
+                });
+            },
+            showNews(id) {
+                this.$router.push({ name : 'news.story', params : { id : id }});
+            },
+            showPage(id) {
+                this.$router.push({ name : 'pages.read', params : { id : id }});
+            }
+        }
     };
 </script>

@@ -3,15 +3,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
-
-import URI from 'urijs';
+import User from './models/User';
 
 const state = () => {
     return {
         users : [],
-        stories : [],
         status : {
             loading : false,
             success : false,
@@ -25,10 +21,7 @@ const getters = {
         return state.users;
     },
     user: (state) => (id) => {
-        return find(state.users, ['id', id]);
-    },
-    stories(state) {
-        return state.stories;
+        return state.users.find((user) => user.id == id);
     },
     loading(state) {
         return state.status.loading;
@@ -42,14 +35,16 @@ const getters = {
 };
 
 const mutations = {
-  users(state, data) {
-      state.users = data.users;
+  users(state, users) {
+      state.users = users;
   },
-  setUser(state, data) {
-      state.users = unionBy([data.user], state.users, 'id');
-  },
-  stories(state, data) {
-      state.stories = data.stories;
+  user(state, user) {
+      var index = state.users.findIndex((u) => u.id == user.id);
+      if (index != -1) {
+          Vue.set(state.users, index, user);
+      } else {
+          state.users.push(user);
+      }
   },
   loading(state) {
       state.status = {
@@ -75,37 +70,29 @@ const mutations = {
 };
 
 const actions = {
-    browse(context, payload) {
-        return oauth.get('api/users', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var users = api.parse(res.data);
-            context.commit('users', {
-                users : users.data
-            });
-        });
+    async browse({ state, getters, commit, context }, payload) {
+        commit('loading');
+        const user = new User();
+        let users = await user.get();
+        commit('users', users);
+        commit('success');
     },
-    read(context, payload) {
-        context.commit('loading');
-        var user = context.getters['user'](payload.id);
+    async read({ state, getters, commit, context }, payload) {
+        commit('loading');
+        var user = getters['user'](payload.id);
         if (user) { // already read
-            context.commit('success');
-            return;
+            commit('success');
+        } else {
+            let model = new User();
+            try {
+                user = await model.find(payload.id);
+                commit('user', user);
+                commit('success');
+            } catch(error) {
+                commit('error', error);
+            }
         }
-
-        oauth.get('api/users/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setUser', {
-                user : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+        return user;
     },
     browseNews(context, payload) {
         context.commit('loading');
