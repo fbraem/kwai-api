@@ -11,7 +11,8 @@ const state = {
         loading : false,
         success : false,
         error : false
-    }
+    },
+    meta : null
 };
 
 const getters = {
@@ -29,11 +30,15 @@ const getters = {
     },
     error(state) {
         return state.status.error;
+    },
+    meta(state) {
+        return state.meta;
     }
 };
 
 const mutations = {
   pages(state, pages) {
+      state.meta = pages.meta();
       state.pages = pages;
   },
   page(state, page) {
