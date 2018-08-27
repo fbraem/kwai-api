@@ -130,7 +130,7 @@ const actions = {
         if (payload.user) {
             story.where('user', payload.user);
         }
-        if (payload.offset) {
+        if (payload.offset || payload.limit) {
             story.paginate(payload.offset, payload.limit);
         }
         let stories = await story.get();
