@@ -57,8 +57,8 @@ class BrowseAction
         $filesystem = $this->container->get('filesystem');
         $resource = PageTransformer::createForCollection($pages, $filesystem);
         $resource->setMeta([
-            'limit' => $limit,
-            'offset' => $offset,
+            'limit' => intval($limit),
+            'offset' => intval($offset),
             'count' => $count
         ]);
 
