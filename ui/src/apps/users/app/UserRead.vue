@@ -61,6 +61,7 @@
                     </tr>
                 </tbody>
             </table>
+            <Paginator v-if="pagesMeta" :count="pagesMeta.count" :limit="pagesMeta.limit" :offset="pagesMeta.offset" @page="loadPages"></Paginator>
         </section>
     </div>
 </template>
@@ -91,20 +92,23 @@
             storiesMeta() {
                 return this.$store.getters['newsModule/meta'];
             },
+            hasStories() {
+                return this.stories && this.stories.length > 0;
+            },
             pages() {
                 return this.$store.getters['pageModule/pages'];
+            },
+            hasPages() {
+                return this.pages && this.pages.length > 0;
+            },
+            pagesMeta() {
+                return this.$store.getters['pageModule/meta'];
             },
             noAvatarImage() {
                 return require('@/apps/users/images/no_avatar.png');
             },
             loading() {
                 return this.$store.getters['userModule/loading'];
-            },
-            hasStories() {
-                return this.stories && this.stories.length > 0;
-            },
-            hasPages() {
-                return this.pages && this.pages.length > 0;
             }
         },
         created() {
@@ -129,19 +133,19 @@
                   .catch((error) => {
                     console.log(error);
                 });
+                this.loadStories(0);
+                this.loadPages(0);
+            },
+            loadStories(offset) {
                 this.$store.dispatch('newsModule/browse', {
-                    user : this.$route.params.id
-                 }).catch((error) => {
-                    console.log(error);
-                });
-                this.$store.dispatch('pageModule/browse', {
-                    user : this.$route.params.id
+                    user : this.$route.params.id,
+                    offset : offset
                  }).catch((error) => {
                     console.log(error);
                 });
             },
-            loadStories(offset) {
-                this.$store.dispatch('newsModule/browse', {
+            loadPages(offset) {
+                this.$store.dispatch('pageModule/browse', {
                     user : this.$route.params.id,
                     offset : offset
                  }).catch((error) => {
