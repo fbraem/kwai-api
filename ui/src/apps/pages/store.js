@@ -90,8 +90,9 @@ const actions = {
     async browse({ state, getters, commit, context }, payload) {
         commit('loading');
         const page = new Page();
-        //var offset = payload.offset || 0;
-        //uri.addQuery('page[offset]', offset);
+        if (payload.offset || payload.limit) {
+            page.paginate(payload.offset, payload.limit);
+        }
         if (payload.category) {
             page.where('category', payload.category);
         }
