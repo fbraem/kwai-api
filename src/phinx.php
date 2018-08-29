@@ -3,10 +3,10 @@
  * Phinx migration configuration
  */
 $application = \Core\Clubman::getApplication();
-$config = $application->getConfig();
+$config = $application->getContainer()['settings'];
 
-$environments = $config->database->toArray();
-$environments['default_database'] = $config->default_database;
+$environments = $config['database'];
+$environments['default_database'] = $config['default_database'];
 
 return [
     'paths' => [
