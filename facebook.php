@@ -8,33 +8,11 @@ use League\Flysystem\Filesystem;
 
 use League\Plates\Engine;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+
 require 'src/vendor/autoload.php';
 
-$config = include('api/config.php');
-
-$app = new \Slim\App([
-    'settings' => $config
-]);
-
-\Cake\Datasource\ConnectionManager::setConfig('default', [
-    'className' => 'Cake\Database\Connection',
-    'driver' => 'Cake\Database\Driver\Mysql',
-    'host' => $config['database'][$config['default_database']]['host'],
-    'username' => $config['database'][$config['default_database']]['user'],
-    'password' => $config['database'][$config['default_database']]['pass'],
-    'database' => $config['database'][$config['default_database']]['name'],
-    'encoding' => $config['database'][$config['default_database']]['charset']
-]);
-
-$app->getContainer()['filesystem'] = function ($c) {
-    $settings = $c->get('settings');
-    $flyAdapter = new Local($settings['files']);
-    return new Filesystem($flyAdapter);
-};
-
-$app->getContainer()['template'] = function ($c) {
-    return new League\Plates\Engine('./src/templates');
-};
+$app = \Core\Clubman::getApplication();
 
 $app->get('/facebook/news/{id}', function (Request $request, Response $response, array $args) {
     $id = $args['id'];
@@ -43,7 +21,7 @@ $app->get('/facebook/news/{id}', function (Request $request, Response $response,
         $story = \Domain\News\NewsStoriesTable::getTableFromRegistry()->get($id, [
             'contain' => ['Contents', 'Category', 'Contents.User']
         ]);
-    } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
+    } catch (RecordNotFoundException $rnfe) {
         return $response->withStatus(404);
     }
 
