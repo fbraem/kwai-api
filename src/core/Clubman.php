@@ -5,7 +5,7 @@ namespace Core;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
-use League\Plates\Engine;
+use League\Plates\Engine as TemplateEngine;
 
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\ResourceServer;
@@ -19,6 +19,8 @@ use Domain\Auth\ClientRepository;
 use Domain\Auth\RefreshTokenRepository;
 use Domain\Auth\ScopeRepository;
 use Domain\Auth\UserRepository;
+
+use PHPMailer\PHPMailer\PHPMailer;
 
 use Core\Middlewares\ParametersMiddleware;
 use Core\Middlewares\LogActionMiddleware;
@@ -63,7 +65,7 @@ class Clubman
             };
 
             $container['template'] = function ($c) {
-                return new League\Plates\Engine(__DIR__ . '../../templates');
+                return new TemplateEngine(__DIR__ . '/../templates');
             };
 
             $container['authorizationServer'] = function ($c) {
@@ -95,6 +97,28 @@ class Clubman
             $container['resourceServer'] = function ($c) {
                 $config = $c->get('settings');
                 return new ResourceServer(new AccessTokenRepository(), $config['oauth2']['public_key']);
+            };
+
+            $container['mailer'] = function ($c) {
+                $config = $c->get('settings');
+                $mail = new PHPMailer(true);
+                //Server settings
+                $mail->SMTPDebug = 2;
+                $mail->isSMTP();
+                $mail->Host = $config['mail']['host'];
+                $mail->SMTPAuth = true;
+                $mail->Username = $config['mail']['user'];
+                $mail->Password = $config['mail']['pass'];
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = $config['mail']['port'];
+
+                //Recipients
+                $recipient = $config['mail']['from'];
+                $recipientMail = array_keys($recipient)[0];
+                $mail->setFrom($recipientMail, $recipient[$recipientMail]);
+                $mail->addReplyTo($recipientMail, $recipient[$recipientMail]);
+
+                return $mail;
             };
 
             $app->add(new ParametersMiddleware());
