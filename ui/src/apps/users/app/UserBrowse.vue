@@ -1,30 +1,37 @@
 <template>
-    <div class="uk-container">
-        <div v-if="loading" class="uk-flex-center" uk-grid>
-            <div class="uk-text-center">
-                <fa-icon name="spinner" scale="2" spin />
+    <Page>
+        <template slot="title">
+            {{ $t('user_mgmt') }}
+        </template>
+        <div slot="content" class="uk-container">
+            <div v-if="loading" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
+            <div v-else uk-grid>
+                <div v-for="user in users" :key="user.id" class="uk-width-1-2@m">
+                    <UserCard :user="user"></UserCard>
+                </div>
             </div>
         </div>
-        <div v-else uk-grid>
-            <div v-for="user in users" :key="user.id" class="uk-width-1-2@m">
-                <UserCard :user="user"></UserCard>
-            </div>
-        </div>
-    </div>
+    </Page>
 </template>
 
 <script>
-    import 'vue-awesome/icons/envelope';
     import 'vue-awesome/icons/spinner';
-    import 'vue-awesome/icons/ellipsis-h';
 
     import messages from '../lang';
 
+    import Page from './Page.vue';
     import UserCard from '../components/UserCard.vue';
+
+    import userStore from '@/apps/users/store';
 
     export default {
         i18n : messages,
         components : {
+            Page,
             UserCard
         },
         computed : {
@@ -44,6 +51,11 @@
                         id : id
                     }
                 };
+            }
+        },
+        created() {
+            if (!this.$store.state.userModule) {
+                this.$store.registerModule('userModule', userStore);
             }
         },
         mounted() {

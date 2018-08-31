@@ -5,6 +5,7 @@ import newsPerimeter from './newsPerimeter';
 import pagePerimeter from './pagePerimeter';
 import memberPerimeter from './memberPerimeter';
 import teamPerimeter from './teamPerimeter';
+import userPerimeter from './userPerimeter';
 
 function perimeters() {
     return [
@@ -14,7 +15,8 @@ function perimeters() {
         newsPerimeter,
         pagePerimeter,
         memberPerimeter,
-        teamPerimeter
+        teamPerimeter,
+        userPerimeter
     ];
 };
 

@@ -8,6 +8,7 @@ import User from './models/User';
 const state = () => {
     return {
         users : [],
+        invitations : [],
         status : {
             loading : false,
             success : false,
@@ -22,6 +23,15 @@ const getters = {
     },
     user: (state) => (id) => {
         return state.users.find((user) => user.id == id);
+    },
+    invitations(state) {
+        return state.invitations;
+    },
+    invitationByToken : (state) => (token) => {
+        return state.invitations.find((invitation) => invitation.token == token);
+    },
+    invitationById: (state) => (id) => {
+        return state.invitations.find((invitation) => invitation.id == id);
     },
     loading(state) {
         return state.status.loading;
@@ -94,25 +104,26 @@ const actions = {
         }
         return user;
     },
-    browseNews(context, payload) {
-        context.commit('loading');
-        var uri = new URI();
-        uri.segment(['api', 'users', 'news', payload.id]);
-        var offset = payload.offset || 0;
-        uri.addQuery('page[offset]', offset);
-
-        oauth.get(uri.href(), {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var stories = api.parse(res.data);
-            context.commit('stories', {
-                stories : stories.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
+    async readInvitationByToken({ state, getters, commit, context }, payload) {
+        commit('loading');
+        var invitation = getters['invitationByToken'](payload.token);
+        if (invitation) { // already read
+            commit('success');
+        } else {
+            let model = new UserInvitation();
+            try {
+                model.where('token', payload.token);
+                var invitations = await model.get();
+                if (invitation.length > 0) {
+                    invitation = invitation[0];
+                    commit('invitation', invitation);
+                }
+                commit('success');
+            } catch(error) {
+                commit('error', error);
+            }
+        }
+        return invitation;
     }
 };
 

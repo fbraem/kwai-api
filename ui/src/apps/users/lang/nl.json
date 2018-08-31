@@ -9,5 +9,8 @@
     "news_info" : "Nieuwsberichten geschreven door deze gebruiker",
     "information" :  "Informatie",
     "information_info" : "Artikels geschreven door deze gebruiker",
-    "title" : "Titel"
+    "title" : "Titel",
+    "user_mgmt" : "Beheer Gebruikers",
+    "member_since" : "Lid sinds",
+    "user_invite" : "Gebruikers Uitnodiging"
 }

@@ -20,6 +20,7 @@
     RewriteRule ^team_types(/.*)?$ /api/team_types.php$1 [L]
     RewriteRule ^teams(/.*)?$ /api/teams.php$1 [L]
     RewriteRule ^users(/.*)?$ /api/users.php$1 [L]
+    RewriteRule ^user_invitations(/.*)?$ /api/user_invitations.php$1 [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]

@@ -1,85 +1,106 @@
 <template>
-    <div class="uk-container">
-        <div v-if="user" class="uk-card uk-card-default">
-            <div class="uk-card-header">
-                <div class="uk-grid-small uk-flex-center" uk-grid>
-                    <div>
+    <Page>
+        <template slot="title">
+            {{ $t('user_mgmt') }}
+        </template>
+        <template v-if="user" slot="header">
+            <div class="uk-container uk-text-center">
+                <div class="uk-flex uk-flex-middle" uk-grid>
+                    <div class="uk-width-1-3">
                         <img :src="noAvatarImage" />
                     </div>
-                </div>
-                <div class="uk-grid-small uk-flex-center" uk-grid>
-                    <div>
-                        {{ user.name }}
+                    <div class="uk-width-2-3">
+                        <h1>{{ user.name }}</h1>
+                        <div uk-margin>
+                            <a class="uk-button uk-button-default"><fa-icon class="uk-margin-small-right" name="envelope"></fa-icon>Mail</a>
+                            <a class="uk-button uk-button-default"><fa-icon class="uk-margin-small-right" name="ban"></fa-icon>Block</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="uk-card-footer">
-                <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
-            </div>
-        </div>
-        <section class="uk-section uk-section-small">
-            <div class="uk-container uk-container-expand">
-                <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('news') }}</span></h4>
-                <p class="uk-text-meta">
-                    {{ $t('news_info') }}
-                </p>
-            </div>
-            <table v-if="hasStories" class="uk-table uk-table-striped">
-                <thead>
-                    <tr><th>{{ $t('title') }}</th></tr>
-                </thead>
-                <tbody>
-                    <tr v-for="story in stories">
-                        <td>
-                            <router-link :to="{ name: 'news.story', params: { id : story.id } }">
-                                {{ story.title }}
-                            </router-link>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
-        </section>
-        <section class="uk-section uk-section-small">
-            <div class="uk-container uk-container-expand">
-                <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('information') }}</span></h4>
-                <p class="uk-text-meta">
-                    {{ $t('information_info') }}
-                </p>
-            </div>
-            <table v-if="hasPages" class="uk-table uk-table-striped">
-                <thead>
-                    <tr><th>{{ $t('title') }}</th></tr>
-                </thead>
-                <tbody>
-                    <tr v-for="page in pages">
-                        <td>
-                            <router-link :to="{ name: 'pages.read', params: { id : page.id } }">
-                                {{ page.title }}
-                            </router-link>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <Paginator v-if="pagesMeta" :count="pagesMeta.count" :limit="pagesMeta.limit" :offset="pagesMeta.offset" @page="loadPages"></Paginator>
-        </section>
-    </div>
+        </template>
+        <template slot="content">
+            <section v-if="user" class="uk-section uk-section-default uk-padding-remove">
+                <div class="uk-container">
+                    <div class="uk-grid uk-grid-small uk-flex uk-flex-middle" data-uk-grid>
+                        <div class="uk-width-1-2">
+                            <fa-icon name="calendar" class="uk-text-primary"></fa-icon>
+                            <span class="uk-text-small uk-text-muted uk-text-bottom"> {{ $t('member_since') }}:</span><br />
+                            <span class="uk-text-large uk-text-primary">{{ user.createdAtFormatted }}</span>
+                        </div>
+                        <div class="uk-width-1-2">
+                            <fa-icon name="user" class="uk-text-success"></fa-icon>
+                            <span class="uk-text-small uk-text-muted  uk-text-bottom"> {{ $t('last_login') }}:</span><br />
+                            <span class="uk-text-large uk-text-success">{{ user.lastLoginFormatted }}</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="uk-section uk-section-default">
+                <div class="uk-container uk-container-expand">
+                    <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('news') }}</span></h4>
+                    <p class="uk-text-meta">
+                        {{ $t('news_info') }}
+                    </p>
+                    <table v-if="hasStories" class="uk-table uk-table-striped">
+                        <thead>
+                            <tr><th>{{ $t('title') }}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="story in stories">
+                                <td>
+                                    <router-link :to="{ name: 'news.story', params: { id : story.id } }">
+                                        {{ story.title }}
+                                    </router-link>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
+                    <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('information') }}</span></h4>
+                    <p class="uk-text-meta">
+                        {{ $t('information_info') }}
+                    </p>
+                    <table v-if="hasPages" class="uk-table uk-table-striped">
+                        <thead>
+                            <tr><th>{{ $t('title') }}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="page in pages">
+                                <td>
+                                    <router-link :to="{ name: 'pages.read', params: { id : page.id } }">
+                                        {{ page.title }}
+                                    </router-link>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Paginator v-if="pagesMeta" :count="pagesMeta.count" :limit="pagesMeta.limit" :offset="pagesMeta.offset" @page="loadPages"></Paginator>
+                </div>
+            </section>
+        </template>
+    </Page>
 </template>
 
 <script>
     import 'vue-awesome/icons/envelope';
-    import 'vue-awesome/icons/ellipsis-h';
+    import 'vue-awesome/icons/calendar';
+    import 'vue-awesome/icons/user';
+    import 'vue-awesome/icons/ban';
 
     import messages from '../lang';
 
-    import NewsStore from '@/apps/news/store.js'
-    import PageStore from '@/apps/pages/store.js'
+    import userStore from '@/apps/users/store';
+    import NewsStore from '@/apps/news/store';
+    import PageStore from '@/apps/pages/store';
 
     import Paginator from '@/components/Paginator.vue';
+    import Page from './Page.vue';
 
     export default {
         components : {
-            Paginator
+            Paginator,
+            Page
         },
         i18n : messages,
         computed : {
@@ -112,6 +133,9 @@
             }
         },
         created() {
+            if (!this.$store.state.userModule) {
+                this.$store.registerModule('userModule', userStore);
+            }
             if (!this.$store.state.newsModule) {
                 this.$store.registerModule('newsModule', NewsStore);
             }

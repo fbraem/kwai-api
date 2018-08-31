@@ -35,6 +35,12 @@ export default class User extends Model {
                     return story.last_login.format('L HH:mm');
                 }
                 return "";
+            },
+            createdAtFormatted(story) {
+                if (story.created_at) {
+                    return story.created_at.format('L HH:mm');
+                }
+                return "";
             }
         };
     }

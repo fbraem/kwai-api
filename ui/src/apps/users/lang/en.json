@@ -9,5 +9,8 @@
     "news_info" : "News written by this user",
     "information" : "Information",
     "information_info" : "Articles written by tis user",
-    "title" : "Title"
+    "title" : "Title",
+    "user_mgmt" : "User Management",
+    "member_since" : "Member since",
+    "user_invite" : "User Invitation"
 }
