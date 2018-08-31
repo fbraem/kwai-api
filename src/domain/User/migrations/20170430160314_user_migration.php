@@ -33,7 +33,7 @@ class UserMigration extends AbstractMigration
         $pwd = $this->randomPassword();
         $data = [
             [
-                'email' => $application->getConfig()->email,
+                'email' => $application->getContainer()->settings['website']['email'],
                 'password' => password_hash($pwd, PASSWORD_DEFAULT),
                 'remark' => 'Root User'
             ]
@@ -42,7 +42,7 @@ class UserMigration extends AbstractMigration
 
         echo 'Root User', PHP_EOL;
         echo '---------', PHP_EOL;
-        echo 'Email: ', $application->getConfig()->email, PHP_EOL;
+        echo 'Email: ', $application->getContainer()->settings['website']['email'], PHP_EOL;
         echo 'Password: ', $pwd, PHP_EOL;
     }
 
