@@ -20,8 +20,10 @@ class UserInvitationsTable extends \Cake\ORM\Table
         $schema
             ->addColumn('id', [ 'type' => 'integer' ])
             ->addColumn('email', [ 'type' => 'string' ])
+            ->addColumn('name', [ 'type' => 'string' ])
             ->addColumn('token', [ 'type' => 'string' ])
             ->addColumn('expired_at', [ 'type' => 'datetime' ])
+            ->addColumn('expired_at_timezone', [ 'type' => 'string' ])
             ->addColumn('remark', [ 'type' => 'text' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
