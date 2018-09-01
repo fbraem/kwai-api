@@ -8,6 +8,13 @@ $app->group('/user_invitations', function () {
         ->setName('user_invitations.create')
         ->setArgument('auth', true)
     ;
+    $this->get('', \REST\Users\Actions\BrowseInvitationAction::class)
+        ->setName('user_invitations.browse')
+        ->setArgument('auth', true)
+    ;
+    $this->get('/{token:[0-9a-zA-Z]+}', \REST\Users\Actions\ReadInvitationByTokenAction::class)
+        ->setName('user_invitations.token')
+    ;
 });
 
 $app->run();
