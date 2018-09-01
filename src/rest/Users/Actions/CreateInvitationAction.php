@@ -35,10 +35,10 @@ class CreateInvitationAction
         $invitation->token = bin2hex(random_bytes(16));
         if ($attributes['expired_at']) {
             $invitation->expired_at = $attributes['expired_at'];
-            $invitation->expired_at_timezone = $attributes['expired_at_timezone'] ?? '';
+            $invitation->expired_at_timezone = $attributes['expired_at_timezone'] ?? date_default_timezone_get();
         } else {
             $invitation->expired_at = \Carbon\Carbon::now()->addWeek();
-            $invitation->expired_at_timezone = $invitation->expired_at->getTimezone();
+            $invitation->expired_at_timezone = date_default_timezone_get();
         }
         $invitation->remark = $attributes['remark'] ?? null;
         $invitationsTable->save($invitation);
@@ -61,8 +61,9 @@ class CreateInvitationAction
         } catch (Exception $e) {
         }
 
-        return (new \Core\ResourceResponse(
-            UserInvitationTransformer::createForItem($invitation)
-        ))($response)->withStatus(201);
+        return \Core\ResourceResponse::respond(
+            UserInvitationTransformer::createForItem($invitation),
+            $response
+        )->withStatus(201);
     }
 }
