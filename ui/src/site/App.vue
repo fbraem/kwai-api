@@ -78,10 +78,21 @@
         </section>
         <section class="uk-section uk-section-small uk-padding-remove-top">
             <div class="uk-container uk-container-expand">
-                <h4 class="uk-heading-line uk-text-bold"><span>Belangrijk Nieuws</span></h4>
-                <div class="uk-child-width-1-1 uk-child-width-1-2@m" uk-grid="masonry: true">
+                <div v-if="loading" class="uk-flex-center" uk-grid>
+                    <div class="uk-text-center">
+                        <fa-icon name="spinner" scale="2" spin />
+                    </div>
+                </div>
+                <h4 class="uk-heading-line uk-text-bold" id="newsgrid"><span>Belangrijk Nieuws</span></h4>
+                <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
+                <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-grid" uk-grid>
                     <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
                 </div>
+                <div style="clear:both"></div>
+                <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
+                <router-link :to="{ name : 'news.browse' }">
+                    {{ $t('more_news') }}
+                </router-link>
             </div>
         </section>
         <section class="uk-section uk-section-small">
@@ -92,10 +103,10 @@
                             <h3 class="uk-card-title">Jeugdvriendelijke Judoclub</h3>
                             <div class="uk-flex-center" uk-grid>
                                 <div>
-                                    <p>Voor het derde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
+                                    <p>Voor het vierde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
                                 </div>
                                 <div>
-                                    <img :src="require('./images/goud_jeugdsport_2017.jpg')" style="height:125px" alt="">
+                                    <img :src="require('./images/goud_jeugdsport_2018.png')" style="height:125px" alt="">
                                 </div>
                             </div>
                         </div>
@@ -114,13 +125,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
                             <h3 class="uk-card-title">Eens proberen?</h3>
                             <div class="uk-flex-center" uk-grid>
                                 <div>
-                                    <p>De Vlaamse Judo Federatie en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
+                                    <p>De <a href="https://www.vjf.be">Vlaamse Judo Federatie</a> en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
                                 </div>
                                 <div>
                                     <img :src="require('./images/kim_ono.png')" style="height:125px;" alt="">
@@ -128,7 +138,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
                             <h3 class="uk-card-title">Hartveilig</h3>
@@ -138,6 +147,32 @@
                                 </div>
                                 <div>
                                     <img :src="require('./images/hartveilig.jpg')" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
+                            <h3 class="uk-card-title">Gezond sporten</h3>
+                            <div class="uk-flex-center" uk-grid>
+                                <div>
+                                    <p>Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a> hoog in het het vaandel.</p>
+                                </div>
+                                <div style="background-color:white;padding:10px">
+                                    <img :src="require('./images/gezond.jpg')" style="height:125px" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
+                            <h3 class="uk-card-title">Panathlon Verklaring</h3>
+                            <div class="uk-flex-center" uk-grid>
+                                <div class="uk-width-1-1">
+                                    <p>Onze club onderschrijft de <a href="http://panathlonvlaanderen.be">Panathlon</a> verklaring.</p>
+                                </div>
+                                <div style="background-color:white;padding:10px">
+                                    <img :src="require('./images/panathlon.jpg')" style="height:125px" alt="">
                                 </div>
                             </div>
                         </div>
@@ -164,22 +199,35 @@
     import 'vue-awesome/icons/users';
     import 'vue-awesome/icons/calendar';
     import 'vue-awesome/icons/shopping-basket';
+    import 'vue-awesome/icons/spinner';
 
     import NewsCard from '@/apps/news/components/NewsCard.vue';
+    import Paginator from '@/components/Paginator.vue';
+
     import newsStore from '@/apps/news/store';
 
     import UIKit from 'uikit';
 
+    import messages from './lang';
+
     export default {
+        i18n : messages,
         components : {
-            NewsCard
+            NewsCard,
+            Paginator
         },
         data() {
             return {};
         },
         computed : {
+            loading() {
+                return this.$store.getters['newsModule/loading'];
+            },
             stories() {
                 return this.$store.getters['newsModule/stories'];
+            },
+            storiesMeta() {
+                return this.$store.getters['newsModule/meta'];
             }
         },
         created() {
@@ -191,8 +239,16 @@
                 featured : true
             });
         },
-        updated() {
-            UIKit.update();
+        methods : {
+            async loadStories(offset) {
+                try {
+                    await this.$store.dispatch('newsModule/browse', {offset : offset, featured : true});
+                    var el = document.getElementById('newsgrid');
+                    el.scrollIntoView();
+                } catch(error) {
+                    console.log(error);
+                }
+            }
         }
     };
 </script>
