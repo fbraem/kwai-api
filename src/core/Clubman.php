@@ -103,7 +103,7 @@ class Clubman
                 $config = $c->get('settings');
                 $mail = new PHPMailer(true);
                 //Server settings
-                $mail->SMTPDebug = 2;
+                //$mail->SMTPDebug = 2;
                 $mail->isSMTP();
                 $mail->Host = $config['mail']['host'];
                 $mail->SMTPAuth = true;
