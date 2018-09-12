@@ -47,6 +47,10 @@ const getters = {
 };
 
 const mutations = {
+  clear(state) {
+     state.meta = null;
+     state.stories = [];
+  },
   stories(state, stories) {
       state.meta = stories.meta();
       state.stories = stories;
@@ -112,6 +116,7 @@ const mutations = {
 
 const actions = {
     async browse({ state, getters, commit, context }, payload) {
+        commit('clear');
         payload = payload || {};
         commit('loading');
         const story = new Story();
