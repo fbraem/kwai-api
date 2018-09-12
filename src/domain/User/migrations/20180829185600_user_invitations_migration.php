@@ -16,6 +16,7 @@ class UserInvitationsMigration extends AbstractMigration
             ->addColumn('expired_at', 'datetime')
             ->addColumn('expired_at_timezone', 'string')
             ->addColumn('remark', 'text', ['null' => true])
+            ->addColumn('user_id', 'integer')
             ->addTimestamps()
             ->create()
         ;
