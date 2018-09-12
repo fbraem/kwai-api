@@ -33,4 +33,14 @@ export default class UserInvitation extends Model {
             }
         };
     }
+
+    async readByToken(token) {
+        const requestConfig = {
+            method : 'GET',
+            url : `${this.resourceUrl()}/${token}`,
+        };
+        let response = await this.request(requestConfig);
+        var invitation = new UserInvitation();
+        return invitation.respond(response);
+    }
 }

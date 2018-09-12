@@ -12,5 +12,40 @@
     "title" : "Titel",
     "user_mgmt" : "Beheer Gebruikers",
     "member_since" : "Lid sinds",
-    "user_invite" : "Gebruikers Uitnodiging"
+    "invitation" : {
+        "title" : "Gebruikers Uitnodiging",
+        "expired" : "Sorry, maar uw uitndoging is verlopen. Neem contact op met onze webmaster.",
+        "intro" : "Je staat op het punt om lid te worden van onze website. Gelieve alle informatie in te vullen.",
+        "not_found" : "Sorry, deze uitnodiging bestaat niet!"
+    },
+    "form" : {
+        "first_name" : {
+            "label" : "Voornaam",
+            "placeholder" : "Geef jouw voornaam in"
+        },
+        "last_name" : {
+            "label" : "Familienaam",
+            "placeholder" : "Geef jouw familienaam in"
+        },
+        "email" : {
+            "label" : "Email",
+            "placeholder" : "Geef jouw email adres in",
+            "invalid" : "Ongeldig email adres"
+        },
+        "password" : {
+            "label" : "Paswoord",
+            "placeholder" : "Geef een paswoord in",
+            "minLength" : "Het paswoord moet minstens 8 karakters bevatten",
+            "complex" : "Het paswoord moet mininum 1 cijfer en 1 hoofdletter bevatten"
+        },
+        "retype_password" : {
+            "label" : "Hertype Paswoord",
+            "placeholder" : "Geef uw paswoord nogmaals in",
+            "sameas" : "De paswoorden zijn niet hetzelfde"
+        }
+    },
+    "required" : "Dit is een verplicht in te vullen veld",
+    "save" : "Bewaar",
+    "invite" : "Nodig een gebruiker uit",
+    "invite_intro" : "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd."
 }

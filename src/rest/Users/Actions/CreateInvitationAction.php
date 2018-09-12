@@ -13,6 +13,7 @@ use PHPMailer\PHPMailer\Exception;
 
 use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
+use Domain\User\UsersTable;
 
 class CreateInvitationAction
 {
@@ -29,6 +30,35 @@ class CreateInvitationAction
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
+        // Check if the email address isn't used yet ...
+        $user = UsersTable::getTableFromRegistry()
+            ->find()
+            ->where(['email' => $attributes['email']])
+            ->first()
+        ;
+        if ($user != null) {
+            // This is not ok!
+            $response
+                ->getBody()
+                ->write(
+                    json_encode([
+                        'errors' => [
+                            [
+                                'source' => [
+                                    'pointer' => '/data/attributes/email'
+                                ],
+                                'title' => _('Email address already in use')
+                            ]
+                        ]
+                    ])
+                )
+            ;
+            return $response
+                ->withStatus(422)
+                ->withHeader('content-type', 'application/vnd.api+json')
+            ;
+        }
+
         $invitationsTable = UserInvitationsTable::getTableFromRegistry();
         $invitation = $invitationsTable->newEntity();
         $invitation->email = $attributes['email'];
@@ -41,6 +71,8 @@ class CreateInvitationAction
             $invitation->expired_at_timezone = date_default_timezone_get();
         }
         $invitation->remark = $attributes['remark'] ?? null;
+        $invitation->user = $request->getAttribute('clubman.user');
+
         $invitationsTable->save($invitation);
 
         $mail = $this->container->mailer;
@@ -53,7 +85,8 @@ class CreateInvitationAction
             $mail->Body = $this->container->template->render('User/invitation_html', [
                 'url' => $this->container->settings['website']['url'] . '/#users/invite/' . $invitation->token,
                 'email' => $this->container->settings['website']['email'],
-                'invitation' => $invitation
+                'invitation' => $invitation,
+                'user' => $invitation->user
             ]);
             $mail->AltBody = $this->container->template->render('User/invitation_txt', ['invitation' => $invitation]);
 

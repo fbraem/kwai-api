@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import User from './models/User';
+import UserInvitation from './models/UserInvitation';
 
 const state = () => {
     return {
@@ -56,6 +57,14 @@ const mutations = {
           state.users.push(user);
       }
   },
+  invitation(state, invitation) {
+      var index = state.invitations.findIndex((i) => i.id == invitation.id);
+      if (index != -1) {
+          Vue.set(state.invitations, index, invitation);
+      } else {
+          state.invitations.push(invitation);
+      }
+  },
   loading(state) {
       state.status = {
           loading : true,
@@ -71,11 +80,9 @@ const mutations = {
       };
   },
   error(state, payload) {
-      state.status = {
-          loading : false,
-          success: false,
-          error : payload
-      };
+      state.status.loading = false;
+      state.status.success = false;
+      state.status.error = payload;
   }
 };
 
@@ -104,6 +111,31 @@ const actions = {
         }
         return user;
     },
+    async invite({ state, getters, commit, context }, invitation) {
+        commit('loading');
+        try  {
+            await invitation.save();
+            commit('invitation', invitation);
+        } catch(error) {
+            commit('error', error);
+            throw error;
+        }
+        commit('success');
+        return invitation;
+    },
+    async createWithToken({ state, getters, commit, context }, payload) {
+        commit('loading');
+        var user = null;
+        try  {
+            user = await payload.user.createWithToken(payload.token);
+            commit('user', user);
+        } catch(error) {
+            commit('error', error);
+            throw error;
+        }
+        commit('success');
+        return user;
+    },
     async readInvitationByToken({ state, getters, commit, context }, payload) {
         commit('loading');
         var invitation = getters['invitationByToken'](payload.token);
@@ -112,14 +144,11 @@ const actions = {
         } else {
             let model = new UserInvitation();
             try {
-                model.where('token', payload.token);
-                var invitations = await model.get();
-                if (invitation.length > 0) {
-                    invitation = invitation[0];
-                    commit('invitation', invitation);
-                }
+                invitation = await model.readByToken(payload.token);
+                commit('invitation', invitation);
                 commit('success');
             } catch(error) {
+                console.log(error);
                 commit('error', error);
             }
         }

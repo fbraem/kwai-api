@@ -12,6 +12,9 @@ $app->group('/users', function () {
         ->setName('users.read')
         ->setArgument('auth', true)
     ;
+    $this->post('/{token:[0-9a-zA-Z]+}', \REST\Users\Actions\CreateWithTokenAction::class)
+        ->setName('users.create.token')
+    ;
 });
 
 $app->run();

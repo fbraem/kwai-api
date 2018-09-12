@@ -13,6 +13,12 @@ class UserInvitationsTable extends \Cake\ORM\Table
     public function initialize(array $config)
     {
         $this->initializeTable();
+        $this->belongsTo('User', [
+                'className' => UsersTable::class
+            ])
+            ->setForeignKey('user_id')
+            ->setProperty('user')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
@@ -25,6 +31,7 @@ class UserInvitationsTable extends \Cake\ORM\Table
             ->addColumn('expired_at', [ 'type' => 'datetime' ])
             ->addColumn('expired_at_timezone', [ 'type' => 'string' ])
             ->addColumn('remark', [ 'type' => 'text' ])
+            ->addColumn('user_id', [ 'type' => 'integer' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(

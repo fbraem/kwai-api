@@ -12,5 +12,40 @@
     "title" : "Title",
     "user_mgmt" : "User Management",
     "member_since" : "Member since",
-    "user_invite" : "User Invitation"
+    "invitation" : {
+        "title" : "User Invitation",
+        "expired" : "Sorry, your invitation is expired. Contact the webmaster .",
+        "intro" : "You are about to become a member of our website. Please fill in all the required fields.",
+        "not_found" : "Sorry, this invitation doesn't exist!"
+    },
+    "form" : {
+        "first_name" : {
+            "label" : "Firstname",
+            "placeholder" : "Enter your firstname"
+        },
+        "last_name" : {
+            "label" : "Lastname",
+            "placeholder" : "Enter your lastname"
+        },
+        "email" : {
+            "label" : "Email",
+            "placeholder" : "Enter your email",
+            "invalid" : "Invalid email"
+        },
+        "password" : {
+            "label" : "Password",
+            "placeholder" : "Enter a password",
+            "minLength" : "The password must have at least 8 characters",
+            "complex" : "The password must contain at least 1 digit and one uppercase letter"
+        },
+        "retype_password" : {
+            "label" : "Retype Password",
+            "placeholder" : "Retype your password",
+            "sameas" : "The passwords are not the same"
+        }
+    },
+    "required" : "This is a required field",
+    "save" : "Save",
+    "invite" : "Invite a new user",
+    "invite_intro" : "Your about to invite a user to become a member of your website. The invitation will be send to the given email address."
 }

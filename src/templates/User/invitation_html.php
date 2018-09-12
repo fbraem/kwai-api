@@ -1,7 +1,7 @@
 <p>
     Beste,<br />
     <br />
-    Je wordt uitgenodigd om lid te worden van onze website!<br /><br />
+    Je werd door <?= $this->e($user->first_name) ?> <?= $this->e($user->last_name) ?> uitgenodigd om lid te worden van onze website!<br /><br />
     Klik op deze <a href="<?= $this->e($url) ?>">link</a> om deze uitnodiging
     te activeren.
 </p>

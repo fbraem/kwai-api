@@ -1,6 +1,6 @@
 export default [
     {
-        path : '/users/create',
+        path : '/users/invite',
         component : () => import(/* webpackChunkName: "user_admin" */ '@/apps/users/app/UserForm.vue'),
         name : 'users.create'
     },

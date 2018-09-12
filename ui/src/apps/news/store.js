@@ -148,7 +148,6 @@ const actions = {
         let model = new Story();
         try {
             story = await model.find(payload.id);
-            console.log(story);
             commit('story', story);
             commit('success');
         } catch(error) {

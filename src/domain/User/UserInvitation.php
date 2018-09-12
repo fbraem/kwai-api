@@ -3,6 +3,8 @@ namespace Domain\User;
 
 class UserInvitation extends \Cake\ORM\Entity
 {
+    protected $_hidden = ['user', 'user_id'];
+
     use \Domain\DatetimeMetaTrait;
 
     public function _getExpiredAt($value)
