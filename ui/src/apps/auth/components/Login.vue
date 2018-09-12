@@ -51,6 +51,7 @@
 
     import UIkit from 'uikit';
 
+    import { validationMixin } from 'vuelidate';
     import { required, email } from 'vuelidate/lib/validators';
 
     var initError = function() {
@@ -71,6 +72,9 @@
             UikitEmail,
             UikitPassword
         },
+        mixins: [
+            validationMixin
+        ],
         data() {
             return {
                 email : '',

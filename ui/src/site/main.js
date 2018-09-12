@@ -43,10 +43,6 @@ import perimeters from '@/perimeters';
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
 
-//TODO: remove when all is changed to mixins ...
-import Vuelidate from 'vuelidate';
-Vue.use(Vuelidate);
-
 import routes from '@/routes';
 
 const router = new VueRouter({
