@@ -15,11 +15,9 @@ import css from 'uikit/dist/css/uikit.min.css';
 
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
-import messages from './lang/nl';
 const i18n = new VueI18n({
     locale : 'nl',
-    fallbackLocale : 'nl',
-    messages
+    fallbackLocale : 'nl'
 });
 
 //import FlagIcon from 'vue-flag-icon';
