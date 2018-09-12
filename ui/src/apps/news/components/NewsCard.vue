@@ -20,7 +20,7 @@
                             <span class="uk-article-meta" v-if="story.publish_date">
                                 {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
                             </span>
-                            <div class="uk-margin-small uk-text-small" v-html="story.summary"></div>
+                            <div class="uk-margin-small" v-html="story.summary"></div>
                         </div>
                     </div>
                 </div>
