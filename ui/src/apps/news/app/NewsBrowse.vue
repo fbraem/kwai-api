@@ -1,11 +1,6 @@
 <template>
     <div class="uk-container">
-        <div v-if="loading" class="uk-flex-center" uk-grid>
-            <div class="uk-text-center">
-                <fa-icon name="spinner" scale="2" spin />
-            </div>
-        </div>
-        <div v-else uk-grid class="uk-flex uk-margin">
+        <div uk-grid class="uk-flex uk-margin">
             <div v-if="category" class="uk-width-1-1">
                 <section class="uk-section uk-section-small uk-section-secondary">
                     <div class="uk-container uk-container-expand">
@@ -48,9 +43,18 @@
             </div>
         </div>
         <div class="uk-child-width-1-1" uk-grid>
-            <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
+            <div v-if="loading" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
+            <div v-else>
+                <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
+                <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
+                <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
+            </div>
         </div>
-        <div v-if="newsCount == 0">
+        <div v-if="! loading && newsCount == 0">
             <div uk-alert>
                 {{ $t('no_news') }}
             </div>
@@ -90,6 +94,9 @@
             },
             stories() {
                 return this.$store.getters['newsModule/stories'];
+            },
+            storiesMeta() {
+                return this.$store.getters['newsModule/meta'];
             },
             newsCount() {
                 if ( this.stories ) return this.stories.length;
@@ -141,7 +148,13 @@
                 });
             },
             readPage(offset) {
-                console.log(offset);
+                this.fetchData({
+                    offset : offset,
+                    year : this.year,
+                    month : this.month,
+                    category : this.category_id,
+                    featured : this.featured
+                });
             }
         }
     };
