@@ -44,5 +44,6 @@
     "delete_story" : "Delete Newsstory",
     "are_you_sure" : "Are you sure to delete this newsstory?",
     "cancel" : "Cancel",
-    "delete" : "Delete"
+    "delete" : "Delete",
+    "share" : "Share"
 }

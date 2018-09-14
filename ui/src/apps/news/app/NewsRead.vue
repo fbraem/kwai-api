@@ -23,6 +23,9 @@
                 <blockquote v-html="story.summary">
                 </blockquote>
             </header>
+            <div class="fb-share-button" style="float:right" :data-href="facebookUrl" data-layout="button_count" data-size="large" data-mobile-iframe="true">
+                <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + facebookUrl + '&amp;src=sdkpreparse'" class="fb-xfbml-parse-ignore">{{ $t('share') }}</a>
+            </div>
             <div class="uk-flex uk-flex-center">
                 <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
                     <fa-icon name="edit" />
@@ -107,6 +110,9 @@
         computed : {
             story() {
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
+            },
+            facebookUrl() {
+                return "https://www.judokwaikemzeke.be/facebook/news/" + this.story.id;
             },
             loading() {
                 return this.$store.getters['newsModule/loading'];

@@ -44,5 +44,6 @@
     "delete_story" : "Nieuwsbericht verwijderen",
     "are_you_sure" : "Ben je zeker om dit nieuwsbericht te verwijderen?",
     "cancel" : "Annuleer",
-    "delete" : "Verwijder"
+    "delete" : "Verwijder",
+    "share" : "Deel"
 }
