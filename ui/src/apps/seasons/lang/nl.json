@@ -1,0 +1,18 @@
+{
+    "seasons" : "Seizoenen",
+    "no_seasons" : "Er zijn nog geen seizoenen gedefiniëerd",
+    "start_date" : "Begin Datum",
+    "start_date_placeholder" : "Geef een datum in",
+    "end_date" : "Eind Datum",
+    "end_date_placeholder" : "Geef een datum in",
+    "remark" : "Opmerking",
+    "remark_placeholder" : "Geef een opmerking in",
+    "active_message" : "Dit seizoen is momenteel actief",
+    "update" : "Wijzig Seizoen",
+    "create" : "Maak Seizoen",
+    "name" : "Naam",
+    "name_placeholder" : "Geef een naam in",
+    "save" : "Bewaar",
+    "invalid_date" : "Ongeldige datum. Formaat is {format}",
+    "invalid_end_date" : "Einddatum moet na startdatum liggen"
+}

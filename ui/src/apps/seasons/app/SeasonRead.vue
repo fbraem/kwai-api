@@ -1,43 +1,67 @@
 <template>
-    <v-container fluid>
-        <v-layout row wrap>
-            <v-flex v-if="season" xs12>
-                <v-card>
-                    <v-card-title>
-                        <div>
-                            {{ season.name }}
-                        </div>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-text-field readonly name="start" :label="$t('start_date')" :value="season.formatted_start_date" />
-                        <v-text-field readonly name="end" :label="$t('end_date')" :value="season.formatted_end_date" />
-                        <v-text-field readonly multi-line name="remark" :label="$t('remark')" :value="season.remark" />
-                        <div v-if="season.active">
-                            <v-icon>fa-check</v-icon>
-                            <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('active_message') }}</span>
-                        </div>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn v-if="$isAllowed('update', season)" color="secondary" icon :to="{ name : 'season.update', params : { id : season.id }}" flat>
-                            <v-icon>fa-edit</v-icon>
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <Page>
+        <template slot="title">
+            {{ $t('seasons') }} <span v-if="season">&nbsp;&bull;&nbsp;{{ season.name }}</span>
+        </template>
+        <template slot="toolbar">
+            <router-link v-if="$season.isAllowed('update', season)" class="uk-icon-button" :to="{ 'name' : 'seasons.update', params : { id : season.id } }">
+                <fa-icon name="edit" />
+            </router-link>
+        </template>
+        <div slot="content" class="uk-container">
+            <div v-if="loading" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
+            <div v-if="season" uk-grid>
+                <table class="uk-table">
+                    <tr>
+                        <th>{{ $t('name') }}</th>
+                        <td>{{ season.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('start_date') }}</th>
+                        <td>{{ season.formatted_start_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('end_date') }}</th>
+                        <td>{{ season.formatted_end_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ $t('remark') }}</th>
+                        <td>{{ season.remark }}</td>
+                    </tr>
+                </table>
+                <div v-if="season.active">
+                    <fa-icon name="check" />
+                    <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('active_message') }}</span>
+                </div>
+            </div>
+        </div>
+    </Page>
 </template>
 
 <script>
-    import messages from '../lang/lang';
+    import 'vue-awesome/icons/check';
+    import 'vue-awesome/icons/edit';
+
+    import messages from '../lang';
     import moment from 'moment';
 
+    import Page from './Page';
+
+    import seasonStore from '../store';
+
     export default {
-        i18n : {
-            messages
+        components : {
+            Page
         },
+        i18n : messages,
         computed : {
+            loading() {
+                return this.$store.getters['seasonModule/loading'];
+            },
             season() {
                 return this.$store.getters['seasonModule/season'](this.$route.params.id);
             }
@@ -46,13 +70,13 @@
             this.fetchData(to.params.id);
             next();
         },
-        mounted() {
-            this.fetchData(this.$route.params.id);
-        },
-        watch : {
-            '$route'(to) {
-                this.fetchData(to.params.id);
+        beforeCreate() {
+            if (!this.$store.state.seasonModule) {
+                this.$store.registerModule('seasonModule', seasonStore);
             }
+        },
+        created() {
+            this.fetchData(this.$route.params.id);
         },
         methods : {
             fetchData(id) {
