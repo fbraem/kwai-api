@@ -115,7 +115,7 @@ class UploadAction
             $person->birthdate = \Carbon\Carbon::createFromFormat(
                 'd/m/Y',
                 $record['Geb Datum']
-            )->format('Y-m-d');
+            );
             $person->gender = $record['Geslacht'] == 'M' ? 1 : 2;
             $person->nationality = $this->countries[$record['Nation.']] ?? null;
             $person->contact = $contact;
@@ -127,7 +127,7 @@ class UploadAction
             $member->license_end_date = \Carbon\Carbon::createFromFormat(
                 'd/m/Y',
                 $record['Geldig Tot']
-            )->format('Y-m-d');
+            );
             $member->competition = false;
             $member->person = $person;
             $membersTable->save($member);
