@@ -100,10 +100,10 @@ class AuthMigration extends AbstractMigration
         $application = \Core\Clubman::getApplication();
         $data = [
             [
-                'name' => $application->getConfig()->oauth2->client->name,
-                'identifier' => $application->getConfig()->oauth2->client->identifier,
-                'secret' => password_hash($application->getConfig()->oauth2->client->secret, PASSWORD_BCRYPT),
-                'redirect_uri' => $application->getConfig()->oauth2->client->redirect
+                'name' => $application->getContainer()->settings['oauth2']['client']['name'],
+                'identifier' => $application->getContainer()->settings['oauth2']['client']['identifier'],
+                'secret' => password_hash($application->getContainer()->settings['oauth2']['client']['secret'], PASSWORD_BCRYPT),
+                'redirect_uri' => $application->getContainer()->settings['oauth2']['client']['redirect']
             ]
         ];
         $this->table('oauth_clients')->insert($data)->save();
