@@ -8,7 +8,7 @@ $app->group('/members', function () {
         ->setName('sport.judo.members.browse')
         ->setArgument('auth', true)
     ;
-    $this->post('/members/upload', \Judo\REST\Members\Actions\UploadAction::class)
+    $this->post('/upload', \Judo\REST\Members\Actions\UploadAction::class)
         ->setName('sport.judo.members.upload')
         ->setArgument('auth', true)
     ;
