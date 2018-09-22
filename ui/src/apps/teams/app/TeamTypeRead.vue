@@ -64,7 +64,7 @@
 </template>
 
 <script>
-    import messages from '../lang/lang';
+    import messages from '../lang';
     import moment from 'moment';
 
     export default {

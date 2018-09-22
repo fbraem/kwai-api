@@ -1,77 +1,72 @@
 <template>
-    <v-container class="pa-0">
-        <v-layout row wrap>
-            <v-flex xs12 sm4>
-                <v-card>
-                    <v-card-title>
-                        <div>
-                            <h3 class="headline pb-0 mb-0">{{ $t('teams') }}</h3>
-                        </div>
-                    </v-card-title>
-                    <v-card-text v-if="items">
-                        <v-list>
-                            <v-list-group v-for="(item, seasonName) in items" :key="seasonName" v-model="item.open">
-                                <v-list-tile slot="item" @click="">
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>{{ seasonName }}</v-list-tile-title>
-                                    </v-list-tile-content>
-                                    <v-list-tile-action>
-                                      <v-icon>keyboard_arrow_down</v-icon>
-                                    </v-list-tile-action>
-                                </v-list-tile>
-                                <TeamListItem v-for="team in item.teams" :key="team.id" :team="team" />
-                            </v-list-group>
-                        </v-list>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn v-if="$isAllowed('create')" icon :to="{ name : 'team.create' }" fab small>
-                            <v-icon>fa-plus</v-icon>
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-flex>
-            <v-flex xs12 sm8>
-                <router-view name="TeamContent"></router-view>
-            </v-flex>
-        </v-layout>
-    </v-container>
+    <Page>
+        <template slot="title">
+            {{ $t('teams') }}
+        </template>
+        <div slot="content" class="uk-container">
+            <div v-if="$wait.is('teams.browse')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
+            <div v-else uk-grid>
+                <div v-if="teams && teams.length == 0">
+                    {{ $t('no_teams') }}
+                </div>
+                <table v-else class="uk-table uk-table-striped">
+                    <tr>
+                        <th>{{ $t('name') }}</th>
+                        <th></th>
+                    </tr>
+                    <tr v-for="team in teams" :key="team.id">
+                        <td>
+                            <router-link :to="{ name: 'teams.read', params: { id : team.id} }">{{ team.name }}</router-link>
+                        </td>
+                        <td>
+                            <router-link v-if="$team.isAllowed('update', team)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'teams.update', params : { id : team.id } }">
+                                <fa-icon name="edit" />
+                            </router-link>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </Page>
 </template>
 
 <script>
-    import messages from '../lang/lang';
+    import 'vue-awesome/icons/spinner';
 
-    import TeamListItem from './TeamListItem';
+    import messages from '../lang';
+
+    import Page from './Page';
+    import teamStore from '../store';
 
     export default {
         components : {
-            TeamListItem
+            Page
         },
-        i18n : {
-            messages
-        },
+        i18n : messages,
         data() {
             return {
             };
         },
         computed : {
-            items() {
-                var items = {};
-                var teams = this.$store.getters['teamModule/teams'];
-                if (teams) {
-                    teams.forEach((team) => {
-                        var seasonName = team.season ? team.season.name : 'No Season';
-                        var season = items[seasonName];
-                        if ( !season) {
-                            season = {
-                                open : false,
-                                teams : []
-                            };
-                            items[seasonName] = season;
-                        }
-                        season.teams.push(team);
-                    });
-                }
-                return items;
+            teams() {
+                return this.$store.getters['teamModule/teams'];
+            }
+        },
+        beforeCreate() {
+            if (!this.$store.state.teamModule) {
+                this.$store.registerModule('teamModule', teamStore);
+            }
+        },
+        mounted() {
+            this.fetchData();
+        },
+        methods : {
+            fetchData() {
+                this.$store.dispatch('teamModule/browse');
             }
         }
     };

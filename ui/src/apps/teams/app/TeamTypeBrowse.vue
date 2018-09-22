@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import messages from '../lang/lang';
+    import messages from '../lang';
 
     import TeamTypeListItem from './TeamTypeListItem';
 

@@ -1,12 +1,8 @@
 import Model from '@/js/JSONAPI/BaseModel';
 
 export default class TeamType extends Model {
-    baseURL() {
-      return super.baseURL() + '/teams';
-    }
-
     resourceName() {
-        return 'teamtypes';
+        return 'team_types';
     }
 
     fields() {

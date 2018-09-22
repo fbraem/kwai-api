@@ -116,7 +116,7 @@ var initForm = function() {
     };
 }
 
-import messages from '../lang/lang';
+import messages from '../lang';
 
 export default {
     props : {

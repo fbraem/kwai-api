@@ -15,13 +15,9 @@ import TeamType from './models/TeamType';
 
 const state = {
     types : [],
-    teams : null,
+    teams : [],
     availableMembers : [],
-    status : {
-        loading : false,
-        success : false,
-        error : false
-    }
+    error : null
 };
 
 const getters = {
@@ -49,14 +45,8 @@ const getters = {
     availableMembers(state) {
         return state.availableMembers;
     },
-    loading(state) {
-        return state.status.loading;
-    },
-    success(state) {
-        return state.status.success;
-    },
     error(state) {
-        return state.status.error;
+        return state.error;
     }
 };
 
@@ -74,12 +64,13 @@ const mutations = {
   teams(state, teams) {
       state.teams = teams;
   },
-  addTeam(state, team) {
-      state.teams.unshift(team);
-  },
-  setTeam(state, team) {
+  team(state, team) {
       var index = state.teams.findIndex((t) => t.id == team.id);
-      if (state.teams[index]) Vue.set(state.teams, index, team);
+      if (index != -1) {
+          Vue.set(state.teams, index, team);
+      } else {
+          state.teams.push(team);
+      }
   },
   setMembers(state, data) {
       var index = state.teams.findIndex((t) => t.id == data.id);
@@ -91,173 +82,140 @@ const mutations = {
   clearAvailableMembers(state) {
       state.availableMembers = [];
   },
-  loading(state) {
-      state.status = {
-          loading : true,
-          success: false,
-          error : false
-      };
+  error(state, data) {
+      state.error = data;
   },
   success(state) {
-      state.status = {
-          loading : false,
-          success: true,
-          error : false
-      };
-  },
-  error(state, payload) {
-      state.status = {
-          loading : false,
-          success: false,
-          error : payload
-      };
+      state.error = null;
   }
 };
 
 const actions = {
-    async browse(context, payload) {
+    async browse({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'teams.browse', { root : true });
         const team = new Team();
-        const fetchTeams = async () => {
+        try {
             let teams = await team.get();
-            context.commit('teams', teams);
-        };
-        team.call(fetchTeams);
+            commit('teams', teams);
+            commit('success');
+            dispatch('wait/end', 'teams.browse', { root : true });
+        } catch(error) {
+            commit('error', error);
+            dispatch('wait/end', 'teams.browse', { root : true });
+            throw error;
+        }
     },
-    async create(context, team) {
+    async save({ dispatch, commit }, team) {
         var newTeam = null;
-        const create = async () => {
-            newTeam = team.save();
-            context.commit('addTeam', newTeam);
+        try  {
+            newTeam = await team.save();
+            commit('team', newTeam);
+            commit('success');
+            return newTeam;
+        } catch(error) {
+            commit('error', error);
+            throw error;
         }
-        await team.call(create)
-            .catch((error) => {
-                context.commit('error', error);
-            });
-        return newTeam;
     },
-    async read(context, payload) {
-        var team = context.getters['team'](payload.id);
+    async read({ dispatch, getters, commit }, payload) {
+        var team = getters['team'](payload.id);
         if (team) { // already read
-            context.commit('success');
-            return;
+            commit('success');
+            return team;
         }
 
-        context.commit('loading');
-        team = new Team();
-        const fetchTeam = async() => {
-            let data = await team.find(payload.id);
-            context.commit('setTeam', data);
-            context.commit('success');
+        dispatch('wait/start', 'teams.read', { root : true });
+        let model = new Team();
+        try {
+            team = await model.find(payload.id);
+            commit('team', team);
+            commit('success');
+            dispatch('wait/end', 'teams.read', { root : true });
+        } catch(error) {
+            commit('error', error);
+            dispatch('wait/end', 'teams.read', { root : true });
+            throw error;
         }
-        team.call(fetchTeam);
+        return team;
     },
-    async update(context, team) {
-        context.commit('loading');
-        var updatedTeam = null;
-        const update = async () => {
-            updatedTeam = team.save();
-            context.commit('setTeam', updatedTeam);
-            context.commit('success');
-        };
-        await team.call(update)
-            .catch((error) => {
-                context.commit('error', error);
-            });
-        return updatedTeam;
-    },
-    async members(context, payload) {
+    async members({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'teams.members', { root : true });
         var team = new Team();
-        context.commit('loading');
-        const fetchMembers = async() => {
-            let teamWithMembers = await team.with(['members']).find(payload.id);
-            context.commit('setTeam', teamWithMembers);
+        try {
+            const teamWithMembers = await team.with(['members']).find(payload.id);
+            commit('team', teamWithMembers);
+            commit('success');
+            dispatch('wait/end', 'teams.members', { root : true });
+        } catch(error) {
+            commit('error', error);
+            dispatch('wait/end', 'teams.members', { root : true });
+            throw error;
         }
-        team.call(fetchMembers)
-            .then(() => {
-                context.commit('success');
-            })
-            .catch((error) => {
-                context.commit('error', error);
-            });
     },
-    async addMembers(context, payload) {
-        context.commit('loading');
-
-        var team = context.getters['team'](payload.id);
-        const attachMembers = async() => {
+    async addMembers({ getters, commit }, payload) {
+        var team = getters['team'](payload.id);
+        try {
             let members = await team.attach(team.id, payload.members);
-            context.commit('setMembers', {
+            commit('setMembers', {
                 id : payload.id,
                 members : members
             });
+            commit('success');
+        } catch(error) {
+            commit('error', error);
+            console.log(error);
         }
-        team.call(attachMembers)
-            .then(() => {
-                context.commit('success');
-            })
-            .catch((error) => {
-                context.commit('error', error);
-            });
     },
-    async deleteMembers(context, payload) {
-        context.commit('loading');
-
-        var team = context.getters['team'](payload.id);
-        const detachMembers = async() => {
+    async deleteMembers({ getters, commit }, payload) {
+        var team = getters['team'](payload.id);
+        try {
             let members = await team.detach(team.id, payload.members);
-            context.commit('setMembers', {
+            commit('setMembers', {
                 id : payload.id,
                 members : members
             });
+            commit('success');
+        } catch(error) {
+            commit('error', error);
+            console.log(error);
         }
-        team.call(detachMembers)
-            .then(() => {
-                context.commit('success');
-            })
-            .catch((error) => {
-                context.commit('error', error);
-            });
     },
-    async availableMembers(context, payload) {
-        context.commit('loading');
-        context.commit('clearAvailableMembers');
+    async availableMembers({ dispatch, commit }, payload) {
+        commit('clearAvailableMembers');
+        dispatch('wait/start', 'teams.availableMembers', { root : true });
 
         const team = new Team();
-        const findAvailableMembers = async() => {
-            if (payload.filter) {
-                if (payload.filter.start_age) {
-                    team.where('start_age', '>=' + payload.filter.start_age);
-                }
-                if (payload.filter.end_age) {
-                    team.where('end_age', '<=' + payload.filter.end_age);
-                }
-                if (payload.filter.gender) {
-                    team.where('gender', payload.filter.gender);
-                }
+        if (payload.filter) {
+            if (payload.filter.start_age) {
+                team.where('start_age', '>=' + payload.filter.start_age);
             }
-            var members = await team.available(payload.id);
-            context.commit('availableMembers', members);
+            if (payload.filter.end_age) {
+                team.where('end_age', '<=' + payload.filter.end_age);
+            }
+            if (payload.filter.gender) {
+                team.where('gender', payload.filter.gender);
+            }
         }
-        team.call(findAvailableMembers)
-            .then(() => {
-                context.commit('success');
-            })
-            .catch((error) => {
-                context.commit('error', error);
-            });
+        try {
+            var members = await team.available(payload.id);
+            commit('availableMembers', members);
+            commit('success');
+            dispatch('wait/end', 'teams.availableMembers', { root : true });
+        } catch(error) {
+            commit('error', error);
+            dispatch('wait/end', 'teams.availableMembers', { root : true });
+            throw error;
+        }
     },
-    browseType(context, payload) {
-        context.commit('loading');
+    async browseType({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'teamtypes.browse', { root : true });
         const type = new TeamType();
-        const fetchTypes = async () => {
-            let types = await type.all();
-            context.commit('types', types);
-        };
-        type.call(fetchTypes);
-        context.commit('success');
+        let types = await type.get();
+        commit('types', types);
+        commit('success');
+        dispatch('wait/end', 'teamtypes.browse', { root : true });
     },
     createType(context, payload) {
-        context.commit('loading');
         return oauth.post('api/teams/types', {
             data : payload
         }).then((res) => {
@@ -273,7 +231,6 @@ const actions = {
         });
     },
     updateType(context, payload) {
-        context.commit('loading');
         return new Promise((resolve, reject) => {
             oauth.patch('api/teams/types/' + payload.data.id, {
                 data : payload
@@ -292,7 +249,6 @@ const actions = {
         });
     },
     readType(context, payload) {
-        context.commit('loading');
         var type = context.getters['type'](payload.id);
         if (type) { // already read
             context.commit('success');
