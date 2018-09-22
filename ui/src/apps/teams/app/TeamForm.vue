@@ -55,6 +55,8 @@
 
 <script>
     import Team from '../models/Team';
+    import TeamType from '../models/TeamType';
+    import Season from '@/apps/seasons/models/Season';
 
     import { validationMixin } from 'vuelidate';
     import { required, numeric } from 'vuelidate/lib/validators';
