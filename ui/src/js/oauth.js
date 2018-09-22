@@ -143,10 +143,14 @@ class OAuth
     async logout() {
         var form = new FormData();
         form.append('refresh_token', this.refresh_token);
-        var response = await this.post(config.api + '/auth/logout', {
-            data : form,
-            dontRetry : true
-        });
+        try {
+            await this.post(config.api + '/auth/logout', {
+                data : form,
+                dontRetry : true
+            });
+        } catch(error) {
+            console.log(error);
+        }
         this.clear();
     }
 }
