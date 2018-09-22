@@ -14,5 +14,6 @@
     "name_placeholder" : "Enter a name",
     "save" : "Save",
     "invalid_date" : "Invalid date. Format is {format}",
-    "invalid_end_date" : "Enddate must be after startdate"
+    "invalid_end_date" : "Enddate must be after startdate",
+    "required" : "This field is required."
 }

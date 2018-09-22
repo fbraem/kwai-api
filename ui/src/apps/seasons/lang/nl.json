@@ -14,5 +14,6 @@
     "name_placeholder" : "Geef een naam in",
     "save" : "Bewaar",
     "invalid_date" : "Ongeldige datum. Formaat is {format}",
-    "invalid_end_date" : "Einddatum moet na startdatum liggen"
+    "invalid_end_date" : "Einddatum moet na startdatum liggen",
+    "required" : "Dit veld is verplicht in te vullen."
 }
