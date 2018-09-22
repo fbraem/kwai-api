@@ -53,7 +53,7 @@
 
 <script>
     import Team from '../models/Team';
-    import TeamType from '../models/TeamType';
+    import TeamType from '@/apps/team_types/models/TeamType';
     import Season from '@/apps/seasons/models/Season';
 
     import { validationMixin } from 'vuelidate';
@@ -87,6 +87,7 @@
 
     import messages from '../lang';
     import teamStore from '@/apps/teams/store';
+    import teamTypeStore from '@/apps/team_types/store';
     import seasonStore from '@/apps/seasons/store';
 
     export default {
@@ -117,7 +118,7 @@
                 return seasons;
             },
             team_types() {
-                var types = this.$store.getters['teamModule/types'].map((type) => ({value : type.id, text : type.name }));
+                var types = this.$store.getters['teamTypeModule/types'].map((type) => ({value : type.id, text : type.name }));
                 types.unshift({ value : 0, text : '< ' + this.$t('no_type') + ' >'});
                 return types;
             },
@@ -157,13 +158,16 @@
             if (!this.$store.state.teamModule) {
                 this.$store.registerModule('teamModule', teamStore);
             }
+            if (!this.$store.state.teamTypeModule) {
+                this.$store.registerModule('teamTypeModule', teamTypeStore);
+            }
             if (!this.$store.state.seasonModule) {
                 this.$store.registerModule('seasonModule', seasonStore);
             }
         },
         async created() {
             await this.$store.dispatch('seasonModule/browse');
-            await this.$store.dispatch('teamModule/browseType')
+            await this.$store.dispatch('teamTypeModule/browse');
         },
         beforeRouteEnter(to, from, next) {
             next(async (vm) => {

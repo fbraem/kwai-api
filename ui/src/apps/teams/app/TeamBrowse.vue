@@ -13,7 +13,7 @@
                 <div v-if="teams && teams.length == 0">
                     {{ $t('no_teams') }}
                 </div>
-                <table v-else class="uk-table uk-table-striped">
+                <table v-else class="uk-table uk-table-divider">
                     <tr>
                         <th>{{ $t('name') }}</th>
                         <th class="uk-table-shrink"></th>

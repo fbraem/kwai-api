@@ -1,0 +1,53 @@
+{
+    "types" : "Team Types",
+    "no_types" : "Er zijn geen team types gedefiniëerd",
+    "type_details" : "Team Type Details",
+    "create" : "Maak een nieuw Team Type",
+    "update" : "Wijzig Team Type",
+    "details" : "Team Type",
+    "form" : {
+        "name" : {
+            "label" : "Naam",
+            "placeholder" : "Geef de naam van het type"
+        },
+        "start_age" : {
+            "label" : "Min. Leeftijd",
+            "placeholder" : "Geef de minimum leeftijd voor leden van dit team type"
+        },
+        "end_age" : {
+            "label" : "Max. Leeftijd",
+            "placeholder" : "Geef de maximum leeftijd voor leden van dit team type"
+        },
+        "remark" : {
+            "label" : "Opmerking",
+            "placeholder" : "Geef opmerking over dit type."
+        },
+        "gender" : {
+            "label" : "Geslacht",
+            "placeholder" : "Zal het het team beperkt zijn tot een bepaald geslacht?"
+        }
+    },
+    "numeric" : "Enkel cijfers zijn toegelaten",
+    "active" : "Actief",
+    "competition" : "Wordt dit type gebruikt in competitie?",
+    "save" : "Bewaar",
+    "clear" : "Maak Leeg",
+    "teams" : "Teams",
+    "remark" : "Opmerking",
+    "no_season" : "Geen Seizoen",
+    "no_type" : "Geen Teamtype",
+    "no_restriction" : "Geen beperking",
+    "not_active" : "Niet actief",
+    "used_competition" : "Gebruikt voor competitie",
+    "no_competition" : "Niet gebruikt voor competitie",
+    "male" : "Man",
+    "female" : "Vrouw",
+    "age" : "jaar",
+    "age_remark" : "Leeftijd is berekend op de einddatum van het seizoen {season} ({start} &ndash; {end})",
+    "delete" : "Verwijder",
+    "cancel" : "Annuleer",
+    "name" : "Naam",
+    "required" : "Dit veld is verplicht in te vullen.",
+    "not_allowed" : "Je hebt geen toelating tot deze informatie",
+    "not_found" : "Dit type bestaat niet"
+}

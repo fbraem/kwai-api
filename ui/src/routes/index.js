@@ -6,6 +6,7 @@ import usersRouter from './users';
 import membersRouter from './members';
 import seasonsRouter from './seasons';
 import teamsRouter from './teams';
+import teamtypesRouter from './team_types';
 
 function routes() {
     var routes = [];
@@ -17,6 +18,7 @@ function routes() {
         .concat(membersRouter)
         .concat(seasonsRouter)
         .concat(teamsRouter)
+        .concat(teamtypesRouter)
 };
 
 export default routes;

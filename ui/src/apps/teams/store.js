@@ -1,32 +1,18 @@
 import Vue from 'vue';
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
-
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import URI from 'urijs';
-import moment from 'moment';
-
 import Team from './models/Team';
 import Member from './models/Member';
-import TeamType from './models/TeamType';
 
 const state = {
-    types : [],
     teams : [],
     availableMembers : [],
     error : null
 };
 
 const getters = {
-    types(state) {
-        return state.types;
-    },
-    type: (state) => (id) => {
-        return state.types.find((type) => type.id == id);
-    },
     teams(state) {
         return state.teams;
     },
@@ -51,16 +37,6 @@ const getters = {
 };
 
 const mutations = {
-  types(state, types) {
-      state.types = types;
-  },
-  addType(state, type) {
-      state.types.unshift(type);
-  },
-  modifyType(state, type) {
-      var index = state.types.findIndex((t) => t.id == type.id);
-      if (state.types[index]) state.types[index] = type;
-  },
   teams(state, teams) {
       state.teams = teams;
   },
@@ -206,67 +182,6 @@ const actions = {
             dispatch('wait/end', 'teams.availableMembers', { root : true });
             throw error;
         }
-    },
-    async browseType({ dispatch, commit }, payload) {
-        dispatch('wait/start', 'teamtypes.browse', { root : true });
-        const type = new TeamType();
-        let types = await type.get();
-        commit('types', types);
-        commit('success');
-        dispatch('wait/end', 'teamtypes.browse', { root : true });
-    },
-    createType(context, payload) {
-        return oauth.post('api/teams/types', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addType', {
-                type : result.data
-            });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
-    },
-    updateType(context, payload) {
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/teams/types/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('modifyType', {
-                    type : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
-    },
-    readType(context, payload) {
-        var type = context.getters['type'](payload.id);
-        if (type) { // already read
-            context.commit('success');
-            return;
-        }
-
-        oauth.get('api/teams/types/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('addType', {
-                type : result.data
-            });
-            context.commit('success');
-        }).catch((error) => {
-            context.commit('error', error);
-        });
     }
 };
 

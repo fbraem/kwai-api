@@ -1,6 +1,6 @@
 import Model from '@/js/JSONAPI/BaseModel';
 
-import TeamType from './TeamType';
+import TeamType from '@/apps/team_types/models/TeamType';
 import Member from './Member';
 import Season from '@/apps/seasons/models/Season';
 

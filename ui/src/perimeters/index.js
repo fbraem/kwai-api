@@ -5,6 +5,7 @@ import newsPerimeter from './newsPerimeter';
 import pagePerimeter from './pagePerimeter';
 import memberPerimeter from './memberPerimeter';
 import teamPerimeter from './teamPerimeter';
+import teamTypePerimeter from './teamTypePerimeter';
 import userPerimeter from './userPerimeter';
 import seasonPerimeter from './seasonPerimeter';
 
@@ -17,6 +18,7 @@ function perimeters() {
         pagePerimeter,
         memberPerimeter,
         teamPerimeter,
+        teamTypePerimeter,
         userPerimeter,
         seasonPerimeter
     ];
