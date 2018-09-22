@@ -5,51 +5,49 @@
             <span v-if="creating">{{ $t('team.create') }}</span>
             <span v-else>{{ $t('team.update') }}</span>
         </template>
-        <section slot="content" class="uk-section uk-section-default uk-section-small">
-            <div class="uk-container">
-                <div uk-grid>
-                    <div class="uk-width-1-1">
-                        <form class="uk-form-stacked">
-                            <uikit-input-text v-model="form.team.name" :validator="$v.form.team.name" :errors="nameErrors" id="name" :placeholder="$t('team.form.name.placeholder')">
-                                {{ $t('team.form.name.label') }}:
-                            </uikit-input-text>
-                            <uikit-select
-                                v-model="form.team.season"
-                                :items="seasons"
-                                :validator="$v.form.team.season"
-                                :errors="seasonErrors"
-                                id="season"
-                                :empty="$t('team.form.season.placeholder')">
-                                {{ $t('team.form.season.label') }}:
-                            </uikit-select>
-                            <p class="uk-text-meta">{{ $t('team.form.season.hint')}}</p>
-                            <uikit-select
-                                v-model="form.team.team_type"
-                                :items="team_types"
-                                :validator="$v.form.team.team_type"
-                                :errors="team_typeErrors"
-                                id="team_type"
-                                :empty="$t('team.form.team_type.placeholder')">
-                                {{ $t('team.form.team_type.label') }}:
-                            </uikit-select>
-                            <p class="uk-text-meta">{{ $t('team.form.team_type.hint')}}</p>
-                            <uikit-textarea v-model="form.team.remark" :validator="$v.form.team.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('team.form.remark.placeholder')">
-                                {{ $t('team.form.remark.label') }}:
-                            </uikit-textarea>
-                        </form>
+        <div slot="content" class="uk-container">
+            <div uk-grid>
+                <div class="uk-width-1-1">
+                    <form class="uk-form-stacked">
+                        <uikit-input-text v-model="form.team.name" :validator="$v.form.team.name" :errors="nameErrors" id="name" :placeholder="$t('team.form.name.placeholder')">
+                            {{ $t('team.form.name.label') }}:
+                        </uikit-input-text>
+                        <uikit-select
+                            v-model="form.team.season"
+                            :items="seasons"
+                            :validator="$v.form.team.season"
+                            :errors="seasonErrors"
+                            id="season"
+                            :empty="$t('team.form.season.placeholder')">
+                            {{ $t('team.form.season.label') }}:
+                        </uikit-select>
+                        <p class="uk-text-meta">{{ $t('team.form.season.hint')}}</p>
+                        <uikit-select
+                            v-model="form.team.team_type"
+                            :items="team_types"
+                            :validator="$v.form.team.team_type"
+                            :errors="team_typeErrors"
+                            id="team_type"
+                            :empty="$t('team.form.team_type.placeholder')">
+                            {{ $t('team.form.team_type.label') }}:
+                        </uikit-select>
+                        <p class="uk-text-meta">{{ $t('team.form.team_type.hint')}}</p>
+                        <uikit-textarea v-model="form.team.remark" :validator="$v.form.team.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('team.form.remark.placeholder')">
+                            {{ $t('team.form.remark.label') }}:
+                        </uikit-textarea>
+                    </form>
+                </div>
+                <div uk-grid class="uk-width-1-1">
+                    <div class="uk-width-expand">
                     </div>
-                    <div uk-grid class="uk-width-1-1">
-                        <div class="uk-width-expand">
-                        </div>
-                        <div class="uk-width-auto">
-                            <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                                <fa-icon name="save" />&nbsp; {{ $t('save') }}
-                            </button>
-                        </div>
+                    <div class="uk-width-auto">
+                        <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
+                            <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                        </button>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </Page>
 </template>
 
