@@ -4,7 +4,7 @@
             {{ $t('seasons') }} <span v-if="season">&nbsp;&bull;&nbsp;{{ season.name }}</span>
         </template>
         <template slot="toolbar">
-            <router-link v-if="$season.isAllowed('update', season)" class="uk-icon-button" :to="{ 'name' : 'seasons.update', params : { id : season.id } }">
+            <router-link v-if="season && $season.isAllowed('update', season)" class="uk-icon-button" :to="{ 'name' : 'seasons.update', params : { id : season.id } }">
                 <fa-icon name="edit" />
             </router-link>
         </template>

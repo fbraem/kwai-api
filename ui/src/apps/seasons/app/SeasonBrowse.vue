@@ -4,13 +4,16 @@
             {{ $t('seasons') }}
         </template>
         <div slot="content" class="uk-container">
-            <div v-if="loading" class="uk-flex-center" uk-grid>
+            <div v-if="$wait.is('seasons.browse')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
                     <fa-icon name="spinner" scale="2" spin />
                 </div>
             </div>
             <div v-else uk-grid>
-                <table class="uk-table uk-table-striped">
+                <div v-if="seasons && seasons.length == 0">
+                    {{ $t('no_seasons') }}
+                </div>
+                <table v-else class="uk-table uk-table-striped">
                     <tr>
                         <th></th>
                         <th>{{ $t('name') }}</th>
@@ -63,9 +66,6 @@
             };
         },
         computed : {
-            loading() {
-                return this.$store.getters['seasonModule/loading'];
-            },
             seasons() {
                 return this.$store.getters['seasonModule/seasons'];
             }

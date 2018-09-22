@@ -7,11 +7,7 @@ import Season from './models/Season';
 
 const state = {
     seasons : [],
-    status : {
-        loading : false,
-        success : false,
-        error : false
-    }
+    error : null
 };
 
 const getters = {
@@ -21,22 +17,18 @@ const getters = {
     season: (state) => (id) => {
         return state.seasons.find((s) => s.id == id);
     },
-    loading(state) {
-        return state.status.loading;
-    },
-    success(state) {
-        return state.status.success;
-    },
     error(state) {
-        return state.status.error;
+        return state.error;
     }
 };
 
 const mutations = {
   seasons(state, seasons) {
+      state.error = null;
       state.seasons = seasons;
   },
   season(state, season) {
+      state.error = null;
       var index = state.seasons.findIndex((s) => s.id == season.id);
       if (index != -1) {
           Vue.set(state.seasons, index, season);
@@ -44,46 +36,26 @@ const mutations = {
           state.seasons.push(season);
       }
   },
-  modifySeason(state, season) {
-      var index = state.seasons.findIndex((s) => s.id == season.id);
-      if (index != -1) {
-          state.seasons[index] = season;
-      } else {
-          state.seasons.push(season);
-      }
-  },
-  loading(state) {
-      state.status = {
-          loading : true,
-          success: false,
-          error : false
-      };
-  },
-  success(state) {
-      state.status = {
-          loading : false,
-          success: true,
-          error : false
-      };
-  },
-  error(state, payload) {
-      state.status = {
-          loading : false,
-          success: false,
-          error : payload
-      };
+  error(state, error) {
+      state.error = error;
   }
 };
 
 const actions = {
-    async browse({ state, getters, commit, context }, payload) {
-        commit('loading');
+    async browse({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'seasons.browse', { root : true });
         const season = new Season();
-        let seasons = await season.get();
-        commit('seasons', seasons);
-        commit('success');
+        try {
+            let seasons = await season.get();
+            commit('seasons', seasons);
+            dispatch('wait/end', 'seasons.browse', { root : true });
+        } catch(error) {
+            commit('error', error);
+            dispatch('wait/end', 'seasons.browse', { root : true });
+            throw error;
+        }
     },
-    async save({ state, getters, commit, context }, season) {
+    async save({ commit }, season) {
         var newSeason = null;
         try  {
             newSeason = await season.save();
@@ -94,22 +66,22 @@ const actions = {
             throw error;
         }
     },
-    async read({ state, getters, commit, context }, payload) {
-        commit('loading');
+    async read({ dispatch, getters, commit }, payload) {
         var season = getters['season'](payload.id);
         if (season) { // already read
-            commit('success');
             return season;
         }
 
+        dispatch('wait/start', 'seasons.read', { root : true });
         let model = new Season();
         try {
             season = await model.find(payload.id);
             commit('season', season);
-            commit('success');
+            dispatch('wait/end', 'seasons.read', { root : true });
         } catch(error) {
-            console.log(error);
             commit('error', error);
+            dispatch('wait/end', 'seasons.read', { root : true });
+            throw error;
         }
         return season;
     }

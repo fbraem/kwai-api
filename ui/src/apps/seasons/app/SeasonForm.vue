@@ -5,7 +5,7 @@
             <span v-if="creating">{{ $t('create') }}</span>
             <span v-else>{{ $t('update') }}</span>
         </template>
-        <section slot="content" class="uk-section uk-section-default uk-section-small">
+        <template slot="content">
             <div class="uk-container">
                 <div uk-grid>
                     <div class="uk-width-1-1">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </template>
     </Page>
 </template>
 
@@ -97,7 +97,7 @@
                 return this.season != null && this.season.id == null;
             },
             error() {
-                return this.$store.state.seasonModule.status.error;
+                return this.$store.getters['seasonModule/error'];
             },
             nameErrors() {
                 const errors = [...this.errors.name];
