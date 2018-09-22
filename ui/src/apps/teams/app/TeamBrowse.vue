@@ -16,7 +16,7 @@
                 <table v-else class="uk-table uk-table-striped">
                     <tr>
                         <th>{{ $t('name') }}</th>
-                        <th></th>
+                        <th class="uk-table-shrink"></th>
                     </tr>
                     <tr v-for="team in teams" :key="team.id">
                         <td>
