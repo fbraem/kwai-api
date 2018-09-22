@@ -38,6 +38,9 @@ Vue.use(VueKindergarten, {
 });
 import perimeters from '@/perimeters';
 
+import VueWait from 'vue-wait';
+Vue.use(VueWait);
+
 import { VueExtendLayout, layout } from 'vue-extend-layout';
 Vue.use(VueExtendLayout);
 
@@ -55,5 +58,8 @@ var app = new Vue({
     store,
     perimeters : perimeters(),
     ...layout,
+    wait : new VueWait({
+        useVuex : true
+    }),
     i18n
 }).$mount('#clubmanApp');
