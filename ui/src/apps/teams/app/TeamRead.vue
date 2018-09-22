@@ -13,6 +13,83 @@
                 <template slot="title">{{ $t('delete') }}</template>
                 {{ $t('sure_to_delete') }}
             </AreYouSure>
+            <div id="addMemberDialog" uk-modal ref="addMemberDialog">
+                <div v-if="team" class="uk-modal-dialog uk-modal-body">
+                    <div class="uk-child-width-1-1" uk-grid>
+                        <div>
+                            <h2 class="uk-modal-title">{{ $t('add_members') }}</h2>
+                            <p class="uk-text-meta" v-if="team.team_type">
+                                {{ $t('add_members_info') }}
+                            </p>
+                        </div>
+                        <div>
+                            <form class="uk-form uk-child-width-1-4 uk-flex-middle" v-if="! team.team_type" uk-grid>
+                                <div>
+                                    <uikit-input-text v-model="start_age" id="start_age">
+                                        {{ $t('type.form.min_age.label') }}:
+                                    </uikit-input-text>
+                                </div>
+                                <div>
+                                    <uikit-input-text v-model="end_age" id="end_age">
+                                        {{ $t('type.form.max_age.label') }}:
+                                    </uikit-input-text>
+                                </div>
+                                <div>
+                                    <uikit-select v-model="gender" :items="genders">
+                                        {{ $t('type.form.gender.label') }}:
+                                    </uikit-select>
+                                </div>
+                                <div>
+                                    <label class="uk-form-label">&nbsp;</label>
+                                    <button class="uk-button uk-button-primary" @click="filterAvailableMembers">
+                                        Filter
+                                    </button>
+                                </div>
+                            </form>
+                            <p class="uk-text-meta" v-if="team.season" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
+                            <hr />
+                        </div>
+                        <div v-if="$wait.is('teams.availableMembers')" class="uk-flex-center" uk-grid>
+                            <div class="uk-text-center">
+                                <fa-icon name="spinner" scale="2" spin />
+                            </div>
+                        </div>
+                        <div class="uk-overflow-auto uk-height-medium" v-if="availableMembers && availableMembers.length > 0">
+                            <table class="uk-table uk-table-small uk-table-middle uk-table-divider">
+                                <tr v-for="member in availableMembers" :key="member.id">
+                                    <td>
+                                        <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id">
+                                    </td>
+                                    <td>
+                                        <strong>{{ member.person.name }}</strong><br />
+                                        {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
+                                    </td>
+                                    <td>
+                                        {{ member.license }}<br />
+                                        <fa-icon v-if="member.person.gender == 1" name="male" />
+                                        <fa-icon v-if="member.person.gender == 2" name="female" />
+                                        <fa-icon v-if="member.person.gender == 0" name="question" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div v-else-if="! $wait.is('teams.availableMembers') ">
+                            <p class="uk-text-meta">
+                                Use filter to get a list of members that can be added this team.
+                            </p>
+                        </div>
+                        <div>
+                            <hr />
+                            <button class="uk-button uk-button-default" @click="hideAddMemberDialog">
+                                <fa-icon name="ban" />&nbsp; {{ $t('cancel') }}
+                            </button>
+                            <button class="uk-button uk-button-primary" :disabled="selectedAvailableMembers.length == 0" @click="addMembers">
+                                <fa-icon name="plus" />&nbsp; {{ $t('add') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
                 {{ $t('not_allowed') }}
             </div>
@@ -83,82 +160,6 @@
                                 <fa-icon name="trash" />
                             </a>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="addMemberDialog" uk-modal ref="addMemberDialog">
-            <div v-if="team" class="uk-modal-dialog uk-modal-body">
-                <div class="uk-child-width-1-1" uk-grid>
-                    <div>
-                        <h2 class="uk-modal-title">{{ $t('add_members') }}</h2>
-                        <p class="uk-text-meta" v-if="team.team_type">
-                            {{ $t('add_members_info') }}
-                        </p>
-                    </div>
-                    <div>
-                        <form class="uk-form uk-child-width-1-4 uk-flex-middle" v-if="! team.team_type" uk-grid>
-                            <div>
-                                <uikit-input-text v-model="start_age" id="start_age">
-                                    {{ $t('type.form.min_age.label') }}:
-                                </uikit-input-text>
-                            </div>
-                            <div>
-                                <uikit-input-text v-model="end_age" id="end_age">
-                                    {{ $t('type.form.max_age.label') }}:
-                                </uikit-input-text>
-                            </div>
-                            <div>
-                                <uikit-select v-model="gender" :items="genders">
-                                    {{ $t('type.form.gender.label') }}:
-                                </uikit-select>
-                            </div>
-                            <div>
-                                <label class="uk-form-label">&nbsp;</label>
-                                <button class="uk-button uk-button-primary" @click="filterAvailableMembers">
-                                    Filter
-                                </button>
-                            </div>
-                        </form>
-                        <hr />
-                    </div>
-                    <div v-if="$wait.is('teams.availableMembers')" class="uk-flex-center" uk-grid>
-                        <div class="uk-text-center">
-                            <fa-icon name="spinner" scale="2" spin />
-                        </div>
-                    </div>
-                    <div class="uk-overflow-auto uk-height-medium" v-if="availableMembers && availableMembers.length > 0">
-                        <table class="uk-table uk-table-small uk-table-middle uk-table-divider">
-                            <tr v-for="member in availableMembers" :key="member.id">
-                                <td>
-                                    <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id">
-                                </td>
-                                <td>
-                                    <strong>{{ member.person.name }}</strong><br />
-                                    {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
-                                </td>
-                                <td>
-                                    {{ member.license }}<br />
-                                    <fa-icon v-if="member.person.gender == 1" name="male" />
-                                    <fa-icon v-if="member.person.gender == 2" name="female" />
-                                    <fa-icon v-if="member.person.gender == 0" name="question" />
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div v-else-if="! $wait.is('teams.availableMembers') ">
-                        <p class="uk-text-meta">
-                            Use filter to get a list of members that can be added this team.
-                        </p>
-                    </div>
-                    <div>
-                        <hr />
-                        <button class="uk-button uk-button-default" @click="hideAddMemberDialog">
-                            <fa-icon name="ban" />&nbsp; {{ $t('cancel') }}
-                        </button>
-                        <button class="uk-button uk-button-primary" :disabled="selectedAvailableMembers.length == 0" @click="addMembers">
-                            <fa-icon name="plus" />&nbsp; {{ $t('add') }}
-                        </button>
                     </div>
                 </div>
             </div>
