@@ -14,7 +14,7 @@
                 {{ item.text }}
             </option>
         </select>
-        <div v-if="errors.length > 0" class="uk-text-danger uk-margin-small">
+        <div v-if="errors && errors.length > 0" class="uk-text-danger uk-margin-small">
             <div v-for="error in errors">
                 {{ error }}
             </div>
@@ -43,7 +43,7 @@
         methods : {
             onChange(e) {
                 this.$emit('input', e.target.value);
-                this.validator.$touch();
+                if (this.validator) this.validator.$touch();
             }
         }
     }
