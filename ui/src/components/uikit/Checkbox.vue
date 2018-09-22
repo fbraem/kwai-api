@@ -41,7 +41,6 @@
         },
         methods : {
             onChange(e) {
-                console.log(e.target.checked);
                 this.$emit('input', e.target.checked);
                 if (this.validator) this.validator.$touch();
             }
