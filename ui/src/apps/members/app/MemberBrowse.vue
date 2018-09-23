@@ -8,14 +8,12 @@
                 </div>
             </div>
             <div class="uk-child-width-1-1" uk-grid>
-                <div class="uk-flex uk-flex-center">
-                    <template v-for="(group, letter) in members">
-                        <span class="uk-margin-right">
-                            <span class="uk-badge" :key="letter">
-                                <a class="uk-link-reset" @click="jumpIt('#letter-' + letter)">{{letter}}</a>
-                            </span>
+                <div class="uk-flex uk-flex-center uk-grid-small" uk-grid>
+                    <div v-for="(group, letter) in members" :key="letter">
+                        <span class="uk-label" >
+                            <a class="uk-link-reset" @click="jumpIt('#letter-' + letter)">{{letter}}</a>
                         </span>
-                    </template>
+                    </div>
                 </div>
                 <div>
                     <div class="uk-column-1-2@s uk-column-1-3@m">
@@ -81,7 +79,6 @@
                 this.$store.dispatch('memberModule/browse', {});
             },
             jumpIt(target) {
-                console.log(target);
                 jump(target);
             }
         }
