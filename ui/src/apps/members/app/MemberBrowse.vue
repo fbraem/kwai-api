@@ -1,63 +1,52 @@
 <template>
-    <v-container fluid grid-list-lg>
-        <v-layout row wrap>
-            <v-flex xs12>
-                <v-toolbar class="elevation-0">
-                    <v-toolbar-title>{{ $t('members') }}</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap>
-            <v-flex xs12>
-                {{ count }}
-            </v-flex>
-        </v-layout>
-        <v-layout row wrap justify-center>
-            <span v-for="(group, letter) in members" :key="letter">
-                <v-btn fab small  @click="jumpIt('#letter-' + letter)">{{ letter }}</v-btn>
-            </span>
-        </v-layout>
-        <v-container class="mb-5">
-            <v-layout row>
-                <v-flex xs12>
-                    <div style="column-count:3;clear:both">
-                        <v-list two-line subheader>
-                            <div v-for="(group, letter) in members" :key="letter">
-                                <v-subheader :id="'letter-' + letter">{{letter}}</v-subheader>
-                                <v-list-tile avatar v-for="member in group" :key="member.id" @click="" style="break-inside:avoid;">
-                                    <v-list-tile-action>
-                                        <span v-if="member.person.nationality">{{ member.person.nationality.iso_2 }}</span>
-                                    </v-list-tile-action>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title v-text="member.person.lastname + ' ' + member.person.firstname"></v-list-tile-title>
-                                        <v-list-tile-sub-title>{{member.license}}</v-list-tile-sub-title>
-                                    </v-list-tile-content>
-                                    <v-list-tile-avatar>
-                                    </v-list-tile-avatar>
-                                </v-list-tile>
-                            </div>
-                        </v-list>
+    <Page>
+        <template slot="title">{{ $t('members') }}</template>
+        <div slot="content" class="uk-container">
+            <div v-if="$wait.is('members.browse')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
+            <div class="uk-child-width-1-1" uk-grid>
+                <div class="uk-flex uk-flex-center">
+                    <template v-for="(group, letter) in members">
+                        <span class="uk-margin-right">
+                            <span class="uk-badge" :key="letter">
+                                <a class="uk-link-reset" @click="jumpIt('#letter-' + letter)">{{letter}}</a>
+                            </span>
+                        </span>
+                    </template>
+                </div>
+                <div>
+                    <div class="uk-column-1-2@s uk-column-1-3@m">
+                        <div v-for="(group, letter) in members" :key="letter">
+                            <h3 class="uk-heading-bullet" :id="'letter-' + letter">{{ letter }}</h3>
+                            <ul class="uk-list">
+                                <li v-for="member in group" :key="member.id">
+                                    <span class="uk-text-meta">{{ member.license }}</span> - {{ member.person.name }}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </v-flex>
-            </v-layout>
-        </v-container>
-        <v-layout row wrap justify-center>
-            <span v-for="(group, letter) in members" :key="letter">
-                <v-btn fab small  @click="jumpIt('#letter-' + letter)">{{ letter }}</v-btn>
-            </span>
-        </v-layout>
-    </v-container>
+                </div>
+            </div>
+        </div>
+    </Page>
 </template>
 
 <script>
-    import messages from '../lang/lang';
+    import memberStore from '../store';
+
+    import messages from '../lang';
     import jump from 'jump.js';
 
+    import Page from './Page.vue';
+
     export default {
-        i18n : {
-            messages
+        components : {
+            Page
         },
+        i18n : messages,
         data() {
             return {
                 count : 0
@@ -76,10 +65,21 @@
                 return result;
             }
         },
-        mounted() {
-            this.$store.dispatch('memberModule/browse', {});
+        beforeCreate() {
+            if (!this.$store.state.memberModule) {
+                this.$store.registerModule('memberModule', memberStore);
+            }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(async (vm) => {
+                await vm.fetchData();
+                next();
+            });
         },
         methods : {
+            fetchData() {
+                this.$store.dispatch('memberModule/browse', {});
+            },
             jumpIt(target) {
                 console.log(target);
                 jump(target);

@@ -201,7 +201,7 @@
     import 'vue-awesome/icons/female';
     import 'vue-awesome/icons/question';
 
-    import Member from '../models/Member';
+    import Member from '@/apps/members/models/Member';
 
     import teamStore from '@/apps/teams/store';
 

@@ -1,7 +1,7 @@
 import Model from '@/js/JSONAPI/BaseModel';
 
 import TeamType from '@/apps/team_types/models/TeamType';
-import Member from './Member';
+import Member from '@/apps/members/models/Member';
 import Season from '@/apps/seasons/models/Season';
 
 export default class Team extends Model {

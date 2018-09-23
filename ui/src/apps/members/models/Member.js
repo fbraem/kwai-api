@@ -5,7 +5,11 @@ import Person from '@/apps/persons/models/Person';
 export default class Member extends Model {
     resourceName() {
         //TODO: sport undependent
-        return 'sport_judo_members';
+        return 'members';
+    }
+
+    namespace() {
+        return 'sport/judo';
     }
 
     fields() {

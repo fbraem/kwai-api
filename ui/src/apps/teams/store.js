@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import Team from './models/Team';
-import Member from './models/Member';
+import Member from '@/apps/members/models/Member';
 
 const state = {
     teams : [],
@@ -39,6 +39,7 @@ const getters = {
 const mutations = {
   teams(state, teams) {
       state.teams = teams;
+      state.error = null;
   },
   team(state, team) {
       var index = state.teams.findIndex((t) => t.id == team.id);
@@ -47,6 +48,7 @@ const mutations = {
       } else {
           state.teams.push(team);
       }
+      state.error = null;
   },
   setMembers(state, data) {
       var index = state.teams.findIndex((t) => t.id == data.id);
@@ -60,9 +62,6 @@ const mutations = {
   },
   error(state, data) {
       state.error = data;
-  },
-  success(state) {
-      state.error = null;
   }
 };
 
@@ -73,7 +72,6 @@ const actions = {
         try {
             let teams = await team.get();
             commit('teams', teams);
-            commit('success');
             dispatch('wait/end', 'teams.browse', { root : true });
         } catch(error) {
             commit('error', error);
@@ -86,7 +84,6 @@ const actions = {
         try  {
             newTeam = await team.save();
             commit('team', newTeam);
-            commit('success');
             return newTeam;
         } catch(error) {
             commit('error', error);
@@ -96,7 +93,6 @@ const actions = {
     async read({ dispatch, getters, commit }, payload) {
         var team = getters['team'](payload.id);
         if (team) { // already read
-            commit('success');
             return team;
         }
 
@@ -105,7 +101,6 @@ const actions = {
         try {
             team = await model.find(payload.id);
             commit('team', team);
-            commit('success');
             dispatch('wait/end', 'teams.read', { root : true });
         } catch(error) {
             commit('error', error);
@@ -120,7 +115,6 @@ const actions = {
         try {
             const teamWithMembers = await team.with(['members']).find(payload.id);
             commit('team', teamWithMembers);
-            commit('success');
             dispatch('wait/end', 'teams.members', { root : true });
         } catch(error) {
             commit('error', error);
@@ -136,7 +130,6 @@ const actions = {
                 id : payload.id,
                 members : members
             });
-            commit('success');
         } catch(error) {
             commit('error', error);
             console.log(error);
@@ -150,7 +143,6 @@ const actions = {
                 id : payload.id,
                 members : members
             });
-            commit('success');
         } catch(error) {
             commit('error', error);
             console.log(error);
@@ -175,7 +167,6 @@ const actions = {
         try {
             var members = await team.available(payload.id);
             commit('availableMembers', members);
-            commit('success');
             dispatch('wait/end', 'teams.availableMembers', { root : true });
         } catch(error) {
             commit('error', error);

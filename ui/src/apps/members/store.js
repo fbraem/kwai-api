@@ -1,22 +1,13 @@
 import Vue from 'vue';
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
-import axios from 'axios';
-
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import URI from 'urijs';
-import moment from 'moment';
+import Member from './models/Member';
 
 const state = {
     members : [],
-    status : {
-        loading : false,
-        success : false,
-        error : false
-    }
+    error : null
 };
 
 const getters = {
@@ -26,55 +17,43 @@ const getters = {
     member: (state) => (id) => {
         return find(state.members, ['id', id]);
     },
-    loading(state) {
-        return state.status.loading;
-    },
-    success(state) {
-        return state.status.success;
-    },
     error(state) {
-        return state.status.error;
+        return state.error;
     }
 };
 
 const mutations = {
-  members(state, data) {
-      state.members = data.members;
+  members(state, members) {
+      state.members = members;
+      state.error = null;
   },
-  setMember(state, data) {
-      state.members = unionBy([data.member], state.members, 'id');
-  },
-  deleteMember(state, data) {
-      state.members = filter(state.members, (member) => {
-         return member.id != member.id;
-      });
-  },
-  loading(state) {
-      state.status = {
-          loading : true,
-          success: false,
-          error : false
-      };
-  },
-  success(state) {
-      state.status = {
-          loading : false,
-          success: true,
-          error : false
-      };
-  },
-  error(state, payload) {
-      state.status = {
-          loading : false,
-          success: false,
-          error : payload
-      };
+  member(state, member) {
+      var index = state.members.findIndex((m) => m.id == member.id);
+      if (index != -1) {
+          Vue.set(state.members, index, member);
+      } else {
+          state.members.push(member);
+      }
+      state.error = null;
   }
 };
 
 const actions = {
-    browse(context, payload) {
-        context.commit('loading');
+    async browse({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'members.browse', { root : true });
+        const member = new Member();
+        try {
+            let members = await member.get();
+            commit('members', members);
+            dispatch('wait/end', 'members.browse', { root : true });
+        } catch(error) {
+            commit('error', error);
+            dispatch('wait/end', 'members.browse', { root : true });
+            throw error;
+        }
+
+/*
+        dispatch('wait/start', 'members.browse', { root : true });
         var uri = new URI('api/sport/judo/members');
         var offset = payload.offset || 0;
         uri.addQuery('page[offset]', offset);
@@ -94,7 +73,6 @@ const actions = {
         if (payload.user) {
             uri.addQuery('filter[user]', payload.user);
         }
-*/
         oauth.get(uri.href(), {
             data : payload
         }).then((res) => {
@@ -107,6 +85,7 @@ const actions = {
         }).catch((error) => {
             context.commit('error', error);
         });
+*/
     },
     read(context, payload) {
         context.commit('loading');
