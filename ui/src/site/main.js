@@ -20,8 +20,6 @@ const i18n = new VueI18n({
     fallbackLocale : 'nl'
 });
 
-//import FlagIcon from 'vue-flag-icon';
-//Vue.use(FlagIcon);
 import Icon from 'vue-awesome/components/Icon';
 Vue.component('fa-icon', Icon);
 

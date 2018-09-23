@@ -66,7 +66,7 @@ var config = {
             { test: /\.svg$/,
                 loader : 'svg-url-loader'
             }
-*/            
+*/
         ]
     },
     resolve : {
