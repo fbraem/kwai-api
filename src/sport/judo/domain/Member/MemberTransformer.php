@@ -6,7 +6,7 @@ use League\Fractal;
 
 class MemberTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'sport_judo_members';
+    private static $type = 'members';
 
     protected $defaultIncludes = [
         'person'
