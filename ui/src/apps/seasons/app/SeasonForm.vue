@@ -166,7 +166,7 @@
         	next();
         },
         watch : {
-            error(nv) {
+            errors(nv) {
                 if (nv) {
                     if ( nv.response.status == 422 ) {
                         nv.response.data.errors.forEach((item, index) => {
