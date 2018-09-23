@@ -2,34 +2,6 @@
     "types" : "Team Types",
     "no_types" : "There are no team types defined yet",
     "no_teams" : "There are no teams defined yet",
-    "type_details" : "Team Type Details",
-    "type" : {
-        "create" : "Create Team Type",
-        "update" : "Update Team Type",
-        "details" : "Team Type",
-        "form" : {
-            "name" : {
-                "label" : "Name",
-                "placeholder" : "Name of the type"
-            },
-            "min_age" : {
-                "label" : "Min. Age",
-                "placeholder" : "The minimum age of a member to be part of this team."
-            },
-            "max_age" : {
-                "label" : "Max. Age",
-                "placeholder" : "The maximum age of a member to be part of this team."
-            },
-            "remark" : {
-                "label" : "Remark",
-                "placeholder" : "A remark about this type."
-            },
-            "gender" : {
-                "label" : "Gender",
-                "placeholder" : "Will the team be restricted to a specific gender?"
-            }
-        }
-    },
     "active" : "Active",
     "competition" : "Is this for a competition?",
     "save": "Save",
@@ -73,6 +45,7 @@
     "age" : "years",
     "age_remark" : "Age is determined on the end date of the season {season} ({start} &ndash; {end})",
     "no_members" : "This team doesn't have members",
+    "no_available_members" : "There are no more members to add to this team",
     "delete" : "Delete",
     "sure_to_delete" : "Are you sure to remove these members from this team?",
     "cancel" : "Cancel",
@@ -82,5 +55,11 @@
     "add_members_info" : "Members are automatically selected based on the team type.",
     "add" : "Add",
     "not_allowed" : "You're not allowed to this information.",
-    "not_found" : "This team doesn't exist"
+    "not_found" : "This team doesn't exist",
+    "count" : "Member count",
+    "min_age" : "Min. Age",
+    "max_age" : "Max. Age",
+    "gender" : "Gender",
+    "filter" : "Filter",
+    "use_filter" : "Use filter to get a list of members that can be added this team."
 }

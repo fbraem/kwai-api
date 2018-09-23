@@ -36,6 +36,24 @@
                             <td>{{ teamtype.end_age }}</td>
                         </tr>
                         <tr>
+                            <th>{{ $t('form.gender.label') }}</th>
+                            <td>{{ gender }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ $t('active') }}</th>
+                            <td>
+                                <fa-icon v-if="teamtype.active" name="check" />
+                                <fa-icon v-else name="times" class="uk-text-danger" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ $t('competition_label') }}<br /></th>
+                            <td>
+                                <fa-icon v-if="teamtype.competition" name="check" />
+                                <fa-icon v-else name="times" class="uk-text-danger" />
+                            </td>
+                        </tr>
+                        <tr>
                             <th>{{ $t('form.remark.label') }}</th>
                             <td>{{ teamtype.remark }}</td>
                         </tr>
@@ -44,73 +62,12 @@
             </div>
         </div>
     </Page>
-<!--
-    <v-container fluid>
-        <v-layout row wrap>
-            <v-flex v-if="teamtype" xs12>
-                <v-card>
-                    <v-card-title>
-                        <div class="headline mb-0">
-                            {{ $t('type.details') }} : {{ teamtype.name }}
-                        </div>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-container fluid grid-list-md>
-                            <v-layout row wrap>
-                                <v-flex xs12 sm6>
-                                    <v-text-field name="start_age" readonly :label="$t('type.form.min_age.label')" :hint="$t('type.form.min_age.hint')" persistent-hint :value="teamtype.start_age" />
-                                </v-flex>
-                                <v-spacer></v-spacer>
-                                <v-flex xs12 sm6>
-                                    <v-text-field name="end_age" :label="$t('type.form.max_age.label')" :hint="$t('type.form.max_age.hint')" persistent-hint :value="teamtype.end_age" />
-                                </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                                <v-flex xs12>
-                                    <v-text-field name="gender" readonly :label="$t('type.form.gender.label')" :value="gender" :hint="$t('type.form.gender.hint')" persistent-hint />
-                                </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                                <v-flex xs12>
-                                    <v-text-field readonly multi-line name="remark" :value="teamtype.remark" :label="$t('type.form.remark.label')" />
-                                </v-flex>
-                            </v-layout>
-                            <v-layout row wrap>
-                                <v-flex xs6>
-                                    <div v-if="teamtype.active">
-                                        <v-icon>fa-check</v-icon>
-                                        <span style="vertical-align:bottom">&nbsp;&nbsp; {{ $t('active') }}</span>
-                                    </div>
-                                    <div v-else>
-                                        {{ $t('not_active') }}
-                                    </div>
-                                </v-flex>
-                                <v-flex xs6>
-                                    <div v-if="teamtype.competition">
-                                        <v-icon>fa-check</v-icon>
-                                        <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('used_competition') }}</span>
-                                    </div>
-                                    <div v-else>
-                                        {{ $t('no_competition') }}
-                                    </div>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn v-if="$isAllowed('update', teamtype)" color="secondary" icon :to="{ name : 'teamtype.update', params : { id : teamtype.id }}" flat>
-                            <v-icon>fa-edit</v-icon>
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
--->
 </template>
 
 <script>
+    import 'vue-awesome/icons/check';
+    import 'vue-awesome/icons/times';
+
     import messages from '../lang';
 
     import Page from './Page';

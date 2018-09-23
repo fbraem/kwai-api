@@ -26,27 +26,30 @@
                             <form class="uk-form uk-child-width-1-4 uk-flex-middle" v-if="! team.team_type" uk-grid>
                                 <div>
                                     <uikit-input-text v-model="start_age" id="start_age">
-                                        {{ $t('type.form.min_age.label') }}:
+                                        {{ $t('min_age') }}:
                                     </uikit-input-text>
                                 </div>
                                 <div>
                                     <uikit-input-text v-model="end_age" id="end_age">
-                                        {{ $t('type.form.max_age.label') }}:
+                                        {{ $t('max_age') }}:
                                     </uikit-input-text>
                                 </div>
                                 <div>
                                     <uikit-select v-model="gender" :items="genders">
-                                        {{ $t('type.form.gender.label') }}:
+                                        {{ $t('gender') }}:
                                     </uikit-select>
                                 </div>
                                 <div>
                                     <label class="uk-form-label">&nbsp;</label>
                                     <button class="uk-button uk-button-primary" @click="filterAvailableMembers">
-                                        Filter
+                                        {{ $t('filter') }}
                                     </button>
                                 </div>
                             </form>
-                            <p class="uk-text-meta" v-if="team.season" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
+                            <p v-if="! team.team_type" class="uk-text-meta">
+                                {{ $t('use_filter') }}
+                            </p>
+                            <p class="uk-text-meta" v-if="team.season && availableMembers.length > 0" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
                             <hr />
                         </div>
                         <div v-if="$wait.is('teams.availableMembers')" class="uk-flex-center" uk-grid>
@@ -54,8 +57,8 @@
                                 <fa-icon name="spinner" scale="2" spin />
                             </div>
                         </div>
-                        <div class="uk-overflow-auto uk-height-medium" v-if="availableMembers && availableMembers.length > 0">
-                            <table class="uk-table uk-table-small uk-table-middle uk-table-divider">
+                        <div class="uk-overflow-auto uk-height-medium">
+                            <table v-if="availableMembers.length > 0" class="uk-table uk-table-small uk-table-middle uk-table-divider">
                                 <tr v-for="member in availableMembers" :key="member.id">
                                     <td>
                                         <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id">
@@ -72,10 +75,8 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
-                        <div v-else-if="! $wait.is('teams.availableMembers') ">
-                            <p class="uk-text-meta">
-                                Use filter to get a list of members that can be added this team.
+                            <p v-else-if="team.team_type">
+                                {{ $t('no_available_members') }}
                             </p>
                         </div>
                         <div>
@@ -110,12 +111,16 @@
                         </tr>
                         <tr>
                             <th>{{ $t('team.form.season.label') }}</th>
-                            <td v-if="team.season">{{ team.season.name }}</td>
+                            <td v-if="team.season">
+                                <router-link :to="{ name: 'seasons.read', params: { id : team.season.id } }">{{ team.season.name }}</router-link>
+                            </td>
                             <td v-else>{{ $t('no_season') }}</td>
                         </tr>
                         <tr>
                             <th>{{ $t('team.form.team_type.label') }}</th>
-                            <td v-if="team.team_type">{{ team.team_type.name }}</td>
+                            <td v-if="team.team_type">
+                                <router-link :to="{ name: 'team_types.read', params: { id : team.team_type.id } }">{{ team.team_type.name }}</router-link>
+                            </td>
                             <td v-else>{{ $t('no_type') }}</td>
                         </tr>
                         <tr>
@@ -127,13 +132,24 @@
                 <div>
                     <h3 class="uk-heading-line"><span>{{ $t('members') }}</span></h3>
                     <div class="uk-child-width-1-1" uk-grid>
-                        <div>
-                            <p v-if="team.season" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
+                        <div v-if="team.season">
+                            <p class="uk-text-meta" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
                         </div>
                         <div v-if="members == null || members.length == 0">
                             {{ $t('no_members') }}
                         </div>
-                        <div v-else>
+                        <div v-else-if="members">
+                            {{ $t('count') }} : {{members.length}}
+                        </div>
+                        <div v-if="members && members.length > 10">
+                            <a v-if="team && $team.isAllowed('attachMember', team)" class="uk-icon-button" @click="showAddMemberDialog">
+                                <fa-icon name="plus" />
+                            </a>
+                            <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger">
+                                <fa-icon name="trash" />
+                            </a>
+                        </div>
+                        <div v-if="members && members.length > 0">
                             <table class="uk-table uk-table-small uk-table-middle uk-table-divider">
                                 <tr v-for="member in members" :key="member.id">
                                     <td>

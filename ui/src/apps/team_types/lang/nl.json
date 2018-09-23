@@ -30,6 +30,7 @@
     "numeric" : "Enkel cijfers zijn toegelaten",
     "active" : "Actief",
     "competition" : "Wordt dit type gebruikt in competitie?",
+    "competition_label" : "Competitie",
     "save" : "Bewaar",
     "clear" : "Maak Leeg",
     "teams" : "Teams",
