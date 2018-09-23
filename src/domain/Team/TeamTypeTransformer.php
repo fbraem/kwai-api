@@ -6,7 +6,7 @@ use League\Fractal;
 
 class TeamTypeTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'teamtypes';
+    private static $type = 'team_types';
 
     public static function createForItem(TeamType $type)
     {
