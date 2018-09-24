@@ -45,7 +45,7 @@
     import { validationMixin } from 'vuelidate';
     import { required, email } from 'vuelidate/lib/validators';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import UserInvitation from '@/models/UserInvitation';
     import userStore from '@/stores/users';

@@ -65,7 +65,7 @@
     import { required, email, sameAs, minLength } from 'vuelidate/lib/validators';
     import passwordComplexity from '@/js/passwordComplexity'
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import User from '@/models/User';
     import userStore from '@/stores/users';

@@ -51,7 +51,7 @@
     import 'vue-awesome/icons/check';
     import 'vue-awesome/icons/edit';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import Page from './Page';
     import seasonStore from '@/stores/seasons';

@@ -66,10 +66,10 @@
     import 'vue-awesome/icons/spinner';
 
     import moment from 'moment';
-    import NewsCard from '../components/NewsCard.vue';
+    import NewsCard from './components/NewsCard.vue';
     import Paginator from '@/components/Paginator.vue';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     export default {
         i18n : messages,

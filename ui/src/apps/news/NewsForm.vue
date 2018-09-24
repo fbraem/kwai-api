@@ -130,7 +130,7 @@
     import moment from 'moment';
     import 'moment-timezone';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import newsStore from '@/stores/news';
     import categoryStore from '@/stores/categories';

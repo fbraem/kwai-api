@@ -6,7 +6,7 @@ export default [
             {
                 path : ':id(\\d+)',
                 components : {
-                    CategoryContent : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/app/CategoryRead.vue')
+                    CategoryContent : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/CategoryRead.vue')
                 },
                 name : 'categories.read',
                 props : {
@@ -16,7 +16,7 @@ export default [
             {
                 path : '',
                 components : {
-                    CategoryContent : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/app/CategoryBrowse.vue')
+                    CategoryContent : () => import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/CategoryBrowse.vue')
                 },
                 name : 'categories.browse'
             }
@@ -24,12 +24,12 @@ export default [
     },
     {
         path : '/categories/create',
-        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryForm.vue'),
+        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/CategoryForm.vue'),
         name : 'categories.create'
     },
     {
         path : '/categories/update/:id(\\d+)',
-        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/app/CategoryForm.vue'),
+        component : () => import(/* webpackChunkName: "category_admin" */ '@/apps/categories/CategoryForm.vue'),
         name : 'categories.update'
     }
 ];

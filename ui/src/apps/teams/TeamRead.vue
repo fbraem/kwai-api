@@ -184,7 +184,7 @@
 </template>
 
 <script>
-    import messages from '../lang';
+    import messages from './lang';
 
     import Page from './Page.vue';
     import AreYouSure from '@/components/AreYouSure.vue';

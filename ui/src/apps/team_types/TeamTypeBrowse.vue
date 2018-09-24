@@ -35,7 +35,7 @@
 <script>
     import 'vue-awesome/icons/spinner';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import Page from './Page';
     import teamTypeStore from '@/stores/team_types';

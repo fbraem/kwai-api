@@ -54,6 +54,8 @@
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitTextarea from '@/components/uikit/Textarea.vue';
 
+    import messages from './lang';
+
     var initError = function() {
         return {
             name : [],
@@ -72,8 +74,6 @@
             }
         };
     }
-
-    import messages from '../lang';
 
     export default {
         i18n : messages,

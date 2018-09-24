@@ -88,7 +88,7 @@
     import 'vue-awesome/icons/user';
     import 'vue-awesome/icons/ban';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import userStore from '@/stores/users';
     import NewsStore from '@/stores/news';

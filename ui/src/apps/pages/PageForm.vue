@@ -69,7 +69,7 @@
     import Content from '@/models/Content';
     import Page from '@/models/Page';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import UikitCheckbox from '@/components/uikit/Checkbox.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';

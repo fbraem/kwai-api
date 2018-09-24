@@ -35,7 +35,7 @@
 <script>
     import memberStore from '@/stores/members';
 
-    import messages from '../lang';
+    import messages from './lang';
     import jump from 'jump.js';
 
     import Page from './Page.vue';

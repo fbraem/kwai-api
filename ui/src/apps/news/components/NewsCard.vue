@@ -47,7 +47,7 @@
     import 'vue-awesome/icons/edit';
     import 'vue-awesome/icons/trash';
 
-    import NewsDelete from '../app//NewsDelete.vue';
+    import NewsDelete from '../NewsDelete.vue';
 
     import messages from '../lang';
 

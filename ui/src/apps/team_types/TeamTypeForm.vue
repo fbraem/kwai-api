@@ -61,6 +61,8 @@
     import UikitSelect from '@/components/uikit/Select.vue';
     import UikitCheckbox from '@/components/uikit/Checkbox.vue';
 
+    import messages from './lang';
+
     var initError = function() {
         return {
             name : [],
@@ -85,8 +87,6 @@
             }
         };
     }
-
-    import messages from '../lang';
 
     export default {
         components : {

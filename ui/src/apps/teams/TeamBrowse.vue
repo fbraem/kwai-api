@@ -37,7 +37,7 @@
 <script>
     import 'vue-awesome/icons/spinner';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import Page from './Page';
     import teamStore from '@/stores/teams';

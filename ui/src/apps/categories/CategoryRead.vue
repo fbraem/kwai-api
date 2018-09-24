@@ -61,7 +61,7 @@
 </template>
 
 <script>
-    import messages from '../lang';
+    import messages from './lang';
 
     import newsStore from '@/stores/news';
     import pageStore from '@/stores/pages';

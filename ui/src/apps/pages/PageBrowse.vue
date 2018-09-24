@@ -35,10 +35,10 @@
     import 'vue-awesome/icons/spinner';
 
     import moment from 'moment';
-    import PageSummary from '../components/PageSummary.vue';
+    import PageSummary from './components/PageSummary.vue';
     //import Paginator from '@/components/Paginator.vue';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     export default {
         i18n : messages,

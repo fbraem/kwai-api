@@ -1,9 +1,9 @@
 <template>
-    <div id="delete-member" uk-modal ref="dialog">
+    <div id="delete-page" uk-modal ref="dialog">
         <div class="uk-modal-dialog uk-modal-body">
-            <h2 class="uk-modal-title">{{ $t('delete')}}</h2>
+            <h2 class="uk-modal-title">{{ $t('delete_page')}}</h2>
             <p>
-                {{ $t('sure_to_delete') }}
+                {{ $t('are_you_sure') }}
             </p>
             <p class="uk-text-right">
                 <button class="uk-button uk-button-default uk-modal-close" type="button">
@@ -21,7 +21,7 @@
     import 'vue-awesome/icons/trash';
     import 'vue-awesome/icons/ban';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import UIkit from 'uikit';
 
@@ -37,7 +37,7 @@
         methods : {
             ok() {
                 UIkit.modal(this.$refs.dialog).hide();
-                this.$emit('deleteMemberEvent');
+                this.$emit('deletePageEvent');
             }
         }
     };

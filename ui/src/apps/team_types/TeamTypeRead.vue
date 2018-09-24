@@ -68,7 +68,7 @@
     import 'vue-awesome/icons/check';
     import 'vue-awesome/icons/times';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import Page from './Page';
 

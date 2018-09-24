@@ -8,7 +8,7 @@ export default [
                 {
                     path : ':id(\\d+)',
                     components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageRead.vue')
+                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageRead.vue')
                     },
                     name : 'pages.read',
                     props : {
@@ -18,7 +18,7 @@ export default [
                 {
                     path : 'category/:category_id(\\d+)',
                     components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageBrowse.vue')
+                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue')
                     },
                     name : 'pages.category',
                     props : {
@@ -28,7 +28,7 @@ export default [
                 {
                     path : '',
                     components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/app/PageBrowse.vue')
+                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue')
                     },
                     name : 'pages.browse'
                 }
@@ -36,12 +36,12 @@ export default [
         },
         {
             path : '/pages/create',
-            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageForm.vue'),
+            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue'),
             name : 'pages.create'
         },
         {
             path : '/pages/update/:id(\\d+)',
-            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/app/PageForm.vue'),
+            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue'),
             name : 'pages.update'
         }
 ];

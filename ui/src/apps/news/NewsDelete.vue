@@ -1,7 +1,7 @@
 <template>
-    <div id="delete-page" uk-modal ref="dialog">
+    <div id="delete-story" uk-modal ref="dialog">
         <div class="uk-modal-dialog uk-modal-body">
-            <h2 class="uk-modal-title">{{ $t('delete_page')}}</h2>
+            <h2 class="uk-modal-title">{{ $t('delete_story')}}</h2>
             <p>
                 {{ $t('are_you_sure') }}
             </p>
@@ -21,7 +21,7 @@
     import 'vue-awesome/icons/trash';
     import 'vue-awesome/icons/ban';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import UIkit from 'uikit';
 
@@ -37,7 +37,7 @@
         methods : {
             ok() {
                 UIkit.modal(this.$refs.dialog).hide();
-                this.$emit('deletePageEvent');
+                this.$emit('deleteStoryEvent');
             }
         }
     };

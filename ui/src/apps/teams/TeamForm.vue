@@ -85,7 +85,7 @@
         };
     }
 
-    import messages from '../lang';
+    import messages from './lang';
     import teamStore from '@/stores/teams';
     import teamTypeStore from '@/stores/team_types';
     import seasonStore from '@/stores/seasons';

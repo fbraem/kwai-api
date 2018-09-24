@@ -21,10 +21,10 @@
 <script>
     import 'vue-awesome/icons/spinner';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import Page from './Page.vue';
-    import UserCard from '../components/UserCard.vue';
+    import UserCard from './components/UserCard.vue';
 
     import userStore from '@/stores/users';
 

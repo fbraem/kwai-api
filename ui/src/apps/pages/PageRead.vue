@@ -125,7 +125,7 @@
     import 'vue-awesome/icons/edit';
     import 'vue-awesome/icons/trash';
 
-    import messages from '../lang';
+    import messages from './lang';
 
     import PageDelete from './PageDelete.vue';
 

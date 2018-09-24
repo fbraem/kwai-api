@@ -6,7 +6,7 @@ export default [
                 {
                     path : ':id(\\d+)',
                     components : {
-                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsRead.vue')
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/NewsRead.vue')
                     },
                     name : 'news.story',
                     props : {
@@ -16,7 +16,7 @@ export default [
                 {
                     path : 'category/:category_id(\\d+)',
                     components : {
-                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsBrowse.vue')
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue')
                     },
                     name : 'news.category',
                     props : {
@@ -26,7 +26,7 @@ export default [
                 {
                     path : 'archive/:year(\\d+)/:month(\\d+)',
                     components : {
-                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsBrowse.vue')
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue')
                     },
                     name : 'news.archive',
                     props : {
@@ -36,7 +36,7 @@ export default [
                 {
                     path : '',
                     components : {
-                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/app/NewsBrowse.vue')
+                        NewsContent : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue')
                     },
                     name : 'news.browse'
                 }
@@ -44,12 +44,12 @@ export default [
         },
         {
             path : '/news/create',
-            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsForm.vue'),
+            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue'),
             name : 'news.create'
         },
         {
             path : '/news/update/:id(\\d+)',
-            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/app/NewsForm.vue'),
+            component : () => import(/* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue'),
             name : 'news.update'
         }
 ];
