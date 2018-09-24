@@ -204,7 +204,7 @@
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import Paginator from '@/components/Paginator.vue';
 
-    import newsStore from '@/apps/news/store';
+    import newsStore from '@/stores/news';
 
     import UIKit from 'uikit';
 

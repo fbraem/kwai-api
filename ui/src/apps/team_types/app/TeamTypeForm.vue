@@ -44,100 +44,13 @@
             </div>
         </div>
     </Page>
-<!--
-    <v-container fluid>
-        <v-card class="mb-5">
-            <v-card-title primary-title>
-                <h4 class="headline mb-0">{{ $t('type_details') }}</h4>
-            </v-card-title>
-            <v-card-text>
-                <v-container fluid grid-list-md>
-                    <v-layout row wrap>
-                        <v-flex xs12>
-                            <v-text-field name="name"
-                                :label="$t('type.form.name.label')"
-                                :hint="$t('type.form.name.hint')"
-                                v-model="form.teamtype.name"
-                                :error-messages="nameErrors"
-                                @input="$v.form.teamtype.name.$touch()"
-                                required>
-                            </v-text-field>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs12 sm6>
-                            <v-text-field name="start_age"
-                                :label="$t('type.form.min_age.label')"
-                                :hint="$t('type.form.min_age.hint')"
-                                v-model="form.teamtype.start_age"
-                                :error-messages="startAgeErrors"
-                                @input="$v.form.teamtype.start_age.$touch()">
-                            </v-text-field>
-                        </v-flex>
-                        <v-spacer></v-spacer>
-                        <v-flex xs12 sm6>
-                            <v-text-field name="end_age"
-                                :label="$t('type.form.max_age.label')"
-                                :hint="$t('type.form.max_age.hint')"
-                                v-model="form.teamtype.end_age"
-                                :error-messages="endAgeErrors"
-                                @input="$v.form.teamtype.end_age.$touch()">
-                            </v-text-field>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs12>
-                            <v-select
-                                :items="genders"
-                                v-model="form.teamtype.gender"
-                                @input="$v.form.teamtype.gender.$touch"
-                                :error-messages="genderErrors"
-                                :label="$t('type.form.gender.label')"
-                                :hint="$t('type.form.gender.hint')">
-                            </v-select>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs12>
-                            <v-text-field
-                                name="remark"
-                                :label="$t('type.form.remark.label')"
-                                :hint="$t('type.form.remark.hint')"
-                                v-model="form.teamtype.remark"
-                                @input="$v.form.teamtype.remark.$touch"
-                                :error-messages="remarkErrors"
-                                textarea>
-                            </v-text-field>
-                        </v-flex>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs6>
-                            <v-checkbox color="green" v-model="form.teamtype.active">
-                                <div slot="label">{{ $t('active') }}</div>
-                            </v-checkbox>
-                        </v-flex>
-                        <v-flex xs6>
-                            <v-checkbox color="green" v-model="form.teamtype.competition">
-                                <div slot="label">{{ $t('competition') }}</div>
-                            </v-checkbox>
-                        </v-flex>
-                    </v-layout>
-                </v-container>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" :disabled="$v.$invalid" @click="submit">{{ $t('submit') }}</v-btn>
-                <v-btn v-if="!teamtype" flat @click="clear">{{ $t('clear') }}</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-container>
--->
 </template>
 
 <script>
     import 'vue-awesome/icons/save';
 
-    import teamTypeStore from '../store';
-    import TeamType from '../models/TeamType';
+    import teamTypeStore from '@/stores/team_types';
+    import TeamType from '@/models/TeamType';
 
     import { validationMixin } from 'vuelidate';
     import { required, numeric } from 'vuelidate/lib/validators';

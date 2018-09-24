@@ -52,8 +52,8 @@
 
     import messages from './lang';
 
-    import pageStore from './store';
-    import categoryStore from '@/apps/categories/store';
+    import pageStore from '@/stores/pages';
+    import categoryStore from '@/stores/categories';
 
     export default {
         i18n : messages,

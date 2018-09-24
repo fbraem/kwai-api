@@ -23,6 +23,8 @@ const i18n = new VueI18n({
 import Icon from 'vue-awesome/components/Icon';
 Vue.component('fa-icon', Icon);
 
+import 'flag-icon-css/css/flag-icon.css';
+
 import moment from 'moment';
 moment.locale('nl');
 

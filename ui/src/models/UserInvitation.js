@@ -1,4 +1,4 @@
-import Model from '@/js/JSONAPI/BaseModel';
+import Model from './BaseModel';
 
 import moment from 'moment-timezone';
 

@@ -3,8 +3,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import Team from './models/Team';
-import Member from '@/apps/members/models/Member';
+import Team from '@/models/Team';
+import Member from '@/models/Member';
 
 const state = {
     teams : [],

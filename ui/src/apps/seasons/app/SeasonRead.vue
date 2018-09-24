@@ -47,11 +47,10 @@
     import 'vue-awesome/icons/edit';
 
     import messages from '../lang';
-    import moment from 'moment';
 
     import Page from './Page';
 
-    import seasonStore from '../store';
+    import seasonStore from '@/stores/seasons';
 
     export default {
         components : {

@@ -52,9 +52,9 @@
 </template>
 
 <script>
-    import Team from '../models/Team';
-    import TeamType from '@/apps/team_types/models/TeamType';
-    import Season from '@/apps/seasons/models/Season';
+    import Team from '@/models/Team';
+    import TeamType from '@/models/TeamType';
+    import Season from '@/models/Season';
 
     import { validationMixin } from 'vuelidate';
     import { required, numeric } from 'vuelidate/lib/validators';
@@ -86,9 +86,9 @@
     }
 
     import messages from '../lang';
-    import teamStore from '@/apps/teams/store';
-    import teamTypeStore from '@/apps/team_types/store';
-    import seasonStore from '@/apps/seasons/store';
+    import teamStore from '@/stores/teams';
+    import teamTypeStore from '@/stores/team_types';
+    import seasonStore from '@/stores/seasons';
 
     export default {
         components : {

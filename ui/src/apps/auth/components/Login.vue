@@ -47,7 +47,7 @@
     import 'vue-awesome/icons/user';
     import 'vue-awesome/icons/lock';
 
-    import User from '@/apps/users/models/User';
+    import User from '@/models/User';
 
     import UIkit from 'uikit';
 

@@ -62,12 +62,12 @@
     import { required, numeric } from 'vuelidate/lib/validators';
     import { withParams } from 'vuelidate/lib';
 
-    import pageStore from '../store';
-    import categoryStore from '@/apps/categories/store';
+    import pageStore from '@/stores/pages';
+    import categoryStore from '@/stores/categories';
 
-    import Category from '@/apps/categories/models/Category';
-    import Content from '@/apps/contents/models/Content';
-    import Page from '../models/Page';
+    import Category from '@/models/Category';
+    import Content from '@/models/Content';
+    import Page from '@/models/Page';
 
     import messages from '../lang';
 

@@ -67,8 +67,8 @@
 
     import messages from '../lang';
 
-    import User from '../models/User';
-    import userStore from '@/apps/users/store';
+    import User from '@/models/User';
+    import userStore from '@/stores/users';
 
     var initError = function() {
         return {

@@ -47,8 +47,8 @@
 
     import messages from '../lang';
 
-    import UserInvitation from '../models/UserInvitation';
-    import userStore from '@/apps/users/store';
+    import UserInvitation from '@/models/UserInvitation';
+    import userStore from '@/stores/users';
 
     var initError = function() {
         return {

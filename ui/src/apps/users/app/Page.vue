@@ -25,7 +25,7 @@
 <script>
     import 'vue-awesome/icons/plus';
 
-    import userStore from '@/apps/users/store';
+    import userStore from '@/stores/users';
 
     export default {
     };

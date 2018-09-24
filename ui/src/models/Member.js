@@ -1,6 +1,6 @@
-import Model from '@/js/JSONAPI/BaseModel';
+import Model from './BaseModel';
 
-import Person from '@/apps/persons/models/Person';
+import Person from './Person';
 
 export default class Member extends Model {
     resourceName() {

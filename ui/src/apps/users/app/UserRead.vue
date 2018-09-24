@@ -90,9 +90,9 @@
 
     import messages from '../lang';
 
-    import userStore from '@/apps/users/store';
-    import NewsStore from '@/apps/news/store';
-    import PageStore from '@/apps/pages/store';
+    import userStore from '@/stores/users';
+    import NewsStore from '@/stores/news';
+    import PageStore from '@/stores/pages';
 
     import Paginator from '@/components/Paginator.vue';
     import Page from './Page.vue';

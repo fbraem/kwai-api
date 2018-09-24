@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import Page from './models/Page';
+import Page from '@/models/Page';
 
 const state = {
     pages : [],

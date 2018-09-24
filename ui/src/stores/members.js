@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import Member from './models/Member';
+import Member from '@/models/Member';
 
 const state = {
     members : [],

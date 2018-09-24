@@ -1,7 +1,7 @@
-import Model from '@/js/JSONAPI/BaseModel';
+import Model from './BaseModel';
 
-import Category from '@/apps/categories/models/Category';
-import Content from '@/apps/contents/models/Content';
+import Category from './Category';
+import Content from './Content';
 
 export default class Page extends Model {
     resourceName() {

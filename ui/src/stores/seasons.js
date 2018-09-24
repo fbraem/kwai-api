@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import Season from './models/Season';
+import Season from '@/models/Season';
 
 const state = {
     seasons : [],

@@ -54,7 +54,7 @@
     import messages from '../lang';
 
     import Page from './Page';
-    import seasonStore from '../store';
+    import seasonStore from '@/stores/seasons';
 
     export default {
         components : {

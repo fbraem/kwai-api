@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 import moment from 'moment';
 
-import Story from './models/Story';
+import Story from '@/models/Story';
 
 const state = {
     stories : [],

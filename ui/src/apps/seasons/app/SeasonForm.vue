@@ -41,8 +41,8 @@
 
 <script>
     import moment from 'moment';
-    import Season from '../models/Season';
-    import seasonStore from '../store';
+    import Season from '@/models/Season';
+    import seasonStore from '@/stores/seasons';
 
     import { validationMixin } from 'vuelidate';
     import { required } from 'vuelidate/lib/validators';

@@ -1,4 +1,5 @@
-import Model from '@/js/JSONAPI/BaseModel';
+import Model from './BaseModel';
+
 import moment from 'moment';
 
 export default class Season extends Model {

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-    import memberStore from '../store';
+    import memberStore from '@/stores/members';
 
     import messages from '../lang';
     import jump from 'jump.js';

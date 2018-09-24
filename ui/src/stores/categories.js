@@ -1,12 +1,9 @@
 import Vue from 'vue';
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
-
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import Category from './models/Category';
+import Category from '@/models/Category';
 
 const state = {
     categories : [],

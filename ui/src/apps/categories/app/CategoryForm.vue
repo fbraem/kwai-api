@@ -42,8 +42,8 @@
 <script>
     import 'vue-awesome/icons/save';
 
-    import Category from '../models/Category';
-    import categoryStore from '../store';
+    import Category from '@/models/Category';
+    import categoryStore from '@/stores/categories';
 
     import { validationMixin } from 'vuelidate';
     import { required } from 'vuelidate/lib/validators';

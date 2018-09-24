@@ -63,8 +63,8 @@
 <script>
     import messages from '../lang';
 
-    import newsStore from '@/apps/news/store';
-    import pageStore from '@/apps/pages/store';
+    import newsStore from '@/stores/news';
+    import pageStore from '@/stores/pages';
 
     import 'vue-awesome/icons/ellipsis-h';
     import 'vue-awesome/icons/edit';

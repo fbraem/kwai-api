@@ -26,7 +26,7 @@
     import Page from './Page.vue';
     import UserCard from '../components/UserCard.vue';
 
-    import userStore from '@/apps/users/store';
+    import userStore from '@/stores/users';
 
     export default {
         i18n : messages,

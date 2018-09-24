@@ -3,8 +3,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import User from './models/User';
-import UserInvitation from './models/UserInvitation';
+import User from '@/models/User';
+import UserInvitation from '@/models/UserInvitation';
 
 const state = () => {
     return {

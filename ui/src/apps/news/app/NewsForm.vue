@@ -132,12 +132,12 @@
 
     import messages from '../lang';
 
-    import newsStore from '../store';
-    import categoryStore from '@/apps/categories/store';
+    import newsStore from '@/stores/news';
+    import categoryStore from '@/stores/categories';
 
-    import Category from '@/apps/categories/models/Category';
-    import Content from '@/apps/contents/models/Content';
-    import Story from '../models/Story';
+    import Category from '@/models/Category';
+    import Content from '@/models/Content';
+    import Story from '@/models/Story';
 
     import { validationMixin } from 'vuelidate';
     import { required, numeric, and } from 'vuelidate/lib/validators';

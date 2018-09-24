@@ -1,4 +1,4 @@
-import Model from '@/js/JSONAPI/BaseModel';
+import Model from './BaseModel';
 
 export default class TeamType extends Model {
     resourceName() {

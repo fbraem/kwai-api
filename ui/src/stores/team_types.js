@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import TeamType from './models/TeamType';
+import TeamType from '@/models/TeamType';
 
 const state = {
     types : [],

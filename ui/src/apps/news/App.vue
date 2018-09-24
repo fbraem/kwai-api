@@ -63,8 +63,8 @@
 
     import messages from './lang';
 
-    import newsStore from './store';
-    import categoryStore from '@/apps/categories/store';
+    import newsStore from '@/stores/news';
+    import categoryStore from '@/stores/categories';
 
     export default {
         i18n : messages,

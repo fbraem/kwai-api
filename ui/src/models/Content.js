@@ -1,6 +1,4 @@
-import Model from '@/js/JSONAPI/BaseModel';
-
-import moment from 'moment';
+import Model from './BaseModel';
 
 export default class Content extends Model {
     resourceName() {

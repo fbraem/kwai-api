@@ -201,9 +201,9 @@
     import 'vue-awesome/icons/female';
     import 'vue-awesome/icons/question';
 
-    import Member from '@/apps/members/models/Member';
+    import Member from '@/models/Member';
 
-    import teamStore from '@/apps/teams/store';
+    import teamStore from '@/stores/teams';
 
     export default {
         data() {

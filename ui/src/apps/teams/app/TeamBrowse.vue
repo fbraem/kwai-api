@@ -40,7 +40,7 @@
     import messages from '../lang';
 
     import Page from './Page';
-    import teamStore from '../store';
+    import teamStore from '@/stores/teams';
 
     export default {
         components : {

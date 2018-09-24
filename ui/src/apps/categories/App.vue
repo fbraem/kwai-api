@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import categoryStore from './store';
+    import categoryStore from '@/stores/categories';
 
     import messages from './lang';
 

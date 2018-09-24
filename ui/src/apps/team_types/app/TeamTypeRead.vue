@@ -72,7 +72,7 @@
 
     import Page from './Page';
 
-    import teamTypeStore from '../store';
+    import teamTypeStore from '@/stores/team_types';
 
     export default {
         components : {
