@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanupWebpackPlugin = require('webpack-cleanup-plugin');
+const DelWebpackPlugin = require('del-webpack-plugin');
 //const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -62,11 +62,13 @@ var config = {
                     }
                 ]
             },
-/*
-            { test: /\.svg$/,
-                loader : 'svg-url-loader'
+            { test: /\.svg(\?.*)?$/,
+                loader : 'file-loader',
+                options : {
+                    limit : 10000,
+                    name : 'assets/flags/[name]_[hash].[ext]'
+                }
             }
-*/
         ]
     },
     resolve : {
@@ -95,7 +97,9 @@ var config = {
             filename: '../../index.html',
             template: 'src/index.template.html'
         }),
-        new CleanupWebpackPlugin({
+        new DelWebpackPlugin({
+            keepGeneratedAssets: true,
+            exclude : [ "assets/**" ]
         })
     ]
 };
