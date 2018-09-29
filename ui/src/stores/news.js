@@ -13,11 +13,7 @@ import Story from '@/models/Story';
 
 const state = {
     stories : [],
-    status : {
-        loading : false,
-        success : false,
-        error : false
-    },
+    error : null,
     meta : null,
     archive : {}
 };
@@ -29,14 +25,8 @@ const getters = {
     story: (state) => (id) => {
         return state.stories.find((story) => story.id == id);
     },
-    loading(state) {
-        return state.status.loading;
-    },
-    success(state) {
-        return state.status.success;
-    },
     error(state) {
-        return state.status.error;
+        return state.error;
     },
     archive(state) {
         return state.archive;
@@ -50,10 +40,12 @@ const mutations = {
   clear(state) {
      state.meta = null;
      state.stories = [];
+     state.error = null;
   },
   stories(state, stories) {
       state.meta = stories.meta();
       state.stories = stories;
+      state.error = null;
   },
   story(state, story) {
       var index = state.stories.findIndex((s) => s.id == story.id);
@@ -62,10 +54,11 @@ const mutations = {
       } else {
           state.stories.push(story);
       }
+      state.error = null;
   },
-  deleteStory(state, data) {
-      state.stories = state.stories.filter((story) => {
-         return story.id != data.id;
+  deleteStory(state, story) {
+      state.stories = state.stories.filter((s) => {
+         return s.id != story.id;
       });
   },
   attachContent(state, data) {
@@ -76,6 +69,7 @@ const mutations = {
           }
           state.stories[index].contents.push(data.content);
       }
+      state.error = null;
   },
   archive(state, data) {
       state.archive = {};
@@ -90,35 +84,18 @@ const mutations = {
               count : element.count
           });
       });
+      state.error = null;
   },
-  loading(state) {
-      state.status = {
-          loading : true,
-          success: false,
-          error : false
-      };
-  },
-  success(state) {
-      state.status = {
-          loading : false,
-          success: true,
-          error : false
-      };
-  },
-  error(state, payload) {
-      state.status = {
-          loading : false,
-          success: false,
-          error : payload
-      };
+  error(state, error) {
+      state.error = error;
   }
 };
 
 const actions = {
-    async browse({ state, getters, commit, context }, payload) {
-        payload = payload || {};
-        commit('loading');
+    async browse({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'news.browse', { root : true });
         commit('clear');
+        payload = payload || {};
         const story = new Story();
         if (payload.category) {
             story.where('category', payload.category);
@@ -140,27 +117,27 @@ const actions = {
         }
         let stories = await story.get();
         commit('stories', stories);
-        commit('success');
+        dispatch('wait/end', 'news.browse', { root : true });
     },
-    async read({ state, getters, commit, context }, payload) {
-        commit('loading');
+    async read({ getters, dispatch, commit }, payload) {
         var story = getters['story'](payload.id);
         if (story) { // already read
-            commit('success');
             return story;
         }
 
+        dispatch('wait/start', 'news.read', { root : true });
         let model = new Story();
         try {
             story = await model.find(payload.id);
             commit('story', story);
-            commit('success');
+            dispatch('wait/end', 'news.read', { root : true });
         } catch(error) {
+            dispatch('wait/end', 'news.read', { root : true });
             commit('error', error);
         }
         return story;
     },
-    async save({ state, getters, commit, context }, story) {
+    async save({ commit }, story) {
         var newStory = null;
         try  {
             newStory = await story.save();
@@ -171,7 +148,7 @@ const actions = {
             throw error;
         }
     },
-    async attachContent({ state, getters, commit, context }, payload) {
+    async attachContent({ commit }, payload) {
         try {
             var newStory = await payload.story.attach(payload.content);
             commit('story', newStory);
@@ -183,22 +160,20 @@ const actions = {
             throw(error);
         }
     },
-    async delete({ state, getters, commit, context }, payload) {
-        commit('loading');
+    async delete({ commit }, payload) {
         try {
             await payload.story.delete();
             commit('deleteStory', { id : payload.story.id });
-            commit('success');
         } catch(error) {
             commit('error', error);
             throw(error);
         }
     },
-    async loadArchive({ state, getters, commit, context }, payload) {
-        commit('loading');
+    async loadArchive({ dispatch, commit }, payload) {
+        dispatch('wait/start', 'news.browse', { root : true });
         var response = await oauth.get(config.api + '/news/archive');
         commit('archive', response.data);
-        commit('success');
+        dispatch('wait/end', 'news.browse', { root : true });
     }
 };
 
