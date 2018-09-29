@@ -1,6 +1,6 @@
 <template>
     <div class="uk-offcanvas-content">
-        <div class="uk-container uk-container-expand uk-light" style="background-color:#f44336">
+        <div class="uk-container uk-container-expand uk-light" style="background-color:#c61c18">
             <nav class="uk-navbar">
                 <div class="uk-navbar-left">
                     <a class="uk-navbar-item uk-logo" href="/">{{ title }}</a>
