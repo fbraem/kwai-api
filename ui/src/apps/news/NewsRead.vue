@@ -1,47 +1,57 @@
 <template>
-    <div class="uk-container">
-        <div v-if="error">
-            {{ error.response.statusText }}
-        </div>
-        <div v-if="story" class="uk-label uk-label-warning uk-float-right uk-margin-small-top uk-margin-small-right" style="font-size: 0.75rem">
-            <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
-                {{ story.category.name }}
-            </router-link>
-        </div>
-        <section v-if="story" class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container">
-                <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
-                    <div>
-                        <h2>{{ story.title }}</h2>
-                        <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
-                    </div>
+    <Page>
+        <div slot="title">
+            <div v-if="story" class="uk-card uk-card-body">
+                <div class="uk-card-badge uk-label uk-label-warning" style="font-size: 0.75rem">
+                    <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
+                        {{ story.category.name }}
+                    </router-link>
+                </div>
+                <div class="uk-light">
+                    <h1 class="uk-margin-remove">{{ $t('news')}}</h1>
+                    <h2 class="uk-margin-remove">{{ story.title }}</h2>
+                    <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
                 </div>
             </div>
-        </section>
-        <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
-            <header>
-                <blockquote v-html="story.summary">
-                </blockquote>
-            </header>
-            <div class="fb-share-button" style="float:right" :data-href="facebookUrl" data-layout="button_count" data-size="large" data-mobile-iframe="true">
-                <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + facebookUrl + '&amp;src=sdkpreparse'" class="fb-xfbml-parse-ignore">{{ $t('share') }}</a>
-            </div>
-            <div class="uk-flex uk-flex-center">
-                <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+        </div>
+        <template slot="toolbar">
+            <div v-if="story && $story.isAllowed('update', story)" class="uk-margin-small-left">
+                <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
                     <fa-icon name="edit" />
                 </router-link>
-                <a v-if="$story.isAllowed('remove', story)" uk-toggle="target: #delete-story" class="uk-icon-button">
+            </div>
+            <div v-if="story && $story.isAllowed('remove', story)" class="uk-margin-small-left">
+                <a uk-toggle="target: #delete-story" class="uk-icon-button">
                     <fa-icon name="trash" />
                 </a>
             </div>
-            <figure v-if="story.header_detail_crop">
-                <img :src="story.header_detail_crop"  />
-            </figure>
+        </template>
+        <article slot="content" v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
+            <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
+            <header>
+                <blockquote>
+                    <div v-html="story.summary"></div>
+                </blockquote>
+            </header>
+            <span class="fb-share-button" style="float:right" :data-href="facebookUrl" data-layout="button_count" data-size="large" data-mobile-iframe="true">
+                <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + facebookUrl + '&amp;src=sdkpreparse'" class="fb-xfbml-parse-ignore">{{ $t('share') }}</a>
+            </span>
+            <div class="uk-text-center">
+                <figure v-if="story.header_detail_crop">
+                    <img :src="story.header_detail_crop"  />
+                </figure>
+            </div>
             <div class="news-content" v-html="story.content">
             </div>
+            <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
+                {{ $t('are_you_sure') }}
+            </AreYouSure>
         </article>
-        <NewsDelete @deleteStoryEvent="deleteStory" />
-    </div>
+    </Page>
 </template>
 
 <style>
@@ -100,11 +110,15 @@
 
     import messages from './lang';
 
-    import NewsDelete from './NewsDelete.vue';
+    import Page from './Page.vue';
+    import AreYouSure from '@/components/AreYouSure.vue';
+
+    import newsStore from '@/stores/news';
 
     export default {
         components : {
-            NewsDelete
+            Page,
+            AreYouSure
         },
         i18n : messages,
         computed : {
@@ -114,20 +128,20 @@
             facebookUrl() {
                 return "https://www.judokwaikemzeke.be/facebook/news/" + this.story.id;
             },
-            loading() {
-                return this.$store.getters['newsModule/loading'];
-            },
             error() {
                 return this.$store.getters['newsModule/error'];
             }
         },
-        mounted() {
-            this.fetchData();
-        },
-        watch : {
-            '$route'() {
-                this.fetchData();
+        beforeCreate() {
+            if (!this.$store.state.newsModule) {
+                this.$store.registerModule('newsModule', newsStore);
             }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(async (vm) => {
+                await vm.fetchData();
+                next();
+            });
         },
         methods : {
             fetchData() {
