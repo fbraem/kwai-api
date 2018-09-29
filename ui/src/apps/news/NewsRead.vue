@@ -1,8 +1,8 @@
 <template>
     <Page>
-        <div slot="title">
+        <div slot="title" class="uk-width-expand">
             <div v-if="story" class="uk-card uk-card-body">
-                <div class="uk-card-badge uk-label uk-label-warning" style="font-size: 0.75rem">
+                <div class="uk-card-badge uk-label uk-label-warning" style="font-size: 0.75rem;background-color:#c61c18;">
                     <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
                         {{ story.category.name }}
                     </router-link>

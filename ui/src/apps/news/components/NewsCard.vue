@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="uk-card uk-card-body uk-card-default uk-card-small uk-border-rounded" style="box-shadow:none;border:  1px solid rgba(0,0,0,0.075);">
-            <div v-if="showCategory" class="uk-card-badge uk-label uk-label-warning" style="font-size: 0.75rem">
+            <div v-if="showCategory" class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;">
                 <router-link :to="{ name : 'news.category', params : { category_id : story.category.id }}" class="uk-link-reset">
                     {{ story.category.name }}
                 </router-link>
