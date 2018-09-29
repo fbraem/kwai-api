@@ -1,31 +1,39 @@
 <template>
-    <section class="uk-section uk-section-default uk-section-small">
-        <div class="uk-container">
+    <div class="uk-container uk-container-expand uk-margin-top uk-margin-bottom">
+        <div>
             <div uk-grid>
-                <div class="uk-width-2-3@m">
-                    <div uk-grid class="uk-grid-small uk-child-width-1-1">
-                        <div>
-                            <router-view name="PageContent" />
+                <div class="uk-width-1-1 uk-width-2-3@m">
+                    <section class="uk-section uk-section-small uk-section-secondary uk-preserve-color">
+                        <div class="uk-flex uk-flex-center uk-flex-middle uk-text-center">
+                            <slot name="title">
+                                <div class="uk-light">
+                                    <h1 class="uk-margin-remove">{{ $t('page') }}</h1>
+                                    <p>
+                                        {{ $t('all_pages') }}
+                                    </p>
+                                </div>
+                            </slot>
                         </div>
+                    </section>
+                    <slot name="content"></slot>
+                </div>
+                <div class="uk-width-1-1 uk-width-1-3@m">
+                    <div class="uk-flex uk-flex-right">
                         <div>
                             <router-link :to="{ name : 'pages.browse' }" class="uk-icon-button">
                                 <fa-icon name="home" />
                             </router-link>
-                            <router-link v-if="$story.isAllowed('create')" :to="{ name : 'pages.create' }" class="uk-icon-button">
+                        </div>
+                        <div v-if="$story.isAllowed('create')" class="uk-margin-small-left">
+                            <router-link class="uk-icon-button" :to="{ 'name' : 'pages.create' }">
                                 <fa-icon name="plus" />
                             </router-link>
                         </div>
+                        <slot name="toolbar"></slot>
                     </div>
-                </div>
-                <div class="uk-width-1-3@m">
                     <div uk-grid class="uk-grid-small uk-child-width-1-1">
                         <div>
                             <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('category') }}</span></h4>
-                        </div>
-                        <div>
-                            <router-link :to="{ name : 'pages.browse' }" class="uk-icon-button">
-                                <fa-icon name="home" />
-                            </router-link>
                         </div>
                         <div>
                             <ul class="uk-list uk-list-divider">
@@ -43,7 +51,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </template>
 
 <script>
@@ -52,7 +60,6 @@
 
     import messages from './lang';
 
-    import pageStore from '@/stores/pages';
     import categoryStore from '@/stores/categories';
 
     export default {
@@ -62,14 +69,12 @@
                 return this.$store.getters['categoryModule/categories'];
             }
           },
-        created() {
-            if (!this.$store.state.pageModule) {
-                this.$store.registerModule('pageModule', pageStore);
-            }
+        beforeCreate() {
             if (!this.$store.state.categoryModule) {
                 this.$store.registerModule('categoryModule', categoryStore);
             }
-            //this.$store.dispatch('setSubTitle', this.$t('pages'));
+        },
+        created() {
             this.$store.dispatch('categoryModule/browse');
         }
     };

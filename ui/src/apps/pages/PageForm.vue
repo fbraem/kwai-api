@@ -1,13 +1,13 @@
 <template>
-    <section class="uk-section uk-section-default uk-section-small">
-        <div class="uk-container uk-container-expand">
+    <Page>
+        <div slot="title" class="uk-light">
+            <h1 class="uk-margin-remove">{{ $t('page') }}</h1>
+            <h3 v-if="creating" class="uk-margin-remove">{{ $t('create') }}</h3>
+            <h3 v-else class="uk-margin-remove">{{ $t('update') }}</h3>
+        </div>
+        <div slot="content" class="uk-container uk-margin-medium-top">
             <div uk-grid>
                 <div class="uk-width-1-1">
-                    <h4 class="uk-heading-line">
-                        {{ $t('page') }} &ndash;
-                        <span v-if="creating">{{ $t('create') }}</span>
-                        <span v-else>{{ $t('update') }}</span>
-                    </h4>
                 </div>
                 <div class="uk-width-1-1">
                     <form class="uk-form-stacked">
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </Page>
 </template>
 
 <script>
@@ -71,6 +71,7 @@
 
     import messages from './lang';
 
+    import PageComponent from './Page.vue';
     import UikitCheckbox from '@/components/uikit/Checkbox.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitSelect from '@/components/uikit/Select.vue';
@@ -111,6 +112,7 @@
             validationMixin
         ],
         components : {
+            'Page' : PageComponent,
             UikitInputText,
             UikitSelect,
             UikitTextarea,

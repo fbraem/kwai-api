@@ -1,47 +1,27 @@
 export default [
-        {
-            path : '/pages/',
-            components : {
-                default : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/App.vue')
-            },
-            children: [
-                {
-                    path : ':id(\\d+)',
-                    components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageRead.vue')
-                    },
-                    name : 'pages.read',
-                    props : {
-                        PageContent : true
-                    }
-                },
-                {
-                    path : 'category/:category_id(\\d+)',
-                    components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue')
-                    },
-                    name : 'pages.category',
-                    props : {
-                        PageContent : true
-                    }
-                },
-                {
-                    path : '',
-                    components : {
-                        PageContent : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue')
-                    },
-                    name : 'pages.browse'
-                }
-            ]
-        },
-        {
-            path : '/pages/create',
-            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue'),
-            name : 'pages.create'
-        },
-        {
-            path : '/pages/update/:id(\\d+)',
-            component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue'),
-            name : 'pages.update'
-        }
+    {
+        path : '/pages/:id(\\d+)',
+        component : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageRead.vue'),
+        name : 'pages.read'
+    },
+    {
+        path : '/pages/category/:category_id(\\d+)',
+        component : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue'),
+        name : 'pages.category'
+    },
+    {
+        path : '/pages/create',
+        component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue'),
+        name : 'pages.create'
+    },
+    {
+        path : '/pages/update/:id(\\d+)',
+        component : () => import(/* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue'),
+        name : 'pages.update'
+    },
+    {
+        path : '/pages',
+        component : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue'),
+        name : 'pages.browse'
+    }
 ];

@@ -1,41 +1,43 @@
 <template>
-    <div class="uk-container">
+    <Page>
         <div v-if="error">
             {{ error.response.statusText }}
         </div>
-        <div v-if="page" class="uk-label uk-label-warning uk-float-right uk-margin-small-top uk-margin-small-right" style="font-size: 0.75rem">
-            <router-link :to="{ name : 'pages.category', params : { category_id : page.category.id }}" class="uk-link-reset">
-                {{ page.category.name }}
-            </router-link>
-        </div>
-        <section v-if="page" class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container">
-                <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
-                    <div>
-                        <h2>{{ page.title }}</h2>
-                        <p class="uk-margin-small-left uk-margin-small-right" v-html="page.summary">
-                        </p>
-                    </div>
-                </div>
+        <div v-if="page" slot="title" class="uk-card uk-card-body uk-width-expand">
+            <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;">
+                <router-link :to="{ name : 'pages.category', params : { category_id : page.category.id }}" class="uk-link-reset">
+                    {{ page.category.name }}
+                </router-link>
             </div>
-        </section>
-        <article v-if="page" class="uk-section uk-section-small">
-            <div class="uk-flex uk-flex-center">
-                <router-link v-if="$page.isAllowed('update', page)" :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
+            <div class="uk-light">
+                <h1>{{ page.title }}</h1>
+            </div>
+        </div>
+        <template slot="toolbar">
+            <div v-if="page && $page.isAllowed('update', page)" class="uk-margin-small-left">
+                <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
                     <fa-icon name="edit" />
                 </router-link>
-                <a v-if="$page.isAllowed('remove', page)" uk-toggle="target: #delete-page" class="uk-icon-button">
+            </div>
+            <div v-if="page && $page.isAllowed('remove', page)" class="uk-margin-small-left">
+                <a uk-toggle="target: #delete-page" class="uk-icon-button">
                     <fa-icon name="trash" />
                 </a>
             </div>
+        </template>
+        <article slot="content" v-if="page" class="uk-section uk-section-small">
+            <blockquote class="uk-margin-small-left uk-margin-small-right" v-html="page.summary">
+            </blockquote>
             <figure v-if="page.header_detail_crop">
                 <img :src="page.header_detail_crop" />
             </figure>
             <article class="page-content uk-article" v-html="page.content">
             </article>
+            <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
+                {{ $t('are_you_sure') }}
+            </AreYouSure>
         </article>
-        <PageDelete @deletePageEvent="deletePage" />
-    </div>
+    </Page>
 </template>
 
 <style>
@@ -127,31 +129,35 @@
 
     import messages from './lang';
 
-    import PageDelete from './PageDelete.vue';
+    import Page from './Page.vue';
+    import AreYouSure from '@/components/AreYouSure.vue';
+
+    import pageStore from '@/stores/pages';
 
     export default {
         components : {
-            PageDelete
+            Page,
+            AreYouSure
         },
         i18n : messages,
         computed : {
             page() {
                 return this.$store.getters['pageModule/page'](this.$route.params.id);
             },
-            loading() {
-                return this.$store.getters['pageModule/loading'];
-            },
             error() {
                 return this.$store.getters['pageModule/error'];
             }
         },
-        mounted() {
-            this.fetchData();
-        },
-        watch : {
-            '$route'() {
-                this.fetchData();
+        beforeCreate() {
+            if (!this.$store.state.pageModule) {
+                this.$store.registerModule('pageModule', pageStore);
             }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(async (vm) => {
+                await vm.fetchData();
+                next();
+            });
         },
         methods : {
             fetchData() {
@@ -159,15 +165,18 @@
                     this.$store.dispatch('pageModule/read', { id : this.$route.params.id });
                 }
                 catch(error) {
-                  console.log('error');
-                  console.log(error);
                 }
             },
             deletePage() {
                 this.$store.dispatch('pageModule/delete', {
                     page : this.page
                 }).then(() => {
-                    //this.$router.go(-1);
+                    this.$router.push({
+                        name : 'pages.browse',
+                        params : {
+                            category_id : this.page.category_id
+                        }
+                    });
                 });
             }
         }
