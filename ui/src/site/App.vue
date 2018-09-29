@@ -1,8 +1,8 @@
 <template>
-    <div class="uk-container uk-margin-top">
+    <div>
         <section class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container uk-margin-left uk-margin-right">
-                <div uk-grid>
+            <div class="uk-container uk-container-expand">
+                <div class="uk-flex uk-flex-center" uk-grid>
                     <div class="uk-width-1-1 uk-width-2-3@m">
                         <img :src="require('./images/judokwaikemzeke.jpg')" alt="" />
                     </div>
@@ -22,62 +22,88 @@
                 </div>
             </div>
         </section>
-        <section class="uk-section uk-section-small">
-            <div class="uk-container">
-                <div class="uk-grid-small uk-flex-center uk-child-width-1-3@s uk-child-width-1-6@l" uk-grid>
-                    <div>
-                        <router-link :to="{ name : 'news.browse' }" class="uk-link-reset">
-                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
-                                <fa-icon name="newspaper" scale="2" style="color:#f44336;height:32px;" />
-                                <div class="uk-text-uppercase uk-margin-top">Nieuws</div>
+        <section class="uk-section uk-section-small uk-section-muted">
+            <div class="uk-container uk-container-large">
+                <div class="uk-grid-small uk-grid-margin-small uk-grid uk-grid-stack" uk-grid>
+                    <div class="uk-width-1-1@m">
+                        <div class="uk-margin uk-text-center uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid-medium uk-grid uk-grid-match uk-flex-center" uk-height-match=".uk-card" uk-grid>
+                            <div>
+                                <Card :to="{ name : 'news.browse' }" title="Nieuws">
+                                    <template slot="icon">
+                                        <fa-icon name="newspaper" scale="3" style="color:#c61c18;height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Blijf op de hoogte over het reilen en zeilen van onze club.
+                                    </template>
+                                </Card>
                             </div>
-                        </router-link>
-                    </div>
-                    <div>
-                        <router-link :to="{ name : 'categories.read', params : { id : '2' } }" class="uk-link-reset">
-                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
-                                <fa-icon name="university" scale="2" style="color:#f44336;height:32px;" />
-                                <div class="uk-text-uppercase uk-margin-top">Trainingen</div>
+                            <div>
+                                <Card :to="{ name : 'categories.read', params : { id : '2' } }" title="Trainingen">
+                                    <template slot="icon">
+                                        <fa-icon name="university" scale="3" style="color:#c61c18;height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Wanneer trainen we? Waar trainen we? Waar kan je nog trainen?
+                                    </template>
+                                </Card>
                             </div>
-                        </router-link>
-                    </div>
-                    <div>
-                        <router-link :to="{ name : 'categories.read', params : { id : '3'} }" class="uk-link-reset">
-                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
-                                <fa-icon name="trophy" scale="2" style="color:#f44336;height:32px;" />
-                                <div class="uk-text-uppercase uk-margin-top">Tornooien</div>
+                            <div>
+                                <Card :to="{ name : 'categories.read', params : { id : '3' } }" title="Tornooien">
+                                    <template slot="icon">
+                                        <fa-icon name="trophy" scale="3" style="color:#c61c18;height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Informatie en nieuws over wedstrijden voor onze judoka's
+                                    </template>
+                                </Card>
                             </div>
-                        </router-link>
-                    </div>
-                    <div>
-                        <a href="https://www.judokwaikemzeke.be/oud/kalender.htm" class="uk-link-reset">
-                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
-                                <fa-icon name="calendar" scale="2" style="color:#f44336;height:32px;" />
-                                <div class="uk-text-uppercase uk-margin-top">Kalender</div>
+                            <div>
+                                <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+                                    <template slot="icon">
+                                        <fa-icon name="calendar" scale="3" style="color:#c61c18;height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Bekijk onze kalender voor trainingen, activiteiten en tornooien
+                                    </template>
+                                </Card>
                             </div>
-                        </a>
-                    </div>
-    <!--
-                    <div class="uk-width-small">
-                        <a class="uk-link-muted uk-flex uk-flex-column uk-flex-center uk-button uk-button-default uk-width-1-1 btn">
-                            <fa-icon name="shopping-basket" scale="2" style="color:#f44336" />
-                            Materiaal
-                        </a>
-                    </div>
-    -->
-                    <div>
-                        <a href="https://www.judokwaikemzeke.be/oud/training/trainers.htm" class="uk-link-reset">
-                            <div class="uk-card uk-card-hover uk-card-body uk-text-center" style="background-color:hsla(0,0%,94%,.9)">
-                                <fa-icon name="users" scale="2" style="color:#f44336;height:32px;"/>
-                                <div class="uk-text-uppercase uk-margin-top">Bestuur</div>
+                            <div>
+                                <Card to="https://oud.judokwaikemzeke.be/technieken/technieken.htm" title="Judo">
+                                    <template slot="icon">
+                                        <img :src="require('./images/Judo_red_white_belt.svg')" style="height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Technieken, Examens, ...
+                                    </template>
+                                </Card>
                             </div>
-                        </a>
+                            <div>
+                                <Card to="https://oud.judokwaikemzeke.be/materiaal.pdf" title="Materiaal">
+                                    <template slot="icon">
+                                        <fa-icon name="shopping-basket" scale="3" style="color:#c61c18;height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Judogi's, gordels, polo's, sweaters, sporttassen, ...
+                                    </template>
+                                </Card>
+                            </div>
+                            <div>
+                                <Card to="https://www.judokwaikemzeke.be/oud/training/trainers.htm" title="Bestuur">
+                                    <template slot="icon">
+                                        <fa-icon name="users" scale="3" style="color:#c61c18;height:32px;" />
+                                    </template>
+                                    <template slot="description">
+                                        Wie is wie? Wie doet wat?
+                                    </template>
+                                </Card>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="uk-section uk-section-small uk-padding-remove-top">
-            <div class="uk-container uk-container-expand">
+        <section class="uk-section uk-section-small">
+            <div class="uk-container uk-container-large">
                 <div v-if="loading" class="uk-flex-center" uk-grid>
                     <div class="uk-text-center">
                         <fa-icon name="spinner" scale="2" spin />
@@ -154,11 +180,11 @@
                     <div>
                         <div class="uk-card uk-card-small uk-card-default uk-card-body uk-light message-card">
                             <h3 class="uk-card-title">Gezond sporten</h3>
-                            <div class="uk-flex-center" uk-grid>
-                                <div>
+                            <div class="uk-flex" uk-grid>
+                                <div class="uk-flex-left">
                                     <p>Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a> hoog in het het vaandel.</p>
                                 </div>
-                                <div style="background-color:white;padding:10px">
+                                <div class="uk-align-center" style="background-color:white;padding:10px">
                                     <img :src="require('./images/gezond.jpg')" style="height:125px" alt="">
                                 </div>
                             </div>
@@ -203,6 +229,7 @@
 
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import Paginator from '@/components/Paginator.vue';
+    import Card from './Card.vue';
 
     import newsStore from '@/stores/news';
 
@@ -214,7 +241,8 @@
         i18n : messages,
         components : {
             NewsCard,
-            Paginator
+            Paginator,
+            Card
         },
         data() {
             return {};
