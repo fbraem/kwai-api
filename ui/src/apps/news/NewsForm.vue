@@ -1,6 +1,6 @@
 <template>
     <Page>
-        <div slot="title">
+        <div slot="title" class="uk-light">
             <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
             <h3 v-if="creating" class="uk-margin-remove">{{ $t('create') }}</h3>
             <h3 v-else class="uk-margin-remove">{{ $t('update') }}</h3>
