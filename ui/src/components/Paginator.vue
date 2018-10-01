@@ -2,8 +2,8 @@
     <ul v-if="pageCount > 1" class="uk-pagination uk-flex-center">
         <li v-if="currentPage > 1"><a @click="currentPage -= 1"><span uk-pagination-previous></span></a></li>
         <template v-for="page in pages">
-            <li :class="{ 'uk-disabled' : page == '...' || page == currentPage }">
-                <a @click="currentPage = page"><span :class="{ 'uk-text-bold' : page == currentPage }">{{ page }}</span></a>
+            <li :key="page" :class="{ 'uk-disabled' : page == '...', 'uk-active' : page == currentPage }">
+                <a @click="currentPage = page">{{ page }}</a>
             </li>
         </template>
         <li v-if="currentPage < pageCount"><a @click="currentPage += 1"><span uk-pagination-next></span></a></li>
