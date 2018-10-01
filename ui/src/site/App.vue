@@ -1,27 +1,19 @@
 <template>
     <div>
-        <section class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container uk-container-expand">
-                <div class="uk-flex uk-flex-center" uk-grid>
-                    <div class="uk-width-1-1 uk-width-2-3@m">
-                        <img :src="require('./images/judokwaikemzeke.jpg')" alt="" />
-                    </div>
-                    <div class="uk-width-1-1 uk-width-1-3@m">
-                        <div uk-grid>
-                            <div class="uk-width-1-1">
-                                <img class="uk-align-center" :src="require('./images/logo2.png')" style="width:121px;height:121px;" />
-                            </div>
-                            <div class="uk-width-1-1">
-                                <h4 class="uk-margin-remove-top uk-text-center">Judokwai Kemzeke</h4>
-                                {{ $t("message.hello") }}
-                                <br />
-                                {{ $t("message.info") }}
-                            </div>
-                        </div>
-                    </div>
+        <PageHeader>
+            <img slot="picture" :src="require('./images/judokwaikemzeke.jpg')" alt="" />
+            <div uk-grid>
+                <div class="uk-width-1-1">
+                    <img class="uk-align-center" :src="require('./images/logo2.png')" style="width:121px;height:121px;" />
+                </div>
+                <div class="uk-width-1-1">
+                    <h4 class="uk-margin-remove-top uk-text-center">Judokwai Kemzeke</h4>
+                    {{ $t("message.hello") }}
+                    <br />
+                    {{ $t("message.info") }}
                 </div>
             </div>
-        </section>
+        </PageHeader>
         <section class="uk-section uk-section-small uk-section-muted">
             <div class="uk-container uk-container-large">
                 <div class="uk-grid-small uk-grid-margin-small uk-grid uk-grid-stack" uk-grid>
@@ -230,6 +222,7 @@
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import Paginator from '@/components/Paginator.vue';
     import Card from './Card.vue';
+    import PageHeader from './components/PageHeader.vue';
 
     import newsStore from '@/stores/news';
 
@@ -242,7 +235,8 @@
         components : {
             NewsCard,
             Paginator,
-            Card
+            Card,
+            PageHeader
         },
         data() {
             return {};
