@@ -5,7 +5,7 @@
         </div>
         <div v-if="page" slot="title" class="uk-card uk-card-body uk-width-expand">
             <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;">
-                <router-link :to="{ name : 'pages.category', params : { category_id : page.category.id }}" class="uk-link-reset">
+                <router-link :to="{ name : 'pages.category', params : { category : page.category.id }}" class="uk-link-reset">
                     {{ page.category.name }}
                 </router-link>
             </div>
@@ -174,7 +174,7 @@
                     this.$router.push({
                         name : 'pages.browse',
                         params : {
-                            category_id : this.page.category_id
+                            category : this.page.category
                         }
                     });
                 });

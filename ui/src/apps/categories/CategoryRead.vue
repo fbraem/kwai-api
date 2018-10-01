@@ -54,7 +54,7 @@
                             <NewsCard v-for="story in stories" :story="story" :key="story.id" :showCategory="false"></NewsCard>
                         </div>
                         <div class="uk-margin">
-                            <router-link :to="{ name: 'news.browse', params: { category_id : category.id } }">{{ $t('more_news') }}</router-link>
+                            <router-link :to="{ name: 'news.browse', params: { category : category.id } }">{{ $t('more_news') }}</router-link>
                         </div>
                     </div>
                     <div v-if="pageCount > 0" class="uk-width-1-1">

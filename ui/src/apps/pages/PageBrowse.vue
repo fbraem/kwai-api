@@ -77,8 +77,8 @@
                 return null;
             },
             category() {
-                if (this.$route.params.category_id) {
-                    return this.$store.getters['categoryModule/category'](this.$route.params.category_id);
+                if (this.$route.params.category) {
+                    return this.$store.getters['categoryModule/category'](this.$route.params.category);
                 }
                 return null;
             }
@@ -94,7 +94,7 @@
         beforeRouteEnter(to, from, next) {
             next(async (vm) => {
                 await vm.fetchData({
-                    category : to.params.category_id
+                    category : to.params.category
                 });
                 next();
             });
@@ -102,7 +102,7 @@
         watch : {
             '$route'(nv) {
                 this.fetchData({
-                    category : nv.params.category_id
+                    category : nv.params.category
                 });
             }
         },

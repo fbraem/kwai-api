@@ -5,7 +5,7 @@ export default [
         name : 'news.story'
     },
     {
-        path : '/news/category/:category_id(\\d+)',
+        path : '/news/category/:category(\\d+)',
         component : () => import(/* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue'),
         name : 'news.category',
     },

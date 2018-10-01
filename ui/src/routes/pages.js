@@ -5,7 +5,7 @@ export default [
         name : 'pages.read'
     },
     {
-        path : '/pages/category/:category_id(\\d+)',
+        path : '/pages/category/:category(\\d+)',
         component : () => import(/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue'),
         name : 'pages.category'
     },

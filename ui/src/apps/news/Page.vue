@@ -38,7 +38,7 @@
                         <div>
                             <ul class="uk-list uk-list-divider">
                                 <li v-for="(category, index) in categories">
-                                    <router-link :to="{ name : 'news.category', params : { category_id : category.id }}">
+                                    <router-link :to="{ name : 'news.category', params : { category : category.id }}">
                                         {{ category.name }}
                                     </router-link>
                                     <div class="uk-text-meta">
