@@ -128,14 +128,11 @@
                 this.$store.registerModule('categoryModule', categoryStore);
             }
         },
-        created() {
-            if (this.$route.params.id) {
-                this.fetchData(this.$route.params.id);
-            }
-        },
-        beforeRouteUpdate(to, from, next) {
-        	if (to.params.id) this.fetchData(to.params.id);
-        	next();
+        beforeRouteEnter(to, from, next) {
+            next(async (vm) => {
+                await vm.fetchData();
+                next();
+            });
         },
         watch : {
             error(nv) {
@@ -163,9 +160,9 @@
                 this.$v.$reset();
                 this.form = initForm();
             },
-            async fetchData(id) {
+            async fetchData() {
                 this.category = await this.$store.dispatch('categoryModule/read', {
-                    id : id
+                    id : this.$route.params.id
                 });
                 this.fillForm();
             },

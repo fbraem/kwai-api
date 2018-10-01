@@ -10,5 +10,8 @@
     "description" : "Description",
     "remark_placeholder" : "Enter a remark",
     "remark" : "Remark",
-    "save" : "Save"
+    "save" : "Save",
+    "featured_news" : "Featured News",
+    "no_featured_news" : "No featured news at the moment",
+    "more_news" : "More news ..."
 }

@@ -1,8 +1,8 @@
 <template>
-    <div class="uk-container uk-margin-top">
-        <section class="uk-section uk-section-small uk-section-secondary">
-            <div class="uk-container">
-                <div class="uk-flex uk-flex-center uk-flex-middle uk-light uk-text-center">
+    <div>
+        <PageHeader>
+            <div uk-grid>
+                <div class="uk-width-expand">
                     <div v-if="category">
                         <h1>{{ category.name }}</h1>
                         <p>
@@ -10,23 +10,31 @@
                         </p>
                     </div>
                 </div>
-            </div>
-        </section>
-        <section v-if="category" class="uk-section uk-section-default uk-section-small">
-            <div class="uk-container">
-                <div class="uk-flex uk-flex-center">
-                    <router-link v-if="$category.isAllowed('update', category)" :to="{ name : 'categories.update', params : { id : category.id }}" class="uk-icon-button">
-                        <fa-icon name="edit" />
-                    </router-link>
+                <div class="uk-width-1-1 uk-width-1-6@m">
+                    <div class="uk-flex uk-flex-right">
+                        <router-link v-if="$category.isAllowed('create')" class="uk-icon-button" :to="{ name : 'categories.create' }">
+                            <fa-icon name="plus" />
+                        </router-link>
+                        <router-link v-if="category && $category.isAllowed('update')" class="uk-icon-button uk-margin-small-left" :to="{ name : 'categories.update', params : { id : category.id } }">
+                            <fa-icon name="edit" />
+                        </router-link>
+                    </div>
                 </div>
+            </div>
+        </PageHeader>
+        <section v-if="category" class="uk-section uk-section-default uk-section-small">
+            <div class="uk-container uk-container-expand">
                 <div uk-grid class="uk-flex uk-margin">
                     <div class="uk-width-1-1">
-                        <h4 class="uk-heading-line"><span>Nieuws</span></h4>
-                        <div v-if="storyCount > 0" uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true;">
+                        <h4 class="uk-heading-line"><span>{{ $t('featured_news') }}</span></h4>
+                        <div v-if="storyCount == 0" class="uk-margin">
+                            {{ $t('no_featured_news') }}
+                        </div>
+                        <div v-else-if="storyCount > 2" uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true;">
                             <div class="uk-position-relative">
                                 <div class="uk-slider-container">
                                     <ul class="uk-slider-items uk-child-width-1-2@m uk-grid-medium uk-grid" uk-height-match="target: > li > div > .uk-card">
-                                        <li v-for="story in stories">
+                                        <li v-for="story in stories" :key="story.id">
                                             <NewsCard :story="story" :showCategory="false"></NewsCard>
                                         </li>
                                     </ul>
@@ -42,8 +50,11 @@
                                 <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>
                             </div>
                         </div>
-                        <div v-else>
-                            Geen nieuws ...
+                        <div v-else class="uk-child-width-1-1 uk-child-width-1-2@m uk-flex uk-flex-center" uk-grid>
+                            <NewsCard v-for="story in stories" :story="story" :key="story.id" :showCategory="false"></NewsCard>
+                        </div>
+                        <div class="uk-margin">
+                            <router-link :to="{ name: 'news.browse', params: { category_id : category.id } }">{{ $t('more_news') }}</router-link>
                         </div>
                     </div>
                     <div v-if="pageCount > 0" class="uk-width-1-1">
@@ -63,12 +74,15 @@
 <script>
     import messages from './lang';
 
+    import categoryStore from '@/stores/categories';
     import newsStore from '@/stores/news';
     import pageStore from '@/stores/pages';
 
     import 'vue-awesome/icons/ellipsis-h';
+    import 'vue-awesome/icons/plus';
     import 'vue-awesome/icons/edit';
 
+    import PageHeader from '@/site/components/PageHeader.vue';
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import PageSummary from '@/apps/pages/components/PageSummary.vue';
 
@@ -76,7 +90,8 @@
         i18n : messages,
         components : {
             NewsCard,
-            PageSummary
+            PageSummary,
+            PageHeader
         },
         computed : {
             category() {
@@ -105,7 +120,10 @@
                 };
             }
         },
-        created() {
+        beforeCreate() {
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
+            }
             if (!this.$store.state.newsModule) {
                 this.$store.registerModule('newsModule', newsStore);
             }
@@ -113,12 +131,11 @@
                 this.$store.registerModule('pageModule', pageStore);
             }
         },
-        beforeRouteUpdate(to, from, next) {
-            this.fetchData();
-        	next();
-        },
-        mounted() {
-            this.fetchData();
+        beforeRouteEnter(to, from, next) {
+            next(async (vm) => {
+                await vm.fetchData();
+                next();
+            });
         },
         methods : {
             fetchData() {

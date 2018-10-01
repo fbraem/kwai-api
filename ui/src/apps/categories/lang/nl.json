@@ -1,5 +1,5 @@
 {
-    "categories" : "Categorieën",
+    "categories" : "Overzicht per categorie",
     "published" : "Geschreven op {publishDate} - {publishDateFromNow}",
     "category" : "Categorie",
     "create" : "Maak een nieuwe categorie",
@@ -10,5 +10,8 @@
     "description" : "Omschrijving",
     "remark_placeholder" : "Geef een opmerking in",
     "remark" : "Opmerking",
-    "save" : "Bewaar"
+    "save" : "Bewaar",
+    "featured_news" : "Nieuws in de kijker",
+    "no_featured_news" : "Geen nieuws in de kijker momenteel ...",
+    "more_news" : "Meer nieuws ..."
 }
