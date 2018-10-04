@@ -56,7 +56,7 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     {
         $category = $story->category;
         if ($category) {
-            return \Domain\Category\CategoryTransformer::createForItem($category);
+            return \Domain\Category\CategoryTransformer::createForItem($category, $this->filesystem);
         }
     }
 }
