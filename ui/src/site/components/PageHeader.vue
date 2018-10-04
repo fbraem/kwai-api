@@ -2,10 +2,10 @@
     <section class="uk-section uk-section-small uk-section-secondary">
         <div class="uk-container uk-container-expand">
             <div uk-grid>
-                <div v-if="hasImage" class="uk-width-1-1 uk-width-2-3@m">
-                    <slot name="picture" />
+                <div v-if="picture" class="uk-width-1-1 uk-width-2-3@m uk-width-3-5@l">
+                    <img :src="picture" />
                 </div>
-                <div class="uk-width-1-1" :class="{ 'uk-width-1-3@m' : hasImage }">
+                <div class="uk-width-1-1" :class="{ 'uk-width-1-3@m' : picture != null, 'uk-width-2-5@l' : picture != null }">
                     <slot />
                 </div>
             </div>
@@ -15,10 +15,6 @@
 
 <script>
     export default {
-        computed : {
-            hasImage() {
-                return this.$slots.picture != null;
-            }
-        }
+        props : [ 'picture' ]
     };
 </script>
