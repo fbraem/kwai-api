@@ -1,7 +1,6 @@
 <template>
     <div>
-        <PageHeader>
-            <img slot="picture" :src="require('./images/judokwaikemzeke.jpg')" alt="" />
+        <PageHeader :picture="require('./images/judokwaikemzeke.jpg')">
             <div uk-grid>
                 <div class="uk-width-1-1">
                     <img class="uk-align-center" :src="require('./images/logo2.png')" style="width:121px;height:121px;" />
