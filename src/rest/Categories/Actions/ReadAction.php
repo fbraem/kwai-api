@@ -26,7 +26,8 @@ class ReadAction
         try {
             $response = (new \Core\ResourceResponse(
                 CategoryTransformer::createForItem(
-                    CategoriesTable::getTableFromRegistry()->get($args['id'])
+                    CategoriesTable::getTableFromRegistry()->get($args['id']),
+                    $this->container->get('filesystem')
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {

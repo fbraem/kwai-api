@@ -23,7 +23,8 @@ class BrowseAction
     {
         return (new \Core\ResourceResponse(
             CategoryTransformer::createForCollection(
-                CategoriesTable::getTableFromRegistry()->find()->all()
+                CategoriesTable::getTableFromRegistry()->find()->all(),
+                $this->container->get('filesystem')
             )
         ))($response);
     }
