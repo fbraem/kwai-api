@@ -6,7 +6,7 @@
                     {{ story.category.name }}
                 </router-link>
             </div>
-            <div class="uk-child-width-1-1 uk-margin-top" uk-grid>
+            <div class="uk-child-width-1-1 uk-margin-large-top" uk-grid>
                 <div>
                     <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" uk-grid>
                         <div v-if="story.header_overview_crop" class="uk-width-1-3@s uk-width-2-5@m uk-width-4-6@l uk-height-1-1">
