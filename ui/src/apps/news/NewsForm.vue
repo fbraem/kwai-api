@@ -1,116 +1,118 @@
 <template>
-    <Page>
-        <div slot="title" class="uk-light">
+    <div>
+        <PageHeader>
             <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
             <h3 v-if="creating" class="uk-margin-remove">{{ $t('create') }}</h3>
             <h3 v-else class="uk-margin-remove">{{ $t('update') }}</h3>
-        </div>
-        <div slot="content" class="uk-container uk-margin-medium-top">
-            <div uk-grid>
-                <div class="uk-width-1-1">
-                    <form class="uk-form-stacked">
-                        <uikit-checkbox v-model="form.story.enabled">
-                            {{ $t('enabled') }}
-                        </uikit-checkbox>
-                        <uikit-select
-                            v-model="form.story.category"
-                            :items="categories"
-                            :validator="$v.form.story.category"
-                            :errors="categoryErrors"
-                            id="category"
-                            empty="Please select a category">
-                            {{ $t('category') }}:
-                        </uikit-select>
-                        <div uk-grid>
-                            <div class="uk-width-1-2">
-                                <uikit-input-text v-model="form.story.publish_date" :validator="$v.form.story.publish_date" :errors="publishDateErrors" id="publish_date" :placeholder="$t('publish_date_placeholder', { format : dateFormat })">
-                                    {{ $t('publish_date') }}:
-                                </uikit-input-text>
+        </PageHeader>
+        <section class="uk-section uk-section-default uk-section-small">
+            <div class="uk-container">
+                <div uk-grid>
+                    <div class="uk-width-1-1">
+                        <form class="uk-form-stacked">
+                            <uikit-checkbox v-model="form.story.enabled">
+                                {{ $t('enabled') }}
+                            </uikit-checkbox>
+                            <uikit-select
+                                v-model="form.story.category"
+                                :items="categories"
+                                :validator="$v.form.story.category"
+                                :errors="categoryErrors"
+                                id="category"
+                                empty="Please select a category">
+                                {{ $t('category') }}:
+                            </uikit-select>
+                            <div uk-grid>
+                                <div class="uk-width-1-2">
+                                    <uikit-input-text v-model="form.story.publish_date" :validator="$v.form.story.publish_date" :errors="publishDateErrors" id="publish_date" :placeholder="$t('publish_date_placeholder', { format : dateFormat })">
+                                        {{ $t('publish_date') }}:
+                                    </uikit-input-text>
+                                </div>
+                                <div class="uk-width-1-2">
+                                    <uikit-input-text v-model="form.story.publish_time" :validator="$v.form.story.publish_time" :errors="publishTimeErrors" id="publish_time" :placeholder="$t('publish_time_placeholder', { format :'(HH:MM)' })">
+                                        {{ $t('publish_time') }}:
+                                    </uikit-input-text>
+                                </div>
                             </div>
-                            <div class="uk-width-1-2">
-                                <uikit-input-text v-model="form.story.publish_time" :validator="$v.form.story.publish_time" :errors="publishTimeErrors" id="publish_time" :placeholder="$t('publish_time_placeholder', { format :'(HH:MM)' })">
-                                    {{ $t('publish_time') }}:
-                                </uikit-input-text>
+                            <div uk-grid>
+                                <div class="uk-width-1-2">
+                                    <uikit-input-text v-model="form.story.end_date" :validator="$v.form.story.end_date" :errors="endDateErrors" id="end_date" :placeholder="$t('end_date_placeholder', { format : dateFormat })">
+                                        {{ $t('end_date') }}:
+                                    </uikit-input-text>
+                                </div>
+                                <div class="uk-width-1-2">
+                                    <uikit-input-text v-model="form.story.end_time" :validator="$v.form.story.end_time" :errors="endTimeErrors" id="end_time" :placeholder="$t('end_time_placeholder', { format :'(HH:MM)' })">
+                                        {{ $t('end_time') }}:
+                                    </uikit-input-text>
+                                </div>
                             </div>
-                        </div>
-                        <div uk-grid>
-                            <div class="uk-width-1-2">
-                                <uikit-input-text v-model="form.story.end_date" :validator="$v.form.story.end_date" :errors="endDateErrors" id="end_date" :placeholder="$t('end_date_placeholder', { format : dateFormat })">
-                                    {{ $t('end_date') }}:
-                                </uikit-input-text>
-                            </div>
-                            <div class="uk-width-1-2">
-                                <uikit-input-text v-model="form.story.end_time" :validator="$v.form.story.end_time" :errors="endTimeErrors" id="end_time" :placeholder="$t('end_time_placeholder', { format :'(HH:MM)' })">
-                                    {{ $t('end_time') }}:
-                                </uikit-input-text>
-                            </div>
-                        </div>
-                        <uikit-textarea v-model="form.story.remark" :validator="$v.form.story.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
-                            {{ $t('remark') }}:
-                        </uikit-textarea>
-                        <div uk-grid>
-                            <div class="uk-width-1-1">
-                                <div class="uk-tile uk-tile-default uk-tile-muted uk-padding-small">
-                                    <div uk-grid>
-                                        <div class="uk-width-1-1">
-                                            <h3>{{ $t('featured') }}</h3>
-                                            <blockquote class="uk-text-meta">
-                                                {{ $t('featured_hint') }}
-                                            </blockquote>
-                                        </div>
-                                        <div class="uk-width-1-1">
-                                            <div uk-grid>
-                                                <div class="uk-width-expand">
-                                                    <uikit-range v-model="form.story.featured" :validator="$v.form.story.featured" :errors="featuredErrors" id="featured">
-                                                        {{ $t('featured_priority') }}
-                                                    </uikit-range>
-                                                </div>
-                                                <div>
-                                                    {{ form.story.featured }}
+                            <uikit-textarea v-model="form.story.remark" :validator="$v.form.story.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
+                                {{ $t('remark') }}:
+                            </uikit-textarea>
+                            <div uk-grid>
+                                <div class="uk-width-1-1">
+                                    <div class="uk-tile uk-tile-default uk-tile-muted uk-padding-small">
+                                        <div uk-grid>
+                                            <div class="uk-width-1-1">
+                                                <h3>{{ $t('featured') }}</h3>
+                                                <blockquote class="uk-text-meta">
+                                                    {{ $t('featured_hint') }}
+                                                </blockquote>
+                                            </div>
+                                            <div class="uk-width-1-1">
+                                                <div uk-grid>
+                                                    <div class="uk-width-expand">
+                                                        <uikit-range v-model="form.story.featured" :validator="$v.form.story.featured" :errors="featuredErrors" id="featured">
+                                                            {{ $t('featured_priority') }}
+                                                        </uikit-range>
+                                                    </div>
+                                                    <div>
+                                                        {{ form.story.featured }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="uk-width-1-2">
-                                            <uikit-input-text v-model="form.story.featured_end_date" :validator="$v.form.story.featured_end_date" :errors="featuredEndDateErrors" id="featured_end_date" :placeholder="$t('featured_end_date_placeholder', { format : dateFormat })">
-                                                {{ $t('featured_end_date') }}:
-                                            </uikit-input-text>
-                                        </div>
-                                        <div class="uk-width-1-2">
-                                            <uikit-input-text v-model="form.story.featured_end_time" :validator="$v.form.story.featured_end_time" :errors="featuredEndTimeErrors" id="featured_end_time" :placeholder="$t('featured_end_time_placeholder', { format :'(HH:MM)' })">
-                                                {{ $t('featured_end_time') }}:
-                                            </uikit-input-text>
+                                            <div class="uk-width-1-2">
+                                                <uikit-input-text v-model="form.story.featured_end_date" :validator="$v.form.story.featured_end_date" :errors="featuredEndDateErrors" id="featured_end_date" :placeholder="$t('featured_end_date_placeholder', { format : dateFormat })">
+                                                    {{ $t('featured_end_date') }}:
+                                                </uikit-input-text>
+                                            </div>
+                                            <div class="uk-width-1-2">
+                                                <uikit-input-text v-model="form.story.featured_end_time" :validator="$v.form.story.featured_end_time" :errors="featuredEndTimeErrors" id="featured_end_time" :placeholder="$t('featured_end_time_placeholder', { format :'(HH:MM)' })">
+                                                    {{ $t('featured_end_time') }}:
+                                                </uikit-input-text>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="uk-width-1-1">
-                    <form class="uk-form-stacked">
-                        <uikit-input-text v-model="form.content.title" :validator="$v.form.content.title" :errors="titleErrors" id="title" :placeholder="$t('title_placeholder')">
-                            {{ $t('title') }}:
-                        </uikit-input-text>
-                        <uikit-textarea v-model="form.content.summary" :validator="$v.form.content.summary" :rows="5" id="summary" :errors="summaryErrors" :placeholder="$t('summary_placeholder')">
-                            {{ $t('summary') }}:
-                        </uikit-textarea>
-                        <uikit-textarea v-model="form.content.content" :validator="$v.form.content.content" :rows="10" id="content" :errors="contentErrors" :placeholder="$t('content_placeholder')">
-                            {{ $t('content') }}:
-                        </uikit-textarea>
-                    </form>
-                </div>
-                <div uk-grid class="uk-width-1-1">
-                    <div class="uk-width-expand">
+                        </form>
                     </div>
-                    <div class="uk-width-auto">
-                        <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                            <fa-icon name="save" />&nbsp; {{ $t('save') }}
-                        </button>
+                    <div class="uk-width-1-1">
+                        <form class="uk-form-stacked">
+                            <uikit-input-text v-model="form.content.title" :validator="$v.form.content.title" :errors="titleErrors" id="title" :placeholder="$t('title_placeholder')">
+                                {{ $t('title') }}:
+                            </uikit-input-text>
+                            <uikit-textarea v-model="form.content.summary" :validator="$v.form.content.summary" :rows="5" id="summary" :errors="summaryErrors" :placeholder="$t('summary_placeholder')">
+                                {{ $t('summary') }}:
+                            </uikit-textarea>
+                            <uikit-textarea v-model="form.content.content" :validator="$v.form.content.content" :rows="10" id="content" :errors="contentErrors" :placeholder="$t('content_placeholder')">
+                                {{ $t('content') }}:
+                            </uikit-textarea>
+                        </form>
+                    </div>
+                    <div uk-grid class="uk-width-1-1">
+                        <div class="uk-width-expand">
+                        </div>
+                        <div class="uk-width-auto">
+                            <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
+                                <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <style scoped>
@@ -159,7 +161,7 @@
         return moment(date, 'L HH:mm', true);
     }
 
-    import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitSelect from '@/components/uikit/Select.vue';
     import UikitTextarea from '@/components/uikit/Textarea.vue';
@@ -210,7 +212,7 @@
             validationMixin
         ],
         components : {
-            Page,
+            PageHeader,
             UikitInputText,
             UikitSelect,
             UikitTextarea,
@@ -229,10 +231,11 @@
                 return this.story != null && this.story.id == null;
             },
             error() {
-                return this.$store.state.newsModule.status.error;
+                return this.$store.getters['newsModule/error'];
             },
             categories() {
-                return this.$store.state.categoryModule.categories.map((category) => ({value : category.id, text : category.name }));
+                var categories = this.$store.getters['categoryModule/categories'];
+                return categories.map((category) => ({value : category.id, text : category.name }));
             },
             dateFormat() {
                 return '(' + moment.localeData().longDateFormat('L') + ')';

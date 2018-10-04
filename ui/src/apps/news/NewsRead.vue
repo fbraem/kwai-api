@@ -1,57 +1,58 @@
 <template>
-    <Page>
-        <div slot="title" class="uk-width-expand">
-            <div v-if="story" class="uk-card uk-card-body">
-                <div class="uk-card-badge uk-label uk-label-warning" style="font-size: 0.75rem;background-color:#c61c18;">
-                    <router-link :to="{ name : 'news.category', params : { category : story.category.id }}" class="uk-link-reset">
-                        {{ story.category.name }}
-                    </router-link>
+    <div>
+        <PageHeader :picture="picture">
+            <div uk-grid>
+                <div class="uk-width-expand">
+                    <div v-if="story" class="uk-card uk-card-body">
+                        <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
+                            <router-link :to="{ name : 'news.category', params : { category : story.category.id }}" class="uk-link-reset">
+                                {{ story.category.name }}
+                            </router-link>
+                        </div>
+                        <div class="uk-light">
+                            <h1 class="uk-margin-remove">{{ $t('news')}}</h1>
+                            <h2 class="uk-margin-remove">{{ story.title }}</h2>
+                            <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="uk-light">
-                    <h1 class="uk-margin-remove">{{ $t('news')}}</h1>
-                    <h2 class="uk-margin-remove">{{ story.title }}</h2>
-                    <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
+                <div class="uk-width-1-1 uk-width-1-6@m">
+                    <div class="uk-flex uk-flex-right">
+                        <div v-if="story && $story.isAllowed('update', story)" class="uk-margin-small-left">
+                            <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
+                                <fa-icon name="edit" />
+                            </router-link>
+                        </div>
+                        <div v-if="story && $story.isAllowed('remove', story)" class="uk-margin-small-left">
+                            <a uk-toggle="target: #delete-story" class="uk-icon-button">
+                                <fa-icon name="trash" />
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <template slot="toolbar">
-            <div v-if="story && $story.isAllowed('update', story)" class="uk-margin-small-left">
-                <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
-                    <fa-icon name="edit" />
-                </router-link>
-            </div>
-            <div v-if="story && $story.isAllowed('remove', story)" class="uk-margin-small-left">
-                <a uk-toggle="target: #delete-story" class="uk-icon-button">
-                    <fa-icon name="trash" />
-                </a>
-            </div>
-        </template>
-        <article slot="content" v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
+        </PageHeader>
+        <Page>
             <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
                     <fa-icon name="spinner" scale="2" spin />
                 </div>
             </div>
-            <header>
+            <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
                 <blockquote>
                     <div v-html="story.summary"></div>
                 </blockquote>
-            </header>
-            <span class="fb-share-button" style="float:right" :data-href="facebookUrl" data-layout="button_count" data-size="large" data-mobile-iframe="true">
-                <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + facebookUrl + '&amp;src=sdkpreparse'" class="fb-xfbml-parse-ignore">{{ $t('share') }}</a>
-            </span>
-            <div class="uk-text-center">
-                <figure v-if="story.header_detail_crop">
-                    <img :src="story.header_detail_crop"  />
-                </figure>
-            </div>
-            <div class="news-content" v-html="story.content">
-            </div>
-            <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
-                {{ $t('are_you_sure') }}
-            </AreYouSure>
-        </article>
-    </Page>
+                <span class="fb-share-button" style="float:right" :data-href="facebookUrl" data-layout="button_count" data-size="large" data-mobile-iframe="true">
+                    <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + facebookUrl + '&amp;src=sdkpreparse'" class="fb-xfbml-parse-ignore">{{ $t('share') }}</a>
+                </span>
+                <div class="news-content" v-html="story.content">
+                </div>
+                <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
+                    {{ $t('are_you_sure') }}
+                </AreYouSure>
+            </article>
+        </Page>
+    </div>
 </template>
 
 <style>
@@ -111,6 +112,7 @@
     import messages from './lang';
 
     import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import AreYouSure from '@/components/AreYouSure.vue';
 
     import newsStore from '@/stores/news';
@@ -118,12 +120,19 @@
     export default {
         components : {
             Page,
+            PageHeader,
             AreYouSure
         },
         i18n : messages,
         computed : {
             story() {
                 return this.$store.getters['newsModule/story'](this.$route.params.id);
+            },
+            picture() {
+                if (this.story) {
+                    return this.story.header_detail_crop;
+                }
+                return null;
             },
             facebookUrl() {
                 return "https://www.judokwaikemzeke.be/facebook/news/" + this.story.id;
@@ -137,11 +146,12 @@
                 this.$store.registerModule('newsModule', newsStore);
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next(async (vm) => {
-                await vm.fetchData();
-                next();
-            });
+        async created() {
+            await this.fetchData();
+        },
+        async beforeRouteUpdate(to, from, next) {
+            await this.fetchData();
+            next();
         },
         methods : {
             fetchData() {

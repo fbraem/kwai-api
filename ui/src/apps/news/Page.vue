@@ -3,34 +3,9 @@
         <div>
             <div uk-grid>
                 <div class="uk-width-1-1 uk-width-2-3@m">
-                    <section class="uk-section uk-section-small uk-section-secondary uk-preserve-color">
-                        <div class="uk-flex uk-flex-center uk-flex-middle uk-text-center">
-                            <slot name="title">
-                                <div class="uk-light">
-                                    <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
-                                    <p>
-                                        {{ $t('all_news') }}
-                                    </p>
-                                </div>
-                            </slot>
-                        </div>
-                    </section>
-                    <slot name="content"></slot>
+                    <slot></slot>
                 </div>
                 <div class="uk-width-1-1 uk-width-1-3@m">
-                    <div class="uk-flex uk-flex-right">
-                        <div>
-                            <router-link :to="{ name : 'news.browse' }" class="uk-icon-button">
-                                <fa-icon name="home" />
-                            </router-link>
-                        </div>
-                        <div v-if="$story.isAllowed('create')" class="uk-margin-small-left">
-                            <router-link class="uk-icon-button" :to="{ 'name' : 'news.create' }">
-                                <fa-icon name="plus" />
-                            </router-link>
-                        </div>
-                        <slot name="toolbar"></slot>
-                    </div>
                     <div uk-grid class="uk-grid-small uk-child-width-1-1">
                         <div>
                             <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('category') }}</span></h4>
