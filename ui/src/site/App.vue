@@ -1,7 +1,7 @@
 <template>
     <div>
         <PageHeader :picture="require('./images/judokwaikemzeke.jpg')">
-            <div uk-grid>
+            <div uk-grid class="uk-flex uk-flex-center">
                 <div class="uk-width-1-1">
                     <img class="uk-align-center" :src="require('./images/logo2.png')" style="width:121px;height:121px;" />
                 </div>
@@ -103,13 +103,16 @@
                 <h4 class="uk-heading-line uk-text-bold" id="newsgrid"><span>Belangrijk Nieuws</span></h4>
                 <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
                 <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-grid" uk-grid>
-                    <NewsCard v-for="story in stories" :story="story" :key="story.id"></NewsCard>
+                    <NewsCard v-for="story in stories" :story="story" :key="story.id" @deleteStory="deleteStory"></NewsCard>
                 </div>
                 <div style="clear:both"></div>
                 <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
                 <router-link :to="{ name : 'news.browse' }">
                     {{ $t('more_news') }}
                 </router-link>
+                <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
+                    {{ $t('are_you_sure') }}
+                </AreYouSure>
             </div>
         </section>
         <section class="uk-section uk-section-small">
@@ -222,10 +225,11 @@
     import Paginator from '@/components/Paginator.vue';
     import Card from './Card.vue';
     import PageHeader from './components/PageHeader.vue';
+    import AreYouSure from '@/components/AreYouSure.vue';
 
     import newsStore from '@/stores/news';
 
-    import UIKit from 'uikit';
+    import UIkit from 'uikit';
 
     import messages from './lang';
 
@@ -235,10 +239,13 @@
             NewsCard,
             Paginator,
             Card,
-            PageHeader
+            PageHeader,
+            AreYouSure
         },
         data() {
-            return {};
+            return {
+                storyToDelete : null
+            };
         },
         computed : {
             loading() {
@@ -269,7 +276,17 @@
                 } catch(error) {
                     console.log(error);
                 }
-            }
+            },
+            deleteStory(story) {
+                this.storyToDelete = story;
+                var modal = UIkit.modal(document.getElementById('delete-story'));
+                modal.show();
+            },
+            doDeleteStory() {
+                this.$store.dispatch('newsModule/delete', {
+                    story : this.storyToDelete
+                });
+            },
         }
     };
 </script>
