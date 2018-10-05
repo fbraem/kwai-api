@@ -28,7 +28,7 @@ import 'flag-icon-css/css/flag-icon.css';
 import moment from 'moment';
 moment.locale('nl');
 
-import store from '@/js/store';
+import store from '@/stores/root';
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {

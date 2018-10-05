@@ -19,11 +19,7 @@ const state = {
         facebook : config.facebook,
         subTitle : ""
     },
-    status : {
-        loading : false,
-        success : false,
-        error : false
-    }
+    error : null
 };
 
 const getters = {
@@ -39,8 +35,8 @@ const getters = {
     facebook(state) {
         return state.page.facebook;
     },
-    loading(state) {
-        return state.status.loading;
+    error(state) {
+        return state.error;
     }
 };
 
@@ -54,41 +50,24 @@ const mutations = {
     subTitle(state, text) {
         state.page.subTitle = text;
     },
-    loading(state) {
-        state.status = {
-            loading : true,
-            success: false,
-            error : false
-        };
-    },
-    success(state) {
-        state.status = {
-            loading : false,
-            success: true,
-            error : false
-        };
-    },
     error(state, payload) {
-        state.status = {
-            loading : false,
-            success: false,
-            error : payload
-        };
+        error = payload;
     }
 };
 
 const actions = {
-    async login(context, payload) {
-        context.commit('loading');
+    async login({ commit, dispatch }, payload) {
+        dispatch('wait/start', 'auth.login', { root : true });
         try {
             var response = await oauth.login(payload.email, payload.password);
-            context.commit('success');
             context.commit('authenticated', true);
         } catch(error) {
+            dispatch('wait/end', 'auth.login', { root : true });
             context.commit('error', error);
             context.commit('authenticated', false);
             throw(error);
         }
+        dispatch('wait/end', 'auth.login', { root : true });
     },
     async logout(context) {
         await oauth.logout();
