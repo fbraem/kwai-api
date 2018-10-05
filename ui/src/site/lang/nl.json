@@ -3,5 +3,8 @@
         "hello" : "Deze florerende judoclub bestaat bijna 40 jaar, telt bijna 150 leden en heeft een goed gevuld palmares.",
         "info" : "Alle informatie betreffende trainingen, contactgegevens, tornooien, activiteiten en het judo zijn hier terug te vinden."
     },
-    "more_news" : "Lees meer nieuws ..."
+    "more_news" : "Lees meer nieuws ...",
+    "delete" : "Verwijder",
+    "cancel" : "Annuleer",
+    "are_you_sure" : "Ben je zeker om dit nieuwsbericht te verwijderen?"
 }
