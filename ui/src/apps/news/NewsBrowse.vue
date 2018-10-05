@@ -29,32 +29,30 @@
             </div>
         </PageHeader>
         <Page>
-            <div class="uk-container uk-margin">
-                <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
-                    <div class="uk-text-center">
-                        <fa-icon name="spinner" scale="2" spin />
-                    </div>
+            <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
                 </div>
-                <div v-else class="uk-child-width-1-1" uk-grid>
-                    <div v-if="storiesMeta">
-                        <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
-                    </div>
-                    <div class="uk-child-width-1-1 uk-child-width-1-2@xl" uk-grid>
-                        <NewsCard v-for="story in stories" :key="story.id" :story="story" @deleteStory="deleteStory"></NewsCard>
-                    </div>
-                    <div v-if="storiesMeta">
-                        <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
-                    </div>
-                </div>
-                <div v-if="! $wait.is('news.browse') && newsCount == 0">
-                    <div uk-alert>
-                        {{ $t('no_news') }}
-                    </div>
-                </div>
-                <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
-                    {{ $t('are_you_sure') }}
-                </AreYouSure>
             </div>
+            <div v-else class="uk-child-width-1-1" uk-grid>
+                <div v-if="storiesMeta">
+                    <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
+                </div>
+                <div class="uk-child-width-1-1 uk-child-width-1-2@xl" uk-grid>
+                    <NewsCard v-for="story in stories" :key="story.id" :story="story" @deleteStory="deleteStory"></NewsCard>
+                </div>
+                <div v-if="storiesMeta">
+                    <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
+                </div>
+            </div>
+            <div v-if="! $wait.is('news.browse') && newsCount == 0">
+                <div uk-alert>
+                    {{ $t('no_news') }}
+                </div>
+            </div>
+            <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
+                {{ $t('are_you_sure') }}
+            </AreYouSure>
         </Page>
     </div>
 </template>
