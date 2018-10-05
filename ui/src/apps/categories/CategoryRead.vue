@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PageHeader>
+        <PageHeader :picture="picture">
             <div uk-grid>
                 <div class="uk-width-expand">
                     <div v-if="category">
@@ -96,6 +96,12 @@
         computed : {
             category() {
                 return this.$store.getters['categoryModule/category'](this.$route.params.id);
+            },
+            picture() {
+                if (this.category && this.category.images) {
+                    return this.category.images.normal;
+                }
+                return null;
             },
             stories() {
                 return this.$store.getters['newsModule/stories'];
