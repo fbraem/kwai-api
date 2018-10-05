@@ -1,11 +1,11 @@
 <template>
-    <div class="uk-container uk-container-expand uk-margin-top">
+    <section class="uk-section uk-section-small uk-container uk-container-expand">
         <div>
             <div uk-grid>
-                <div class="uk-width-1-1 uk-width-2-3@m">
+                <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
                     <slot></slot>
                 </div>
-                <div class="uk-width-1-1 uk-width-1-3@m">
+                <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
                     <div uk-grid class="uk-grid-small uk-child-width-1-1">
                         <div>
                             <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('category') }}</span></h4>
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
