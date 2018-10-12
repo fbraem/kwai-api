@@ -10,17 +10,17 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^auth(/.*)?$ /api/auth.php?$1 [L]
-    RewriteRule ^categories(/.*)?$ /api/categories.php?$1 [L]
-    RewriteRule ^countries(/.*)?$ /api/countries.php?$1 [L]
-    RewriteRule ^news(/.*)?$ /api/news.php?$1 [L]
-    RewriteRule ^pages(/.*)?$ /api/pages.php?$1 [L]
-    RewriteRule ^persons(/.*)?$ /api/persons.php?$1 [L]
-    RewriteRule ^seasons(/.*)?$ /api/seasons.php?$1 [L]
-    RewriteRule ^team_types(/.*)?$ /api/team_types.php?$1 [L]
-    RewriteRule ^teams(/.*)?$ /api/teams.php?$1 [L]
-    RewriteRule ^users(/.*)?$ /api/users.php?$1 [L]
-    RewriteRule ^user_invitations(/.*)?$ /api/user_invitations.php?$1 [L]
+    RewriteRule ^auth(/.*)?$ /api/auth.php?$1 [QSA,L]
+    RewriteRule ^categories(/.*)?$ /api/categories.php?$1 [QSA,L]
+    RewriteRule ^countries(/.*)?$ /api/countries.php?$1 [QSA,L]
+    RewriteRule ^news(/.*)?$ /api/news.php?$1 [QSA,L]
+    RewriteRule ^pages(/.*)?$ /api/pages.php?$1 [QSA,L]
+    RewriteRule ^persons(/.*)?$ /api/persons.php?$1 [QSA,L]
+    RewriteRule ^seasons(/.*)?$ /api/seasons.php?$1 [QSA,L]
+    RewriteRule ^team_types(/.*)?$ /api/team_types.php?$1 [QSA,L]
+    RewriteRule ^teams(/.*)?$ /api/teams.php?$1 [QSA,L]
+    RewriteRule ^users(/.*)?$ /api/users.php?$1 [QSA,L]
+    RewriteRule ^user_invitations(/.*)?$ /api/user_invitations.php?$1 [QSA,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
 </IfModule>
