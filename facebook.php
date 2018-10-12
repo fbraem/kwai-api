@@ -47,6 +47,7 @@ $app->get('/facebook/news/{id}', function (Request $request, Response $response,
         $images = $this->filesystem->listContents('images/news/' . $story->id);
         $meta = [];
         $meta['og:url'] = $uri->__toString();
+        $meta['og:type'] = 'article';
         $meta['og:title'] = $story->contents[0]['title'];
         $meta['og:description'] = $story->contents[0]['social_media'] ?? '';
         foreach ($images as $image) {
