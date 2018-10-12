@@ -12,12 +12,16 @@
                 </div>
                 <div class="uk-width-1-1 uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
-                        <router-link v-if="$category.isAllowed('create')" class="uk-icon-button" :to="{ name : 'categories.create' }">
-                            <fa-icon name="plus" />
-                        </router-link>
-                        <router-link v-if="category && $category.isAllowed('update')" class="uk-icon-button uk-margin-small-left" :to="{ name : 'categories.update', params : { id : category.id } }">
-                            <fa-icon name="edit" />
-                        </router-link>
+                        <div v-if="$category.isAllowed('create')">
+                            <router-link  class="uk-icon-button" :to="{ name : 'categories.create' }">
+                                <fa-icon name="plus" />
+                            </router-link>
+                        </div>
+                        <div v-if="category && $category.isAllowed('update')">
+                            <router-link class="uk-icon-button uk-margin-small-left" :to="{ name : 'categories.update', params : { id : category.id } }">
+                                <fa-icon name="edit" />
+                            </router-link>
+                        </div>
                     </div>
                 </div>
             </div>

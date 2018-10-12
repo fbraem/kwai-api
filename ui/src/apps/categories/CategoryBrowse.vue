@@ -8,9 +8,11 @@
                     </div>
                     <div class="uk-width-1-1 uk-width-1-6@m">
                         <div class="uk-flex uk-flex-right">
-                            <router-link v-if="$category.isAllowed('create')" class="uk-icon-button" :to="{ name : 'categories.create' }">
-                                <fa-icon name="plus" />
-                            </router-link>
+                            <div v-if="$category.isAllowed('create')">
+                                <router-link class="uk-icon-button" :to="{ name : 'categories.create' }">
+                                    <fa-icon name="plus" />
+                                </router-link>
+                            </div>
                         </div>
                     </div>
                 </div>
