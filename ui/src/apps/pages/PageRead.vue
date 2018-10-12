@@ -1,43 +1,58 @@
 <template>
-    <Page>
-        <div v-if="error">
-            {{ error.response.statusText }}
-        </div>
-        <div v-if="page" slot="title" class="uk-card uk-card-body uk-width-expand">
-            <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;">
-                <router-link :to="{ name : 'pages.category', params : { category : page.category.id }}" class="uk-link-reset">
-                    {{ page.category.name }}
-                </router-link>
+    <div>
+        <PageHeader :picture="picture">
+            <div uk-grid>
+                <div class="uk-width-expand">
+                    <div v-if="page" class="uk-card uk-card-body">
+                        <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
+                            <router-link :to="{ name : 'pages.category', params : { category : page.category.id }}" class="uk-link-reset">
+                                {{ page.category.name }}
+                            </router-link>
+                        </div>
+                        <div class="uk-light">
+                            <h1>{{ page.title }}</h1>
+                        </div>
+                        <p v-html="page.summary">
+                        </p>
+                    </div>
+                </div>
+                <div class="uk-width-1-1 uk-width-1-6@m">
+                    <div class="uk-flex uk-flex-right">
+                        <div v-if="page && $page.isAllowed('update', page)" class="uk-margin-small-left">
+                            <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
+                                <fa-icon name="edit" />
+                            </router-link>
+                        </div>
+                        <div v-if="page && $page.isAllowed('remove', page)" class="uk-margin-small-left">
+                            <a uk-toggle="target: #delete-page" class="uk-icon-button">
+                                <fa-icon name="trash" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="uk-light">
-                <h1>{{ page.title }}</h1>
+        </PageHeader>
+        <Page>
+            <div v-if="error">
+                {{ error.response.statusText }}
             </div>
-        </div>
-        <template slot="toolbar">
-            <div v-if="page && $page.isAllowed('update', page)" class="uk-margin-small-left">
-                <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
-                    <fa-icon name="edit" />
-                </router-link>
+            <div v-if="$wait.is('pages.read')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
             </div>
-            <div v-if="page && $page.isAllowed('remove', page)" class="uk-margin-small-left">
-                <a uk-toggle="target: #delete-page" class="uk-icon-button">
-                    <fa-icon name="trash" />
-                </a>
-            </div>
-        </template>
-        <article slot="content" v-if="page" class="uk-section uk-section-small">
-            <blockquote class="uk-margin-small-left uk-margin-small-right" v-html="page.summary">
-            </blockquote>
-            <figure v-if="page.header_detail_crop">
-                <img :src="page.header_detail_crop" />
-            </figure>
-            <article class="page-content uk-article" v-html="page.content">
+            <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
+                <figure v-if="page.header_detail_crop">
+                    <img :src="page.header_detail_crop" />
+                </figure>
+                <article class="page-content uk-article" v-html="page.content">
+                </article>
+                <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
+                    {{ $t('are_you_sure') }}
+                </AreYouSure>
             </article>
-            <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
-                {{ $t('are_you_sure') }}
-            </AreYouSure>
-        </article>
-    </Page>
+        </Page>
+    </div>
 </template>
 
 <style>
@@ -130,12 +145,14 @@
     import messages from './lang';
 
     import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import AreYouSure from '@/components/AreYouSure.vue';
 
     import pageStore from '@/stores/pages';
 
     export default {
         components : {
+            PageHeader,
             Page,
             AreYouSure
         },
@@ -143,6 +160,12 @@
         computed : {
             page() {
                 return this.$store.getters['pageModule/page'](this.$route.params.id);
+            },
+            picture() {
+                if (this.page) {
+                    return this.page.header_detail_crop;
+                }
+                return null;
             },
             error() {
                 return this.$store.getters['pageModule/error'];
@@ -153,18 +176,20 @@
                 this.$store.registerModule('pageModule', pageStore);
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next(async (vm) => {
-                await vm.fetchData();
-                next();
-            });
+        async created() {
+            await this.fetchData(this.$route.params);
+        },
+        async beforeRouteUpdate(to, from, next) {
+            await this.fetchData(to.params);
+            next();
         },
         methods : {
-            fetchData() {
+            fetchData(params) {
                 try {
-                    this.$store.dispatch('pageModule/read', { id : this.$route.params.id });
+                    this.$store.dispatch('pageModule/read', { id : params.id });
                 }
                 catch(error) {
+                    console.log(error);
                 }
             },
             deletePage() {
