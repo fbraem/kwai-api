@@ -12,7 +12,7 @@ import moment from 'moment';
 import Story from '@/models/Story';
 
 const state = {
-    stories : [],
+    stories : null,
     error : null,
     meta : null,
     archive : {}
@@ -23,6 +23,7 @@ const getters = {
         return state.stories;
     },
     story: (state) => (id) => {
+        if (state.stories == null ) return null;
         return state.stories.find((story) => story.id == id);
     },
     error(state) {
@@ -39,7 +40,7 @@ const getters = {
 const mutations = {
   clear(state) {
      state.meta = null;
-     state.stories = [];
+     state.stories = null;
      state.error = null;
   },
   stories(state, stories) {
@@ -48,6 +49,9 @@ const mutations = {
       state.error = null;
   },
   story(state, story) {
+      if (state.stories == null) {
+          state.stories = [];
+      }
       var index = state.stories.findIndex((s) => s.id == story.id);
       if (index != -1) {
           Vue.set(state.stories, index, story);
