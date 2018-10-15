@@ -20,4 +20,14 @@ export default class Category extends Model {
             'updated_at' : 'YYYY-MM-DD HH:mm:ss'
         }
     }
+
+    computed() {
+        return {
+            header_picture(category) {
+                if (category.images) {
+                    return category.images.header;
+                }
+            }
+        }
+    }
 }

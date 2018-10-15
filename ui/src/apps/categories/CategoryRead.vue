@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PageHeader :picture="picture">
+        <PageHeader v-if="category" :picture="category.header_picture">
             <div uk-grid>
                 <div class="uk-width-expand">
                     <div v-if="category">
@@ -17,7 +17,7 @@
                                 <fa-icon name="plus" />
                             </router-link>
                         </div>
-                        <div v-if="category && $category.isAllowed('update')">
+                        <div v-if="$category.isAllowed('update', category)">
                             <router-link class="uk-icon-button uk-margin-small-left" :to="{ name : 'categories.update', params : { id : category.id } }">
                                 <fa-icon name="edit" />
                             </router-link>
