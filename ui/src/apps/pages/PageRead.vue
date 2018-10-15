@@ -1,9 +1,9 @@
 <template>
     <div>
-        <PageHeader :picture="picture">
+        <PageHeader v-if="page" :picture="page.picture">
             <div uk-grid>
                 <div class="uk-width-expand">
-                    <div v-if="page" class="uk-card uk-card-body">
+                    <div class="uk-card uk-card-body">
                         <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
                             <router-link :to="{ name : 'pages.category', params : { category : page.category.id }}" class="uk-link-reset">
                                 {{ page.category.name }}
@@ -18,12 +18,12 @@
                 </div>
                 <div class="uk-width-1-1 uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
-                        <div v-if="page && $page.isAllowed('update', page)" class="uk-margin-small-left">
+                        <div v-if="$page.isAllowed('update', page)" class="uk-margin-small-left">
                             <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
                                 <fa-icon name="edit" />
                             </router-link>
                         </div>
-                        <div v-if="page && $page.isAllowed('remove', page)" class="uk-margin-small-left">
+                        <div v-if="$page.isAllowed('remove', page)" class="uk-margin-small-left">
                             <a uk-toggle="target: #delete-page" class="uk-icon-button">
                                 <fa-icon name="trash" />
                             </a>
@@ -160,12 +160,6 @@
         computed : {
             page() {
                 return this.$store.getters['pageModule/page'](this.$route.params.id);
-            },
-            picture() {
-                if (this.page) {
-                    return this.page.header_detail_crop;
-                }
-                return null;
             },
             error() {
                 return this.$store.getters['pageModule/error'];

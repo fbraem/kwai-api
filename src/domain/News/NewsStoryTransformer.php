@@ -37,10 +37,14 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
 
         if ($this->filesystem) {
             $images = $this->filesystem->listContents('images/news/' . $story->id);
-            foreach ($images as $image) {
-                $result[$image['filename']] = '/files/' . $image['path'];
+            if (count($images) > 0) {
+                $result['images'] = [];
+                foreach ($images as $image) {
+                    $result['images'][$image['filename']] = '/files/' . $image['path'];
+                }
             }
         }
+
         return $result;
     }
 

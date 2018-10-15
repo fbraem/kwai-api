@@ -9,8 +9,8 @@
             <div class="uk-child-width-1-1" :class="{ 'uk-margin-medium-top' : showCategory }" uk-grid>
                 <div>
                     <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" uk-grid>
-                        <div v-if="story.header_overview_crop" class="uk-width-1-3@s uk-width-2-5@m uk-width-4-6@l uk-height-1-1">
-                            <img :src="story.header_overview_crop" alt="" />
+                        <div v-if="story.overview_picture" class="uk-width-1-3@s uk-width-2-5@m uk-width-4-6@l uk-height-1-1">
+                            <img :src="story.overview_picture" alt="" />
                         </div>
                         <div :class="widthClass">
                             <h3 class="uk-card-title uk-margin-small-top uk-margin-remove-bottom uk-text-break">
@@ -74,7 +74,7 @@
                 return this.$store.getters['categoryModule/category'](this.story.category.id);
             },
             widthClass() {
-                if ( this.story.header_overview_crop ) {
+                if ( this.story.overview_picture ) {
                     return {
                         'uk-width-2-3@s' : true,
                         'uk-width-3-5@m' : true,

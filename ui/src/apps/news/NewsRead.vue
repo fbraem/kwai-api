@@ -1,9 +1,9 @@
 <template>
     <div>
-        <PageHeader :picture="picture">
+        <PageHeader v-if="story" :picture="story.detail_picture">
             <div uk-grid>
                 <div class="uk-width-expand">
-                    <div v-if="story" class="uk-card uk-card-body">
+                    <div class="uk-card uk-card-body">
                         <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
                             <router-link :to="{ name : 'news.category', params : { category : story.category.id }}" class="uk-link-reset">
                                 {{ story.category.name }}
@@ -18,12 +18,12 @@
                 </div>
                 <div class="uk-width-1-1 uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
-                        <div v-if="story && $story.isAllowed('update', story)" class="uk-margin-small-left">
+                        <div v-if="$story.isAllowed('update', story)" class="uk-margin-small-left">
                             <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
                                 <fa-icon name="edit" />
                             </router-link>
                         </div>
-                        <div v-if="story && $story.isAllowed('remove', story)" class="uk-margin-small-left">
+                        <div v-if="$story.isAllowed('remove', story)" class="uk-margin-small-left">
                             <a uk-toggle="target: #delete-story" class="uk-icon-button">
                                 <fa-icon name="trash" />
                             </a>

@@ -21,9 +21,7 @@ export default class Story extends Model {
             'publish_date_timezone',
             'end_date_timezone',
             'remark',
-            'header_detail_crop',
-            'header_original',
-            'header_overview_crop'
+            'images'
         ];
     }
 
@@ -129,6 +127,16 @@ export default class Story extends Model {
                     }
                 }
                 return "";
+            },
+            detail_picture(story) {
+                if (story.images) {
+                    return story.images.header_detail_crop;
+                }
+            },
+            overview_picture(story) {
+                if (story.images) {
+                    return story.images.header_overview_crop;
+                }
             }
         };
     }

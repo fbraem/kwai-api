@@ -14,9 +14,7 @@ export default class Page extends Model {
             'enabled',
             'remark',
             'priority',
-            'header_detail_crop',
-            'header_original',
-            'header_overview_crop'
+            'images'
         ];
     }
 
@@ -75,6 +73,12 @@ export default class Page extends Model {
                     }
                 }
                 return "";
+            },
+            picture(page) {
+                if (page.images) {
+                    return page.images.crop;
+                }
+                return null;
             }
         };
     }
