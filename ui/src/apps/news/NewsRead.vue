@@ -42,9 +42,6 @@
                 <blockquote>
                     <div v-html="story.summary"></div>
                 </blockquote>
-                <span class="fb-share-button" style="float:right" :data-href="facebookUrl" data-layout="button_count" data-size="large" data-mobile-iframe="true">
-                    <a target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u=' + facebookUrl + '&amp;src=sdkpreparse'" class="fb-xfbml-parse-ignore">{{ $t('share') }}</a>
-                </span>
                 <div class="news-content" v-html="story.content">
                 </div>
                 <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
