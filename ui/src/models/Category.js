@@ -27,6 +27,11 @@ export default class Category extends Model {
                 if (category.images) {
                     return category.images.header;
                 }
+            },
+            icon_picture(category) {
+                if (category.images) {
+                    return category.images.icon;
+                }
             }
         }
     }

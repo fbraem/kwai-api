@@ -2,9 +2,11 @@
     <div>
         <PageHeader v-if="category" :picture="category.header_picture">
             <div uk-grid>
-                <div class="uk-width-expand">
+                <div class="uk-width-expand uk-light">
                     <div v-if="category">
-                        <h1>{{ category.name }}</h1>
+                        <h1>
+                            <img v-if="category.icon_picture" :src="category.icon_picture" width="40" height="40" uk-svg />
+                            &nbsp;{{ category.name }}</h1>
                         <p>
                             {{ category.description }}
                         </p>
@@ -75,6 +77,12 @@
     </div>
 </template>
 
+<style>
+    #icon.svg {
+        fill:red;
+    }
+</style>
+
 <script>
     import messages from './lang';
 
@@ -141,11 +149,17 @@
                 this.$store.registerModule('pageModule', pageStore);
             }
         },
-        beforeRouteEnter(to, from, next) {
-            next(async (vm) => {
-                await vm.fetchData();
-                next();
-            });
+        async beforeRouteUpdate(to, from, next) {
+            await this.fetchData();
+            next();
+        },
+        async created() {
+            await this.fetchData();
+        },
+        watch : {
+            '$route'() {
+                this.fetchData();
+            }
         },
         methods : {
             fetchData() {
