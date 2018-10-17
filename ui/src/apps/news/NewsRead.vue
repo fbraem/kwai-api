@@ -39,9 +39,21 @@
                 </div>
             </div>
             <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
-                <blockquote>
-                    <div v-html="story.summary"></div>
-                </blockquote>
+                <div uk-grid class="uk-margin">
+                    <div class="uk-width-expand">
+                        <blockquote>
+                            <div v-html="story.summary"></div>
+                        </blockquote>
+                    </div>
+                    <div class="uk-width-1-1@s uk-width-auto@m">
+                        <div class="uk-flex uk-flex-right">
+                            <vue-goodshare-facebook
+                                :page_url="facebookUrl"
+                                has_icon>
+                            </vue-goodshare-facebook>
+                        </div>
+                    </div>
+                </div>
                 <div class="news-content" v-html="story.content">
                 </div>
                 <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
@@ -106,7 +118,10 @@
     import 'vue-awesome/icons/edit';
     import 'vue-awesome/icons/trash';
 
+
     import messages from './lang';
+
+    import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 
     import Page from './Page.vue';
     import PageHeader from '@/site/components/PageHeader.vue';
@@ -118,7 +133,8 @@
         components : {
             Page,
             PageHeader,
-            AreYouSure
+            AreYouSure,
+            VueGoodshareFacebook
         },
         i18n : messages,
         computed : {
@@ -132,6 +148,7 @@
                 return null;
             },
             facebookUrl() {
+                //TODO: remove the host
                 return "https://www.judokwaikemzeke.be/facebook/news/" + this.story.id;
             },
             error() {
