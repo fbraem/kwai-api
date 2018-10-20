@@ -60,24 +60,24 @@ const actions = {
         dispatch('wait/start', 'auth.login', { root : true });
         try {
             var response = await oauth.login(payload.email, payload.password);
-            context.commit('authenticated', true);
+            commit('authenticated', true);
         } catch(error) {
             dispatch('wait/end', 'auth.login', { root : true });
-            context.commit('error', error);
-            context.commit('authenticated', false);
+            commit('error', error);
+            commit('authenticated', false);
             throw(error);
         }
         dispatch('wait/end', 'auth.login', { root : true });
     },
-    async logout(context) {
+    async logout({ commit }) {
         await oauth.logout();
-        context.commit('authenticated', false);
+        commit('authenticated', false);
     },
-    setTitle(context, text) {
-        context.commit('title', text);
+    setTitle({ commit }, text) {
+        commit('title', text);
     },
-    setSubTitle(context, text) {
-        context.commit('subTitle', text);
+    setSubTitle({ commit }, text) {
+        commit('subTitle', text);
     }
 };
 
