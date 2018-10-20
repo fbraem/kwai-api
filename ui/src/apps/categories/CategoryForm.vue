@@ -16,7 +16,10 @@
                             <uikit-input-text v-model="form.category.name" :validator="$v.form.category.name" :errors="nameErrors" id="name" :placeholder="$t('name_placeholder')">
                                 {{ $t('name') }}:
                             </uikit-input-text>
-                            <uikit-textarea v-model="form.category.description" :validator="$v.form.category.description" :rows="5" id="description" :errors="descriptionErrors" :placeholder="$t('description_placeholder')">
+                            <uikit-textarea v-model="form.category.short_description" :validator="$v.form.category.short_description" :rows="5" id="short_description" :errors="shortDescriptionErrors" :placeholder="$t('short_description_placeholder')">
+                                {{ $t('short_description') }}:
+                            </uikit-textarea>
+                            <uikit-textarea v-model="form.category.description" :validator="$v.form.category.description" :rows="10" id="description" :errors="descriptionErrors" :placeholder="$t('description_placeholder')">
                                 {{ $t('description') }}:
                             </uikit-textarea>
                             <uikit-textarea v-model="form.category.remark" :validator="$v.form.category.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
@@ -57,7 +60,8 @@
         return {
             name : [],
             description : [],
-            remark : []
+            remark : [],
+            short_description : []
         }
     };
     var initForm = function() {
@@ -65,7 +69,8 @@
             category : {
                 name : '',
                 description : '',
-                remark : ''
+                remark : '',
+                short_description : ''
             }
         };
     }
@@ -108,6 +113,11 @@
                 const errors = [...this.errors.remark];
                 if (! this.$v.form.category.remark.$dirty) return errors;
                 return errors;
+            },
+            shortDescriptionErrors() {
+                const errors = [...this.errors.short_description];
+                if (! this.$v.form.category.short_description.$dirty) return errors;
+                return errors;
             }
         },
         validations : {
@@ -119,6 +129,8 @@
                     description : {
                     },
                     remark : {
+                    },
+                    short_description : {
                     }
                 }
             }
@@ -130,7 +142,9 @@
         },
         beforeRouteEnter(to, from, next) {
             next(async (vm) => {
-                await vm.fetchData();
+                if (vm.$route.params.id) {
+                    vm.fetchData();
+                }
                 next();
             });
         },
@@ -170,11 +184,13 @@
                 this.form.category.name = this.category.name;
                 this.form.category.description = this.category.description;
                 this.form.category.remark = this.category.remark;
+                this.form.category.short_description = this.category.short_description;
             },
             fillCategory() {
                 this.category.name = this.form.category.name;
                 this.category.description = this.form.category.description;
                 this.category.remark = this.form.category.remark;
+                this.category.short_description = this.form.category.short_description;
             },
             submit() {
                 this.errors = initError();

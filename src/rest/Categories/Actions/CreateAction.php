@@ -42,6 +42,7 @@ class CreateAction
         $categoriesTable = CategoriesTable::getTableFromRegistry();
         $category = $categoriesTable->newEntity();
         $category->name = $attributes['name'];
+        $category->short_description = $attributes['short_description'];
         $category->description = $attributes['description'];
         $category->remark = $attributes['remark'];
         $category->user = $request->getAttribute('clubman.user');

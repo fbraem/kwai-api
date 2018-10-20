@@ -19,5 +19,15 @@ class CategoryInputValidator extends \Core\Validators\InputValidator
             StringLength::TOO_SHORT => _('Name can\'t be empty')
         ]);
         $this->addValidator('data.attributes.name', $nameValidation);
+
+        $shortDescriptionValidation = new StringLength([
+            'min' => 1,
+            'max' => 255
+        ]);
+        $nameValidation->setMessages([
+            StringLength::TOO_LONG => _('Short description can\'t contain more then 255 characters'),
+            StringLength::TOO_SHORT => _('Short description can\'t be empty')
+        ]);
+        $this->addValidator('data.attributes.name', $shortDescriptionValidation);
     }
 }

@@ -43,6 +43,9 @@ class UpdateAction
         if (array_key_exists('name', $attributes)) {
             $category->name = $attributes['name'];
         }
+        if (array_key_exists('short_description', $attributes)) {
+            $category->short_description = $attributes['short_description'];
+        }
         if (array_key_exists('description', $attributes)) {
             $category->description = $attributes['description'];
         }
