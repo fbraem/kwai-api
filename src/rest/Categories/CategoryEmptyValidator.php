@@ -8,6 +8,6 @@ class CategoryEmptyValidator extends \Core\Validators\EmptyValidator
     {
         parent::__construct();
 
-        $this->addValidator('data.attributes.name');
+        $this->addEmptyValidator('data.attributes.name');
     }
 }

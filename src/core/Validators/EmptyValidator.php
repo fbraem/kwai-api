@@ -11,28 +11,7 @@ class EmptyValidator extends InputValidator
         parent::__construct();
     }
 
-    public function validate($data)
-    {
-        $this->errors = [];
-
-        foreach ($this->validators as $path => $validator) {
-            $value = \JmesPath\search($path, $data);
-            if (!$validator->isValid($value)) {
-                $messages = [];
-                foreach ($validator->getMessages() as $messageId => $message) {
-                    $pointer = '/' . str_replace('.', '/', $path);
-                    if (!isset($this->errors[$pointer])) {
-                        $this->errors[$pointer] = [];
-                    }
-                    $this->errors[$pointer][] = $message;
-                }
-            }
-        }
-
-        return count($this->errors) == 0;
-    }
-
-    public function addValidator($path, $option = null)
+    public function addEmptyValidator($path, $option = null)
     {
         $notEmpty = new NotEmpty($option);
         $notEmpty->setMessage(_("Value can't be empty"));

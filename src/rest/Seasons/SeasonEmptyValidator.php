@@ -8,8 +8,8 @@ class SeasonEmptyValidator extends \Core\Validators\EmptyValidator
     {
         parent::__construct();
 
-        $this->addValidator('data.attributes.name');
-        $this->addValidator('data.attributes.start_date', \Zend\Validator\NotEmpty::INTEGER | \Zend\Validator\NotEmpty::NULL);
-        $this->addValidator('data.attributes.end_date', \Zend\Validator\NotEmpty::INTEGER | \Zend\Validator\NotEmpty::NULL);
+        $this->addEmptyValidator('data.attributes.name');
+        $this->addEmptyValidator('data.attributes.start_date', \Zend\Validator\NotEmpty::INTEGER | \Zend\Validator\NotEmpty::NULL);
+        $this->addEmptyValidator('data.attributes.end_date', \Zend\Validator\NotEmpty::INTEGER | \Zend\Validator\NotEmpty::NULL);
     }
 }

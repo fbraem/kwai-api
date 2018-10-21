@@ -8,7 +8,7 @@ class TeamTypeEmptyValidator extends \Core\Validators\EmptyValidator
     {
         parent::__construct();
 
-        $this->addValidator('data.attributes.competition');
-        $this->addValidator('data.attributes.gender');
+        $this->addEmptyValidator('data.attributes.competition');
+        $this->addEmptyValidator('data.attributes.gender');
     }
 }
