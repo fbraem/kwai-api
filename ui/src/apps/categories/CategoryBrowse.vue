@@ -18,17 +18,12 @@
                 </div>
             </div>
         </PageHeader>
-        <section class="uk-section">
-            <div class="uk-container">
-                <div class="uk-child-width-1-1 uk-child-width-1-2@l" uk-grid>
-                    <div v-for="category in categories" :key="category.id">
-                        <div class="uk-card uk-card-body uk-card-default uk-card-small uk-card-hover">
-                            <router-link :to="{ name: 'categories.read', params: { id : category.id } }" class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent"></router-link>
-                            <h3 class="uk-card-title">
-                                {{ category.name }}
-                            </h3>
-                            <p v-html="category.description">
-                            </p>
+        <section class="uk-section uk-section-small">
+            <div class="uk-container uk-container-large">
+                <div class="uk-grid-small uk-grid-margin-small uk-grid-stack" uk-grid>
+                    <div class="uk-width-1-1@m">
+                        <div class="uk-margin uk-text-center uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-medium uk-grid-match uk-flex-center" uk-height-match=".uk-card" uk-grid>
+                            <Card v-for="category in categories" :key="category.id" :category="category" />
                         </div>
                     </div>
                 </div>
@@ -39,6 +34,7 @@
 
 <script>
     import PageHeader from '@/site/components/PageHeader.vue';
+    import Card from './components/Card.vue';
 
     import 'vue-awesome/icons/plus';
 
@@ -48,7 +44,8 @@
 
     export default {
         components : {
-            PageHeader
+            PageHeader,
+            Card
         },
         i18n : messages,
         computed : {

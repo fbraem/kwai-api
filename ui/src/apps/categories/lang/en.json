@@ -13,5 +13,8 @@
     "save" : "Save",
     "featured_news" : "Featured News",
     "no_featured_news" : "No featured news at the moment",
-    "more_news" : "More news ..."
+    "more_news" : "More news ...",
+    "short_description" : "Short Description",
+    "short_description_placeholder" : "Enter a short description",
+    "overview" : "Overview"
 }

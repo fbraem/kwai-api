@@ -5,23 +5,7 @@
                 <slot></slot>
             </div>
             <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
-                <div uk-grid class="uk-grid-small uk-child-width-1-1">
-                    <div>
-                        <h4 class="uk-heading-line uk-text-bold"><span>{{ $t('category') }}</span></h4>
-                    </div>
-                    <div>
-                        <ul class="uk-list uk-list-divider">
-                            <li v-for="(category, index) in categories">
-                                <router-link :to="{ name : 'pages.category', params : { category : category.id }}">
-                                    {{ category.name }}
-                                </router-link>
-                                <div class="uk-text-meta">
-                                    {{ category.description }}
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <ListCategories :categories="categories" />
             </div>
         </div>
     </section>
@@ -35,8 +19,13 @@
 
     import categoryStore from '@/stores/categories';
 
+    import ListCategories from '@/apps/categories/components/List.vue';
+
     export default {
         i18n : messages,
+        components : {
+            ListCategories
+        },
         computed : {
             categories() {
                 return this.$store.getters['categoryModule/categories'];

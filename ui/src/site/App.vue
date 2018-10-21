@@ -13,82 +13,60 @@
                 </div>
             </div>
         </PageHeader>
-        <section class="uk-section uk-section-small uk-section-muted">
+        <section class="uk-section uk-section-small uk-section-muted uk-visible@m">
             <div class="uk-container uk-container-large">
-                <div class="uk-grid-small uk-grid-margin-small uk-grid uk-grid-stack" uk-grid>
-                    <div class="uk-width-1-1@m">
-                        <div class="uk-margin uk-text-center uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-4@m uk-grid-medium uk-grid uk-grid-match uk-flex-center" uk-height-match=".uk-card" uk-grid>
-                            <div>
-                                <Card :to="{ name : 'news.browse' }" title="Nieuws">
-                                    <template slot="icon">
-                                        <fa-icon name="newspaper" scale="3" style="color:#c61c18;height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Blijf op de hoogte over het reilen en zeilen van onze club.
-                                    </template>
-                                </Card>
-                            </div>
-                            <div>
-                                <Card :to="{ name : 'categories.read', params : { id : '2' } }" title="Trainingen">
-                                    <template slot="icon">
-                                        <fa-icon name="university" scale="3" style="color:#c61c18;height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Wanneer trainen we? Waar trainen we? Waar kan je nog trainen?
-                                    </template>
-                                </Card>
-                            </div>
-                            <div>
-                                <Card :to="{ name : 'categories.read', params : { id : '3' } }" title="Tornooien">
-                                    <template slot="icon">
-                                        <fa-icon name="trophy" scale="3" style="color:#c61c18;height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Informatie en nieuws over wedstrijden voor onze judoka's
-                                    </template>
-                                </Card>
-                            </div>
-                            <div>
-                                <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
-                                    <template slot="icon">
-                                        <fa-icon name="calendar" scale="3" style="color:#c61c18;height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Bekijk onze kalender voor trainingen, activiteiten en tornooien
-                                    </template>
-                                </Card>
-                            </div>
-                            <div>
-                                <Card to="https://oud.judokwaikemzeke.be/technieken/technieken.htm" title="Judo">
-                                    <template slot="icon">
-                                        <img :src="require('./images/Judo_red_white_belt.svg')" style="height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Technieken, Examens, ...
-                                    </template>
-                                </Card>
-                            </div>
-                            <div>
-                                <Card to="https://oud.judokwaikemzeke.be/materiaal.pdf" title="Materiaal">
-                                    <template slot="icon">
-                                        <fa-icon name="shopping-basket" scale="3" style="color:#c61c18;height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Judogi's, gordels, polo's, sweaters, sporttassen, ...
-                                    </template>
-                                </Card>
-                            </div>
-                            <div>
-                                <Card to="https://www.judokwaikemzeke.be/oud/training/trainers.htm" title="Bestuur">
-                                    <template slot="icon">
-                                        <fa-icon name="users" scale="3" style="color:#c61c18;height:32px;" />
-                                    </template>
-                                    <template slot="description">
-                                        Wie is wie? Wie doet wat?
-                                    </template>
-                                </Card>
-                            </div>
-                        </div>
+                <div class="uk-margin uk-text-center uk-child-width-1-2@m uk-child-width-1-4@l uk-grid-medium uk-grid-match uk-flex uk-flex-center" uk-height-match=".uk-card" uk-grid>
+                    <div>
+                        <Card :to="{ name : 'news.browse' }" title="Nieuws">
+                            <template slot="icon">
+                                <fa-icon name="newspaper" scale="3" style="color:#c61c18;height:32px;" />
+                            </template>
+                            <template slot="description">
+                                Blijf op de hoogte over het reilen en zeilen van onze club.
+                            </template>
+                        </Card>
+                    </div>
+                    <div>
+                        <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+                            <template slot="icon">
+                                <fa-icon name="calendar" scale="3" style="color:#c61c18;height:32px;" />
+                            </template>
+                            <template slot="description">
+                                Bekijk onze kalender voor trainingen, activiteiten en tornooien
+                            </template>
+                        </Card>
+                    </div>
+                    <div v-for="category in categories" :key="category.id">
+                        <CategoryCard :category="category" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="uk-section uk-section-small uk-section-muted uk-hidden@m">
+            <div class="uk-container uk-container-large">
+                <div class="uk-margin uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-4@l uk-grid-medium uk-grid-match uk-flex uk-flex-center" uk-height-match=".uk-card" uk-grid>
+                    <div class="uk-text-center">
+                        <Card :to="{ name : 'news.browse' }" title="Nieuws">
+                            <template slot="icon">
+                                <fa-icon name="newspaper" scale="3" style="color:#c61c18;height:32px;" />
+                            </template>
+                            <template slot="description">
+                                Blijf op de hoogte over het reilen en zeilen van onze club.
+                            </template>
+                        </Card>
+                    </div>
+                    <div class="uk-text-center">
+                        <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+                            <template slot="icon">
+                                <fa-icon name="calendar" scale="3" style="color:#c61c18;height:32px;" />
+                            </template>
+                            <template slot="description">
+                                Bekijk onze kalender voor trainingen, activiteiten en tornooien
+                            </template>
+                        </Card>
+                    </div>
+                    <div>
+                        <CategoryList :categories="categories" />
                     </div>
                 </div>
             </div>
@@ -226,8 +204,11 @@
     import Card from './Card.vue';
     import PageHeader from './components/PageHeader.vue';
     import AreYouSure from '@/components/AreYouSure.vue';
+    import CategoryCard from '@/apps/categories/components/Card.vue';
+    import CategoryList from '@/apps/categories/components/List.vue';
 
     import newsStore from '@/stores/news';
+    import categoryStore from '@/stores/categories';
 
     import UIkit from 'uikit';
 
@@ -240,7 +221,9 @@
             Paginator,
             Card,
             PageHeader,
-            AreYouSure
+            AreYouSure,
+            CategoryCard,
+            CategoryList
         },
         data() {
             return {
@@ -256,16 +239,23 @@
             },
             storiesMeta() {
                 return this.$store.getters['newsModule/meta'];
+            },
+            categories() {
+                return this.$store.getters['categoryModule/categories'];
+            }
+        },
+        beforeCreate() {
+            if (!this.$store.state.newsModule) {
+                this.$store.registerModule('newsModule', newsStore);
+            }
+            if (!this.$store.state.categoryModule) {
+                this.$store.registerModule('categoryModule', categoryStore);
             }
         },
         created() {
             this.$store.dispatch('setSubTitle', '');
-            if (!this.$store.state.newsModule) {
-                this.$store.registerModule('newsModule', newsStore);
-            }
-            this.$store.dispatch('newsModule/browse', {
-                featured : true
-            });
+            this.loadStories(0);
+            this.$store.dispatch('categoryModule/browse');
         },
         methods : {
             async loadStories(offset) {

@@ -13,5 +13,8 @@
     "save" : "Bewaar",
     "featured_news" : "Nieuws in de kijker",
     "no_featured_news" : "Geen nieuws in de kijker momenteel ...",
-    "more_news" : "Meer nieuws ..."
+    "more_news" : "Meer nieuws ...",
+    "short_description" : "Korte Omschrijving",
+    "short_description_placeholder" : "Geef een korte omschrijving in",
+    "overview" : "Overzicht"
 }

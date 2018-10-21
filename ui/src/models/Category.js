@@ -10,7 +10,8 @@ export default class Category extends Model {
             'name',
             'description',
             'remark',
-            'images'
+            'images',
+            'short_description'
         ];
     }
 

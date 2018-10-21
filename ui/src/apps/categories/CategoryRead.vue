@@ -5,8 +5,8 @@
                 <div class="uk-width-expand uk-light">
                     <div v-if="category">
                         <h1>
-                            <img v-if="category.icon_picture" :src="category.icon_picture" width="40" height="40" uk-svg />
-                            &nbsp;{{ category.name }}</h1>
+                            <span v-if="category.icon_picture"><img  :src="category.icon_picture" width="40" height="40" uk-svg />&nbsp;</span>
+                            {{ category.name }}</h1>
                         <p>
                             {{ category.description }}
                         </p>
