@@ -15,6 +15,6 @@ class PageValidator extends \Core\Validators\InputValidator
             _('Priority must be a number'),
             Digits::NOT_DIGITS
         );
-        $this-addValidator('data.attributes.priority', $priorityValidation);
+        $this->addValidator('data.attributes.priority', $priorityValidation);
     }
 }
