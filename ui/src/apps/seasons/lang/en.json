@@ -15,5 +15,9 @@
     "save" : "Save",
     "invalid_date" : "Invalid date. Format is {format}",
     "invalid_end_date" : "Enddate must be after startdate",
-    "required" : "This field is required."
+    "required" : "This field is required.",
+    "season_not_found" : "Season doesn't exist",
+    "are_you_sure" : "Are you sure to delete this season?",
+    "cancel" : "Annuleer",
+    "delete" : "Verwijder"
 }

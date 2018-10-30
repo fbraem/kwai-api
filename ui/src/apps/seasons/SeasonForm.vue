@@ -1,42 +1,40 @@
 <template>
-    <Page>
-        <template slot="title">
-            {{ $t('seasons') }} &bull;&nbsp;
-            <span v-if="creating">{{ $t('create') }}</span>
-            <span v-else>{{ $t('update') }}</span>
-        </template>
-        <template slot="content">
-            <div class="uk-container">
-                <div uk-grid>
-                    <div class="uk-width-1-1">
-                        <form class="uk-form-stacked">
-                            <uikit-input-text v-model="form.season.name" :validator="$v.form.season.name" :errors="nameErrors" id="name" :placeholder="$t('name_placeholder')">
-                                {{ $t('name') }}:
-                            </uikit-input-text>
-                            <uikit-input-text v-model="form.season.start_date" :validator="$v.form.season.start_date" :errors="startDateErrors" id="start_date" :placeholder="$t('start_date_placeholder')">
-                                {{ $t('start_date') }}:
-                            </uikit-input-text>
-                            <uikit-input-text v-model="form.season.end_date" :validator="$v.form.season.end_date" :errors="endDateErrors" id="end_date" :placeholder="$t('end_date_placeholder')">
-                                {{ $t('end_date') }}:
-                            </uikit-input-text>
-                            <uikit-textarea v-model="form.season.remark" :validator="$v.form.season.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
-                                {{ $t('remark') }}:
-                            </uikit-textarea>
-                        </form>
+    <div>
+        <PageHeader>
+            <h1>{{ $t('seasons') }}</h1>
+            <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('create') }}</h3>
+            <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('update') }}</h3>
+        </PageHeader>
+        <section class="uk-section uk-section-small uk-container uk-container-expand">
+            <div uk-grid>
+                <div class="uk-width-1-1">
+                    <form class="uk-form-stacked">
+                        <uikit-input-text v-model="form.season.name" :validator="$v.form.season.name" :errors="nameErrors" id="name" :placeholder="$t('name_placeholder')">
+                            {{ $t('name') }}:
+                        </uikit-input-text>
+                        <uikit-input-text v-model="form.season.start_date" :validator="$v.form.season.start_date" :errors="startDateErrors" id="start_date" :placeholder="$t('start_date_placeholder')">
+                            {{ $t('start_date') }}:
+                        </uikit-input-text>
+                        <uikit-input-text v-model="form.season.end_date" :validator="$v.form.season.end_date" :errors="endDateErrors" id="end_date" :placeholder="$t('end_date_placeholder')">
+                            {{ $t('end_date') }}:
+                        </uikit-input-text>
+                        <uikit-textarea v-model="form.season.remark" :validator="$v.form.season.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('remark_placeholder')">
+                            {{ $t('remark') }}:
+                        </uikit-textarea>
+                    </form>
+                </div>
+                <div uk-grid class="uk-width-1-1">
+                    <div class="uk-width-expand">
                     </div>
-                    <div uk-grid class="uk-width-1-1">
-                        <div class="uk-width-expand">
-                        </div>
-                        <div class="uk-width-auto">
-                            <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                                <fa-icon name="save" />&nbsp; {{ $t('save') }}
-                            </button>
-                        </div>
+                    <div class="uk-width-auto">
+                        <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
+                            <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                        </button>
                     </div>
                 </div>
             </div>
-        </template>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <script>
@@ -50,7 +48,7 @@
 
     import 'vue-awesome/icons/save';
 
-    import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitTextarea from '@/components/uikit/Textarea.vue';
 
@@ -78,7 +76,7 @@
     export default {
         i18n : messages,
         components : {
-            Page,
+            PageHeader,
             UikitInputText,
             UikitTextarea
         },
@@ -166,7 +164,7 @@
         	next();
         },
         watch : {
-            errors(nv) {
+            error(nv) {
                 if (nv) {
                     if ( nv.response.status == 422 ) {
                         nv.response.data.errors.forEach((item, index) => {

@@ -6,7 +6,7 @@ Vue.use(Vuex);
 import Season from '@/models/Season';
 
 const state = {
-    seasons : [],
+    seasons : null,
     error : null
 };
 
@@ -15,7 +15,10 @@ const getters = {
         return state.seasons;
     },
     season: (state) => (id) => {
-        return state.seasons.find((s) => s.id == id);
+        if (state.seasons) {
+            return state.seasons.find((s) => s.id == id);
+        }
+        return null;
     },
     error(state) {
         return state.error;
@@ -29,6 +32,9 @@ const mutations = {
   },
   season(state, season) {
       state.error = null;
+      if (state.seasons == null) {
+          state.seasons = [];
+      }
       var index = state.seasons.findIndex((s) => s.id == season.id);
       if (index != -1) {
           Vue.set(state.seasons, index, season);

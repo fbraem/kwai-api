@@ -15,5 +15,9 @@
     "save" : "Bewaar",
     "invalid_date" : "Ongeldige datum. Formaat is {format}",
     "invalid_end_date" : "Einddatum moet na startdatum liggen",
-    "required" : "Dit veld is verplicht in te vullen."
+    "required" : "Dit veld is verplicht in te vullen.",
+    "season_not_found" : "Seizoen niet gevonden",
+    "are_you_sure" : "Ben je zeker om dit seizoen te verwijderen?",
+    "cancel" : "Cancel",
+    "delete" : "Delete"
 }
