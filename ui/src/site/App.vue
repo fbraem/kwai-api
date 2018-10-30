@@ -261,8 +261,6 @@
             async loadStories(offset) {
                 try {
                     await this.$store.dispatch('newsModule/browse', {offset : offset, featured : true});
-                    var el = document.getElementById('newsgrid');
-                    el.scrollIntoView();
                 } catch(error) {
                     console.log(error);
                 }
