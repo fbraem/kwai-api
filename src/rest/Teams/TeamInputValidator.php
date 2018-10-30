@@ -15,6 +15,6 @@ class TeamInputValidator extends \Core\Validators\InputValidator
             _('name can\'t contain more then 255 characters'),
             StringLength::TOO_LONG
         );
-        $this->addEmptyValidator('data.attributes.name', $nameValidation);
+        $this->addValidator('data.attributes.name', $nameValidation);
     }
 }
