@@ -26,7 +26,9 @@ class ReadAction
         try {
             return (new \Core\ResourceResponse(
                 SeasonTransformer::createForItem(
-                    SeasonsTable::getTableFromRegistry()->get($args['id'])
+                    SeasonsTable::getTableFromRegistry()->get($args['id'], [
+                        'contain' => ['Teams']
+                    ])
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {

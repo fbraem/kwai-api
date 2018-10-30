@@ -13,6 +13,10 @@ class SeasonsTable extends \Cake\ORM\Table
     public function initialize(array $config)
     {
         $this->initializeTable();
+
+        $this->hasMany('Teams', [
+                'className' => \Domain\Team\TeamsTable::class
+        ]);
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)

@@ -4,6 +4,8 @@ namespace Domain\Game;
 
 class Season extends \Cake\ORM\Entity
 {
+    protected $_hidden = ['teams'];
+
     public function _getStartDate($value)
     {
         if ($value) {

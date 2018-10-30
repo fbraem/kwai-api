@@ -25,6 +25,7 @@ class BrowseAction
             SeasonTransformer::createForCollection(
                 SeasonsTable::getTableFromRegistry()
                     ->find()
+                    ->contain(['Teams'])
                     ->order(['start_date' => 'DESC'])
                     ->all()
             )
