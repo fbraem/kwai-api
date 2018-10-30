@@ -2,6 +2,8 @@ import Model from './BaseModel';
 
 import moment from 'moment';
 
+import Team from './Team';
+
 export default class Season extends Model {
     resourceName() {
         return 'seasons';
@@ -21,6 +23,12 @@ export default class Season extends Model {
             'created_at' : 'YYYY-MM-DD HH:mm:ss',
             'updated_at' : 'YYYY-MM-DD HH:mm:ss'
         }
+    }
+
+    relationships() {
+        return {
+            teams : new Team()
+        };
     }
 
     computed() {

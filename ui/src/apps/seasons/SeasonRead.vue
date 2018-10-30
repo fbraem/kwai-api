@@ -29,7 +29,7 @@
                     <fa-icon name="spinner" scale="2" spin />
                 </div>
             </div>
-            <div v-else uk-grid>
+            <div v-else class="uk-child-width-1-1" uk-grid>
                 <AreYouSure id="delete-season" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteSeason">
                     {{ $t('are_you_sure') }}
                 </AreYouSure>
@@ -59,6 +59,18 @@
                 </div>
                 <div v-else class="uk-alert uk-alert-danger">
                     {{ $t('season_not_found') }}
+                </div>
+                <div v-if="season && season.teams">
+                    <h3>Teams</h3>
+                    <table class="uk-table">
+                        <tr v-for="team in season.teams">
+                            <td>
+                                <router-link :to="{ 'name' : 'teams.read', params : { id : team.id } }">
+                                    {{ team.name }}
+                                </router-link>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </section>
