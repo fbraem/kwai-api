@@ -1,7 +1,7 @@
 <template>
     <div>
         <PageHeader :picture="picture">
-            <div v-if="category" class="uk-light" uk-grid>
+            <div class="uk-light" uk-grid>
                 <div class="uk-width-1-1 uk-width-5-6@m">
                     <div v-if="category">
                         <h1 class="uk-margin-remove">{{ category.name }}</h1>
@@ -49,6 +49,7 @@
 
 <script>
     import 'vue-awesome/icons/spinner';
+    import 'vue-awesome/icons/plus';
 
     import moment from 'moment';
     import PageHeader from '@/site/components/PageHeader.vue';
