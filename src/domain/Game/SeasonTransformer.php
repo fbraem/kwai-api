@@ -29,7 +29,7 @@ class SeasonTransformer extends Fractal\TransformerAbstract
 
     public function includeTeams(Season $season)
     {
-        $teams = $seasons->teams;
+        $teams = $season->teams;
         if ($teams) {
             return \Domain\Team\TeamTransformer::createForCollection($teams);
         }
