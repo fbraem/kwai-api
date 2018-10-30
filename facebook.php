@@ -61,7 +61,7 @@ $app->get('/facebook/news/{id}', function (Request $request, Response $response,
         $result = $this->template->render('facebook', ['meta' => $meta]);
         $response = $response->getBody()->write($result);
     } else {
-        $response = $response->withRedirect($uri->withPath('/')->__toString() . '#/news/' . $story->id);
+        $response = $response->withRedirect($uri->withPath('/')->withQuery('')->__toString() . '#/news/' . $story->id);
     }
 
     return $response;
