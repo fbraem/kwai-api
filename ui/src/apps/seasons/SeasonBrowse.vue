@@ -7,7 +7,7 @@
                 </div>
                 <div class="uk-width-1-6">
                     <div class="uk-flex uk-flex-right">
-                        <router-link v-if="$page.isAllowed('create')" class="uk-icon-button" :to="{ name : 'seasons.create' }">
+                        <router-link v-if="$season.isAllowed('create')" class="uk-icon-button" :to="{ name : 'seasons.create' }">
                             <fa-icon name="plus" />
                         </router-link>
                     </div>
