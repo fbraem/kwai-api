@@ -1,9 +1,20 @@
 <template>
-    <Page>
-        <template slot="title">
-            {{ $t('teams') }}
-        </template>
-        <div slot="content" class="uk-container">
+    <div>
+        <PageHeader>
+            <div class="uk-grid">
+                <div class="uk-width-5-6">
+                    <h1>{{ $t('teams') }}</h1>
+                </div>
+                <div class="uk-width-1-6">
+                    <div class="uk-flex uk-flex-right">
+                        <router-link v-if="$team.isAllowed('create')" class="uk-icon-button" :to="{ name : 'teams.create' }">
+                            <fa-icon name="plus" />
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+        </PageHeader>
+        <section class="uk-section uk-section-small uk-container uk-container-expand">
             <div v-if="$wait.is('teams.browse')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
                     <fa-icon name="spinner" scale="2" spin />
@@ -30,21 +41,24 @@
                     </tr>
                 </table>
             </div>
-        </div>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <script>
     import 'vue-awesome/icons/spinner';
+    import 'vue-awesome/icons/check';
+    import 'vue-awesome/icons/edit';
+    import 'vue-awesome/icons/plus';
 
     import messages from './lang';
 
-    import Page from './Page';
+    import PageHeader from '@/site/components/PageHeader';
     import teamStore from '@/stores/teams';
 
     export default {
         components : {
-            Page
+            PageHeader
         },
         i18n : messages,
         data() {

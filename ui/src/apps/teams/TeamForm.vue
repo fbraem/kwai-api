@@ -1,11 +1,11 @@
 <template>
-    <Page>
-        <template slot="title">
-            {{ $t('teams') }} &bull;&nbsp;
-            <span v-if="creating">{{ $t('team.create') }}</span>
-            <span v-else>{{ $t('team.update') }}</span>
-        </template>
-        <div slot="content" class="uk-container">
+    <div>
+        <PageHeader>
+            <h1>{{ $t('teams') }}</h1>
+            <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('team.create') }}</h3>
+            <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('team.update') }}</h3>
+        </PageHeader>
+        <section class="uk-section uk-section-small uk-container uk-container-expand">
             <div uk-grid>
                 <div class="uk-width-1-1">
                     <form class="uk-form-stacked">
@@ -47,8 +47,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <script>
@@ -61,7 +61,7 @@
 
     import 'vue-awesome/icons/save';
 
-    import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitTextarea from '@/components/uikit/Textarea.vue';
     import UikitSelect from '@/components/uikit/Select.vue';
@@ -92,7 +92,7 @@
 
     export default {
         components : {
-            Page, UikitInputText, UikitTextarea, UikitSelect
+            PageHeader, UikitInputText, UikitTextarea, UikitSelect
         },
         i18n : messages,
         mixins: [
@@ -113,8 +113,11 @@
                 return this.$store.getters['teamModule/error'];
             },
             seasons() {
-                var seasons = this.$store.getters['seasonModule/seasons'].map((season) => ({value : season.id, text : season.name }));
-                seasons.unshift({ value : 0, text : '< ' + this.$t('no_season') + ' >'});
+                var seasons = this.$store.getters['seasonModule/seasons'];
+                if (seasons) {
+                    seasons = seasons.map((season) => ({value : season.id, text : season.name }));
+                    seasons.unshift({ value : 0, text : '< ' + this.$t('no_season') + ' >'});
+                }
                 return seasons;
             },
             team_types() {

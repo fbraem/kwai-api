@@ -1,14 +1,23 @@
 <template>
-    <Page>
-        <template slot="title">
-            {{ $t('teams') }}<span v-if="team">&nbsp;&bull;&nbsp;{{ team.name }}</span>
-        </template>
-        <template slot="toolbar">
-            <router-link v-if="team && $team.isAllowed('update', team)" class="uk-icon-button" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
-                <fa-icon name="edit" />
-            </router-link>
-        </template>
-        <div slot="content" class="uk-container">
+    <div>
+        <PageHeader>
+            <div class="uk-grid">
+                <div class="uk-width-1-1@s uk-width-5-6@m">
+                    <h1 class="uk-h1">{{ $t('teams') }}</h1>
+                    <h3 v-if="team" class="uk-h3 uk-margin-remove">{{ team.name }}</h3>
+                </div>
+                <div class="uk-width-1-1@s uk-width-1-6@m">
+                    <div class="uk-flex uk-flex-right">
+                        <div>
+                            <router-link v-if="team && $team.isAllowed('update', team)" class="uk-icon-button" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
+                                <fa-icon name="edit" />
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </PageHeader>
+        <section class="uk-section uk-section-small uk-container uk-container-expand">
             <AreYouSure id="delete-member" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteMembers">
                 <template slot="title">{{ $t('delete') }}</template>
                 {{ $t('sure_to_delete') }}
@@ -179,14 +188,14 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <script>
     import messages from './lang';
 
-    import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import AreYouSure from '@/components/AreYouSure.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitSelect from '@/components/uikit/Select.vue';
@@ -221,7 +230,7 @@
             }
         },
         components : {
-            Page,
+            PageHeader,
             AreYouSure,
             UikitInputText,
             UikitSelect
