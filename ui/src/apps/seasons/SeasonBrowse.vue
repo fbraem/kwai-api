@@ -20,38 +20,40 @@
                     <fa-icon name="spinner" scale="2" spin />
                 </div>
             </div>
-            <div v-else uk-grid>
+            <div v-else class="uk-child-width-1-1" uk-grid>
                 <div v-if="seasons && seasons.length == 0" class="uk-alert uk-alert-warning">
                     {{ $t('no_seasons') }}
                 </div>
-                <table v-else class="uk-table uk-table-striped">
-                    <tr>
-                        <th></th>
-                        <th>{{ $t('name') }}</th>
-                        <th>{{ $t('start_date') }}</th>
-                        <th>{{ $t('end_date') }}</th>
-                        <th></th>
-                    </tr>
-                    <tr v-for="season in seasons" :key="season.id">
-                        <td>
-                            <fa-icon name="check" v-if="season.active" />
-                        </td>
-                        <td>
-                            <router-link :to="{ name: 'seasons.read', params: { id : season.id} }">{{ season.name }}</router-link>
-                        </td>
-                        <td>
-                            {{ season.formatted_start_date }}
-                        </td>
-                        <td>
-                            {{ season.formatted_end_date }}
-                        </td>
-                        <td>
-                            <router-link v-if="$season.isAllowed('update', season)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'seasons.update', params : { id : season.id } }">
-                                <fa-icon name="edit" />
-                            </router-link>
-                        </td>
-                    </tr>
-                </table>
+                <div v-else>
+                    <table class="uk-table uk-table-striped">
+                        <tr>
+                            <th></th>
+                            <th>{{ $t('name') }}</th>
+                            <th>{{ $t('start_date') }}</th>
+                            <th>{{ $t('end_date') }}</th>
+                            <th></th>
+                        </tr>
+                        <tr v-for="season in seasons" :key="season.id">
+                            <td>
+                                <fa-icon name="check" v-if="season.active" />
+                            </td>
+                            <td>
+                                <router-link :to="{ name: 'seasons.read', params: { id : season.id} }">{{ season.name }}</router-link>
+                            </td>
+                            <td>
+                                {{ season.formatted_start_date }}
+                            </td>
+                            <td>
+                                {{ season.formatted_end_date }}
+                            </td>
+                            <td>
+                                <router-link v-if="$season.isAllowed('update', season)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'seasons.update', params : { id : season.id } }">
+                                    <fa-icon name="edit" />
+                                </router-link>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </section>
     </div>
