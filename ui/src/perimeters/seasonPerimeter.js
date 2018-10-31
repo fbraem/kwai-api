@@ -18,7 +18,7 @@ export default createPerimeter({
         },
         remove(season) {
             if (this.child.authenticated) {
-                return true;
+                return season.teams == null;
             }
             return false;
         }
