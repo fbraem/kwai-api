@@ -28,7 +28,10 @@ class UpdateAction
     {
         $seasonsTable = SeasonsTable::getTableFromRegistry();
         try {
-            $season = $seasonsTable->get($args['id']);
+            $season = $seasonsTable->get(
+                $args['id'],
+                ['contain' => ['Teams']]
+            );
         } catch (RecordNotFoundException $rnfe) {
             return $response->withStatus(404, _("Season doesn't exist"));
         }
