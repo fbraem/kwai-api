@@ -1,5 +1,6 @@
 {
     "seasons": "Seasons",
+    "season" : "Season",
     "no_seasons" : "There are no seasons yet",
     "start_date" : "Start Date",
     "start_date_placeholder" : "Enter a date",
@@ -19,5 +20,7 @@
     "season_not_found" : "Season doesn't exist",
     "are_you_sure" : "Are you sure to delete this season?",
     "cancel" : "Annuleer",
-    "delete" : "Verwijder"
+    "delete" : "Verwijder",
+    "teams" : "Teams",
+    "no_teams" : "There are no teams defined for this season"
 }

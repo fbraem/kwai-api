@@ -1,5 +1,6 @@
 {
     "seasons" : "Seizoenen",
+    "season" : "Seizoen",
     "no_seasons" : "Er zijn nog geen seizoenen gedefiniëerd",
     "start_date" : "Begin Datum",
     "start_date_placeholder" : "Geef een datum in",
@@ -19,5 +20,7 @@
     "season_not_found" : "Seizoen niet gevonden",
     "are_you_sure" : "Ben je zeker om dit seizoen te verwijderen?",
     "cancel" : "Cancel",
-    "delete" : "Delete"
+    "delete" : "Delete",
+    "teams" : "Teams",
+    "no_teams" : "Er zijn nog geen teams gedefiniëerd voor dit seizoen"
 }
