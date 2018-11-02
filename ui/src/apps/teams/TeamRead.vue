@@ -9,6 +9,11 @@
                 <div class="uk-width-1-1@s uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
                         <div>
+                            <router-link class="uk-icon-button" :to="{ 'name' : 'teams.browse' }">
+                                <fa-icon name="list" />
+                            </router-link>
+                        </div>
+                        <div class="uk-margin-small-left">
                             <router-link v-if="team && $team.isAllowed('update', team)" class="uk-icon-button" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
                                 <fa-icon name="edit" />
                             </router-link>
@@ -209,6 +214,7 @@
     import 'vue-awesome/icons/male';
     import 'vue-awesome/icons/female';
     import 'vue-awesome/icons/question';
+    import 'vue-awesome/icons/list';
 
     import Member from '@/models/Member';
 
