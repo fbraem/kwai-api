@@ -1,11 +1,11 @@
 <template>
-    <Page>
-        <template slot="title">
-            {{ $t('types') }} &bull;&nbsp;
-            <span v-if="creating">{{ $t('create') }}</span>
-            <span v-else>{{ $t('update') }}</span>
-        </template>
-        <div slot="content" class="uk-container">
+    <div>
+        <PageHeader>
+            <h1>{{ $t('types') }}</h1>
+            <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('create') }}</h3>
+            <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('update') }}</h3>
+        </PageHeader>
+        <section class="uk-section uk-section-small uk-container uk-container-expand">
             <div uk-grid>
                 <div class="uk-width-1-1">
                     <form class="uk-form-stacked">
@@ -42,8 +42,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <script>
@@ -55,7 +55,7 @@
     import { validationMixin } from 'vuelidate';
     import { required, numeric } from 'vuelidate/lib/validators';
 
-    import Page from './Page.vue';
+    import PageHeader from '@/site/components/PageHeader.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitTextarea from '@/components/uikit/Textarea.vue';
     import UikitSelect from '@/components/uikit/Select.vue';
@@ -90,7 +90,7 @@
 
     export default {
         components : {
-            Page, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
+            PageHeader, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
         },
         i18n : messages,
         mixins: [
@@ -176,7 +176,7 @@
             });
         },
         watch : {
-            errors(nv) {
+            error(nv) {
                 if (nv) {
                     if ( nv.response.status == 422 ) {
                         nv.response.data.errors.forEach((item, index) => {

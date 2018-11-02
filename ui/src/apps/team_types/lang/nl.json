@@ -2,8 +2,8 @@
     "types" : "Team Types",
     "no_types" : "Er zijn geen team types gedefiniëerd",
     "type_details" : "Team Type Details",
-    "create" : "Maak een nieuw Team Type",
-    "update" : "Wijzig Team Type",
+    "create" : "Maak een nieuw type",
+    "update" : "Wijzig type",
     "details" : "Team Type",
     "form" : {
         "name" : {

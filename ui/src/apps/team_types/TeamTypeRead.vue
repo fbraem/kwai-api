@@ -1,14 +1,33 @@
 <template>
-    <Page>
-        <template slot="title">{{ $t('types') }}
-            <span v-if="teamtype">&nbsp;&bull;&nbsp;{{ teamtype.name }}</span>
-        </template>
-        <template slot="toolbar">
-            <router-link v-if="teamtype && $team_type.isAllowed('update', teamtype)" class="uk-icon-button" :to="{ 'name' : 'team_types.update', params : { id : teamtype.id } }">
-                <fa-icon name="edit" />
-            </router-link>
-        </template>
-        <div slot="content" class="uk-container">
+    <div>
+        <PageHeader>
+            <div class="uk-grid">
+                <div class="uk-width-5-6">
+                    <h1>{{ $t('types') }}</h1>
+                    <h3 v-if="teamtype" class="uk-h3 uk-margin-remove">{{ teamtype.name }}</h3>
+                </div>
+                <div class="uk-width-1-6">
+                    <div class="uk-flex uk-flex-right">
+                        <div>
+                            <router-link class="uk-icon-button" :to="{ 'name' : 'team_types.browse' }">
+                                <fa-icon name="list" />
+                            </router-link>
+                        </div>
+                        <div class="uk-margin-small-left">
+                            <router-link v-if="$team_type.isAllowed('update',teamtype)" class="uk-icon-button" :to="{ name : 'team_types.update' }">
+                                <fa-icon name="edit" />
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </PageHeader>
+        <section class="uk-section uk-section-small uk-container uk-container-expand">
+            <div v-if="$wait.is('teamtypes.read')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                    <fa-icon name="spinner" scale="2" spin />
+                </div>
+            </div>
             <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
                 {{ $t('not_allowed') }}
             </div>
@@ -60,23 +79,24 @@
                     </table>
                 </div>
             </div>
-        </div>
-    </Page>
+        </section>
+    </div>
 </template>
 
 <script>
     import 'vue-awesome/icons/check';
+    import 'vue-awesome/icons/list';
     import 'vue-awesome/icons/times';
 
     import messages from './lang';
 
-    import Page from './Page';
+    import PageHeader from '@/site/components/PageHeader';
 
     import teamTypeStore from '@/stores/team_types';
 
     export default {
         components : {
-            Page
+            PageHeader
         },
         i18n : messages,
         computed : {
