@@ -8,7 +8,7 @@ class Person extends \Cake\ORM\Entity
         'age'
     ];
 
-    protected $_hidden = [ 'nationality', 'nationality_id' ];
+    protected $_hidden = [ 'contact', 'contact_id', 'nationality', 'nationality_id' ];
 
     use \Domain\DatetimeMetaTrait;
 
