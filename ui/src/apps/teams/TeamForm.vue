@@ -230,7 +230,11 @@
                 this.team.remark = this.form.team.remark;
                 if (this.form.team.season) {
                     this.team.season = new Season();
-                    this.team.season.id = this.form.team.season;
+                    if (this.form.team.season == 0) {
+                        this.team.season.id = null;
+                    } else {
+                        this.team.season.id = this.form.team.season;
+                    }
                 }
                 if (this.form.team.team_type) {
                     this.team.team_type = new TeamType();

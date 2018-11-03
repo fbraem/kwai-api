@@ -29,7 +29,9 @@ class TeamUpdateAction
     {
         $teamsTable = TeamsTable::getTableFromRegistry();
         try {
-            $team = $teamsTable->get($args['id']);
+            $team = $teamsTable->get($args['id'], [
+                'contain' => [ 'Season' ]
+            ]);
         } catch (RecordNotFoundException $rnfe) {
             return $response->withStatus(404, _("Team doesn't exist"));
         }
@@ -41,29 +43,34 @@ class TeamUpdateAction
             return $validator->unprocessableEntityResponse($response);
         }
 
-        $seasonId = \JmesPath\search('data.relationships.season.data.id', $data);
-        if (isset($seasonId)) {
-            try {
-                $season = $teamsTable->Season->get($seasonId);
-            } catch (RecordNotFoundException $rnfe) {
-                $response
-                    ->getBody()
-                    ->write(
-                        json_encode([
-                            'errors' => [
-                                'source' => [
-                                    'pointer' => '/data/relationships/season'
-                                ],
-                                'title' => _("Season doesn't exist")
-                            ]
-                        ])
-                    )
-                ;
+        $seasonData = \JmesPath\search('data.relationships.season.data', $data);
+        if (isset($seasonData)) {
+            if ($seasonData['id']) {
+                try {
+                    $season = $teamsTable->Season->get($seasonData['id']);
+                    $team->season = $season;
+                } catch (RecordNotFoundException $rnfe) {
+                    $response
+                        ->getBody()
+                        ->write(
+                            json_encode([
+                                'errors' => [
+                                    'source' => [
+                                        'pointer' => '/data/relationships/season'
+                                    ],
+                                    'title' => _("Season doesn't exist")
+                                ]
+                            ])
+                        )
+                    ;
 
-                return $response
-                    ->withStatus(422)
-                    ->withHeader('content-type', 'application/vnd.api+json')
-                ;
+                    return $response
+                        ->withStatus(422)
+                        ->withHeader('content-type', 'application/vnd.api+json')
+                    ;
+                }
+            } else {
+                $team->season_id = null;
             }
         }
 
@@ -97,9 +104,6 @@ class TeamUpdateAction
 
         if (isset($attributes['name'])) {
             $team->name = $attributes['name'];
-        }
-        if (isset($season)) {
-            $team->season = $season;
         }
         if (isset($team_type)) {
             $team->team_type = $team_type;
