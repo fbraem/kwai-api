@@ -47,6 +47,10 @@ class OAuth
         Lockr.rm(REFRESHTOKEN_KEY);
     }
 
+    getAuthorizationHeader() {
+        return `Bearer ${this.access_token}`;
+    }
+
     call(url, options) {
         var opts = options || Object.create(null);
         opts.headers = opts.headers || {
@@ -55,7 +59,7 @@ class OAuth
         };
         opts.withCredentials = true;
         if ( this.access_token) {
-            opts.headers['Authorization'] = `Bearer ${this.access_token}`
+            opts.headers['Authorization'] = this.getAuthorizationHeader();
         }
         opts.url = url;
         return new Promise((resolve, reject) => {
@@ -67,7 +71,7 @@ class OAuth
                         if (this.refresh_token) {
                             this.refreshToken().then((response) => {
                                 if (this.access_token) {
-                                    opts.headers['Authorization'] = `Bearer ${this.access_token}`
+                                    opts.headers['Authorization'] = this.getAuthorizationHeader();
                                     return axios.request(opts)
                                     .then((response) => {
                                         resolve(response);
