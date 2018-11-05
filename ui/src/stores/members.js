@@ -6,7 +6,7 @@ Vue.use(Vuex);
 import Member from '@/models/Member';
 
 const state = {
-    members : [],
+    members : null,
     error : null
 };
 
@@ -15,7 +15,10 @@ const getters = {
         return state.members;
     },
     member: (state) => (id) => {
-        return find(state.members, ['id', id]);
+        if (state.members) {
+            return find(state.members, ['id', id]);
+        }
+        return null;
     },
     error(state) {
         return state.error;
@@ -28,6 +31,9 @@ const mutations = {
       state.error = null;
   },
   member(state, member) {
+      if (state.members == null) {
+          state.members = [];
+      }
       var index = state.members.findIndex((m) => m.id == member.id);
       if (index != -1) {
           Vue.set(state.members, index, member);
