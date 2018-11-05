@@ -21,6 +21,12 @@ export default createPerimeter({
                 return true;
             }
             return false;
+        },
+        upload() {
+            if (this.child.authenticated) {
+                return true;
+            }
+            return false;
         }
     }
 });

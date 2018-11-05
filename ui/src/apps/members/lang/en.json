@@ -1,3 +1,5 @@
 {
-    "members" : "Members"
+    "members" : "Members",
+    "no_members" : "There are no members registered yet",
+    "upload" : "Import members"
 }

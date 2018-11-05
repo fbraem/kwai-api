@@ -1,3 +1,5 @@
 {
-    "members" : "Leden"
+    "members" : "Leden",
+    "no_members" : "Er zijn nog geen leden geregistreerd",
+    "upload" : "Importeer leden"
 }

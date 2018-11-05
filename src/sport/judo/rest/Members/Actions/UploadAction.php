@@ -60,14 +60,24 @@ class UploadAction
         $records = $reader->getRecords();
 
         $membersTable = MembersTable::getTableFromRegistry();
+        $contactsTable = ContactsTable::getTableFromRegistry();
+        $personsTable = PersonsTable::getTableFromRegistry();
+
+        $query = $membersTable->find();
+        $lastImportId = $query->select(['last_import_id' => $query->func()->max('import_id')])->first()->last_import_id ?? 0;
+        $newImportId = $lastImportId + 1;
+
+        $members = $membersTable
+            ->find()
+            ->contain(['Person', 'Person.Contact', 'Person.Nationality'])
+            ->indexBy('license')
+            ->toArray();
 
         foreach ($records as $offset => $record) {
-            $member = $membersTable
-                ->find()
-                ->where(['license' => $record['Vergunning']])
-                ->first();
-            if ($member) {
-                continue;
+            $member = $members[$record['Vergunning']];
+            if (!$member) {
+                $member = $membersTable->newEntity();
+                $members[$record['Vergunning']] = $member;
             }
 
             $city = null;
@@ -95,8 +105,24 @@ class UploadAction
                 $city = $parts[1];
             }
 
-            $contactsTable = ContactsTable::getTableFromRegistry();
-            $contact = $contactsTable->newEntity();
+            if ($member) {
+                $person = $member->person;
+                if (! $person) {
+                    $person = $personsTable->newEntity();
+                    $member->person = $person;
+                }
+            } else {
+                $person = $personsTable->newEntity();
+                $member->person = $person;
+            }
+
+            if (!$person->contact) {
+                $contact = $contactsTable->newEntity();
+                $person->contact = $contact;
+            } else {
+                $contact = $person->contact;
+            }
+
             $contact->email = $record['Email'];
             $contact->tel = $record['Tel'];
             $contact->mobile = $record['Gsm'];
@@ -108,8 +134,6 @@ class UploadAction
             $contact->remark = 'Imported';
             $contactsTable->save($contact);
 
-            $personsTable = PersonsTable::getTableFromRegistry();
-            $person = $personsTable->newEntity();
             $person->firstname = utf8_encode($record['Voornaam']);
             $person->lastname = utf8_encode($record['Naam']);
             $person->birthdate = \Carbon\Carbon::createFromFormat(
@@ -118,21 +142,20 @@ class UploadAction
             );
             $person->gender = $record['Geslacht'] == 'M' ? 1 : 2;
             $person->nationality = $this->countries[$record['Nation.']] ?? null;
-            $person->contact = $contact;
             $personsTable->save($person);
 
-            $membersTable = MembersTable::getTableFromRegistry();
-            $member = $membersTable->newEntity();
+            if (!$member) {
+                $member = $membersTable->newEntity();
+                $member->competition = false;
+            }
             $member->license = $record['Vergunning'];
             $member->license_end_date = \Carbon\Carbon::createFromFormat(
                 'd/m/Y',
                 $record['Geldig Tot']
             );
-            $member->competition = false;
-            $member->person = $person;
-            $membersTable->save($member);
+            $member->import_id = $newImportId;
 
-            $members[] = $member;
+            $membersTable->save($member);
         }
 
         $connection->commit();
