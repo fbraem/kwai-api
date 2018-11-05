@@ -2,6 +2,8 @@ import Model from './BaseModel';
 
 import moment from 'moment';
 
+import Country from './Country';
+
 export default class Person extends Model {
     resourceName() {
         return 'persons';
@@ -48,6 +50,7 @@ export default class Person extends Model {
 
     relationships() {
         return {
+            'nationality' : new Country()
         };
     }
 }
