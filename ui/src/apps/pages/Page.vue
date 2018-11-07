@@ -12,9 +12,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/home';
-    import 'vue-awesome/icons/plus';
-
     import messages from './lang';
 
     import categoryStore from '@/stores/categories';

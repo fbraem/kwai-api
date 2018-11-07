@@ -9,13 +9,13 @@
                 <div class="uk-width-1-6">
                     <div class="uk-flex uk-flex-right">
                         <div>
-                            <router-link class="uk-icon-button" :to="{ 'name' : 'team_types.browse' }">
-                                <fa-icon name="list" />
+                            <router-link class="uk-icon-button uk-link-reset" :to="{ 'name' : 'team_types.browse' }">
+                                <i class="fas fa-list"></i>
                             </router-link>
                         </div>
                         <div class="uk-margin-small-left">
-                            <router-link v-if="$team_type.isAllowed('update',teamtype)" class="uk-icon-button" :to="{ name : 'team_types.update' }">
-                                <fa-icon name="edit" />
+                            <router-link v-if="$team_type.isAllowed('update',teamtype)" class="uk-icon-button uk-link-reset" :to="{ name : 'team_types.update' }">
+                                <i class="fas fa-edit"></i>
                             </router-link>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
         <section class="uk-section uk-section-small uk-container uk-container-expand">
             <div v-if="$wait.is('teamtypes.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class ="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
@@ -36,7 +36,7 @@
             </div>
             <div v-if="$wait.is('teams.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class ="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-if="teamtype" class="uk-child-width-1-1" uk-grid>
@@ -61,15 +61,15 @@
                         <tr>
                             <th>{{ $t('active') }}</th>
                             <td>
-                                <fa-icon v-if="teamtype.active" name="check" />
-                                <fa-icon v-else name="times" class="uk-text-danger" />
+                                <i class="fas fa-check" v-if="teamtype.active"></i>
+                                <i class="fas fa-times uk-text-danger" v-else name="times"></i>
                             </td>
                         </tr>
                         <tr>
                             <th>{{ $t('competition_label') }}<br /></th>
                             <td>
-                                <fa-icon v-if="teamtype.competition" name="check" />
-                                <fa-icon v-else name="times" class="uk-text-danger" />
+                                <i class="fas fa-check" v-if="teamtype.competition"></i>
+                                <i class="fas fa-times uk-text-danger" v-else></i>
                             </td>
                         </tr>
                         <tr>
@@ -84,10 +84,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/check';
-    import 'vue-awesome/icons/list';
-    import 'vue-awesome/icons/times';
-
     import messages from './lang';
 
     import PageHeader from '@/site/components/PageHeader';

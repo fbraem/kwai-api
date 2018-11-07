@@ -9,7 +9,7 @@
                     <div class="uk-flex uk-flex-right">
                         <div>
                             <router-link v-if="$team_type.isAllowed('create')" class="uk-icon-button" :to="{ name : 'team_types.create' }">
-                                <fa-icon name="plus" />
+                                <i class="fas fa-plus"></i>
                             </router-link>
                         </div>
                     </div>
@@ -19,7 +19,7 @@
         <section class="uk-section uk-section-small uk-container uk-container-expand">
             <div v-if="$wait.is('teamtypes.browse')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-else class="uk-child-width-1-1" uk-grid>
@@ -38,7 +38,7 @@
                             </td>
                             <td>
                                 <router-link v-if="$team_type.isAllowed('update', type)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'team_types.update', params : { id : type.id } }">
-                                    <fa-icon name="edit" />
+                                    <i class="fas fa-edit"></i>
                                 </router-link>
                             </td>
                         </tr>
@@ -50,9 +50,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/spinner';
-    import 'vue-awesome/icons/plus';
-
     import messages from './lang';
 
     import PageHeader from '@/site/components/PageHeader';

@@ -10,17 +10,17 @@
                     <div class="uk-flex uk-flex-right">
                         <div>
                             <router-link class="uk-icon-button" :to="{ 'name' : 'seasons.browse' }">
-                                <fa-icon name="list" />
+                                <i class="fas fa-list"></i>
                             </router-link>
                         </div>
                         <div class="uk-margin-small-left">
-                            <router-link v-if="season && $season.isAllowed('update', season)" class="uk-icon-button" :to="{ 'name' : 'seasons.update', params : { id : season.id } }">
-                                <fa-icon name="edit" />
+                            <router-link v-if="season && $season.isAllowed('update', season)" class="uk-icon-button uk-link-reset" :to="{ 'name' : 'seasons.update', params : { id : season.id } }">
+                                <i class="fas fa-edit"></i>
                             </router-link>
                         </div>
                         <div v-if="season && $season.isAllowed('remove', season)" class="uk-margin-small-left">
-                            <a uk-toggle="target: #delete-season" class="uk-icon-button">
-                                <fa-icon name="trash" />
+                            <a uk-toggle="target: #delete-season" class="uk-icon-button uk-link-reset">
+                                <i class="fas fa-trash"></i>
                             </a>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
             </AreYouSure>
             <div v-if="$wait.is('seasons.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-else-if="season" class="uk-grid uk-grid-divider" uk-grid>
@@ -59,7 +59,7 @@
                             </tr>
                         </table>
                         <div v-if="season.active">
-                            <fa-icon name="check" />
+                            <i class="fas fa-check"></i>
                             <span style="vertical-align:bottom">&nbsp;&nbsp;{{ $t('active_message') }}</span>
                         </div>
                     </div>
@@ -83,12 +83,12 @@
                     <div class="uk-flex uk-flex-right">
                         <div>
                             <router-link class="uk-icon-button" :to="{ 'name' : 'teams.browse' }">
-                                <fa-icon name="list" />
+                                <i class="fas fa-list"></i>
                             </router-link>
                         </div>
                         <div class="uk-margin-small-left">
                             <router-link v-if="$team.isAllowed('create')" class="uk-icon-button" :to="{ 'name' : 'teams.create', params : { season : season.id } }">
-                                <fa-icon name="plus" />
+                                <i class="fas fa-plus"></i>
                             </router-link>
                         </div>
                     </div>
@@ -102,11 +102,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/check';
-    import 'vue-awesome/icons/list';
-    import 'vue-awesome/icons/edit';
-    import 'vue-awesome/icons/plus';
-
     import messages from './lang';
 
     import PageHeader from '@/site/components/PageHeader.vue';

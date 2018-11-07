@@ -7,7 +7,7 @@
                 </div>
                 <div class="uk-navbar-right uk-padding">
                     <router-link v-if="$user.isAllowed('create')" class="uk-icon-button" :to="{ 'name' : 'users.create' }">
-                        <fa-icon name="plus" />
+                        <i class="fas fa-plus"></i>
                     </router-link>
                     <slot name="toolbar"></slot>
                 </div>
@@ -23,8 +23,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/plus';
-
     import userStore from '@/stores/users';
 
     export default {

@@ -42,8 +42,12 @@ var config = {
                     use : "css-loader"
                 })
             },
-            { test: /\.(woff|woff2|eot|ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'url-loader'
+            { test: /\.(woff(2)?|eot|svg|otf|ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'file-loader',
+                options : {
+                    name : '[name]_[hash].[ext]',
+                    outputPath : 'fonts/'
+                }
             },
             { test: /\.(png|jpe?g|gif)$/i,
                 loaders: [
@@ -61,13 +65,6 @@ var config = {
                         }
                     }
                 ]
-            },
-            { test: /\.svg(\?.*)?$/,
-                loader : 'file-loader',
-                options : {
-                    limit : 10000,
-                    name : 'assets/flags/[name]_[hash].[ext]'
-                }
             }
         ]
     },
@@ -99,7 +96,7 @@ var config = {
         }),
         new DelWebpackPlugin({
             keepGeneratedAssets: true,
-            exclude : [ "assets/**" ]
+            exclude : [ "assets/**", "fonts/**" ]
         })
     ]
 };

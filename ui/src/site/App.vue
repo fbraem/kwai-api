@@ -19,7 +19,7 @@
                     <div>
                         <Card :to="{ name : 'news.browse' }" title="Nieuws">
                             <template slot="icon">
-                                <fa-icon name="newspaper" scale="3" style="color:#c61c18;height:32px;" />
+                                <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
                             </template>
                             <template slot="description">
                                 Blijf op de hoogte over het reilen en zeilen van onze club.
@@ -29,7 +29,7 @@
                     <div>
                         <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
                             <template slot="icon">
-                                <fa-icon name="calendar" scale="3" style="color:#c61c18;height:32px;" />
+                                <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
                             </template>
                             <template slot="description">
                                 Bekijk onze kalender voor trainingen, activiteiten en tornooien
@@ -48,7 +48,7 @@
                     <div class="uk-text-center">
                         <Card :to="{ name : 'news.browse' }" title="Nieuws">
                             <template slot="icon">
-                                <fa-icon name="newspaper" scale="3" style="color:#c61c18;height:32px;" />
+                                <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
                             </template>
                             <template slot="description">
                                 Blijf op de hoogte over het reilen en zeilen van onze club.
@@ -58,7 +58,7 @@
                     <div class="uk-text-center">
                         <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
                             <template slot="icon">
-                                <fa-icon name="calendar" scale="3" style="color:#c61c18;height:32px;" />
+                                <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
                             </template>
                             <template slot="description">
                                 Bekijk onze kalender voor trainingen, activiteiten en tornooien
@@ -75,7 +75,7 @@
             <div class="uk-container uk-container-large">
                 <div v-if="loading" class="uk-flex-center" uk-grid>
                     <div class="uk-text-center">
-                        <fa-icon name="spinner" scale="2" spin />
+                        <i class="fas fa-spinner fa-2x fa-spin"></i>
                     </div>
                 </div>
                 <h4 class="uk-heading-line uk-text-bold" id="newsgrid"><span>Belangrijk Nieuws</span></h4>
@@ -191,14 +191,6 @@
 </style>
 
 <script>
-    import 'vue-awesome/icons/newspaper';
-    import 'vue-awesome/icons/university';
-    import 'vue-awesome/icons/trophy';
-    import 'vue-awesome/icons/users';
-    import 'vue-awesome/icons/calendar';
-    import 'vue-awesome/icons/shopping-basket';
-    import 'vue-awesome/icons/spinner';
-
     import NewsCard from '@/apps/news/components/NewsCard.vue';
     import Paginator from '@/components/Paginator.vue';
     import Card from './Card.vue';

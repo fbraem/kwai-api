@@ -16,12 +16,12 @@
                     <div class="uk-flex uk-flex-right">
                         <div v-if="$category.isAllowed('create')">
                             <router-link  class="uk-icon-button" :to="{ name : 'categories.create' }">
-                                <fa-icon name="plus" />
+                                <i class="fas fa-plus"></i>
                             </router-link>
                         </div>
                         <div v-if="$category.isAllowed('update', category)">
                             <router-link class="uk-icon-button uk-margin-small-left" :to="{ name : 'categories.update', params : { id : category.id } }">
-                                <fa-icon name="edit" />
+                                <i class="fas fa-edit"></i>
                             </router-link>
                         </div>
                     </div>
@@ -89,10 +89,6 @@
     import categoryStore from '@/stores/categories';
     import newsStore from '@/stores/news';
     import pageStore from '@/stores/pages';
-
-    import 'vue-awesome/icons/ellipsis-h';
-    import 'vue-awesome/icons/plus';
-    import 'vue-awesome/icons/edit';
 
     import PageHeader from '@/site/components/PageHeader.vue';
     import NewsCard from '@/apps/news/components/NewsCard.vue';

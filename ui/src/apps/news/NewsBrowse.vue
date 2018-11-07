@@ -21,8 +21,8 @@
                 </div>
                 <div class="uk-width-1-1 uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
-                        <router-link v-if="$story.isAllowed('create')" class="uk-icon-button" :to="{ name : 'news.create' }">
-                            <fa-icon name="plus" />
+                        <router-link v-if="$story.isAllowed('create')" class="uk-icon-button uk-link-reset" :to="{ name : 'news.create' }">
+                            <i class="fas fa-plus"></i>
                         </router-link>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
         <Page>
             <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-else class="uk-child-width-1-1" uk-grid>
@@ -58,9 +58,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/spinner';
-    import 'vue-awesome/icons/plus';
-
     import moment from 'moment';
     import PageHeader from '@/site/components/PageHeader.vue';
     import Page from './Page.vue';

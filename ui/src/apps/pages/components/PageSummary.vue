@@ -11,7 +11,7 @@
                 <p class="uk-text-small uk-text-muted" v-html="page.summary"></p>
                 <span class="uk-float-right">
                     <router-link class="uk-icon-button" :to="contentLink">
-                        <fa-icon name="ellipsis-h" />
+                        <i class="fas fa-ellipsis-h"></i>
                     </router-link>
                 </span>
             </div>
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/ellipsis-h';
-
     export default {
         props : [
             'page'

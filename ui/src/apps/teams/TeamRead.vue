@@ -9,13 +9,13 @@
                 <div class="uk-width-1-1@s uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
                         <div>
-                            <router-link class="uk-icon-button" :to="{ 'name' : 'teams.browse' }">
-                                <fa-icon name="list" />
+                            <router-link class="uk-icon-button uk-link-reset" :to="{ 'name' : 'teams.browse' }">
+                                <i class="fas fa-list"></i>
                             </router-link>
                         </div>
                         <div class="uk-margin-small-left">
-                            <router-link v-if="team && $team.isAllowed('update', team)" class="uk-icon-button" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
-                                <fa-icon name="edit" />
+                            <router-link v-if="team && $team.isAllowed('update', team)" class="uk-icon-button uk-link-reset" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
+                                <i class="fas fa-edit"></i>
                             </router-link>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                         </div>
                         <div v-if="$wait.is('teams.availableMembers')" class="uk-flex-center" uk-grid>
                             <div class="uk-text-center">
-                                <fa-icon name="spinner" scale="2" spin />
+                                <i class="fas fa-spinner fa-2x fa-spin"></i>
                             </div>
                         </div>
                         <div class="uk-overflow-auto uk-height-medium">
@@ -83,9 +83,9 @@
                                     </td>
                                     <td>
                                         {{ member.license }}<br />
-                                        <fa-icon v-if="member.person.gender == 1" name="male" />
-                                        <fa-icon v-if="member.person.gender == 2" name="female" />
-                                        <fa-icon v-if="member.person.gender == 0" name="question" />
+                                        <i class="fas fa-male" v-if="member.person.gender == 1"></i>
+                                        <i class="fas fa-female" v-if="member.person.gender == 2"></i>
+                                        <i class="fas fa-question" v-if="member.person.gender == 0"></i>
                                     </td>
                                 </tr>
                             </table>
@@ -96,10 +96,10 @@
                         <div>
                             <hr />
                             <button class="uk-button uk-button-default" @click="hideAddMemberDialog">
-                                <fa-icon name="ban" />&nbsp; {{ $t('cancel') }}
+                                <i class="fas fa-ban"></i>&nbsp; {{ $t('cancel') }}
                             </button>
                             <button class="uk-button uk-button-primary" :disabled="selectedAvailableMembers.length == 0" @click="addMembers">
-                                <fa-icon name="plus" />&nbsp; {{ $t('add') }}
+                                <i class="fas fa-plus"></i>&nbsp; {{ $t('add') }}
                             </button>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
             </div>
             <div v-if="$wait.is('teams.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-if="team" class="uk-child-width-1-1" uk-grid>
@@ -157,10 +157,10 @@
                         </div>
                         <div v-if="members && members.length > 10">
                             <a v-if="team && $team.isAllowed('attachMember', team)" class="uk-icon-button" @click="showAddMemberDialog">
-                                <fa-icon name="plus" />
+                                <i class="fas fa-plus"></i>
                             </a>
                             <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger">
-                                <fa-icon name="trash" />
+                                <i class="fas fa-trash"></i>
                             </a>
                         </div>
                         <div v-if="members && members.length > 0">
@@ -175,19 +175,19 @@
                                     </td>
                                     <td>
                                         {{ member.license }}<br />
-                                        <fa-icon v-if="member.person.gender == 1" name="male" />
-                                        <fa-icon v-if="member.person.gender == 2" name="female" />
-                                        <fa-icon v-if="member.person.gender == 0" name="question" />
+                                        <i class="fas fa-male" v-if="member.person.gender == 1"></i>
+                                        <i class="fas fa-female" v-if="member.person.gender == 2"></i>
+                                        <i class="fas fa-question" v-if="member.person.gender == 0"></i>
                                     </td>
                                 </tr>
                             </table>
                         </div>
                         <div>
                             <a v-if="team && $team.isAllowed('attachMember', team)" class="uk-icon-button" @click="showAddMemberDialog">
-                                <fa-icon name="plus" />
+                                <i class="fas fa-plus"></i>
                             </a>
                             <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger">
-                                <fa-icon name="trash" />
+                                <i class="fas fa-trash"></i>
                             </a>
                         </div>
                     </div>
@@ -206,15 +206,6 @@
     import UikitSelect from '@/components/uikit/Select.vue';
 
     import UIkit from 'uikit';
-
-    import 'vue-awesome/icons/plus';
-    import 'vue-awesome/icons/ban';
-    import 'vue-awesome/icons/edit';
-    import 'vue-awesome/icons/spinner';
-    import 'vue-awesome/icons/male';
-    import 'vue-awesome/icons/female';
-    import 'vue-awesome/icons/question';
-    import 'vue-awesome/icons/list';
 
     import Member from '@/models/Member';
 

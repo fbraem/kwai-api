@@ -7,7 +7,7 @@
                 </div>
                 <div class="uk-navbar-right uk-padding">
                     <router-link v-if="$team.isAllowed('create')" class="uk-icon-button" :to="{ 'name' : 'team_types.create' }">
-                        <fa-icon name="plus" />
+                        <i class="fas fa-plus"></i>
                     </router-link>
                     <slot name="toolbar"></slot>
                 </div>
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/plus';
     export default {
     };
 </script>

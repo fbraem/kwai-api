@@ -7,8 +7,8 @@
                     <span v-if="subTitle && subTitle.length > 0"> &bull; {{ subTitle }}</span>
                 </div>
                 <div class="uk-navbar-right">
-                    <a :href="facebook" class="uk-icon-button">
-                        <fa-icon name="brands/facebook-f" />
+                    <a :href="facebook" class="uk-icon-button uk-link-reset">
+                        <i class="fab fa-facebook-f"></i>
                     </a>
                     <Login />
                 </div>
@@ -22,7 +22,9 @@
                 </div>
                 <div class="uk-width-expand">
                     <span class="uk-float-right">
-                        <a href="mailto:franky.braem@gmail.com" class="uk-icon-button uk-margin-small-right" uk-icon="mail"></a>
+                        <a href="mailto:franky.braem@gmail.com" class="uk-icon-button uk-margin-small-right uk-link-reset">
+                            <i class="fas fa-envelope"></i>
+                        </a>
                     </span>
                 </div>
             </div>
@@ -31,7 +33,6 @@
 </template>
 
 <script>
-  import 'vue-awesome/icons/brands/facebook-f';
   import Login from '@/apps/auth/components/Login.vue';
 
   import config from 'config';

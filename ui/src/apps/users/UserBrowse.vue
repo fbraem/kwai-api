@@ -6,7 +6,7 @@
         <div slot="content" class="uk-container">
             <div v-if="loading" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-else uk-grid>
@@ -19,8 +19,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/spinner';
-
     import messages from './lang';
 
     import Page from './Page.vue';

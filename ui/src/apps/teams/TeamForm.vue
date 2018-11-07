@@ -42,7 +42,7 @@
                     </div>
                     <div class="uk-width-auto">
                         <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                            <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
                         </button>
                     </div>
                 </div>
@@ -58,8 +58,6 @@
 
     import { validationMixin } from 'vuelidate';
     import { required, numeric } from 'vuelidate/lib/validators';
-
-    import 'vue-awesome/icons/save';
 
     import PageHeader from '@/site/components/PageHeader.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';

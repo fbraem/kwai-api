@@ -7,7 +7,7 @@
                 </div>
                 <div class="uk-width-expand">
                     <h3 class="uk-card-title uk-margin-remove-bottom">{{ user.name }}</h3>
-                    <p class="uk-text-meta uk-margin-remove-top"><fa-icon name="envelope" />&nbsp;<a :href="'mailto:' + user.email">{{ user.email }}</a></p>
+                    <p class="uk-text-meta uk-margin-remove-top"><i class="fas fa-envelope"></i>&nbsp;<a :href="'mailto:' + user.email">{{ user.email }}</a></p>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
             <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
             <span class="uk-float-right">
                 <router-link class="uk-icon-button" :to="userLink">
-                    <fa-icon name="ellipsis-h" />
+                    <i class="fas fa-ellipsis-h"></i>
                 </router-link>
             </span>
         </div>
@@ -25,9 +25,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/envelope';
-    import 'vue-awesome/icons/ellipsis-h';
-
     import messages from '../lang';
 
     export default {

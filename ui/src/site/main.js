@@ -20,8 +20,7 @@ const i18n = new VueI18n({
     fallbackLocale : 'nl'
 });
 
-import Icon from 'vue-awesome/components/Icon';
-Vue.component('fa-icon', Icon);
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import moment from 'moment';
 moment.locale('nl');

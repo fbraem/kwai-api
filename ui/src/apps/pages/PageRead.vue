@@ -19,13 +19,13 @@
                 <div class="uk-width-1-1 uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
                         <div v-if="$page.isAllowed('update', page)" class="uk-margin-small-left">
-                            <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button">
-                                <fa-icon name="edit" />
+                            <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button uk-link-reset">
+                                <i class="fas fa-edit"></i>
                             </router-link>
                         </div>
                         <div v-if="$page.isAllowed('remove', page)" class="uk-margin-small-left">
-                            <a uk-toggle="target: #delete-page" class="uk-icon-button">
-                                <fa-icon name="trash" />
+                            <a uk-toggle="target: #delete-page" class="uk-icon-button uk-link-reset">
+                                <i class="fas fa-trash"></i>
                             </a>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
             </div>
             <div v-if="$wait.is('pages.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
@@ -139,9 +139,6 @@
 </style>
 
 <script>
-    import 'vue-awesome/icons/edit';
-    import 'vue-awesome/icons/trash';
-
     import messages from './lang';
 
     import Page from './Page.vue';

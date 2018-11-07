@@ -9,10 +9,10 @@
             </p>
             <p class="uk-text-right">
                 <button class="uk-button uk-button-default uk-modal-close" type="button">
-                    <fa-icon name="ban" />&nbsp;&nbsp;{{ no }}
+                    <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
                 </button>
                 <button class="uk-button uk-button-danger" type="button" @click="ok">
-                    <fa-icon name="trash" />&nbsp;&nbsp;{{ yes }}
+                    <i class="fas fa-trash"></i>&nbsp;&nbsp;{{ yes }}
                 </button>
             </p>
         </div>
@@ -20,9 +20,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/trash';
-    import 'vue-awesome/icons/ban';
-
     import UIkit from 'uikit';
 
     export default {

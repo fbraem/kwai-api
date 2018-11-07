@@ -19,13 +19,13 @@
                 <div class="uk-width-1-1 uk-width-1-6@m">
                     <div class="uk-flex uk-flex-right">
                         <div v-if="$story.isAllowed('update', story)" class="uk-margin-small-left">
-                            <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
-                                <fa-icon name="edit" />
+                            <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button uk-link-reset">
+                                <i class="fas fa-edit"></i>
                             </router-link>
                         </div>
                         <div v-if="$story.isAllowed('remove', story)" class="uk-margin-small-left">
-                            <a uk-toggle="target: #delete-story" class="uk-icon-button">
-                                <fa-icon name="trash" />
+                            <a uk-toggle="target: #delete-story" class="uk-icon-button uk-link-reset">
+                                <i class="fas fa-trash"></i>
                             </a>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
         <Page>
             <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
@@ -115,10 +115,6 @@
 </style>
 
 <script>
-    import 'vue-awesome/icons/edit';
-    import 'vue-awesome/icons/trash';
-
-
     import messages from './lang';
 
     import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';

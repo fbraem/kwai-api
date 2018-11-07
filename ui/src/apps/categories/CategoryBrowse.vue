@@ -10,7 +10,7 @@
                         <div class="uk-flex uk-flex-right">
                             <div v-if="$category.isAllowed('create')">
                                 <router-link class="uk-icon-button" :to="{ name : 'categories.create' }">
-                                    <fa-icon name="plus" />
+                                    <i class="fas fa-plus"></i>
                                 </router-link>
                             </div>
                         </div>
@@ -35,8 +35,6 @@
 <script>
     import PageHeader from '@/site/components/PageHeader.vue';
     import Card from './components/Card.vue';
-
-    import 'vue-awesome/icons/plus';
 
     import messages from './lang';
 

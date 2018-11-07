@@ -26,7 +26,7 @@
                     </div>
                     <div class="uk-width-auto">
                         <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                            <fa-icon name="save" />&nbsp; {{ $t('save') }}
+                            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
                         </button>
                     </div>
                 </div>
@@ -36,8 +36,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/save';
-
     import Page from './Page.vue';
     import UikitInputText from '@/components/uikit/InputText.vue';
     import UikitEmail from '@/components/uikit/Email.vue';

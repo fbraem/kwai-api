@@ -8,7 +8,7 @@
                 <div class="uk-width-1-6">
                     <div class="uk-flex uk-flex-right">
                         <router-link v-if="$season.isAllowed('create')" class="uk-icon-button" :to="{ name : 'seasons.create' }">
-                            <fa-icon name="plus" />
+                            <i class="fas fa-plus"></i>
                         </router-link>
                     </div>
                 </div>
@@ -17,7 +17,7 @@
         <section class="uk-section uk-section-small uk-container uk-container-expand">
             <div v-if="$wait.is('seasons.browse')" class="uk-flex-center" uk-grid>
                 <div class="uk-text-center">
-                    <fa-icon name="spinner" scale="2" spin />
+                    <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
             <div v-else class="uk-child-width-1-1" uk-grid>
@@ -35,7 +35,7 @@
                         </tr>
                         <tr v-for="season in seasons" :key="season.id">
                             <td>
-                                <fa-icon name="check" v-if="season.active" />
+                                <i class="fas fa-check" v-if="season.active"></i>
                             </td>
                             <td>
                                 <router-link :to="{ name: 'seasons.read', params: { id : season.id} }">{{ season.name }}</router-link>
@@ -48,7 +48,7 @@
                             </td>
                             <td>
                                 <router-link v-if="$season.isAllowed('update', season)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'seasons.update', params : { id : season.id } }">
-                                    <fa-icon name="edit" />
+                                    <i class="fas fa-edit"></i>
                                 </router-link>
                             </td>
                         </tr>
@@ -60,11 +60,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/spinner';
-    import 'vue-awesome/icons/check';
-    import 'vue-awesome/icons/edit';
-    import 'vue-awesome/icons/plus';
-
     import messages from './lang';
 
     import PageHeader from '@/site/components/PageHeader';

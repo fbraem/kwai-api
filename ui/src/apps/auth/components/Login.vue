@@ -21,13 +21,13 @@
             </div>
         </div>
         <div v-if="$base.isAllowed('login')" class="uk-inline">
-            <a class="uk-icon-button" @click="login">
-                <fa-icon name="lock" />
+            <a class="uk-icon-button uk-link-reset" @click="login">
+                <i class="fas fa-lock"></i>
             </a>
         </div>
         <div v-else class="uk-inline">
-            <a class="uk-icon-button">
-                <fa-icon name="user" />
+            <a class="uk-icon-button uk-link-reset">
+                <i class="fas fa-user"></i>
             </a>
             <div uk-dropdown="mode: click">
                 <ul class="uk-nav uk-dropdown-nav">
@@ -44,9 +44,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/user';
-    import 'vue-awesome/icons/lock';
-
     import User from '@/models/User';
 
     import UIkit from 'uikit';

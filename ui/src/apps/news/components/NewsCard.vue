@@ -26,14 +26,14 @@
                 </div>
                 <div class="uk-margin-remove-top">
                     <span class="uk-float-right">
-                        <router-link v-if="story.content" class="uk-icon-button" :to="contentLink">
-                            <fa-icon name="ellipsis-h" />
+                        <router-link v-if="story.content" class="uk-icon-button uk-link-reset" :to="contentLink">
+                            <i class="fas fa-ellipsis-h"></i>
                         </router-link>
-                        <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button">
-                            <fa-icon name="edit" />
+                        <router-link v-if="$story.isAllowed('update', story)" :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button uk-link-reset">
+                            <i class="fas fa-edit"></i>
                         </router-link>
-                        <a v-if="$story.isAllowed('remove', story)" @click="deleteStory" class="uk-icon-button">
-                            <fa-icon name="trash" />
+                        <a v-if="$story.isAllowed('remove', story)" @click="deleteStory" class="uk-icon-button uk-link-reset">
+                            <i class="fas fa-trash"></i>
                         </a>
                     </span>
                 </div>
@@ -43,10 +43,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/ellipsis-h';
-    import 'vue-awesome/icons/edit';
-    import 'vue-awesome/icons/trash';
-
     import messages from '../lang';
 
     export default {

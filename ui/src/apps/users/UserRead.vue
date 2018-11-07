@@ -12,8 +12,8 @@
                     <div class="uk-width-2-3">
                         <h1>{{ user.name }}</h1>
                         <div uk-margin>
-                            <a class="uk-button uk-button-default"><fa-icon class="uk-margin-small-right" name="envelope"></fa-icon>Mail</a>
-                            <a class="uk-button uk-button-default"><fa-icon class="uk-margin-small-right" name="ban"></fa-icon>Block</a>
+                            <a class="uk-button uk-button-default"><i class="fas fa-envelope uk-margin-small-right"></i>Mail</a>
+                            <a class="uk-button uk-button-default"><i class="fas fa-ban uk-margin-small-right"></i>Block</a>
                         </div>
                     </div>
                 </div>
@@ -24,12 +24,12 @@
                 <div class="uk-container">
                     <div class="uk-grid uk-grid-small uk-flex uk-flex-middle" data-uk-grid>
                         <div class="uk-width-1-2">
-                            <fa-icon name="calendar" class="uk-text-primary"></fa-icon>
+                            <i class="fas fa-calendar uk-text-primary"></i>
                             <span class="uk-text-small uk-text-muted uk-text-bottom"> {{ $t('member_since') }}:</span><br />
                             <span class="uk-text-large uk-text-primary">{{ user.createdAtFormatted }}</span>
                         </div>
                         <div class="uk-width-1-2">
-                            <fa-icon name="user" class="uk-text-success"></fa-icon>
+                            <i class="fas fa-user uk-text-success"></i>
                             <span class="uk-text-small uk-text-muted  uk-text-bottom"> {{ $t('last_login') }}:</span><br />
                             <span class="uk-text-large uk-text-success">{{ user.lastLoginFormatted }}</span>
                         </div>
@@ -83,11 +83,6 @@
 </template>
 
 <script>
-    import 'vue-awesome/icons/envelope';
-    import 'vue-awesome/icons/calendar';
-    import 'vue-awesome/icons/user';
-    import 'vue-awesome/icons/ban';
-
     import messages from './lang';
 
     import userStore from '@/stores/users';
