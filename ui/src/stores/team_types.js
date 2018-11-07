@@ -6,7 +6,7 @@ Vue.use(Vuex);
 import TeamType from '@/models/TeamType';
 
 const state = {
-    types : [],
+    types : null,
     error : null
 };
 
@@ -15,7 +15,10 @@ const getters = {
         return state.types;
     },
     type: (state) => (id) => {
-        return state.types.find((type) => type.id == id);
+        if (state.types) {
+            return state.types.find((type) => type.id == id);
+        }
+        return null;
     },
     error(state) {
         return state.error;
@@ -28,6 +31,9 @@ const mutations = {
       state.error = null;
   },
   type(state, type) {
+      if (state.types == null) {
+          state.types = [];
+      }
       var index = state.types.findIndex((t) => t.id == type.id);
       if (index != -1) {
           Vue.set(state.types, index, type);
