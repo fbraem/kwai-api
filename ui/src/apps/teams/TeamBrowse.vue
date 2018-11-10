@@ -27,11 +27,15 @@
                 <table v-else class="uk-table uk-table-divider">
                     <tr>
                         <th>{{ $t('name') }}</th>
+                        <th>{{ $t('season') }}</th>
                         <th class="uk-table-shrink"></th>
                     </tr>
                     <tr v-for="team in teams" :key="team.id">
                         <td>
                             <router-link :to="{ name: 'teams.read', params: { id : team.id} }">{{ team.name }}</router-link>
+                        </td>
+                        <td>
+                            <router-link v-if="team.season" :to="{ name: 'seasons.read', params: { id : team.season.id} }">{{ team.season.name }}</router-link>
                         </td>
                         <td>
                             <router-link v-if="$team.isAllowed('update', team)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'teams.update', params : { id : team.id } }">

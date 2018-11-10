@@ -61,5 +61,6 @@
     "max_age" : "Max. Age",
     "gender" : "Gender",
     "filter" : "Filter",
-    "use_filter" : "Use filter to get a list of members that can be added this team."
+    "use_filter" : "Use filter to get a list of members that can be added this team.",
+    "season" : "Season"
 }

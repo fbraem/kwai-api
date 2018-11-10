@@ -61,5 +61,6 @@
     "max_age" : "Max. Leeftijd",
     "gender" : "Geslacht",
     "filter" : "Filter",
-    "use_filter" : "Gebruik de filter om een lijst van leden te krijgen."
+    "use_filter" : "Gebruik de filter om een lijst van leden te krijgen.",
+    "season" : "Seizoen"
 }
