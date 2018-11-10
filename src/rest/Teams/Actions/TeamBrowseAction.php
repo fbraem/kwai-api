@@ -21,15 +21,22 @@ class TeamBrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        $table = TeamsTable::getTableFromRegistry();
+        $query = $table->find();
+
         return (new \Core\ResourceResponse(
             TeamTransformer::createForCollection(
-                TeamsTable::getTableFromRegistry()
-                    ->find()
+                $query->select($table)
+                    ->select($table->Season)
+                    ->select($table->TeamType)
+                    ->select(['members_count' => $query->func()->count('Members.id')])
                     ->contain(['Season', 'TeamType'])
+                    ->leftJoinWith('Members')
                     ->order([
                         'Season.name' => 'DESC',
                         'Teams.name' => 'ASC'
                     ])
+                    ->group('Teams.id')
                     ->all()
             )
         ))($response);

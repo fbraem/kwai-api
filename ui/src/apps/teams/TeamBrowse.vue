@@ -7,7 +7,7 @@
                 </div>
                 <div class="uk-width-1-6">
                     <div class="uk-flex uk-flex-right">
-                        <router-link v-if="$team.isAllowed('create')" class="uk-icon-button" :to="{ name : 'teams.create' }">
+                        <router-link v-if="$team.isAllowed('create')" class="uk-icon-button uk-link-reset" :to="{ name : 'teams.create' }">
                             <i class="fas fa-plus"></i>
                         </router-link>
                     </div>
@@ -20,14 +20,15 @@
                     <i class="fas fa-spinner fa-2x fa-spin"></i>
                 </div>
             </div>
-            <div v-else uk-grid>
+            <div v-else class="uk-width-1-2@xl" uk-grid>
                 <div v-if="teams && teams.length == 0">
                     {{ $t('no_teams') }}
                 </div>
-                <table v-else class="uk-table uk-table-divider">
+                <table v-else class="uk-table uk-table-small uk-table-divider uk-table-middle">
                     <tr>
                         <th>{{ $t('name') }}</th>
                         <th>{{ $t('season') }}</th>
+                        <th class="uk-table-shrink">{{ $t('members') }}</th>
                         <th class="uk-table-shrink"></th>
                     </tr>
                     <tr v-for="team in teams" :key="team.id">
@@ -38,8 +39,11 @@
                             <router-link v-if="team.season" :to="{ name: 'seasons.read', params: { id : team.season.id} }">{{ team.season.name }}</router-link>
                         </td>
                         <td>
-                            <router-link v-if="$team.isAllowed('update', team)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'teams.update', params : { id : team.id } }">
-                                <i class="fas fa-edit"></i>
+                            {{ team.members_count }}
+                        </td>
+                        <td>
+                            <router-link class="uk-icon-button uk-link-reset" v-if="$team.isAllowed('update', team)" :to="{ name : 'teams.update', params : { id : team.id } }">
+                                <i class="fas fa-edit uk-text-muted"></i>
                             </router-link>
                         </td>
                     </tr>

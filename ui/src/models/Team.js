@@ -13,7 +13,8 @@ export default class Team extends Model {
         return [
             'name',
             'active',
-            'remark'
+            'remark',
+            'members_count'
         ];
     }
 
