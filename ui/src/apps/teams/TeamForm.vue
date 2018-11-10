@@ -119,8 +119,11 @@
                 return seasons;
             },
             team_types() {
-                var types = this.$store.getters['teamTypeModule/types'].map((type) => ({value : type.id, text : type.name }));
-                types.unshift({ value : 0, text : '< ' + this.$t('no_type') + ' >'});
+                var types = this.$store.getters['teamTypeModule/types'];
+                if (types) {
+                    var types = types.map((type) => ({value : type.id, text : type.name }));
+                    types.unshift({ value : 0, text : '< ' + this.$t('no_type') + ' >'});
+                }
                 return types;
             },
             nameErrors() {
