@@ -27,84 +27,7 @@
                 <template slot="title">{{ $t('delete') }}</template>
                 {{ $t('sure_to_delete') }}
             </AreYouSure>
-            <div id="addMemberDialog" uk-modal ref="addMemberDialog">
-                <div v-if="team" class="uk-modal-dialog uk-modal-body">
-                    <div class="uk-child-width-1-1" uk-grid>
-                        <div>
-                            <h2 class="uk-modal-title">{{ $t('add_members') }}</h2>
-                            <p class="uk-text-meta" v-if="team.team_type">
-                                {{ $t('add_members_info') }}
-                            </p>
-                        </div>
-                        <div>
-                            <form class="uk-form uk-child-width-1-4 uk-flex-middle" v-if="! team.team_type" uk-grid>
-                                <div>
-                                    <uikit-input-text v-model="start_age" id="start_age">
-                                        {{ $t('min_age') }}:
-                                    </uikit-input-text>
-                                </div>
-                                <div>
-                                    <uikit-input-text v-model="end_age" id="end_age">
-                                        {{ $t('max_age') }}:
-                                    </uikit-input-text>
-                                </div>
-                                <div>
-                                    <uikit-select v-model="gender" :items="genders">
-                                        {{ $t('gender') }}:
-                                    </uikit-select>
-                                </div>
-                                <div>
-                                    <label class="uk-form-label">&nbsp;</label>
-                                    <button class="uk-button uk-button-primary" @click="filterAvailableMembers">
-                                        {{ $t('filter') }}
-                                    </button>
-                                </div>
-                            </form>
-                            <p v-if="! team.team_type" class="uk-text-meta">
-                                {{ $t('use_filter') }}
-                            </p>
-                            <p class="uk-text-meta" v-if="team.season && availableMembers.length > 0" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
-                            <hr />
-                        </div>
-                        <div v-if="$wait.is('teams.availableMembers')" class="uk-flex-center" uk-grid>
-                            <div class="uk-text-center">
-                                <i class="fas fa-spinner fa-2x fa-spin"></i>
-                            </div>
-                        </div>
-                        <div class="uk-overflow-auto uk-height-medium">
-                            <table v-if="availableMembers.length > 0" class="uk-table uk-table-small uk-table-middle uk-table-divider">
-                                <tr v-for="member in availableMembers" :key="member.id">
-                                    <td>
-                                        <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id">
-                                    </td>
-                                    <td>
-                                        <strong>{{ member.person.name }}</strong><br />
-                                        {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
-                                    </td>
-                                    <td>
-                                        {{ member.license }}<br />
-                                        <i class="fas fa-male" v-if="member.person.gender == 1"></i>
-                                        <i class="fas fa-female" v-if="member.person.gender == 2"></i>
-                                        <i class="fas fa-question" v-if="member.person.gender == 0"></i>
-                                    </td>
-                                </tr>
-                            </table>
-                            <p v-else-if="team.team_type">
-                                {{ $t('no_available_members') }}
-                            </p>
-                        </div>
-                        <div>
-                            <hr />
-                            <button class="uk-button uk-button-default" @click="hideAddMemberDialog">
-                                <i class="fas fa-ban"></i>&nbsp; {{ $t('cancel') }}
-                            </button>
-                            <button class="uk-button uk-button-primary" :disabled="selectedAvailableMembers.length == 0" @click="addMembers">
-                                <i class="fas fa-plus"></i>&nbsp; {{ $t('add') }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <AddMembersDialog v-if="team" id="add-member-dialog" :team="team"></AddMembersDialog>
             <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
                 {{ $t('not_allowed') }}
             </div>
@@ -156,10 +79,10 @@
                             {{ $t('count') }} : {{members.length}}
                         </div>
                         <div v-if="members && members.length > 10">
-                            <a v-if="team && $team.isAllowed('attachMember', team)" class="uk-icon-button" @click="showAddMemberDialog">
+                            <a v-if="team && $team.isAllowed('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
                                 <i class="fas fa-plus"></i>
                             </a>
-                            <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger">
+                            <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger uk-link-reset">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </div>
@@ -183,11 +106,11 @@
                             </table>
                         </div>
                         <div>
-                            <a v-if="team && $team.isAllowed('attachMember', team)" class="uk-icon-button" @click="showAddMemberDialog">
+                            <a v-if="team && $team.isAllowed('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
                                 <i class="fas fa-plus"></i>
                             </a>
-                            <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger">
-                                <i class="fas fa-trash"></i>
+                            <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger uk-link-reset">
+                                <i class="fas fa-trash uk-light"></i>
                             </a>
                         </div>
                     </div>
@@ -200,10 +123,9 @@
 <script>
     import messages from './lang';
 
+    import AddMembersDialog from './AddMembersDialog.vue';
     import PageHeader from '@/site/components/PageHeader.vue';
     import AreYouSure from '@/components/AreYouSure.vue';
-    import UikitInputText from '@/components/uikit/InputText.vue';
-    import UikitSelect from '@/components/uikit/Select.vue';
 
     import UIkit from 'uikit';
 
@@ -212,36 +134,23 @@
     import teamStore from '@/stores/teams';
 
     export default {
-        data() {
-            return {
-                selectedMembers : [],
-                selectedAvailableMembers : [],
-                start_age : 0,
-                end_age : 0,
-                gender : 0,
-                genders : [
-                    { text : 'None', value : 0 },
-                    { text : 'Male', value : 1 },
-                    { text : 'Female', value : 2 }
-                ]
-            }
-        },
         components : {
             PageHeader,
             AreYouSure,
-            UikitInputText,
-            UikitSelect
+            AddMembersDialog,
         },
         i18n : messages,
+        data() {
+            return {
+                selectedMembers : []
+            };
+        },
         computed : {
             team() {
                 return this.$store.getters['teamModule/team'](this.$route.params.id);
             },
             members() {
                 return this.$store.getters['teamModule/members'](this.$route.params.id);
-            },
-            availableMembers() {
-                return this.$store.getters['teamModule/availableMembers'];
             },
             error() {
                 return this.$store.getters['teamModule/error'];
@@ -285,36 +194,6 @@
                             console.log(err);
                         });
                 }
-                var modal = UIkit.modal(this.$refs.addMemberDialog);
-                modal.show();
-            },
-            hideAddMemberDialog() {
-                var modal = UIkit.modal(this.$refs.addMemberDialog);
-                modal.hide();
-            },
-            filterAvailableMembers() {
-                this.$store.dispatch('teamModule/availableMembers', {
-                    id : this.$route.params.id,
-                    filter : {
-                        start_age : this.start_age,
-                        end_age : this.end_age,
-                        gender : this.gender
-                    }
-                });
-            },
-            addMembers() {
-                var members = [];
-                this.selectedAvailableMembers.forEach((id) => {
-                    var member = new Member();
-                    member.id = id;
-                    members.push(member);
-                });
-                this.$store.dispatch('teamModule/addMembers', {
-                    id : this.$route.params.id,
-                    members : members
-                });
-                var modal = UIkit.modal(this.$refs.addMemberDialog);
-                modal.hide();
             },
             deleteMembers() {
                 var members = [];
