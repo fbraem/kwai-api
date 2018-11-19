@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Person\PersonsTable;
 use Domain\Person\PersonTransformer;
 
+use Core\Responses\ResourceResponse;
+
 class BrowseAction
 {
     private $container;
@@ -21,7 +23,7 @@ class BrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             PersonTransformer::createForCollection(
                 PersonsTable::getTableFromRegistry()
                     ->find()
