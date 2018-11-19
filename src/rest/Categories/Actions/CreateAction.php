@@ -52,6 +52,11 @@ class CreateAction
             $category->user = $request->getAttribute('clubman.user');
             $categoriesTable->save($category);
 
+            $route = $request->getAttribute('route');
+            if (! empty($route)) {
+                $route->setArgument('id', $category->id);
+            }
+
             return (new ResourceResponse(
                 CategoryTransformer::createForItem($category)
             ))($response)->withStatus(201);

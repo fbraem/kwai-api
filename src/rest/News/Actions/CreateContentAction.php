@@ -71,6 +71,11 @@ class CreateContentAction
             $story->contents = [ $content ];
             $storiesTable->save($story);
 
+            $route = $request->getAttribute('route');
+            if (! empty($route)) {
+                $route->setArgument('id', $story->contents[0]->id);
+            }
+
             $filesystem = $this->container->get('filesystem');
 
             $connection->commit();

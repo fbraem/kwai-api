@@ -62,6 +62,12 @@ class CreateStoryAction
             $story->remark = $attributes['remark'] ?? null;
 
             $storiesTable->save($story);
+
+            $route = $request->getAttribute('route');
+            if (! empty($route)) {
+                $route->setArgument('id', $story->id);
+            }
+
             $filesystem = $this->container->get('filesystem');
 
             return (new ResourceResponse(
