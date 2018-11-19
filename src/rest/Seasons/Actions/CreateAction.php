@@ -9,9 +9,17 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Game\SeasonsTable;
 use Domain\Game\SeasonTransformer;
+
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
 use REST\Seasons\SeasonValidator;
-use REST\Seasons\SeasonInputValidator;
-use REST\Seasons\SeasonEmptyValidator;
+
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\ResourceResponse;
+
+use Carbon\Carbon;
 
 class CreateAction
 {
@@ -26,32 +34,41 @@ class CreateAction
     {
         $data = $request->getParsedBody();
 
-        $validator = new SeasonInputValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
+        try {
+            (new InputValidator([
+                'data.attributes.name' => v::notEmpty()->length(1, 255),
+                'data.attributes.start_date' => v::notEmpty()->date('Y-m-d'),
+                'data.attributes.end_date' => v::notEmpty()->date('Y-m-d')
+            ]))->validate($data);
+
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            $seasonsTable = SeasonsTable::getTableFromRegistry();
+            $season = $seasonsTable->newEntity();
+            $season->name = $attributes['name'];
+            $season->start_date = $attributes['start_date'];
+            $season->end_date = $attributes['end_date'];
+            $season->remark = $attributes['remark'];
+
+            $seasonValidator = new SeasonValidator();
+            $seasonValidator->validate($season);
+
+            $seasonsTable->save($season);
+
+            $route = $request->getAttribute('route');
+            if (! empty($route)) {
+                $route->setArgument('id', $season->id);
+            }
+
+            $response = (new ResourceResponse(
+                SeasonTransformer::createForItem($season)
+                ))($response)->withStatus(201);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse(
+                $ve->getErrors()
+            ))($response);
         }
-        $validator = new SeasonEmptyValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
 
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        $seasonsTable = SeasonsTable::getTableFromRegistry();
-        $season = $seasonsTable->newEntity();
-        $season->name = $attributes['name'];
-        $season->start_date = $attributes['start_date'];
-        $season->end_date = $attributes['end_date'];
-        $season->remark = $attributes['remark'];
-        $seasonsTable->save($season);
-
-        $validator = new SeasonValidator();
-        if (! $validator->validate($season)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
-
-        return (new \Core\ResourceResponse(
-            SeasonTransformer::createForItem($season)
-        ))($response)->withStatus(201);
+        return $response;
     }
 }

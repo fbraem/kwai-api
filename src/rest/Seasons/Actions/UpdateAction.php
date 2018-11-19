@@ -9,11 +9,20 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Game\SeasonsTable;
 use Domain\Game\SeasonTransformer;
-use REST\Seasons\SeasonValidator;
-use REST\Seasons\SeasonInputValidator;
-use REST\Seasons\SeasonEmptyValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+use REST\Seasons\SeasonValidator;
+
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
+use Carbon\Carbon;
 
 class UpdateAction
 {
@@ -26,47 +35,52 @@ class UpdateAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $seasonsTable = SeasonsTable::getTableFromRegistry();
+        $data = $request->getParsedBody();
+
         try {
+            $seasonsTable = SeasonsTable::getTableFromRegistry();
             $season = $seasonsTable->get(
                 $args['id'],
                 ['contain' => ['Teams']]
             );
+
+            (new InputValidator([
+                'data.attributes.name' => v::notEmpty()->length(1, 255),
+                'data.attributes.start_date' => v::notEmpty()->date('Y-m-d'),
+                'data.attributes.end_date' => v::notEmpty()->date('Y-m-d')
+            ], true))->validate($data);
+
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            if (array_key_exists('name', $attributes)) {
+                $season->name = $attributes['name'];
+            }
+            if (array_key_exists('start_date', $attributes)) {
+                $season->start_date = $attributes['start_date'];
+            }
+            if (array_key_exists('end_date', $attributes)) {
+                $season->end_date = $attributes['end_date'];
+            }
+            if (array_key_exists('remark', $attributes)) {
+                $season->remark = $attributes['remark'];
+            }
+
+            $seasonValidator = new seasonValidator();
+            $seasonValidator->validate($season);
+
+            $seasonsTable->save($season);
+
+            $response = (new ResourceResponse(
+                SeasonTransformer::createForItem($season)
+            ))($response);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse(
+                $ve->getErrors()
+            ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Season doesn't exist"));
+            return (new NotFoundResponse(_("Season doesn't exist")))($response);
         }
 
-        $data = $request->getParsedBody();
-
-        $validator = new SeasonInputValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
-
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        if (array_key_exists('name', $attributes)) {
-            $season->name = $attributes['name'];
-        }
-        if (array_key_exists('start_date', $attributes)) {
-            $season->start_date = $attributes['start_date'];
-        }
-        if (array_key_exists('end_date', $attributes)) {
-            $season->end_date = $attributes['end_date'];
-        }
-        if (array_key_exists('remark', $attributes)) {
-            $season->remark = $attributes['remark'];
-        }
-
-        $validator = new SeasonValidator();
-        if (! $validator->validate($season)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
-
-        $seasonsTable->save($season);
-
-        return (new \Core\ResourceResponse(
-            SeasonTransformer::createForItem($season)
-        ))($response);
+        return $response;
     }
 }

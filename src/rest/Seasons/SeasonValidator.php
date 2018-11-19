@@ -1,26 +1,21 @@
 <?php
 namespace REST\Seasons;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Zend\Validator\Callback;
+use Core\Validators\ValidatorInterface;
+use Core\Validators\ValidationException;
+
 use Carbon\Carbon;
 
-class SeasonValidator extends \Core\Validators\EntityValidator
+class SeasonValidator implements ValidatorInterface
 {
-    public function __construct()
+    public function validate($data)
     {
-        parent::__construct();
-
-        $endDateValidator = new Callback(function ($value) {
-            $b = Carbon::createFromFormat('Y-m-d', $value->start_date);
-            $e = Carbon::createFromFormat('Y-m-d', $value->end_date);
-            return $e->gte($b);
-        });
-        $endDateValidator->setMessage(
-            _('End date must be after start date'),
-            Callback::INVALID_VALUE
-        );
-
-        $this->addValidator($endDateValidator);
+        $b = Carbon::createFromFormat('Y-m-d', $data->start_date);
+        $e = Carbon::createFromFormat('Y-m-d', $data->end_date);
+        if ($e->lt($b)) {
+            throw new ValidationException([
+                'data/attributes/end_date' => _('End date must be after start date')
+            ]);
+        }
     }
 }

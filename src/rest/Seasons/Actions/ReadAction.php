@@ -12,6 +12,9 @@ use Domain\Game\SeasonTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
 class ReadAction
 {
     private $container;
@@ -24,7 +27,7 @@ class ReadAction
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            return (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 SeasonTransformer::createForItem(
                     SeasonsTable::getTableFromRegistry()->get($args['id'], [
                         'contain' => ['Teams']
@@ -32,7 +35,8 @@ class ReadAction
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Season doesn't exist"));
+            $response = (new NotFoundResponse(_("Season doesn't exist")))($response);
         }
+        return $response;
     }
 }
