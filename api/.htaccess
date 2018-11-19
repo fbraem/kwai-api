@@ -19,6 +19,7 @@
     RewriteRule ^seasons(/.*)?$ /api/seasons.php?$1 [QSA,L]
     RewriteRule ^team_types(/.*)?$ /api/team_types.php?$1 [QSA,L]
     RewriteRule ^teams(/.*)?$ /api/teams.php?$1 [QSA,L]
+    RewriteRule ^trainings(/.*)?$ /api/trainings.php?$1 [QSA,L]
     RewriteRule ^users(/.*)?$ /api/users.php?$1 [QSA,L]
     RewriteRule ^user_invitations(/.*)?$ /api/user_invitations.php?$1 [QSA,L]
 
