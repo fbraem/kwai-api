@@ -11,7 +11,6 @@
         "league/fractal": "^0.16.0",
         "nesbot/carbon": "^1.22",
         "mtdowling/jmespath.php": "^2.4",
-        "zendframework/zend-validator": "^2.9",
         "robmorgan/phinx": "^0.8.1",
         "league/flysystem": "^1.0",
         "intervention/image": "^2.4",
@@ -23,7 +22,6 @@
         "cakephp/i18n": "^3.5",
         "slim/slim": "^3.0",
         "league/plates": "^3.3",
-        "zendframework/zend-filter": "^2.8",
         "phpmailer/phpmailer": "^6.0",
         "respect/validation": "^1.1"
     },
