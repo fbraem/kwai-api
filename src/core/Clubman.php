@@ -25,6 +25,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use Core\Middlewares\ParametersMiddleware;
 use Core\Middlewares\LogActionMiddleware;
 use Core\Middlewares\AuthenticationMiddleware;
+use Core\Middlewares\TransactionMiddleware;
 
 class Clubman
 {
@@ -55,7 +56,8 @@ class Clubman
                 'username' => $dbConfig[$dbDefault]['user'],
                 'password' => $dbConfig[$dbDefault]['pass'],
                 'database' => $dbConfig[$dbDefault]['name'],
-                'encoding' => $dbConfig[$dbDefault]['charset']
+                'encoding' => $dbConfig[$dbDefault]['charset'],
+                'quoteIdentifiers' => true
             ]);
 
             $container['filesystem'] = function ($c) {
@@ -122,6 +124,7 @@ class Clubman
             };
 
             $app->add(new ParametersMiddleware());
+            $app->add(new TransactionMiddleware($container));
             $app->add(new LogActionMiddleware($container));
             $app->add(new AuthenticationMiddleware($container));
 
