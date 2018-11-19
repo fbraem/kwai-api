@@ -2,66 +2,51 @@
 
 namespace Core\Validators;
 
-use Psr\Http\Message\ResponseInterface as Response;
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\NestedValidationException;
 
 class InputValidator implements ValidatorInterface
 {
-    protected $validators;
+    private $validators;
 
-    protected $errors;
-
-    public function __construct()
+    public function __construct($validators, $optional = false)
     {
-        $this->validators = [];
-    }
-
-    public function addValidator($path, \Zend\Validator\ValidatorInterface $validator)
-    {
-        $this->validators[$path] = $validator;
+        foreach ($validators as $path => $validator) {
+            if (!is_array($validator)) {
+                $validator = [ $validator, $optional ];
+            }
+            $paths = explode('.', $path);
+            $validator[0]->setName(end($paths));
+            $this->validators[$path] = $validator;
+        }
     }
 
     public function validate($data)
     {
-        $this->errors = [];
+        $errors = [];
 
-        foreach ($this->validators as $path => $validator) {
+        foreach ($this->validators as $path => $v) {
             $value = \JmesPath\search($path, $data);
-            if (isset($value) && !$validator->isValid($value)) {
-                $messages = [];
-                foreach ($validator->getMessages() as $messageId => $message) {
+            if ($v[1] && is_null($value)) {
+                continue;
+            }
+
+            try {
+                $v[0]->assert($value);
+            } catch (NestedValidationException $nve) {
+                $messages = $nve->getMessages();
+                foreach ($messages as $message) {
                     $pointer = '/' . str_replace('.', '/', $path);
                     if (!isset($this->errors[$pointer])) {
-                        $this->errors[$pointer] = [];
+                        $errors[$pointer] = [];
                     }
-                    $this->errors[$pointer][] = $message;
+                    $errors[$pointer][] = $message;
                 }
             }
         }
 
-        return count($this->errors) == 0;
-    }
-
-    public function unprocessableEntityResponse(Response $response) : Response
-    {
-        $errors = [];
-        foreach ($this->errors as $pointer => $messages) {
-            foreach ($messages as $message) {
-                $errors[] = [
-                    'source' => [
-                        'pointer' => $pointer
-                    ],
-                    'title' => $message
-                ];
-            }
+        if (count($errors) > 0) {
+            throw new ValidationException($errors);
         }
-        $response
-            ->getBody()
-            ->write(json_encode(['errors' => $errors]))
-        ;
-
-        return $response
-            ->withStatus(422)
-            ->withHeader('content-type', 'application/vnd.api+json')
-        ;
     }
 }
