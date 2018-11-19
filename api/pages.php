@@ -11,7 +11,7 @@ $app->group('/pages', function () {
         ->setName('pages.read')
     ;
     $this->post('', \REST\Pages\Actions\CreateAction::class)
-        ->setName('pagescreate')
+        ->setName('pages.create')
         ->setArgument('auth', true)
     ;
     $this->patch('/{id:[0-9]+}', \REST\Pages\Actions\UpdateAction::class)
