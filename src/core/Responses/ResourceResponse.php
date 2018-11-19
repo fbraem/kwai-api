@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Core\Responses;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -12,14 +12,20 @@ class ResourceResponse
 {
     private $resource;
 
-    public function __construct(ResourceInterface $resource)
+    private $includes;
+
+    public function __construct(ResourceInterface $resource, $includes = '')
     {
         $this->resource = $resource;
+        $this->includes = $includes;
     }
 
     public function __invoke(Response $response) : Response
     {
         $fractal = new Manager();
+        if ($this->includes) {
+            $fractal->parseIncludes($this->includes);
+        }
         $fractal->setSerializer(new JsonApiSerializer());
         $data = $fractal->createData($this->resource)->toJson();
 
