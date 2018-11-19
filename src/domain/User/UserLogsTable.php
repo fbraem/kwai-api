@@ -28,8 +28,8 @@ class UserLogsTable extends \Cake\ORM\Table
             ->addColumn('id', [ 'type' => 'integer' ])
             ->addColumn('user_id', [ 'type' => 'integer' ])
             ->addColumn('action', [ 'type' => 'string' ])
-            ->addColumn('rest', [ 'type' => 'string' ])
             ->addColumn('model_id', [ 'type' => 'integer' ])
+            ->addColumn('status', [ 'type' => 'integer' ])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(
