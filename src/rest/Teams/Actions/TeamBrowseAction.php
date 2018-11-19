@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 
+use Core\Responses\ResourceResponse;
+
 class TeamBrowseAction
 {
     private $container;
@@ -24,7 +26,7 @@ class TeamBrowseAction
         $table = TeamsTable::getTableFromRegistry();
         $query = $table->find();
 
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             TeamTransformer::createForCollection(
                 $query->select($table)
                     ->select($table->Season)
