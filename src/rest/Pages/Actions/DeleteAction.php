@@ -7,12 +7,12 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
-
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 use Domain\Content\ContentsTable;
+
+use Core\Responses\NotFoundResponse;
+use Core\Responses\OkResponse;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
@@ -42,9 +42,9 @@ class DeleteAction
             $folder = 'images/pages/' . $id;
             $filesystem->deleteDir($folder);
 
-            $response = $response->withStatus(200);
+            $response = (new OkResponse())($response);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response->withStatus(404, _("Page doesn't exist"));
+            $response = (new NotFoundResponse(_("Page doesn't exist")))($response);
         }
 
         return $response;

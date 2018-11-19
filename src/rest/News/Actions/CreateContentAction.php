@@ -10,10 +10,18 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
 
-use REST\Contents\ContentValidator;
 use Domain\Content\ContentsTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+
+use Core\Responses\NotFoundResponse;
+use Core\Responses\ResourceResponse;
+use Core\Responses\UnprocessableEntityResponse;
 
 class CreateContentAction
 {
@@ -34,32 +42,48 @@ class CreateContentAction
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Story doesn't exist"));
+            return (new NotFoundResponse(_("Story doesn't exist")))($response);
         }
 
-        $validator = new ContentValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
+        try {
+            (new InputValidator([
+                'data.attributes.title' => v::notEmpty()->length(1, 255),
+                'data.attributes.content' => v::notEmpty()
+            ]))->validate($data);
+
+            $contentsTable = ContentsTable::getTableFromRegistry();
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            // If it already exists, we update
+            // TODO: check when multiple languages are possible!
+            if ($page->contents) {
+                $content = $page->contents[0];
+            } else {
+                $content = $contentsTable->newEntity();
+            }
+            $content->locale = 'nl';
+            $content->format = 'md';
+            $content->title = $attributes['title'];
+            $content->summary = $attributes['summary'];
+            $content->content = $attributes['content'];
+            $content->user = $request->getAttribute('clubman.user');
+
+            $story->contents = [ $content ];
+            $storiesTable->save($story);
+
+            $filesystem = $this->container->get('filesystem');
+
+            $connection->commit();
+
+            $response = (new ResourceResponse(
+                NewsStoryTransformer::createForItem($story, $filesystem)
+            ))($response)->withStatus(201);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse(
+                $ve->getErrors()
+            ))($response);
         }
 
-        $contentsTable = ContentsTable::getTableFromRegistry();
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        $content = $contentsTable->newEntity();
-        $content->locale = 'nl';
-        $content->format = 'md';
-        $content->title = $attributes['title'];
-        $content->summary = $attributes['summary'];
-        $content->content = $attributes['content'];
-        $content->user = $request->getAttribute('clubman.user');
-
-        $story->contents = [ $content ];
-        $storiesTable->save($story);
-
-        $filesystem = $this->container->get('filesystem');
-
-        return (new \Core\ResourceResponse(
-            NewsStoryTransformer::createForItem($story, $filesystem)
-        ))($response)->withStatus(201);
+        return $response;
     }
 }

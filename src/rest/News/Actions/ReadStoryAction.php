@@ -12,6 +12,9 @@ use Domain\News\NewsStoriesTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
+use Core\Responses\NotFoundResponse;
+use Core\Responses\ResourceResponse;
+
 class ReadStoryAction
 {
     private $container;
@@ -31,11 +34,11 @@ class ReadStoryAction
             $filesystem = $this->container->get('filesystem');
             $resource = NewsStoryTransformer::createForItem($story, $filesystem);
 
-            $response = (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 NewsStoryTransformer::createForItem($story, $filesystem)
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response->withStatus(404, _("Story doesn't exist"));
+            $response = (new NotFoundResponse(_("Story doesn't exist")))($response);
         }
 
         return $response;

@@ -9,7 +9,16 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
-use REST\Pages\PageValidator;
+
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+use Core\Validators\EntityExistValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
@@ -29,59 +38,48 @@ class UpdateAction
             $page = $pagesTable->get($args['id'], [
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
-        } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Page doesn't exist"));
-        }
 
-        $data = $request->getParsedBody();
-        $validator = new PageValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
+            $data = $request->getParsedBody();
 
-        $categoryId = \JmesPath\search('data.relationships.category.data.id', $data);
-        if (isset($categoryId)) {
-            try {
-                $category = $pagesTable->Category->get($categoryId);
-            } catch (RecordNotFoundException $rnfe) {
-                return $response
-                    ->withStatus(422)
-                    ->withHeader('content-type', 'application/vnd.api+json')
-                    ->getBody()
-                    ->write(
-                        json_encode([
-                            'errors' => [
-                                'source' => [
-                                    'pointer' => '/data/relationships/category'
-                                ],
-                                'title' => _('Category doesn\'t exist')
-                            ]
-                        ])
-                    );
+            (new InputValidator([
+                'data.attributes.priority' => v::digit(),
+                'data.attributes.enabled' => v::boolType()
+            ], true))->validate($data);
+
+            $category = (new EntityExistValidator(
+                'data.relationships.category',
+                $pagesTable->Category,
+                false
+            ))->validate($data);
+
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            if (isset($category)) {
+                $page->catgory = $category;
             }
+            if (isset($attributes['priority'])) {
+                $page->priority = $attributes['priority'];
+            }
+            if (isset($attributes['enabled'])) {
+                $page->enabled = $attributes['enabled'];
+            }
+            if (isset($attributes['remark'])) {
+                $page->remark = $attributes['remark'];
+            }
+
+            $pagesTable->save($page);
+
+            $filesystem = $this->container->get('filesystem');
+
+            $response = (new \Core\ResourceResponse(
+                PageTransformer::createForItem($page, $filesystem)
+            ))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            $response = (new NotFoundResponse(_("Page doesn't exist")))($response);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse($ve->getErrors()));
         }
 
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        if (isset($category)) {
-            $page->catgory = $category;
-        }
-        if (isset($attributes['priority'])) {
-            $page->priority = $attributes['priority'];
-        }
-        if (isset($attributes['enabled'])) {
-            $page->enabled = $attributes['enabled'];
-        }
-        if (isset($attributes['remark'])) {
-            $page->remark = $attributes['remark'];
-        }
-
-        $pagesTable->save($page);
-
-        $filesystem = $this->container->get('filesystem');
-
-        return (new \Core\ResourceResponse(
-            PageTransformer::createForItem($page, $filesystem)
-        ))($response);
+        return $response;
     }
 }

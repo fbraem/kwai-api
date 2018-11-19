@@ -11,7 +11,15 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
-use REST\Categories\CategoryInputValidator;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+
+use Respect\Validation\Validator as v;
+
+use Core\Responses\ResourceResponse;
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\NotFoundResponse;
 
 class UpdateAction
 {
@@ -28,36 +36,45 @@ class UpdateAction
         try {
             $category = $categoriesTable->get($args['id']);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Category doesn't exist"));
+            return (new NotFoundResponse(_("Category doesn't exist")))($response);
         }
 
         $data = $request->getParsedBody();
 
-        $validator = new CategoryInputValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
+        try {
+            (new InputValidator(
+                [
+                    'data.attributes.name' => v::notEmpty()->length(1, 255),
+                    'data.attributes.short_description' => v::notEmpty()->length(1, 255)
+                ],
+                true
+            ))->validate($data);
 
-        $attributes = \JmesPath\search('data.attributes', $data);
+            $attributes = \JmesPath\search('data.attributes', $data);
 
-        if (array_key_exists('name', $attributes)) {
-            $category->name = $attributes['name'];
-        }
-        if (array_key_exists('short_description', $attributes)) {
-            $category->short_description = $attributes['short_description'];
-        }
-        if (array_key_exists('description', $attributes)) {
-            $category->description = $attributes['description'];
-        }
-        if (array_key_exists('remark', $attributes)) {
-            $category->remark = $attributes['remark'];
-        }
-        $category->user = $request->getAttribute('clubman.user');
+            if (array_key_exists('name', $attributes)) {
+                $category->name = $attributes['name'];
+            }
+            if (array_key_exists('short_description', $attributes)) {
+                $category->short_description = $attributes['short_description'];
+            }
+            if (array_key_exists('description', $attributes)) {
+                $category->description = $attributes['description'];
+            }
+            if (array_key_exists('remark', $attributes)) {
+                $category->remark = $attributes['remark'];
+            }
+            $category->user = $request->getAttribute('clubman.user');
 
-        $categoriesTable->save($category);
+            $categoriesTable->save($category);
 
-        return (new \Core\ResourceResponse(
-            CategoryTransformer::createForItem($category)
-        ))($response);
+            return (new ResourceResponse(
+                CategoryTransformer::createForItem($category)
+            ))($response);
+        } catch (ValidationException $ve) {
+            return (new UnprocessableEntityResponse(
+                        $ve->getErrors()
+                    ))($response);
+        }
     }
 }

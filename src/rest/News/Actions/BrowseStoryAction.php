@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
 
+use Core\Responses\ResourceResponse;
+
 class BrowseStoryAction
 {
     private $container;
@@ -95,7 +97,7 @@ class BrowseStoryAction
             'count' => $count
         ]);
 
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             $resource
         ))($response);
     }

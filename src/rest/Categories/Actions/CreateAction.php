@@ -11,8 +11,14 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
-use REST\Categories\CategoryInputValidator;
-use REST\Categories\CategoryEmptyValidator;
+
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+
+use \Core\Responses\ResourceResponse;
+use \Core\Responses\UnprocessableEntityResponse;
 
 class CreateAction
 {
@@ -27,29 +33,32 @@ class CreateAction
     {
         $data = $request->getParsedBody();
 
-        $validator = new CategoryInputValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
+        try {
+            (new InputValidator(
+                [
+                    'data.attributes.name' => v::notEmpty()->length(1, 255),
+                    'data.attributes.short_description' => v::notEmpty()->length(1, 255)
+                ]
+            ))->validate($data);
+
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            $categoriesTable = CategoriesTable::getTableFromRegistry();
+            $category = $categoriesTable->newEntity();
+            $category->name = $attributes['name'];
+            $category->short_description = $attributes['short_description'];
+            $category->description = $attributes['description'];
+            $category->remark = $attributes['remark'];
+            $category->user = $request->getAttribute('clubman.user');
+            $categoriesTable->save($category);
+
+            return (new ResourceResponse(
+                CategoryTransformer::createForItem($category)
+            ))($response)->withStatus(201);
+        } catch (ValidationException $ve) {
+            return (new UnprocessableEntityResponse(
+                $ve->getErrors()
+            ))($response);
         }
-
-        $validator = new CategoryEmptyValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
-
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        $categoriesTable = CategoriesTable::getTableFromRegistry();
-        $category = $categoriesTable->newEntity();
-        $category->name = $attributes['name'];
-        $category->short_description = $attributes['short_description'];
-        $category->description = $attributes['description'];
-        $category->remark = $attributes['remark'];
-        $category->user = $request->getAttribute('clubman.user');
-        $categoriesTable->save($category);
-
-        return (new \Core\ResourceResponse(
-            CategoryTransformer::createForItem($category)
-        ))($response)->withStatus(201);
     }
 }

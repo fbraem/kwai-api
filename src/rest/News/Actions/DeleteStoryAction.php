@@ -7,13 +7,13 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
-
-use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
+use \Domain\Content\ContentsTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Core\Responses\NotFoundResponse;
+use Core\Responses\OkResponse;
 
 class DeleteStoryAction
 {
@@ -31,7 +31,7 @@ class DeleteStoryAction
             $story = $storiesTable->get($args['id'], [
                 'contain' => ['Contents']
             ]);
-            $contentTable = \Domain\Content\ContentsTable::getTableFromRegistry();
+            $contentTable = ContentsTable::getTableFromRegistry();
             foreach ($story->contents as $content) {
                 $contentTable->delete($content);
             }
@@ -41,9 +41,9 @@ class DeleteStoryAction
             $folder = 'images/news/' . $args['id'];
             $filesystem->deleteDir($folder);
 
-            $response = $response->withStatus(200);
+            $response = (new OKResponse())($response);
         } catch (RecordNotFoundException $rnfe) {
-            $response = $response->withStatus(404, _("Story doesn't exist"));
+            $response = (new NotFoundResponse(_("Story doesn't exist")))($response);
         }
 
         return $response;

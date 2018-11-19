@@ -7,10 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\Fractal\Manager;
-use League\Fractal\Serializer\JsonApiSerializer;
+use Core\Responses\JSONResponse;
 
-use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
 
 class ArchiveAction
@@ -47,8 +45,6 @@ class ArchiveAction
 
         $archive = $query->all();
 
-        $response->getBody()->write(json_encode($archive));
-
-        return $response->withHeader('content-type', 'application/json');
+        return (new JSONResponse($archive))($response);
     }
 }

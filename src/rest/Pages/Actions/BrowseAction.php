@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 
+use Core\Responses\ResourceResponse;
+
 class BrowseAction
 {
     private $container;
@@ -62,6 +64,6 @@ class BrowseAction
             'count' => $count
         ]);
 
-        return (new \Core\ResourceResponse($resource))($response);
+        return (new ResourceResponse($resource))($response);
     }
 }

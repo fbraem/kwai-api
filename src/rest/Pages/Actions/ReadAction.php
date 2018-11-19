@@ -12,6 +12,9 @@ use Domain\Page\PagesTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
 class ReadAction
 {
     private $container;
@@ -27,14 +30,15 @@ class ReadAction
             $page = PagesTable::getTableFromRegistry()->get($args['id'], [
                 'contain' => ['Contents', 'Category', 'Contents.User']
             ]);
+            $filesystem = $this->container->get('filesystem');
+
+            $response = (new ResourceResponse(
+                PageTransformer::createForItem($page, $filesystem)
+            ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Story doesn't exist"));
+            $response = (new NotFoundResponse(_("Page doesn't exist")))($response);
         }
-
-        $filesystem = $this->container->get('filesystem');
-
-        return (new \Core\ResourceResponse(
-            PageTransformer::createForItem($page, $filesystem)
-        ))($response);
+        
+        return $response;
     }
 }

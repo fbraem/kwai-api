@@ -21,7 +21,7 @@ class BrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return (new \Core\ResourceResponse(
+        return (new \Core\Responses\ResourceResponse(
             CategoryTransformer::createForCollection(
                 CategoriesTable::getTableFromRegistry()->find()->all(),
                 $this->container->get('filesystem')
