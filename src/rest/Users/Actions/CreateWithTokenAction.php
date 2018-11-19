@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\ConnectionManager;
 
 use PHPMailer\PHPMailer\Exception;
 
@@ -78,13 +77,8 @@ class CreateWithTokenAction
         $user->last_name = $attributes['last_name'];
         $user->password = password_hash($attributes['password'], PASSWORD_DEFAULT);
 
-        $connection = ConnectionManager::get('default');
-        $connection->begin();
-
         $usersTable->save($user);
         $invitationsTable->delete($invitation);
-
-        $connection->commit();
 
         return \Core\ResourceResponse::respond(
             UserTransformer::createForItem($user),

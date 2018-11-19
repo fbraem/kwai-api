@@ -9,8 +9,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use League\Csv\Reader;
 
-use Cake\Datasource\ConnectionManager;
-
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
 
@@ -33,9 +31,6 @@ class UploadAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $connection = ConnectionManager::get('default');
-        $connection->begin();
-
         $countriesTable = CountriesTable::getTableFromRegistry();
         $countriesTable->find()->where(['iso_3' => array_values($this->countries)]);
         $result = $countriesTable->find()->all();
