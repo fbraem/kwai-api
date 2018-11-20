@@ -19,8 +19,6 @@ use REST\Seasons\SeasonValidator;
 use Core\Responses\UnprocessableEntityResponse;
 use Core\Responses\ResourceResponse;
 
-use Carbon\Carbon;
-
 class CreateAction
 {
     private $container;
