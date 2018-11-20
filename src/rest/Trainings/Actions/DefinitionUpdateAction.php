@@ -10,15 +10,23 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Training\DefinitionsTable;
 use Domain\Training\DefinitionTransformer;
 
-use Cake\Datasource\Exception\RecordNotFoundException;
-
 use Respect\Validation\Validator as v;
 
-class DefinitionUpdateAction extends \Core\Action
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+use Core\Validators\EntityExistValidator;
+
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
+class DefinitionUpdateAction
 {
+    private $container;
+
     public function __construct(ContainerInterface $container)
     {
-        parent::__construct($container);
+        $this->container = $container;
     }
 
     public function __invoke(Request $request, Response $response, $args)
@@ -34,12 +42,8 @@ class DefinitionUpdateAction extends \Core\Action
                     'contain' => [ 'Season' ]
                 ]
             );
-        } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Training definition doesn't exist"));
-        }
 
-        try {
-            $this->validate(
+            (new InputValidator(
                 [
                     'data.attributes.name' => v::notEmpty()->length(1, 255),
                     'data.attributes.location' => v::notEmpty()->length(1, 255),
@@ -47,14 +51,14 @@ class DefinitionUpdateAction extends \Core\Action
                     'data.attributes.start_time' => v::date('H:i:s'),
                     'data.attributes.end_time' => v::date('H:i:s')
                 ],
-                $data,
-                true
-            );
+                false
+            ))->validate($data);
 
             $seasonData = \JmesPath\search('data.relationships.season.data', $data);
             if (isset($seasonData)) {
-                if ($seasonData['id']) {
-                    $def->season = $this->checkEntity('data.relationships.season', $data, $definitionsTable->Season);
+                $season = (new EntityExistValidator('data.relationships.season', $definitionsTable->Season, false))->validate($data);
+                if ($season) {
+                    $def->season = $season;
                 } else {
                     $def->season_id = null;
                 }
@@ -92,9 +96,11 @@ class DefinitionUpdateAction extends \Core\Action
 
             $response = (new \Core\ResourceResponse(
                 DefinitionTransformer::createForItem($def)
-            ))($response)->withStatus(201);
+            ))($response);
         } catch (\Core\ValidationException $ve) {
-            $response = $ve->unprocessableEntityResponse($response);
+            $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            $response = (new NotFoundResponse(_("Training definition doesn't exist")))($response);
         }
 
         return $response;

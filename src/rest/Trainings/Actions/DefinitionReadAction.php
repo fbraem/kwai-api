@@ -12,11 +12,16 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Domain\Training\DefinitionsTable;
 use Domain\Training\DefinitionTransformer;
 
-class DefinitionReadAction extends \Core\Action
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
+class DefinitionReadAction
 {
+    private $container;
+
     public function __construct(ContainerInterface $container)
     {
-        parent::__construct($container);
+        $this->container = $container;
     }
 
     public function __invoke(Request $request, Response $response, $args)
@@ -24,7 +29,7 @@ class DefinitionReadAction extends \Core\Action
         $contain = [];
 
         try {
-            return (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 DefinitionTransformer::createForItem(
                     DefinitionsTable::getTableFromRegistry()->get(
                         $args['id'],
@@ -35,7 +40,9 @@ class DefinitionReadAction extends \Core\Action
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Training definition doesn't exist"));
+            $response = (new NotFoundResponse(_("Training definition doesn't exist")))($response);
         }
+
+        return $response;
     }
 }

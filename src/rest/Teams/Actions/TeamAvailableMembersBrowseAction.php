@@ -12,9 +12,12 @@ use Cake\ORM\Query;
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Team\TeamMembersTable;
+
 //TODO: Remove sport dependency?
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
+
+use Core\Responses\ResourceResponse;
 
 class TeamAvailableMembersBrowseAction
 {
@@ -127,7 +130,7 @@ class TeamAvailableMembersBrowseAction
         $members = $query->all();
 
         //TODO: Remove sport dependency?
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             MemberTransformer::createForCollection($members)
         ))($response);
     }

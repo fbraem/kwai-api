@@ -11,8 +11,15 @@ use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 use Domain\Team\TeamTypesTable;
 
-use REST\Teams\TeamInputValidator;
-use REST\Teams\TeamEmptyValidator;
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+use Core\Validators\EntityExistValidator;
+
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
@@ -32,93 +39,62 @@ class TeamUpdateAction
             $team = $teamsTable->get($args['id'], [
                 'contain' => [ 'Season' ]
             ]);
-        } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Team doesn't exist"));
-        }
 
-        $data = $request->getParsedBody();
+            $data = $request->getParsedBody();
 
-        $validator = new TeamInputValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
+            (new InputValidator([
+                'data.attributes.name' => v::notEmpty()->length(1, 255),
+                'data.attributes.active' => [ v::boolType(), true ]
+            ], true))->validate($data);
 
-        $seasonData = \JmesPath\search('data.relationships.season.data', $data);
-        if (isset($seasonData)) {
-            if ($seasonData['id']) {
-                try {
-                    $season = $teamsTable->Season->get($seasonData['id']);
+            $seasonData = \JmesPath\search('data.relationships.season.data', $data);
+            if (isset($seasonData)) {
+                $season = (new EntityExistValidator('data.relationships.season', $teamsTable->Season, false))->validate($data);
+                if ($season) {
                     $team->season = $season;
-                } catch (RecordNotFoundException $rnfe) {
-                    $response
-                        ->getBody()
-                        ->write(
-                            json_encode([
-                                'errors' => [
-                                    'source' => [
-                                        'pointer' => '/data/relationships/season'
-                                    ],
-                                    'title' => _("Season doesn't exist")
-                                ]
-                            ])
-                        )
-                    ;
-
-                    return $response
-                        ->withStatus(422)
-                        ->withHeader('content-type', 'application/vnd.api+json')
-                    ;
+                } else {
+                    $team->season_id = null;
                 }
-            } else {
-                $team->season_id = null;
             }
-        }
 
-        $teamTypeId = \JmesPath\search('data.relationships.team_type.data.id', $data);
-        if (isset($teamTypeId)) {
-            try {
-                $team_type = $teamsTable->TeamType->get($teamTypeId);
-            } catch (RecordNotFoundException $rnfe) {
-                $response
-                    ->getBody()
-                    ->write(
-                        json_encode([
-                            'errors' => [
-                                'source' => [
-                                    'pointer' => '/data/relationships/team_type'
-                                ],
-                                'title' => _("Teamtype doesn't exist")
-                            ]
-                        ])
-                    )
-                ;
-
-                return $response
-                    ->withStatus(422)
-                    ->withHeader('content-type', 'application/vnd.api+json')
-                ;
+            $typeData = \JmesPath\search('data.relationships.team_type.data', $data);
+            if (isset($typeData)) {
+                $team_type = (new EntityExistValidator('data.relationships.team_type', $teamsTable->TeamType, false))->validate($data);
+                if ($team_type) {
+                    $team->team_type = $team_type;
+                } else {
+                    $team->team_type_id = null;
+                }
             }
+
+            $teamType = (new EntityExistValidator('data.relationships.team_type', $teamsTable->TeamType, false))->validate($data);
+
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            if (isset($attributes['name'])) {
+                $team->name = $attributes['name'];
+            }
+            if (isset($team_type)) {
+                $team->team_type = $team_type;
+            }
+            if (isset($attributes['active'])) {
+                $team->active = $attributes['active'];
+            }
+            if (isset($attributes['remark'])) {
+                $team->remark = $attributes['remark'];
+            }
+
+            $teamsTable->save($team);
+
+            $response = (new ResourceResponse(
+                TeamTransformer::createForItem($team)
+            ))($response);
+        } catch (RecordNotFoundException $rnfe) {
+            $response = (new NotFoundResponse(("Team doesn't exist")))($response);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         }
 
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        if (isset($attributes['name'])) {
-            $team->name = $attributes['name'];
-        }
-        if (isset($team_type)) {
-            $team->team_type = $team_type;
-        }
-        if (isset($attributes['active'])) {
-            $team->active = $attributes['active'];
-        }
-        if (isset($attributes['remark'])) {
-            $team->remark = $attributes['remark'];
-        }
-
-        $teamsTable->save($team);
-
-        return (new \Core\ResourceResponse(
-            TeamTransformer::createForItem($team)
-        ))($response);
+        return $response;
     }
 }

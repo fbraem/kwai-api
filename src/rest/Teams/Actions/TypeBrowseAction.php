@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Team\TeamTypesTable;
 use Domain\Team\TeamTypeTransformer;
 
+use Core\Responses\ResourceResponse;
+
 class TypeBrowseAction
 {
     private $container;
@@ -21,12 +23,12 @@ class TypeBrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return (new \Core\ResourceResponse(
-            TeamTypeTransformer::createForCollection(
-                TeamTypesTable::getTableFromRegistry()
-                    ->find()
-                    ->all()
-            )
-        ))($response);
+        return (new ResourceResponse(
+                TeamTypeTransformer::createForCollection(
+                    TeamTypesTable::getTableFromRegistry()
+                        ->find()
+                        ->all()
+                )
+            ))($response);
     }
 }

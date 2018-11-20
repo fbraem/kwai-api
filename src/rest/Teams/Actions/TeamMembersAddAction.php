@@ -15,6 +15,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
 
+use Core\Responses\ResourceResponse;
+
 class TeamMembersAddAction
 {
     private $container;
@@ -54,7 +56,7 @@ class TeamMembersAddAction
         $team->dirty('members', true);
         $teamsTable->save($team);
 
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             MemberTransformer::createForCollection($team->members)
         ))($response);
     }

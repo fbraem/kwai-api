@@ -12,6 +12,9 @@ use Domain\Team\TeamTypeTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
+use Core\Responses\NotFoundResponse;
+use Core\Responses\ResourceResponse;
+
 class TypeReadAction
 {
     private $container;
@@ -24,13 +27,14 @@ class TypeReadAction
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            return (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 TeamTypeTransformer::createForItem(
                     TeamTypesTable::getTableFromRegistry()->get($args['id'])
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Teamtype doesn't exist"));
+            $response = (new NotFoundResponse(_("Teamtype doesn't exist")))($response);
         }
+        return $response;
     }
 }

@@ -1,27 +1,19 @@
 <?php
 namespace REST\Teams;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Zend\Validator\Callback;
-use Carbon\Carbon;
+use Core\Validators\ValidatorInterface;
+use Core\Validators\ValidationException;
 
-class TeamTypeValidator extends \Core\Validators\EntityValidator
+class TeamTypeValidator implements \Core\Validators\ValidatorInterface
 {
-    public function __construct()
+    public function validate($data)
     {
-        parent::__construct();
-
-        $endAgeValidator = new Callback(function ($value) {
-            if (isset($value->end_age) && isset($value->start_age)) {
-                return $value->end_age >= $value->start_age;
+        if (isset($value->end_age) && isset($value->start_age)) {
+            if ($value->end_age < $value->start_age) {
+                throw new ValidationException([
+                    'data/attributes/end_age' => 'end_age must be equal or greater then start_age'
+                ]);
             }
-            return true;
-        });
-        $endAgeValidator->setMessage(
-            _('End age must be greater then start age'),
-            Callback::INVALID_VALUE
-        );
-
-        $this->addValidator($endAgeValidator);
+        }
     }
 }

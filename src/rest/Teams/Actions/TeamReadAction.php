@@ -10,6 +10,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 
+use Core\Responses\NotFoundResponse;
+use Core\Responses\ResourceResponse;
+
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 class TeamReadAction
@@ -36,8 +39,9 @@ class TeamReadAction
                 }
             }
         }
+
         try {
-            return (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 TeamTransformer::createForItem(
                     TeamsTable::getTableFromRegistry()->get(
                         $args['id'],
@@ -48,7 +52,9 @@ class TeamReadAction
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            return $response->withStatus(404, _("Team doesn't exist"));
+            $response = (new NotFoundResponse(_("Team doesn't exist")))($response);
         }
+
+        return $response;
     }
 }

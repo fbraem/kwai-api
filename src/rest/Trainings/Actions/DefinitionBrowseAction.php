@@ -10,11 +10,15 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Training\DefinitionsTable;
 use Domain\Training\DefinitionTransformer;
 
-class DefinitionBrowseAction extends \Core\Action
+use Core\Responses\ResourceResponse;
+
+class DefinitionBrowseAction
 {
+    private $container;
+
     public function __construct(ContainerInterface $container)
     {
-        parent::__construct($container);
+        $this->container = $container;
     }
 
     public function __invoke(Request $request, Response $response, $args)
@@ -23,7 +27,7 @@ class DefinitionBrowseAction extends \Core\Action
         $query = $table->find();
         $query->contain(['Season']);
 
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             DefinitionTransformer::createForCollection(
                 $query->all()
             )

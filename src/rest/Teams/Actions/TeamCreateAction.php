@@ -11,10 +11,14 @@ use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 use Domain\Team\TeamTypesTable;
 
-use REST\Teams\TeamInputValidator;
-use REST\Teams\TeamEmptyValidator;
+use Respect\Validation\Validator as v;
 
-use Cake\Datasource\Exception\RecordNotFoundException;
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+use Core\Validators\EntityExistValidator;
+
+use Core\Responses\UnprocessableEntityResponse;
+use Core\Responses\ResourceResponse;
 
 class TeamCreateAction
 {
@@ -29,77 +33,39 @@ class TeamCreateAction
     {
         $data = $request->getParsedBody();
 
-        $validator = new TeamInputValidator();
-        if (! $validator->validate($data)) {
-            return $validator->unprocessableEntityResponse($response);
-        }
+        try {
+            (new InputValidator([
+                'data.attributes.name' => v::notEmpty()->length(1, 255),
+                'data.attributes.active' => [ v::boolType(), true ]
+            ]))->validate($data);
 
-        $teamsTable = TeamsTable::getTableFromRegistry();
+            $teamsTable = TeamsTable::getTableFromRegistry();
 
-        $seasonId = \JmesPath\search('data.relationships.season.data.id', $data);
-        if (isset($seasonId)) {
-            try {
-                $season = $teamsTable->Season->get($seasonId);
-            } catch (RecordNotFoundException $rnfe) {
-                $response
-                    ->getBody()
-                    ->write(
-                        json_encode([
-                            'errors' => [
-                                'source' => [
-                                    'pointer' => '/data/relationships/season'
-                                ],
-                                'title' => _("Season doesn't exist")
-                            ]
-                        ])
-                    )
-                ;
+            $season = (new EntityExistValidator('data.relationships.season', $teamsTable->Season, false))->validate($data);
+            $teamType = (new EntityExistValidator('data.relationships.team_type', $teamsTable->TeamType, false))->validate($data);
 
-                return $response
-                    ->withStatus(422)
-                    ->withHeader('content-type', 'application/vnd.api+json')
-                ;
+            $attributes = \JmesPath\search('data.attributes', $data);
+
+            $team = $teamsTable->newEntity();
+            $team->name = $attributes['name'];
+            $team->remark = $attributes['remark'] ?? null;
+            $team->active = $attribute['active'] ?? true;
+            $team->season = $season ?? null;
+            $team->team_type = $teamType ?? null;
+            $teamsTable->save($team);
+
+            $route = $request->getAttribute('route');
+            if (! empty($route)) {
+                $route->setArgument('id', $team->id);
             }
+
+            $response = (new ResourceResponse(
+                TeamTransformer::createForItem($team)
+            ))($response)->withStatus(201);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         }
 
-        $teamTypeId = \JmesPath\search('data.relationships.team_type.data.id', $data);
-        if (isset($teamTypeId)) {
-            try {
-                $teamType = $teamsTable->TeamType->get($teamTypeId);
-            } catch (RecordNotFoundException $rnfe) {
-                $response
-                    ->getBody()
-                    ->write(
-                        json_encode([
-                            'errors' => [
-                                'source' => [
-                                    'pointer' => '/data/relationships/team_type'
-                                ],
-                                'title' => _("Teamtype doesn't exist")
-                            ]
-                        ])
-                    )
-                ;
-
-                return $response
-                    ->withStatus(422)
-                    ->withHeader('content-type', 'application/vnd.api+json')
-                ;
-            }
-        }
-
-        $attributes = \JmesPath\search('data.attributes', $data);
-
-        $team = $teamsTable->newEntity();
-        $team->name = $attributes['name'];
-        $team->remark = $attributes['remark'] ?? null;
-        $team->active = $attribute['active'] ?? true;
-        $team->season = $season ?? null;
-        $team->team_type = $teamType ?? null;
-        $teamsTable->save($team);
-
-        return (new \Core\ResourceResponse(
-            TeamTransformer::createForItem($team)
-        ))($response)->withStatus(201);
+        return $response;
     }
 }
