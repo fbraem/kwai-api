@@ -7,13 +7,20 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Cake\Datasource\Exception\RecordNotFoundException;
-
 use PHPMailer\PHPMailer\Exception;
 
 use Domain\User\UsersTable;
 use Domain\User\UserTransformer;
 use Domain\User\UserInvitationsTable;
+
+use Respect\Validation\Validator as v;
+
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+use Core\Responses\UnprocessableEntityResponse;
 
 class CreateWithTokenAction
 {
@@ -39,21 +46,25 @@ class CreateWithTokenAction
         }
 
         try {
+            (new InputValidator([
+                'data.attributes.email' => v::allOf(
+                    v::email(),
+                    v::callback(function ($value) {
+                        // Check if the email address isn't used yet ...
+                        $user = UsersTable::getTableFromRegistry()
+                            ->find()
+                            ->where(['email' => $value])
+                            ->first()
+                        ;
+                        return $user == null;
+                    })->setTemplate('{{name}} already in use')
+                ),
+                'data.attributes.password' => v::alnum()->notEmpty()->length(8, null),
+                'data.attributes.first_name' => v::notEmpty()->length(1, 255),
+                'data.attributes.last_name' => v::notEmpty()->length(1, 255)
+            ]))->validate($data);
+
             $attributes = \JmesPath\search('data.attributes', $data);
-
-            $usersTable = UsersTable::getTableFromRegistry();
-
-            // Check if the email address isn't used yet ...
-            $user = $usersTable
-                ->find()
-                ->where(['email' => $attributes['email']])
-                ->first()
-            ;
-            if ($user != null) {
-                throw new ValidationException([
-                    '/data/attributes/email' => _('Email address already in use')
-                ]);
-            }
 
             $user = $usersTable->newEntity();
             $user->email = $attributes['email'];
@@ -64,10 +75,10 @@ class CreateWithTokenAction
             $usersTable->save($user);
             $invitationsTable->delete($invitation);
 
-            $response = ResourceResponse::respond(
-                UserTransformer::createForItem($user),
-                $response
-            )->withStatus(201);
+            $response = (new ResourceResponse(
+                UserTransformer::createForItem($user)
+            ))($response)
+                ->withStatus(201);
         } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         }

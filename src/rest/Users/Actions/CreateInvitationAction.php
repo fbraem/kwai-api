@@ -15,7 +15,11 @@ use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
 use Domain\User\UsersTable;
 
+use Respect\Validation\Validator as v;
+
+use Core\Validators\InputValidator;
 use Core\Validators\ValidationException;
+
 use Core\Responses\ResourceResponse;
 use Core\Responses\UnprocessableEntityResponse;
 
@@ -35,17 +39,20 @@ class CreateInvitationAction
         $attributes = \JmesPath\search('data.attributes', $data);
 
         try {
-            // Check if the email address isn't used yet ...
-            $user = UsersTable::getTableFromRegistry()
-                ->find()
-                ->where(['email' => $attributes['email']])
-                ->first()
-            ;
-            if ($user != null) {
-                throw new ValidationException([
-                    '/data/attributes/email' => _('Email address already in use')
-                ]);
-            }
+            (new InputValidator([
+                'data.attributes.email' => v::allOf(
+                    v::email(),
+                    v::callback(function ($value) {
+                        // Check if the email address isn't used yet ...
+                        $user = UsersTable::getTableFromRegistry()
+                            ->find()
+                            ->where(['email' => $value])
+                            ->first()
+                        ;
+                        return $user == null;
+                    })->setTemplate('{{name}} already in use')
+                )
+            ]))->validate($data);
 
             $invitationsTable = UserInvitationsTable::getTableFromRegistry();
             $invitation = $invitationsTable->newEntity();
@@ -83,10 +90,9 @@ class CreateInvitationAction
                 //TODO: log it? add a column to indicate failure?
             }
 
-            $response = ResourceResponse::respond(
-                UserInvitationTransformer::createForItem($invitation),
-                $response
-            )->withStatus(201);
+            $response = (new ResourceResponse(
+                UserInvitationTransformer::createForItem($invitation)
+            ))($response)->withStatus(201);
         } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         }
