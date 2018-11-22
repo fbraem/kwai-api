@@ -18,6 +18,10 @@ $app->group('/trainings', function () {
         ->setName('trainings.definitions.update')
         ->setArgument('auth', true)
     ;
+    $this->get('/coaches', \REST\Trainings\Actions\CoachBrowseAction::class)
+        ->setName('trainings.coaches.browse')
+    ;
+
     /*
     $this->delete('/stories/{id:[0-9]+}', \REST\News\Actions\DeleteStoryAction::class)
         ->setName('news.delete')
