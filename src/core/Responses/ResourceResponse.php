@@ -33,9 +33,4 @@ class ResourceResponse
 
         return $response->withHeader('content-type', 'application/vnd.api+json');
     }
-
-    public static function respond($resource, $response)
-    {
-        return (new self($resource))($response);
-    }
 }
