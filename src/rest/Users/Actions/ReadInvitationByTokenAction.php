@@ -10,6 +10,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
 
+use Core\Responses\ResourceResponse;
+use Core\Responses\NotFoundResponse;
+
 class ReadInvitationByTokenAction
 {
     private $container;
@@ -29,13 +32,15 @@ class ReadInvitationByTokenAction
             ->first()
         ;
         if ($invitation == null) {
-            return $response->withStatus(404, _("Invitation doesn't exist."));
+            $response = (new NotFoundResponse(_("Invitation doesn't exist.")))($response);
+        } else {
+            $response = (new ResourceResponse(
+                UserInvitationTransformer::createForItem(
+                    $invitation
+                )
+            ))($response);
         }
 
-        return (new \Core\ResourceResponse(
-            UserInvitationTransformer::createForItem(
-            $invitation
-        )
-        ))($response);
+        return $response;
     }
 }

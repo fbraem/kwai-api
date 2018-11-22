@@ -15,6 +15,10 @@ use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
 use Domain\User\UsersTable;
 
+use Core\Validators\ValidationException;
+use Core\Responses\ResourceResponse;
+use Core\Responses\UnprocessableEntityResponse;
+
 class CreateInvitationAction
 {
     private $container;
@@ -30,73 +34,63 @@ class CreateInvitationAction
 
         $attributes = \JmesPath\search('data.attributes', $data);
 
-        // Check if the email address isn't used yet ...
-        $user = UsersTable::getTableFromRegistry()
-            ->find()
-            ->where(['email' => $attributes['email']])
-            ->first()
-        ;
-        if ($user != null) {
-            // This is not ok!
-            $response
-                ->getBody()
-                ->write(
-                    json_encode([
-                        'errors' => [
-                            [
-                                'source' => [
-                                    'pointer' => '/data/attributes/email'
-                                ],
-                                'title' => _('Email address already in use')
-                            ]
-                        ]
-                    ])
-                )
-            ;
-            return $response
-                ->withStatus(422)
-                ->withHeader('content-type', 'application/vnd.api+json')
-            ;
-        }
-
-        $invitationsTable = UserInvitationsTable::getTableFromRegistry();
-        $invitation = $invitationsTable->newEntity();
-        $invitation->email = $attributes['email'];
-        $invitation->token = bin2hex(random_bytes(16));
-        if ($attributes['expired_at']) {
-            $invitation->expired_at = $attributes['expired_at'];
-            $invitation->expired_at_timezone = $attributes['expired_at_timezone'] ?? date_default_timezone_get();
-        } else {
-            $invitation->expired_at = \Carbon\Carbon::now()->addWeek();
-            $invitation->expired_at_timezone = date_default_timezone_get();
-        }
-        $invitation->remark = $attributes['remark'] ?? null;
-        $invitation->user = $request->getAttribute('clubman.user');
-
-        $invitationsTable->save($invitation);
-
-        $mail = $this->container->mailer;
         try {
-            $mail->addAddress($invitation->email, 'Joe User');
-            $mail->addAddress('ellen@example.com');
+            // Check if the email address isn't used yet ...
+            $user = UsersTable::getTableFromRegistry()
+                ->find()
+                ->where(['email' => $attributes['email']])
+                ->first()
+            ;
+            if ($user != null) {
+                throw new ValidationException([
+                    '/data/attributes/email' => _('Email address already in use')
+                ]);
+            }
 
-            $mail->isHTML(true);
-            $mail->Subject = $this->container->settings['mail']['subject'] . ' - User Invitation';
-            $mail->Body = $this->container->template->render('User/invitation_html', [
-                'url' => $this->container->settings['website']['url'] . '/#users/invite/' . $invitation->token,
-                'email' => $this->container->settings['website']['email'],
-                'invitation' => $invitation,
-                'user' => $invitation->user
-            ]);
-            $mail->AltBody = $this->container->template->render('User/invitation_txt', ['invitation' => $invitation]);
+            $invitationsTable = UserInvitationsTable::getTableFromRegistry();
+            $invitation = $invitationsTable->newEntity();
+            $invitation->email = $attributes['email'];
+            $invitation->token = bin2hex(random_bytes(16));
+            if ($attributes['expired_at']) {
+                $invitation->expired_at = $attributes['expired_at'];
+                $invitation->expired_at_timezone = $attributes['expired_at_timezone'] ?? date_default_timezone_get();
+            } else {
+                $invitation->expired_at = \Carbon\Carbon::now()->addWeek();
+                $invitation->expired_at_timezone = date_default_timezone_get();
+            }
+            $invitation->remark = $attributes['remark'] ?? null;
+            $invitation->user = $request->getAttribute('clubman.user');
 
-            $mail->send();
-        } catch (Exception $e) {
+            $invitationsTable->save($invitation);
+
+            $mail = $this->container->mailer;
+            try {
+                $mail->addAddress($invitation->email, 'Joe User');
+                $mail->addAddress('ellen@example.com');
+
+                $mail->isHTML(true);
+                $mail->Subject = $this->container->settings['mail']['subject'] . ' - User Invitation';
+                $mail->Body = $this->container->template->render('User/invitation_html', [
+                    'url' => $this->container->settings['website']['url'] . '/#users/invite/' . $invitation->token,
+                    'email' => $this->container->settings['website']['email'],
+                    'invitation' => $invitation,
+                    'user' => $invitation->user
+                ]);
+                $mail->AltBody = $this->container->template->render('User/invitation_txt', ['invitation' => $invitation]);
+
+                $mail->send();
+            } catch (Exception $e) {
+                //TODO: log it? add a column to indicate failure?
+            }
+
+            $response = ResourceResponse::respond(
+                UserInvitationTransformer::createForItem($invitation),
+                $response
+            )->withStatus(201);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         }
 
-        return \Core\ResourceResponse::respond(
-            UserInvitationTransformer::createForItem($invitation),
-            $response
-        )->withStatus(201);
+        return $response;
     }
 }

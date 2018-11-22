@@ -35,54 +35,43 @@ class CreateWithTokenAction
             ->first()
         ;
         if ($invitation == null) {
-            return $response->withStatus(404, _("Invitation doesn't exist."));
+            return (new NotFoundResponse(_("Invitation doesn't exist.")))($response);
         }
 
-        $attributes = \JmesPath\search('data.attributes', $data);
+        try {
+            $attributes = \JmesPath\search('data.attributes', $data);
 
-        $usersTable = UsersTable::getTableFromRegistry();
+            $usersTable = UsersTable::getTableFromRegistry();
 
-        // Check if the email address isn't used yet ...
-        $user = $usersTable
-            ->find()
-            ->where(['email' => $attributes['email']])
-            ->first()
-        ;
-        if ($user != null) {
-            // This is not ok!
-            $response
-                ->getBody()
-                ->write(
-                    json_encode([
-                        'errors' => [
-                            [
-                                'source' => [
-                                    'pointer' => '/data/attributes/email'
-                                ],
-                                'title' => _('Email address already in use')
-                                ]
-                            ]
-                    ])
-                )
+            // Check if the email address isn't used yet ...
+            $user = $usersTable
+                ->find()
+                ->where(['email' => $attributes['email']])
+                ->first()
             ;
-            return $response
-                ->withStatus(422)
-                ->withHeader('content-type', 'application/vnd.api+json')
-            ;
+            if ($user != null) {
+                throw new ValidationException([
+                    '/data/attributes/email' => _('Email address already in use')
+                ]);
+            }
+
+            $user = $usersTable->newEntity();
+            $user->email = $attributes['email'];
+            $user->first_name = $attributes['first_name'];
+            $user->last_name = $attributes['last_name'];
+            $user->password = password_hash($attributes['password'], PASSWORD_DEFAULT);
+
+            $usersTable->save($user);
+            $invitationsTable->delete($invitation);
+
+            $response = ResourceResponse::respond(
+                UserTransformer::createForItem($user),
+                $response
+            )->withStatus(201);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         }
 
-        $user = $usersTable->newEntity();
-        $user->email = $attributes['email'];
-        $user->first_name = $attributes['first_name'];
-        $user->last_name = $attributes['last_name'];
-        $user->password = password_hash($attributes['password'], PASSWORD_DEFAULT);
-
-        $usersTable->save($user);
-        $invitationsTable->delete($invitation);
-
-        return \Core\ResourceResponse::respond(
-            UserTransformer::createForItem($user),
-            $response
-        )->withStatus(201);
+        return $response;
     }
 }

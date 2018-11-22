@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
 
+use Core\Responses\ResourceResponse;
+
 class BrowseInvitationAction
 {
     private $container;
@@ -44,6 +46,6 @@ class BrowseInvitationAction
             'count' => $count
         ]);
 
-        return (new \Core\ResourceResponse($resource))($response);
+        return (new ResourceResponse($resource))($response);
     }
 }
