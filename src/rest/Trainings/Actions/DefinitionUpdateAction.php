@@ -51,7 +51,7 @@ class DefinitionUpdateAction
                     'data.attributes.start_time' => v::date('H:i:s'),
                     'data.attributes.end_time' => v::date('H:i:s')
                 ],
-                false
+                true
             ))->validate($data);
 
             $seasonData = \JmesPath\search('data.relationships.season.data', $data);
@@ -61,6 +61,7 @@ class DefinitionUpdateAction
                     $def->season = $season;
                 } else {
                     $def->season_id = null;
+                    $def->season = null;
                 }
             }
 
@@ -94,10 +95,10 @@ class DefinitionUpdateAction
 
             $definitionsTable->save($def);
 
-            $response = (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 DefinitionTransformer::createForItem($def)
             ))($response);
-        } catch (\Core\ValidationException $ve) {
+        } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);
         } catch (RecordNotFoundException $rnfe) {
             $response = (new NotFoundResponse(_("Training definition doesn't exist")))($response);
