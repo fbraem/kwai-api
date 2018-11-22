@@ -15,7 +15,7 @@ class CoachesTable extends \Cake\ORM\Table
         $this->initializeTable();
 
         $this->belongsTo('Member', [
-                'className' => \Sport\Judo\Domain\Member\MembersTable::class
+                'className' => \Judo\Domain\Member\MembersTable::class
             ])
             ->setForeignKey('member_id')
             ->setProperty('member')
