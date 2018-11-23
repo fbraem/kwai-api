@@ -63,6 +63,11 @@ class DefinitionCreateAction
 
             $definitionsTable->save($def);
 
+            $route = $request->getAttribute('route');
+            if (! empty($route)) {
+                $route->setArgument('id', $def->id);
+            }
+
             $response = (new ResourceResponse(
                 DefinitionTransformer::createForItem($def)
             ))($response)->withStatus(201);
