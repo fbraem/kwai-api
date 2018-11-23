@@ -25,8 +25,9 @@ class CoachTransformer extends Fractal\TransformerAbstract
     public function includeMember(Coach $coach)
     {
         $member = $coach->member;
-        if ($season) {
-            return \Sport\Judo\Domain\Member\MemberTransformer::createForItem($member);
+        if ($member) {
+            //TODO; make it sport independent
+            return \Judo\Domain\Member\MemberTransformer::createForItem($member);
         }
     }
 
