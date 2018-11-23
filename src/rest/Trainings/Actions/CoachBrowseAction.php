@@ -25,7 +25,7 @@ class CoachBrowseAction
     {
         $table = CoachesTable::getTableFromRegistry();
         $query = $table->find();
-        $query->contain(['Member']);
+        $query->contain(['Member', 'Member.Person']);
 
         return (new ResourceResponse(
             CoachTransformer::createForCollection(
