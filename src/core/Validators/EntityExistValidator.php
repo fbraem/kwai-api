@@ -17,7 +17,6 @@ class EntityExistValidator implements ValidatorInterface
         $this->data = $data;
         $this->table = $table;
         $this->required = $required;
-        $this->entity = null;
     }
 
     public function validate($data)
