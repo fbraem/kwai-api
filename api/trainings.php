@@ -38,23 +38,9 @@ $app->group('/trainings', function () {
         ->setArgument('auth', true)
     ;
 
-    /*
-    $this->delete('/stories/{id:[0-9]+}', \REST\News\Actions\DeleteStoryAction::class)
-        ->setName('news.delete')
-        ->setArgument('auth', true)
+    $this->get('/events', \REST\Trainings\Actions\EventBrowseAction::class)
+        ->setName('trainings.events.browse')
     ;
-    $this->get('/archive', \REST\News\Actions\ArchiveAction::class)
-        ->setName('news.archive')
-    ;
-    $this->post('/stories/{id:[0-9]+}/contents', \REST\News\Actions\CreateContentAction::class)
-        ->setName('news.contents.create')
-        ->setArgument('auth', true)
-    ;
-    $this->patch('/stories/{id:[0-9]+}/contents/{contentId:[0-9]+}', \REST\News\Actions\UpdateContentAction::class)
-        ->setName('news.contents.update')
-        ->setArgument('auth', true)
-    ;
-    */
 });
 
 $app->run();
