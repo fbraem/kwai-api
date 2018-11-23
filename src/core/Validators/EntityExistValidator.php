@@ -28,10 +28,10 @@ class EntityExistValidator implements ValidatorInterface
             try {
                 return $this->table->get($id);
             } catch (RecordNotFoundException $rnfe) {
-                $errors['/' . str_replace('.', '/', $path)] = end($paths) . " doesn't exist";
+                $errors['/' . str_replace('.', '/', $this->path)] = end($paths) . " doesn't exist";
             }
         } elseif ($this->required) {
-            $errors['/' . str_replace('.', '/', $path)] = end($paths) . " is missing";
+            $errors['/' . str_replace('.', '/', $this->path)] = end($paths) . " is missing";
         }
 
         if (count($errors) > 0) {
