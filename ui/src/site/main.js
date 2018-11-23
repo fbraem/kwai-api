@@ -1,4 +1,4 @@
-import "babel-polyfill";
+import 'babel-polyfill';
 
 import Vue from 'vue';
 
@@ -11,13 +11,13 @@ Vue.use(Vuex);
 import UIkit from 'uikit';
 import UIkitIcons from 'uikit/dist/js/uikit-icons';
 UIkit.use(UIkitIcons);
-import css from 'uikit/dist/css/uikit.min.css';
+import 'uikit/dist/css/uikit.min.css';
 
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 const i18n = new VueI18n({
-    locale : 'nl',
-    fallbackLocale : 'nl'
+  locale: 'nl',
+  fallbackLocale: 'nl',
 });
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -29,9 +29,9 @@ import store from '@/stores/root';
 
 import VueKindergarten from 'vue-kindergarten';
 Vue.use(VueKindergarten, {
-    child : (store) => {
-        return store ? store.getters.user : null;
-    }
+  child: (store) => {
+    return store ? store.getters.user : null;
+  },
 });
 import perimeters from '@/perimeters';
 
@@ -44,19 +44,19 @@ Vue.use(VueExtendLayout);
 import routes from '@/routes';
 
 const router = new VueRouter({
-    routes : routes()
+  routes: routes(),
 });
 
 import VueScrollBehavior from 'vue-scroll-behavior';
-Vue.use(VueScrollBehavior, { router : router });
+Vue.use(VueScrollBehavior, { router: router });
 
-var app = new Vue({
-    router,
-    store,
-    perimeters : perimeters(),
-    ...layout,
-    wait : new VueWait({
-        useVuex : true
-    }),
-    i18n
+new Vue({
+  router,
+  store,
+  perimeters: perimeters(),
+  ...layout,
+  wait: new VueWait({
+    useVuex: true,
+  }),
+  i18n,
 }).$mount('#clubmanApp');

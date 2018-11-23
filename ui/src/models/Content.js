@@ -1,33 +1,33 @@
 import Model from './BaseModel';
 
 export default class Content extends Model {
-    resourceName() {
-        return 'contents';
-    }
+  resourceName() {
+    return 'contents';
+  }
 
-    fields() {
-        return [
-            'locale',
-            'format',
-            'title',
-            'content',
-            'html_content',
-            'summary',
-            'html_summary'
-        ];
-    }
+  fields() {
+    return [
+      'locale',
+      'format',
+      'title',
+      'content',
+      'html_content',
+      'summary',
+      'html_summary',
+    ];
+  }
 
-    dates() {
-        return {
-            'created_at' : 'YYYY-MM-DD HH:mm:ss',
-            'updated_at' : 'YYYY-MM-DD HH:mm:ss'
-        }
-    }
+  dates() {
+    return {
+      created_at: 'YYYY-MM-DD HH:mm:ss',
+      updated_at: 'YYYY-MM-DD HH:mm:ss',
+    };
+  }
 
-    relationships() {
-        return {
-            //TODO:
-            //'user' : new User()
-        };
-    }
+  relationships() {
+    return {
+      // TODO:
+      // 'user' : new User()
+    };
+  }
 }

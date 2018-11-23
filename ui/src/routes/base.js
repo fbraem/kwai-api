@@ -1,9 +1,9 @@
 import SiteApp from '@/site/App.vue';
 
 export default [
-    {
-        path : '/',
-        component : SiteApp,
-        name :'home'
-    }
+  {
+    path: '/',
+    component: SiteApp,
+    name: 'home',
+  },
 ];

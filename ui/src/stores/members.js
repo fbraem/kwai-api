@@ -6,59 +6,59 @@ Vue.use(Vuex);
 import Member from '@/models/Member';
 
 const state = {
-    members : null,
-    error : null
+  members: null,
+  error: null,
 };
 
 const getters = {
-    members(state) {
-        return state.members;
-    },
-    member: (state) => (id) => {
-        if (state.members) {
-            return find(state.members, ['id', id]);
-        }
-        return null;
-    },
-    error(state) {
-        return state.error;
+  members(state) {
+    return state.members;
+  },
+  member: (state) => (id) => {
+    if (state.members) {
+      return find(state.members, ['id', id]);
     }
+    return null;
+  },
+  error(state) {
+    return state.error;
+  },
 };
 
 const mutations = {
   members(state, members) {
-      state.members = members;
-      state.error = null;
+    state.members = members;
+    state.error = null;
   },
   member(state, member) {
-      if (state.members == null) {
-          state.members = [];
-      }
-      var index = state.members.findIndex((m) => m.id == member.id);
-      if (index != -1) {
-          Vue.set(state.members, index, member);
-      } else {
-          state.members.push(member);
-      }
-      state.error = null;
-  }
+    if (state.members == null) {
+      state.members = [];
+    }
+    var index = state.members.findIndex((m) => m.id === member.id);
+    if (index !== -1) {
+      Vue.set(state.members, index, member);
+    } else {
+      state.members.push(member);
+    }
+    state.error = null;
+  },
 };
 
 const actions = {
-    async browse({ dispatch, commit }, payload) {
-        dispatch('wait/start', 'members.browse', { root : true });
-        const member = new Member();
-        try {
-            let members = await member.get();
-            commit('members', members);
-            dispatch('wait/end', 'members.browse', { root : true });
-        } catch(error) {
-            commit('error', error);
-            dispatch('wait/end', 'members.browse', { root : true });
-            throw error;
-        }
+  async browse({ dispatch, commit }, payload) {
+    dispatch('wait/start', 'members.browse', { root: true });
+    const member = new Member();
+    try {
+      let members = await member.get();
+      commit('members', members);
+      dispatch('wait/end', 'members.browse', { root: true });
+    } catch (error) {
+      commit('error', error);
+      dispatch('wait/end', 'members.browse', { root: true });
+      throw error;
+    }
 
-/*
+    /*
         dispatch('wait/start', 'members.browse', { root : true });
         var uri = new URI('api/sport/judo/members');
         var offset = payload.offset || 0;
@@ -92,85 +92,85 @@ const actions = {
             context.commit('error', error);
         });
 */
-    },
-    read(context, payload) {
-        context.commit('loading');
-        var member = context.getters['member'](payload.id);
-        if (member) { // already read
-            context.commit('success');
-            return;
-        }
+  },
+  read(context, payload) {
+    context.commit('loading');
+    var member = context.getters['member'](payload.id);
+    if (member) { // already read
+      context.commit('success');
+      return;
+    }
 
-        oauth.get('api/members/' + payload.id, {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setMember', {
-                member : result.data
-            });
-            context.commit('success');
+    oauth.get('api/members/' + payload.id, {
+      data: payload,
+    }).then((res) => {
+      var api = new JSONAPI();
+      var result = api.parse(res.data);
+      context.commit('setMember', {
+        member: result.data,
+      });
+      context.commit('success');
+    }).catch((error) => {
+      context.commit('error', error);
+    });
+  },
+  create(context, payload) {
+    context.commit('loading');
+    return oauth.post('api/members', {
+      data: payload,
+    }).then((res) => {
+      var api = new JSONAPI();
+      var result = api.parse(res.data);
+      context.commit('setMember', {
+        member: result.data,
+      });
+      context.commit('success');
+      return result.data;
+    }).catch((error) => {
+      context.commit('error', error);
+    });
+  },
+  update(context, payload) {
+    context.commit('loading');
+    return new Promise((resolve, reject) => {
+      oauth.patch('api/members/' + payload.data.id, {
+        data: payload,
+      }).then((res) => {
+        var api = new JSONAPI();
+        var result = api.parse(res.data);
+        context.commit('setMember', {
+          member: result.data,
+        });
+        context.commit('success');
+        resolve();
+      }).catch((error) => {
+        context.commit('error', error);
+        reject();
+      });
+    });
+  },
+  delete(context, payload) {
+    context.commit('loading');
+    return new Promise((resolve, reject) => {
+      oauth.delete('api/members/' + payload.id)
+        .then((res) => {
+          context.commit('deleteMember', { id: payload.id });
+          context.commit('success');
+          resolve();
         }).catch((error) => {
-            context.commit('error', error);
+          context.commit('error', error);
+          reject();
         });
-    },
-    create(context, payload) {
-        context.commit('loading');
-        return oauth.post('api/members', {
-            data : payload
-        }).then((res) => {
-            var api = new JSONAPI();
-            var result = api.parse(res.data);
-            context.commit('setMember', {
-                member : result.data
-            });
-            context.commit('success');
-            return result.data;
-        }).catch((error) => {
-            context.commit('error', error);
-        });
-    },
-    update(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.patch('api/members/' + payload.data.id, {
-                data : payload
-            }).then((res) => {
-                var api = new JSONAPI();
-                var result = api.parse(res.data);
-                context.commit('setMember', {
-                    member : result.data
-                });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
-    },
-    delete(context, payload) {
-        context.commit('loading');
-        return new Promise((resolve, reject) => {
-            oauth.delete('api/members/' + payload.id)
-            .then((res) => {
-                context.commit('deleteMember', { id : payload.id });
-                context.commit('success');
-                resolve();
-            }).catch((error) => {
-                context.commit('error', error);
-                reject();
-            });
-        });
-    },
+    });
+  },
 };
 
 export default {
-    namespaced : true,
-    state : state,
-    getters : getters,
-    mutations : mutations,
-    actions : actions,
-    modules: {
-    }
+  namespaced: true,
+  state: state,
+  getters: getters,
+  mutations: mutations,
+  actions: actions,
+  modules: {
+  },
 };

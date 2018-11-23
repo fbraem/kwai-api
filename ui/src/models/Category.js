@@ -1,39 +1,39 @@
 import Model from './BaseModel';
 
 export default class Category extends Model {
-    resourceName() {
-        return 'categories';
-    }
+  resourceName() {
+    return 'categories';
+  }
 
-    fields() {
-        return [
-            'name',
-            'description',
-            'remark',
-            'images',
-            'short_description'
-        ];
-    }
+  fields() {
+    return [
+      'name',
+      'description',
+      'remark',
+      'images',
+      'short_description',
+    ];
+  }
 
-    dates() {
-        return {
-            'created_at' : 'YYYY-MM-DD HH:mm:ss',
-            'updated_at' : 'YYYY-MM-DD HH:mm:ss'
+  dates() {
+    return {
+      created_at: 'YYYY-MM-DD HH:mm:ss',
+      updated_at: 'YYYY-MM-DD HH:mm:ss',
+    };
+  }
+
+  computed() {
+    return {
+      header_picture(category) {
+        if (category.images) {
+          return category.images.header;
         }
-    }
-
-    computed() {
-        return {
-            header_picture(category) {
-                if (category.images) {
-                    return category.images.header;
-                }
-            },
-            icon_picture(category) {
-                if (category.images) {
-                    return category.images.icon;
-                }
-            }
+      },
+      icon_picture(category) {
+        if (category.images) {
+          return category.images.icon;
         }
-    }
+      },
+    };
+  }
 }

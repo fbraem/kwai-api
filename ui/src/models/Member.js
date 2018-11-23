@@ -3,34 +3,34 @@ import Model from './BaseModel';
 import Person from './Person';
 
 export default class Member extends Model {
-    resourceName() {
-        //TODO: sport undependent
-        return 'members';
-    }
+  resourceName() {
+    // TODO: sport undependent
+    return 'members';
+  }
 
-    namespace() {
-        return 'sport/judo';
-    }
+  namespace() {
+    return 'sport/judo';
+  }
 
-    fields() {
-        return [
-            'competition',
-            'remark',
-            'license'
-        ];
-    }
+  fields() {
+    return [
+      'competition',
+      'remark',
+      'license',
+    ];
+  }
 
-    dates() {
-        return {
-            'license_date' : 'YYYY-MM-DD',
-            'created_at' : 'YYYY-MM-DD HH:mm:ss',
-            'updated_at' : 'YYYY-MM-DD HH:mm:ss'
-        }
-    }
+  dates() {
+    return {
+      license_date: 'YYYY-MM-DD',
+      created_at: 'YYYY-MM-DD HH:mm:ss',
+      updated_at: 'YYYY-MM-DD HH:mm:ss',
+    };
+  }
 
-    relationships() {
-        return {
-            person : new Person()
-        };
-    }
+  relationships() {
+    return {
+      person: new Person(),
+    };
+  }
 }

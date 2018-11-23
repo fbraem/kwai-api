@@ -10,18 +10,18 @@ import userPerimeter from './userPerimeter';
 import seasonPerimeter from './seasonPerimeter';
 
 function perimeters() {
-    return [
-        basePerimeter,
-        authPerimeter,
-        categoryPerimeter,
-        newsPerimeter,
-        pagePerimeter,
-        memberPerimeter,
-        teamPerimeter,
-        teamTypePerimeter,
-        userPerimeter,
-        seasonPerimeter
-    ];
+  return [
+    basePerimeter,
+    authPerimeter,
+    categoryPerimeter,
+    newsPerimeter,
+    pagePerimeter,
+    memberPerimeter,
+    teamPerimeter,
+    teamTypePerimeter,
+    userPerimeter,
+    seasonPerimeter,
+  ];
 };
 
 export default perimeters;
