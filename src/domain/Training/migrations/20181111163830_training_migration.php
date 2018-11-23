@@ -48,6 +48,7 @@ class TrainingMigration extends AbstractMigration
             ->addColumn('location', 'string')
             ->addColumn('remark', 'text', ['null' => true])
             ->addColumn('user_id', 'integer')
+            ->addTimestamps()
             ->create()
         ;
 
