@@ -26,8 +26,9 @@ class TrainingMigration extends AbstractMigration
 
         $this->table('training_coaches', ['signed' => false])
             ->addColumn('member_id', 'integer')
-            ->addColumn('description', 'text')
+            ->addColumn('description', 'text', ['null' => true])
             ->addColumn('diploma', 'string', ['null' => true])
+            ->addColumn('active', 'boolean', ['default' => true])
             ->addColumn('remark', 'text', ['null' => true])
             ->addColumn('user_id', 'integer')
             ->addTimestamps()
