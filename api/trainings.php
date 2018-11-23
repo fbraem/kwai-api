@@ -18,8 +18,24 @@ $app->group('/trainings', function () {
         ->setName('trainings.definitions.update')
         ->setArgument('auth', true)
     ;
+
     $this->get('/coaches', \REST\Trainings\Actions\CoachBrowseAction::class)
         ->setName('trainings.coaches.browse')
+    ;
+    $this->get('/coaches/{id:[0-9]+}', \REST\Trainings\Actions\CoachReadAction::class)
+        ->setName('trainings.coaches.read')
+    ;
+    $this->post('/coaches', \REST\Trainings\Actions\CoachCreateAction::class)
+        ->setName('trainings.coaches.create')
+        ->setArgument('auth', true)
+    ;
+    $this->patch('/coaches/{id:[0-9]+}', \REST\Trainings\Actions\CoachUpdateAction::class)
+        ->setName('trainings.coaches.update')
+        ->setArgument('auth', true)
+    ;
+    $this->delete('/coaches/{id:[0-9]+}', \REST\Trainings\Actions\CoachDeleteAction::class)
+        ->setName('trainings.coaches.delete')
+        ->setArgument('auth', true)
     ;
 
     /*
