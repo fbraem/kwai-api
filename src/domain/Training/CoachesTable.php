@@ -36,6 +36,7 @@ class CoachesTable extends \Cake\ORM\Table
             ->addColumn('description', [ 'type' => 'text' ])
             ->addColumn('diploma', [ 'type' => 'string' ])
             ->addColumn('remark', [ 'type' => 'text' ])
+            ->addColumn('active', [ 'type' => 'boolean' ])
             ->addColumn('user_id', [ 'type' => 'integer' ])
             ->addColumn('created_at', [ 'type' => 'timestamp' ])
             ->addColumn('updated_at', [ 'type' => 'timestamp' ])
