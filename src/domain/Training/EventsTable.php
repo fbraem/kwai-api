@@ -32,6 +32,16 @@ class EventsTable extends \Cake\ORM\Table
             ->setForeignKey('user_id')
             ->setProperty('user')
         ;
+        $this->belongsToMany('Coaches', [
+                'className' => CoachesTable::class,
+                'targetForeignKey' => 'training_coach_id',
+                'joinTable' => 'training_event_coaches',
+                'through' => EventCoachesTable::getTableFromRegistry(),
+                'dependent' => true
+            ])
+            ->setForeignKey('training_event_id')
+            ->setProperty('coaches')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
@@ -45,6 +55,7 @@ class EventsTable extends \Cake\ORM\Table
             ->addColumn('start_date', [ 'type' => 'date' ])
             ->addColumn('start_time', [ 'type' => 'time' ])
             ->addColumn('end_time', [ 'type' => 'time' ])
+            ->addColumn('time_zone', [ 'type' => 'string' ])
             ->addColumn('active', [ 'type' => 'boolean' ])
             ->addColumn('cancelled', [ 'type' => 'boolean' ])
             ->addColumn('location', [ 'type' => 'string' ])
