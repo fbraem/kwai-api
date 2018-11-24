@@ -41,6 +41,13 @@ $app->group('/trainings', function () {
     $this->get('/events', \REST\Trainings\Actions\EventBrowseAction::class)
         ->setName('trainings.events.browse')
     ;
+    $this->get('/events/{id:[0-9]+}', \REST\Trainings\Actions\EventReadAction::class)
+        ->setName('trainings.events.read')
+    ;
+    $this->post('/events', \REST\Trainings\Actions\EventCreateAction::class)
+        ->setName('trainings.events.create')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();
