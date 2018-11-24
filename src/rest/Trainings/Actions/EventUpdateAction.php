@@ -39,7 +39,7 @@ class EventUpdateAction
             $table = EventsTable::getTableFromRegistry();
 
             $event = $table->get($args['id'], [
-                'contain' => ['TrainingDefinition', 'Season', 'Coaches' ]
+                'contain' => ['TrainingDefinition', 'Season' ]
             ]);
 
             (new InputValidator(
