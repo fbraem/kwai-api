@@ -25,7 +25,7 @@ class EventBrowseAction
     {
         $table = EventsTable::getTableFromRegistry();
         $query = $table->find();
-        $query->contain(['Season', 'TrainingDefinition']);
+        $query->contain(['Season', 'TrainingDefinition', 'Coaches']);
 
         return (new ResourceResponse(
             EventTransformer::createForCollection(
