@@ -4,6 +4,8 @@ namespace Domain\News;
 
 class NewsStory extends \Cake\ORM\Entity
 {
+    use \Domain\DatetimeMetaTrait;
+    
     protected $_hidden = [ 'contents', 'category', 'category_id' ];
 
     public function _getFeaturedEndDate($value)
