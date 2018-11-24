@@ -48,6 +48,10 @@ $app->group('/trainings', function () {
         ->setName('trainings.events.create')
         ->setArgument('auth', true)
     ;
+    $this->patch('/events/{id:[0-9]+}', \REST\Trainings\Actions\EventUpdateAction::class)
+        ->setName('trainings.events.update')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();
