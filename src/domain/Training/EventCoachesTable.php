@@ -32,6 +32,7 @@ class EventCoachesTable extends \Cake\ORM\Table
             ->addColumn('training_event_id', ['type' => 'integer'])
             ->addColumn('training_coach_id', ['type' => 'integer'])
             ->addColumn('coach_type', ['type' => 'integer'])
+            ->addColumn('present', ['type' => 'boolean'])
             ->addColumn('remark', ['type' => 'text'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
