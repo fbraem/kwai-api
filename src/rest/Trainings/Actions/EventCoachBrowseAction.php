@@ -10,12 +10,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Training\EventsTable;
-use Domain\Training\EventTransformer;
+use Domain\Training\EventCoachTransformer;
 
 use Core\Responses\ResourceResponse;
 use Core\Responses\NotFoundResponse;
 
-class EventReadAction
+class EventCoachBrowseAction
 {
     private $container;
 
@@ -28,13 +28,13 @@ class EventReadAction
     {
         $table = EventsTable::getTableFromRegistry();
         try {
-            $coach = $table->get($args['id'], [
-                'contain' => ['TrainingDefinition', 'Season', 'TrainingCoaches' ]
+            $event = $table->get($args['id'], [
+                'contain' => [ 'TrainingCoaches' ]
             ]);
 
             $response = (new ResourceResponse(
-                EventTransformer::createForItem(
-                    $coach
+                EventCoachTransformer::createForCollection(
+                    $event->coaches
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {

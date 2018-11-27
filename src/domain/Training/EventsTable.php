@@ -32,7 +32,7 @@ class EventsTable extends \Cake\ORM\Table
             ->setForeignKey('user_id')
             ->setProperty('user')
         ;
-        $this->belongsToMany('Coaches', [
+        $this->belongsToMany('TrainingCoaches', [
                 'className' => CoachesTable::class,
                 'targetForeignKey' => 'training_coach_id',
                 'joinTable' => 'training_event_coaches',

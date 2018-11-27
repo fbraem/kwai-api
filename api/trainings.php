@@ -52,6 +52,14 @@ $app->group('/trainings', function () {
         ->setName('trainings.events.update')
         ->setArgument('auth', true)
     ;
+    $this->get('/events/{id:[0-9]+}/coaches', \REST\Trainings\Actions\EventCoachBrowseAction::class)
+        ->setName('trainings.events.coaches.browse')
+        ->setArgument('auth', true)
+    ;
+    $this->post('/events/{id:[0-9]+}/coaches', \REST\Trainings\Actions\EventCoachCreateAction::class)
+        ->setName('trainings.events.coaches.create')
+        ->setArgument('auth', true)
+    ;
 });
 
 $app->run();
