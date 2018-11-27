@@ -23,10 +23,11 @@ class EntityExistValidator implements ValidatorInterface
     {
         $paths = explode('.', $this->path);
         $errors = [];
-        $id = \JmesPath\search($this->path . '.data.id', $data);
-        if (isset($id)) {
+
+        $relationshipData = \JmesPath\search($this->path . '.data', $data);
+        if (isset($relationshipData)) {
             try {
-                return $this->table->get($id);
+                return $this->table->get($relationshipData['id']);
             } catch (RecordNotFoundException $rnfe) {
                 $errors['/' . str_replace('.', '/', $this->path)] = end($paths) . " doesn't exist";
             }
