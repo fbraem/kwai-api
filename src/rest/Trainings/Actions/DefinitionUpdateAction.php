@@ -46,10 +46,11 @@ class DefinitionUpdateAction
             (new InputValidator(
                 [
                     'data.attributes.name' => v::notEmpty()->length(1, 255),
-                    'data.attributes.location' => v::notEmpty()->length(1, 255),
+                    'data.attributes.description' => v::notEmpty(),
+                    'data.attributes.location' => v::length(1, 255),
                     'data.attributes.weekday' => v::intVal()->min(1)->max(7),
-                    'data.attributes.start_time' => v::date('H:i:s'),
-                    'data.attributes.end_time' => v::date('H:i:s')
+                    'data.attributes.start_time' => v::date('H:i'),
+                    'data.attributes.end_time' => v::date('H:i')
                 ],
                 true
             ))->validate($data);
@@ -92,6 +93,8 @@ class DefinitionUpdateAction
                 $def->remark = $attributes['remark'];
             }
             $def->user = $request->getAttribute('clubman.user');
+
+            (new \REST\Trainings\DefinitionValidator())->validate($def);
 
             $definitionsTable->save($def);
 
