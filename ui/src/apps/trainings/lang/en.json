@@ -1,0 +1,57 @@
+{
+    "training" : {
+        "definitions" : {
+            "title" : "Training Definitions",
+            "no_data" : "There are no training definitions yet",
+            "form" : {
+                "name" : {
+                    "label": "Name",
+                    "required" : "Name is required",
+                    "placeholder" : "Enter a name"
+                },
+                "description" : {
+                    "label" : "Description",
+                    "placeholder" : "Enter a description"
+                },
+                "location" : {
+                    "label" : "Location",
+                    "placeholder" : "Enter a location"
+                },
+                "weekday" : {
+                    "label" : "Weekday",
+                    "required" : "Weekday is required",
+                    "numeric" : "Weekday must be numeric"
+                },
+                "season" : {
+                    "label" : "Season",
+                    "no_season" : "< No Season >"
+                },
+                "start_time" : {
+                    "label" : "Starttime",
+                    "required" : "Starttime is required",
+                    "invalid" : "Starttime is wrong.",
+                    "placeholder" : "Enter a starttime"
+                },
+                "end_time" : {
+                    "label" : "Endtime",
+                    "required" : "Endtime is required",
+                    "invalid" : "Endtime is wrong.",
+                    "placeholder" : "Enter an endtime"
+                },
+                "active" : {
+                    "label" : "Active"
+                },
+                "remark" : {
+                    "label" : "Remark",
+                    "placeholder" : "Enter a remark"
+                }
+            }
+        }
+    },
+    "create" : "Create a new training definition",
+    "update" : "Update a training definition",
+    "save" : "Save",
+    "season" : "Season",
+    "name" : "Name",
+    "description" : "Description"
+}

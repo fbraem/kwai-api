@@ -8,6 +8,7 @@ import teamPerimeter from './teamPerimeter';
 import teamTypePerimeter from './teamTypePerimeter';
 import userPerimeter from './userPerimeter';
 import seasonPerimeter from './seasonPerimeter';
+import trainingDefinitionPerimeter from './trainingDefinitionPerimeter';
 
 function perimeters() {
   return [
@@ -21,6 +22,7 @@ function perimeters() {
     teamTypePerimeter,
     userPerimeter,
     seasonPerimeter,
+    trainingDefinitionPerimeter,
   ];
 };
 

@@ -1,0 +1,57 @@
+{
+    "training" : {
+        "definitions" : {
+            "title" : "Trainingsmomenten",
+            "no_data" : "Er zijn momenteel nog geen trainingsmomenten",
+            "form" : {
+                "name" : {
+                    "label" : "Naam",
+                    "required" : "Naam is verplicht",
+                    "placeholder" : "Geef een naam in"
+                },
+                "description" : {
+                    "label" : "Omschrijving",
+                    "placeholder" : "Geef een omschrijving in"
+                },
+                "location" : {
+                    "label" : "Locatie",
+                    "placeholder" : "Geef een locatie in"
+                },
+                "weekday" : {
+                    "label" : "Weekdag",
+                    "required" : "Weekdag is verplicht",
+                    "numeric" : "Weekdag moet numerisch zijn"
+                },
+                "season" : {
+                    "label" : "Seizoen",
+                    "no_season" : "< Geen Seizoen >"
+                },
+                "start_time" : {
+                    "label" : "Aanvangstijd",
+                    "required" : "Aanvangstijd is verplicht",
+                    "invalid" : "Aanvangstijd is foutief.",
+                    "placeholder" : "Geef een aanvangstijd in"
+                },
+                "end_time" : {
+                    "label" : "Eindtijd",
+                    "required" : "Eindtijd is verplicht",
+                    "invalid" : "Eindtijd is foutief.",
+                    "placeholder" : "Geef een eindtijd in"
+                },
+                "active" : {
+                    "label" : "Actief"
+                },
+                "remark" : {
+                    "label" : "Opmerking",
+                    "placeholder" : "Geef een opmerking in"
+                }
+            }
+        }
+    },
+    "create" : "Maak een nieuw trainingsmoment",
+    "update" : "Wijzig een trainingsmoment",
+    "save" : "Bewaar",
+    "season" : "Seizoen",
+    "name" : "Naam",
+    "description" : "Omschrijving"
+}
