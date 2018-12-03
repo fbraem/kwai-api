@@ -33,7 +33,6 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
-    "clean-webpack-plugin": "^1.0.0",
     "css-loader": "^0.28.11",
     "del-webpack-plugin": "^1.2.0",
     "eslint": "^5.9.0",
@@ -54,6 +53,7 @@
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-clean-obsolete-chunks": "^0.4.0",
     "webpack-cleanup-plugin": "^0.5.1",
     "webpack-cli": "^3.1.2"
   },

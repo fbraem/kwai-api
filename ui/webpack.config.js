@@ -2,8 +2,8 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve(dir) {
@@ -28,18 +28,27 @@ module.exports = (env, argv) => {
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
+          default: false,
+          vendors: false,
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            name: 'vendor',
-            priority: 1
+            chunks: 'all',
+            name: 'vendor'
           },
           styles: {
-            name: 'styles',
             test: '\.css$/',
+            chunks: 'all',
+            name: 'styles'
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'async',
+            priority: 10,
+            reuseExistingChunk: true,
             enforce: true
           }
-        },
-        chunks: 'all'
+        }
       }
     },
     module: {
@@ -105,11 +114,9 @@ module.exports = (env, argv) => {
       }
     },
     plugins: [
-      new CleanWebpackPlugin([
-        path.join(__dirname, 'build'),
-      ],
-      {
-        verbose: true
+      new CleanObsoleteChunks({
+        verbose: true,
+        deep: true
       }),
       new VueLoaderPlugin(),
       new MiniCssExtractPlugin({
