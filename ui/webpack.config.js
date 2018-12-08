@@ -3,7 +3,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
+//const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 function resolve(dir) {
@@ -38,7 +39,8 @@ module.exports = (env, argv) => {
           styles: {
             test: '\.css$/',
             chunks: 'all',
-            name: 'styles'
+            name: 'styles',
+            enforce: true
           },
           common: {
             name: 'common',
@@ -66,6 +68,7 @@ module.exports = (env, argv) => {
           test: /\.scss$/,
           use: [
             'vue-style-loader',
+            MiniCssExtractPlugin.loader,
             'css-loader',
             'sass-loader',
           ]
@@ -114,14 +117,11 @@ module.exports = (env, argv) => {
       }
     },
     plugins: [
-      new CleanObsoleteChunks({
-        verbose: true,
-        deep: true
-      }),
+      new CleanWebpackPlugin('build', {}),
       new VueLoaderPlugin(),
       new MiniCssExtractPlugin({
-        filename: '[name].[hash].css',
-        chunkFilename: '[name].[hash].css',
+        filename: '[name].[contenthash].css',
+        /* chunkFilename: '[name].[hash].css', */
         publicPath: './build',
       }),
       //  new BundleAnalyzerPlugin(),
