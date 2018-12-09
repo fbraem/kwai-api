@@ -50,7 +50,8 @@ class DefinitionUpdateAction
                     'data.attributes.location' => v::length(1, 255),
                     'data.attributes.weekday' => v::intVal()->min(1)->max(7),
                     'data.attributes.start_time' => v::date('H:i'),
-                    'data.attributes.end_time' => v::date('H:i')
+                    'data.attributes.end_time' => v::date('H:i'),
+                    'data.attributes.time_zone' => v::notEmpty()->length(1, 255),
                 ],
                 true
             ))->validate($data);
@@ -82,6 +83,9 @@ class DefinitionUpdateAction
             }
             if (isset($attributes['end_time'])) {
                 $def->end_time = $attributes['end_time'];
+            }
+            if (isset($attributes['time_zone'])) {
+                $def->time_zone = $attributes['time_zone'];
             }
             if (isset($attributes['active'])) {
                 $def->active = $attributes['active'];

@@ -16,6 +16,7 @@ class TrainingMigration extends AbstractMigration
             ->addColumn('weekday', 'integer')
             ->addColumn('start_time', 'time')
             ->addColumn('end_time', 'time')
+            ->addColumn('time_zone', 'string')
             ->addColumn('active', 'boolean', ['default' => true])
             ->addColumn('location', 'string', ['null' => true])
             ->addColumn('remark', 'text', ['null' => true])

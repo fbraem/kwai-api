@@ -40,7 +40,8 @@ class DefinitionCreateAction
                     'data.attributes.location' => [v::length(1, 255), true],
                     'data.attributes.weekday' => v::intVal()->min(1)->max(7),
                     'data.attributes.start_time' => v::date('H:i'),
-                    'data.attributes.end_time' => v::date('H:i')
+                    'data.attributes.end_time' => v::date('H:i'),
+                    'data.attributes.time_zone' => v::notEmpty()->length(1, 255),
                 ]
             ))->validate($data);
 
@@ -57,6 +58,7 @@ class DefinitionCreateAction
             $def->weekday = $attributes['weekday'];
             $def->start_time = $attributes['start_time'];
             $def->end_time = $attributes['end_time'] ?? null;
+            $def->time_zone = $attributes['time_zone'] ?? null;
             $def->active = $attributes['active'] ?? true;
             $def->location = $attributes['location'] ?? null;
             $def->remark = $attributes['remark'] ?? null;

@@ -44,6 +44,7 @@ class DefinitionsTable extends \Cake\ORM\Table
             ->addColumn('weekday', [ 'type' => 'integer' ])
             ->addColumn('start_time', [ 'type' => 'time' ])
             ->addColumn('end_time', [ 'type' => 'time' ])
+            ->addColumn('time_zone', [ 'type' => 'string' ])
             ->addColumn('active', [ 'type' => 'boolean' ])
             ->addColumn('location', [ 'type' => 'string' ])
             ->addColumn('remark', [ 'type' => 'text' ])
