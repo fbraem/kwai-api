@@ -17,11 +17,10 @@ export default class TrainingDefinition extends Model {
       'name',
       'description',
       'weekday',
-      'start_time',
-      'end_time',
       'active',
       'location',
       'remark',
+      'time_zone',
     ];
   }
 
@@ -29,6 +28,8 @@ export default class TrainingDefinition extends Model {
     return {
       created_at: 'YYYY-MM-DD HH:mm:ss',
       updated_at: 'YYYY-MM-DD HH:mm:ss',
+      start_time: 'HH:mm',
+      end_time: 'HH:mm'
     };
   }
 
@@ -36,6 +37,21 @@ export default class TrainingDefinition extends Model {
     return {
       season: new Season(),
       user: new User(),
+    };
+  }
+
+  computed() {
+    return {
+      localStartTime(definition) {
+        var utc = definition.start_time.clone();
+        utc.utcOffset('+00:00', true);
+        return utc.local().format('HH:mm');
+      },
+      localEndtime(definition) {
+        var utc = definition.end_time.clone();
+        utc.utcOffset('+00:00', true);
+        return utc.local().format('HH:mm');
+      },
     };
   }
 }

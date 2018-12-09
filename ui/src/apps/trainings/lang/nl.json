@@ -11,7 +11,8 @@
                 },
                 "description" : {
                     "label" : "Omschrijving",
-                    "placeholder" : "Geef een omschrijving in"
+                    "placeholder" : "Geef een omschrijving in",
+                    "required" : "Omschrijving is verplicht in te vullen"
                 },
                 "location" : {
                     "label" : "Locatie",

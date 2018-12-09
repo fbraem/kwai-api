@@ -12,48 +12,43 @@
           <form class="uk-form-stacked">
             <div uk-grid>
               <div class="uk-width-expand">
-                <uikit-input-text v-model="form.name" :validator="$v.form.name" :errors="errors.name" id="name" :placeholder="$t('training.definitions.form.name.placeholder')">
-                  {{ $t('training.definitions.form.name.label') }}:
-                </uikit-input-text>
+                <field name="name">
+                  <uikit-input-text :placeholder="$t('training.definitions.form.name.placeholder')" />
+                </field>
               </div>
               <div>
-                <uikit-switch v-model="form.active.value">
-                  {{ $t('training.definitions.form.active.label') }}
-                </uikit-switch>
+                <field name="active">
+                  <uikit-switch />
+                </field>
               </div>
             </div>
-            <uikit-textarea v-model="form.description" :validator="$v.form.description" :rows="5" id="description" :errors="errors.description" :placeholder="$t('training.definitions.form.description.placeholder')">
-              {{ $t('training.definitions.form.description.label') }}:
-            </uikit-textarea>
-            <uikit-select v-model="form.weekday" :items="weekdays" :validator="$v.form.weekday" :errors="errors.weekday" id="weekday">
-              {{ $t('training.definitions.form.weekday.label') }}:
-            </uikit-select>
+            <field name="description">
+              <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.description.placeholder')" />
+            </field>
+            <field name="weekday">
+              <uikit-select :items="weekdays" />
+            </field>
             <div class="uk-child-width-1-2" uk-grid>
               <div>
-                <uikit-input-text v-model="form.start_time" :validator="$v.form.start_time" :errors="errors.start_time" id="startTime" :placeholder="$t('training.definitions.form.start_time.placeholder')">
-                  {{ $t('training.definitions.form.start_time.label') }}:
-                </uikit-input-text>
+                <field name="start_time">
+                  <uikit-input-text :placeholder="$t('training.definitions.form.start_time.placeholder')" />
+                </field>
               </div>
               <div>
-                <uikit-input-text v-model="form.end_time" :validator="$v.form.end_time" :errors="errors.end_time" id="endTime" :placeholder="$t('training.definitions.form.end_time.placeholder')">
-                  {{ $t('training.definitions.form.end_time.label') }}:
-                </uikit-input-text>
+                <field name="end_time">
+                  <uikit-input-text :placeholder="$t('training.definitions.form.end_time.placeholder')" />
+                </field>
               </div>
             </div>
-            <uikit-select
-                v-model="form.season"
-                :items="seasons"
-                :validator="$v.form.season"
-                :errors="errors.season"
-                id="season">
-                {{ $t('training.definitions.form.season.label') }}:
-            </uikit-select>
-            <uikit-input-text v-model="form.location" :validator="$v.form.location" :errors="errors.location" id="location" :placeholder="$t('training.definitions.form.location.placeholder')">
-              {{ $t('training.definitions.form.location.label') }}:
-            </uikit-input-text>
-            <uikit-textarea v-model="form.remark" :validator="$v.form.remark" :rows="5" id="remark" :errors="errors.remark" :placeholder="$t('training.definitions.form.remark.placeholder')">
-              {{ $t('training.definitions.form.remark.label') }}:
-            </uikit-textarea>
+            <field name="season">
+              <uikit-select :items="seasons" />
+            </field>
+            <field name="location">
+              <uikit-input-text :placeholder="$t('training.definitions.form.location.placeholder')" />
+            </field>
+            <field name="remark">
+              <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.remark.placeholder')" />
+            </field>
           </form>
         </div>
         <div uk-grid class="uk-width-1-1">
@@ -77,32 +72,28 @@ import trainingDefinitionStore from '@/stores/training/definitions';
 import seasonStore from '@/stores/seasons';
 
 import TrainingDefinition from '@/models/trainings/Definition';
-import Season from '@/models/Season';
-
-import { validationMixin } from 'vuelidate';
 
 import PageHeader from '@/site/components/PageHeader.vue';
-import UikitInputText from '@/components/uikit/InputText.vue';
-import UikitTextarea from '@/components/uikit/Textarea.vue';
-import UikitSelect from '@/components/uikit/Select.vue';
-import UikitSwitch from '@/components/uikit/Switch.vue';
+import Field from '@/components/forms/Field.vue';
+import UikitInputText from '@/components/forms/InputText.vue';
+import UikitTextarea from '@/components/forms/Textarea.vue';
+import UikitSelect from '@/components/forms/Select.vue';
+import UikitSwitch from '@/components/forms/Switch.vue';
 
 import messages from './lang';
 
 import Form from './DefinitionForm';
-var form = new Form();
 
 export default {
   components: {
-    PageHeader, UikitInputText, UikitTextarea,
+    PageHeader, Field, UikitInputText, UikitTextarea,
     UikitSelect, UikitSwitch
   },
   i18n: messages,
-  mixins: [ validationMixin, form.errorsMixin() ],
+  mixins: [ new Form().mixin() ],
   data() {
     return {
       definition: new TrainingDefinition(),
-      form: form,
       weekdays: moment.weekdays(true).map((d, i) => {
         return {
           value: i + 1,
@@ -135,11 +126,6 @@ export default {
       return seasons;
     },
   },
-  validations() {
-    return {
-      form: this.form.validators()
-    };
-  },
   beforeCreate() {
     if (!this.$store.state.trainingDefinitionModule) {
       this.$store.registerModule(
@@ -163,12 +149,7 @@ export default {
     error(nv) {
       if (nv) {
         if (nv.response.status === 422) {
-          nv.response.data.errors.forEach((item, index) => {
-            if (item.source && item.source.pointer) {
-              var attr = item.source.pointer.split('/').pop();
-              this.errors[attr].push(item.title);
-            }
-          });
+          this.form.handleErrors(nv.response.data.errors);
         } else if (nv.response.status === 404){
           // this.error = err.response.statusText;
         } else {
@@ -181,47 +162,18 @@ export default {
   methods: {
     clear() {
       this.$v.$reset();
-      this.form.reset();
+      // this.form.reset();
     },
     async fetchData(id) {
-      this.teamType = await this.$store.dispatch('teamTypeModule/read', {
-        id: id
-      });
-      this.fillForm();
-    },
-    fillForm() {
-      this.form.definition.name = this.definition.name;
-      this.form.definition.description = this.definition.description;
-      this.form.definition.active = this.definition.active;
-      this.form.definition.location = this.definition.location;
-      this.form.definition.start_time = this.definition.start_time;
-      this.form.definition.end_time = this.definition.end_time;
-      if (this.definition.season) {
-        this.form.definition.season = this.definition.season.id;
-      }
-      this.form.definition.remark = this.definition.remark;
-    },
-    fillDefinition() {
-      this.definition.name = this.form.definition.name;
-      this.definition.description = this.form.definition.description;
-      this.definition.active = this.form.definition.active;
-      this.definition.weekday = this.form.definition.weekday;
-      this.definition.location = this.form.definition.location;
-      this.definition.start_time = this.form.definition.start_time;
-      this.definition.end_time = this.form.definition.end_time;
-      this.definition.remark = this.form.definition.remark;
-      if (this.form.definition.season) {
-        if (this.form.definition.season === 0) {
-          this.definition.season = null;
-        } else {
-          this.definition.season = new Season();
-          this.definition.season.id = this.form.definition.season;
-        }
-      }
+      this.definition
+        = await this.$store.dispatch('trainingDefinitionModule/read', {
+          id: id
+        });
+      this.form.set(this.definition);
     },
     submit() {
-      this.errors = initError();
-      this.fillDefinition();
+      this.form.clearErrors();
+      this.form.get(this.definition);
       this.$store.dispatch('trainingDefinitionModule/save', this.definition)
         .then((newDefinition) => {
           this.$router.push({

@@ -1,5 +1,9 @@
 import Form from '@/js/Form';
 
+import Season from '@/models/Season';
+
+import moment from 'moment';
+
 import { required, numeric } from 'vuelidate/lib/validators';
 import isTime from '@/js/isTime';
 
@@ -22,7 +26,7 @@ export default class DefinitionForm extends Form {
       },
       description: {
         value: '',
-        label: 'training.definitions.form.desription.label',
+        label: 'training.definitions.form.description.label',
         validators: [
           {
             v: { required },
@@ -32,12 +36,11 @@ export default class DefinitionForm extends Form {
       },
       season: {
         value: 0,
-        label: 'training.definitions.form.desription.label',
-        options: []
+        label: 'training.definitions.form.season.label'
       },
       weekday: {
         value: 1,
-        label: '',
+        label: 'training.definitions.form.weekday.label',
         validators: [
           {
             v: { required },
@@ -90,5 +93,44 @@ export default class DefinitionForm extends Form {
         label: 'training.definitions.form.remark.label'
       }
     };
+  }
+
+  set(definition) {
+    this.name.value = definition.name;
+    this.description.value = definition.description;
+    this.active.value = definition.active;
+    this.location.value = definition.location;
+    this.start_time.value = definition.localStartTime;
+    this.end_time.value = definition.localEndtime;
+    if (definition.season) {
+      this.season.value = definition.season.id;
+    }
+    this.remark.value = definition.remark;
+  }
+
+  get(definition) {
+    definition.name = this.name.value;
+    definition.description = this.description.value;
+    definition.active = this.active.value;
+    definition.weekday = this.weekday.value;
+    definition.location = this.location.value;
+    var tz = moment.tz.guess();
+    if (this.start_time.value) {
+      definition.start_time
+        = moment(this.start_time.value, 'HH:mm', true).utc();
+    }
+    if (this.end_time.value) {
+      definition.end_time = moment(this.end_time.value, 'HH:mm', true).utc();
+    }
+    definition.time_zone = tz;
+    definition.remark = this.remark.value;
+    if (this.season.value) {
+      if (this.season.value === 0) {
+        definition.season = null;
+      } else {
+        definition.season = new Season();
+        definition.season.id = this.season.value;
+      }
+    }
   }
 };
