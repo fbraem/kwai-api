@@ -17,26 +17,20 @@
 export default {
   props: [ 'name' ],
   inject: {
-    form: 'form',
-    $v: '$v',
-    errors: 'errors'
+    form: 'form'
   },
   computed: {
-    hasLabel() {
-      return this.form.$fields[this.name].label
-        && this.form.$fields[this.name].label.length > 0;
-    },
-    label() {
-      return this.form.$fields[this.name].label;
-    },
     field() {
       return this.form[this.name];
     },
-    fieldValidator() {
-      return this.$v.form[this.name];
+    hasLabel() {
+      return this.field.label && this.field.label.length > 0;
+    },
+    label() {
+      return this.field.label;
     },
     fieldErrors() {
-      return this.errors()[this.name];
+      return this.field.errors;
     },
     hasErrors() {
       return this.fieldErrors && this.fieldErrors.length > 0;
@@ -44,7 +38,7 @@ export default {
   },
   provide() {
     return {
-      field: this.fieldValidator,
+      field: this.field,
       id: this.name
     };
   }

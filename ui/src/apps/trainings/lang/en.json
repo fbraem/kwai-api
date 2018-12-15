@@ -31,12 +31,14 @@
                     "label" : "Starttime",
                     "required" : "Starttime is required",
                     "invalid" : "Starttime is wrong.",
+                    "before" : "Starttime must be before the endtime",
                     "placeholder" : "Enter a starttime"
                 },
                 "end_time" : {
                     "label" : "Endtime",
                     "required" : "Endtime is required",
                     "invalid" : "Endtime is wrong.",
+                    "after" : "Endtime must be after the starttime",
                     "placeholder" : "Enter an endtime"
                 },
                 "active" : {

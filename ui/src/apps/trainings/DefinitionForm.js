@@ -1,136 +1,151 @@
-import Form from '@/js/Form';
+import Vue from 'vue';
+import VueForm, { notEmpty, isTime } from '@/js/VueForm';
+Vue.use(VueForm);
 
+
+import TrainingDefinition from '@/models/trainings/Definition';
 import Season from '@/models/Season';
 
 import moment from 'moment';
 
-import { required, numeric } from 'vuelidate/lib/validators';
-import isTime from '@/js/isTime';
-
-/**
- * Class representing the form fields for creating/updating a training
- * definition
- */
-export default class DefinitionForm extends Form {
-  static fields() {
+export default {
+  form() {
     return {
       name: {
         value: '',
-        label: 'training.definitions.form.name.label',
+        label: this.$t('training.definitions.form.name.label'),
+        required: true,
         validators: [
           {
-            v: { required },
-            error: 'training.definitions.form.name.required',
+            v: notEmpty,
+            error: this.$t('training.definitions.form.name.required'),
           },
         ]
       },
       description: {
         value: '',
-        label: 'training.definitions.form.description.label',
+        label: this.$t('training.definitions.form.description.label'),
+        required: true,
         validators: [
           {
-            v: { required },
-            error: 'training.definitions.form.description.required',
+            v: notEmpty,
+            error: this.$t('training.definitions.form.description.required'),
           },
         ]
       },
       season: {
         value: 0,
-        label: 'training.definitions.form.season.label'
+        label: this.$t('training.definitions.form.season.label')
       },
       weekday: {
         value: 1,
-        label: 'training.definitions.form.weekday.label',
+        label: this.$t('training.definitions.form.weekday.label'),
+        required: true,
         validators: [
           {
-            v: { required },
-            error: 'training.definitions.form.weekday.required'
-          },
-          {
-            v: { numeric },
-            error: 'training.definitions.form.weekday.numeric'
+            v: (value) => value > 0,
+            error: this.$t('training.definitions.form.weekday.required')
           },
         ]
       },
       start_time: {
         value: '',
-        label: 'training.definitions.form.start_time.label',
+        label: this.$t('training.definitions.form.start_time.label'),
+        required: true,
         validators: [
           {
-            v: { required },
-            error: 'training.definitions.form.start_time.required'
+            v: notEmpty,
+            error: this.$t('training.definitions.form.start_time.required')
           },
           {
-            v: { isTime },
-            error: 'training.definitions.form.start_time.invalid'
+            v: isTime,
+            error: this.$t('training.definitions.form.start_time.invalid')
           },
         ]
       },
       end_time: {
         value: '',
-        label: 'training.definitions.form.end_time.label',
+        required: true,
+        label: this.$t('training.definitions.form.end_time.label'),
         validators: [
           {
-            v: { required },
-            error: 'training.definitions.form.end_time.required'
+            v: notEmpty,
+            error: this.$t('training.definitions.form.end_time.required')
           },
           {
-            v: { isTime },
-            error: 'training.definitions.form.end_time.invalid'
+            v: isTime,
+            error: this.$t('training.definitions.form.end_time.invalid')
           },
         ]
       },
       active: {
         value: true,
-        label: 'training.definitions.form.active.label'
+        label: this.$t('training.definitions.form.active.label')
       },
       location: {
         value: null,
-        label: 'training.definitions.form.location.label'
+        label: this.$t('training.definitions.form.location.label')
       },
       remark: {
         value: '',
-        label: 'training.definitions.form.remark.label'
+        label: this.$t('training.definitions.form.remark.label')
       }
     };
-  }
-
-  set(definition) {
-    this.name.value = definition.name;
-    this.description.value = definition.description;
-    this.active.value = definition.active;
-    this.location.value = definition.location;
-    this.start_time.value = definition.localStartTime;
-    this.end_time.value = definition.localEndtime;
-    if (definition.season) {
-      this.season.value = definition.season.id;
-    }
-    this.remark.value = definition.remark;
-  }
-
-  get(definition) {
-    definition.name = this.name.value;
-    definition.description = this.description.value;
-    definition.active = this.active.value;
-    definition.weekday = this.weekday.value;
-    definition.location = this.location.value;
-    var tz = moment.tz.guess();
-    if (this.start_time.value) {
-      definition.start_time
-        = moment(this.start_time.value, 'HH:mm', true).utc();
-    }
-    if (this.end_time.value) {
-      definition.end_time = moment(this.end_time.value, 'HH:mm', true).utc();
-    }
-    definition.time_zone = tz;
-    definition.remark = this.remark.value;
-    if (this.season.value) {
-      if (this.season.value === 0) {
-        definition.season = null;
-      } else {
-        definition.season = new Season();
-        definition.season.id = this.season.value;
+  },
+  validations() {
+    return [
+      () => {
+        var start = moment(this.form.start_time.value, 'HH:mm', true);
+        var end = moment(this.form.end_time.value, 'HH:mm', true);
+        if (end.isAfter(start)) {
+          return true;
+        }
+        this.form.end_time.errors = [
+          this.$t('training.definitions.form.end_time.after'),
+        ];
+        return false;
+      },
+    ];
+  },
+  methods: {
+    writeForm(definition) {
+      this.form.name.value = definition.name;
+      this.form.description.value = definition.description;
+      this.form.active.value = definition.active;
+      this.form.location.value = definition.location;
+      this.form.start_time.value = definition.localStartTime;
+      this.form.end_time.value = definition.localEndtime;
+      if (definition.season) {
+        this.form.season.value = definition.season.id;
       }
+      this.form.remark.value = definition.remark;
+    },
+    readForm(definition) {
+      definition.name = this.form.name.value;
+      definition.description = this.form.description.value;
+      definition.active = this.form.active.value;
+      definition.weekday = this.form.weekday.value;
+      definition.location = this.form.location.value;
+      var tz = moment.tz.guess();
+      if (this.form.start_time.value) {
+        definition.start_time
+          = moment(this.form.start_time.value, 'HH:mm', true).utc();
+      }
+      if (this.form.end_time.value) {
+        definition.end_time
+          = moment(this.form.end_time.value, 'HH:mm', true).utc();
+      }
+      definition.time_zone = tz;
+      definition.remark = this.form.remark.value;
+      if (this.form.season.value) {
+        if (this.form.season.value === 0) {
+          definition.season = null;
+        } else {
+          definition.season = new Season();
+          definition.season.id = this.form.season.value;
+        }
+      }
+      return definition;
     }
   }
 };

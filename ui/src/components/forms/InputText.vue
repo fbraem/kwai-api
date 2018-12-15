@@ -1,12 +1,19 @@
 <template>
-  <input v-model="field.value.$model"
+  <input v-model="field.value"
     :id="id"
     class="uk-input"
-    :class="{ 'uk-form-danger' : field.value.$error }"
+    :class="{ 'uk-form-danger' : field.errors.length > 0 }"
     type="text"
+    :required="field.required"
     v-bind="$attrs"
     />
 </template>
+
+<style>
+  input:required {
+    border-left: 3px solid;
+  }
+</style>
 
 <script>
 export default {

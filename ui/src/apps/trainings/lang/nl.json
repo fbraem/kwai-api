@@ -31,12 +31,14 @@
                     "label" : "Aanvangstijd",
                     "required" : "Aanvangstijd is verplicht",
                     "invalid" : "Aanvangstijd is foutief.",
+                    "before" : "Aanvangstijd moet voor de eindtijd liggen",
                     "placeholder" : "Geef een aanvangstijd in"
                 },
                 "end_time" : {
                     "label" : "Eindtijd",
                     "required" : "Eindtijd is verplicht",
                     "invalid" : "Eindtijd is foutief.",
+                    "after" : "Eindtijd moet na de aanvangstijd liggen",
                     "placeholder" : "Geef een eindtijd in"
                 },
                 "active" : {

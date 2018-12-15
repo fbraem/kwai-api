@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="uk-switch">
-      <input :value="field.value.$model"
+      <input :value="field.value"
         :id="id"
         type="checkbox"
         :checked="isChecked"
@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     isChecked() {
-      return this.field.value.$model;
+      return this.field.value;
     }
   }
 };

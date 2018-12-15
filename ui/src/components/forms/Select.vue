@@ -1,8 +1,8 @@
 <template>
-  <select v-model="field.value.$model"
+  <select v-model="field.value"
       :id="id"
       class="uk-select"
-      :class="{ 'uk-form-danger' : field.value.$error }"
+      :class="{ 'uk-form-danger' : field.errors.length > 0 }"
       v-bind="$attrs">
       <option value="" v-if="empty">{{ empty}}</option>
       <option v-for="(item, index) in items" :value="item.value" :key="index">

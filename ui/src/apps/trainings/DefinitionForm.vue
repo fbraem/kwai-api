@@ -55,7 +55,7 @@
           <div class="uk-width-expand">
           </div>
           <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
+            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
               <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
             </button>
           </div>
@@ -70,6 +70,7 @@ import moment from 'moment';
 
 import trainingDefinitionStore from '@/stores/training/definitions';
 import seasonStore from '@/stores/seasons';
+import registerModule from '@/stores/mixin';
 
 import TrainingDefinition from '@/models/trainings/Definition';
 
@@ -82,15 +83,27 @@ import UikitSwitch from '@/components/forms/Switch.vue';
 
 import messages from './lang';
 
-import Form from './DefinitionForm';
+import DefinitionForm from './DefinitionForm';
 
 export default {
   components: {
     PageHeader, Field, UikitInputText, UikitTextarea,
     UikitSelect, UikitSwitch
   },
+  mixins: [
+    DefinitionForm,
+    registerModule([
+      {
+        namespace: 'trainingDefinitionModule',
+        store: trainingDefinitionStore
+      },
+      {
+        namespace: 'seasonModule',
+        store: seasonStore
+      },
+    ]),
+  ],
   i18n: messages,
-  mixins: [ new Form().mixin() ],
   data() {
     return {
       definition: new TrainingDefinition(),
@@ -126,16 +139,6 @@ export default {
       return seasons;
     },
   },
-  beforeCreate() {
-    if (!this.$store.state.trainingDefinitionModule) {
-      this.$store.registerModule(
-        'trainingDefinitionModule', trainingDefinitionStore
-      );
-    }
-    if (!this.$store.state.seasonModule) {
-      this.$store.registerModule('seasonModule', seasonStore);
-    }
-  },
   async created() {
     await this.$store.dispatch('seasonModule/browse');
   },
@@ -149,7 +152,7 @@ export default {
     error(nv) {
       if (nv) {
         if (nv.response.status === 422) {
-          this.form.handleErrors(nv.response.data.errors);
+          this.handleErrors(nv.response.data.errors);
         } else if (nv.response.status === 404){
           // this.error = err.response.statusText;
         } else {
@@ -161,7 +164,7 @@ export default {
   },
   methods: {
     clear() {
-      this.$v.$reset();
+      // this.$v.$reset();
       // this.form.reset();
     },
     async fetchData(id) {
@@ -169,11 +172,11 @@ export default {
         = await this.$store.dispatch('trainingDefinitionModule/read', {
           id: id
         });
-      this.form.set(this.definition);
+      this.writeForm(this.definition);
     },
     submit() {
-      this.form.clearErrors();
-      this.form.get(this.definition);
+      this.clearErrors();
+      this.readForm(this.definition);
       this.$store.dispatch('trainingDefinitionModule/save', this.definition)
         .then((newDefinition) => {
           this.$router.push({
