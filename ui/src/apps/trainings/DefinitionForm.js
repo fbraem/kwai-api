@@ -1,14 +1,11 @@
-import Vue from 'vue';
 import VueForm, { notEmpty, isTime } from '@/js/VueForm';
-Vue.use(VueForm);
 
-
-import TrainingDefinition from '@/models/trainings/Definition';
 import Season from '@/models/Season';
 
 import moment from 'moment';
 
 export default {
+  mixins: [ VueForm ],
   form() {
     return {
       name: {
