@@ -2,6 +2,7 @@ import Model from '../BaseModel';
 
 import Season from '../Season';
 import User from '../User';
+import Team from '../Team';
 
 export default class TrainingDefinition extends Model {
   resourceName() {
@@ -36,6 +37,7 @@ export default class TrainingDefinition extends Model {
   relationships() {
     return {
       season: new Season(),
+      team: new Team(),
       user: new User(),
     };
   }
@@ -47,7 +49,7 @@ export default class TrainingDefinition extends Model {
         utc.utcOffset('+00:00', true);
         return utc.local().format('HH:mm');
       },
-      localEndtime(definition) {
+      localEndTime(definition) {
         var utc = definition.end_time.clone();
         utc.utcOffset('+00:00', true);
         return utc.local().format('HH:mm');
