@@ -74,6 +74,7 @@ const actions = {
   async read({ dispatch, getters, commit }, payload) {
     var definition = getters['definition'](payload.id);
     if (definition) { // already read
+      commit('error', null); // Reset error
       return definition;
     }
 
