@@ -15,6 +15,18 @@ const getters = {
   teams(state) {
     return state.teams;
   },
+  teamsAsOptions(state) {
+    var teams = state.teams;
+    if (teams) {
+      teams = teams.map((team) => ({
+        value: team.id,
+        text: team.name
+      }));
+    } else {
+      teams = [];
+    }
+    return teams;
+  },
   team: (state) => (id) => {
     return state.teams.find((team) => team.id === id);
   },

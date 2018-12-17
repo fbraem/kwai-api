@@ -14,6 +14,18 @@ const getters = {
   seasons(state) {
     return state.seasons;
   },
+  seasonsAsOptions(state) {
+    var seasons = state.seasons;
+    if (seasons) {
+      seasons = seasons.map((season) => ({
+        value: season.id,
+        text: season.name }
+      ));
+    } else {
+      seasons = [];
+    }
+    return seasons;
+  },
   season: (state) => (id) => {
     if (state.seasons) {
       return state.seasons.find((s) => s.id === id);
