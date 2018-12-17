@@ -1,6 +1,7 @@
 import VueForm, { notEmpty, isTime } from '@/js/VueForm';
 
 import Season from '@/models/Season';
+import Team from '@/models/Team';
 
 import moment from 'moment';
 
@@ -33,6 +34,10 @@ export default {
       season: {
         value: 0,
         label: this.$t('training.definitions.form.season.label')
+      },
+      team: {
+        value: 0,
+        label: this.$t('training.definitions.form.team.label')
       },
       weekday: {
         value: 1,
@@ -111,9 +116,12 @@ export default {
       this.form.active.value = definition.active;
       this.form.location.value = definition.location;
       this.form.start_time.value = definition.localStartTime;
-      this.form.end_time.value = definition.localEndtime;
+      this.form.end_time.value = definition.localEndTime;
       if (definition.season) {
         this.form.season.value = definition.season.id;
+      }
+      if (definition.team) {
+        this.form.team.value = definition.team.id;
       }
       this.form.remark.value = definition.remark;
     },
@@ -140,6 +148,14 @@ export default {
         } else {
           definition.season = new Season();
           definition.season.id = this.form.season.value;
+        }
+      }
+      if (this.form.team.value) {
+        if (this.form.team.value === 0) {
+          definition.team = null;
+        } else {
+          definition.team = new Team();
+          definition.team.id = this.form.team.value;
         }
       }
       return definition;

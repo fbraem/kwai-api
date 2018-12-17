@@ -30,6 +30,7 @@
             <tr>
               <th>{{ $t('name') }}</th>
               <th>{{ $t('description') }}</th>
+              <th>{{ $t('team') }}</th>
               <th>{{ $t('season') }}</th>
               <th class="uk-table-shrink"></th>
             </tr>
@@ -41,7 +42,13 @@
                 {{ definition.description }}
               </td>
               <td>
+                <router-link v-if="definition.team" :to="{ name: 'teams.read', params: { id : definition.team.id} }">{{ definition.team.name }}</router-link>
+              </td>
+              <td>
                 <router-link v-if="definition.season" :to="{ name: 'seasons.read', params: { id : definition.season.id} }">{{ definition.season.name }}</router-link>
+                <div v-else>
+                  <i class="fas fa-minus"></i>
+                </div>
               </td>
               <td>
                 <router-link class="uk-icon-button uk-link-reset" v-if="$training_definition.isAllowed('update', definition)" :to="{ name : 'trainings.definitions.update', params : { id : definition.id } }">

@@ -43,6 +43,9 @@
             <field name="season">
               <uikit-select :items="seasons" />
             </field>
+            <field name="team">
+              <uikit-select :items="teams" />
+            </field>
             <field name="location">
               <uikit-input-text :placeholder="$t('training.definitions.form.location.placeholder')" />
             </field>
@@ -70,6 +73,7 @@ import moment from 'moment';
 
 import trainingDefinitionStore from '@/stores/training/definitions';
 import seasonStore from '@/stores/seasons';
+import teamStore from '@/stores/teams';
 import registerModule from '@/stores/mixin';
 
 import TrainingDefinition from '@/models/trainings/Definition';
@@ -101,6 +105,10 @@ export default {
         namespace: 'seasonModule',
         store: seasonStore
       },
+      {
+        namespace: 'teamModule',
+        store: teamStore
+      },
     ]),
   ],
   i18n: messages,
@@ -123,24 +131,25 @@ export default {
       return this.$store.getters['trainingDefinitionModule/error'];
     },
     seasons() {
-      var seasons = this.$store.getters['seasonModule/seasons'];
-      if (seasons) {
-        seasons = seasons.map((season) => ({
-          value: season.id,
-          text: season.name }
-        ));
-      } else {
-        seasons = [];
-      }
+      var seasons = this.$store.getters['seasonModule/seasonsAsOptions'];
       seasons.unshift({
         value: 0,
         text: this.$t('training.definitions.form.season.no_season')
       });
       return seasons;
     },
+    teams() {
+      var teams = this.$store.getters['teamModule/teamsAsOptions'];
+      teams.unshift({
+        value: 0,
+        text: this.$t('training.definitions.form.team.no_team')
+      });
+      return teams;
+    },
   },
   async created() {
     await this.$store.dispatch('seasonModule/browse');
+    await this.$store.dispatch('teamModule/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
