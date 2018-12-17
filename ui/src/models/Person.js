@@ -28,7 +28,7 @@ export default class Person extends Model {
   computed() {
     return {
       name(person) {
-        return person.lastname + ' ' + person.firstname;
+        return [person.lastname, person.firstname].filter(Boolean).join(' ');
       },
       age(person) {
         return moment().diff(person.birthdate, 'years');
