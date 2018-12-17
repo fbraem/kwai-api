@@ -13,6 +13,7 @@ class TrainingMigration extends AbstractMigration
             ->addColumn('name', 'string')
             ->addColumn('description', 'text')
             ->addColumn('season_id', 'integer', ['null' => true])
+            ->addColumn('team_id', 'integer', ['null' => true])
             ->addColumn('weekday', 'integer')
             ->addColumn('start_time', 'time')
             ->addColumn('end_time', 'time')

@@ -47,7 +47,17 @@ class DefinitionCreateAction
 
             $definitionsTable = DefinitionsTable::getTableFromRegistry();
 
-            $season = (new EntityExistValidator('data.relationships.season', $definitionsTable->Season, false))->validate($data);
+            $season = (new EntityExistValidator(
+                'data.relationships.season',
+                $definitionsTable->Season,
+                false
+            ))->validate($data);
+
+            $team = (new EntityExistValidator(
+                'data.relationships.team',
+                $definitionsTable->Team,
+                false
+            ))->validate($data);
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
@@ -55,6 +65,7 @@ class DefinitionCreateAction
             $def->name = $attributes['name'];
             $def->description = $attributes['description'] ?? null;
             $def->season = $season ?? null;
+            $def->team = $team ?? null;
             $def->weekday = $attributes['weekday'];
             $def->start_time = $attributes['start_time'];
             $def->end_time = $attributes['end_time'] ?? null;

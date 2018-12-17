@@ -56,14 +56,36 @@ class DefinitionUpdateAction
                 true
             ))->validate($data);
 
-            $seasonData = \JmesPath\search('data.relationships.season.data', $data);
+            $seasonData = \JmesPath\search(
+                'data.relationships.season.data',
+                $data
+            );
             if (isset($seasonData)) {
-                $season = (new EntityExistValidator('data.relationships.season', $definitionsTable->Season, false))->validate($data);
+                $season = (new EntityExistValidator(
+                    'data.relationships.season',
+                    $definitionsTable->Season,
+                    false
+                ))->validate($data);
                 if ($season) {
                     $def->season = $season;
                 } else {
                     $def->season_id = null;
                     $def->season = null;
+                }
+            }
+
+            $teamData = \JmesPath\search('data.relationships.team.data', $data);
+            if (isset($teamData)) {
+                $team = (new EntityExistValidator(
+                    'data.relationships.team',
+                    $definitionsTable->Team,
+                    false
+                ))->validate($data);
+                if ($team) {
+                    $def->team = $team;
+                } else {
+                    $def->team_id = null;
+                    $def->team = null;
                 }
             }
 

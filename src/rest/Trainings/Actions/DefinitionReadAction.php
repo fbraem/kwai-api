@@ -34,13 +34,18 @@ class DefinitionReadAction
                     DefinitionsTable::getTableFromRegistry()->get(
                         $args['id'],
                         [
-                            'contain' => [ 'Season' ]
+                            'contain' => [
+                                'Season',
+                                'Team'
+                            ]
                         ]
                     )
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            $response = (new NotFoundResponse(_("Training definition doesn't exist")))($response);
+            $response = (new NotFoundResponse(
+                _("Training definition doesn't exist")
+            ))($response);
         }
 
         return $response;

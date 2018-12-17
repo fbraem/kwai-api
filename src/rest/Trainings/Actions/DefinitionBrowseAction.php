@@ -25,7 +25,10 @@ class DefinitionBrowseAction
     {
         $table = DefinitionsTable::getTableFromRegistry();
         $query = $table->find();
-        $query->contain(['Season']);
+        $query->contain([
+            'Season',
+            'Team'
+        ]);
 
         return (new ResourceResponse(
             DefinitionTransformer::createForCollection(

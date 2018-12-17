@@ -9,7 +9,8 @@ class DefinitionTransformer extends Fractal\TransformerAbstract
     private static $type = 'training_definitions';
 
     protected $defaultIncludes = [
-        'season'
+        'season',
+        'team'
     ];
 
     public static function createForItem(Definition $def)
@@ -27,6 +28,14 @@ class DefinitionTransformer extends Fractal\TransformerAbstract
         $season = $def->season;
         if ($season) {
             return \Domain\Game\SeasonTransformer::createForItem($season);
+        }
+    }
+
+    public function includeTeam(Definition $def)
+    {
+        $team = $def->team;
+        if ($team) {
+            return \Domain\Team\TeamTransformer::createForItem($team);
         }
     }
 

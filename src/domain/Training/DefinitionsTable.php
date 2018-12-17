@@ -26,6 +26,12 @@ class DefinitionsTable extends \Cake\ORM\Table
             ->setForeignKey('season_id')
             ->setProperty('season')
         ;
+        $this->belongsTo('Team', [
+                'className' => \Domain\Team\TeamsTable::class
+            ])
+            ->setForeignKey('team_id')
+            ->setProperty('team')
+        ;
         $this->belongsTo('User', [
                 'className' => \Domain\User\UsersTable::class
             ])
@@ -41,6 +47,7 @@ class DefinitionsTable extends \Cake\ORM\Table
             ->addColumn('name', [ 'type' => 'string' ])
             ->addColumn('description', [ 'type' => 'text' ])
             ->addColumn('season_id', [ 'type' => 'integer' ])
+            ->addColumn('team_id', [ 'type' => 'integer' ])
             ->addColumn('weekday', [ 'type' => 'integer' ])
             ->addColumn('start_time', [ 'type' => 'time' ])
             ->addColumn('end_time', [ 'type' => 'time' ])
