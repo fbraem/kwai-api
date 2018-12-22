@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="uk-switch">
-      <input :value="field.value"
+      <input v-model="field.value"
         :id="id"
         type="checkbox"
         :checked="isChecked"
