@@ -6,13 +6,13 @@ export default [
     name: 'trainings.definitions.read',
   },
   {
-    path: '/trainings/create',
+    path: '/trainings/definitions/create',
     component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/DefinitionForm.vue'),
     name: 'trainings.definitions.create',
   },
   {
-    path: '/trainings/update/:id(\\d+)',
+    path: '/trainings/definitions/update/:id(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/DefinitionForm.vue'),
     name: 'trainings.definitions.update',
@@ -22,5 +22,29 @@ export default [
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/DefinitionBrowse.vue'),
     name: 'trainings.definitions.browse',
+  },
+  {
+    path: '/trainings/coaches/:id(\\d+)',
+    component: () => import(/* webpackChunkName: "trainings_chunck" */
+      '@/apps/trainings/CoachRead.vue'),
+    name: 'trainings.coaches.read',
+  },
+  {
+    path: '/trainings/coaches',
+    component: () => import(/* webpackChunkName: "trainings_chunck" */
+      '@/apps/trainings/CoachBrowse.vue'),
+    name: 'trainings.coaches.browse',
+  },
+  {
+    path: '/trainings/coaches/create',
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+      '@/apps/trainings/CoachForm.vue'),
+    name: 'trainings.coaches.create',
+  },
+  {
+    path: '/trainings/coaches/update/:id(\\d+)',
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+      '@/apps/trainings/CoachForm.vue'),
+    name: 'trainings.coaches.update',
   },
 ];

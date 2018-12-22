@@ -3,6 +3,10 @@
         "definitions" : {
             "title" : "Training Definitions",
             "no_data" : "There are no training definitions yet",
+            "not_found" : "This training definition doesn't exist",
+            "create" : "Create a new training definition",
+            "update" : "Update a training definition",
+            "time" : "Tijdstip",
             "form" : {
                 "name" : {
                     "label": "Name",
@@ -27,6 +31,10 @@
                     "label" : "Season",
                     "no_season" : "< No Season >"
                 },
+                "team" : {
+                    "label" : "Team",
+                    "no_team" : "< No Team >"
+                },
                 "start_time" : {
                     "label" : "Starttime",
                     "required" : "Starttime is required",
@@ -49,11 +57,38 @@
                     "placeholder" : "Enter a remark"
                 }
             }
+        },
+        "coaches" : {
+            "title" : "Coaches",
+            "no_data" : "There are no coaches",
+            "not_found" : "This coach doesn't exist",
+            "create" : "Add a new coach",
+            "update" : "Update a coach",
+            "form" : {
+                "member" : {
+                    "label" : "Member",
+                    "placeholder" : "Search a member"
+                },
+                "diploma" : {
+                    "label" : "Diploma",
+                    "placeholder" : "Enter a diploma"
+                },
+                "description" : {
+                    "label" : "Description",
+                    "placeholder" : "Enter a description"
+                },
+                "remark" : {
+                    "label" : "Remark",
+                    "placeholder" : "Enter a remark"
+                },
+                "active" : {
+                    "label" : "Active"
+                }
+            }
         }
     },
-    "create" : "Create a new training definition",
-    "update" : "Update a training definition",
     "save" : "Save",
+    "team" : "Team",
     "season" : "Season",
     "name" : "Name",
     "description" : "Description"

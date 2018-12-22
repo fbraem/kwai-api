@@ -1,8 +1,12 @@
 {
     "training" : {
         "definitions" : {
+            "create" : "Maak een nieuw trainingsmoment",
+            "update" : "Wijzig een trainingsmoment",
             "title" : "Trainingsmomenten",
             "no_data" : "Er zijn momenteel nog geen trainingsmomenten",
+            "not_found" : "Dit trainingsmoment bestaat niet",
+            "time" : "Time",
             "form" : {
                 "name" : {
                     "label" : "Naam",
@@ -27,6 +31,10 @@
                     "label" : "Seizoen",
                     "no_season" : "< Geen Seizoen >"
                 },
+                "team" : {
+                    "label" : "Team",
+                    "no_team" : "< Geen Team >"
+                },
                 "start_time" : {
                     "label" : "Aanvangstijd",
                     "required" : "Aanvangstijd is verplicht",
@@ -49,11 +57,38 @@
                     "placeholder" : "Geef een opmerking in"
                 }
             }
+        },
+        "coaches" : {
+            "title" : "Coaches",
+            "no_data" : "Er zijn momenteel geen coaches",
+            "not_found" : "Deze coach bestaat niet",
+            "create" : "Voeg een nieuwe coach toe",
+            "update" : "Wijzig een coach",
+            "form" : {
+                "member" : {
+                    "label" : "Lid",
+                    "placeholder" : "Zoek een lid"
+                },
+                "diploma" : {
+                    "label" : "Diploma",
+                    "placeholder" : "Geef een diploma in"
+                },
+                "description" : {
+                    "label" : "Omschrijving",
+                    "placeholder" : "Geef een omschrijving in"
+                },
+                "remark" : {
+                    "label" : "Opmerking",
+                    "placeholder" : "Geef een opmerking in"
+                },
+                "active" : {
+                    "label" : "Actief"
+                }
+            }
         }
     },
-    "create" : "Maak een nieuw trainingsmoment",
-    "update" : "Wijzig een trainingsmoment",
     "save" : "Bewaar",
+    "team" : "Team",
     "season" : "Seizoen",
     "name" : "Naam",
     "description" : "Omschrijving"
