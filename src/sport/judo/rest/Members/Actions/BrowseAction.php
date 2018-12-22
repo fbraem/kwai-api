@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
 
+use Core\Responses\ResourceResponse;
+
 class BrowseAction
 {
     private $container;
@@ -21,16 +23,46 @@ class BrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return (new \Core\ResourceResponse(
-            MemberTransformer::createForCollection(
-                MembersTable::getTableFromRegistry()
-                    ->find()
-                    ->contain(['Person', 'Person.Contact', 'Person.Nationality'])
-                    ->order([
-                        'Person.lastname' => 'ASC',
-                        'Person.firstname' => 'ASC'])
-                    ->all()
-            )
-        ))($response);
+        $parameters = $request->getAttribute('parameters');
+
+        $query = MembersTable::getTableFromRegistry()->find();
+        $concat = $query->func()->concat([
+            'Person.lastname' => 'identifier',
+            ' ',
+            'Person.firstname' => 'identifier'
+        ]);
+        $query->contain([
+            'Person',
+            'Person.Contact',
+            'Person.Nationality'
+        ]);
+
+        if (isset($parameters['filter']['name'])) {
+            $query->where(function ($exp) use ($concat, $parameters) {
+                $orCond = $exp->or_(function ($or) use ($parameters) {
+                    return $or->like('Person.firstname', '%' . $parameters['filter']['name'] . '%');
+                });
+                $orCond = $orCond->like($concat, '%' . $parameters['filter']['name'] . '%');
+                return $orCond->like('Person.lastname', '%' . $parameters['filter']['name'] . '%');
+            });
+        }
+
+        $count = $query->count();
+        $limit = $parameters['page']['limit'] ?? 10;
+        $offset = $parameters['page']['offset'] ?? 0;
+
+        $resource = MemberTransformer::createForCollection(
+            $query->order([
+                    'Person.lastname' => 'ASC',
+                    'Person.firstname' => 'ASC'])
+                ->all()
+        );
+        $resource->setMeta([
+            'limit' => intval($limit),
+            'offset' => intval($offset),
+            'count' => $count
+        ]);
+
+        return (new ResourceResponse($resource))($response);
     }
 }
