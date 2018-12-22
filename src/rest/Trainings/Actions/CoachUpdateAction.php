@@ -50,6 +50,7 @@ class CoachUpdateAction
             $attributes = \JmesPath\search('data.attributes', $data);
 
             $coach->name = $attributes['name'];
+            $coach->diploma = $attributes['diploma'];
             $coach->description = $attributes['description'];
             $coach->active = $attributes['active'] ?? true;
             $coach->remark = $attributes['remark'];
