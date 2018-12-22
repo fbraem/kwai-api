@@ -59,6 +59,7 @@ class CoachCreateAction
 
             $coach = $coachesTable->newEntity();
             $coach->name = $attributes['name'];
+            $coach->diploma = $attributes['diploma'];
             $coach->description = $attributes['description'];
             $coach->member = $member;
             $coach->active = $attributes['active'] ?? true;
@@ -73,8 +74,7 @@ class CoachCreateAction
                 $route->setArgument('id', $coach->id);
             }
 
-            // Load the person data
-            $coach->member->person;
+            $coachesTable->Member->loadInto($member, ['Person']);
 
             $response = (new ResourceResponse(
                 CoachTransformer::createForItem($coach)
