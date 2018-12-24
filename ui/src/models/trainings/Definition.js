@@ -4,6 +4,8 @@ import Season from '../Season';
 import User from '../User';
 import Team from '../Team';
 
+import moment from 'moment';
+
 export default class TrainingDefinition extends Model {
   resourceName() {
     return 'definitions';
@@ -54,6 +56,9 @@ export default class TrainingDefinition extends Model {
         utc.utcOffset('+00:00', true);
         return utc.local().format('HH:mm');
       },
+      weekdayText(definition) {
+        return moment.weekdays(true)[definition.weekday - 1];
+      }
     };
   }
 }
