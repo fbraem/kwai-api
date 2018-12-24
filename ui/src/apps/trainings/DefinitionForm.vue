@@ -71,7 +71,8 @@
 <script>
 import moment from 'moment';
 
-import trainingDefinitionStore from '@/stores/training/definitions';
+import trainingStore from '@/stores/training';
+import definitionStore from '@/stores/training/definitions';
 import seasonStore from '@/stores/seasons';
 import teamStore from '@/stores/teams';
 import registerModule from '@/stores/mixin';
@@ -96,20 +97,18 @@ export default {
   },
   mixins: [
     DefinitionForm,
-    registerModule([
+    registerModule(
       {
-        namespace: 'trainingDefinitionModule',
-        store: trainingDefinitionStore
+        training: trainingStore,
+        definition: definitionStore,
       },
       {
-        namespace: 'seasonModule',
-        store: seasonStore
+        season: seasonStore
       },
       {
-        namespace: 'teamModule',
-        store: teamStore
-      },
-    ]),
+        team: teamStore
+      }
+    ),
   ],
   i18n: messages,
   data() {
@@ -128,10 +127,10 @@ export default {
       return this.definition != null && this.definition.id == null;
     },
     error() {
-      return this.$store.getters['trainingDefinitionModule/error'];
+      return this.$store.state.training.definition.error;
     },
     seasons() {
-      var seasons = this.$store.getters['seasonModule/seasonsAsOptions'];
+      var seasons = this.$store.getters['season/seasonsAsOptions'];
       seasons.unshift({
         value: 0,
         text: this.$t('training.definitions.form.season.no_season')
@@ -139,7 +138,7 @@ export default {
       return seasons;
     },
     teams() {
-      var teams = this.$store.getters['teamModule/teamsAsOptions'];
+      var teams = this.$store.getters['team/teamsAsOptions'];
       teams.unshift({
         value: 0,
         text: this.$t('training.definitions.form.team.no_team')
@@ -148,8 +147,8 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch('seasonModule/browse');
-    await this.$store.dispatch('teamModule/browse');
+    await this.$store.dispatch('season/browse');
+    await this.$store.dispatch('team/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
@@ -178,7 +177,7 @@ export default {
     },
     async fetchData(id) {
       this.definition
-        = await this.$store.dispatch('trainingDefinitionModule/read', {
+        = await this.$store.dispatch('training/definition/read', {
           id: id
         });
       this.writeForm(this.definition);
@@ -186,7 +185,7 @@ export default {
     submit() {
       this.clearErrors();
       this.readForm(this.definition);
-      this.$store.dispatch('trainingDefinitionModule/save', this.definition)
+      this.$store.dispatch('training/definition/save', this.definition)
         .then((newDefinition) => {
           this.$router.push({
             name: 'trainings.definitions.read',

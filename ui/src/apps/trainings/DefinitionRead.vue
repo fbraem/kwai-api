@@ -70,6 +70,10 @@
                 <td v-if="definition.season">{{ definition.season.name }}</td>
                 <td v-else><i class="fas fa-minus"></i></td>
               </tr>
+              <tr>
+                <th>{{ $t('training.definitions.form.remark.label') }}</th>
+                <td>{{ definition.remark }}</td>
+              </tr>
             </table>
           </div>
         </div>
@@ -82,7 +86,8 @@ import moment from 'moment';
 
 import messages from './lang';
 
-import trainingDefinitionStore from '@/stores/training/definitions';
+import trainingStore from '@/stores/training';
+import definitionStore from '@/stores/training/definitions';
 import registerModule from '@/stores/mixin';
 
 import PageHeader from '@/site/components/PageHeader.vue';
@@ -93,11 +98,11 @@ export default {
   },
   i18n: messages,
   mixins: [
-    registerModule([
+    registerModule(
       {
-        namespace: 'trainingDefinitionModule',
-        store: trainingDefinitionStore
-      }]
+        training: trainingStore,
+        definition: definitionStore,
+      }
     ),
   ],
   data() {
@@ -106,12 +111,12 @@ export default {
   },
   computed: {
     definition() {
-      return this.$store.getters['trainingDefinitionModule/definition'](
+      return this.$store.getters['training/definition/definition'](
         this.$route.params.id
       );
     },
     error() {
-      return this.$store.getters['trainingDefinitionModule/error'];
+      return this.$store.state.training.definition.error;
     },
     updateAllowed() {
       return this.definition
@@ -146,7 +151,7 @@ export default {
   },
   methods: {
     fetchData(id) {
-      this.$store.dispatch('trainingDefinitionModule/read', {
+      this.$store.dispatch('training/definition/read', {
         id: id
       }).catch((err) => {
         console.log(err);

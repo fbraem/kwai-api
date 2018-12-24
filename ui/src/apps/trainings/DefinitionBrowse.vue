@@ -68,35 +68,44 @@ import PageHeader from '@/site/components/PageHeader';
 
 import messages from './lang';
 
-import trainingDefinitionStore from '@/stores/training/definitions';
+import trainingStore from '@/stores/training';
+import definitionStore from '@/stores/training/definitions';
+import registerModule from '@/stores/mixin';
 
 export default {
   components: {
     PageHeader
   },
   i18n: messages,
+  mixins: [
+    registerModule(
+      {
+        training: trainingStore,
+        definition: definitionStore,
+      }
+    ),
+  ],
   computed: {
     definitions() {
-      return this.$store.getters['trainingDefinitionModule/definitions'];
+      return this.$store.state.training.definition.definitions;
     },
     noData() {
       return this.definitions && this.definitions.length === 0;
     }
   },
-  beforeCreate() {
-    if (!this.$store.state.trainingDefinitionModule) {
-      this.$store.registerModule(
-        'trainingDefinitionModule',
-        trainingDefinitionStore
-      );
-    }
+  beforeRouteEnter(to, from, next) {
+    next(async(vm) => {
+      await vm.fetchData();
+      next();
+    });
   },
-  mounted() {
-    this.fetchData();
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetchData();
+    next();
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('trainingDefinitionModule/browse');
+      this.$store.dispatch('training/definition/browse');
     }
   }
 };
