@@ -11,17 +11,11 @@ const state = {
 };
 
 const getters = {
-  definitions(state) {
-    return state.definitions;
-  },
   definition: (state) => (id) => {
     if (state.definitions) {
       return state.definitions.find((def) => def.id === id);
     }
     return null;
-  },
-  error(state) {
-    return state.error;
   },
 };
 
