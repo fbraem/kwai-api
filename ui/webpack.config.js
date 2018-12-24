@@ -3,7 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-//const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
+// const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -114,7 +114,8 @@ module.exports = (env, argv) => {
         vue$: 'vue/dist/vue.common.js',
         '@': resolve('ui/src'),
         config: path.join(__dirname, 'src', 'site', 'config', argv.mode),
-      }
+      },
+      mainFiles: [ 'index' ],
     },
     plugins: [
       new CleanWebpackPlugin('build', {}),
