@@ -6,11 +6,11 @@ use League\Fractal;
 
 class EventTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'training_events';
+    private static $type = 'events';
 
     protected $defaultIncludes = [
         'season',
-        'training_definition'
+        'definition'
     ];
 
     public static function createForItem(Event $event)
@@ -31,9 +31,9 @@ class EventTransformer extends Fractal\TransformerAbstract
         }
     }
 
-    public function includeTrainingDefinition(Event $event)
+    public function includeDefinition(Event $event)
     {
-        $def = $event->training_definition;
+        $def = $event->definition;
         if ($def) {
             return DefinitionTransformer::createForItem($def);
         }

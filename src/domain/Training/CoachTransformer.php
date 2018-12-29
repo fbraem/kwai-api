@@ -6,7 +6,7 @@ use League\Fractal;
 
 class CoachTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'training_coaches';
+    private static $type = 'coaches';
 
     protected $defaultIncludes = [
         'member'
