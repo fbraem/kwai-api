@@ -11,6 +11,9 @@ import moment from 'moment';
 export function isTime(value) {
   return moment(value, 'HH:mm', true).isValid();
 };
+export function isDate(value) {
+  return moment(value, 'L', true).isValid();
+};
 
 export default {
   data() {
@@ -44,6 +47,7 @@ export default {
               this.validateField(field, true);
             });
           }
+          this.validateField(field);
         }
       });
     }
