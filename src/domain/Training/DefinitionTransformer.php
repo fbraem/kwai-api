@@ -6,7 +6,7 @@ use League\Fractal;
 
 class DefinitionTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'training_definitions';
+    private static $type = 'definitions';
 
     protected $defaultIncludes = [
         'season',
