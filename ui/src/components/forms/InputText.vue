@@ -5,6 +5,7 @@
     :class="{ 'uk-form-danger' : field.errors.length > 0 }"
     type="text"
     :required="field.required"
+    :placeholder="placeholder"
     v-bind="$attrs"
     />
 </template>
@@ -20,6 +21,12 @@ export default {
   inject: {
     field: 'field',
     id: 'id'
+  },
+  computed: {
+    placeholder() {
+      if (this.field.placeholder) return this.field.placeholder;
+      return '';
+    }
   }
 };
 </script>
