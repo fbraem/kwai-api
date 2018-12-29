@@ -18,7 +18,7 @@ class DefinitionsTable extends \Cake\ORM\Table
                 'className' => EventsTable::class
             ])
             ->setForeignKey('training_definition_id')
-            ->setProperty('training_events')
+            ->setProperty('events')
         ;
         $this->belongsTo('Season', [
                 'className' => \Domain\Game\SeasonsTable::class
