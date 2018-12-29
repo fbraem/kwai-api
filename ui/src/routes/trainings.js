@@ -47,4 +47,16 @@ export default [
       '@/apps/trainings/CoachForm.vue'),
     name: 'trainings.coaches.update',
   },
+  {
+    path: '/trainings/events/generate',
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+      '@/apps/trainings/EventGenerate.vue'),
+    name: 'trainings.events.generate',
+  },
+  {
+    path: '/trainings/events',
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+      '@/apps/trainings/EventBrowse.vue'),
+    name: 'trainings.events.browse',
+  },
 ];

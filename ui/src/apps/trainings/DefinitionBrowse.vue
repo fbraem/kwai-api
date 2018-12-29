@@ -22,33 +22,47 @@
         </div>
       </div>
       <div v-else class="uk-child-width-1-1" uk-grid>
-        <div v-if="noData" class="uk-alert uk-alert-warning">
-          {{ $t('training.definitions.no_data') }}
+        <div v-if="noData">
+          <div class="uk-alert uk-alert-warning">
+            {{ $t('training.definitions.no_data') }}
+          </div>
         </div>
         <div v-else>
           <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
             <tr>
               <th>{{ $t('name') }}</th>
+              <th>{{ $t('training.definitions.weekday') }}</th>
               <th>{{ $t('description') }}</th>
               <th>{{ $t('team') }}</th>
               <th>{{ $t('season') }}</th>
+              <th>{{ $t('training.definitions.form.active.label') }}</th>
               <th class="uk-table-shrink"></th>
             </tr>
             <tr v-for="definition in definitions" :key="definition.id">
               <td>
                 <router-link :to="{ name: 'trainings.definitions.read', params: { id : definition.id} }">{{ definition.name }}</router-link>
               </td>
+              <td>
+                {{ definition.weekdayText }}
+              </td>
               <td class="uk-text-meta">
                 {{ definition.description }}
               </td>
               <td>
                 <router-link v-if="definition.team" :to="{ name: 'teams.read', params: { id : definition.team.id} }">{{ definition.team.name }}</router-link>
+                <div v-else>
+                  <i class="fas fa-minus"></i>
+                </div>
               </td>
               <td>
                 <router-link v-if="definition.season" :to="{ name: 'seasons.read', params: { id : definition.season.id} }">{{ definition.season.name }}</router-link>
                 <div v-else>
                   <i class="fas fa-minus"></i>
                 </div>
+              </td>
+              <td>
+                <i class="fas fa-check" v-if="definition.active"></i>
+                <i class="fas fa-times uk-text-danger" v-else name="times"></i>
               </td>
               <td>
                 <router-link class="uk-icon-button uk-link-reset" v-if="$training_definition.isAllowed('update', definition)" :to="{ name : 'trainings.definitions.update', params : { id : definition.id } }">

@@ -61,6 +61,10 @@
                       <i class="fas fa-times uk-text-danger" v-else name="times"></i>
                   </td>
               </tr>
+              <tr>
+                <th>{{ $t('training.coaches.form.remark.label') }}</th>
+                <td>{{ coach.remark }}</td>
+              </tr>
             </table>
           </div>
         </div>

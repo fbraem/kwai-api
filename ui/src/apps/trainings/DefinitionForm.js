@@ -117,6 +117,7 @@ export default {
       this.form.location.value = definition.location;
       this.form.start_time.value = definition.localStartTime;
       this.form.end_time.value = definition.localEndTime;
+      this.form.weekday.value = definition.weekday;
       if (definition.season) {
         this.form.season.value = definition.season.id;
       }
@@ -134,11 +135,11 @@ export default {
       var tz = moment.tz.guess();
       if (this.form.start_time.value) {
         definition.start_time
-          = moment(this.form.start_time.value, 'HH:mm', true).utc();
+          = moment(this.form.start_time.value, 'HH:mm', true);
       }
       if (this.form.end_time.value) {
         definition.end_time
-          = moment(this.form.end_time.value, 'HH:mm', true).utc();
+          = moment(this.form.end_time.value, 'HH:mm', true);
       }
       definition.time_zone = tz;
       definition.remark = this.form.remark.value;

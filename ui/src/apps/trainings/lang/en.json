@@ -7,6 +7,7 @@
             "create" : "Create a new training definition",
             "update" : "Update a training definition",
             "time" : "Tijdstip",
+            "weekday": "Day",
             "form" : {
                 "name" : {
                     "label": "Name",
@@ -85,11 +86,46 @@
                     "label" : "Active"
                 }
             }
+        },
+        "generator" : {
+            "create" : "Create trainings by entering a start and enddate. It's also possible to attach coaches to these trainings.",
+            "form" : {
+                "start_date" : {
+                    "label" : "Startdate",
+                    "placeholder" : "Enter a date",
+                    "required": "Startdate is required",
+                    "invalid": "Invalid startdate (Format: {format})"
+                },
+                "end_date" : {
+                    "label" : "Enddate",
+                    "placeholder" : "Enter a date",
+                    "required": "Enddate is required",
+                    "invalid": "Invalid enddate (Format: {format})",
+                    "after": "Enddate must be after startdate"
+                },
+                "coaches": {
+                    "label": "Coaches",
+                    "placeholder": "Select coaches for the training",
+                    "selectLabel" : "Press enter to select",
+                    "deselectLabel" : "Press enter to remove"
+                },
+                "generate": "Generate"
+            }
+        },
+        "events": {
+            "title": "Trainings",
+            "generate": "Generate new trainings",
+            "no_generated_data": "There are no trainings generated",
+            "day": "Day",
+            "time": "Time",
+            "date": "Date",
+            "coaches":  "Coaches"
         }
     },
     "save" : "Save",
     "team" : "Team",
     "season" : "Season",
     "name" : "Name",
-    "description" : "Description"
+    "description" : "Description",
+    "trainings" : "Trainings"
 }

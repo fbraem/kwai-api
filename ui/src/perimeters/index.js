@@ -10,6 +10,7 @@ import userPerimeter from './userPerimeter';
 import seasonPerimeter from './seasonPerimeter';
 import trainingDefinitionPerimeter from './trainingDefinitionPerimeter';
 import trainingCoachPerimeter from './trainingCoachPerimeter';
+import trainingEventPerimeter from './trainingEventPerimeter';
 
 function perimeters() {
   return [
@@ -25,6 +26,7 @@ function perimeters() {
     seasonPerimeter,
     trainingDefinitionPerimeter,
     trainingCoachPerimeter,
+    trainingEventPerimeter,
   ];
 };
 

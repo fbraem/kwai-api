@@ -4,13 +4,13 @@
     <PageHeader>
       <div class="uk-grid">
         <div class="uk-width-5-6">
-          <h1>{{ $t('training.coaches.title') }}</h1>
+          <h1>{{ $t('training.events.title') }}</h1>
         </div>
         <div class="uk-width-1-6">
           <div class="uk-flex uk-flex-right">
-            <router-link v-if="$training_coach.isAllowed('create')"
+            <router-link v-if="$training_event.isAllowed('create')"
               class="uk-icon-button uk-link-reset"
-              :to="{ name : 'trainings.coaches.create' }">
+              :to="{ name : 'trainings.events.create' }">
               <i class="fas fa-plus"></i>
             </router-link>
           </div>
@@ -18,7 +18,7 @@
       </div>
     </PageHeader>
     <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('training.coaches.browse')"
+      <div v-if="$wait.is('training.events.browse')"
         class="uk-flex-center" uk-grid>
         <div class="uk-text-center">
           <i class="fas fa-spinner fa-2x fa-spin"></i>
@@ -27,30 +27,29 @@
       <div v-else class="uk-child-width-1-1" uk-grid>
         <div v-if="noData">
           <div class="uk-alert uk-alert-warning">
-            {{ $t('training.coaches.no_data') }}
+            {{ $t('training.events.no_data') }}
           </div>
         </div>
         <div v-else>
           <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
             <tr>
               <th>{{ $t('name') }}</th>
-              <th>{{ $t('training.coaches.form.diploma.label') }}</th>
-              <th>{{ $t('training.coaches.form.active.label') }}</th>
+              <th>{{ $t('training.events.form.start_time.label') }}</th>
+              <th>{{ $t('training.events.form.end_time.label') }}</th>
               <th></th>
             </tr>
-            <tr v-for="coach in coaches" :key="coach.id">
+            <tr v-for="event in events" :key="event.id">
               <td>
-                <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">{{ coach.member.person.name }}</router-link>
+                <router-link :to="{ name: 'trainings.events.read', params: { id : event.id} }">{{ event.name }}</router-link>
               </td>
               <td>
-                {{ coach.diploma }}
+                {{ event.start_time.format('HH:mm') }}
               </td>
               <td>
-                <i class="fas fa-check" v-if="coach.active"></i>
-                <i class="fas fa-times uk-text-danger" v-else name="times"></i>
+                {{ event.end_time.format('HH:mm') }}
               </td>
               <td>
-                <router-link class="uk-icon-button uk-link-reset" v-if="$training_coach.isAllowed('update', coach)" :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }">
+                <router-link class="uk-icon-button uk-link-reset" v-if="$training_event.isAllowed('update', event)" :to="{ name : 'trainings.events.update', params : { id : event.id } }">
                   <i class="fas fa-edit uk-text-muted"></i>
                 </router-link>
               </td>
@@ -69,7 +68,7 @@ import PageHeader from '@/site/components/PageHeader';
 import messages from './lang';
 
 import trainingStore from '@/stores/training';
-import coachStore from '@/stores/training/coaches';
+import eventStore from '@/stores/training/events';
 import registerModule from '@/stores/mixin';
 
 export default {
@@ -81,16 +80,16 @@ export default {
     registerModule(
       {
         training: trainingStore,
-        coach: coachStore,
+        event: eventStore,
       }
     ),
   ],
   computed: {
-    coaches() {
-      return this.$store.state.training.coach.coaches;
+    events() {
+      return this.$store.state.training.event.events;
     },
     noData() {
-      return this.coaches && this.coaches.length === 0;
+      return this.events && this.events.length === 0;
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -105,7 +104,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('training/coach/browse');
+      this.$store.dispatch('training/event/browse');
     }
   }
 };

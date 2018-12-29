@@ -3,12 +3,12 @@ import Model from '../BaseModel';
 import Season from '../Season';
 import User from '../User';
 import Team from '../Team';
+import Definition from './Definition';
+import Coach from './Coach';
 
-import moment from 'moment';
-
-export default class TrainingDefinition extends Model {
+export default class TrainingEvent extends Model {
   resourceName() {
-    return 'definitions';
+    return 'events';
   }
 
   namespace() {
@@ -19,19 +19,20 @@ export default class TrainingDefinition extends Model {
     return [
       'name',
       'description',
-      'weekday',
       'active',
+      'time_zone',
+      'cancelled',
       'location',
       'remark',
-      'time_zone',
     ];
   }
 
-  // Times are never stored in UTC. They are stored as localtime.
+  // Event times are never stored in UTC. They are stored as localtime.
   dates() {
     return {
       created_at: 'YYYY-MM-DD HH:mm:ss',
       updated_at: 'YYYY-MM-DD HH:mm:ss',
+      start_date: 'YYYY-MM-DD',
       start_time: 'HH:mm',
       end_time: 'HH:mm'
     };
@@ -40,16 +41,10 @@ export default class TrainingDefinition extends Model {
   relationships() {
     return {
       season: new Season(),
-      team: new Team(),
+      teams: new Team(),
+      coaches: new Coach(),
+      definition: new Definition(),
       user: new User(),
-    };
-  }
-
-  computed() {
-    return {
-      weekdayText(definition) {
-        return moment.weekdays(true)[definition.weekday - 1];
-      }
     };
   }
 }

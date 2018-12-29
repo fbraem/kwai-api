@@ -6,7 +6,8 @@
             "title" : "Trainingsmomenten",
             "no_data" : "Er zijn momenteel nog geen trainingsmomenten",
             "not_found" : "Dit trainingsmoment bestaat niet",
-            "time" : "Time",
+            "time" : "Tijdstip",
+            "weekday": "Dag",
             "form" : {
                 "name" : {
                     "label" : "Naam",
@@ -85,11 +86,46 @@
                     "label" : "Actief"
                 }
             }
+        },
+        "generator" : {
+            "create" : "Maak trainingen door een start en einddatum in te geven. Je kan ook meteen coaches koppelen aan deze trainingen.",
+            "form" : {
+                "start_date" : {
+                    "label" : "Startdatum",
+                    "placeholder" : "Geef een startdatum in",
+                    "required": "Startdatum is verplicht in te vullen.",
+                    "invalid": "Ongeldige startdatum (Formaat: {format})."
+                },
+                "end_date" : {
+                    "label" : "Einddatum",
+                    "placeholder" : "Geef een einddatum in",
+                    "required": "Einddatum is verplicht in te vullen.",
+                    "invalid": "Ongeldige einddatum (Formaat: {format}).",
+                    "after": "Einddatum moet na de startdatum liggen"
+                },
+                "coaches": {
+                    "label": "Coaches",
+                    "placeholder": "Selecteer coaches voor de trainingen",
+                    "selectLabel" : "Druk enter om te selecteren",
+                    "deselectLabel" : "Druk enter om te verwijderen"
+                },
+                "generate": "Genereer"
+            }
+        },
+        "events": {
+            "title": "Trainingen",
+            "generate": "Genereer nieuwe trainingen",
+            "no_generated_data": "Er zijn geen trainingen gegenereerd",
+            "day": "Dag",
+            "time": "Tijdstip",
+            "date": "Datum",
+            "coaches":  "Coaches"
         }
     },
     "save" : "Bewaar",
     "team" : "Team",
     "season" : "Seizoen",
     "name" : "Naam",
-    "description" : "Omschrijving"
+    "description" : "Omschrijving",
+    "trainings" : "Trainingen"
 }

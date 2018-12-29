@@ -57,21 +57,27 @@ class EventUpdateAction
 
             $seasonData = \JmesPath\search('data.relationships.season.data', $data);
             if (isset($seasonData)) {
-                $event->season = (new EntityExistValidator(
+                $season = (new EntityExistValidator(
                     'data.relationships.season',
                     $table->Season,
-                    true
+                    false
                 ))->validate($data);
+                if ($season) {
+                    $event->season = $season;
+                } else {
+                    $event->season_id = null;
+                    $event->season = null;
+                }
             }
 
-            $defData = \JmesPath\search('data.relationships.training_definition.data', $data);
+            $defData = \JmesPath\search('data.relationships.definition.data', $data);
             if (isset($defData)) {
-                $def = (new EntityExistValidator('data.relationships.training_definition', $table->TrainingDefinition, false))->validate($data);
+                $def = (new EntityExistValidator('data.relationships.definition', $table->TrainingDefinition, false))->validate($data);
                 if ($def) {
                     $event->training_definition = $def;
                 } else {
-                    $def->training_definition_id = null;
-                    $def->training_definition = null;
+                    $event->training_definition_id = null;
+                    $event->training_definition = null;
                 }
             }
 
