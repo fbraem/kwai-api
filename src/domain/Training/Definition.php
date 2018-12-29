@@ -19,7 +19,7 @@ class Definition extends \Cake\ORM\Entity
     public function _getStartTime($value)
     {
         if ($value) {
-            $date = new \Carbon\Carbon($value, 'UTC');
+            $date = new \Carbon\Carbon($value, $this->time_zone);
             return $date->toTimeString();
         }
         return null;
@@ -28,7 +28,7 @@ class Definition extends \Cake\ORM\Entity
     public function _getEndTime($value)
     {
         if ($value) {
-            $date = new \Carbon\Carbon($value, 'UTC');
+            $date = new \Carbon\Carbon($value, $this->time_zone);
             return $date->toTimeString();
         }
         return null;
