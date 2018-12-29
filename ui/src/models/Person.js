@@ -35,7 +35,7 @@ export default class Person extends Model {
       },
       formatted_birthdate(person) {
         if (person.birthdate) {
-          return person.birthdate.locale('nl').format('L');
+          return person.birthdate.format('L');
         }
         return '';
       },
