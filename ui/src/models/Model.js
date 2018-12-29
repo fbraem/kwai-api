@@ -255,6 +255,21 @@ export default class Model {
     return this;
   }
 
+  async createAll(models) {
+    var data = [];
+    models.forEach((model) => {
+      data.push(model.serialize());
+    });
+    this.reset();
+    let config = {
+      url: this._uri.href(),
+      data: data,
+      method: 'POST',
+    };
+    let response = await this.request(config);
+    return this.respond(response);
+  }
+
   respond(response) {
     let json = response.data;
     if (json) {
