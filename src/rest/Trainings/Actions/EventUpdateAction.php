@@ -74,10 +74,10 @@ class EventUpdateAction
             if (isset($defData)) {
                 $def = (new EntityExistValidator('data.relationships.definition', $table->TrainingDefinition, false))->validate($data);
                 if ($def) {
-                    $event->training_definition = $def;
+                    $event->definition = $def;
                 } else {
                     $event->training_definition_id = null;
-                    $event->training_definition = null;
+                    $event->definition = null;
                 }
             }
 

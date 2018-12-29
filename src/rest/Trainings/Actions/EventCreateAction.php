@@ -107,7 +107,7 @@ class EventCreateAction
         $event->active = $attributes['active'] ?? true;
         $event->remark = $attributes['remark'];
         $event->season = $season;
-        $event->training_definition = $def;
+        $event->definition = $def;
         $event->user = $request->getAttribute('clubman.user');
 
         $this->eventValidator->validate($event);
