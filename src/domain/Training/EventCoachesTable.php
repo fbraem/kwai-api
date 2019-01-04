@@ -24,6 +24,12 @@ class EventCoachesTable extends \Cake\ORM\Table
             ])
             ->setForeignKey('training_coach_id')
         ;
+        $this->belongsTo('User', [
+                'className' => \Domain\User\UsersTable::class
+            ])
+            ->setForeignKey('user_id')
+            ->setProperty('user')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
@@ -34,6 +40,7 @@ class EventCoachesTable extends \Cake\ORM\Table
             ->addColumn('coach_type', ['type' => 'integer'])
             ->addColumn('present', ['type' => 'boolean'])
             ->addColumn('remark', ['type' => 'text'])
+            ->addColumn('user_id', ['type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(
