@@ -50,7 +50,13 @@
                 <td>{{ event.start_date.format('dddd') }}</td>
                 <td>{{ event.start_date.format('L') }}</td>
                 <td>{{ event.start_time.format('HH:mm') }} - {{ event.end_time.format('HH:mm') }}</td>
-                <td></td>
+                <td>
+                  <template v-for="(coach, index) in event.coaches">
+                    <div :key="coach.id">
+                      <span>{{ coach.name }}</span><span v-if="index != Object.keys(event.coaches).length - 1">,&nbsp;</span>
+                    </div>
+                  </template>
+                </td>
               </tr>
             </table>
           </div>
