@@ -7,6 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
+use \Cake\ORM\Entity;
+
 use Domain\Training\EventsTable;
 use Domain\Training\EventTransformer;
 
@@ -95,6 +97,12 @@ class EventCreateAction
             false
         ))->validate($data);
 
+        $coaches = (new EntityExistValidator(
+            'data.relationships.coaches',
+            $table->TrainingCoaches,
+            false
+        ))->validate($data);
+
         $attributes = \JmesPath\search('data.attributes', $data);
 
         $event = $table->newEntity();
@@ -113,6 +121,17 @@ class EventCreateAction
         $this->eventValidator->validate($event);
 
         $table->save($event);
+
+        foreach ($coaches as $coach) {
+            $coach->_joinData = new Entity([
+                'coach_type' => 0,
+                'present' => false,
+                'user' => $request->getAttribute('clubman.user')
+            ], [
+                'markNew' => true
+            ]);
+            $table->TrainingCoaches->link($event, [$coach]);
+        }
 
         return $event;
     }
