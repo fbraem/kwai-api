@@ -1,31 +1,30 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
 import Category from './Category';
 import Content from './Content';
 
+/**
+ * Page model
+ */
 export default class Page extends Model {
-  resourceName() {
+  static type() {
     return 'pages';
   }
 
-  fields() {
-    return [
-      'name',
-      'enabled',
-      'remark',
-      'priority',
-      'images',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      name: new Attribute(),
+      enabled: new Attribute(),
+      remark: new Attribute(),
+      priority: new Attribute(),
+      images: new Attribute(true),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
   }
 
-  computed() {
+  static computed() {
     return {
       summary(page) {
         if (page.contents) {
@@ -85,10 +84,10 @@ export default class Page extends Model {
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      category: new Category(),
-      contents: new Content(),
+      category: Category,
+      contents: Content,
     };
   }
 }

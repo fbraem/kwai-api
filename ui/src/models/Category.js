@@ -1,28 +1,27 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
+/**
+ * Category model
+ */
 export default class Category extends Model {
-  resourceName() {
+  static type() {
     return 'categories';
   }
 
-  fields() {
-    return [
-      'name',
-      'description',
-      'remark',
-      'images',
-      'short_description',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      name: new Attribute(),
+      description: new Attribute(),
+      remark: new Attribute(),
+      images: new Attribute(true),
+      short_description: new Attribute(),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  computed() {
+  static computed() {
     return {
       header_picture(category) {
         if (category.images) {

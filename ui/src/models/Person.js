@@ -1,31 +1,30 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
 import moment from 'moment';
 
 import Country from './Country';
 
+/**
+ * Person model
+ */
 export default class Person extends Model {
-  resourceName() {
+  static type() {
     return 'persons';
   }
 
-  fields() {
-    return [
-      'lastname',
-      'firstname',
-      'gender',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      birthdate: 'YYYY-MM-DD',
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      lastname: new Attribute(),
+      firstname: new Attribute(),
+      gender: new Attribute(),
+      birthdate: new DateAttribute('YYYY-MM-DD'),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
   }
 
-  computed() {
+  static computed() {
     return {
       name(person) {
         return [person.lastname, person.firstname].filter(Boolean).join(' ');
@@ -48,9 +47,9 @@ export default class Person extends Model {
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      nationality: new Country(),
+      nationality: Country,
     };
   }
 }

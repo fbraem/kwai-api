@@ -1,37 +1,36 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
 import moment from 'moment';
 
 import Team from './Team';
 
+/**
+ * Season model
+ */
 export default class Season extends Model {
-  resourceName() {
+  static type() {
     return 'seasons';
   }
 
-  fields() {
-    return [
-      'name',
-      'remark',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      start_date: 'YYYY-MM-DD',
-      end_date: 'YYYY-MM-DD',
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      name: new Attribute(),
+      remark: new Attribute(),
+      start_date: new DateAttribute('YYYY-MM-DD'),
+      end_date: new DateAttribute('YYYY-MM-DD'),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      teams: new Team(),
+      teams: Team
     };
   }
 
-  computed() {
+  static computed() {
     return {
       formatted_start_date(season) {
         if (season.start_date) {

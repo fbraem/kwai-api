@@ -1,38 +1,38 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
 import TeamType from './TeamType';
 import Member from './Member';
 import Season from './Season';
 
+/**
+ * Team model
+ */
 export default class Team extends Model {
-  resourceName() {
+  static type() {
     return 'teams';
   }
 
-  fields() {
-    return [
-      'name',
-      'active',
-      'remark',
-      'members_count',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      name: new Attribute(),
+      active: new Attribute(),
+      remark: new Attribute(),
+      members_count: new Attribute(true),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      team_type: new TeamType(),
-      season: new Season(),
-      members: new Member(),
+      team_type: TeamType,
+      season: Season,
+      members: Member,
     };
   }
 
+/*
   async available(id) {
     var segments = this._uri.segment();
     segments.push(id);
@@ -77,5 +77,5 @@ export default class Team extends Model {
     var member = new Member();
     return member.respond(response);
   }
-
+*/
 }

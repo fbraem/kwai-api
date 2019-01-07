@@ -1,28 +1,27 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
+/**
+ * UserInvitation model
+ */
 export default class UserInvitation extends Model {
-  resourceName() {
+  static type() {
     return 'user_invitations';
   }
 
-  fields() {
-    return [
-      'name',
-      'expired_at_timezone',
-      'email',
-      'remark',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      expired_at: 'YYYY-MM-DD HH:mm:ss',
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      name: new Attribute(),
+      expired_at: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
+      expired_at_timezone: new Attribute(),
+      email: new Attribute(),
+      remark: new Attribute(),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
   }
 
-  computed() {
+  static computed() {
     return {
       isExpired(invitation) {
         var utc = invitation.expired_at.clone();

@@ -1,354 +1,201 @@
-import URI from 'urijs';
-import moment from 'moment';
+import { Attribute } from './Attribute';
 
+const TYPE = Symbol('TYPE');
+
+/**
+ * Class which keeps all created model objects in a cache. When the model
+ * is not yet available in the cache, it will be created and stored.
+ */
 class Cache {
+  /**
+   * Creates the cache
+   */
   constructor() {
-    this._cache = Object.create(null);
+    this.cache = Object.create(null);
   }
 
-  getModel(model, id, data, includes) {
-    this._cache[model.resourceName()]
-      = this._cache[model.resourceName()]
-        || Object.create(null);
-    this._cache[model.resourceName()][id]
-      = this._cache[model.resourceName()][id]
-        || this.createModel(model, id, data, includes);
-    return this._cache[model.resourceName()][id];
-  }
-
-  createModel(m, id, data, includes) {
-    var model = new m.constructor();
-    model.id = id;
-
-    if (!data) return model;
-
-    model.fields().forEach((field) => {
-      model[field] = data.attributes[field];
-    });
-
-    var dates = model.dates();
-    Object.keys(dates).forEach((key) => {
-      var format = dates[key];
-      if (data.attributes[key]) {
-        model[key] = moment(data.attributes[key], format);
-      }
-    });
-
-    Object.keys(model.relationships()).forEach((relationName) => {
-      model[relationName] = null;
-      if (data.relationships) {
-        if (data.relationships[relationName]) {
-          var relatedModel = model.relationships()[relationName];
-          var relatedData = data.relationships[relationName].data;
-          if (Array.isArray(relatedData)) {
-            model[relationName] = [];
-            relatedData.forEach((r) => {
-              model[relationName].push(
-                this.getModel(
-                  relatedModel,
-                  r.id,
-                  includes[relatedModel.resourceName()][r.id],
-                  includes)
-              );
-            });
-          } else {
-            model[relationName] = this.getModel(
-              relatedModel,
-              relatedData.id,
-              includes[relatedModel.resourceName()][relatedData.id],
-              includes
-            );
-          }
-        }
-      }
-    });
-
-    var computed = model.computed();
-    Object.keys(computed).forEach((key) => {
-      model[key] = computed[key](model);
-    });
-
-    return model;
+  /**
+   * Searches the cache for the model with the given constructor and id. When
+   * it doesn't find it, it will create it.
+   * @param {function} ctor The constructor of the Model class.
+   * @param {string} id The id of the model.
+   * @return {object} The cached or a new model
+   */
+  getModel(ctor, id) {
+    this.cache[ctor.name] = this.cache[ctor.name] || Object.create(null);
+    /*eslint new-cap: ["error", { "newIsCapExceptions": ["ctor"] }]*/
+    this.cache[ctor.name][id] = this.cache[ctor.name][id] || new ctor(id);
+    return this.cache[ctor.name][id];
   }
 }
 
-export default class Model {
-  constructor() {
-    this._type = this.resourceName();
-    this.reset();
-  }
+var cache = new Cache();
 
-  baseURL() {
-    return null;
-  }
+/**
+ * Our private function to create a model from JSONAPI data. Before calling this
+ * function it must be bind against the constructor of the model.
+ * @param {object} data
+ * @param {array} included
+ * @return {object} An instance of the model
+ * @see deserialize
+ */
+function createModel(data, included) {
+  var me = cache.getModel(this, data.id);
 
-  namespace() {
-    return null;
-  }
-
-  bulk() {
-    return null;
-  }
-
-  fields() {
-    return [];
-  }
-
-  dates() {
-    return [];
-  }
-
-  relationships() {
-    return {};
-  }
-
-  computed() {
-    return [];
-  }
-
-  resourceName() {
-    return null;
-  }
-
-  addPath(path) {
-    this._uri.segment(path);
-    return this;
-  }
-
-  resourceUrl() {
-    var uri = new URI('');
-    var segment = [this.baseURL()];
-    var ns = this.namespace();
-    if (ns) segment.push(ns);
-    segment.push(this._type);
-    uri.segment(segment);
-    return uri;
-  }
-
-  reset() {
-    this._uri = this.resourceUrl();
-  }
-
-  async request(config) {
-    return {};
-  }
-
-  all() {
-    return this.get();
-  }
-
-  where(filter, value) {
-    let q = this._uri.search(true);
-    q['filter[' + filter + ']'] = value;
-    this._uri.search(q);
-    return this;
-  }
-
-  paginate(offset, limit) {
-    let q = this._uri.search(true);
-    q['page[offset]'] = offset || 0;
-    q['page[limit]'] = limit || 10;
-    this._uri.search(q);
-    return this;
-  }
-
-  async get() {
-    const config = {
-      method: 'GET',
-      url: this._uri.href(),
-    };
-    this.reset();
-    let response = await this.request(config);
-    return this.respond(response);
-  }
-
-  async delete() {
-    var segments = this._uri.segment();
-    segments.push(this.id);
-    this._uri.segment(segments);
-    const config = {
-      method: 'DELETE',
-      url: this._uri.href(),
-    };
-    this.reset();
-
-    let response = await this.request(config);
-    return this.respond(response);
-  }
-
-  async find(id) {
-    var segments = this._uri.segment();
-    segments.push(id);
-    this._uri.segment(segments);
-    const config = {
-      method: 'GET',
-      url: this._uri.href(),
-    };
-    this.reset();
-    let response = await this.request(config);
-    if (response) return this.respond(response);
-  }
-
-  async save() {
-    this.reset();
-    if (this.id) {
-      var segments = this._uri.segment();
-      segments.push(this.id);
-      this._uri.segment(segments);
+  // Set all fields
+  Object.entries(this.fields()).forEach((entry) => {
+    const [key, attr] = entry;
+    if (data.attributes[key]) {
+      if (attr instanceof Attribute) {
+        me[key] = attr.from(data.attributes[key]);
+      } else {
+        me[key] = data.attributes[key];
+      }
     }
+  });
 
-    var ourData = this.serialize();
-    var bulk = this.bulk();
-    var data;
-    if (bulk) {
-      data = [ ourData ];
-      bulk.forEach((b) => {
-        if (this[b]) {
-          if (Array.isArray(this[b])) {
-            this[b].forEach((e) => {
-              data.push(e.serialize().data);
-            });
+  // Set all relations
+  var relationships = this.relationships();
+  Object.keys(relationships).forEach((key) => {
+    if (data.relationships && data.relationships[key]) {
+      if (Array.isArray(data.relationships[key].data)) {
+        me[key] = [];
+        data.relationships[key].data.forEach((relation) => {
+          var includedData = included.find((o, i) => {
+            return o.type === relationships[key].type() && o.id === relation.id;
+          });
+          if (includedData === null) {
+            console.log('No included data found for relation ', key);
+          }
+          var model =
+            relationships[key].deserialize(includedData, included);
+          me[key].push(model);
+        });
+      } else if (data.relationships[key].data !== null) {
+        var includedData = included.find((o, i) => {
+          return o.type === relationships[key].type()
+            && o.id === data.relationships[key].data.id;
+        });
+        if (includedData === null) {
+          console.log('No included data found for relation ', key);
+        }
+        me[key] =
+          relationships[key].deserialize(includedData, included);
+      } else {
+        me[key] = null;
+      }
+    }
+  });
+
+  // Handle all computed values
+  var computed = this.computed();
+  Object.entries(computed).forEach((entry) => {
+    const [key, fn] = entry;
+    me[key] = fn(me);
+  });
+
+  return me;
+};
+
+/**
+ * Base Model class
+ */
+class Model {
+  /**
+   * Creates a new model and will set all internal properties.
+   * @param {string} id The id of the model.
+   */
+  constructor(id) {
+    this[TYPE] = this.constructor.type();
+    this.id = id;
+  }
+
+  /**
+   * Default implementation. Returns an empty object.
+   */
+  static fields() {
+    return Object.create(null);
+  }
+
+  /**
+   * Default implementation. Returns an empty object.
+   */
+  static relationships() {
+    return Object.create(null);
+  }
+
+  /**
+   * Default implementation. Returns an empty object.
+   */
+  static computed() {
+    return Object.create(null);
+  }
+
+  /**
+   * Default implementation. Returns an empty array
+   */
+  static namespace() {
+    return [];
+  }
+
+  /**
+   * Class method that will start creating all models from a JSONAPI structure
+   * @param {object|array} data The data of the JSONAPI response
+   * @param {array} included The included data of the JSONAPI response
+   * @return {object|array} An instance of the model or an array with instances.
+   */
+  static deserialize(data, included) {
+    included = included || [];
+    if (Array.isArray(data)) {
+      return data.map(element => createModel.bind(this)(element, included));
+    }
+    return createModel.bind(this)(data, included);
+  }
+
+  /**
+   * Method to serialize a model to a JSONAPI structure.
+   * @return {object} An object which contains a JSONAPI structure.
+   */
+  serialize() {
+    var json = Object.create(null);
+    json.type = this[TYPE];
+    if (this.id) json.id = this.id;
+
+    // Handle all fields
+    json.attributes = Object.create(null);
+    Object.entries(this.constructor.fields()).forEach((entry) => {
+      const [key, attr] = entry;
+      if (!attr.isReadonly()) {
+        if (this[key]) {
+          if (attr instanceof Attribute) {
+            json.attributes[key] = attr.to(this[key]);
           } else {
-            data.push(this[b].serialize().data);
+            json.attributes[key] = this[key];
           }
         }
-      });
-    } else {
-      data = ourData;
-    }
-    let config = {
-      url: this._uri.href(),
-      data: data,
-      method: this.id ? 'PATCH' : 'POST',
-    };
-    let response = await this.request(config);
-    return this.respond(response);
-  }
-
-  async attach(model) {
-    this.reset();
-
-    var url = this._uri.href() + '/' + this.id + '/' + model._type;
-    var method = 'POST';
-    if (model.id) {
-      url += '/' + model.id;
-      method = 'PATCH';
-    }
-
-    let config = {
-      url: url,
-      data: model.serialize(),
-      method: method,
-    };
-    let response = await this.request(config);
-    return this.respond(response);
-  }
-
-  with(resourceName) {
-    var query = this._uri.query(true);
-    if (query.include) {
-      query.include += ',' + resourceName;
-    } else {
-      query.include = resourceName;
-    }
-    this._uri.query(query);
-    return this;
-  }
-
-  async createAll(models) {
-    var data = [];
-    models.forEach((model) => {
-      data.push(model.serialize());
-    });
-    this.reset();
-    let config = {
-      url: this._uri.href(),
-      data: data,
-      method: 'POST',
-    };
-    let response = await this.request(config);
-    return this.respond(response);
-  }
-
-  respond(response) {
-    let json = response.data;
-    if (json) {
-      // Make it easy to lookup included models
-      let included = {};
-      if (json.included) {
-        json.included.forEach((data) => {
-          let includedModel = data;
-          if (!included[includedModel.type]) {
-            included[includedModel.type] = {};
-          }
-          included[includedModel.type][includedModel.id] = includedModel;
-        });
       }
+    });
 
-      var cache = new Cache();
-      let result = null;
-      if (Array.isArray(json.data)) {
-        result = [];
-        json.data.forEach((element) => {
-          var model = cache.getModel(this, element.id, element, included);
-          result.push(model);
+    // Handle all relations
+    var relationships = Object.create(null);
+    Object.keys(this.constructor.relationships()).forEach((relation) => {
+      relationships[relation] = Object.create(null);
+      if (Array.isArray(this[relation])) {
+        relationships[relation].data = this[relation].map((element) => {
+          var relatedObject = Object.create(null);
+          relatedObject.type = element[TYPE];
+          relatedObject.id = element.id;
+          return relatedObject;
         });
       } else {
-        result = cache.getModel(this, json.data.id, json.data, included);
-      }
-      result.meta = function() {
-        return json.meta;
-      };
-      return result;
-    }
-    return null;
-  }
-
-  serialize(opts) {
-    var json = {
-      data: {
-        type: this._type,
-      },
-    };
-
-    if (this.id) json.data.id = this.id;
-
-    json.data.attributes = Object.create(null);
-    this.fields().forEach((field) => {
-      json.data.attributes[field] = this[field];
-    });
-
-    Object.keys(this.dates()).forEach((key) => {
-      var format = this.dates()[key];
-      if (this[key]) {
-        json.data.attributes[key] = this[key].format(format);
+        relationships[relation].data = Object.create(null);
+        relationships[relation].data.type = this[relation][TYPE];
+        relationships[relation].data.id = this[relation].id;
       }
     });
-
-    var relations = Object.create(null);
-    Object.keys(this.relationships()).forEach((relationName) => {
-      if (this[relationName]) {
-        relations[relationName] = Object.create(null);
-        if (Array.isArray(this[relationName])) {
-          var data = [];
-          this[relationName].forEach((model) => {
-            data.push({
-              id: model.id,
-              type: model._type,
-            });
-          });
-          relations[relationName].data = data;
-        } else {
-          data = Object.create(null);
-          data.id = this[relationName].id;
-          data.type = this[relationName]._type;
-          relations[relationName].data = data;
-        }
-      }
-    });
-    if (Object.keys(relations).length > 0) {
-      json.data.relationships = relations;
-    }
+    json.relationships = relationships;
     return json;
   }
 }
+
+export default Model;

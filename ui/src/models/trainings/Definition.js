@@ -1,4 +1,5 @@
-import Model from '../BaseModel';
+import Model from '../Model';
+import { Attribute, DateAttribute } from '../Attribute';
 
 import Season from '../Season';
 import User from '../User';
@@ -6,46 +7,43 @@ import Team from '../Team';
 
 import moment from 'moment';
 
+/**
+ * TrainingDefinition model
+ */
 export default class TrainingDefinition extends Model {
-  resourceName() {
+  static type() {
     return 'definitions';
   }
 
-  namespace() {
-    return 'trainings';
+  static namespaces() {
+    return ['trainings'];
   }
 
-  fields() {
-    return [
-      'name',
-      'description',
-      'weekday',
-      'active',
-      'location',
-      'remark',
-      'time_zone',
-    ];
-  }
-
-  // Times are never stored in UTC. They are stored as localtime.
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
-      start_time: 'HH:mm',
-      end_time: 'HH:mm'
+      name: new Attribute(),
+      description: new Attribute(),
+      weekday: new Attribute(),
+      active: new Attribute(),
+      location: new Attribute(),
+      remark: new Attribute(),
+      start_time: new DateAttribute('HH:mm'),
+      end_time: new DateAttribute('HH:mm'),
+      time_zone: new Attribute(),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      season: new Season(),
-      team: new Team(),
-      user: new User(),
+      season: Season,
+      team: Team,
+      user: User,
     };
   }
 
-  computed() {
+  static computed() {
     return {
       weekdayText(definition) {
         return moment.weekdays(true)[definition.weekday - 1];

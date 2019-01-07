@@ -1,4 +1,5 @@
-import Model from '../BaseModel';
+import Model from '../Model';
+import { Attribute, DateAttribute } from '../Attribute';
 
 import Season from '../Season';
 import User from '../User';
@@ -6,45 +7,43 @@ import Team from '../Team';
 import Definition from './Definition';
 import Coach from './Coach';
 
+/**
+ * Event model
+ */
 export default class TrainingEvent extends Model {
-  resourceName() {
+  static type() {
     return 'events';
   }
 
-  namespace() {
-    return 'trainings';
-  }
-
-  fields() {
-    return [
-      'name',
-      'description',
-      'active',
-      'time_zone',
-      'cancelled',
-      'location',
-      'remark',
-    ];
+  static namespaces() {
+    return ['trainings'];
   }
 
   // Event times are never stored in UTC. They are stored as localtime.
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
-      start_date: 'YYYY-MM-DD',
-      start_time: 'HH:mm',
-      end_time: 'HH:mm'
+      name: new Attribute(),
+      description: new Attribute(),
+      active: new Attribute(),
+      start_date: new DateAttribute('YYYY-MM-DD'),
+      start_time: new DateAttribute('HH:mm'),
+      end_time: new DateAttribute('HH:mm'),
+      time_zone: new Attribute(),
+      cancelled: new Attribute(),
+      location: new Attribute(),
+      remark: new Attribute(),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      season: new Season(),
-      teams: new Team(),
-      coaches: new Coach(),
-      definition: new Definition(),
-      user: new User(),
+      season: Season,
+      teams: Team,
+      coaches: Coach,
+      definition: Definition,
+      user: User,
     };
   }
 }

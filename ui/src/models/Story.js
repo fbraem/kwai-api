@@ -1,41 +1,40 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
 import Category from './Category';
 import Content from './Content';
 import moment from 'moment-timezone';
 
+/**
+ * Story model
+ */
 export default class Story extends Model {
-  resourceName() {
+  static type() {
     return 'stories';
   }
 
-  namespace() {
-    return 'news';
+  static namespace() {
+    return ['news'];
   }
 
-  fields() {
-    return [
-      'enabled',
-      'featured',
-      'featured_end_date_timezone',
-      'publish_date_timezone',
-      'end_date_timezone',
-      'remark',
-      'images',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      publish_date: 'YYYY-MM-DD HH:mm:ss',
-      end_date: 'YYYY-MM-DD HH:mm:ss',
-      featured_end_date: 'YYYY-MM-DD HH:mm:ss',
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      enabled: new Attribute(),
+      featured: new Attribute(),
+      featured_end_date: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
+      featured_end_date_timezone: new Attribute(),
+      publish_date: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
+      publish_date_timezone: new Attribute(),
+      end_date: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
+      end_date_timezone: new Attribute(),
+      remark: new Attribute(),
+      images: new Attribute(true),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  computed() {
+  static computed() {
     return {
       summary(story) {
         if (story.contents) {
@@ -143,10 +142,10 @@ export default class Story extends Model {
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      category: new Category(),
-      contents: new Content(),
+      category: Category,
+      contents: Content,
     };
   }
 }

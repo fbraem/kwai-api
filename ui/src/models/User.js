@@ -1,29 +1,28 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
+/**
+ * User model
+ */
 export default class User extends Model {
-  resourceName() {
+  static type() {
     return 'users';
   }
 
-  fields() {
-    return [
-      'first_name',
-      'last_name',
-      'password',
-      'email',
-      'remark',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      last_login: 'YYYY-MM-DD HH:mm:ss',
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      first_name: new Attribute(),
+      last_name: new Attribute(),
+      password: new Attribute(),
+      email: new Attribute(),
+      remark: new Attribute(),
+      last_login: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
   }
 
-  computed() {
+  static computed() {
     return {
       name(user) {
         return user.first_name + ' ' + user.last_name;

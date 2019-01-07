@@ -1,36 +1,35 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
 import Person from './Person';
 
+/**
+ * Member model
+ */
 export default class Member extends Model {
-  resourceName() {
+  static type() {
     // TODO: sport undependent
     return 'members';
   }
 
-  namespace() {
-    return 'sport/judo';
+  static namespace() {
+    return ['sport', 'judo'];
   }
 
-  fields() {
-    return [
-      'competition',
-      'remark',
-      'license',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      license_date: 'YYYY-MM-DD',
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      competition: new Attribute(),
+      remark: new Attribute(),
+      license: new Attribute(),
+      license_date: new DateAttribute('YYYY-MM-DD'),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      person: new Person(),
+      person: Person,
     };
   }
 }

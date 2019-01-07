@@ -1,22 +1,21 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
+/**
+ * Country model
+ */
 export default class Country extends Model {
-  resourceName() {
+  static type() {
     return 'countries';
   }
 
-  fields() {
-    return [
-      'name',
-      'iso_2',
-      'iso_3',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      name: new Attribute(),
+      iso_2: new Attribute(),
+      iso_3: new Attribute(),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 }

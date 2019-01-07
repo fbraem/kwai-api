@@ -1,41 +1,40 @@
-import Model from '../BaseModel';
+import Model from '../Model';
+import { Attribute, DateAttribute } from '../Attribute';
 
 import User from '../User';
 import Member from '../Member';
 
+/**
+ * Coaches model
+ */
 export default class TrainingCoach extends Model {
-  resourceName() {
+  static type() {
     return 'coaches';
   }
 
-  namespace() {
-    return 'trainings';
+  static namespaces() {
+    return ['trainings'];
   }
 
-  fields() {
-    return [
-      'description',
-      'diploma',
-      'active',
-      'remark',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      description: new Attribute(),
+      diploma: new Attribute(),
+      active: new Attribute(),
+      remark: new Attribute(),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
-      member: new Member(),
-      user: new User(),
+      member: Member,
+      user: User,
     };
   }
 
-  computed() {
+  static computed() {
     return {
       name(coach) {
         if (coach.member && coach.member.person) {

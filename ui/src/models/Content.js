@@ -1,30 +1,29 @@
-import Model from './BaseModel';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
+/**
+ * Content model
+ */
 export default class Content extends Model {
-  resourceName() {
+  static type() {
     return 'contents';
   }
 
-  fields() {
-    return [
-      'locale',
-      'format',
-      'title',
-      'content',
-      'html_content',
-      'summary',
-      'html_summary',
-    ];
-  }
-
-  dates() {
+  static fields() {
     return {
-      created_at: 'YYYY-MM-DD HH:mm:ss',
-      updated_at: 'YYYY-MM-DD HH:mm:ss',
+      locale: new Attribute(),
+      format: new Attribute(),
+      title: new Attribute(),
+      content: new Attribute(),
+      html_content: new Attribute(true),
+      summary: new Attribute(),
+      html_summary: new Attribute(true),
+      created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
   }
 
-  relationships() {
+  static relationships() {
     return {
       // TODO:
       // 'user' : new User()
