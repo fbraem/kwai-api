@@ -21,6 +21,13 @@
                 "objects" : "only-multiline",
                 "arrays" : "always-multiline"
             }
+        ],
+        "indent" : [
+            "error",
+            2,
+            {
+                "ignoreComments" : true
+            }
         ]
     }
 }
