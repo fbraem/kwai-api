@@ -4,17 +4,29 @@
     "category" : "Category",
     "create" : "Create a new category",
     "update" : "Edit a category",
-    "name_placeholder" : "Enter a name",
-    "name" : "Name",
-    "description_placeholder" : "Enter a description",
-    "description" : "Description",
-    "remark_placeholder" : "Enter a remark",
-    "remark" : "Remark",
     "save" : "Save",
     "featured_news" : "Featured News",
     "no_featured_news" : "No featured news at the moment",
     "more_news" : "More news ...",
-    "short_description" : "Short Description",
-    "short_description_placeholder" : "Enter a short description",
-    "overview" : "Overview"
+    "overview" : "Overview",
+    "form" : {
+        "name" : {
+            "label" : "Name",
+            "placeholder" : "Enter a name",
+            "required" : "A name is required"
+        },
+        "description" : {
+            "label" : "Description",
+            "placeholder" : "Enter a description"
+        },
+        "remark" : {
+            "label" : "Remark",
+            "placeholder" : "Enter a remark"
+        },
+        "short_description" : {
+            "label" : "Short Description",
+            "placeholder" : "Enter a short description",
+            "required" : "A short description is required"
+        }
+    }
 }

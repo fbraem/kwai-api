@@ -3,9 +3,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import Season from '@/models/Season';
 
 const state = {
+  meta: null,
   seasons: null,
   error: null,
 };
@@ -38,20 +40,21 @@ const getters = {
 };
 
 const mutations = {
-  seasons(state, seasons) {
+  seasons(state, {meta, data}) {
     state.error = null;
-    state.seasons = seasons;
+    state.seasons = data;
+    state.meta = meta;
   },
-  season(state, season) {
+  season(state, { data }) {
     state.error = null;
     if (state.seasons == null) {
       state.seasons = [];
     }
-    var index = state.seasons.findIndex((s) => s.id === season.id);
+    var index = state.seasons.findIndex((s) => s.id === data.id);
     if (index !== -1) {
-      Vue.set(state.seasons, index, season);
+      Vue.set(state.seasons, index, data);
     } else {
-      state.seasons.push(season);
+      state.seasons.push(data);
     }
   },
   error(state, error) {
@@ -62,10 +65,9 @@ const mutations = {
 const actions = {
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'seasons.browse', { root: true });
-    const season = new Season();
     try {
-      let seasons = await season.get();
-      commit('seasons', seasons);
+      var api = new JSONAPI({ source: Season });
+      commit('seasons', await api.get());
       dispatch('wait/end', 'seasons.browse', { root: true });
     } catch (error) {
       commit('error', error);
@@ -74,11 +76,11 @@ const actions = {
     }
   },
   async save({ commit }, season) {
-    var newSeason = null;
     try {
-      newSeason = await season.save();
-      commit('season', newSeason);
-      return newSeason;
+      var api = new JSONAPI({ source: Season });
+      var result = await api.save(season);
+      commit('season', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
@@ -91,17 +93,17 @@ const actions = {
     }
 
     dispatch('wait/start', 'seasons.read', { root: true });
-    let model = new Season();
     try {
-      season = await model.find(payload.id);
-      commit('season', season);
+      var api = new JSONAPI({ source: Season });
+      var result = await api.get(payload.id);
+      commit('season', result);
       dispatch('wait/end', 'seasons.read', { root: true });
+      return result.data;
     } catch (error) {
       commit('error', error);
       dispatch('wait/end', 'seasons.read', { root: true });
       throw error;
     }
-    return season;
   },
 };
 

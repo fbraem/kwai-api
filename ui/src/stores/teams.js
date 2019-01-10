@@ -3,9 +3,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import Team from '@/models/Team';
 
 const state = {
+  meta: null,
   teams: [],
   availableMembers: [],
   error: null,
@@ -48,16 +50,17 @@ const getters = {
 };
 
 const mutations = {
-  teams(state, teams) {
-    state.teams = teams;
+  teams(state, { meta, data }) {
+    state.teams = data;
     state.error = null;
+    state.meta = meta;
   },
-  team(state, team) {
-    var index = state.teams.findIndex((t) => t.id === team.id);
+  team(state, { data }) {
+    var index = state.teams.findIndex((t) => t.id === data.id);
     if (index !== -1) {
-      Vue.set(state.teams, index, team);
+      Vue.set(state.teams, index, data);
     } else {
-      state.teams.push(team);
+      state.teams.push(data);
     }
     state.error = null;
   },
@@ -80,10 +83,10 @@ const mutations = {
 const actions = {
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'teams.browse', { root: true });
-    const team = new Team();
     try {
-      let teams = await team.get();
-      commit('teams', teams);
+      var api = new JSONAPI({ source: Team });
+      let result = await api.get();
+      commit('teams', result);
       dispatch('wait/end', 'teams.browse', { root: true });
     } catch (error) {
       commit('error', error);
@@ -92,11 +95,11 @@ const actions = {
     }
   },
   async save({ dispatch, commit }, team) {
-    var newTeam = null;
     try {
-      newTeam = await team.save();
-      commit('team', newTeam);
-      return newTeam;
+      var api = new JSONAPI({ source: Team });
+      var result = await api.save(team);
+      commit('team', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
@@ -109,24 +112,24 @@ const actions = {
     }
 
     dispatch('wait/start', 'teams.read', { root: true });
-    let model = new Team();
     try {
-      team = await model.find(payload.id);
-      commit('team', team);
+      var api = new JSONAPI({ source: Team });
+      var result = await api.get(payload.id);
+      commit('team', result);
       dispatch('wait/end', 'teams.read', { root: true });
+      return result.data;
     } catch (error) {
       commit('error', error);
       dispatch('wait/end', 'teams.read', { root: true });
       throw error;
     }
-    return team;
   },
   async members({ dispatch, commit }, payload) {
     dispatch('wait/start', 'teams.members', { root: true });
-    var team = new Team();
     try {
-      const teamWithMembers = await team.with(['members']).find(payload.id);
-      commit('team', teamWithMembers);
+      const api = new JSONAPI({ source: Team });
+      const result = await api.with(['members']).get(payload.id);
+      commit('team', result);
       dispatch('wait/end', 'teams.members', { root: true });
     } catch (error) {
       commit('error', error);

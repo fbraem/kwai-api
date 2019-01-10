@@ -4,17 +4,30 @@
     "category" : "Categorie",
     "create" : "Maak een nieuwe categorie",
     "update" : "Wijzig een categorie",
-    "name_placeholder" : "Geef een naam in",
     "name" : "Naam",
-    "description_placeholder" : "Geef een omschrijving in",
-    "description" : "Omschrijving",
-    "remark_placeholder" : "Geef een opmerking in",
-    "remark" : "Opmerking",
     "save" : "Bewaar",
     "featured_news" : "Nieuws in de kijker",
     "no_featured_news" : "Geen nieuws in de kijker momenteel ...",
     "more_news" : "Meer nieuws ...",
-    "short_description" : "Korte Omschrijving",
-    "short_description_placeholder" : "Geef een korte omschrijving in",
-    "overview" : "Overzicht"
+    "overview" : "Overzicht",
+    "form" : {
+        "name" : {
+            "label" : "Naam",
+            "placeholder" : "Geef een naam in",
+            "required" : "Naam is verplicht in te vullen"
+        },
+        "description" : {
+            "label" : "Omschrijving",
+            "placeholder" : "Geef een omschrijving in"
+        },
+        "remark" : {
+            "label" : "Opmerking",
+            "placeholder" : "Geef een opmerking in"
+        },
+        "short_description" : {
+            "label" : "Kort Omschrijving",
+            "placeholder" : "Geef een korte omschrijving in",
+            "required" : "Korte omschrijving is verplicht in te vullen"
+        }
+    }
 }

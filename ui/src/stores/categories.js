@@ -3,108 +3,90 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import Category from '@/models/Category';
 
 const state = {
-  categories: [],
-  status: {
-    loading: false,
-    success: false,
-    error: false,
-  },
+  meta: null,
+  categories: null,
+  error: null
 };
 
 const getters = {
-  categories(state) {
-    return state.categories;
-  },
   category: (state) => (id) => {
-    return state.categories.find((category) => category.id === id);
-  },
-  loading(state) {
-    return state.status.loading;
-  },
-  success(state) {
-    return state.status.success;
-  },
-  error(state) {
-    return state.status.error;
+    if (state.categories) {
+      return state.categories.find((category) => category.id === id);
+    }
+    return null;
   },
 };
 
 const mutations = {
-  categories(state, categories) {
-    state.categories = categories;
+  categories(state, { meta, data }) {
+    state.meta = meta;
+    state.categories = data;
+    state.error = null;
   },
-  category(state, category) {
-    var index = state.categories.findIndex((c) => c.id === category.id);
+  category(state, { data }) {
+    if (!state.categories) state.categories = [];
+    var index = state.categories.findIndex((c) => c.id === data.id);
     if (index !== -1) {
-      Vue.set(state.categories, index, category);
+      Vue.set(state.categories, index, data);
     } else {
-      state.categories.push(category);
+      state.categories.push(data);
     }
+    state.error = null;
   },
   deleteCategory(state, category) {
     state.categories = state.categories.filter((c) => {
       return category.id !== c.id;
     });
+    state.error = null;
   },
-  loading(state) {
-    state.status = {
-      loading: true,
-      success: false,
-      error: false,
-    };
-  },
-  success(state) {
-    state.status = {
-      loading: false,
-      success: true,
-      error: false,
-    };
-  },
-  error(state, payload) {
-    state.status = {
-      loading: false,
-      success: false,
-      error: payload,
-    };
+  error(state, error) {
+    state.error = error;
   },
 };
 
 const actions = {
-  async browse({ state, getters, commit, context }, payload) {
-    commit('loading');
-    const category = new Category();
-    let categories = await category.get();
-    commit('categories', categories);
-    commit('success');
+  async browse({ dispatch, commit }, payload) {
+    dispatch('wait/start', 'categories.browse', { root: true });
+    try {
+      var api = new JSONAPI({ source: Category });
+      commit('categories', await api.get());
+      dispatch('wait/end', 'categories.browse', { root: true });
+    } catch (error) {
+      commit('error', error);
+      dispatch('wait/end', 'categories.browse', { root: true });
+      throw error;
+    }
   },
-  async read({ state, getters, commit, context }, payload) {
-    commit('loading');
+  async read({ dispatch, getters, commit }, payload) {
+    dispatch('wait/start', 'categories.read', { root: true });
     var category = getters['category'](payload.id);
     if (category) { // already read
-      commit('success');
       return category;
     }
 
-    let model = new Category();
+    dispatch('wait/start', 'categories.read', { root: true });
     try {
-      category = await model.find(payload.id);
-      commit('category', category);
-      commit('success');
+      var api = new JSONAPI({ source: Category });
+      var result = await api.get(payload.id);
+      commit('category', result);
+      dispatch('wait/end', 'categories.read', { root: true });
+      return result.data;
     } catch (error) {
-      console.log(error);
       commit('error', error);
+      dispatch('wait/end', 'categories.read', { root: true });
+      throw error;
     }
-    return category;
   },
-  async save({ state, getters, commit, context }, category) {
-    var newCategory = null;
+  async save({ commit }, category) {
     try {
-      newCategory = await category.save();
-      commit('category', newCategory);
-      return newCategory;
+      var api = new JSONAPI({ source: Category });
+      var result = await api.save(category);
+      commit('category', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
