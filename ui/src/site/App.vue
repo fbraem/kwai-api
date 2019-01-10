@@ -233,7 +233,7 @@
                 return this.$store.getters['newsModule/meta'];
             },
             categories() {
-                return this.$store.getters['categoryModule/categories'];
+                return this.$store.state.categoryModule.categories;
             }
         },
         beforeCreate() {
