@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  props: [ 'name' ],
+  props: [ 'name', 'label' ],
   inject: {
     form: 'form'
   },
@@ -24,10 +24,7 @@ export default {
       return this.form[this.name];
     },
     hasLabel() {
-      return this.field.label && this.field.label.length > 0;
-    },
-    label() {
-      return this.field.label;
+      return this.label && this.label.length > 0;
     },
     fieldErrors() {
       return this.field.errors;
