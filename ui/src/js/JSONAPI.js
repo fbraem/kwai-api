@@ -102,7 +102,9 @@ class JSONAPI {
     const config = {
       method: model.id ? 'PATCH' : 'POST',
       url: uri.href(),
-      data: data
+      data: {
+        data: data
+      }
     };
     let response = await this.request(config);
     return {
