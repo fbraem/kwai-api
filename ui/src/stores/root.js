@@ -9,47 +9,49 @@ import OAuth from '@/js/oauth';
 const oauth = new OAuth();
 
 const state = {
-  user: {
-    authenticated: oauth.isAuthenticated(),
-  },
-  page: {
-    title: config.title,
-    facebook: config.facebook,
-    subTitle: '',
-  },
-  error: null,
+  global: {
+    user: {
+      authenticated: oauth.isAuthenticated(),
+    },
+    page: {
+      title: config.title,
+      facebook: config.facebook,
+      subTitle: '',
+    },
+    error: null
+  }
 };
 
 const getters = {
   user(state) {
-    return state.user;
+    return state.global.user;
   },
   title(state) {
-    return state.page.title;
+    return state.global.page.title;
   },
   subTitle(state) {
-    return state.page.subTitle;
+    return state.global.page.subTitle;
   },
   facebook(state) {
-    return state.page.facebook;
+    return state.global.page.facebook;
   },
   error(state) {
-    return state.error;
+    return state.global.error;
   },
 };
 
 const mutations = {
   authenticated(state, sw) {
-    state.user.authenticated = sw;
+    state.global.user.authenticated = sw;
   },
   title(state, text) {
-    state.page.title = text;
+    state.global.page.title = text;
   },
   subTitle(state, text) {
-    state.page.subTitle = text;
+    state.global.page.subTitle = text;
   },
   error(state, payload) {
-    state.error = payload;
+    state.global.error = payload;
   },
 };
 
