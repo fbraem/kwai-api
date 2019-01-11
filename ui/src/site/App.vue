@@ -66,7 +66,7 @@
                         </Card>
                     </div>
                     <div>
-                        <CategoryList :categories="categories" />
+                        <CategoryList v-if="categories" :categories="categories" />
                     </div>
                 </div>
             </div>
@@ -233,7 +233,7 @@
                 return this.$store.getters['newsModule/meta'];
             },
             categories() {
-                return this.$store.state.categoryModule.categories;
+                return this.$store.state.category.categories;
             }
         },
         beforeCreate() {
@@ -241,13 +241,13 @@
                 this.$store.registerModule('newsModule', newsStore);
             }
             if (!this.$store.state.categoryModule) {
-                this.$store.registerModule('categoryModule', categoryStore);
+                this.$store.registerModule('category', categoryStore);
             }
         },
         created() {
             this.$store.dispatch('setSubTitle', '');
             this.loadStories(0);
-            this.$store.dispatch('categoryModule/browse');
+            this.$store.dispatch('category/browse');
         },
         methods : {
             async loadStories(offset) {
