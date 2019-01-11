@@ -115,7 +115,7 @@ export default {
         news: newsStore
       },
       {
-        pageModule: pageStore
+        page: pageStore
       }
     ),
   ],
@@ -137,7 +137,7 @@ export default {
       return 0;
     },
     pages() {
-      return this.$store.getters['pageModule/pages'];
+      return this.$store.getters['page/pages'];
     },
     pageCount() {
       if (this.pages) return this.pages.length;
