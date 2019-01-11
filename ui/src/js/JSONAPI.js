@@ -51,6 +51,32 @@ class JSONAPI {
   }
 
   /**
+   * Add a filter
+   * @param {string} filter The name of the field to filter
+   * @param {*} value The value used to filter
+   */
+  where(filter, value) {
+    var query = this.uri.query(true);
+    query['filter[' + filter + ']'] = value;
+    this.uri.query(query);
+    return this;
+  }
+
+  /**
+   * Add a page filter
+   * @param {object} page
+   * @param {int} page.offset The page offset.
+   * @param {int} page.limit The max. number of records to return.
+   */
+  paginate({ offset = 0, limit = 10 }) {
+    var query = this.uri.query(true);
+    query['page[offset]'] = offset;
+    query['page[limit]'] = limit;
+    this.uri.query(query);
+    return this;
+  }
+
+  /**
   * @typedef {Object} Data
   * @property {object} meta The meta information of the request.
   * @property {object|array} data The returned data as object or array.
