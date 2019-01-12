@@ -19,6 +19,18 @@ const getters = {
     }
     return null;
   },
+  categoriesAsOptions(state) {
+    var categories = state.categories;
+    if (categories) {
+      categories = categories.map((category) => ({
+        value: category.id,
+        text: category.name }
+      ));
+    } else {
+      categories = [];
+    }
+    return categories;
+  },
 };
 
 const mutations = {
