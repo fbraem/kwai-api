@@ -37,9 +37,8 @@ class CreateStoryAction
                 'data.attributes.featured' => v::digit(),
                 'data.attributes.featured_end_date' => [ v::date('Y-m-d'), true ],
                 'data.attributes.publish_date' => v::date('Y-m-d'),
-                'data.attributes.publish_date_timezone' => v::notEmpty()->length(1, 255),
+                'data.attributes.timezone' => v::notEmpty()->length(1, 255),
                 'data.attributes.end_date' => [ v::date('Y-m-d'), true ],
-                'data.attributes.end_timezone' => [ v::notEmpty()->length(1, 255), true ],
                 'data.attributes.enabled' => v::boolType()
             ]))->validate($data);
 
@@ -52,12 +51,10 @@ class CreateStoryAction
             $story = $storiesTable->newEntity();
             $story->category = $category;
             $story->publish_date = $attributes['publish_date'];
-            $story->publish_date_timezone = $attributes['publish_date_timezone'] ?? null;
+            $story->timezone = $attributes['timezone'] ?? null;
             $story->end_date = $attributes['end_date'] ?? null;
-            $story->end_date_timezone = $attributes['end_date_timezone'] ?? null;
             $story->featured = $attributes['featured'] ?? 0;
             $story->featured_end_date = $attributes['featured_end_date'] ?? null;
-            $story->featered_end_date_timezone = $attributes['featured_end_date_timezone'] ?? null;
             $story->enabled = $attributes['enabled'];
             $story->remark = $attributes['remark'] ?? null;
 

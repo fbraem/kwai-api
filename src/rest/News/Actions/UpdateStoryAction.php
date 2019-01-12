@@ -51,9 +51,8 @@ class UpdateStoryAction
                 'data.attributes.featured' => v::digit(),
                 'data.attributes.featured_end_date' => v::date('Y-m-d'),
                 'data.attributes.publish_date' => v::date('Y-m-d'),
-                'data.attributes.publish_date_timezone' => v::notEmpty()->length(1, 255),
+                'data.attributes.timezone' => v::notEmpty()->length(1, 255),
                 'data.attributes.end_date' => v::date('Y-m-d'),
-                'data.attributes.end_timezone' => v::notEmpty()->length(1, 255),
                 'data.attributes.enabled' => v::boolType()
             ], true))->validate($data);
 
@@ -79,14 +78,8 @@ class UpdateStoryAction
             if (isset($attributes['enabled'])) {
                 $story->enabled = $attributes['enabled'];
             }
-            if (isset($attributes['publish_date_timezone'])) {
-                $story->publish_date_timezone = $attributes['publish_date_timezone'];
-            }
-            if (isset($attributes['end_date_timezone'])) {
-                $story->end_date_timezone = $attributes['end_date_timezone'];
-            }
-            if (isset($attributes['featured_date_timezone'])) {
-                $story->featured_date_timezone = $attributes['featured_date_timezone'];
+            if (isset($attributes['timezone'])) {
+                $story->timezone = $attributes['timezone'];
             }
             if (isset($attributes['remark'])) {
                 $story->remark = $attributes['remark'];
