@@ -35,10 +35,10 @@ class CreateStoryAction
         try {
             (new InputValidator([
                 'data.attributes.featured' => v::digit(),
-                'data.attributes.featured_end_date' => [ v::date('Y-m-d'), true ],
-                'data.attributes.publish_date' => v::date('Y-m-d'),
+                'data.attributes.featured_end_date' => [ v::date('Y-m-d H:i:s'), true ],
+                'data.attributes.publish_date' => v::date('Y-m-d H:i:s'),
                 'data.attributes.timezone' => v::notEmpty()->length(1, 255),
-                'data.attributes.end_date' => [ v::date('Y-m-d'), true ],
+                'data.attributes.end_date' => [ v::date('Y-m-d H:i:s'), true ],
                 'data.attributes.enabled' => v::boolType()
             ]))->validate($data);
 

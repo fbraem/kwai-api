@@ -49,10 +49,10 @@ class UpdateStoryAction
         try {
             (new InputValidator([
                 'data.attributes.featured' => v::digit(),
-                'data.attributes.featured_end_date' => v::date('Y-m-d'),
-                'data.attributes.publish_date' => v::date('Y-m-d'),
+                'data.attributes.featured_end_date' => v::date('Y-m-d H:i:s'),
+                'data.attributes.publish_date' => v::date('Y-m-d H:i:s'),
                 'data.attributes.timezone' => v::notEmpty()->length(1, 255),
-                'data.attributes.end_date' => v::date('Y-m-d'),
+                'data.attributes.end_date' => v::date('Y-m-d H:i:s'),
                 'data.attributes.enabled' => v::boolType()
             ], true))->validate($data);
 
