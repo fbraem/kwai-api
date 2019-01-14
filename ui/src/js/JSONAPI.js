@@ -140,6 +140,41 @@ class JSONAPI {
   }
 
   /**
+   * Saves a relation of a model. The model needs an id.
+   * @param {Model} model The model with the relationship
+   * @param {Model} relation The related model
+   */
+  async attach(model, relation) {
+    var uri = this.uri.clone();
+    var segments = uri.segment();
+    segments.push(this.source.type());
+    if (!model.id) throw new Error('Model needs an id!');
+
+    segments.push(model.id);
+    segments.push(relation.constructor.type());
+    if (relation.id) {
+      segments.push(relation.id);
+    }
+    uri.segment(segments);
+
+    var data = Array.isArray(relation) ?
+      relation.map(element => element.serialize()) : relation.serialize();
+
+    const config = {
+      method: relation.id ? 'PATCH' : 'POST',
+      url: uri.href(),
+      data: {
+        data: data
+      }
+    };
+    let response = await this.request(config);
+    return {
+      meta: response.data.meta,
+      data: this.target.deserialize(response.data.data, response.data.included)
+    };
+  }
+
+  /**
    * Sends the request
    * @private
    * @param {object} config The axios configuration object.
