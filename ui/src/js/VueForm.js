@@ -9,10 +9,12 @@ export function notEmpty(value) {
 
 import moment from 'moment';
 export function isTime(value) {
-  return moment(value, 'HH:mm', true).isValid();
+  if (value) return moment(value, 'HH:mm', true).isValid();
+  return true;
 };
 export function isDate(value) {
-  return moment(value, 'L', true).isValid();
+  if (value) return moment(value, 'L', true).isValid();
+  return true;
 };
 
 export default {
@@ -99,7 +101,9 @@ export default {
       errors.forEach((item, index) => {
         if (item.source && item.source.pointer) {
           var attr = item.source.pointer.split('/').pop();
-          this.form[attr].errors.push(item.title);
+          if (this.form[attr]) {
+            this.form[attr].errors.push(item.title);
+          }
         }
       });
     },
