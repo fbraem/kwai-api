@@ -7,32 +7,73 @@
     "archive_title" : "Archive of {monthName} {year}",
     "no_news" : "There are no newsstories",
     "create" : "Write a newsstory",
-    "story_details" : "Newsstory",
-    "title" : "Title",
-    "title_placeholder" : "Enter a title",
-    "summary" : "Summary",
-    "summary_placeholder" : "Enter a summary",
+    "story" : "Newsstory",
     "content" : "Content",
-    "content_placeholder" : "Enter the content",
-    "remark" : "Remark",
-    "remark_placeholder" : "Enter a remark",
-    "publication" : "Publication",
-    "enabled" : "Enabled",
-    "publish_date" : "Publication Date",
-    "publish_date_placeholder" : "Enter the publication date {format}",
-    "publish_time" : "Publication Time",
-    "publish_time_placeholder" : "Enter the publication time {format}",
-    "end_date" : "End Date",
-    "end_date_placeholder" : "Enter the end date {format}",
-    "end_time" : "End Time",
-    "end_time_placeholder" : "Enter the end time {format}",
     "featured" : "Featured",
-    "featured_priority" : "Priority",
     "featured_hint" : "A featured story can be selected to show on the front page for example. A story is featured when the priority is greater then 0.",
-    "featured_end_date" : "Featured End Date",
-    "featured_end_date_placeholder" : "Enter the end date of the period {format}",
-    "featured_end_time" : "Featured End Time",
-    "featured_end_time_placeholder" : "Enter the end time of the period {format}",
+    "form" : {
+        "content" : {
+            "title" : {
+                "label" : "Title",
+                "placeholder" : "Enter a title",
+                "required" : "Title is required"
+            },
+            "summary" : {
+                "label" : "Summary",
+                "placeholder" : "Enter a summary",
+                "required" : "Summary is required"
+            },
+            "content" : {
+                "label" : "Content",
+                "placeholder" : "Enter the content"
+            }
+        },
+        "story" : {
+            "remark" : {
+                "label": "Remark",
+                "placeholder" : "Enter a remark"
+            },
+            "enabled" : {
+                "label" : "Active"
+            },
+            "category" : {
+                "label" : "Category"
+            },
+            "publish_date" : {
+                "label": "Publish Date",
+                "placeholder" : "Enter a date in {format}",
+                "invalid" : "Invalid date. The format is {format}."
+            },
+            "publish_time" : {
+                "label": "Publish Time",
+                "placeholder" : "Enter a time in {format}",
+                "invalid" : "Invalid time. The format is {format}."
+            },
+            "end_date" : {
+                "label": "Enddate",
+                "placeholder" : "Enter a date in {format}",
+                "invalid" : "Invalid date. The format is {format}."
+            },
+            "end_time" : {
+                "label": "Eindtime",
+                "placeholder" : "Enter a time in {format}",
+                "invalid" : "Invalid time. The format is {format}."
+            },
+            "featured_priority" : {
+                "label": "Priority"
+            },
+            "featured_end_date" : {
+                "label" : "Featured Enddate",
+                "placeholder" : "Enter a date in {format}",
+                "invalid" : "Invalid date. The format is {format}."
+            },
+            "featured_end_time" : {
+                "label": "Featured Endtime",
+                "placeholder" : "Enter a time in {format}",
+                "invalid" : "Invalid time. The format is {format}."
+            }
+        }
+    },
     "save" : "Save",
     "update" : "Update",
     "required" : "This is a required field.",

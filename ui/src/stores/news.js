@@ -3,6 +3,7 @@ import config from 'config';
 
 import OAuth from '@/js/oauth';
 const oauth = new OAuth();
+import JSONAPI from '@/js/JSONAPI';
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
@@ -19,22 +20,10 @@ const state = {
 };
 
 const getters = {
-  stories(state) {
-    return state.stories;
-  },
   story: (state) => (id) => {
     if (state.stories == null) return null;
     return state.stories.find((story) => story.id === id);
-  },
-  error(state) {
-    return state.error;
-  },
-  archive(state) {
-    return state.archive;
-  },
-  meta(state) {
-    return state.meta;
-  },
+  }
 };
 
 const mutations = {
@@ -43,20 +32,20 @@ const mutations = {
     state.stories = null;
     state.error = null;
   },
-  stories(state, stories) {
-    state.meta = stories.meta();
-    state.stories = stories;
+  stories(state, { meta, data }) {
+    state.meta = meta;
+    state.stories = data;
     state.error = null;
   },
-  story(state, story) {
+  story(state, { data }) {
     if (state.stories == null) {
       state.stories = [];
     }
-    var index = state.stories.findIndex((s) => s.id === story.id);
+    var index = state.stories.findIndex((s) => s.id === data.id);
     if (index !== -1) {
-      Vue.set(state.stories, index, story);
+      Vue.set(state.stories, index, data);
     } else {
-      state.stories.push(story);
+      state.stories.push(data);
     }
     state.error = null;
   },
@@ -64,16 +53,6 @@ const mutations = {
     state.stories = state.stories.filter((s) => {
       return s.id !== story.id;
     });
-  },
-  attachContent(state, data) {
-    var index = state.stories.findIndex((s) => s.id === data.story.id);
-    if (index !== -1) {
-      if (state.stories[index].contents == null) {
-        state.stories[index].contents = [];
-      }
-      state.stories[index].contents.push(data.content);
-    }
-    state.error = null;
   },
   archive(state, data) {
     state.archive = {};
@@ -96,33 +75,39 @@ const mutations = {
 };
 
 const actions = {
+  /**
+   * Get all news stories
+   */
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'news.browse', { root: true });
     commit('clear');
+    var api = new JSONAPI({ source: Story });
     payload = payload || {};
-    const story = new Story();
     if (payload.category) {
-      story.where('category', payload.category);
+      api.where('category', payload.category);
     }
     if (payload.year) {
-      story.where('year', payload.year);
+      api.where('year', payload.year);
     }
     if (payload.month) {
-      story.where('month', payload.month);
+      api.where('month', payload.month);
     }
     if (payload.featured) {
-      story.where('featured', true);
+      api.where('featured', true);
     }
     if (payload.user) {
-      story.where('user', payload.user);
+      api.where('user', payload.user);
     }
     if (payload.offset || payload.limit) {
-      story.paginate(payload.offset, payload.limit);
+      api.paginate(payload);
     }
-    let stories = await story.get();
-    commit('stories', stories);
+    let result = await api.get();
+    commit('stories', result);
     dispatch('wait/end', 'news.browse', { root: true });
   },
+  /**
+   * Read a new story.
+   */
   async read({ getters, dispatch, commit }, payload) {
     var story = getters['story'](payload.id);
     if (story) { // already read
@@ -130,33 +115,34 @@ const actions = {
     }
 
     dispatch('wait/start', 'news.read', { root: true });
-    let model = new Story();
+    var api = new JSONAPI({ source: Story });
     try {
-      story = await model.find(payload.id);
-      commit('story', story);
+      var result = await api.get(payload.id);
+      commit('story', result);
       dispatch('wait/end', 'news.read', { root: true });
+      return result.data;
     } catch (error) {
       dispatch('wait/end', 'news.read', { root: true });
       commit('error', error);
     }
-    return story;
   },
   async save({ commit }, story) {
-    var newStory = null;
     try {
-      newStory = await story.save();
-      commit('story', newStory);
-      return newStory;
+      var api = new JSONAPI({ source: Story });
+      var result = await api.save(story);
+      commit('story', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
     }
   },
-  async attachContent({ commit }, payload) {
+  async saveContent({ commit }, payload) {
     try {
-      var newStory = await payload.story.attach(payload.content);
-      commit('story', newStory);
-      return newStory;
+      var api = new JSONAPI({ source: Story });
+      var result = await api.attach(payload.story, payload.content);
+      commit('story', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw (error);

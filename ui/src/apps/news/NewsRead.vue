@@ -1,67 +1,72 @@
 <template>
-    <div>
-        <PageHeader v-if="story" :picture="story.detail_picture">
-            <div uk-grid>
-                <div class="uk-width-expand">
-                    <div class="uk-card uk-card-body">
-                        <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
-                            <router-link :to="{ name : 'news.category', params : { category : story.category.id }}" class="uk-link-reset">
-                                {{ story.category.name }}
-                            </router-link>
-                        </div>
-                        <div class="uk-light">
-                            <h1 class="uk-margin-remove">{{ $t('news')}}</h1>
-                            <h2 class="uk-margin-remove">{{ story.title }}</h2>
-                            <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="uk-width-1-1 uk-width-1-6@m">
-                    <div class="uk-flex uk-flex-right">
-                        <div v-if="$story.isAllowed('update', story)" class="uk-margin-small-left">
-                            <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button uk-link-reset">
-                                <i class="fas fa-edit"></i>
-                            </router-link>
-                        </div>
-                        <div v-if="$story.isAllowed('remove', story)" class="uk-margin-small-left">
-                            <a uk-toggle="target: #delete-story" class="uk-icon-button uk-link-reset">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+  <!-- eslint-disable max-len -->
+  <div>
+    <PageHeader v-if="story" :picture="story.detail_picture">
+      <div uk-grid>
+        <div class="uk-width-expand">
+          <div class="uk-card uk-card-body">
+            <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
+              <router-link :to="{ name : 'news.category', params : { category : story.category.id }}" class="uk-link-reset">
+                {{ story.category.name }}
+              </router-link>
             </div>
-        </PageHeader>
-        <Page>
-            <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
-                <div class="uk-text-center">
-                    <i class="fas fa-spinner fa-2x fa-spin"></i>
-                </div>
+            <div class="uk-light">
+              <h1 class="uk-margin-remove">{{ $t('news')}}</h1>
+              <h2 class="uk-margin-remove">{{ story.title }}</h2>
+              <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
             </div>
-            <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
-                <div uk-grid class="uk-margin">
-                    <div class="uk-width-expand">
-                        <blockquote>
-                            <div v-html="story.summary"></div>
-                        </blockquote>
-                    </div>
-                    <div class="uk-width-1-1@s uk-width-auto@m">
-                        <div class="uk-flex uk-flex-right">
-                            <vue-goodshare-facebook
-                                :page_url="facebookUrl"
-                                has_icon>
-                            </vue-goodshare-facebook>
-                        </div>
-                    </div>
-                </div>
-                <div class="news-content" v-html="story.content">
-                </div>
-                <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
-                    {{ $t('are_you_sure') }}
-                </AreYouSure>
-            </article>
-        </Page>
-    </div>
+          </div>
+        </div>
+        <div class="uk-width-1-1 uk-width-1-6@m">
+          <div class="uk-flex uk-flex-right">
+            <div v-if="$story.isAllowed('update', story)" class="uk-margin-small-left">
+              <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button uk-link-reset">
+                <i class="fas fa-edit"></i>
+              </router-link>
+            </div>
+            <div v-if="$story.isAllowed('remove', story)" class="uk-margin-small-left">
+              <a uk-toggle="target: #delete-story" class="uk-icon-button uk-link-reset">
+                <i class="fas fa-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PageHeader>
+    <Page>
+      <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
+        <div class="uk-text-center">
+          <i class="fas fa-spinner fa-2x fa-spin"></i>
+        </div>
+      </div>
+      <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
+        <div uk-grid class="uk-margin">
+          <div class="uk-width-expand">
+            <blockquote>
+              <div v-html="story.summary"></div>
+            </blockquote>
+          </div>
+        </div>
+        <div class="news-content" v-html="story.content">
+        </div>
+        <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
+        {{ $t('are_you_sure') }}
+        </AreYouSure>
+        <div uk-grid class="uk-margin">
+          <div class="uk-width-expand">
+          </div>
+          <div class="uk-width-1-1@s uk-width-auto@m">
+            <div class="uk-flex uk-flex-right">
+              <vue-goodshare-facebook style="text-decoration:none"
+                :title_social="$t('share')"
+                :page_url="facebookUrl"
+                has_icon />
+            </div>
+          </div>
+        </div>
+      </article>
+    </Page>
+  </div>
 </template>
 
 <style>
@@ -115,71 +120,77 @@
 </style>
 
 <script>
-    import messages from './lang';
+import messages from './lang';
 
-    import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
+import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 
-    import Page from './Page.vue';
-    import PageHeader from '@/site/components/PageHeader.vue';
-    import AreYouSure from '@/components/AreYouSure.vue';
+import Page from './Page.vue';
+import PageHeader from '@/site/components/PageHeader.vue';
+import AreYouSure from '@/components/AreYouSure.vue';
 
-    import newsStore from '@/stores/news';
+import newsStore from '@/stores/news';
+import registerModule from '@/stores/mixin';
 
-    export default {
-        components : {
-            Page,
-            PageHeader,
-            AreYouSure,
-            VueGoodshareFacebook
-        },
-        i18n : messages,
-        computed : {
-            story() {
-                return this.$store.getters['newsModule/story'](this.$route.params.id);
-            },
-            picture() {
-                if (this.story) {
-                    return this.story.header_detail_crop;
-                }
-                return null;
-            },
-            facebookUrl() {
-                //TODO: remove the host
-                return "https://www.judokwaikemzeke.be/facebook/news/" + this.story.id;
-            },
-            error() {
-                return this.$store.getters['newsModule/error'];
-            }
-        },
-        beforeCreate() {
-            if (!this.$store.state.newsModule) {
-                this.$store.registerModule('newsModule', newsStore);
-            }
-        },
-        async created() {
-            await this.fetchData();
-        },
-        async beforeRouteUpdate(to, from, next) {
-            await this.fetchData();
-            next();
-        },
-        methods : {
-            fetchData() {
-                try {
-                    this.$store.dispatch('newsModule/read', { id : this.$route.params.id });
-                }
-                catch(error) {
-                  console.log('error');
-                  console.log(error);
-                }
-            },
-            deleteStory() {
-                this.$store.dispatch('newsModule/delete', {
-                    story : this.story
-                }).then(() => {
-                    //this.$router.go(-1);
-                });
-            }
-        }
-    };
+export default {
+  components: {
+    Page,
+    PageHeader,
+    AreYouSure,
+    VueGoodshareFacebook
+  },
+  mixins: [
+    registerModule(
+      {
+        news: newsStore
+      }
+    ),
+  ],
+  i18n: messages,
+  computed: {
+    story() {
+      return this.$store.getters['news/story'](this.$route.params.id);
+    },
+    picture() {
+      if (this.story) {
+        return this.story.header_detail_crop;
+      }
+      return null;
+    },
+    facebookUrl() {
+      // TODO: remove the host
+      return 'https://www.judokwaikemzeke.be/facebook/news/' + this.story.id;
+    },
+    error() {
+      return this.$store.state.news.error;
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(async(vm) => {
+      await vm.fetchData(to.params);
+      next();
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetchData(to.params);
+    next();
+  },
+  methods: {
+    fetchData(params) {
+      try {
+        this.$store.dispatch('news/read', {
+          id: params.id
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    deleteStory() {
+      this.$store.dispatch('news/delete', {
+        story: this.story
+      }).then(() => {
+        // this.$router.go(-1);
+      });
+    }
+  }
+};
 </script>
