@@ -138,15 +138,15 @@ export default {
       this.contentFormHandler();
 
       try {
-        var newStory = await this.$store.dispatch('news/save', this.story);
+        this.story = await this.$store.dispatch('news/save', this.story);
         await this.$store.dispatch('news/saveContent', {
-          story: newStory,
+          story: this.story,
           content: this.content
         });
         this.$router.push({
           name: 'news.story',
           params: {
-            id: newStory.id
+            id: this.story.id
           }
         });
       } catch (error) {
