@@ -21,7 +21,7 @@
             "summary" : {
                 "label" : "Samenvatting",
                 "placeholder" : "Geef een samenvatting in",
-                "required" : "Samenvatting is verplicht in te vullen"
+                "required" : "Een samenvatting is verplicht in te vullen"
             },
             "content" : {
                 "label" : "Inhoud",
@@ -41,11 +41,13 @@
             },
             "publish_date" : {
                 "label": "Publicatie Datum",
+                "required" : "Publicatie datum is verplicht in te vullen",
                 "placeholder" : "Geef de publicatie datum in {format}",
                 "invalid" : "Ongeldige datum. Het formaat is {format}."
             },
             "publish_time" : {
                 "label": "Publicatie Tijdstip",
+                "required" : "Publicatie tijdstip is verplicht in te vullen",
                 "placeholder" : "Geef het tijdstip van de publicatie in {format}",
                 "invalid" : "Ongeldige tijd. Het formaat is {format}."
             },

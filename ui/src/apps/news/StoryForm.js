@@ -1,4 +1,4 @@
-import VueForm, { isDate, isTime } from '@/js/VueForm';
+import VueForm, { notEmpty, isDate, isTime } from '@/js/VueForm';
 import moment from 'moment';
 
 import Category from '@/models/Category';
@@ -26,8 +26,13 @@ export default {
         required: true
       },
       publish_date: {
-        value: null,
+        value: moment().format('L'),
+        required: true,
         validators: [
+          {
+            v: notEmpty,
+            error: this.$t('form.story.publish_date.required')
+          },
           {
             v: isDate,
             error: this.$t('form.story.publish_date.invalid', {
@@ -37,8 +42,13 @@ export default {
         ]
       },
       publish_time: {
-        value: null,
+        value: moment().format('HH:MM'),
+        required: true,
         validators: [
+          {
+            v: notEmpty,
+            error: this.$t('form.story.publish_time.required')
+          },
           {
             v: isTime,
             error: this.$t('form.story.publish_time.invalid', {
@@ -154,6 +164,7 @@ export default {
       } else {
         story.featured_end_date = null;
       }
+      console.log(story);
     }
   }
 };

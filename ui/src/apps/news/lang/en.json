@@ -41,11 +41,13 @@
             },
             "publish_date" : {
                 "label": "Publish Date",
+                "required" : "Publish date is required",
                 "placeholder" : "Enter a date in {format}",
                 "invalid" : "Invalid date. The format is {format}."
             },
             "publish_time" : {
                 "label": "Publish Time",
+                "required" : "Publish time is required",
                 "placeholder" : "Enter a time in {format}",
                 "invalid" : "Invalid time. The format is {format}."
             },
