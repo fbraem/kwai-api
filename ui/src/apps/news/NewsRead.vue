@@ -188,7 +188,7 @@ export default {
       this.$store.dispatch('news/delete', {
         story: this.story
       }).then(() => {
-        // this.$router.go(-1);
+        this.$router.push({ name: 'news.browse' });
       });
     }
   }
