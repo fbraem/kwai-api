@@ -166,8 +166,8 @@ class Model {
     Object.entries(this.constructor.fields()).forEach((entry) => {
       const [key, attr] = entry;
       if (!attr.isReadonly()) {
-        if (this[key]) {
-          if (attr instanceof Attribute) {
+        if (key in this) {
+          if (this[key] && attr instanceof Attribute) {
             json.attributes[key] = attr.to(this[key]);
           } else {
             json.attributes[key] = this[key];
@@ -188,9 +188,11 @@ class Model {
           return relatedObject;
         });
       } else {
-        relationships[relation].data = Object.create(null);
-        relationships[relation].data.type = this[relation][TYPE];
-        relationships[relation].data.id = this[relation].id;
+        if (this[relation]) {
+          relationships[relation].data = Object.create(null);
+          relationships[relation].data.type = this[relation][TYPE];
+          relationships[relation].data.id = this[relation].id;
+        }
       }
     });
     json.relationships = relationships;
