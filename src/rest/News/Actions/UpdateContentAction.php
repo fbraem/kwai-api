@@ -46,7 +46,7 @@ class UpdateContentAction
         try {
             (new InputValidator([
                 'data.attributes.title' => v::notEmpty()->length(1, 255),
-                'data.attributes.content' => v::notEmpty()
+                'data.attributes.summary' => v::notEmpty()
             ], true))->validate($data);
 
             $attributes = \JmesPath\search('data.attributes', $data);
