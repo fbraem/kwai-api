@@ -48,7 +48,7 @@ class CreateContentAction
         try {
             (new InputValidator([
                 'data.attributes.title' => v::notEmpty()->length(1, 255),
-                'data.attributes.content' => v::notEmpty()
+                'data.attributes.summary' => v::notEmpty()
             ]))->validate($data);
 
             $contentsTable = ContentsTable::getTableFromRegistry();
@@ -77,8 +77,6 @@ class CreateContentAction
             }
 
             $filesystem = $this->container->get('filesystem');
-
-            $connection->commit();
 
             $response = (new ResourceResponse(
                 NewsStoryTransformer::createForItem($story, $filesystem)
