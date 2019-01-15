@@ -105,6 +105,7 @@ const actions = {
     commit('stories', result);
     dispatch('wait/end', 'news.browse', { root: true });
   },
+
   /**
    * Read a new story.
    */
@@ -126,6 +127,10 @@ const actions = {
       commit('error', error);
     }
   },
+
+  /**
+   * Save the (new) story
+   */
   async save({ commit }, story) {
     try {
       var api = new JSONAPI({ source: Story });
@@ -137,6 +142,10 @@ const actions = {
       throw error;
     }
   },
+
+  /**
+   * Save the (new) content
+   */
   async saveContent({ commit }, payload) {
     try {
       var api = new JSONAPI({ source: Story });
@@ -148,9 +157,14 @@ const actions = {
       throw (error);
     }
   },
+
+  /**
+   * Delete the story
+   */
   async delete({ commit }, payload) {
     try {
-      await payload.story.delete();
+      var api = new JSONAPI({ source: Story });
+      await api.delete(payload.story);
       commit('deleteStory', { id: payload.story.id });
     } catch (error) {
       commit('error', error);
