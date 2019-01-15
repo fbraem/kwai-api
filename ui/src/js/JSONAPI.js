@@ -140,6 +140,24 @@ class JSONAPI {
   }
 
   /**
+   * Sends a DELETE to the API.
+   * @param {Model} model The model to delete.
+   */
+  async delete(model) {
+    var uri = this.uri.clone();
+    var segments = uri.segment();
+    segments.push(this.source.type());
+    if (model.id) segments.push(model.id);
+    uri.segment(segments);
+
+    const config = {
+      method: 'DELETE',
+      url: uri.href()
+    };
+    await this.request(config);
+  }
+
+  /**
    * Saves a relation of a model. The model needs an id.
    * @param {Model} model The model with the relationship
    * @param {Model} relation The related model
