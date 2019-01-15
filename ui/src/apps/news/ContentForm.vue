@@ -3,11 +3,15 @@
     <field name="title" :label="$t('form.content.title.label')">
       <uikit-input-text :placeholder="$t('form.content.title.placeholder')" />
     </field>
-    <field name="summary" :label="$t('form.content.summary.label')" :rows="5">
-      <uikit-textarea :placeholder="$t('form.content.summary.placeholder')" />
+    <field name="summary" :label="$t('form.content.summary.label')">
+      <uikit-textarea
+        :placeholder="$t('form.content.summary.placeholder')"
+        :rows="5" />
     </field>
-    <field name="content" :label="$t('form.content.content.label')" :rows="5">
-      <uikit-textarea :placeholder="$t('form.content.content.placeholder')" />
+    <field name="content" :label="$t('form.content.content.label')">
+      <uikit-textarea
+        :placeholder="$t('form.content.content.placeholder')"
+        :rows="15" />
     </field>
   </form>
 </template>
