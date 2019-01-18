@@ -135,10 +135,9 @@ export default {
     },
     async submit() {
       this.storyFormHandler();
-      this.contentFormHandler();
-
       try {
         this.story = await this.$store.dispatch('news/save', this.story);
+        this.contentFormHandler();
         await this.$store.dispatch('news/saveContent', {
           story: this.story,
           content: this.content
