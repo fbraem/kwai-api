@@ -40,6 +40,7 @@ class CreateContentAction
 
             (new InputValidator([
                 'data.attributes.title' => v::notEmpty()->length(1, 255),
+                'data.attributes.summary' => v::notEmpty(),
                 'data.attributes.content' => v::notEmpty()
             ]))->validate($data);
 
