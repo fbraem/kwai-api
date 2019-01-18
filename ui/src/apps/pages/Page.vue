@@ -5,7 +5,7 @@
         <slot></slot>
       </div>
       <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
-        <ListCategories :categories="categories" />
+        <ListCategories v-if="categories" :categories="categories" />
       </div>
     </div>
   </section>

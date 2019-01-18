@@ -9,15 +9,37 @@
     "delete_page" : "Delete Page",
     "create" : "Create a page",
     "update" : "Edit a page",
-    "title" : "Title",
-    "title_placeholder" : "Enter a title",
-    "summary" : "Summary",
-    "summary_placeholder" : "Enter a summary",
+    "form" : {
+        "page" : {
+            "category" : {
+                "label" : "Category",
+                "required" : "Category is required"
+            },
+            "remark" : {
+                "label" : "Remark",
+                "placeholder" : "Enter a remark"
+            }
+        },
+        "content" : {
+            "title" : {
+                "label" : "Title",
+                "placeholder" : "Enter a title",
+                "required" : "Title is required"
+            },
+            "summary" : {
+                "label" : "Summary",
+                "placeholder" : "Enter a summary",
+                "required" : "Summary is required"
+            },
+            "content" : {
+                "label" : "Content",
+                "placeholder" : "Enter the content",
+                "required" : "Content is required"
+            }
+        }
+    },
     "content" : "Content",
-    "content_placeholder" : "Enter content",
-    "remark" : "Remark",
-    "remark_placeholder" : "Enter a remark",
-    "save" : "Saver",
+    "save" : "Save",
     "enabled" : "Active",
     "all_pages" : "All information on one place ..."
 }

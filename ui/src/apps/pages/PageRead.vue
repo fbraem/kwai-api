@@ -1,58 +1,59 @@
 <template>
-    <div>
-        <PageHeader v-if="page" :picture="page.picture">
-            <div uk-grid>
-                <div class="uk-width-expand">
-                    <div class="uk-card uk-card-body">
-                        <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
-                            <router-link :to="{ name : 'pages.category', params : { category : page.category.id }}" class="uk-link-reset">
-                                {{ page.category.name }}
-                            </router-link>
-                        </div>
-                        <div class="uk-light">
-                            <h1>{{ page.title }}</h1>
-                        </div>
-                        <p v-html="page.summary">
-                        </p>
-                    </div>
-                </div>
-                <div class="uk-width-1-1 uk-width-1-6@m">
-                    <div class="uk-flex uk-flex-right">
-                        <div v-if="$page.isAllowed('update', page)" class="uk-margin-small-left">
-                            <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button uk-link-reset">
-                                <i class="fas fa-edit"></i>
-                            </router-link>
-                        </div>
-                        <div v-if="$page.isAllowed('remove', page)" class="uk-margin-small-left">
-                            <a uk-toggle="target: #delete-page" class="uk-icon-button uk-link-reset">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+  <!-- eslint-disable max-len -->
+  <div>
+    <PageHeader v-if="page" :picture="page.picture">
+      <div uk-grid>
+        <div class="uk-width-expand">
+          <div class="uk-card uk-card-body">
+            <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
+              <router-link :to="categoryLink" class="uk-link-reset">
+                {{ page.category.name }}
+              </router-link>
             </div>
-        </PageHeader>
-        <Page>
-            <div v-if="error">
-                {{ error.response.statusText }}
+            <div class="uk-light">
+              <h1>{{ page.title }}</h1>
             </div>
-            <div v-if="$wait.is('pages.read')" class="uk-flex-center" uk-grid>
-                <div class="uk-text-center">
-                    <i class="fas fa-spinner fa-2x fa-spin"></i>
-                </div>
+            <p v-html="page.summary">
+            </p>
+          </div>
+        </div>
+        <div class="uk-width-1-1 uk-width-1-6@m">
+          <div class="uk-flex uk-flex-right">
+            <div v-if="$page.isAllowed('update', page)" class="uk-margin-small-left">
+              <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button uk-link-reset">
+                <i class="fas fa-edit"></i>
+              </router-link>
             </div>
-            <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
-                <figure v-if="page.header_detail_crop">
-                    <img :src="page.header_detail_crop" />
-                </figure>
-                <article class="page-content uk-article" v-html="page.content">
-                </article>
-                <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
-                    {{ $t('are_you_sure') }}
-                </AreYouSure>
-            </article>
-        </Page>
-    </div>
+            <div v-if="$page.isAllowed('remove', page)" class="uk-margin-small-left">
+              <a uk-toggle="target: #delete-page" class="uk-icon-button uk-link-reset">
+                <i class="fas fa-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </PageHeader>
+    <Page>
+      <div v-if="error">
+        {{ error.response.statusText }}
+      </div>
+      <div v-if="$wait.is('pages.read')" class="uk-flex-center" uk-grid>
+        <div class="uk-text-center">
+          <i class="fas fa-spinner fa-2x fa-spin"></i>
+        </div>
+      </div>
+      <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
+        <figure v-if="page.header_detail_crop">
+          <img :src="page.header_detail_crop" />
+        </figure>
+        <article class="page-content uk-article" v-html="page.content">
+        </article>
+        <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
+          {{ $t('are_you_sure') }}
+        </AreYouSure>
+      </article>
+    </Page>
+  </div>
 </template>
 
 <style>
@@ -72,8 +73,9 @@
     .page-content table {
         border-collapse: collapse;
         margin-bottom:20px;
-        margin-left:auto;
-        margin-right:auto;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 
     .page-content table tbody tr:nth-child(odd) {
@@ -139,62 +141,77 @@
 </style>
 
 <script>
-    import messages from './lang';
+import messages from './lang';
 
-    import Page from './Page.vue';
-    import PageHeader from '@/site/components/PageHeader.vue';
-    import AreYouSure from '@/components/AreYouSure.vue';
+import Page from './Page.vue';
+import PageHeader from '@/site/components/PageHeader.vue';
+import AreYouSure from '@/components/AreYouSure.vue';
 
-    import pageStore from '@/stores/pages';
+import pageStore from '@/stores/pages';
+import registerModule from '@/stores/mixin';
 
-    export default {
-        components : {
-            PageHeader,
-            Page,
-            AreYouSure
-        },
-        i18n : messages,
-        computed : {
-            page() {
-                return this.$store.getters['pageModule/page'](this.$route.params.id);
-            },
-            error() {
-                return this.$store.getters['pageModule/error'];
-            }
-        },
-        beforeCreate() {
-            if (!this.$store.state.pageModule) {
-                this.$store.registerModule('pageModule', pageStore);
-            }
-        },
-        async created() {
-            await this.fetchData(this.$route.params);
-        },
-        async beforeRouteUpdate(to, from, next) {
-            await this.fetchData(to.params);
-            next();
-        },
-        methods : {
-            fetchData(params) {
-                try {
-                    this.$store.dispatch('pageModule/read', { id : params.id });
-                }
-                catch(error) {
-                    console.log(error);
-                }
-            },
-            deletePage() {
-                this.$store.dispatch('pageModule/delete', {
-                    page : this.page
-                }).then(() => {
-                    this.$router.push({
-                        name : 'pages.browse',
-                        params : {
-                            category : this.page.category
-                        }
-                    });
-                });
-            }
+export default {
+  components: {
+    PageHeader,
+    Page,
+    AreYouSure
+  },
+  i18n: messages,
+  mixins: [
+    registerModule(
+      {
+        page: pageStore
+      }
+    ),
+  ],
+  computed: {
+    page() {
+      return this.$store.getters['page/page'](this.$route.params.id);
+    },
+    categoryLink() {
+      return {
+        name: 'pages.category',
+        params: {
+          category:
+          this.page.category.id
         }
-    };
+      };
+    },
+    error() {
+      return this.$store.state.page.error;
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(async(vm) => {
+      await vm.fetchData(to.params);
+      next();
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetchData(to.params);
+    next();
+  },
+  methods: {
+    fetchData(params) {
+      try {
+        this.$store.dispatch('page/read', { id: params.id });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    deletePage() {
+      var category = this.page.category.id;
+      this.$store.dispatch('page/delete', {
+        page: this.page
+      }).then(() => {
+        this.$router.push({
+          name: 'pages.browse',
+          params: {
+            category: category
+          }
+        });
+      });
+    }
+  }
+};
 </script>

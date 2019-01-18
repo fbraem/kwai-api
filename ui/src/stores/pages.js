@@ -3,6 +3,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import Page from '@/models/Page';
 
 const state = {
@@ -12,73 +13,72 @@ const state = {
 };
 
 const getters = {
-  pages(state) {
-    return state.pages;
-  },
   page: (state) => (id) => {
     return state.pages.find((page) => page.id === id);
-  },
-  error(state) {
-    return state.error;
-  },
-  meta(state) {
-    return state.meta;
   },
 };
 
 const mutations = {
-  pages(state, pages) {
-    state.meta = pages.meta();
-    state.pages = pages;
+  /**
+   * Set the pages of the store
+   */
+  pages(state, { meta, data }) {
+    state.meta = meta;
+    state.pages = data;
     state.error = null;
   },
-  page(state, page) {
-    var index = state.pages.findIndex((p) => p.id === page.id);
+  /**
+   * Put a page into the store
+   */
+  page(state, { data }) {
+    var index = state.pages.findIndex((p) => p.id === data.id);
     if (index !== -1) {
-      Vue.set(state.pages, index, page);
+      Vue.set(state.pages, index, data);
     } else {
-      state.pages.push(page);
+      state.pages.push(data);
     }
     state.error = null;
   },
+  /**
+   * Remove a page from the store
+   */
   deletePage(state, page) {
     state.pages = state.pages.filter((p) => {
       return page.id !== p.id;
     });
     state.error = null;
   },
-  attachContent(state, data) {
-    var index = state.pages.findIndex((p) => p.id === data.page.id);
-    if (index !== -1) {
-      if (state.pages[index].contents == null) {
-        state.pages[index].contents = [];
-      }
-      state.pages[index].contents.push(data.content);
-    }
-    state.error = null;
-  },
-  error(state, payload) {
-    state.error = payload;
+  /**
+   * Set the error of the store
+   */
+  error(state, error) {
+    state.error = error;
   },
 };
 
 const actions = {
+  /**
+   * Get all pages
+   */
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'pages.browse', { root: true });
-    const page = new Page();
+    const api = new JSONAPI({ source: Page });
     if (payload.offset || payload.limit) {
-      page.paginate(payload.offset, payload.limit);
+      api.paginate(payload.offset, payload.limit);
     }
     if (payload.category) {
-      page.where('category', payload.category);
+      api.where('category', payload.category);
     }
     if (payload.user) {
-      page.where('user', payload.user);
+      api.where('user', payload.user);
     }
-    let pages = await page.get();
-    commit('pages', pages);
+    let result = await api.get();
+    commit('pages', result);
     dispatch('wait/end', 'pages.browse', { root: true });
   },
+  /**
+   * Get a page. First look into the store before getting it from the server.
+   */
   async read({ dispatch, getters, commit }, payload) {
     var page = getters['page'](payload.id);
     if (page) { // already read
@@ -86,40 +86,52 @@ const actions = {
     }
 
     dispatch('wait/start', 'pages.read', { root: true });
-    let model = new Page();
     try {
-      page = await model.find(payload.id);
-      commit('page', page);
+      const api = new JSONAPI({ source: Page });
+      var result = await api.get(payload.id);
+      commit('page', result);
       dispatch('wait/end', 'pages.read', { root: true });
+      return result.data;
     } catch (error) {
       commit('error', error);
       dispatch('wait/end', 'pages.read', { root: true });
     }
-    return page;
   },
-  async save({ state, getters, commit, context }, page) {
+  /**
+   * Save the (new) page
+   */
+  async save({ commit }, page) {
     try {
-      var newPage = await page.save();
-      commit('page', newPage);
-      return newPage;
+      const api = new JSONAPI({ source: Page });
+      var result = await api.save(page);
+      commit('page', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
     }
   },
-  async attachContent({ state, getters, commit, context }, payload) {
+  /**
+   * Save the (new) content
+   */
+  async saveContent({ commit }, payload) {
     try {
-      var newPage = await payload.page.attach(payload.content);
-      commit('page', newPage);
-      return newPage;
+      const api = new JSONAPI({ source: Page });
+      var result = await api.attach(payload.page, payload.content);
+      commit('page', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw (error);
     }
   },
-  async delete({ state, getters, commit, context }, payload) {
+  /**
+   * Delete a page
+   */
+  async delete({ commit }, payload) {
     try {
-      await payload.page.delete();
+      const api = new JSONAPI({ source: Page });
+      await api.delete(payload.page);
       commit('deletePage', { id: payload.page.id });
     } catch (error) {
       commit('error', error);
