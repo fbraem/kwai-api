@@ -71,7 +71,7 @@ class UpdateAction
 
             $filesystem = $this->container->get('filesystem');
 
-            $response = (new \Core\ResourceResponse(
+            $response = (new ResourceResponse(
                 PageTransformer::createForItem($page, $filesystem)
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
