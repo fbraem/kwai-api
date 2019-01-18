@@ -130,14 +130,14 @@ export default {
       return null;
     },
     stories() {
-      return this.$store.getters['news/stories'];
+      return this.$store.state.news.stories;
     },
     storyCount() {
       if (this.stories) return this.stories.length;
       return 0;
     },
     pages() {
-      return this.$store.getters['page/pages'];
+      return this.$store.state.page.pages;
     },
     pageCount() {
       if (this.pages) return this.pages.length;
@@ -171,7 +171,7 @@ export default {
         category: params.id,
         featured: true
       });
-      this.$store.dispatch('pageModule/browse', {
+      this.$store.dispatch('page/browse', {
         category: params.id
       });
     }
