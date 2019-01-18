@@ -42,16 +42,18 @@
           <i class="fas fa-spinner fa-2x fa-spin"></i>
         </div>
       </div>
-      <article v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
-        <figure v-if="page.header_detail_crop">
-          <img :src="page.header_detail_crop" />
-        </figure>
-        <article class="page-content uk-article" v-html="page.content">
-        </article>
-        <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
-          {{ $t('are_you_sure') }}
-        </AreYouSure>
-      </article>
+      <section v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
+        <div class="uk-flex-center" uk-grid>
+          <figure v-if="page.header_detail_crop">
+            <img :src="page.header_detail_crop" />
+          </figure>
+          <article class="page-content uk-article" style="overflow-x: auto;" v-html="page.content">
+          </article>
+          <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
+            {{ $t('are_you_sure') }}
+          </AreYouSure>
+        </div>
+      </section>
     </Page>
   </div>
 </template>
