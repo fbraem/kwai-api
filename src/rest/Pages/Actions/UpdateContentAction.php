@@ -7,11 +7,19 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
+use Respect\Validation\Validator as v;
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
+
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 use REST\Contents\ContentValidator;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
+
+use Core\Responses\NotFoundResponse;
+use Core\Responses\ResourceResponse;
+use Core\Responses\UnprocessableEntityResponse;
 
 class UpdateContentAction
 {
@@ -29,12 +37,18 @@ class UpdateContentAction
             $page = $pagesTable->get($args['id'], [
                 'contain' => ['Category', 'Contents', 'Contents.User']
             ]);
+        } catch (RecordNotFoundException $rnfe) {
+            $response = (new NotFoundResponse(_("Page doesn't exist")))($response);
+        }
 
+        try {
             $data = $request->getParsedBody();
-            $validator = new ContentValidator();
-            if (! $validator->validate($data)) {
-                return $validator->unprocessableEntityResponse($response);
-            }
+
+            (new InputValidator([
+                'data.attributes.title' => v::notEmpty()->length(1, 255),
+                'data.attributes.summary' => v::notEmpty(),
+                'data.attributes.content' => v::notEmpty()
+            ], true))->validate($data);
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
@@ -62,8 +76,10 @@ class UpdateContentAction
             $response = (new ResourceResponse(
                 PageTransformer::createForItem($page, $filesystem)
             ))($response);
-        } catch (RecordNotFoundException $rnfe) {
-            $response = (new NotFoundResponse(_("Page doesn't exist")))($response);
+        } catch (ValidationException $ve) {
+            $response = (new UnprocessableEntityResponse(
+                $ve->getErrors()
+            ))($response);
         }
 
         return $response;
