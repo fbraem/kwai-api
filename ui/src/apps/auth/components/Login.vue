@@ -4,19 +4,16 @@
     <div id="login-form" uk-modal ref="dialog">
       <div class="uk-modal-dialog uk-modal-body">
         <h2 class="uk-modal-title">{{ $t('login') }}</h2>
-        <form>
-          <uikit-email v-model="email" :validator="$v.email" :errors="emailErrors" id="email" :placeholder="$t('email.placeholder')">
-            {{ $t('email.label') }}:
-          </uikit-email>
-          <uikit-password v-model="password" :validator="$v.password" :errors="passwordErrors" id="password" :placeholder="$t('password.placeholder')">
-            {{ $t('password.label') }}:
-          </uikit-password>
-          <div v-if="error" uk-alert class="uk-alert-danger">
-            {{ error }}
-          </div>
+        <form class="uk-form-stacked">
+          <field name="email" :label="$t('email.label')">
+            <uikit-email :placeholder="$t('email.placeholder')" />
+          </field>
+          <field name="password" :label="$t('password.label')">
+            <uikit-password :placeholder="$t('password.placeholder')" />
+          </field>
           <p class="uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button">{{ $t('cancel') }}</button>
-            <button class="uk-button uk-button-primary" type="button" :disabled="$v.$invalid" @click="submit">{{ $t('login') }}</button>
+            <button class="uk-button uk-button-primary" type="button" :disabled="!$valid" @click="submit">{{ $t('login') }}</button>
           </p>
         </form>
       </div>
@@ -49,82 +46,40 @@ import User from '@/models/User';
 
 import UIkit from 'uikit';
 
-import { validationMixin } from 'vuelidate';
-import { required, email } from 'vuelidate/lib/validators';
-
-var initError = function() {
-  return {
-    email: [],
-    password: [],
-  };
-};
-
-import UikitEmail from '@/components/uikit/Email.vue';
-import UikitPassword from '@/components/uikit/Password.vue';
+import LoginForm from './Login';
+import Field from '@/components/forms/Field.vue';
+import UikitEmail from '@/components/forms/Email.vue';
+import UikitPassword from '@/components/forms/Password.vue';
 
 import messages from '../lang';
 
 export default {
   i18n: messages,
   components: {
+    Field,
     UikitEmail,
     UikitPassword
   },
   mixins: [
-    validationMixin,
+    LoginForm,
   ],
   data() {
     return {
-      email: '',
-      password: '',
-      hidePassword: true,
-      errors: initError(),
-      error: null
+      user: new User()
     };
-  },
-  validations: {
-    email: {
-      required,
-      email
-    },
-    password: {
-      required
-    }
-  },
-  computed: {
-    emailErrors() {
-      const errors = [... this.errors.email];
-      if (!this.$v.email.$dirty) return errors;
-      !this.$v.email.required && errors.push(this.$t('email.required'));
-      !this.$v.email.email && errors.push(this.$t('email.invalid'));
-      return errors;
-    },
-    passwordErrors() {
-      const errors = [... this.errors.password];
-      if (!this.$v.password.$dirty) return errors;
-      !this.$v.password.required && errors.push(this.$t('password.required'));
-      return errors;
-    }
   },
   methods: {
     clear() {
-      this.$v.$reset();
-      this.email = '';
-      this.password = '';
+      this.user.email = '';
+      this.user.password = '';
     },
     login() {
       var modal = UIkit.modal(this.$refs.dialog);
       modal.show();
     },
     submit() {
-      this.errors = initError();
-      this.error = null;
-
-      var user = new User();
-      user.email = this.email;
-      user.password = this.password;
-
-      this.$store.dispatch('login', user)
+      this.readForm(this.user);
+      this.$store.dispatch('login', this.user)
         .then(() => {
           this.clear();
           var modal = UIkit.modal(this.$refs.dialog);
