@@ -113,7 +113,7 @@ export default {
     category() {
       /* eslint-disable max-len */
       if (this.$route.params.category) {
-        return this.$store.state.getters['category/category'](this.$route.params.category);
+        return this.$store.getters['category/category'](this.$route.params.category);
       }
       return null;
       /* eslint-enable max-len */
