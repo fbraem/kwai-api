@@ -4,6 +4,9 @@
     <div id="login-form" uk-modal ref="dialog">
       <div class="uk-modal-dialog uk-modal-body">
         <h2 class="uk-modal-title">{{ $t('login') }}</h2>
+        <div v-if="error" class="uk-alert-danger" uk-alert>
+          {{error}}
+        </div>
         <form class="uk-form-stacked">
           <field name="email" :label="$t('email.label')">
             <uikit-email :placeholder="$t('email.placeholder')" />
@@ -65,7 +68,8 @@ export default {
   ],
   data() {
     return {
-      user: new User()
+      user: new User(),
+      error: null
     };
   },
   methods: {
@@ -78,6 +82,7 @@ export default {
       modal.show();
     },
     submit() {
+      this.error = null;
       this.readForm(this.user);
       this.$store.dispatch('login', this.user)
         .then(() => {
