@@ -1,63 +1,80 @@
+/**
+ * Vuex store for members
+ */
 import Vue from 'vue';
-
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import Member from '@/models/Member';
 
 const state = {
   members: null,
   error: null,
+  meta: null
 };
 
 const getters = {
-  members(state) {
-    return state.members;
-  },
+  /**
+   * Gets a member from the store
+   */
   member: (state) => (id) => {
     if (state.members) {
       return find(state.members, ['id', id]);
     }
     return null;
-  },
-  error(state) {
-    return state.error;
-  },
+  }
 };
 
 const mutations = {
-  members(state, members) {
-    state.members = members;
+  /**
+   * Mutate members
+   */
+  members(state, { meta, data }) {
+    state.members = data;
+    state.meta = meta;
     state.error = null;
   },
-  member(state, member) {
+  /**
+   * Mutate a member
+   */
+  member(state, { data }) {
     if (state.members == null) {
       state.members = [];
     }
-    var index = state.members.findIndex((m) => m.id === member.id);
+    var index = state.members.findIndex((m) => m.id === data.id);
     if (index !== -1) {
-      Vue.set(state.members, index, member);
+      Vue.set(state.members, index, data);
     } else {
-      state.members.push(member);
+      state.members.push(data);
     }
     state.error = null;
+  },
+  /**
+   * Mutate the error
+   */
+  error(state, error) {
+    state.error = error;
   },
 };
 
 const actions = {
+  /**
+   * Get all members
+   */
   async browse({ dispatch, commit }, payload) {
     payload = payload || {};
 
     dispatch('wait/start', 'members.browse', { root: true });
 
-    const member = new Member();
+    var api = new JSONAPI({ source: Member });
     if (payload.name) {
-      member.where('name', payload.name);
+      api.where('name', payload.name);
     }
 
     try {
-      let members = await member.get();
-      commit('members', members);
+      let result = await api.get();
+      commit('members', result);
       dispatch('wait/end', 'members.browse', { root: true });
     } catch (error) {
       commit('error', error);
