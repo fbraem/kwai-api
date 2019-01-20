@@ -37,6 +37,11 @@
           <div uk-grid class="uk-flex uk-margin">
             <div class="uk-width-1-1">
               <h4 class="uk-heading-line"><span>{{ $t('featured_news') }}</span></h4>
+              <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
+                <div class="uk-text-center">
+                  <i class="fas fa-spinner fa-2x fa-spin"></i>
+                </div>
+              </div>
               <div v-if="storyCount == 0" class="uk-margin">
                 {{ $t('no_featured_news') }}
               </div>
@@ -64,7 +69,15 @@
                 <NewsCard v-for="story in stories" :story="story" :key="story.id" :showCategory="false"></NewsCard>
               </div>
               <div class="uk-margin">
-                <router-link :to="{ name: 'news.browse', params: { category : category.id } }">{{ $t('more_news') }}</router-link>
+                <router-link :to="moreNewsLink"
+                  class="uk-button uk-button-default">
+                  {{ $t('more_news') }}
+                </router-link>
+              </div>
+            </div>
+            <div v-if="$wait.is('pages.browse')" class="uk-flex-center" uk-grid>
+              <div class="uk-text-center">
+                <i class="fas fa-spinner fa-2x fa-spin"></i>
               </div>
             </div>
             <div v-if="pageCount > 0" class="uk-width-1-1">
@@ -122,6 +135,14 @@ export default {
   computed: {
     category() {
       return this.$store.getters['category/category'](this.$route.params.id);
+    },
+    moreNewsLink() {
+      return {
+        name: 'news.browse',
+        params: {
+          category: this.category.id
+        }
+      };
     },
     picture() {
       if (this.category && this.category.images) {
