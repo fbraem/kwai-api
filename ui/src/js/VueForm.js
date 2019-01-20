@@ -3,20 +3,45 @@
  */
 import Vue from 'vue';
 
+/**
+ * Checks if a value is not empty
+ */
 export function notEmpty(value) {
   return value != null && value.length > 0;
 }
 
 import moment from 'moment';
+
+/**
+ * Checks a time with format HH:mm
+ */
 export function isTime(value) {
   if (value) return moment(value, 'HH:mm', true).isValid();
   return true;
 };
+
+/**
+ * Check the date with format 'L'
+ */
 export function isDate(value) {
   if (value) return moment(value, 'L', true).isValid();
   return true;
 };
 
+/**
+ * A simple function to validate email.
+ */
+export function isEmail(value) {
+  if (value) {
+    var re = /^\S+@\S+$/;
+    return value.match(re);
+  }
+  return true;
+};
+
+/**
+ * A mixin for handling our forms
+ */
 export default {
   data() {
     var data = {};
@@ -80,6 +105,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * Resets all fields to their initial value
+     */
     reset() {
       var fn = this.$options.form.bind(this);
       var form = fn();
@@ -89,6 +117,9 @@ export default {
         return true;
       });
     },
+    /**
+     * Clears all errors
+     */
     clearErrors() {
       Object.entries(this.form).forEach((entry) => {
         const [fieldName, field] = entry;
@@ -97,6 +128,10 @@ export default {
         }
       });
     },
+    /**
+     * Tries to set JSONAPI errors to the corresponding fields
+     * @param {array} errors The JSONAPI errors
+     */
     handleErrors(errors) {
       errors.forEach((item, index) => {
         if (item.source && item.source.pointer) {
@@ -107,6 +142,9 @@ export default {
         }
       });
     },
+    /**
+     * Validates a field
+     */
     validateField(field, showErrors) {
       field.errors = [];
       field.valid = field.validators.every((validator) => {
