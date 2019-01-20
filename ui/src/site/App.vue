@@ -14,6 +14,11 @@
           <br />
           {{ $t("message.info") }}
         </div>
+        <div class="uk-width-1-1">
+          <img class="uk-align-center"
+            :src="require('./images/40jaar.png')"
+            style="width:200px;height:200px;" />
+        </div>
       </div>
     </PageHeader>
     <section class="uk-section uk-section-small uk-section-muted uk-visible@m">
