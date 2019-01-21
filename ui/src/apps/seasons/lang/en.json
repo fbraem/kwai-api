@@ -2,21 +2,36 @@
     "seasons": "Seasons",
     "season" : "Season",
     "no_seasons" : "There are no seasons yet",
-    "start_date" : "Start Date",
-    "start_date_placeholder" : "Enter a date",
-    "end_date" : "End Date",
-    "end_date_placeholder" : "Enter a date",
-    "remark" : "Remark",
-    "remark_placeholder" : "Enter a remark",
+    "form" : {
+        "season" : {
+            "name" : {
+                "label" : "Name",
+                "placeholder" : "Enter a name",
+                "required" : "Name is required."
+            },
+            "start_date" : {
+                "label" : "Start Date",
+                "placeholder" : "Enter a date",
+                "invalid" : "Invalid date. Format is {format}",
+                "required" : "Start date is required."
+            },
+            "end_date" : {
+                "label" : "End Date",
+                "placeholder" : "Enter a date",
+                "invalid" : "Invalid date. Format is {format}",
+                "required" : "End date is required.",
+                "after" : "End date must be after start date"
+            },
+            "remark" : {
+                "label" : "Remark",
+                "placeholder" : "Enter a remark"
+            }
+        }
+    },
     "active_message" : "This season is currently active",
     "update" : "Edit Season",
     "create" : "Create Season",
-    "name" : "Name",
-    "name_placeholder" : "Enter a name",
     "save" : "Save",
-    "invalid_date" : "Invalid date. Format is {format}",
-    "invalid_end_date" : "Enddate must be after startdate",
-    "required" : "This field is required.",
     "season_not_found" : "Season doesn't exist",
     "are_you_sure" : "Are you sure to delete this season?",
     "cancel" : "Annuleer",
