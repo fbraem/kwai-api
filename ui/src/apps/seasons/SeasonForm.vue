@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div>
     <PageHeader>
       <h1>{{ $t('seasons') }}</h1>
