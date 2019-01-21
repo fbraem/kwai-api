@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div>
     <PageHeader>
       <div class="uk-grid">
