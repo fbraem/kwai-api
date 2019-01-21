@@ -68,11 +68,11 @@ const actions = {
     try {
       var api = new JSONAPI({ source: Season });
       commit('seasons', await api.get());
-      dispatch('wait/end', 'seasons.browse', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'seasons.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'seasons.browse', { root: true });
     }
   },
   async save({ commit }, season) {
@@ -97,12 +97,12 @@ const actions = {
       var api = new JSONAPI({ source: Season });
       var result = await api.get(payload.id);
       commit('season', result);
-      dispatch('wait/end', 'seasons.read', { root: true });
       return result.data;
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'seasons.read', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'seasons.read', { root: true });
     }
   },
 };

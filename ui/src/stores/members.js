@@ -75,11 +75,11 @@ const actions = {
     try {
       let result = await api.get();
       commit('members', result);
-      dispatch('wait/end', 'members.browse', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'members.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'members.browse', { root: true });
     }
   },
 };

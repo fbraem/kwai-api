@@ -68,11 +68,11 @@ const actions = {
     try {
       const api = new JSONAPI({ source: TeamType });
       commit('types', await api.get());
-      dispatch('wait/end', 'team_types.browse', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'team_types.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'team_types.browse', { root: true });
     }
   },
   /**
@@ -100,12 +100,12 @@ const actions = {
       var api = new JSONAPI({ source: TeamType });
       var result = await api.get(payload.id);
       commit('type', result);
-      dispatch('wait/end', 'team_types.read', { root: true });
       return result.data;
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'team_types.read', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'team_types.read', { root: true });
     }
   },
 };

@@ -90,10 +90,10 @@ const actions = {
       const api = new JSONAPI({ source: Page });
       var result = await api.get(payload.id);
       commit('page', result);
-      dispatch('wait/end', 'pages.read', { root: true });
       return result.data;
     } catch (error) {
       commit('error', error);
+    } finally {
       dispatch('wait/end', 'pages.read', { root: true });
     }
   },

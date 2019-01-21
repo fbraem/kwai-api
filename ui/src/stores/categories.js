@@ -66,11 +66,11 @@ const actions = {
     try {
       var api = new JSONAPI({ source: Category });
       commit('categories', await api.get());
-      dispatch('wait/end', 'categories.browse', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'categories.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'categories.browse', { root: true });
     }
   },
   async read({ dispatch, getters, commit }, payload) {
@@ -85,12 +85,12 @@ const actions = {
       var api = new JSONAPI({ source: Category });
       var result = await api.get(payload.id);
       commit('category', result);
-      dispatch('wait/end', 'categories.read', { root: true });
       return result.data;
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'categories.read', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'categories.read', { root: true });
     }
   },
   async save({ commit }, category) {

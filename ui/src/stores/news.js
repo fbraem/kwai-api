@@ -120,11 +120,11 @@ const actions = {
     try {
       var result = await api.get(payload.id);
       commit('story', result);
-      dispatch('wait/end', 'news.read', { root: true });
       return result.data;
     } catch (error) {
-      dispatch('wait/end', 'news.read', { root: true });
       commit('error', error);
+    } finally {
+      dispatch('wait/end', 'news.read', { root: true });
     }
   },
 
