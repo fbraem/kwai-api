@@ -1,58 +1,73 @@
+/**
+ * Vuex store for teamtypes
+ */
 import Vue from 'vue';
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import TeamType from '@/models/TeamType';
 
 const state = {
   types: null,
   error: null,
+  meta: null
 };
 
 const getters = {
-  types(state) {
-    return state.types;
-  },
+  /**
+   * Returns a type
+   */
   type: (state) => (id) => {
     if (state.types) {
       return state.types.find((type) => type.id === id);
     }
     return null;
   },
-  error(state) {
-    return state.error;
-  },
 };
 
 const mutations = {
-  types(state, types) {
-    state.types = types;
+  /**
+   * Mutate all types
+   */
+  types(state, { meta, data }) {
+    state.types = data;
+    state.meta = meta;
     state.error = null;
   },
-  type(state, type) {
+  /**
+   * Mutate a type
+   */
+  type(state, { data }) {
     if (state.types == null) {
       state.types = [];
     }
-    var index = state.types.findIndex((t) => t.id === type.id);
+    var index = state.types.findIndex((t) => t.id === data.id);
     if (index !== -1) {
-      Vue.set(state.types, index, type);
+      Vue.set(state.types, index, data);
     } else {
-      state.types.push(type);
+      state.types.push(data);
     }
     state.error = null;
   },
+  /**
+   * Mutate an error
+   */
   error(state, data) {
     state.error = data;
   },
 };
 
 const actions = {
+  /**
+   * Get all team types
+   */
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'team_types.browse', { root: true });
-    const type = new TeamType();
     try {
-      commit('types', await type.get());
+      const api = new JSONAPI({ source: TeamType });
+      commit('types', await api.get());
       dispatch('wait/end', 'team_types.browse', { root: true });
     } catch (error) {
       commit('error', error);
@@ -60,12 +75,15 @@ const actions = {
       throw error;
     }
   },
-  async save({ dispatch, commit }, type) {
-    var newType = null;
+  /**
+   * Save a type
+   */
+  async save({ commit }, type) {
     try {
-      newType = await type.save();
-      commit('type', newType);
-      return newType;
+      var api = new JSONAPI({ source: TeamType });
+      var result = await api.save(type);
+      commit('type', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
@@ -78,17 +96,17 @@ const actions = {
     }
 
     dispatch('wait/start', 'team_types.read', { root: true });
-    let model = new TeamType();
     try {
-      type = await model.find(payload.id);
-      commit('type', type);
+      var api = new JSONAPI({ source: TeamType });
+      var result = await api.get(payload.id);
+      commit('type', result);
       dispatch('wait/end', 'team_types.read', { root: true });
+      return result.data;
     } catch (error) {
       commit('error', error);
       dispatch('wait/end', 'team_types.read', { root: true });
       throw error;
     }
-    return type;
   },
 };
 
