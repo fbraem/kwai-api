@@ -29,6 +29,14 @@ export function isDate(value) {
 };
 
 /**
+ * Check if the value is an integer
+ */
+export function isInteger(value) {
+  if (value) return /^(0|[1-9]\d*)$/.test(value);
+  return true;
+};
+
+/**
  * A simple function to validate email.
  */
 export function isEmail(value) {
