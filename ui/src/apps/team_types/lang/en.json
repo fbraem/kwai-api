@@ -7,25 +7,36 @@
     "update" : "Update Team Type",
     "details" : "Team Type",
     "form" : {
-        "name" : {
-            "label" : "Name",
-            "placeholder" : "Enter the name of the type"
-        },
-        "start_age" : {
-            "label" : "Min. Age",
-            "placeholder" : "Enter the minimum age of a member to be part of a team with this type."
-        },
-        "end_age" : {
-            "label" : "Max. Age",
-            "placeholder" : "Enter the maximum age of a member to be part of a team with this type."
-        },
-        "remark" : {
-            "label" : "Remark",
-            "placeholder" : "Enter a remark about this type."
-        },
-        "gender" : {
-            "label" : "Gender",
-            "placeholder" : "Will the team be restricted to a specific gender?"
+        "team_type" : {
+            "name" : {
+                "label" : "Name",
+                "placeholder" : "Enter the name of the type",
+                "required" : "Name is required"
+            },
+            "start_age" : {
+                "label" : "Min. Age",
+                "placeholder" : "Enter the minimum age of a member to be part of a team with this type.",
+                "numeric" : "Min. age must be numeric"
+            },
+            "end_age" : {
+                "label" : "Max. Age",
+                "placeholder" : "Enter the maximum age of a member to be part of a team with this type.",
+                "numeric" : "Max. age must be numeric"
+            },
+            "active" : {
+                "label" : "Active"
+            },
+            "competition" : {
+                "label" : "Used for competition"
+            },
+            "remark" : {
+                "label" : "Remark",
+                "placeholder" : "Enter a remark about this type."
+            },
+            "gender" : {
+                "label" : "Gender",
+                "placeholder" : "Will the team be restricted to a specific gender?"
+            }
         }
     },
     "numeric" : "This field must be numeric",

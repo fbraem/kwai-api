@@ -1,239 +1,153 @@
 <template>
-    <div>
-        <PageHeader>
-            <h1>{{ $t('types') }}</h1>
-            <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('create') }}</h3>
-            <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('update') }}</h3>
-        </PageHeader>
-        <section class="uk-section uk-section-small uk-container uk-container-expand">
-            <div uk-grid>
-                <div class="uk-width-1-1">
-                    <form class="uk-form-stacked">
-                        <uikit-input-text v-model="form.team_type.name" :validator="$v.form.team_type.name" :errors="nameErrors" id="name" :placeholder="$t('form.name.placeholder')">
-                            {{ $t('form.name.label') }}:
-                        </uikit-input-text>
-                        <uikit-input-text v-model="form.team_type.start_age" :validator="$v.form.team_type.start_age" :errors="startAgeErrors" id="start_age" :placeholder="$t('form.start_age.placeholder')">
-                            {{ $t('form.start_age.label') }}:
-                        </uikit-input-text>
-                        <uikit-input-text v-model="form.team_type.end_age" :validator="$v.form.team_type.end_age" :errors="endAgeErrors" id="end_age" :placeholder="$t('form.end_age.placeholder')">
-                            {{ $t('form.end_age.label') }}:
-                        </uikit-input-text>
-                        <uikit-select v-model="form.team_type.gender" :items="genders" :validator="$v.form.team_type.gender" :errors="genderErrors" id="gender">
-                            {{ $t('form.gender.label') }}:
-                        </uikit-select>
-                        <uikit-checkbox v-model="form.team_type.active">
-                            {{ $t('active') }}
-                        </uikit-checkbox>
-                        <uikit-checkbox v-model="form.team_type.competition">
-                            {{ $t('competition') }}
-                        </uikit-checkbox>
-                        <uikit-textarea v-model="form.team_type.remark" :validator="$v.form.team_type.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('form.remark.placeholder')">
-                            {{ $t('form.remark.label') }}:
-                        </uikit-textarea>
-                    </form>
-                </div>
-                <div uk-grid class="uk-width-1-1">
-                    <div class="uk-width-expand">
-                    </div>
-                    <div class="uk-width-auto">
-                        <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+  <!-- eslint-disable max-len -->
+  <div>
+    <PageHeader>
+      <h1>{{ $t('types') }}</h1>
+      <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('create') }}</h3>
+      <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('update') }}</h3>
+    </PageHeader>
+    <section class="uk-section uk-section-small uk-container uk-container-expand">
+      <div uk-grid>
+        <div class="uk-width-1-1">
+          <form class="uk-form-stacked">
+            <field name="name" :label="$t('form.team_type.name.label')">
+              <uikit-input-text :placeholder="$t('form.team_type.name.placeholder')" />
+            </field>
+            <field name="start_age" :label="$t('form.team_type.start_age.label')">
+              <uikit-input-text :placeholder="$t('form.team_type.start_age.placeholder')" />
+            </field>
+            <field name="end_age" :label="$t('form.team_type.end_age.label')">
+              <uikit-input-text :placeholder="$t('form.team_type.end_age.placeholder')" />
+            </field>
+            <field name="gender" :label="$t('form.team_type.gender.label')">
+              <uikit-select :items="genders" />
+            </field>
+            <field name="active" :label="$t('form.team_type.active.label')">
+              <uikit-checkbox />
+            </field>
+            <field name="competition" :label="$t('form.team_type.competition.label')">
+              <uikit-checkbox />
+            </field>
+            <field name="remark" :label="$t('form.team_type.remark.label')">
+              <uikit-textarea :placeholder="$t('form.team_type.remark.placeholder')" />
+            </field>
+          </form>
+        </div>
+        <div uk-grid class="uk-width-1-1">
+          <div class="uk-width-expand">
+          </div>
+          <div class="uk-width-auto">
+            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
-    import teamTypeStore from '@/stores/team_types';
-    import TeamType from '@/models/TeamType';
+import teamTypeStore from '@/stores/team_types';
+import registerModule from '@/stores/mixin';
 
-    import { validationMixin } from 'vuelidate';
-    import { required, numeric } from 'vuelidate/lib/validators';
+import TeamType from '@/models/TeamType';
 
-    import PageHeader from '@/site/components/PageHeader.vue';
-    import UikitInputText from '@/components/uikit/InputText.vue';
-    import UikitTextarea from '@/components/uikit/Textarea.vue';
-    import UikitSelect from '@/components/uikit/Select.vue';
-    import UikitCheckbox from '@/components/uikit/Checkbox.vue';
+import PageHeader from '@/site/components/PageHeader.vue';
 
-    import messages from './lang';
+import TeamTypeForm from './TeamTypeForm';
+import Field from '@/components/forms/Field.vue';
+import UikitInputText from '@/components/forms/InputText.vue';
+import UikitTextarea from '@/components/forms/Textarea.vue';
+import UikitSelect from '@/components/forms/Select.vue';
+import UikitCheckbox from '@/components/forms/Checkbox.vue';
 
-    var initError = function() {
-        return {
-            name : [],
-            start_age : [],
-            end_age : [],
-            gender : [],
-            active : [],
-            competition : [],
-            remark : [],
-        }
+import messages from './lang';
+
+export default {
+  components: {
+    PageHeader, Field, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
+  },
+  i18n: messages,
+  mixins: [
+    TeamTypeForm,
+    registerModule({
+      teamType: teamTypeStore
+    }),
+  ],
+  data() {
+    return {
+      teamType: new TeamType(),
+      genders: [
+        {
+          value: 0,
+          text: this.$t('no_restriction')
+        },
+        {
+          value: 1,
+          text: this.$t('male')
+        },
+        {
+          value: 2,
+          text: this.$t('female')
+        },
+      ]
     };
-    var initForm = function() {
-        return {
-            team_type : {
-                name : '',
-                start_age : '',
-                end_age : '',
-                gender : 0,
-                active : true,
-                competition : true,
-                remark : ''
-            }
-        };
+  },
+  computed: {
+    creating() {
+      return this.teamType != null && this.teamType.id == null;
+    },
+    error() {
+      return this.$store.state.teamType.error;
+    },
+  },
+  beforeRouteEnter(to, from, next) {
+    next(async(vm) => {
+      if (to.params.id) await vm.fetchData(to.params);
+      next();
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetchData(to.params);
+    next();
+  },
+  watch: {
+    error(nv) {
+      if (nv) {
+        if (nv.response.status === 422) {
+          this.handleErrors(nv.response.data.errors);
+        } else if (nv.response.status === 404) {
+          // this.error = err.response.statusText;
+        } else {
+          // TODO: check if we can get here ...
+          console.log(nv);
+        }
+      }
     }
-
-    export default {
-        components : {
-            PageHeader, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
-        },
-        i18n : messages,
-        mixins: [
-            validationMixin
-        ],
-        data() {
-            return {
-                teamType : new TeamType(),
-                form : initForm(),
-                errors : initError(),
-                genders : [
-                    { value : 0, text : this.$t('no_restriction') },
-                    { value : 1, text : this.$t('male') },
-                    { value : 2, text : this.$t('female') }
-                ]
+  },
+  methods: {
+    async fetchData(params) {
+      this.teamType = await this.$store.dispatch('teamType/read', {
+        id: params.id
+      });
+      this.writeForm(this.teamType);
+    },
+    submit() {
+      this.clearErrors();
+      this.readForm(this.teamType);
+      this.$store.dispatch('teamType/save', this.teamType)
+        .then((newType) => {
+          this.$router.push({
+            name: 'team_types.read',
+            params: {
+              id: newType.id
             }
-        },
-        computed : {
-            creating() {
-                return this.teamType != null && this.teamType.id == null;
-            },
-            error() {
-                return this.$store.getters['teamTypeModule/error'];
-            },
-            nameErrors() {
-                const errors = [...this.errors.name];
-                if (! this.$v.form.team_type.name.$dirty) return errors;
-                ! this.$v.form.team_type.name.required && errors.push('Name is required');
-                return errors;
-            },
-            startAgeErrors() {
-                const errors = [...this.errors.start_age];
-                if (! this.$v.form.team_type.start_age.$dirty) return errors;
-                ! this.$v.form.team_type.start_age.numeric && errors.push(this.$t('numeric'));
-                return errors;
-            },
-            endAgeErrors() {
-                const errors = [...this.errors.end_age];
-                if (! this.$v.form.team_type.end_age.$dirty) return errors;
-                ! this.$v.form.team_type.end_age.numeric && errors.push(this.$t('numeric'));
-                return errors;
-            },
-            genderErrors() {
-                const errors = [...this.errors.gender];
-                if (! this.$v.form.team_type.gender.$dirty) return errors;
-                //! this.$v.form.teamtype.gender.numeric && errors.push('End age must be numeric');
-                return errors;
-            },
-            remarkErrors() {
-                const errors = [...this.errors.remark];
-                if (! this.$v.form.team_type.remark.$dirty) return errors;
-                return errors;
-            }
-        },
-        validations : {
-            form : {
-                team_type : {
-                    name : {
-                        required
-                    },
-                    start_age : {
-                        numeric
-                    },
-                    end_age : {
-                        numeric
-                    },
-                    gender : {
-                    },
-                    remark : {
-                    }
-                }
-            }
-        },
-        beforeCreate() {
-            if (!this.$store.state.teamTypeModule) {
-                this.$store.registerModule('teamTypeModule', teamTypeStore);
-            }
-        },
-        beforeRouteEnter(to, from, next) {
-            next(async (vm) => {
-                if (to.params.id) await vm.fetchData(to.params.id);
-                next();
-            });
-        },
-        watch : {
-            error(nv) {
-                if (nv) {
-                    if ( nv.response.status == 422 ) {
-                        nv.response.data.errors.forEach((item, index) => {
-                            if ( item.source && item.source.pointer ) {
-                                var attr = item.source.pointer.split('/').pop();
-                                this.errors[attr].push(item.title);
-                            }
-                        });
-                    }
-                    else if ( nv.response.status == 404 ){
-                      //this.error = err.response.statusText;
-                    }
-                    else {
-                      //TODO: check if we can get here ...
-                      console.log(nv);
-                    }
-                }
-            }
-        },
-        methods : {
-            clear() {
-                this.$v.$reset();
-                this.form = initForm();
-            },
-            async fetchData(id) {
-                this.teamType = await this.$store.dispatch('teamTypeModule/read', {
-                    id : id
-                });
-                this.fillForm();
-            },
-            fillForm() {
-                this.form.team_type.name = this.teamType.name;
-                this.form.team_type.start_age = this.teamType.start_age;
-                this.form.team_type.end_age = this.teamType.end_age;
-                this.form.team_type.gender = this.teamType.gender;
-                this.form.team_type.active = this.teamType.active;
-                this.form.team_type.competition = this.teamType.competition;
-                this.form.team_type.remark = this.teamType.remark;
-            },
-            fillTeamType() {
-                this.teamType.name =this.form.team_type.name;
-                this.teamType.start_age = this.form.team_type.start_age;
-                this.teamType.end_age = this.form.team_type.end_age;
-                this.teamType.gender = this.form.team_type.gender;
-                this.teamType.active = this.form.team_type.active;
-                this.teamType.competition = this.form.team_type.competition;
-                this.teamType.remark =this.form.team_type.remark;
-            },
-            submit() {
-                this.errors = initError();
-                this.fillTeamType();
-                this.$store.dispatch('teamTypeModule/save', this.teamType)
-                    .then((newType) => {
-                        this.$router.push({ name : 'team_types.read', params : { id : newType.id }});
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-        }
-    };
+          });
+        }).catch(err => {
+          console.log(err);
+        });
+    }
+  }
+};
 </script>

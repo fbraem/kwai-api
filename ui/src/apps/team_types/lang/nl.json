@@ -6,25 +6,36 @@
     "update" : "Wijzig type",
     "details" : "Team Type",
     "form" : {
-        "name" : {
-            "label" : "Naam",
-            "placeholder" : "Geef de naam van het type"
-        },
-        "start_age" : {
-            "label" : "Min. Leeftijd",
-            "placeholder" : "Geef de minimum leeftijd voor leden van dit team type"
-        },
-        "end_age" : {
-            "label" : "Max. Leeftijd",
-            "placeholder" : "Geef de maximum leeftijd voor leden van dit team type"
-        },
-        "remark" : {
-            "label" : "Opmerking",
-            "placeholder" : "Geef opmerking over dit type."
-        },
-        "gender" : {
-            "label" : "Geslacht",
-            "placeholder" : "Zal het het team beperkt zijn tot een bepaald geslacht?"
+        "team_type" : {
+            "name" : {
+                "label" : "Naam",
+                "placeholder" : "Geef de naam van het type",
+                "required" : "Naam is verplicht"
+            },
+            "start_age" : {
+                "label" : "Min. Leeftijd",
+                "placeholder" : "Geef de minimum leeftijd voor leden van dit team type",
+                "numeric": "Min. Leeftijd moet een getal zijn"
+            },
+            "end_age" : {
+                "label" : "Max. Leeftijd",
+                "placeholder" : "Geef de maximum leeftijd voor leden van dit team type",
+                "numeric": "Max. Leeftijd moet een getal zijn"
+            },
+            "active" : {
+                "label" : "Actief"
+            },
+            "competition" : {
+                "label" : "Gebruikt voor competitie"
+            },
+            "remark" : {
+                "label" : "Opmerking",
+                "placeholder" : "Geef opmerking over dit type."
+            },
+            "gender" : {
+                "label" : "Geslacht",
+                "placeholder" : "Zal het het team beperkt zijn tot een bepaald geslacht?"
+            }
         }
     },
     "numeric" : "Enkel cijfers zijn toegelaten",
@@ -48,7 +59,6 @@
     "delete" : "Verwijder",
     "cancel" : "Annuleer",
     "name" : "Naam",
-    "required" : "Dit veld is verplicht in te vullen.",
     "not_allowed" : "Je hebt geen toelating tot deze informatie",
     "not_found" : "Dit type bestaat niet"
 }
