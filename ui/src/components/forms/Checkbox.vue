@@ -1,49 +1,18 @@
 <template>
-    <div class="uk-margin">
-        <label>
-            <input :value="value"
-                :id="id"
-                class="uk-checkbox"
-                :class="{ 'uk-form-danger' : danger }"
-                type="checkbox"
-                :checked="isChecked"
-                @change="onChange"
-                v-bind="$attrs"
-            />
-            <slot></slot>
-        </label>
-        <div v-if="errors && errors.length > 0" class="uk-text-danger uk-margin-small">
-            <div v-for="error in errors">
-                {{ error }}
-            </div>
-        </div>
-    </div>
+    <input v-model="field.value"
+        :id="id"
+        class="uk-checkbox"
+        type="checkbox"
+        :class="{ 'uk-form-danger' : field.errors.length > 0 }"
+        v-bind="$attrs"
+    />
 </template>
 
 <script>
-    export default {
-        props : [
-            'validator',
-            'errors',
-            'id',
-            'value'
-        ],
-        computed : {
-            isChecked() {
-                return this.value;
-            },
-            danger() {
-                if ( this.validator ) {
-                    return this.validator.$error;
-                }
-                return false;
-            }
-        },
-        methods : {
-            onChange(e) {
-                this.$emit('input', e.target.checked);
-                if (this.validator) this.validator.$touch();
-            }
-        }
-    }
+export default {
+  inject: {
+    field: 'field',
+    id: 'id'
+  }
+};
 </script>
