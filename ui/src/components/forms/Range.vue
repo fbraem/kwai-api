@@ -1,5 +1,5 @@
 <template>
-  <div class="uk-margin">
+  <div class="uk-form-controls">
     <input v-model="field.value"
       :id="id"
       class="uk-range"

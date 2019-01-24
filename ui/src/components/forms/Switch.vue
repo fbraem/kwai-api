@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="uk-form-controls">
     <label class="uk-switch">
       <input v-model="field.value"
         :id="id"
