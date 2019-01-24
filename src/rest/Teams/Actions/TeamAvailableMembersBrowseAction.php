@@ -66,32 +66,50 @@ class TeamAvailableMembersBrowseAction
             if ($team->team_type->gender) {
                 $query->where(['Person.gender' => $team->team_type->gender]);
             }
+            // When the team is attached to a season, the age of a member is
+            // calculated on the end date of the season.
             if ($team->season) {
+                $diff = $q->func()->TIMESTAMPDIFF([
+                    'YEAR' => 'literal',
+                    'Person.birthdate' => 'identifier',
+                    $team->season->end_date
+                ]);
                 if ($team->team_type->start_age) {
-                    $query->where(function (QueryExpression $exp, Query $q) use ($team) {
-                        return $exp->gte("TIMESTAMPDIFF(YEAR, Person.birthdate, '" . $team->season->end_date . "')", $team->team_type->start_age);
+                    $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
+                        return $exp->gte($diff, $team->team_type->start_age);
                     });
                 }
                 if ($team->team_type->end_age) {
-                    $query->where(function (QueryExpression $exp, Query $q) use ($team) {
-                        return $exp->lte("TIMESTAMPDIFF(YEAR, Person.birthdate, '" . $team->season->end_date . "')", $team->team_type->end_age);
+                    $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
+                        return $exp->lte($diff, $team->team_type->end_age);
                     });
                 }
             } else {
-                $endOfYearDate = \Carbon\Carbon::now()->endOfYear();
+                // Age is calculated on the end of the year
+                $diff = $q->func()->TIMESTAMPDIFF([
+                    'YEAR' => 'literal',
+                    'Person.birthdate' => 'identifier',
+                    \Carbon\Carbon::now()->endOfYear()
+                ]);
                 if ($team->team_type->start_age) {
-                    $query->where(function (QueryExpression $exp, Query $q) use ($team, $endOfYearDate) {
-                        return $exp->gte("TIMESTAMPDIFF(YEAR, Person.birthdate, '" . $endOfYearDate . "')", $team->team_type->start_age);
+                    $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
+                        return $exp->gte($diff, $team->team_type->start_age);
                     });
                 }
                 if ($team->team_type->end_age) {
-                    $query->where(function (QueryExpression $exp, Query $q) use ($team, $endOfYearDate) {
-                        return $exp->lte("TIMESTAMPDIFF(YEAR, Person.birthdate, '" . $endOfYearDate . "')", $team->team_type->end_age);
+                    $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
+                        return $exp->lte($diff, $team->team_type->end_age);
                     });
                 }
             }
         } else {
             $parameters = $request->getAttribute('parameters');
+            // Age is calculated on the end of the year
+            $diff = $q->func()->TIMESTAMPDIFF([
+                'YEAR' => 'literal',
+                'Person.birthdate' => 'identifier',
+                \Carbon\Carbon::now()->endOfYear()
+            ]);
             if (isset($parameters['filter']['start_age'])) {
                 if (preg_match("/([><!]?=?)?\s*([0-9]*)/", $parameters['filter']['start_age'], $matches)) {
                     $operator = $matches[1];
@@ -100,10 +118,8 @@ class TeamAvailableMembersBrowseAction
                     }
                     $method = self::$_logicExpressions[$operator] ?? 'eq';
                     $age = $matches[2];
-                    $query->where(function (QueryExpression $exp, Query $q) use ($method, $age) {
-                        $endOfYearDate = \Carbon\Carbon::now()->endOfYear();
-                        $condition = "TIMESTAMPDIFF(YEAR, Person.birthdate, '" . $endOfYearDate . "')";
-                        return $exp->$method($condition, $age);
+                    $query->where(function (QueryExpression $exp, Query $q) use ($method, $diff, $age) {
+                        return $exp->$method($diff, $age);
                     });
                 }
             }
@@ -115,10 +131,8 @@ class TeamAvailableMembersBrowseAction
                     }
                     $method = self::$_logicExpressions[$operator] ?? 'eq';
                     $age = $matches[2];
-                    $query->where(function (QueryExpression $exp, Query $q) use ($method, $age) {
-                        $endOfYearDate = \Carbon\Carbon::now()->endOfYear();
-                        $condition = "TIMESTAMPDIFF(YEAR, Person.birthdate, '" . $endOfYearDate . "')";
-                        return $exp->$method($condition, $age);
+                    $query->where(function (QueryExpression $exp, Query $q) use ($method, $diff, $age) {
+                        return $exp->$method($diff, $age);
                     });
                 }
             }
