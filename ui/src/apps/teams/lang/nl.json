@@ -16,23 +16,24 @@
     "no_competition" : "Niet gebruikt voor competitie",
     "male" : "Man",
     "female" : "Vrouw",
-    "team" : {
-        "create" : "Maak nieuw team",
-        "update" : "Wijzig Team",
-        "details" : "Team Details",
-        "form" : {
+    "create" : "Maak nieuw team",
+    "update" : "Wijzig Team",
+    "details" : "Team Details",
+    "form" : {
+        "team" : {
             "name" : {
                 "label" : "Naam",
-                "placeholder" : "Geef de naam van het team in"
+                "placeholder" : "Geef de naam van het team in",
+                "required": "Naam is verplicht in te vullen"
             },
             "season" : {
                 "label" : "Seizoen",
-                "placeholder" : "Selecteer een seizoen",
+                "empty" : "<Geen Seizoen>",
                 "hint" : "Een team dat niet gebonden is aan een seizoen kan gebruikt worden om leden te groeperen (bv. bij registratie trainingen). Een team dat bij een seizoen hoort kan gebruikt worden voor tornooien/wedstrijden."
             },
             "team_type" : {
                 "label" : "Teamtype",
-                "placeholder" : "Selecteer een type",
+                "empty" : "<Geen Type>",
                 "hint" : "Een type kan gebruikt worden om extra controles uit te voeren bij het toevoegen van leden (Bv. leeftijd)."
             },
             "remark" : {

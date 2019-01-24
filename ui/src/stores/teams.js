@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 import JSONAPI from '@/js/JSONAPI';
 import Team from '@/models/Team';
+import Member from '@/models/Member';
 
 const state = {
   meta: null,
@@ -14,9 +15,6 @@ const state = {
 };
 
 const getters = {
-  teams(state) {
-    return state.teams;
-  },
   teamsAsOptions(state) {
     var teams = state.teams;
     if (teams) {
@@ -87,11 +85,11 @@ const actions = {
       var api = new JSONAPI({ source: Team });
       let result = await api.get();
       commit('teams', result);
-      dispatch('wait/end', 'teams.browse', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'teams.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'teams.browse', { root: true });
     }
   },
   async save({ dispatch, commit }, team) {
@@ -116,12 +114,12 @@ const actions = {
       var api = new JSONAPI({ source: Team });
       var result = await api.get(payload.id);
       commit('team', result);
-      dispatch('wait/end', 'teams.read', { root: true });
       return result.data;
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'teams.read', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'teams.read', { root: true });
     }
   },
   async members({ dispatch, commit }, payload) {
@@ -130,11 +128,11 @@ const actions = {
       const api = new JSONAPI({ source: Team });
       const result = await api.with(['members']).get(payload.id);
       commit('team', result);
-      dispatch('wait/end', 'teams.members', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'teams.members', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'teams.members', { root: true });
     }
   },
   async addMembers({ getters, commit }, payload) {
@@ -167,26 +165,29 @@ const actions = {
     commit('clearAvailableMembers');
     dispatch('wait/start', 'teams.availableMembers', { root: true });
 
-    const team = new Team();
+    var api = new JSONAPI({ source: Team, target: Member});
     if (payload.filter) {
       if (payload.filter.start_age) {
-        team.where('start_age', '>=' + payload.filter.start_age);
+        api.where('start_age', '>=' + payload.filter.start_age);
       }
       if (payload.filter.end_age) {
-        team.where('end_age', '<=' + payload.filter.end_age);
+        api.where('end_age', '<=' + payload.filter.end_age);
       }
       if (payload.filter.gender) {
-        team.where('gender', payload.filter.gender);
+        api.where('gender', payload.filter.gender);
       }
     }
     try {
-      var members = await team.available(payload.id);
+      var members = await api.custom({
+        id: payload.id,
+        path: 'available_members'
+      });
       commit('availableMembers', members);
-      dispatch('wait/end', 'teams.availableMembers', { root: true });
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'teams.availableMembers', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'teams.availableMembers', { root: true });
     }
   },
 };

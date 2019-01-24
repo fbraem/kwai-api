@@ -1,258 +1,170 @@
 <template>
-    <div>
-        <PageHeader>
-            <h1>{{ $t('teams') }}</h1>
-            <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('team.create') }}</h3>
-            <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('team.update') }}</h3>
-        </PageHeader>
-        <section class="uk-section uk-section-small uk-container uk-container-expand">
-            <div uk-grid>
-                <div class="uk-width-1-1">
-                    <form class="uk-form-stacked">
-                        <uikit-input-text v-model="form.team.name" :validator="$v.form.team.name" :errors="nameErrors" id="name" :placeholder="$t('team.form.name.placeholder')">
-                            {{ $t('team.form.name.label') }}:
-                        </uikit-input-text>
-                        <uikit-select
-                            v-model="form.team.season"
-                            :items="seasons"
-                            :validator="$v.form.team.season"
-                            :errors="seasonErrors"
-                            id="season"
-                            :empty="$t('team.form.season.placeholder')">
-                            {{ $t('team.form.season.label') }}:
-                        </uikit-select>
-                        <p class="uk-text-meta">{{ $t('team.form.season.hint')}}</p>
-                        <uikit-select
-                            v-model="form.team.team_type"
-                            :items="team_types"
-                            :validator="$v.form.team.team_type"
-                            :errors="team_typeErrors"
-                            id="team_type"
-                            :empty="$t('team.form.team_type.placeholder')">
-                            {{ $t('team.form.team_type.label') }}:
-                        </uikit-select>
-                        <p class="uk-text-meta">{{ $t('team.form.team_type.hint')}}</p>
-                        <uikit-textarea v-model="form.team.remark" :validator="$v.form.team.remark" :rows="5" id="remark" :errors="remarkErrors" :placeholder="$t('team.form.remark.placeholder')">
-                            {{ $t('team.form.remark.label') }}:
-                        </uikit-textarea>
-                    </form>
-                </div>
-                <div uk-grid class="uk-width-1-1">
-                    <div class="uk-width-expand">
-                    </div>
-                    <div class="uk-width-auto">
-                        <button class="uk-button uk-button-primary" :disabled="$v.$invalid" @click="submit">
-                            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+  <!-- eslint-disable max-len -->
+  <div>
+    <PageHeader>
+      <h1>{{ $t('teams') }}</h1>
+      <h3 v-if="creating" class="uk-h3 uk-margin-remove">
+        {{ $t('create') }}
+      </h3>
+      <h3 v-else class="uk-h3 uk-margin-remove">
+        {{ $t('update') }}
+      </h3>
+    </PageHeader>
+    <section class="uk-section uk-section-small uk-container uk-container-expand">
+      <div uk-grid>
+        <div class="uk-width-1-1">
+          <form class="uk-form-stacked">
+            <field name="name" :label="$t('form.team.name.label')">
+              <uikit-input-text :placeholder="$t('form.team.name.placeholder')">
+              </uikit-input-text>
+            </field>
+            <field name="season" :label="$t('form.team.season.label')">
+              <uikit-select :items="seasons">
+              </uikit-select>
+            </field>
+            <p class="uk-text-meta">{{ $t('form.team.season.hint')}}</p>
+            <field name="team_type" :label="$t('form.team.team_type.label')">
+              <uikit-select :items="team_types">
+              </uikit-select>
+            </field>
+            <p class="uk-text-meta">{{ $t('form.team.team_type.hint')}}</p>
+            <field name="remark" :label="$t('form.team.remark.label')">
+              <uikit-textarea :rows="5" id="remark"
+                :placeholder="$t('form.team.remark.placeholder')">
+              </uikit-textarea>
+            </field>
+          </form>
+        </div>
+        <div uk-grid class="uk-width-1-1">
+          <div class="uk-width-expand">
+          </div>
+          <div class="uk-width-auto">
+            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
-    import Team from '@/models/Team';
-    import TeamType from '@/models/TeamType';
-    import Season from '@/models/Season';
+import Team from '@/models/Team';
 
-    import { validationMixin } from 'vuelidate';
-    import { required, numeric } from 'vuelidate/lib/validators';
+import PageHeader from '@/site/components/PageHeader.vue';
 
-    import PageHeader from '@/site/components/PageHeader.vue';
-    import UikitInputText from '@/components/uikit/InputText.vue';
-    import UikitTextarea from '@/components/uikit/Textarea.vue';
-    import UikitSelect from '@/components/uikit/Select.vue';
+import TeamForm from './TeamForm';
+import Field from '@/components/forms/Field.vue';
+import UikitInputText from '@/components/forms/InputText.vue';
+import UikitTextarea from '@/components/forms/Textarea.vue';
+import UikitSelect from '@/components/forms/Select.vue';
 
-    var initError = function() {
-        return {
-            name : [],
-            season : [],
-            team_type : [],
-            remark : []
-        }
+import messages from './lang';
+
+import teamStore from '@/stores/teams';
+import teamTypeStore from '@/stores/team_types';
+import seasonStore from '@/stores/seasons';
+import registerModule from '@/stores/mixin';
+
+export default {
+  components: {
+    PageHeader, Field, UikitInputText, UikitTextarea, UikitSelect
+  },
+  i18n: messages,
+  mixins: [
+    TeamForm,
+    registerModule(
+      {
+        teamType: teamTypeStore
+      },
+      {
+        team: teamStore
+      },
+      {
+        season: seasonStore
+      }
+    ),
+  ],
+  data() {
+    return {
+      team: new Team()
     };
-    var initForm = function() {
-        return {
-            team : {
-                name : '',
-                season : 0,
-                team_type : 0,
-                remark : ''
-            }
-        };
+  },
+  computed: {
+    creating() {
+      return this.team != null && this.team.id == null;
+    },
+    error() {
+      return this.$store.state.team.error;
+    },
+    seasons() {
+      var seasons = this.$store.getters['season/seasonsAsOptions'];
+      seasons.unshift({
+        value: 0,
+        text: this.$t('form.team.season.empty')
+      });
+      return seasons;
+    },
+    team_types() {
+      var seasons = this.$store.getters['teamType/typesAsOptions'];
+      seasons.unshift({
+        value: 0,
+        text: this.$t('form.team.team_type.empty')
+      });
+      return seasons;
+    },
+  },
+  async created() {
+    await this.$store.dispatch('season/browse');
+    await this.$store.dispatch('teamType/browse');
+  },
+  beforeRouteEnter(to, from, next) {
+    next(async(vm) => {
+      if (to.params.id) await vm.fetchData(to.params);
+      next();
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    if (to.params.id) await this.fetchData(to.params);
+    next();
+  },
+  watch: {
+    error(nv) {
+      if (nv) {
+        if (nv.response.status === 422) {
+          this.handleErrors(nv);
+        } else if (nv.response.status === 404) {
+          // this.error = err.response.statusText;
+        } else {
+          // TODO: check if we can get here ...
+          console.log(nv);
+        }
+      }
     }
-
-    import messages from './lang';
-    import teamStore from '@/stores/teams';
-    import teamTypeStore from '@/stores/team_types';
-    import seasonStore from '@/stores/seasons';
-
-    export default {
-        components : {
-            PageHeader, UikitInputText, UikitTextarea, UikitSelect
-        },
-        i18n : messages,
-        mixins: [
-            validationMixin
-        ],
-        data() {
-            return {
-                team : new Team(),
-                form : initForm(),
-                errors : initError()
-            }
-        },
-        computed : {
-            creating() {
-                return this.team != null && this.team.id == null;
-            },
-            error() {
-                return this.$store.getters['teamModule/error'];
-            },
-            seasons() {
-                var seasons = this.$store.getters['seasonModule/seasons'];
-                if (seasons) {
-                    seasons = seasons.map((season) => ({value : season.id, text : season.name }));
-                    seasons.unshift({ value : 0, text : '< ' + this.$t('no_season') + ' >'});
-                }
-                return seasons;
-            },
-            team_types() {
-                var types = this.$store.getters['teamTypeModule/types'];
-                if (types) {
-                    var types = types.map((type) => ({value : type.id, text : type.name }));
-                    types.unshift({ value : 0, text : '< ' + this.$t('no_type') + ' >'});
-                }
-                return types;
-            },
-            nameErrors() {
-                const errors = [...this.errors.name];
-                if (! this.$v.form.team.name.$dirty) return errors;
-                ! this.$v.form.team.name.required && errors.push(this.$t('required'));
-                return errors;
-            },
-            seasonErrors() {
-                const errors = [...this.errors.season];
-                if (! this.$v.form.team.season.$dirty) return errors;
-                return errors;
-            },
-            team_typeErrors() {
-                const errors = [...this.errors.team_type];
-                if (! this.$v.form.team.team_type.$dirty) return errors;
-                return errors;
-            },
-            remarkErrors() {
-                const errors = [...this.errors.remark];
-                if (! this.$v.form.team.remark.$dirty) return errors;
-                return errors;
-            }
-        },
-        validations : {
-            form : {
-                team : {
-                    name : { required },
-                    season : {},
-                    team_type : {},
-                    remark : {}
-                }
-            }
-        },
-        beforeCreate() {
-            if (!this.$store.state.teamModule) {
-                this.$store.registerModule('teamModule', teamStore);
-            }
-            if (!this.$store.state.teamTypeModule) {
-                this.$store.registerModule('teamTypeModule', teamTypeStore);
-            }
-            if (!this.$store.state.seasonModule) {
-                this.$store.registerModule('seasonModule', seasonStore);
-            }
-        },
-        async created() {
-            await this.$store.dispatch('seasonModule/browse');
-            await this.$store.dispatch('teamTypeModule/browse');
-        },
-        beforeRouteEnter(to, from, next) {
-            next(async (vm) => {
-                if (to.params.id) await vm.fetchData(to.params.id);
-                next();
-            });
-        },
-        watch : {
-            team(nv) {
-                if (nv) {
-                    this.fillForm(nv);
-                }
-            },
-            error(nv) {
-                if (nv) {
-                    if ( nv.response.status == 422 ) {
-                        nv.response.data.errors.forEach((item, index) => {
-                            if ( item.source && item.source.pointer ) {
-                                var attr = item.source.pointer.split('/').pop();
-                                this.errors[attr].push(item.title);
-                            }
-                        });
-                    }
-                    else if ( nv.response.status == 404 ){
-                      //this.error = err.response.statusText;
-                    }
-                    else {
-                      //TODO: check if we can get here ...
-                      console.log(nv);
-                    }
-                }
-            }
-        },
-        methods : {
-            async fetchData(id) {
-                this.team = await this.$store.dispatch('teamModule/read', {
-                    id : id
-                });
-                this.fillForm();
-            },
-            clear() {
-                this.$v.$reset();
-                this.form = initForm();
-            },
-            fillForm() {
-                this.form.team.name = this.team.name;
-                this.form.team.remark = this.team.remark;
-                if (this.team.season) {
-                    this.form.team.season = this.team.season.id;
-                }
-                if (this.team.team_type) {
-                    this.form.team.team_type = this.team.team_type.id;
-                }
-            },
-            fillTeam() {
-                this.team.name = this.form.team.name;
-                this.team.remark = this.form.team.remark;
-                if (this.form.team.season) {
-                    this.team.season = new Season();
-                    if (this.form.team.season == 0) {
-                        this.team.season.id = null;
-                    } else {
-                        this.team.season.id = this.form.team.season;
-                    }
-                }
-                if (this.form.team.team_type) {
-                    this.team.team_type = new TeamType();
-                    this.team.team_type.id = this.form.team.team_type;
-                }
-            },
-            submit() {
-                this.errors = initError();
-                this.fillTeam();
-                this.$store.dispatch('teamModule/save', this.team)
-                    .then((newTeam) => {
-                        this.$router.push({ name : 'teams.read', params : { id : newTeam.id }});
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-        }
-    };
+  },
+  methods: {
+    async fetchData(params) {
+      this.team = await this.$store.dispatch('team/read', {
+        id: params.id
+      });
+      this.writeForm(this.team);
+    },
+    async submit() {
+      this.clearErrors();
+      this.readForm(this.team);
+      try {
+        this.team = await this.$store.dispatch('team/save', this.team);
+        this.$router.push({
+          name: 'teams.read',
+          params: {
+            id: this.team.id
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      };
+    }
+  }
+};
 </script>

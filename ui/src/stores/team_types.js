@@ -25,6 +25,21 @@ const getters = {
     }
     return null;
   },
+  /**
+   * Return types as items for a select
+   */
+  typesAsOptions(state) {
+    var types = state.types;
+    if (types) {
+      types = types.map((type) => ({
+        value: type.id,
+        text: type.name }
+      ));
+    } else {
+      types = [];
+    }
+    return types;
+  },
 };
 
 const mutations = {

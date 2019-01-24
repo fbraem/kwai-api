@@ -16,23 +16,24 @@
     "no_competition" : "Not used for competition",
     "male" : "Male",
     "female" : "Female",
-    "team" : {
-        "create" : "Create new team",
-        "update" : "Edit Team",
-        "details" : "Team Details",
-        "form" : {
+    "create" : "Create new team",
+    "update" : "Edit Team",
+    "details" : "Team Details",
+    "form" : {
+        "team" : {
             "name" : {
                 "label" : "Name",
-                "placeholder" : "Enter the name of the team"
+                "placeholder" : "Enter the name of the team",
+                "required": "The name is required"
             },
             "season" : {
                 "label" : "Season",
-                "placeholder" : "Select a season",
+                "empty" : "<No Season>",
                 "hint" : "A team that is not related to a season can be used to group members (to register the presence on a training for example). A team that is related to a season can be used for tournaments/games."
             },
             "team_type" : {
                 "label" : "Teamtype",
-                "placeholder" : "Select a type",
+                "empty" : "<No Type>",
                 "hint" : "A type can be used to add more checks when a member is added to the team (Age for example)."
             },
             "remark" : {
