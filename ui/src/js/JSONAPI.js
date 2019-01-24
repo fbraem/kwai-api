@@ -107,6 +107,24 @@ class JSONAPI {
     };
   }
 
+  async custom({id, path}) {
+    var uri = this.uri.clone();
+    var segments = uri.segment();
+    segments.push(this.source.type());
+    if (id) segments.push(id);
+    if (path) segments.push(path);
+    uri.segment(segments);
+    const config = {
+      method: 'GET',
+      url: uri.href(),
+    };
+    let response = await this.request(config);
+    return {
+      meta: response.data.meta,
+      data: this.target.deserialize(response.data.data, response.data.included)
+    };
+  }
+
   /**
    * Saves a model by sending a request with a POST or PATCH method. POST is
    * used when the model doesn't have an id. Otherwise PATCH is used.
