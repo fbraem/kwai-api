@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
   textarea:required {
     border-left: 3px solid;
   }

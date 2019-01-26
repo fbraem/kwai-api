@@ -7,7 +7,7 @@
   </multiselect>
 </template>
 
-<style>
+<style scoped>
   input:required {
     border-left: 3px solid;
   }

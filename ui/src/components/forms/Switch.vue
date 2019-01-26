@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .uk-switch {
   position: relative;
   display: inline-block;

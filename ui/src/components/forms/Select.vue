@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
   select:required {
     border-left: 3px solid;
   }
