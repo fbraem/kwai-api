@@ -47,6 +47,12 @@ export default class TrainingDefinition extends Model {
     return {
       weekdayText(definition) {
         return moment.weekdays(true)[definition.weekday - 1];
+      },
+      formattedStartTime(definition) {
+        return definition.start_time.format('HH:mm');
+      },
+      formattedEndTime(definition) {
+        return definition.end_time.format('HH:mm');
       }
     };
   }
