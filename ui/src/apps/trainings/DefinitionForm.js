@@ -11,7 +11,6 @@ export default {
     return {
       name: {
         value: '',
-        label: this.$t('training.definitions.form.name.label'),
         required: true,
         validators: [
           {
@@ -22,7 +21,6 @@ export default {
       },
       description: {
         value: '',
-        label: this.$t('training.definitions.form.description.label'),
         required: true,
         validators: [
           {
@@ -32,16 +30,13 @@ export default {
         ]
       },
       season: {
-        value: 0,
-        label: this.$t('training.definitions.form.season.label')
+        value: 0
       },
       team: {
-        value: 0,
-        label: this.$t('training.definitions.form.team.label')
+        value: 0
       },
       weekday: {
         value: 1,
-        label: this.$t('training.definitions.form.weekday.label'),
         required: true,
         validators: [
           {
@@ -52,7 +47,6 @@ export default {
       },
       start_time: {
         value: '',
-        label: this.$t('training.definitions.form.start_time.label'),
         required: true,
         validators: [
           {
@@ -68,7 +62,6 @@ export default {
       end_time: {
         value: '',
         required: true,
-        label: this.$t('training.definitions.form.end_time.label'),
         validators: [
           {
             v: notEmpty,
@@ -81,16 +74,13 @@ export default {
         ]
       },
       active: {
-        value: true,
-        label: this.$t('training.definitions.form.active.label')
+        value: true
       },
       location: {
-        value: null,
-        label: this.$t('training.definitions.form.location.label')
+        value: null
       },
       remark: {
-        value: '',
-        label: this.$t('training.definitions.form.remark.label')
+        value: ''
       }
     };
   },
@@ -115,8 +105,8 @@ export default {
       this.form.description.value = definition.description;
       this.form.active.value = definition.active;
       this.form.location.value = definition.location;
-      this.form.start_time.value = definition.localStartTime;
-      this.form.end_time.value = definition.localEndTime;
+      this.form.start_time.value = definition.formattedStartTime;
+      this.form.end_time.value = definition.formattedEndTime;
       this.form.weekday.value = definition.weekday;
       if (definition.season) {
         this.form.season.value = definition.season.id;

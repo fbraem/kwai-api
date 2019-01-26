@@ -12,44 +12,44 @@
           <form class="uk-form-stacked">
             <div uk-grid>
               <div class="uk-width-expand">
-                <field name="name">
+                <field name="name" :label="$t('training.definitions.form.name.label')">
                   <uikit-input-text :placeholder="$t('training.definitions.form.name.placeholder')" />
                 </field>
               </div>
               <div>
-                <field name="active">
+                <field name="active" :label="$t('training.definitions.form.active.label')">
                   <uikit-switch />
                 </field>
               </div>
             </div>
-            <field name="description">
+            <field name="description" :label="$t('training.definitions.form.description.label')">
               <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.description.placeholder')" />
             </field>
-            <field name="weekday">
+            <field name="weekday" :label="$t('training.definitions.form.weekday.label')">
               <uikit-select :items="weekdays" />
             </field>
             <div class="uk-child-width-1-2" uk-grid>
               <div>
-                <field name="start_time">
+                <field name="start_time" :label="$t('training.definitions.form.start_time.label')">
                   <uikit-input-text :placeholder="$t('training.definitions.form.start_time.placeholder')" />
                 </field>
               </div>
               <div>
-                <field name="end_time">
+                <field name="end_time" :label="$t('training.definitions.form.end_time.label')">
                   <uikit-input-text :placeholder="$t('training.definitions.form.end_time.placeholder')" />
                 </field>
               </div>
             </div>
-            <field name="season">
+            <field name="season" :label="$t('training.definitions.form.season.label')">
               <uikit-select :items="seasons" />
             </field>
-            <field name="team">
+            <field name="team" :label="$t('training.definitions.form.team.label')">
               <uikit-select :items="teams" />
             </field>
-            <field name="location">
+            <field name="location" :label="$t('training.definitions.form.location.label')">
               <uikit-input-text :placeholder="$t('training.definitions.form.location.placeholder')" />
             </field>
-            <field name="remark">
+            <field name="remark" :label="$t('training.definitions.form.remark.label')">
               <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.remark.placeholder')" />
             </field>
           </form>
