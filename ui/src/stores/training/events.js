@@ -5,10 +5,12 @@ Vue.use(Vuex);
 
 import moment from 'moment';
 
+import JSONAPI from '@/js/JSONAPI';
 import TrainingEvent from '@/models/trainings/Event';
 
 const state = {
   events: null,
+  meta: null,
   error: null,
 };
 
@@ -22,19 +24,20 @@ const getters = {
 };
 
 const mutations = {
-  events(state, events) {
-    state.events = events;
+  events(state, { meta, data }) {
+    state.events = data;
+    state.meta = meta;
     state.error = null;
   },
-  event(state, event) {
+  event(state, { data }) {
     if (state.events == null) {
       state.events = [];
     }
-    var index = state.events.findIndex((e) => e.id === event.id);
+    var index = state.events.findIndex((e) => e.id === data.id);
     if (index !== -1) {
-      Vue.set(state.events, index, event);
+      Vue.set(state.events, index, data);
     } else {
-      state.events.push(event);
+      state.events.push(data);
     }
     state.error = null;
   },
@@ -46,22 +49,22 @@ const mutations = {
 const actions = {
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'training.events.browse', { root: true });
-    const model = new TrainingEvent();
     try {
-      commit('events', await model.get());
-      dispatch('wait/end', 'training.events.browse', { root: true });
+      const api = new JSONAPI({ source: TrainingEvent });
+      commit('events', await api.get());
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'training.events.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'training.events.browse', { root: true });
     }
   },
   async save({ dispatch, commit }, event) {
-    var newEvent = null;
     try {
-      newEvent = await event.save();
-      commit('event', newEvent);
-      return newEvent;
+      const api = new JSONAPI({ source: TrainingEvent });
+      const result = await api.save(event);
+      commit('event', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
@@ -75,17 +78,18 @@ const actions = {
     }
 
     dispatch('wait/start', 'training.events.read', { root: true });
-    let model = new TrainingEvent();
     try {
-      event = await model.find(payload.id);
-      commit('event', event);
-      dispatch('wait/end', 'training.events.read', { root: true });
+      const api = new JSONAPI({ source: TrainingEvent });
+      const result = await api.get(payload.id);
+      commit('event', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       dispatch('wait/end', 'training.events.read', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'training.events.read', { root: true });
     }
-    return event;
   },
   generate({commit}, payload) {
     var tz = moment.tz.guess();

@@ -3,11 +3,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
 import TrainingDefinition from '@/models/trainings/Definition';
 
 const state = {
   definitions: null,
   error: null,
+  meta: null
 };
 
 const getters = {
@@ -20,19 +22,20 @@ const getters = {
 };
 
 const mutations = {
-  definitions(state, definitions) {
-    state.definitions = definitions;
+  definitions(state, { meta, data }) {
+    state.definitions = data;
+    state.meta = meta;
     state.error = null;
   },
-  definition(state, definition) {
+  definition(state, { data }) {
     if (state.definitions == null) {
       state.definitions = [];
     }
-    var index = state.definitions.findIndex((t) => t.id === definition.id);
+    var index = state.definitions.findIndex((t) => t.id === data.id);
     if (index !== -1) {
-      Vue.set(state.definitions, index, definition);
+      Vue.set(state.definitions, index, data);
     } else {
-      state.definitions.push(definition);
+      state.definitions.push(data);
     }
     state.error = null;
   },
@@ -44,22 +47,22 @@ const mutations = {
 const actions = {
   async browse({ dispatch, commit }, payload) {
     dispatch('wait/start', 'training.definitions.browse', { root: true });
-    const model = new TrainingDefinition();
     try {
-      commit('definitions', await model.get());
-      dispatch('wait/end', 'training.definitions.browse', { root: true });
+      const api = new JSONAPI({ source: TrainingDefinition });
+      commit('definitions', await api.get());
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'training.definitions.browse', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'training.definitions.browse', { root: true });
     }
   },
   async save({ dispatch, commit }, definition) {
-    var newDefinition = null;
     try {
-      newDefinition = await definition.save();
-      commit('definition', newDefinition);
-      return newDefinition;
+      const api = new JSONAPI({ source: TrainingDefinition });
+      const result = await api.save(definition);
+      commit('definition', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
@@ -73,17 +76,17 @@ const actions = {
     }
 
     dispatch('wait/start', 'training.definitions.read', { root: true });
-    let model = new TrainingDefinition();
     try {
-      definition = await model.find(payload.id);
-      commit('definition', definition);
-      dispatch('wait/end', 'training.definitions.read', { root: true });
+      const api = new JSONAPI({ source: TrainingDefinition });
+      const result = await api.get(payload.id);
+      commit('definition', result);
+      return result.data;
     } catch (error) {
       commit('error', error);
-      dispatch('wait/end', 'training.definitions.read', { root: true });
       throw error;
+    } finally {
+      dispatch('wait/end', 'training.definitions.read', { root: true });
     }
-    return definition;
   },
 };
 
