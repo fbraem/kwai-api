@@ -15,7 +15,7 @@ export default class TrainingEvent extends Model {
     return 'events';
   }
 
-  static namespaces() {
+  static namespace() {
     return ['trainings'];
   }
 

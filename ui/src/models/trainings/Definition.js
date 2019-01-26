@@ -15,7 +15,7 @@ export default class TrainingDefinition extends Model {
     return 'definitions';
   }
 
-  static namespaces() {
+  static namespace() {
     return ['trainings'];
   }
 

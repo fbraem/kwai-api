@@ -12,7 +12,7 @@ export default class TrainingCoach extends Model {
     return 'coaches';
   }
 
-  static namespaces() {
+  static namespace() {
     return ['trainings'];
   }
 
