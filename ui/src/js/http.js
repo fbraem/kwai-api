@@ -3,17 +3,35 @@
  * Used https://github.com/Flyrell/axios-auth-refresh as input.
  */
 import axios from 'axios';
-import OAuth from './oauth';
+import config from 'config';
+import TokenStore from './TokenStore';
 
-var oauth = new OAuth();
+var tokenStore = new TokenStore();
 
 /**
  * Refresh a new token
  */
 const refreshAuthLogic = async failedRequest => {
-  await oauth.refreshToken();
-  var token = oauth.getAccessToken();
-  failedRequest.response.config.headers['Authentication'] = 'Bearer ' + token;
+  var token = tokenStore.getRefreshToken();
+  if (token) {
+    var form = new FormData();
+    form.append('grant_type', 'refresh_token');
+    form.append('client_id', config.clientId);
+    form.append('refresh_token', tokenStore.getRefreshToken());
+    var response = await axios.request({
+      method: 'POST',
+      url: config.api + '/auth/access_token',
+      data: form
+    });
+    tokenStore.setTokens(
+      response.data.access_token,
+      response.data.refresh_token
+    );
+    failedRequest.response.config.headers['Authentication'] =
+      'Bearer ' + tokenStore.getAccessToken();
+  } else {
+    throw failedRequest;
+  }
 };
 
 /**
@@ -56,7 +74,7 @@ function createAuthRefreshInterceptor(axios, refreshTokenCall, options = {}) {
  * Interceptor for setting headers.
  */
 axios.interceptors.request.use(request => {
-  var token = oauth.getAccessToken();
+  var token = tokenStore.getAccessToken();
   request.headers['Authorization'] = `Bearer ${token}`;
   request.headers['Accept'] = 'application/vnd.api+json';
   request.headers['Content-Type'] = 'application/vnd.api+json';

@@ -4,14 +4,15 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import config from 'config';
+import TokenStore from '@/js/TokenStore';
+import axios from '@/js/http';
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
+var tokenStore = new TokenStore();
 
 const state = {
   global: {
     user: {
-      authenticated: oauth.isAuthenticated(),
+      authenticated: tokenStore.isAuthenticated(),
     },
     page: {
       title: config.title,
@@ -59,18 +60,41 @@ const actions = {
   async login({ commit, dispatch }, payload) {
     dispatch('wait/start', 'auth.login', { root: true });
     try {
-      await oauth.login(payload.email, payload.password);
+      var form = new FormData();
+      form.append('grant_type', 'password');
+      form.append('client_id', config.clientId);
+      form.append('username', payload.email);
+      form.append('password', payload.password);
+      form.append('scope', 'basic');
+      var response = await axios.request({
+        method: 'POST',
+        url: config.api + '/auth/access_token',
+        data: form
+      });
+      tokenStore.setTokens(
+        response.data.access_token,
+        response.data.refresh_token
+      );
       commit('authenticated', true);
     } catch (error) {
-      dispatch('wait/end', 'auth.login', { root: true });
       commit('error', error);
       commit('authenticated', false);
       throw (error);
+    } finally {
+      dispatch('wait/end', 'auth.login', { root: true });
     }
-    dispatch('wait/end', 'auth.login', { root: true });
   },
   async logout({ commit }) {
-    await oauth.logout();
+    var form = new FormData();
+    form.append('refresh_token', this.refresh_token);
+    try {
+      await axios.post(config.api + '/auth/logout', {
+        data: form
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    tokenStore.clear();
     commit('authenticated', false);
   },
   setTitle({ commit }, text) {

@@ -1,6 +1,6 @@
-import axios from '@/js/http';
 import URI from 'urijs';
 import config from 'config';
+import axios from '@/js/http';
 
 /**
  * Helper class for sending a JSONAPI request
@@ -99,7 +99,7 @@ class JSONAPI {
       method: 'GET',
       url: uri.href(),
     };
-    let response = await this.request(config);
+    let response = await axios.request(config);
     return {
       meta: response.data.meta,
       data: this.target.deserialize(response.data.data, response.data.included)
@@ -117,7 +117,7 @@ class JSONAPI {
       method: 'GET',
       url: uri.href(),
     };
-    let response = await this.request(config);
+    let response = await axios.request(config);
     return {
       meta: response.data.meta,
       data: this.target.deserialize(response.data.data, response.data.included)
@@ -149,7 +149,7 @@ class JSONAPI {
         data: data
       }
     };
-    let response = await this.request(config);
+    let response = await axios.request(config);
     return {
       meta: response.data.meta,
       data: this.target.deserialize(response.data.data, response.data.included)
@@ -171,7 +171,7 @@ class JSONAPI {
       method: 'DELETE',
       url: uri.href()
     };
-    await this.request(config);
+    await this.axios(config);
   }
 
   /**
@@ -202,23 +202,11 @@ class JSONAPI {
         data: data
       }
     };
-    let response = await this.request(config);
+    let response = await axios.request(config);
     return {
       meta: response.data.meta,
       data: this.target.deserialize(response.data.data, response.data.included)
     };
-  }
-
-  /**
-   * Sends the request
-   * @private
-   * @param {object} config The axios configuration object.
-   * @return {object} Returns the response data
-   * @throws An exception will be throwed when the request fails. The exception
-   *         is a rethrow of the Axios exception.
-   */
-  async request(config) {
-    return await axios.request(config);
   }
 }
 

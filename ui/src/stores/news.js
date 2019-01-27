@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import config from 'config';
 
-import OAuth from '@/js/oauth';
-const oauth = new OAuth();
+import axios from '@/js/http';
 import JSONAPI from '@/js/JSONAPI';
 
 import Vuex from 'vuex';
@@ -173,7 +172,7 @@ const actions = {
   },
   async loadArchive({ dispatch, commit }, payload) {
     dispatch('wait/start', 'news.browse', { root: true });
-    var response = await oauth.get(config.api + '/news/archive');
+    var response = await axios.get(config.api + '/news/archive');
     commit('archive', response.data);
     dispatch('wait/end', 'news.browse', { root: true });
   },
