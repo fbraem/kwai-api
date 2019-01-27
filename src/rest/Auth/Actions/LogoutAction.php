@@ -31,12 +31,16 @@ class LogoutAction
         $server = $this->container->get('authorizationServer');
 
         $refreshTokenRepo = new RefreshTokenRepository();
-        $token = json_decode($this->decrypt($request->getParsedBody()['refresh_token']));
-        $refreshTokenRepo->revokeRefreshToken($token->refresh_token_id);
+        $refreshToken = $request->getParsedBody()['refresh_token'];
+        if (isset($refreshToken)) {
+            $token = json_decode($this->decrypt($refreshToken));
+            $refreshTokenRepo->revokeRefreshToken($token->refresh_token_id);
 
-        $accessTokenRepo = new AccessTokenRepository();
-        $accessTokenRepo->revokeAccessToken($token->access_token_id);
+            $accessTokenRepo = new AccessTokenRepository();
+            $accessTokenRepo->revokeAccessToken($token->access_token_id);
 
-        return $response->withStatus(200);
+            return $response->withStatus(200);
+        }
+        return $response->withStatus(400);
     }
 }
