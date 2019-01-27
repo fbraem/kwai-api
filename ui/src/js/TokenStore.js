@@ -3,7 +3,6 @@ import Lockr from 'lockr';
 const USER_KEY = 'user';
 const ACCESSTOKEN_KEY = 'access_token';
 const REFRESHTOKEN_KEY = 'refresh_token';
-const CLIENT_ID = 'judokwaikemzeke';
 
 class TokenStore {
   constructor() {
