@@ -31,9 +31,9 @@
           <table class="uk-table uk-table-striped">
             <tr>
               <th></th>
-              <th>{{ $t('name') }}</th>
-              <th>{{ $t('start_date') }}</th>
-              <th>{{ $t('end_date') }}</th>
+              <th>{{ $t('form.season.name.label') }}</th>
+              <th>{{ $t('form.season.start_date.label') }}</th>
+              <th>{{ $t('form.season.end_date.label') }}</th>
               <th></th>
             </tr>
             <tr v-for="season in seasons" :key="season.id">
