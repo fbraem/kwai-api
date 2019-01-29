@@ -12,19 +12,19 @@
         <div>
           <form class="uk-form uk-child-width-1-4 uk-flex-middle" v-if="! team.team_type" uk-grid>
             <div>
-              <uikit-input-text v-model="start_age" id="start_age">
-                {{ $t('min_age') }}:
-              </uikit-input-text>
+              <field name="start_age" :label="$t('min_age')">
+                <uikit-input-text />
+              </field>
             </div>
             <div>
-              <uikit-input-text v-model="end_age" id="end_age">
-                {{ $t('max_age') }}:
-              </uikit-input-text>
+              <field name="end_age" :label="$t('max_age')">
+                <uikit-input-text />
+              </field>
             </div>
             <div>
-              <uikit-select v-model="gender" :items="genders">
-                {{ $t('gender') }}:
-              </uikit-select>
+              <field name="gender" :label="$t('gender')">
+                <uikit-select :items="genders" />
+              </field>
             </div>
             <div>
               <label class="uk-form-label">&nbsp;</label>
@@ -81,8 +81,11 @@
 </template>
 
 <script>
-import UikitInputText from '@/components/uikit/InputText.vue';
-import UikitSelect from '@/components/uikit/Select.vue';
+import AddMembersDialog from './AddMembersDialog';
+
+import Field from '@/components/forms/Field.vue';
+import UikitInputText from '@/components/forms/InputText.vue';
+import UikitSelect from '@/components/forms/Select.vue';
 
 import UIkit from 'uikit';
 
@@ -92,17 +95,16 @@ import Member from '@/models/Member';
 
 export default {
   components: {
+    Field,
     UikitInputText,
     UikitSelect
   },
   i18n: messages,
   props: [ 'id', 'team' ],
+  mixins: [ AddMembersDialog ],
   data() {
     return {
       selectedAvailableMembers: [],
-      start_age: 0,
-      end_age: 0,
-      gender: 0,
       genders: [
         { text: 'None', value: 0 },
         { text: 'Male', value: 1 },
@@ -112,7 +114,7 @@ export default {
   },
   computed: {
     availableMembers() {
-      return this.$store.getters['team/availableMembers'];
+      return this.$store.state.team.availableMembers;
     }
   },
   mounted() {
@@ -132,9 +134,9 @@ export default {
       this.$store.dispatch('team/availableMembers', {
         id: this.$route.params.id,
         filter: {
-          start_age: this.start_age,
-          end_age: this.end_age,
-          gender: this.gender
+          start_age: this.form.start_age.value,
+          end_age: this.form.end_age.value,
+          gender: this.form.gender.value
         }
       });
     },
