@@ -38,13 +38,7 @@ const getters = {
       }
     }
     return null;
-  },
-  availableMembers(state) {
-    return state.availableMembers;
-  },
-  error(state) {
-    return state.error;
-  },
+  }
 };
 
 const mutations = {
@@ -64,11 +58,13 @@ const mutations = {
   },
   setMembers(state, data) {
     var index = state.teams.findIndex((t) => t.id === data.id);
-    if (state.teams[index])
+    if (state.teams[index]) {
+      if (state.teams[index].members) Vue.delete(state.teams[index], 'members');
       Vue.set(state.teams[index], 'members', data.members);
+    }
   },
-  availableMembers(state, members) {
-    state.availableMembers = members;
+  availableMembers(state, { data }) {
+    state.availableMembers = data;
   },
   clearAvailableMembers(state) {
     state.availableMembers = [];
@@ -138,10 +134,11 @@ const actions = {
   async addMembers({ getters, commit }, payload) {
     var team = getters['team'](payload.id);
     try {
-      let members = await team.attach(team.id, payload.members);
+      const api = new JSONAPI({source: Team, target: Member});
+      let result = await api.attach(team, payload.members);
       commit('setMembers', {
         id: payload.id,
-        members: members,
+        members: result.data,
       });
     } catch (error) {
       commit('error', error);
@@ -151,10 +148,11 @@ const actions = {
   async deleteMembers({ getters, commit }, payload) {
     var team = getters['team'](payload.id);
     try {
-      let members = await team.detach(team.id, payload.members);
+      const api = new JSONAPI({source: Team, target: Member});
+      let result = await api.detach(team, payload.members);
       commit('setMembers', {
         id: payload.id,
-        members: members,
+        members: result.data,
       });
     } catch (error) {
       commit('error', error);
