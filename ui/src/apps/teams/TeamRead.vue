@@ -84,8 +84,8 @@
               <a v-if="team && $team.isAllowed('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
                 <i class="fas fa-plus"></i>
               </a>
-              <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger uk-link-reset">
-                <i class="fas fa-trash"></i>
+              <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-link-reset uk-button-danger">
+                <i class="fas fa-trash" style="color:#fff"></i>
               </a>
             </div>
             <div v-if="members && members.length > 0">
