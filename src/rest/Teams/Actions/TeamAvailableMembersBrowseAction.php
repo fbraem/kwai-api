@@ -49,7 +49,7 @@ class TeamAvailableMembersBrowseAction
         }
 
         $membersTable = MembersTable::getTableFromRegistry();
-        $query =$membersTable
+        $query = $membersTable
             ->find()
             ->contain('Person')
         ;
@@ -69,7 +69,7 @@ class TeamAvailableMembersBrowseAction
             // When the team is attached to a season, the age of a member is
             // calculated on the end date of the season.
             if ($team->season) {
-                $diff = $q->func()->TIMESTAMPDIFF([
+                $diff = $query->func()->TIMESTAMPDIFF([
                     'YEAR' => 'literal',
                     'Person.birthdate' => 'identifier',
                     $team->season->end_date
@@ -86,7 +86,7 @@ class TeamAvailableMembersBrowseAction
                 }
             } else {
                 // Age is calculated on the end of the year
-                $diff = $q->func()->TIMESTAMPDIFF([
+                $diff = $query->func()->TIMESTAMPDIFF([
                     'YEAR' => 'literal',
                     'Person.birthdate' => 'identifier',
                     \Carbon\Carbon::now()->endOfYear()
@@ -105,7 +105,7 @@ class TeamAvailableMembersBrowseAction
         } else {
             $parameters = $request->getAttribute('parameters');
             // Age is calculated on the end of the year
-            $diff = $q->func()->TIMESTAMPDIFF([
+            $diff = $query->func()->TIMESTAMPDIFF([
                 'YEAR' => 'literal',
                 'Person.birthdate' => 'identifier',
                 \Carbon\Carbon::now()->endOfYear()
