@@ -186,9 +186,13 @@ class JSONAPI {
     if (!model.id) throw new Error('Model needs an id!');
 
     segments.push(model.id);
-    segments.push(relation.constructor.type());
-    if (relation.id) {
-      segments.push(relation.id);
+    if (Array.isArray(relation)) {
+      segments.push(relation[0].constructor.type());
+    } else {
+      segments.push(relation.constructor.type());
+      if (relation.id) {
+        segments.push(relation.id);
+      }
     }
     uri.segment(segments);
 
@@ -197,6 +201,45 @@ class JSONAPI {
 
     const config = {
       method: relation.id ? 'PATCH' : 'POST',
+      url: uri.href(),
+      data: {
+        data: data
+      }
+    };
+    let response = await axios.request(config);
+    return {
+      meta: response.data.meta,
+      data: this.target.deserialize(response.data.data, response.data.included)
+    };
+  }
+
+  /**
+   * Removes a relation (or relations) of a model. The model needs an id.
+   * @param {Model} model The model with the relationship
+   * @param {Model} relation The related model(s)
+   */
+  async detach(model, relation) {
+    var uri = this.uri.clone();
+    var segments = uri.segment();
+    segments.push(this.source.type());
+    if (!model.id) throw new Error('Model needs an id!');
+
+    segments.push(model.id);
+    if (Array.isArray(relation)) {
+      segments.push(relation[0].constructor.type());
+    } else {
+      segments.push(relation.constructor.type());
+      if (relation.id) {
+        segments.push(relation.id);
+      }
+    }
+    uri.segment(segments);
+
+    var data = Array.isArray(relation) ?
+      relation.map(element => element.serialize()) : relation.serialize();
+
+    const config = {
+      method: 'DELETE',
       url: uri.href(),
       data: {
         data: data
