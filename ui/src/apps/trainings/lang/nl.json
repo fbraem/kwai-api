@@ -119,7 +119,15 @@
             "day": "Dag",
             "time": "Tijdstip",
             "date": "Datum",
-            "coaches":  "Coaches"
+            "coaches":  "Coaches",
+            "form" : {
+                "start_time": {
+                    "label" : "Aanvangstijd"
+                },
+                "end_time" : {
+                    "label" : "Eindtijd"
+                }
+            }
         }
     },
     "save" : "Bewaar",

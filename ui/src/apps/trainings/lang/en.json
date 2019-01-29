@@ -119,7 +119,15 @@
             "day": "Day",
             "time": "Time",
             "date": "Date",
-            "coaches":  "Coaches"
+            "coaches":  "Coaches",
+            "form" : {
+                "start_time": {
+                    "label" : "Starttime"
+                },
+                "end_time" : {
+                    "label" : "Endtime"
+                }
+            }
         }
     },
     "save" : "Save",
