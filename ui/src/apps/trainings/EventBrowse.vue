@@ -34,6 +34,7 @@
           <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
             <tr>
               <th>{{ $t('name') }}</th>
+              <th>{{ $t('training.events.date') }}</th>
               <th>{{ $t('training.events.form.start_time.label') }}</th>
               <th>{{ $t('training.events.form.end_time.label') }}</th>
               <th></th>
@@ -43,10 +44,13 @@
                 <router-link :to="{ name: 'trainings.events.read', params: { id : event.id} }">{{ event.name }}</router-link>
               </td>
               <td>
-                {{ event.start_time.format('HH:mm') }}
+                {{ event.formattedStartDate }}
               </td>
               <td>
-                {{ event.end_time.format('HH:mm') }}
+                {{ event.formattedStartTime }}
+              </td>
+              <td>
+                {{ event.formattedEndTime }}
               </td>
               <td>
                 <router-link class="uk-icon-button uk-link-reset" v-if="$training_event.isAllowed('update', event)" :to="{ name : 'trainings.events.update', params : { id : event.id } }">
