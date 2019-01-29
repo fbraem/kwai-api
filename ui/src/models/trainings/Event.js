@@ -46,4 +46,18 @@ export default class TrainingEvent extends Model {
       user: User,
     };
   }
+
+  static computed() {
+    return {
+      formattedStartDate(event) {
+        return event.start_date.format('L');
+      },
+      formattedStartTime(event) {
+        return event.start_time.format('HH:mm');
+      },
+      formattedEndTime(event) {
+        return event.end_time.format('HH:mm');
+      }
+    };
+  }
 }
