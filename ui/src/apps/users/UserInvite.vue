@@ -55,12 +55,10 @@
 
 <script>
     import Page from './Page.vue';
-    import UikitInputText from '@/components/uikit/InputText.vue';
-    import UikitPassword from '@/components/uikit/Password.vue';
-    import UikitEmail from '@/components/uikit/Email.vue';
+    import UikitInputText from '@/components/forms/InputText.vue';
+    import UikitPassword from '@/components/forms/Password.vue';
+    import UikitEmail from '@/components/forms/Email.vue';
 
-    import { validationMixin } from 'vuelidate';
-    import { required, email, sameAs, minLength } from 'vuelidate/lib/validators';
     import passwordComplexity from '@/js/passwordComplexity'
 
     import messages from './lang';

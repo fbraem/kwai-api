@@ -56,7 +56,6 @@ import messages from './lang';
 import trainingStore from '@/stores/training';
 import definitionStore from '@/stores/training/definitions';
 import coachStore from '@/stores/training/coaches';
-import eventStore from '@/stores/training/events';
 import registerModule from '@/stores/mixin';
 
 import Field from '@/components/forms/Field.vue';
@@ -77,16 +76,15 @@ export default {
     TrainingGeneratorForm,
     registerModule(
       {
+        training: trainingStore
+      },
+      {
         training: trainingStore,
         definition: definitionStore
       },
       {
         training: trainingStore,
         coach: coachStore,
-      },
-      {
-        training: trainingStore,
-        event: eventStore
       }
     ),
   ],

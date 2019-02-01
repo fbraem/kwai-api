@@ -4,13 +4,13 @@
     <PageHeader>
       <div class="uk-grid">
         <div class="uk-width-5-6">
-          <h1>{{ $t('training.events.title') }}</h1>
+          <h1>{{ $t('events') }}</h1>
         </div>
         <div class="uk-width-1-6">
           <div class="uk-flex uk-flex-right">
-            <router-link v-if="$training_event.isAllowed('create')"
+            <router-link v-if="$event.isAllowed('create')"
               class="uk-icon-button uk-link-reset"
-              :to="{ name : 'trainings.events.create' }">
+              :to="{ name : 'create' }">
               <i class="fas fa-plus"></i>
             </router-link>
           </div>
@@ -18,7 +18,7 @@
       </div>
     </PageHeader>
     <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('training.events.browse')"
+      <div v-if="$wait.is('events.browse')"
         class="uk-flex-center" uk-grid>
         <div class="uk-text-center">
           <i class="fas fa-spinner fa-2x fa-spin"></i>
@@ -50,7 +50,7 @@
               <div class="events">
                 <div v-for="(event, index) in day.events" :key="index">
                   {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
-                  <router-link :to="{ name: 'trainings.events.read', params: { id: event.id }}">
+                  <router-link :to="{ name: 'events.read', params: { id: event.id }}">
                     {{ event.name }}
                   </router-link>
                 </div>
@@ -60,7 +60,7 @@
         </div>
         <div v-if="noData">
           <div class="uk-alert uk-alert-warning">
-            {{ $t('training.events.no_data') }}
+            {{ $t('no_data') }}
           </div>
         </div>
       </div>
@@ -264,7 +264,7 @@ import PageHeader from '@/site/components/PageHeader';
 
 import messages from './lang';
 
-import trainingStore from '@/stores/training';
+import eventStore from '@/stores/events';
 import registerModule from '@/stores/mixin';
 
 export default {
@@ -285,7 +285,7 @@ export default {
   mixins: [
     registerModule(
       {
-        training: trainingStore
+        event: eventStore,
       }
     ),
   ],
@@ -301,9 +301,9 @@ export default {
     monthName() {
       return this.currentDate.format('MMMM');
     },
-    trainings() {
-      var trainings = this.$store.state.training.trainings;
-      return trainings || [];
+    events() {
+      var events = this.$store.state.event.events;
+      return events || [];
     },
     days() {
       let m = () => moment().year(this.year).month(this.month - 1).startOf('month')
@@ -324,7 +324,7 @@ export default {
           number: current.format('D'),
           month: current.format('MMMM'),
           year: current.format('YYYY'),
-          events: this.trainings.filter((event) => {
+          events: this.events.filter((event) => {
             return current.isSame(event.start_date, 'day');
           })
         });
@@ -332,7 +332,7 @@ export default {
       return days;
     },
     noData() {
-      return this.trainings.length === 0;
+      return this.events && this.events.length === 0;
     },
     prevMonth() {
       var year = this.year;
@@ -342,7 +342,7 @@ export default {
         month = 12;
       }
       return {
-        to: 'training.browse',
+        to: 'events.browse',
         params: {
           year,
           month
@@ -357,7 +357,7 @@ export default {
         month = 1;
       }
       return {
-        to: 'training.browse',
+        to: 'events.browse',
         params: {
           year,
           month
@@ -378,7 +378,7 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('training/browse', {
+      this.$store.dispatch('event/browse', {
         year: this.year,
         month: this.month
       });

@@ -14,11 +14,11 @@ class DefinitionsTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->hasMany('TrainingEvents', [
+        $this->hasMany('Trainings', [
                 'className' => EventsTable::class
             ])
-            ->setForeignKey('training_definition_id')
-            ->setProperty('events')
+            ->setForeignKey('definition_id')
+            ->setProperty('trainings')
         ;
         $this->belongsTo('Season', [
                 'className' => \Domain\Game\SeasonsTable::class

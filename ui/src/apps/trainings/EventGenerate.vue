@@ -77,7 +77,6 @@
 
 <script>
 import trainingStore from '@/stores/training';
-import eventStore from '@/stores/training/events';
 import registerModule from '@/stores/mixin';
 
 import PageHeader from '@/site/components/PageHeader.vue';
@@ -92,8 +91,7 @@ export default {
   mixins: [
     registerModule(
       {
-        training: trainingStore,
-        event: eventStore
+        training: trainingStore
       }
     ),
   ],

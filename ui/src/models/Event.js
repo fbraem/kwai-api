@@ -1,33 +1,24 @@
-import Model from '../Model';
-import { Attribute, DateAttribute } from '../Attribute';
+import Model from './Model';
+import { Attribute, DateAttribute } from './Attribute';
 
-import Season from '../Season';
-import User from '../User';
-import Team from '../Team';
-import Definition from './Definition';
-import Coach from './Coach';
+import User from './User';
+import Category from './Category';
+import Content from './Content';
 
 /**
  * Event model
  */
-export default class TrainingEvent extends Model {
+export default class Event extends Model {
   static type() {
     return 'events';
-  }
-
-  static namespace() {
-    return ['trainings'];
   }
 
   // Event times are never stored in UTC. They are stored as localtime.
   static fields() {
     return {
-      name: new Attribute(),
-      description: new Attribute(),
       active: new Attribute(),
-      start_date: new DateAttribute('YYYY-MM-DD'),
-      start_time: new DateAttribute('HH:mm'),
-      end_time: new DateAttribute('HH:mm'),
+      start_date: new DateAttribute('YYYY-MM-DD HH:mm'),
+      end_date: new DateAttribute('YYYY-MM-DD HH:mm'),
       time_zone: new Attribute(),
       cancelled: new Attribute(),
       location: new Attribute(),
@@ -39,10 +30,8 @@ export default class TrainingEvent extends Model {
 
   static relationships() {
     return {
-      season: Season,
-      teams: Team,
-      coaches: Coach,
-      definition: Definition,
+      category: Category,
+      contents: Content,
       user: User,
     };
   }
@@ -53,10 +42,10 @@ export default class TrainingEvent extends Model {
         return event.start_date.format('L');
       },
       formattedStartTime(event) {
-        return event.start_time.format('HH:mm');
+        return event.start_date.format('HH:mm');
       },
       formattedEndTime(event) {
-        return event.end_time.format('HH:mm');
+        return event.end_date.format('HH:mm');
       }
     };
   }

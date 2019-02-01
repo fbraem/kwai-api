@@ -2,11 +2,11 @@
 
 namespace Domain\Training;
 
-class EventCoachesTable extends \Cake\ORM\Table
+class TrainingCoachesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'TrainingEventCoaches';
-    public static $tableName = 'training_event_coaches';
-    public static $entityClass = 'Domain\Training\EventCoach';
+    public static $registryName = 'TrainingTrainingCoaches';
+    public static $tableName = 'training_training_coaches';
+    public static $entityClass = 'Domain\Training\TrainingCoach';
 
     use \Domain\DomainTableTrait;
 
@@ -14,10 +14,10 @@ class EventCoachesTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsTo('TrainingEvent', [
-            'className' => EventsTable::class
+        $this->belongsTo('Training', [
+            'className' => TrainingsTable::class
             ])
-            ->setForeignKey('training_event_id')
+            ->setForeignKey('training_id')
         ;
         $this->belongsTo('TrainingCoach', [
             'className' => CoachesTable::class
@@ -35,8 +35,8 @@ class EventCoachesTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
-            ->addColumn('training_event_id', ['type' => 'integer'])
-            ->addColumn('training_coach_id', ['type' => 'integer'])
+            ->addColumn('training_id', ['type' => 'integer'])
+            ->addColumn('coach_id', ['type' => 'integer'])
             ->addColumn('coach_type', ['type' => 'integer'])
             ->addColumn('present', ['type' => 'boolean'])
             ->addColumn('remark', ['type' => 'text'])
@@ -48,8 +48,8 @@ class EventCoachesTable extends \Cake\ORM\Table
                 [
                     'type' => 'primary',
                     'columns' => [
-                        'training_event_id',
-                        'training_coach_id'
+                        'training_id',
+                        'coach_id'
                     ]
                 ]
         );

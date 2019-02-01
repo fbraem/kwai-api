@@ -13,7 +13,7 @@ class Definition extends \Cake\ORM\Entity
         'team',
         'user_id',
         'user',
-        'training_events'
+        'trainings'
     ];
 
     public function _getStartTime($value)

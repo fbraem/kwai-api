@@ -2,11 +2,11 @@
 
 namespace Domain\Training;
 
-class EventPresencesTable extends \Cake\ORM\Table
+class PresencesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'TrainingEventPrecences';
-    public static $tableName = 'training_event_presences';
-    public static $entityClass = 'Domain\Training\EventPresence';
+    public static $registryName = 'TrainingPrecences';
+    public static $tableName = 'training_presences';
+    public static $entityClass = 'Domain\Training\Presence';
 
     use \Domain\DomainTableTrait;
 
@@ -14,10 +14,10 @@ class EventPresencesTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsTo('TrainingEvent', [
-            'className' => EventsTable::class
+        $this->belongsTo('Training', [
+            'className' => TrainingsTable::class
             ])
-            ->setForeignKey('training_event_id')
+            ->setForeignKey('training_id')
         ;
         $this->belongsTo('Member', [
             'className' => MembersTable::class
@@ -29,7 +29,7 @@ class EventPresencesTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
-            ->addColumn('training_event_id', ['type' => 'integer'])
+            ->addColumn('training_id', ['type' => 'integer'])
             ->addColumn('member_id', ['type' => 'integer'])
             ->addColumn('remark', ['type' => 'text'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
@@ -39,7 +39,7 @@ class EventPresencesTable extends \Cake\ORM\Table
                 [
                     'type' => 'primary',
                     'columns' => [
-                        'training_event_id',
+                        'training_id',
                         'member_id'
                     ]
                 ]

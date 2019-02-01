@@ -127,7 +127,8 @@
                 "end_time" : {
                     "label" : "Endtime"
                 }
-            }
+            },
+            "no_data" : "There are no events for this period."
         }
     },
     "save" : "Save",

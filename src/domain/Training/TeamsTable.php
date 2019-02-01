@@ -2,11 +2,11 @@
 
 namespace Domain\Training;
 
-class EventTeamsTable extends \Cake\ORM\Table
+class TeamsTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'TrainingEventTeams';
-    public static $tableName = 'training_event_teams';
-    public static $entityClass = 'Domain\Training\EventTeam';
+    public static $registryName = 'TrainingTeams';
+    public static $tableName = 'training_teams';
+    public static $entityClass = 'Domain\Training\TrainingTeam';
 
     use \Domain\DomainTableTrait;
 
@@ -14,13 +14,13 @@ class EventTeamsTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsTo('TrainingEvent', [
-            'className' => EventsTable::class
+        $this->belongsTo('Training', [
+            'className' => TrainingsTable::class
             ])
-            ->setForeignKey('training_event_id')
+            ->setForeignKey('training_id')
         ;
         $this->belongsTo('Team', [
-            'className' => TeamsTable::class
+            'className' => \Domain\Team\TeamsTable::class
             ])
             ->setForeignKey('team_id')
         ;
@@ -29,7 +29,7 @@ class EventTeamsTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
-            ->addColumn('training_event_id', ['type' => 'integer'])
+            ->addColumn('training_id', ['type' => 'integer'])
             ->addColumn('team_id', ['type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])

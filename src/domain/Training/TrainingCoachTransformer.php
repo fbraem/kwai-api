@@ -4,15 +4,15 @@ namespace Domain\Training;
 
 use League\Fractal;
 
-class EventCoachTransformer extends Fractal\TransformerAbstract
+class TrainingCoachTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'training_event_coaches';
+    private static $type = 'training_coaches';
 
     protected $defaultIncludes = [
         'training_coach'
     ];
 
-    public static function createForItem(EventCoach $item)
+    public static function createForItem(TrainingCoach $item)
     {
         return new Fractal\Resource\Item($item, new self(), self::$type);
     }
@@ -22,7 +22,7 @@ class EventCoachTransformer extends Fractal\TransformerAbstract
         return new Fractal\Resource\Collection($collection, new self(), self::$type);
     }
 
-    public function includeCoach(EventCoach $eventCoach)
+    public function includeCoach(TrainingCoach $eventCoach)
     {
         $coach = $eventCoach->coach;
         if ($coach) {
@@ -30,7 +30,7 @@ class EventCoachTransformer extends Fractal\TransformerAbstract
         }
     }
 
-    public function transform(EventCoach $eventCoach)
+    public function transform(TrainingCoach $eventCoach)
     {
         return $eventCoach->toArray();
     }

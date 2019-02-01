@@ -127,7 +127,8 @@
                 "end_time" : {
                     "label" : "Eindtijd"
                 }
-            }
+            },
+            "no_data" : "Er zijn geen evenementen gevonden in deze periode."
         }
     },
     "save" : "Bewaar",

@@ -1,13 +1,13 @@
 <?php
 
-namespace REST\Trainings\Actions;
+namespace REST\Events\Actions;
 
 use Interop\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Domain\Training\EventsTable;
+use Domain\Event\EventsTable;
 use Domain\Training\EventTransformer;
 
 use Core\Responses\ResourceResponse;
@@ -25,7 +25,19 @@ class EventBrowseAction
     {
         $table = EventsTable::getTableFromRegistry();
         $query = $table->find();
-        $query->contain(['Season', 'TrainingDefinition', 'TrainingCoaches']);
+        $query->contain(['Category', 'User', 'Contents']);
+
+        $parameters = $request->getAttribute('parameters');
+        if (isset($parameters['filter']['year'])) {
+            $query->where([
+                'YEAR(Events.start_date)' => $parameters['filter']['year']
+            ]);
+            if (isset($parameters['filter']['month'])) {
+                $query->where([
+                    'MONTH(Events.start_date)' => $parameters['filter']['month']
+                ]);
+            }
+        }
 
         return (new ResourceResponse(
             EventTransformer::createForCollection(

@@ -37,34 +37,24 @@ class TrainingMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('training_events', ['signed' => false])
-            ->addColumn('name', 'string', ['null' => true])
-            ->addColumn('description', 'text', ['null' => true])
-            ->addColumn('training_definition_id', 'integer', ['null' => true])
+        $this->table('training_trainings', ['signed' => false])
+            ->addColumn('definition_id', 'integer', ['null' => true])
             ->addColumn('season_id', 'integer', ['null' => true])
-            ->addColumn('start_date', 'date')
-            ->addColumn('start_time', 'time')
-            ->addColumn('end_time', 'time')
-            ->addColumn('time_zone', 'string')
-            ->addColumn('active', 'boolean', ['default' => true])
-            ->addColumn('cancelled', 'boolean', ['default' => false])
-            ->addColumn('location', 'string', ['null' => true])
-            ->addColumn('remark', 'text', ['null' => true])
-            ->addColumn('user_id', 'integer')
+            ->addColumn('event_id', 'integer', ['null' => true])
             ->addTimestamps()
             ->create()
         ;
 
-        $this->table('training_event_teams', ['id' => false, 'primary_key' => ['training_event_id' , 'team_id']])
-            ->addColumn('training_event_id', 'integer')
+        $this->table('training_teams', ['id' => false, 'primary_key' => ['training_id' , 'team_id']])
+            ->addColumn('training_id', 'integer')
             ->addColumn('team_id', 'integer')
             ->addTimestamps()
             ->create()
         ;
 
-        $this->table('training_event_coaches', ['id' => false, 'primary_key' => ['training_event_id' , 'training_coach_id']])
-            ->addColumn('training_event_id', 'integer')
-            ->addColumn('training_coach_id', 'integer')
+        $this->table('training_training_coaches', ['id' => false, 'primary_key' => ['training_id' , 'coach_id']])
+            ->addColumn('training_id', 'integer')
+            ->addColumn('coach_id', 'integer')
             ->addColumn('coach_type', 'integer')
             ->addColumn('present', 'boolean')
             ->addColumn('remark', 'text', ['null' => true])
@@ -73,8 +63,8 @@ class TrainingMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('training_event_presences', ['id' => false, 'primary_key' => ['training_event_id' , 'member_id']])
-            ->addColumn('training_event_id', 'integer')
+        $this->table('training_presences', ['id' => false, 'primary_key' => ['training_id' , 'member_id']])
+            ->addColumn('training_id', 'integer')
             ->addColumn('member_id', 'integer')
             ->addColumn('remark', 'text', ['null' => true])
             ->addColumn('user_id', 'integer')
@@ -85,11 +75,11 @@ class TrainingMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('training_event_presences')->drop();
-        $this->table('training_event_coaches')->drop();
-        $this->table('training_event_teams')->drop();
-        $this->table('training_events')->drop();
+        $this->table('training_presences')->drop();
         $this->table('training_coaches')->drop();
+        $this->table('training_teams')->drop();
+        $this->table('training_trainings')->drop();
+        $this->table('training_training_coaches')->drop();
         $this->table('training_definitions')->drop();
     }
 }

@@ -54,9 +54,27 @@ export default [
     name: 'trainings.events.generate',
   },
   {
-    path: '/trainings/events',
-    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+    path: '/trainings/events/:year(\\d+)/:month(\\d+)',
+    component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/EventBrowse.vue'),
     name: 'trainings.events.browse',
+    props(route) {
+      var result = {};
+      if (route.params.year) result.year = Number(route.params.year);
+      if (route.params.month) result.month = Number(route.params.month);
+      return result;
+    }
+  },
+  {
+    path: '/trainings/events/:id(\\d+)',
+    component: () => import(/* webpackChunkName: "trainings_chunck" */
+      '@/apps/trainings/EventRead.vue'),
+    name: 'trainings.events.read'
+  },
+  {
+    path: '/trainings/events',
+    component: () => import(/* webpackChunkName: "trainings_chunck" */
+      '@/apps/trainings/EventBrowse.vue'),
+    name: 'trainings.events.home'
   },
 ];

@@ -37,11 +37,8 @@
 
 <script>
     import Page from './Page.vue';
-    import UikitInputText from '@/components/uikit/InputText.vue';
-    import UikitEmail from '@/components/uikit/Email.vue';
-
-    import { validationMixin } from 'vuelidate';
-    import { required, email } from 'vuelidate/lib/validators';
+    import UikitInputText from '@/components/forms/InputText.vue';
+    import UikitEmail from '@/components/forms/Email.vue';
 
     import messages from './lang';
 

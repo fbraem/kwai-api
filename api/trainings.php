@@ -38,26 +38,26 @@ $app->group('/trainings', function () {
         ->setArgument('auth', true)
     ;
 
-    $this->get('/events', \REST\Trainings\Actions\EventBrowseAction::class)
-        ->setName('trainings.events.browse')
+    $this->get('', \REST\Trainings\Actions\TrainingBrowseAction::class)
+        ->setName('trainings.browse')
     ;
-    $this->get('/events/{id:[0-9]+}', \REST\Trainings\Actions\EventReadAction::class)
-        ->setName('trainings.events.read')
+    $this->get('/{id:[0-9]+}', \REST\Trainings\Actions\TrainingReadAction::class)
+        ->setName('trainings.read')
     ;
-    $this->post('/events', \REST\Trainings\Actions\EventCreateAction::class)
-        ->setName('trainings.events.create')
+    $this->post('', \REST\Trainings\Actions\TrainingCreateAction::class)
+        ->setName('trainings.create')
         ->setArgument('auth', true)
     ;
-    $this->patch('/events/{id:[0-9]+}', \REST\Trainings\Actions\EventUpdateAction::class)
-        ->setName('trainings.events.update')
+    $this->patch('/{id:[0-9]+}', \REST\Trainings\Actions\TrainingUpdateAction::class)
+        ->setName('trainings.update')
         ->setArgument('auth', true)
     ;
-    $this->get('/events/{id:[0-9]+}/coaches', \REST\Trainings\Actions\EventCoachBrowseAction::class)
-        ->setName('trainings.events.coaches.browse')
+    $this->get('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachBrowseAction::class)
+        ->setName('trainings.training.coaches.browse')
         ->setArgument('auth', true)
     ;
-    $this->post('/events/{id:[0-9]+}/coaches', \REST\Trainings\Actions\EventCoachCreateAction::class)
-        ->setName('trainings.events.coaches.create')
+    $this->post('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachCreateAction::class)
+        ->setName('trainings.training.coaches.create')
         ->setArgument('auth', true)
     ;
 });

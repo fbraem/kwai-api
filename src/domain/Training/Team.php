@@ -2,7 +2,7 @@
 
 namespace Domain\Training;
 
-class EventPresence extends \Cake\ORM\Entity
+class Team extends \Cake\ORM\Entity
 {
     use \Domain\DatetimeMetaTrait;
 }
