@@ -48,7 +48,7 @@
           <table v-if="availableMembers.length > 0" class="uk-table uk-table-small uk-table-middle uk-table-divider">
             <tr v-for="member in availableMembers" :key="member.id">
               <td>
-                <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id">
+                <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id" />
               </td>
               <td>
                 <strong>{{ member.person.name }}</strong><br />
