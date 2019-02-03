@@ -6,7 +6,7 @@ class Event extends \Cake\ORM\Entity
 {
     use \Domain\DatetimeMetaTrait;
 
-    protected $_hidden = [ 'contents', 'category', 'category_id' ];
+    protected $_hidden = [ 'category', 'category_id', 'user', 'user_id' ];
 
     public function _getStartDate($value)
     {
@@ -17,7 +17,7 @@ class Event extends \Cake\ORM\Entity
         return null;
     }
 
-    public function _getEndTime($value)
+    public function _getEndDate($value)
     {
         if ($value) {
             $date = new \Carbon\Carbon($value, $this->time_zone);

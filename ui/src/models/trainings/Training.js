@@ -1,11 +1,12 @@
 import Model from '../Model';
-import { Attribute, DateAttribute } from '../Attribute';
+import { DateAttribute } from '../Attribute';
 
 import Season from '../Season';
 import User from '../User';
 import Team from '../Team';
 import Definition from './Definition';
 import Coach from './Coach';
+import Event from '@/models/Event';
 
 /**
  * Event model
@@ -15,19 +16,8 @@ export default class Training extends Model {
     return 'trainings';
   }
 
-  // Event times are never stored in UTC. They are stored as localtime.
   static fields() {
     return {
-      name: new Attribute(),
-      description: new Attribute(),
-      active: new Attribute(),
-      start_date: new DateAttribute('YYYY-MM-DD'),
-      start_time: new DateAttribute('HH:mm'),
-      end_time: new DateAttribute('HH:mm'),
-      time_zone: new Attribute(),
-      cancelled: new Attribute(),
-      location: new Attribute(),
-      remark: new Attribute(),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
     };
@@ -39,6 +29,7 @@ export default class Training extends Model {
       teams: Team,
       coaches: Coach,
       definition: Definition,
+      event: Event,
       user: User,
     };
   }

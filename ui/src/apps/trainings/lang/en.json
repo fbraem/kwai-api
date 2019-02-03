@@ -110,7 +110,8 @@
                     "deselectLabel" : "Press enter to remove"
                 },
                 "generate": "Generate"
-            }
+            },
+            "help" : "Select all trainings to create and click on 'Save'"
         },
         "events": {
             "title": "Trainings",

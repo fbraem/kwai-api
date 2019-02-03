@@ -110,7 +110,8 @@
                     "deselectLabel" : "Druk enter om te verwijderen"
                 },
                 "generate": "Genereer"
-            }
+            },
+            "help" : "Selecteer alle trainingen die aangemaakt moeten worden en klik onderaan op 'Bewaar'"
         },
         "events": {
             "title": "Trainingen",

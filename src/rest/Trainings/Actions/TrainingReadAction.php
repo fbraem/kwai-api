@@ -9,13 +9,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Domain\Training\EventsTable;
-use Domain\Training\EventTransformer;
+use Domain\Training\TrainingsTable;
+use Domain\Training\TrainingTransformer;
 
 use Core\Responses\ResourceResponse;
 use Core\Responses\NotFoundResponse;
 
-class EventReadAction
+class TrainingReadAction
 {
     private $container;
 
@@ -26,19 +26,25 @@ class EventReadAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $table = EventsTable::getTableFromRegistry();
+        $table = TrainingsTable::getTableFromRegistry();
         try {
             $coach = $table->get($args['id'], [
-                'contain' => ['TrainingDefinition', 'Season', 'TrainingCoaches' ]
+                'contain' => [
+                    'TrainingDefinition',
+                    'Season',
+                    'TrainingCoaches',
+                    'Event',
+                    'Event.Contents'
+                ]
             ]);
 
             $response = (new ResourceResponse(
-                EventTransformer::createForItem(
+                TrainingTransformer::createForItem(
                     $coach
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            $response = (new NotFoundResponse(_("Event doesn't exist")))($response);
+            $response = (new NotFoundResponse(_("Training doesn't exist")))($response);
         }
         return $response;
     }

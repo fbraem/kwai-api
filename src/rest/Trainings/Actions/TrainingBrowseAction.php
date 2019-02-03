@@ -29,7 +29,8 @@ class TrainingBrowseAction
             'Season',
             'TrainingDefinition',
             'TrainingCoaches',
-            'Event'
+            'Event',
+            'Event.Contents'
         ]);
 
         $parameters = $request->getAttribute('parameters');

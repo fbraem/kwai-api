@@ -1,7 +1,7 @@
 export default [
   {
     path: '/trainings/definitions/:id(\\d+)',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/DefinitionRead.vue'),
     name: 'trainings.definitions.read',
   },
@@ -19,19 +19,19 @@ export default [
   },
   {
     path: '/trainings/definitions',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/DefinitionBrowse.vue'),
     name: 'trainings.definitions.browse',
   },
   {
     path: '/trainings/coaches/:id(\\d+)',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/CoachRead.vue'),
     name: 'trainings.coaches.read',
   },
   {
     path: '/trainings/coaches',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/CoachBrowse.vue'),
     name: 'trainings.coaches.browse',
   },
@@ -48,16 +48,16 @@ export default [
     name: 'trainings.coaches.update',
   },
   {
-    path: '/trainings/events/generate',
+    path: '/trainings/generate',
     component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/EventGenerate.vue'),
-    name: 'trainings.events.generate',
+    name: 'trainings.generate',
   },
   {
     path: '/trainings/events/:year(\\d+)/:month(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/EventBrowse.vue'),
-    name: 'trainings.events.browse',
+    name: 'trainings.browse',
     props(route) {
       var result = {};
       if (route.params.year) result.year = Number(route.params.year);
@@ -69,12 +69,12 @@ export default [
     path: '/trainings/events/:id(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/EventRead.vue'),
-    name: 'trainings.events.read'
+    name: 'trainings.read'
   },
   {
     path: '/trainings/events',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/EventBrowse.vue'),
-    name: 'trainings.events.home'
+    name: 'trainings.home'
   },
 ];

@@ -36,9 +36,8 @@ class EventCreateAction
         $this->inputValidator = (new InputValidator(
             [
                 'data.attributes.name' => v::length(1, 255),
-                'data.attributes.start_date' => v::date('Y-m-d'),
+                'data.attributes.start_date' => v::date('Y-m-d H:i'),
                 'data.attributes.start_time' => v::date('H:i'),
-                'data.attributes.end_time' => v::date('H:i'),
                 'data.attributes.time_zone' => v::length(1, 255),
                 'data.attributes.active' => [ v::boolType(), true ],
                 'data.attributes.location' => [ v::length(1, 255), true ]

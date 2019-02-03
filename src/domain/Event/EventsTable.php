@@ -44,6 +44,7 @@ class EventsTable extends \Cake\ORM\Table
         $schema
             ->addColumn('id', [ 'type' => 'integer' ])
             ->addColumn('category_id', [ 'type' => 'integer' ])
+            ->addColumn('user_id', [ 'type' => 'integer' ])
             ->addColumn('active', [ 'type' => 'boolean' ])
             ->addColumn('cancelled', [ 'type' => 'boolean' ])
             ->addColumn('start_date', [ 'type' => 'datetime' ])

@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import JSONAPI from '@/js/JSONAPI';
 import Training from '@/models/trainings/Training';
+import Event from '@/models/Event';
 
 const state = {
   trainings: null,
@@ -97,42 +98,16 @@ const actions = {
       dispatch('wait/end', 'training.read', { root: true });
     }
   },
-  generate({commit}, payload) {
-    var tz = moment.tz.guess();
-    var start = payload.start;
-    var end = payload.end;
-    var next = start.day(payload.definition.weekday + 7);
-    var trainings = [];
-    while (next.isBefore(end)) {
-      var training = new Training();
-      training.name = payload.definition.name;
-      training.start_date = next.clone();
-      var s = training.start_date.clone();
-      s.hours(payload.definition.start_time.hours());
-      s.minutes(payload.definition.start_time.minutes());
-      training.start_time = s;
-
-      var e = training.start_date.clone();
-      e.hours(payload.definition.end_time.hours());
-      e.minutes(payload.definition.end_time.minutes());
-      training.end_time = e;
-
-      training.location = payload.definition.location;
-      training.time_zone = tz;
-      training.disabled = false;
-      training.definition = payload.definition;
-      training.coaches = payload.coaches;
-      training.push(training);
-      next = next.day(payload.definition.weekday + 7);
+  async createAll({commit, state}, trainings) {
+    try {
+      const api = new JSONAPI({ source: Training });
+      const result = await api.save(trainings);
+      commit('training', result);
+      return result.data;
+    } catch (error) {
+      commit('error', error);
+      throw error;
     }
-    commit('trainings', trainings);
-  },
-  createAll({commit, state}) {
-    var trainings = state.trainings.filter((e) => {
-      return !e.disabled;
-    });
-    var training = new Training();
-    training.createAll(trainings);
   }
 };
 

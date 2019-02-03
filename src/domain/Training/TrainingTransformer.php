@@ -11,7 +11,7 @@ class TrainingTransformer extends Fractal\TransformerAbstract
     protected $defaultIncludes = [
         'season',
         'definition',
-        'event'
+        'coaches'
     ];
 
     public static function createForItem(Training $training)
@@ -32,14 +32,6 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         }
     }
 
-    public function includeEvent(Training $training)
-    {
-        $event = $training->event;
-        if ($event) {
-            return \Domain\Event\EventTransformer::createForItem($event);
-        }
-    }
-
     public function includeDefinition(Training $training)
     {
         $def = $training->definition;
@@ -48,8 +40,22 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         }
     }
 
+    public function includeCoaches(Training $training)
+    {
+        $coaches = $training->coaches;
+        if ($coaches) {
+            return TrainingCoachTransformer::createForCollection($coaches);
+        }
+    }
+
     public function transform(Training $training)
     {
-        return $training->toArray();
+        $arr = $training->toArray();
+        unset($arr['event']['id']);
+        foreach ($arr['event']['contents'] as &$content) {
+            unset($content['id']);
+            unset($content['_joinData']);
+        }
+        return $arr;
     }
 }

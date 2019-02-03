@@ -44,6 +44,7 @@
           </div>
         </div>
       </form>
+      <EventGenerate v-if="trainings" :trainings="trainings" @generate="createAll" />
     </div>
   </div>
 </template>
@@ -52,6 +53,10 @@
 import moment from 'moment';
 
 import messages from './lang';
+
+import Training from '@/models/trainings/Training';
+import Event from '@/models/Event';
+import Content from '@/models/Content';
 
 import trainingStore from '@/stores/training';
 import definitionStore from '@/stores/training/definitions';
@@ -63,13 +68,14 @@ import UikitInputText from '@/components/forms/InputText.vue';
 import Multiselect from '@/components/forms/MultiSelect.vue';
 
 import TrainingGeneratorForm from './TrainingGeneratorForm';
+import EventGenerate from './EventGenerate.vue';
 
 export default {
   props: [
     'definition',
   ],
   components: {
-    Multiselect, Field, UikitInputText
+    Multiselect, Field, UikitInputText, EventGenerate
   },
   i18n: messages,
   mixins: [
@@ -88,6 +94,11 @@ export default {
       }
     ),
   ],
+  data() {
+    return {
+      trainings: null
+    };
+  },
   computed: {
     error() {
       return this.$store.state.training.definition.error;
@@ -107,15 +118,43 @@ export default {
       });
     },
     generate() {
-      this.$store.dispatch('training/event/generate', {
-        start: moment(this.form.start_date.value, 'L'),
-        end: moment(this.form.end_date.value, 'L'),
-        definition: this.definition,
-        coaches: this.form.coaches.value
-      });
-      this.$router.push({
-        name: 'trainings.events.generate'
-      });
+      var tz = moment.tz.guess();
+      var start = moment(this.form.start_date.value, 'L');
+      var end = moment(this.form.end_date.value, 'L');
+      var next = start.day(this.definition.weekday + 7);
+      var trainings = [];
+      while (next.isBefore(end)) {
+        var training = new Training();
+        training.event = new Event();
+        var content = new Content();
+        content.title = this.definition.name;
+        content.summary = this.definition.description;
+        training.event.contents = [ content ];
+        var s = next.clone();
+        s.hours(this.definition.start_time.hours());
+        s.minutes(this.definition.start_time.minutes());
+        training.event.start_date = s;
+
+        var e = next.clone();
+        e.hours(this.definition.end_time.hours());
+        e.minutes(this.definition.end_time.minutes());
+        training.event.end_date = e;
+
+        training.event.location = this.definition.location;
+        training.event.time_zone = tz;
+        training.definition = this.definition;
+        // TODO: Make it possible to assign multiple teams to a definition
+        if (this.definition.team) {
+          training.teams = [ this.definition.team ];
+        }
+        training.coaches = this.form.coaches.value;
+        trainings.push(training);
+        next = next.day(this.definition.weekday + 7);
+      }
+      this.trainings = trainings;
+    },
+    createAll(selection) {
+      this.$store.dispatch('training/createAll', selection);
     }
   }
 };
