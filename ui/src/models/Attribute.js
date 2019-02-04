@@ -69,4 +69,96 @@ class DateAttribute extends Attribute {
   }
 }
 
-export { Attribute, DateAttribute };
+/**
+ * ObjectAttribute is used for objects that are returned as JSON and not as
+ * relationships
+ */
+class ObjectAttribute extends Attribute {
+  /**
+   * @param {object} fields An object with attributes
+   * @param {boolean} readonly Is this attribute readonly?
+   */
+  constructor(fields, readonly = false) {
+    super(readonly);
+    this.fields = fields;
+  }
+
+  /**
+   * Returns an object
+   */
+  to(arg) {
+    var obj = Object.create(null);
+    Object.entries(this.fields).forEach((entry) => {
+      const [key, attr] = entry;
+      if (!attr.isReadonly()) {
+        if (key in arg) {
+          if (arg[key] && attr instanceof Attribute) {
+            obj[key] = attr.to(arg[key]);
+          } else {
+            obj[key] = arg[key];
+          }
+        }
+      }
+    });
+    return obj;
+  }
+
+  /**
+   * Returns a simple object
+   * @param {object} arg A JSON object
+   * @return {object}
+   */
+  from(arg) {
+    var obj = Object.create(null);
+    Object.entries(this.fields).forEach((entry) => {
+      const [key, attr] = entry;
+      if (attr instanceof Attribute) {
+        obj[key] = attr.from(arg[key]);
+      } else {
+        obj[key] = arg[key];
+      }
+    });
+    return obj;
+  }
+}
+
+/**
+ * ArrayAttribute is used for arrays that are returned in JSON
+ */
+class ArrayAttribute extends Attribute {
+  /**
+   * @param {Attribute} elementAttribute The atribute to use for the elements
+   * of the array.
+   * @param {boolean} readonly Is this attribute readonly?
+   */
+  constructor(elementAttribute, readonly = false) {
+    super(readonly);
+    this.elementAttribute = elementAttribute;
+  }
+
+  /**
+   * Returns an array with values for a JSONAPI structure
+   * @param {array} arg An array
+   * @return {array}
+   */
+  to(arg) {
+    if (Array.isArray(arg)) {
+      return arg.map((e) => this.elementAttribute.to(e));
+    }
+    return arg;
+  }
+
+  /**
+   * Returns an  array from the JSONAP structure
+   * @param {array} arg An array
+   * @return {array}
+   */
+  from(arg) {
+    if (Array.isArray(arg)) {
+      return arg.map((e) => this.elementAttribute.from(e));
+    }
+    return arg;
+  }
+}
+
+export { Attribute, DateAttribute, ObjectAttribute, ArrayAttribute };
