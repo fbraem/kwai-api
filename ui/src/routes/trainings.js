@@ -48,15 +48,9 @@ export default [
     name: 'trainings.coaches.update',
   },
   {
-    path: '/trainings/generate',
-    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
-      '@/apps/trainings/EventGenerate.vue'),
-    name: 'trainings.generate',
-  },
-  {
-    path: '/trainings/events/:year(\\d+)/:month(\\d+)',
+    path: '/trainings/:year(\\d+)/:month(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
-      '@/apps/trainings/EventBrowse.vue'),
+      '@/apps/trainings/TrainingBrowse.vue'),
     name: 'trainings.browse',
     props(route) {
       var result = {};
@@ -66,15 +60,15 @@ export default [
     }
   },
   {
-    path: '/trainings/events/:id(\\d+)',
+    path: '/trainings/:id(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
-      '@/apps/trainings/EventRead.vue'),
+      '@/apps/trainings/TrainingRead.vue'),
     name: 'trainings.read'
   },
   {
-    path: '/trainings/events',
+    path: '/trainings',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
-      '@/apps/trainings/EventBrowse.vue'),
+      '@/apps/trainings/TrainingBrowse.vue'),
     name: 'trainings.home'
   },
 ];

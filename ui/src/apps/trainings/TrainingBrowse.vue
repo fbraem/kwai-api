@@ -18,7 +18,7 @@
       </div>
     </PageHeader>
     <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('training.events.browse')"
+      <div v-if="$wait.is('training.browse')"
         class="uk-flex-center" uk-grid>
         <div class="uk-text-center">
           <i class="fas fa-spinner fa-2x fa-spin"></i>
@@ -49,9 +49,9 @@
               </div>
               <div class="events">
                 <div v-for="(event, index) in day.events" :key="index">
-                  {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
-                  <router-link :to="{ name: 'trainings.events.read', params: { id: event.id }}">
-                    {{ event.name }}
+                  {{ event.formattedStartTime }}&nbsp;
+                  <router-link :to="{ name: 'trainings.read', params: { id: event.id }}">
+                    {{ event.content.title }}
                   </router-link>
                 </div>
               </div>
@@ -95,7 +95,7 @@
 .calendar .days .events .event {
   box-sizing: border-box;
   line-height: 1;
-  /* font-size: .75rem; */
+  font-size: .75rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -306,7 +306,10 @@ export default {
       return trainings || [];
     },
     days() {
-      let m = () => moment().year(this.year).month(this.month - 1).startOf('month')
+      let m = () => moment()
+        .year(this.year)
+        .month(this.month - 1)
+        .startOf('month');
       let daysInMonth = m().daysInMonth();
       let previousMonthDays = m().date(1).day();
       let offset = 0 - previousMonthDays;
@@ -324,8 +327,8 @@ export default {
           number: current.format('D'),
           month: current.format('MMMM'),
           year: current.format('YYYY'),
-          events: this.trainings.filter((event) => {
-            return current.isSame(event.start_date, 'day');
+          events: this.trainings.filter((training) => {
+            return current.isSame(training.event.start_date, 'day');
           })
         });
       }

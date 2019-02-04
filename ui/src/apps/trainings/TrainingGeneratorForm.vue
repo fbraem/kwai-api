@@ -68,7 +68,7 @@ import UikitInputText from '@/components/forms/InputText.vue';
 import Multiselect from '@/components/forms/MultiSelect.vue';
 
 import TrainingGeneratorForm from './TrainingGeneratorForm';
-import EventGenerate from './EventGenerate.vue';
+import EventGenerate from './TrainingGenerate.vue';
 
 export default {
   props: [
