@@ -46,6 +46,7 @@
       </form>
       <EventGenerate v-if="trainings" :trainings="trainings" @generate="createAll" />
     </div>
+    <notifications position="bottom right" />
   </div>
 </template>
 
@@ -55,8 +56,6 @@ import moment from 'moment';
 import messages from './lang';
 
 import Training from '@/models/trainings/Training';
-import Event from '@/models/Event';
-import Content from '@/models/Content';
 
 import trainingStore from '@/stores/training';
 import definitionStore from '@/stores/training/definitions';
@@ -125,8 +124,8 @@ export default {
       var trainings = [];
       while (next.isBefore(end)) {
         var training = new Training();
-        training.event = new Event();
-        var content = new Content();
+        training.event = Object.create(null);
+        var content = Object.create(null);
         content.title = this.definition.name;
         content.summary = this.definition.description;
         training.event.contents = [ content ];
@@ -154,7 +153,14 @@ export default {
       this.trainings = trainings;
     },
     createAll(selection) {
-      this.$store.dispatch('training/createAll', selection);
+      this.$store.dispatch('training/createAll', selection).then(() => {
+        this.trainings = null;
+        this.$notify({
+          type: 'success',
+          title: 'Success!',
+          text: 'All trainings were created!'
+        });
+      });
     }
   }
 };
