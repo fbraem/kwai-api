@@ -1,7 +1,7 @@
 import { createPerimeter } from 'vue-kindergarten';
 
 export default createPerimeter({
-  purpose: 'training_event',
+  purpose: 'training',
   can: {
     read: () => true,
     update(event) {

@@ -66,6 +66,18 @@ export default [
     name: 'trainings.read'
   },
   {
+    path: '/trainings/create',
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+      '@/apps/trainings/TrainingForm.vue'),
+    name: 'trainings.create',
+  },
+  {
+    path: '/trainings/update/:id(\\d+)',
+    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
+      '@/apps/trainings/TrainingForm.vue'),
+    name: 'trainings.update',
+  },
+  {
     path: '/trainings',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/TrainingBrowse.vue'),
