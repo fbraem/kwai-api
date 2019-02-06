@@ -35,8 +35,8 @@ class TrainingCreateAction
     {
         $this->container = $container;
         $this->eventInputValidator = new InputValidator([
-            'data.attributes.event.start_date' => v::date('Y-m-d H:i'),
-            'data.attributes.event.end_date' => v::date('Y-m-d H:i'),
+            'data.attributes.event.start_date' => v::date('Y-m-d H:i:s'),
+            'data.attributes.event.end_date' => v::date('Y-m-d H:i:s'),
             'data.attributes.event.time_zone' => v::length(1, 255),
             'data.attributes.event.active' => [ v::boolType(), true ],
             'data.attributes.event.location' => [ v::length(1, 255), true ]
@@ -48,7 +48,7 @@ class TrainingCreateAction
         $data = $request->getParsedBody();
 
         try {
-            if ($this->isAssoc($data)) {
+            if ($this->isAssoc($data['data'])) {
                 $training = $this->createEvent($request, $data);
                 $route = $request->getAttribute('route');
                 if (! empty($route)) {
@@ -59,8 +59,10 @@ class TrainingCreateAction
                 ))($response)->withStatus(201);
             } else {
                 $trainings = [];
-                foreach ($data as $item) {
-                    $trainings[] = $this->createEvent($request, $item);
+                foreach ($data['data'] as $item) {
+                    $trainings[] = $this->createEvent($request, [
+                        'data' => $item
+                    ]);
                 }
                 $response = (new ResourceResponse(
                     TrainingTransformer::createForCollection($trainings)
