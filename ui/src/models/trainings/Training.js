@@ -28,6 +28,8 @@ export default class Training extends Model {
       event: new ObjectAttribute({
         start_date: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
         end_date: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
+        time_zone: new Attribute(),
+        location: new Attribute(),
         contents: new ArrayAttribute(
           new ObjectAttribute({
             locale: new Attribute(),
