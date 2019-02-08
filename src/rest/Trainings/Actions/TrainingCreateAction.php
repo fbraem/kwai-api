@@ -134,7 +134,7 @@ class TrainingCreateAction
             ], [
                 'markNew' => true
             ]);
-            $table->TrainingCoaches->link($training, [$coach]);
+            $trainingsTable->TrainingCoaches->link($training, [$coach]);
         }
 
         return $training;
