@@ -85,7 +85,7 @@ export default {
       type: Function,
       required: false,
       default: (value) => value
-    }
+    },
   },
   data() {
     return {
