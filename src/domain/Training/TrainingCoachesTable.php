@@ -19,7 +19,7 @@ class TrainingCoachesTable extends \Cake\ORM\Table
             ])
             ->setForeignKey('training_id')
         ;
-        $this->belongsTo('TrainingCoach', [
+        $this->belongsTo('Coach', [
             'className' => CoachesTable::class
             ])
             ->setForeignKey('training_coach_id')
