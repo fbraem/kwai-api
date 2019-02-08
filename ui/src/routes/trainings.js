@@ -51,13 +51,7 @@ export default [
     path: '/trainings/:year(\\d+)/:month(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/TrainingBrowse.vue'),
-    name: 'trainings.browse',
-    props(route) {
-      var result = {};
-      if (route.params.year) result.year = Number(route.params.year);
-      if (route.params.month) result.month = Number(route.params.month);
-      return result;
-    }
+    name: 'trainings.browse'
   },
   {
     path: '/trainings/:id(\\d+)',

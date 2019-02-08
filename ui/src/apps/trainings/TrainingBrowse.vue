@@ -8,9 +8,9 @@
         </div>
         <div class="uk-width-1-6">
           <div class="uk-flex uk-flex-right">
-            <router-link v-if="$training_event.isAllowed('create')"
+            <router-link v-if="$training.isAllowed('create')"
               class="uk-icon-button uk-link-reset"
-              :to="{ name : 'trainings.events.create' }">
+              :to="{ name : 'trainings.create' }">
               <i class="fas fa-plus"></i>
             </router-link>
           </div>
@@ -26,17 +26,26 @@
       </div>
       <div v-else class="uk-child-width-1-1" uk-grid>
         <div class="calendar">
-          <div class="title">
-            <router-link :to="prevMonth" class="fas fa-caret-left uk-link-reset">
-            </router-link>
-            <div class="month" style="text-transform:capitalize">
-              {{ monthName }}
+          <div class="uk-margin-bottom" uk-grid>
+            <div>
+              <router-link :to="firstMonth" class="uk-link-reset uk-icon-button">
+                <i class="fas fa-angle-double-left"></i>
+              </router-link>
+              <router-link :to="prevMonth" class="uk-link-reset uk-icon-button">
+                <i class="fas fa-angle-left "></i>
+              </router-link>
             </div>
-            <div class="year">
-              {{ year }}
+            <div class="uk-width-expand uk-text-center">
+              <span class="uk-h2 uk-text-capitalize">{{ monthName }} {{ year }}</span>
             </div>
-            <router-link :to="nextMonth" class="fas fa-caret-right uk-link-reset">
-            </router-link>
+            <div>
+              <router-link :to="nextMonth" class="uk-link-reset uk-icon-button">
+                <i class="fas fa-angle-right"></i>
+              </router-link>
+              <router-link :to="lastMonth" class="uk-link-reset uk-icon-button">
+                <i class="fas fa-angle-double-right"></i>
+              </router-link>
+            </div>
           </div>
           <ol class="days">
             <li class="day" v-for="(day, index) in days" :key="index"
@@ -271,16 +280,6 @@ export default {
   components: {
     PageHeader
   },
-  props: {
-    year: {
-      type: Number,
-      default: moment().year()
-    },
-    month: {
-      type: Number,
-      default: moment().month() + 1
-    }
-  },
   i18n: messages,
   mixins: [
     registerModule(
@@ -295,8 +294,22 @@ export default {
     };
   },
   computed: {
+    month() {
+      var m = Number(this.$route.params.month);
+      if (m > 12) {
+        m = 12;
+      } else if (m < 1) {
+        m = 1;
+      }
+      return m;
+    },
+    year() {
+      return Number(this.$route.params.year);
+    },
     currentDate() {
-      return moment().year(this.year).month(this.month - 1);
+      return moment()
+        .year(this.year)
+        .month(this.month - 1);
     },
     monthName() {
       return this.currentDate.format('MMMM');
@@ -306,12 +319,14 @@ export default {
       return trainings || [];
     },
     days() {
-      let m = () => moment()
-        .year(this.year)
-        .month(this.month - 1)
-        .startOf('month');
+      let m = () => {
+        return moment()
+          .year(this.year)
+          .month(this.month - 1)
+          .startOf('month');
+      };
       let daysInMonth = m().daysInMonth();
-      let previousMonthDays = m().date(1).day();
+      let previousMonthDays = m().date(1).day() - 1;
       let offset = 0 - previousMonthDays;
       let nextMonthDays = offset + (6 - m().date(daysInMonth).day());
       let total = daysInMonth + previousMonthDays + nextMonthDays;
@@ -337,6 +352,24 @@ export default {
     noData() {
       return this.trainings.length === 0;
     },
+    firstMonth() {
+      return {
+        name: 'trainings.browse',
+        params: {
+          year: this.year,
+          month: 1
+        }
+      };
+    },
+    lastMonth() {
+      return {
+        name: 'trainings.browse',
+        params: {
+          year: this.year,
+          month: 12
+        }
+      };
+    },
     prevMonth() {
       var year = this.year;
       var month = this.month - 1;
@@ -345,7 +378,7 @@ export default {
         month = 12;
       }
       return {
-        to: 'training.browse',
+        name: 'trainings.browse',
         params: {
           year,
           month
@@ -360,7 +393,7 @@ export default {
         month = 1;
       }
       return {
-        to: 'training.browse',
+        name: 'trainings.browse',
         params: {
           year,
           month
@@ -370,20 +403,19 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      await vm.fetchData();
+      await vm.fetchData(to.params.year, to.params.month);
       next();
     });
   },
-  watch: {
-    '$route'() {
-      this.fetchData();
-    }
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetchData(to.params.year, to.params.month);
+    next();
   },
   methods: {
-    fetchData() {
+    fetchData(year, month) {
       this.$store.dispatch('training/browse', {
-        year: this.year,
-        month: this.month
+        year: year,
+        month: month
       });
     }
   }
