@@ -6,13 +6,13 @@ use League\Fractal;
 
 class TrainingCoachTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'training_coaches';
+    private static $type = 'coaches';
 
     protected $defaultIncludes = [
-        'training_coach'
+        'member'
     ];
 
-    public static function createForItem(TrainingCoach $item)
+    public static function createForItem(Coach $item)
     {
         return new Fractal\Resource\Item($item, new self(), self::$type);
     }
@@ -22,16 +22,21 @@ class TrainingCoachTransformer extends Fractal\TransformerAbstract
         return new Fractal\Resource\Collection($collection, new self(), self::$type);
     }
 
-    public function includeCoach(TrainingCoach $eventCoach)
+    public function includeMember(Coach $coach)
     {
-        $coach = $eventCoach->coach;
-        if ($coach) {
-            return CoachTransformer::createForItem($coach);
+        $member = $coach->member;
+        if ($member) {
+            //TODO; make it sport independent
+            return \Judo\Domain\Member\MemberTransformer::createForItem($member);
         }
     }
 
-    public function transform(TrainingCoach $eventCoach)
+    public function transform(Coach $coach)
     {
-        return $eventCoach->toArray();
+        $result = $coach->toArray();
+        unset($result['_joinData']);
+        $result['present'] = $coach['_joinData']['present'];
+        $result['coach_type'] = $coach['_joinData']['coach_type'];
+        return $result;
     }
 }
