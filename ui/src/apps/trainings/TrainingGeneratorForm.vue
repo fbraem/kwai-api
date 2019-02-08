@@ -38,7 +38,7 @@
           <div class="uk-width-expand">
           </div>
           <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="generate">
+            <button class="uk-button uk-button-primary" :disabled="!$valid" @click.prevent="generate">
               <i class="fas fa-save"></i>&nbsp; {{ $t('training.generator.form.generate') }}
             </button>
           </div>
