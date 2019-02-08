@@ -37,11 +37,11 @@
                     "no_team" : "< Geen Team >"
                 },
                 "start_time" : {
-                    "label" : "Aanvangstijd",
-                    "required" : "Aanvangstijd is verplicht",
-                    "invalid" : "Aanvangstijd is foutief.",
-                    "before" : "Aanvangstijd moet voor de eindtijd liggen",
-                    "placeholder" : "Geef een aanvangstijd in"
+                    "label" : "Begintijd",
+                    "required" : "Begintijd is verplicht",
+                    "invalid" : "Begintijd is foutief.",
+                    "before" : "Begintijd moet voor de eindtijd liggen",
+                    "placeholder" : "Geef een begintijd in"
                 },
                 "end_time" : {
                     "label" : "Eindtijd",
@@ -68,7 +68,8 @@
             "form" : {
                 "member" : {
                     "label" : "Lid",
-                    "placeholder" : "Zoek een lid"
+                    "placeholder" : "Zoek een lid",
+                    "not_found" : "Geen leden gevonden"
                 },
                 "diploma" : {
                     "label" : "Diploma",
@@ -123,7 +124,7 @@
             "coaches":  "Coaches",
             "form" : {
                 "start_time": {
-                    "label" : "Aanvangstijd"
+                    "label" : "Begintijd"
                 },
                 "end_time" : {
                     "label" : "Eindtijd"
@@ -137,5 +138,6 @@
     "season" : "Seizoen",
     "name" : "Naam",
     "description" : "Omschrijving",
-    "trainings" : "Trainingen"
+    "trainings" : "Trainingen",
+    "cancelled" : "Opgelet, deze training is geannuleerd!"
 }

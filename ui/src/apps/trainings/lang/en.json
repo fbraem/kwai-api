@@ -68,7 +68,8 @@
             "form" : {
                 "member" : {
                     "label" : "Member",
-                    "placeholder" : "Search a member"
+                    "placeholder" : "Search a member",
+                    "not_found" : "No members found"
                 },
                 "diploma" : {
                     "label" : "Diploma",
@@ -137,5 +138,6 @@
     "season" : "Season",
     "name" : "Name",
     "description" : "Description",
-    "trainings" : "Trainings"
+    "trainings" : "Trainings",
+    "cancelled" : "This training is cancelled!"
 }
