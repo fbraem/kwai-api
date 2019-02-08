@@ -33,6 +33,8 @@ class TrainingReadAction
                     'TrainingDefinition',
                     'Season',
                     'TrainingCoaches',
+                    'TrainingCoaches.Member',
+                    'TrainingCoaches.Member.Person',
                     'Event',
                     'Event.Contents'
                 ]
