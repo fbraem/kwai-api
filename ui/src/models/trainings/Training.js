@@ -30,6 +30,8 @@ export default class Training extends Model {
         end_date: new DateAttribute('YYYY-MM-DD HH:mm:ss'),
         time_zone: new Attribute(),
         location: new Attribute(),
+        cancelled: new Attribute(),
+        active: new Attribute(),
         contents: new ArrayAttribute(
           new ObjectAttribute({
             locale: new Attribute(),
