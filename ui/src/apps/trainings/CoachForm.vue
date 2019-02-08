@@ -17,6 +17,9 @@
                 <template slot-scope="row">
                   {{ row.result.license }} - {{ row.result.person.name }}
                 </template>
+                <span slot="empty">
+                  {{ $t('training.coaches.form.member.not_found') }}
+                </span>
               </AutoComplete>
             </field>
             <div v-else>
@@ -114,8 +117,7 @@ export default {
       return this.$store.getters['training/coach/error'];
     },
     members() {
-      var members = this.$store.getters['member/members'];
-      return members;
+      return this.$store.state.member.members;
     },
   },
   beforeRouteEnter(to, from, next) {
