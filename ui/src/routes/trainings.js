@@ -50,7 +50,23 @@ export default [
     name: 'trainings.coaches.update',
   },
   {
-    path: '/trainings/:year(\\d+)?/:month(\\d+)?',
+    path: '/trainings',
+    redirect: {
+      name: 'trainings.browse',
+      params: {
+        year: moment().year(),
+        month: moment().month() + 1
+      }
+    }
+  },
+  {
+    path: '/trainings/:id(\\d+)',
+    component: () => import(/* webpackChunkName: "trainings_chunck" */
+      '@/apps/trainings/TrainingRead.vue'),
+    name: 'trainings.read'
+  },
+  {
+    path: '/trainings/:year(\\d+)/:month(\\d+)',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/TrainingBrowse.vue'),
     name: 'trainings.browse',
@@ -61,12 +77,6 @@ export default [
         ? Number(route.params.month) : moment().month() + 1;
       return { year, month };
     }
-  },
-  {
-    path: '/trainings/:id(\\d+)',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
-      '@/apps/trainings/TrainingRead.vue'),
-    name: 'trainings.read'
   },
   {
     path: '/trainings/create',
