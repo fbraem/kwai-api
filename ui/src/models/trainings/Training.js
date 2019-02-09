@@ -32,6 +32,7 @@ export default class Training extends Model {
         location: new Attribute(),
         cancelled: new Attribute(),
         active: new Attribute(),
+        remark: new Attribute(),
         contents: new ArrayAttribute(
           new ObjectAttribute({
             locale: new Attribute(),
