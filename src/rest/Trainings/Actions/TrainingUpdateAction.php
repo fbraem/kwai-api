@@ -133,7 +133,7 @@ class TrainingUpdateAction
 
             $response = (new ResourceResponse(
                 TrainingTransformer::createForItem($training)
-            ))($response)->withStatus(201);
+            ))($response);
         } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse(
                 $ve->getErrors()
