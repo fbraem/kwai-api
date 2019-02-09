@@ -3,11 +3,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import moment from 'moment';
-
 import JSONAPI from '@/js/JSONAPI';
 import Training from '@/models/trainings/Training';
-import Event from '@/models/Event';
 
 const state = {
   trainings: null,
