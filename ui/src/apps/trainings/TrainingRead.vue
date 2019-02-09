@@ -9,8 +9,8 @@
         <div class="uk-width-1-1@s uk-width-1-6@m">
           <div class="uk-flex uk-flex-right">
             <div>
-              <router-link class="uk-icon-button uk-link-reset"
-                :to="{ name: 'trainings.browse' }">
+              <router-link v-if="training" class="uk-icon-button uk-link-reset"
+                :to="browseLink">
                 <i class="fas fa-list"></i>
               </router-link>
             </div>
@@ -31,9 +31,9 @@
             <div class="uk-card-header uk-padding-remove">
               <div class="uk-grid-collapse" uk-grid>
                 <div class="uk-width-1-2@m uk-light uk-text-center uk-padding" style="background-color:rgb(198, 28, 24)">
-                  <span style="font-size:3em; line-height:1em; text-transform:lowercase;">{{ dayName }}</span><br />
+                  <span style="font-size:2em; line-height:1em; text-transform:lowercase;">{{ dayName }}</span><br />
                   <span style="font-size:8em; font-weight:900; line-height:1em;">{{ day }}</span><br />
-                  <span style="font-size:3em; line-height:1em; text-transform:lowercase;">{{ month }}</span>
+                  <span style="font-size:2em; line-height:1em; text-transform:lowercase;">{{ month }}</span>
                 </div>
                 <div class="uk-width-1-2@m uk-text-center uk-padding">
                   <span style="font-size:4em; line-height:1em; text-transform:lowercase;">{{ training.formattedStartTime}}</span><br />
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 import messages from './lang';
 
 import trainingStore from '@/stores/training';
@@ -112,6 +111,15 @@ export default {
         name: 'trainings.update',
         params: {
           id: this.training.id }
+      };
+    },
+    browseLink() {
+      return {
+        name: 'trainings.browse',
+        params: {
+          year: this.training.event.start_date.year(),
+          month: this.training.event.start_date.month() + 1
+        }
       };
     },
     notAllowed() {
