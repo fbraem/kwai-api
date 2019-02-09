@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default [
   {
     path: '/trainings/definitions/:id(\\d+)',
@@ -48,10 +50,17 @@ export default [
     name: 'trainings.coaches.update',
   },
   {
-    path: '/trainings/:year(\\d+)/:month(\\d+)',
+    path: '/trainings/:year(\\d+)?/:month(\\d+)?',
     component: () => import(/* webpackChunkName: "trainings_chunck" */
       '@/apps/trainings/TrainingBrowse.vue'),
-    name: 'trainings.browse'
+    name: 'trainings.browse',
+    props: (route) => {
+      const year = route.params.year
+        ? Number(route.params.year) : moment().year();
+      const month = route.params.month
+        ? Number(route.params.month) : moment().month() + 1;
+      return { year, month };
+    }
   },
   {
     path: '/trainings/:id(\\d+)',
@@ -70,11 +79,5 @@ export default [
     component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
       '@/apps/trainings/TrainingForm.vue'),
     name: 'trainings.update',
-  },
-  {
-    path: '/trainings',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
-      '@/apps/trainings/TrainingBrowse.vue'),
-    name: 'trainings.home'
   },
 ];

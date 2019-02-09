@@ -280,6 +280,16 @@ export default {
   components: {
     PageHeader
   },
+  props: {
+    year: {
+      type: Number,
+      required: true
+    },
+    month: {
+      type: Number,
+      required: true
+    }
+  },
   i18n: messages,
   mixins: [
     registerModule(
@@ -294,18 +304,6 @@ export default {
     };
   },
   computed: {
-    month() {
-      var m = Number(this.$route.params.month);
-      if (m > 12) {
-        m = 12;
-      } else if (m < 1) {
-        m = 1;
-      }
-      return m;
-    },
-    year() {
-      return Number(this.$route.params.year);
-    },
     currentDate() {
       return moment()
         .year(this.year)
