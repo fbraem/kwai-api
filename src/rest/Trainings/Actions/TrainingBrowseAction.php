@@ -29,6 +29,8 @@ class TrainingBrowseAction
             'Season',
             'TrainingDefinition',
             'TrainingCoaches',
+            'TrainingCoaches.Member',
+            'TrainingCoaches.Member.Person',
             'Event',
             'Event.Contents'
         ]);
