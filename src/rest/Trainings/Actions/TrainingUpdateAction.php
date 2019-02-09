@@ -110,6 +110,9 @@ class TrainingUpdateAction
             if (isset($attributes['event']['active'])) {
                 $training->event->active = $attributes['event']['active'];
             }
+            if (isset($attributes['event']['cancelled'])) {
+                $training->event->cancelled = $attributes['event']['cancelled'];
+            }
             if (isset($attributes['event']['remark'])) {
                 $training->event->remark = $attributes['event']['remark'];
             }
