@@ -104,14 +104,14 @@ class TrainingUpdateAction
             if (isset($attributes['event']['end_date'])) {
                 $training->event->end_date = $attributes['event']['end_date'];
             }
-            if (isset($attributes['time_zone'])) {
-                $training->event->time_zone = $attributes['time_zone'];
+            if (isset($attributes['event']['time_zone'])) {
+                $training->event->time_zone = $attributes['event']['time_zone'];
             }
-            if (isset($attributes['active'])) {
-                $training->event->active = $attributes['active'];
+            if (isset($attributes['event']['active'])) {
+                $training->event->active = $attributes['event']['active'];
             }
-            if (isset($attributes['remark'])) {
-                $training->event->remark = $attributes['remark'];
+            if (isset($attributes['event']['remark'])) {
+                $training->event->remark = $attributes['event']['remark'];
             }
 
             $training->event->dirty('contents', true);
