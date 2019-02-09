@@ -60,8 +60,10 @@
                 <div v-for="(event, index) in day.events" :key="index">
                   {{ event.formattedStartTime }}&nbsp;
                   <router-link :to="{ name: 'trainings.read', params: { id: event.id }}">
-                    {{ event.content.title }}
+                    <del v-if="event.event.cancelled">{{ event.content.title }}</del>
+                    <span v-else>{{ event.content.title }}</span>
                   </router-link>
+                  <i v-if="event.event.cancelled" class="fas fa-times" style="color: rgb(192,28,24)"></i>
                 </div>
               </div>
             </li>
