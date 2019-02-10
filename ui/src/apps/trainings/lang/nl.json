@@ -118,19 +118,64 @@
             "title": "Trainingen",
             "generate": "Genereer nieuwe trainingen",
             "no_generated_data": "Er zijn geen trainingen gegenereerd",
+            "create" : "Maak een nieuwe training",
+            "update" : "Wijzig de training",
             "day": "Dag",
             "time": "Tijdstip",
             "date": "Datum",
             "coaches":  "Coaches",
             "form" : {
+                "title" : {
+                    "label" : "Titel",
+                    "required" : "Titel is verplicht in te vullen",
+                    "placeholder" : "Geef een titel in"
+                },
+                "summary" : {
+                    "label" : "Omschrijving",
+                    "required" : "Omschrijving is verplicht in te vullen",
+                    "placeholder" : "Geef een omschrijving in"
+                },
+                "active" : {
+                    "label" : "Actief"
+                },
+                "cancelled" : {
+                    "label" : "Geannulleerd"
+                },
+                "start_date": {
+                    "label" : "Datum",
+                    "placeholder" : "Geef een datum in",
+                    "required" : "Datum is verplicht in te vullen",
+                    "invalid" : "Datum is niet geldig"
+                },
                 "start_time": {
-                    "label" : "Begintijd"
+                    "label" : "Begintijd",
+                    "placeholder" : "Geef een tijd in",
+                    "required" : "Begintijd is verplicht in te vullen",
+                    "invalid" : "Begintijd is niet geldig"
                 },
                 "end_time" : {
-                    "label" : "Eindtijd"
+                    "label" : "Eindtijd",
+                    "placeholder" : "Geef een tijd in",
+                    "required" : "Eindtijd is verplicht in te vullen",
+                    "after" : "Eindtijd moet na de begintijd liggen",
+                    "invalid" : "Eindtijd is niet geldig"
+                },
+                "remark" : {
+                    "label" : "Opmerking",
+                    "placeholder" : "Geef een opmerking in"
+                },
+                "season" : {
+                    "label" : "Seizoen",
+                    "no_season" : "< Geen Seizoen >"
+                },
+                "coaches": {
+                    "label": "Coaches",
+                    "placeholder": "Selecteer coaches voor de trainingen",
+                    "selectLabel" : "Druk enter om te selecteren",
+                    "deselectLabel" : "Druk enter om te verwijderen"
                 }
             },
-            "no_data" : "Er zijn geen evenementen gevonden in deze periode."
+            "no_data" : "Er zijn geen trainingen gevonden in deze periode."
         }
     },
     "save" : "Bewaar",

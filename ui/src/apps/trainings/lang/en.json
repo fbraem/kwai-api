@@ -123,11 +123,54 @@
             "date": "Date",
             "coaches":  "Coaches",
             "form" : {
+                "title" : {
+                    "label" : "Title",
+                    "required" : "Title is required",
+                    "placeholder" : "Enter a title"
+                },
+                "summary" : {
+                    "label" : "Description",
+                    "required" : "Description is required",
+                    "placeholder" : "Enter a description"
+                },
+                "active" : {
+                    "label" : "Active"
+                },
+                "cancelled" : {
+                    "label" : "Cancelled"
+                },
+                "start_date": {
+                    "label" : "Date",
+                    "placeholder" : "Enter a date",
+                    "required" : "Date is required",
+                    "invalid" : "Date is not valid"
+                },
                 "start_time": {
-                    "label" : "Starttime"
+                    "label" : "Starttime",
+                    "placeholder" : "Enter a time",
+                    "required" : "Starttime is required",
+                    "invalid" : "Starttime is invalid"
                 },
                 "end_time" : {
-                    "label" : "Endtime"
+                    "label" : "Endtime",
+                    "placeholder" : "Enter a time",
+                    "required" : "Endtime is required",
+                    "after" : "Endtime must be after starttime",
+                    "invalid" : "Endtime is required"
+                },
+                "remark" : {
+                    "label" : "Remark",
+                    "placeholder" : "Enter a remark"
+                },
+                "season" : {
+                    "label" : "Season",
+                    "no_season" : "< No Season >"
+                },
+                "coaches": {
+                    "label": "Coaches",
+                    "placeholder": "Select coaches for the training",
+                    "selectLabel" : "Press enter to select",
+                    "deselectLabel" : "Press enter to remove"
                 }
             },
             "no_data" : "There are no events for this period."
