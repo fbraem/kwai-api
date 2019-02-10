@@ -7,6 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
+use \Cake\ORM\Entity;
+
 use Domain\Training\TrainingsTable;
 use Domain\Training\TrainingTransformer;
 
@@ -41,6 +43,7 @@ class TrainingUpdateAction
             $training = $table->get($args['id'], [
                 'contain' => [
                     'TrainingDefinition',
+                    'TrainingCoaches',
                     'Season',
                     'Event',
                     'Event.Contents'
@@ -72,6 +75,12 @@ class TrainingUpdateAction
                     $training->season = null;
                 }
             }
+
+            $coaches = (new EntityExistValidator(
+                'data.relationships.coaches',
+                $table->TrainingCoaches,
+                false
+            ))->validate($data);
 
             $defData = \JmesPath\search('data.relationships.definition.data', $data);
             if (isset($defData)) {
@@ -128,6 +137,40 @@ class TrainingUpdateAction
                     'Event.Contents'
                 ]
             ]);
+
+            // Update coaches
+
+            // When a coach is not passed to this function, it must be deleted
+            $lookup = array_column($coaches, null, 'id');
+            $toDelete = [];
+            foreach ($training->coaches as $coach) {
+                if (!$lookup[$coach->id]) {
+                    $toDelete[] = $coach;
+                }
+            }
+            if (count($toDelete) > 0) {
+                $table->TrainingCoaches->unlink($training, $toDelete);
+            }
+
+            // When a coach is passed to this function and it's not in the
+            // table, it must be insert
+            $lookup = array_column($training->coaches, null, 'id');
+            $toInsert = [];
+            foreach ($coaches as $coach) {
+                if (!$lookup[$coach->id]) {
+                    $coach->_joinData = new Entity([
+                        'coach_type' => 0,
+                        'present' => false,
+                        'user' => $request->getAttribute('clubman.user')
+                    ], [
+                        'markNew' => true
+                    ]);
+                    $toInsert[] = $coach;
+                }
+            }
+            if (count($toInsert) > 0) {
+                $table->TrainingCoaches->link($training, $toInsert);
+            }
 
             $route = $request->getAttribute('route');
             if (! empty($route)) {
