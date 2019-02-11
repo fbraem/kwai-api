@@ -53,6 +53,9 @@ const actions = {
         api.where('month', payload.month);
       }
     }
+    if (payload.coach) {
+      api.where('coach', payload.coach);
+    }
     dispatch('wait/start', 'training.browse', { root: true });
     try {
       commit('trainings', await api.get());
