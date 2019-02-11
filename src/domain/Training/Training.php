@@ -12,6 +12,7 @@ class Training extends \Cake\ORM\Entity
         'definition',
         'definition_id',
         'event_id',
-        'coaches'
+        'coaches',
+        'teams'
     ];
 }
