@@ -50,6 +50,13 @@
             <field name="season" :label="$t('training.events.form.season.label')">
               <uikit-select :items="seasons" />
             </field>
+            <field name="teams" :label="$t('training.events.form.teams.label')">
+              <multiselect :options="teams" label="name"
+                track-by="id" :multiple="true" :close-on-select="false"
+                :selectLabel="$t('training.events.form.teams.selectLabel')"
+                :deselectLabel="$t('training.events.form.teams.deselectLabel')">
+              </multiselect>
+            </field>
             <field name="coaches" :label="$t('training.events.form.coaches.label')">
               <multiselect :options="coaches" label="name"
                 track-by="id" :multiple="true" :close-on-select="false"
@@ -147,24 +154,16 @@ export default {
       return seasons;
     },
     coaches() {
-      var coaches = this.$store.state.training.coach.coaches;
-      return coaches || [];
-    }
-/*
-    teams() {
-      var teams = this.$store.getters['team/teamsAsOptions'];
-      teams.unshift({
-        value: 0,
-        text: this.$t('training.events.form.team.no_team')
-      });
-      return teams;
+      return this.$store.state.training.coach.coaches || [];
     },
-*/
+    teams() {
+      return this.$store.state.team.teams || [];
+    },
   },
-  async created() {
+  created() {
     this.$store.dispatch('season/browse');
     this.$store.dispatch('training/coach/browse');
-//    await this.$store.dispatch('team/browse');
+    this.$store.dispatch('team/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {

@@ -34,8 +34,8 @@ export default {
       coaches: {
         value: []
       },
-      team: {
-        value: 0
+      teams: {
+        value: []
       },
       start_date: {
         value: '',
@@ -122,10 +122,7 @@ export default {
       if (training.season) {
         this.form.season.value = training.season.id;
       }
-/* TODO
-      if (training.teams) {
-      }
-*/
+      this.form.teams.value = training.teams;
       this.form.remark.value = training.event.remark;
     },
     readForm(training) {
@@ -150,6 +147,7 @@ export default {
       training.event.end_date.minutes(endTime.minutes());
       training.event.remark = this.form.remark.value;
       training.coaches = this.form.coaches.value;
+      training.teams = this.form.teams.value;
       if (this.form.season.value) {
         if (this.form.season.value === 0) {
           training.season = null;

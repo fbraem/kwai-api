@@ -173,6 +173,12 @@
                     "placeholder": "Selecteer coaches voor de trainingen",
                     "selectLabel" : "Druk enter om te selecteren",
                     "deselectLabel" : "Druk enter om te verwijderen"
+                },
+                "teams": {
+                    "label": "Teams",
+                    "placeholder": "Selecteer teams voor de trainingen",
+                    "selectLabel" : "Druk enter om te selecteren",
+                    "deselectLabel" : "Druk enter om te verwijderen"
                 }
             },
             "no_data" : "Er zijn geen trainingen gevonden in deze periode."

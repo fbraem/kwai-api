@@ -99,6 +99,12 @@ class TrainingCreateAction
             false
         ))->validate($data);
 
+        $teams = (new EntityExistValidator(
+            'data.relationships.teams',
+            $trainingsTable->Teams,
+            false
+        ))->validate($data);
+
         $this->eventInputValidator->validate($data);
 
         $attributes = \JmesPath\search('data.attributes', $data);
@@ -121,6 +127,7 @@ class TrainingCreateAction
         $event->user = $request->getAttribute('clubman.user');
         $training->season = $season;
         $training->definition = $def;
+        $training->teams = $teams;
 
         (new TrainingValidator())->validate($training);
 

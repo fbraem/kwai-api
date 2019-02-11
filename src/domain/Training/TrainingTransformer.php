@@ -4,6 +4,8 @@ namespace Domain\Training;
 
 use League\Fractal;
 
+use Domain\Team\TeamTransformer;
+
 class TrainingTransformer extends Fractal\TransformerAbstract
 {
     private static $type = 'trainings';
@@ -11,7 +13,8 @@ class TrainingTransformer extends Fractal\TransformerAbstract
     protected $defaultIncludes = [
         'season',
         'definition',
-        'coaches'
+        'coaches',
+        'teams'
     ];
 
     public static function createForItem(Training $training)
@@ -45,6 +48,14 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         $coaches = $training->coaches;
         if ($coaches) {
             return TrainingCoachTransformer::createForCollection($coaches);
+        }
+    }
+
+    public function includeTeams(Training $training)
+    {
+        $teams = $training->teams;
+        if ($teams) {
+            return TeamTransformer::createForCollection($teams);
         }
     }
 

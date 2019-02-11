@@ -2,7 +2,7 @@
 
 namespace Domain\Training;
 
-class TeamsTable extends \Cake\ORM\Table
+class TrainingTeamsTable extends \Cake\ORM\Table
 {
     public static $registryName = 'TrainingTeams';
     public static $tableName = 'training_teams';
@@ -38,7 +38,7 @@ class TeamsTable extends \Cake\ORM\Table
                 [
                     'type' => 'primary',
                     'columns' => [
-                        'training_event_id',
+                        'training_id',
                         'team_id'
                     ]
                 ]

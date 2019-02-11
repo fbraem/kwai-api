@@ -31,6 +31,7 @@ class TrainingBrowseAction
             'TrainingCoaches',
             'TrainingCoaches.Member',
             'TrainingCoaches.Member.Person',
+            'Teams',
             'Event',
             'Event.Contents'
         ]);

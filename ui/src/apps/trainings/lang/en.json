@@ -171,6 +171,12 @@
                     "placeholder": "Select coaches for the training",
                     "selectLabel" : "Press enter to select",
                     "deselectLabel" : "Press enter to remove"
+                },
+                "teams": {
+                    "label": "Teams",
+                    "placeholder": "Select a team for this training",
+                    "selectLabel" : "Press enter to select",
+                    "deselectLabel" : "Press enter to remove"
                 }
             },
             "no_data" : "There are no events for this period."
