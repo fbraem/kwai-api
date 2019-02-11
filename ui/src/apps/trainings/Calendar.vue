@@ -1,38 +1,52 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <PageHeader>
-      <div class="uk-grid">
-        <div class="uk-width-5-6">
-          <h1>{{ $t('training.events.title') }}</h1>
+  <div class="calendar">
+    <div class="uk-margin-bottom" uk-grid>
+      <div>
+        <router-link :to="firstMonth" class="uk-link-reset uk-icon-button">
+          <i class="fas fa-angle-double-left"></i>
+        </router-link>
+        <router-link :to="prevMonth" class="uk-link-reset uk-icon-button">
+          <i class="fas fa-angle-left "></i>
+        </router-link>
+      </div>
+      <div class="uk-width-expand uk-text-center">
+        <span class="uk-h2 uk-text-capitalize">{{ monthName }} {{ year }}</span>
+      </div>
+      <div>
+        <router-link :to="nextMonth" class="uk-link-reset uk-icon-button">
+          <i class="fas fa-angle-right"></i>
+        </router-link>
+        <router-link :to="lastMonth" class="uk-link-reset uk-icon-button">
+          <i class="fas fa-angle-double-right"></i>
+        </router-link>
+      </div>
+    </div>
+    <ol class="days">
+      <li class="day" v-for="(day, index) in days" :key="index"
+        :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }">
+        <div class="date">
+          <span class="weekday">{{ day.weekday }}</span>
+          <span class="day">{{ day.number }}</span>
+          <span class="month">{{ day.month }}</span>
+          <span class="year">{{ day.year }}</span>
         </div>
-        <div class="uk-width-1-6">
-          <div class="uk-flex uk-flex-right">
-            <router-link v-if="$training.isAllowed('create')"
-              class="uk-icon-button uk-link-reset"
-              :to="{ name : 'trainings.create' }">
-              <i class="fas fa-plus"></i>
+        <div class="events">
+          <div v-for="(event, index) in day.events" :key="index">
+            {{ event.formattedStartTime }}&nbsp;
+            <router-link :to="{ name: 'trainings.read', params: { id: event.id }}">
+              <del v-if="event.event.cancelled" :uk-tooltip="'title:' + $t('cancelled')">
+                {{ event.content.title }}
+              </del>
+              <span v-else>{{ event.content.title }}</span>
             </router-link>
+            <i v-if="event.event.cancelled" :uk-tooltip="'title:' + $t('cancelled')" class="fas fa-times" style="color: rgb(192,28,24)">
+            </i>
+            <i v-if="event.coaches == null || event.coaches.length == 0" :uk-tooltip="'title:' + $t('no_coach')" class="fas fa-user-times" style="color: rgb(192,28,24)"></i>
           </div>
         </div>
-      </div>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('training.browse')"
-        class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-      <div v-else class="uk-child-width-1-1" uk-grid>
-        <Calendar :year="year" :month="month" :trainings="trainings" />
-        <div v-if="noData">
-          <div class="uk-alert uk-alert-warning">
-            {{ $t('training.events.no_data') }}
-          </div>
-        </div>
-      </div>
-    </section>
+      </li>
+    </ol>
   </div>
 </template>
 
@@ -227,18 +241,11 @@
 </style>
 
 <script>
-import PageHeader from '@/site/components/PageHeader';
-import Calendar from './Calendar.vue';
+import moment from 'moment';
 
 import messages from './lang';
 
-import trainingStore from '@/stores/training';
-import registerModule from '@/stores/mixin';
-
 export default {
-  components: {
-    PageHeader, Calendar
-  },
   props: {
     year: {
       type: Number,
@@ -247,41 +254,105 @@ export default {
     month: {
       type: Number,
       required: true
+    },
+    trainings: {
+      type: Array,
+      required: true
     }
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        training: trainingStore
-      }
-    ),
-  ],
+  data() {
+    return {
+      dayNames: moment.weekdays(true),
+    };
+  },
   computed: {
-    trainings() {
-      var trainings = this.$store.state.training.trainings;
-      return trainings || [];
+    currentDate() {
+      return moment()
+        .year(this.year)
+        .month(this.month - 1);
     },
-    noData() {
-      return this.trainings.length === 0;
+    monthName() {
+      return this.currentDate.format('MMMM');
     },
-  },
-  beforeRouteEnter(to, from, next) {
-    next(async(vm) => {
-      await vm.fetchData(to.params.year, to.params.month);
-      next();
-    });
-  },
-  async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params.year, to.params.month);
-    next();
-  },
-  methods: {
-    fetchData(year, month) {
-      this.$store.dispatch('training/browse', {
-        year: year,
-        month: month
-      });
+    days() {
+      let m = () => {
+        return moment()
+          .year(this.year)
+          .month(this.month - 1)
+          .startOf('month');
+      };
+      let daysInMonth = m().daysInMonth();
+      let previousMonthDays = m().date(1).day() - 1;
+      let offset = 0 - previousMonthDays;
+      let nextMonthDays = offset + (6 - m().date(daysInMonth).day());
+      let total = daysInMonth + previousMonthDays + nextMonthDays;
+      let days = [];
+
+      for (let i = offset; i < total; i++) {
+        var current = m().add(i, 'd');
+        days.push({
+          outsideOfCurrentMonth: (i < 0 || i > daysInMonth - 1),
+          date: current,
+          weekday: current.format('dddd'),
+          day: current.format('Do'),
+          number: current.format('D'),
+          month: current.format('MMMM'),
+          year: current.format('YYYY'),
+          events: this.trainings.filter((training) => {
+            return current.isSame(training.event.start_date, 'day');
+          })
+        });
+      }
+      return days;
+    },
+    firstMonth() {
+      return {
+        name: 'trainings.browse',
+        params: {
+          year: this.year,
+          month: 1
+        }
+      };
+    },
+    lastMonth() {
+      return {
+        name: 'trainings.browse',
+        params: {
+          year: this.year,
+          month: 12
+        }
+      };
+    },
+    prevMonth() {
+      var year = this.year;
+      var month = this.month - 1;
+      if (month === 0) {
+        year = this.year - 1;
+        month = 12;
+      }
+      return {
+        name: 'trainings.browse',
+        params: {
+          year,
+          month
+        }
+      };
+    },
+    nextMonth() {
+      var year = this.year;
+      var month = this.month + 1;
+      if (month === 13) {
+        year = this.year + 1;
+        month = 1;
+      }
+      return {
+        name: 'trainings.browse',
+        params: {
+          year,
+          month
+        }
+      };
     }
   }
 };
