@@ -22,7 +22,7 @@ class TrainingCoachesTable extends \Cake\ORM\Table
         $this->belongsTo('Coach', [
             'className' => CoachesTable::class
             ])
-            ->setForeignKey('training_coach_id')
+            ->setForeignKey('coach_id')
         ;
         $this->belongsTo('User', [
                 'className' => \Domain\User\UsersTable::class
