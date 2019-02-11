@@ -56,10 +56,23 @@ class TrainingBrowseAction
             });
         }
 
-        return (new ResourceResponse(
-            TrainingTransformer::createForCollection(
-                $query->all()
-            )
-        ))($response);
+        $count = $query->count();
+
+        $limit = $parameters['page']['limit'] ?? 10;
+        $offset = $parameters['page']['offset'] ?? 0;
+
+        $query->limit($limit);
+        $query->offset($offset);
+
+        $resource = TrainingTransformer::createForCollection(
+            $query->all()
+        );
+        $resource->setMeta([
+            'limit' => intval($limit),
+            'offset' => intval($offset),
+            'count' => $count
+        ]);
+
+        return (new ResourceResponse($resource))($response);
     }
 }
