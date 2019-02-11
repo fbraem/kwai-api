@@ -3,23 +3,23 @@
   <div class="calendar">
     <div class="uk-margin-bottom" uk-grid>
       <div>
-        <router-link :to="firstMonth" class="uk-link-reset uk-icon-button">
+        <a @click="firstMonth" class="uk-link-reset uk-icon-button">
           <i class="fas fa-angle-double-left"></i>
-        </router-link>
-        <router-link :to="prevMonth" class="uk-link-reset uk-icon-button">
+        </a>
+        <a @click="prevMonth" class="uk-link-reset uk-icon-button">
           <i class="fas fa-angle-left "></i>
-        </router-link>
+        </a>
       </div>
       <div class="uk-width-expand uk-text-center">
         <span class="uk-h2 uk-text-capitalize">{{ monthName }} {{ year }}</span>
       </div>
       <div>
-        <router-link :to="nextMonth" class="uk-link-reset uk-icon-button">
+        <a @click="nextMonth" class="uk-link-reset uk-icon-button">
           <i class="fas fa-angle-right"></i>
-        </router-link>
-        <router-link :to="lastMonth" class="uk-link-reset uk-icon-button">
+        </a>
+        <a @click="lastMonth" class="uk-link-reset uk-icon-button">
           <i class="fas fa-angle-double-right"></i>
-        </router-link>
+        </a>
       </div>
     </div>
     <ol class="days">
@@ -305,54 +305,20 @@ export default {
         });
       }
       return days;
-    },
+    }
+  },
+  methods: {
     firstMonth() {
-      return {
-        name: 'trainings.browse',
-        params: {
-          year: this.year,
-          month: 1
-        }
-      };
+      this.$emit('firstMonth');
     },
     lastMonth() {
-      return {
-        name: 'trainings.browse',
-        params: {
-          year: this.year,
-          month: 12
-        }
-      };
+      this.$emit('lastMonth');
     },
     prevMonth() {
-      var year = this.year;
-      var month = this.month - 1;
-      if (month === 0) {
-        year = this.year - 1;
-        month = 12;
-      }
-      return {
-        name: 'trainings.browse',
-        params: {
-          year,
-          month
-        }
-      };
+      this.$emit('prevMonth');
     },
     nextMonth() {
-      var year = this.year;
-      var month = this.month + 1;
-      if (month === 13) {
-        year = this.year + 1;
-        month = 1;
-      }
-      return {
-        name: 'trainings.browse',
-        params: {
-          year,
-          month
-        }
-      };
+      this.$emit('nextMonth');
     }
   }
 };
