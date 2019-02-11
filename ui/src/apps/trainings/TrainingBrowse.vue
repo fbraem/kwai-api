@@ -25,7 +25,9 @@
         </div>
       </div>
       <div v-else class="uk-child-width-1-1" uk-grid>
-        <Calendar :year="year" :month="month" :trainings="trainings" />
+        <Calendar :year="year" :month="month" :trainings="trainings"
+          @prevMonth="prevMonth" @firstMonth="firstMonth"
+          @nextMonth="nextMonth" @lastMonth="lastMonth" />
         <div v-if="noData">
           <div class="uk-alert uk-alert-warning">
             {{ $t('training.events.no_data') }}
@@ -35,196 +37,6 @@
     </section>
   </div>
 </template>
-
-<style scoped>
-.calendar > .title {
-  font-size: 2.5rem;
-  font-weight: 100;
-  margin-bottom: 2rem;
-  color: #222;
-}
-.calendar > .title > * {
-  display: inline;
-}
-.calendar .days {
-  list-style: none;
-  margin: 0 0 0 0;
-  padding: 0;
-}
-.calendar .days > .day.outside {
-  display: none;
-}
-.calendar .days > .day.empty {
-  display: none;
-}
-.calendar .days .events {
-  margin-bottom: 1rem;
-}
-.calendar .days .events .event {
-  box-sizing: border-box;
-  line-height: 1;
-  font-size: .75rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  background: rgba(182, 43, 16, 0.05);
-  color: #B62B10;
-  padding: .25rem .5rem;
-  margin-bottom: 2px;
-  cursor: pointer;
-  transition: all .1s ease-in-out;
-}
-.calendar .days .events .event:hover, .calendar .days .events .event:focus {
-  background: rgba(182, 43, 16, 0.1);
-}
-.calendar .days .events .event:active {
-  color: white;
-  background: #b62b10;
-}
-.calendar .days .date {
-  position: relative;
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-  padding-bottom: .5rem;
-}
-.calendar .days .date:after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: currentColor;
-  opacity: .5;
-}
-.calendar .days .date > * {
-  display: inline-block;
-}
-.calendar .days .date .weekday {
-  font-weight: 400;
-  color: #B62B10;
-  text-transform: uppercase;
-}
-.calendar .days .date .weekday:after {
-  content: ',';
-}
-
-@media (min-width: 1024px) {
-  .calendar {
-    border-bottom: 2px solid #B62B10;
-  }
-  .calendar .days {
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex-wrap: wrap;
-  }
-  .calendar .days > .day {
-    position: relative;
-    font-size: .75rem;
-    margin-bottom: 0;
-    padding: 0 0 15% 0;
-    width: 14.2857142857%;
-    flex-shrink: 0;
-  }
-  .calendar .days > .day:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: .5rem;
-    top: 0;
-    height: 1px;
-    background: currentColor;
-    opacity: .5;
-  }
-  .calendar .days > .day .date {
-    position: absolute;
-    top: 1rem;
-    font-size: 1rem;
-    line-height: 1rem;
-  }
-  .calendar .days > .day .date:after {
-    display: none;
-  }
-  .calendar .days > .day .date .weekday,
-  .calendar .days > .day .date .month,
-  .calendar .days > .day .date .year {
-    display: none;
-  }
-  .calendar .days > .day .date .day:after {
-    content: "";
-  }
-  .calendar .days > .day.outside {
-    display: inline-block;
-  }
-  .calendar .days > .day.outside:before {
-    opacity: .125;
-  }
-  .calendar .days > .day.outside .date .day {
-    opacity: 0.5;
-  }
-  .calendar .days > .day.empty {
-    display: inline-block;
-  }
-  .calendar .days > .day:nth-child(n+1):nth-child(-n+7) {
-    margin-top: 2rem;
-  }
-  .calendar .days > .day:nth-child(n+1):nth-child(-n+7):before {
-    opacity: 1;
-    height: 2px;
-    background: #B62B10;
-  }
-  .calendar .days > .day:nth-child(n+1):nth-child(-n+7) .date {
-    width: 100%;
-  }
-  .calendar .days > .day:nth-child(n+1):nth-child(-n+7) .date .weekday {
-    display: block;
-    position: absolute;
-    top: -3rem;
-    width: 100%;
-    overflow: hidden;
-    text-transform: uppercase;
-    font-weight: 300;
-    color: #B62B10;
-    text-overflow: ellipsis;
-  }
-  .calendar .days > .day:nth-child(n+1):nth-child(-n+7) .date .weekday:after {
-    content: "";
-  }
-  .calendar .days > .day .events {
-    box-sizing: border-box;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    padding-top: 2.5rem;
-    padding-right: .5rem;
-    overflow: auto;
-  }
-  .calendar .days > .day .events .event {
-    box-sizing: border-box;
-    line-height: 1;
-    font-size: .75rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    background: rgba(182, 43, 16, 0.05);
-    color: #B62B10;
-    padding: .25rem .5rem;
-    margin-bottom: 2px;
-    cursor: pointer;
-    transition: all .1s ease-in-out;
-  }
-  .calendar .days > .day .events .event:hover,
-  .calendar .days > .day .events .event:focus {
-    background: rgba(182, 43, 16, 0.1);
-  }
-  .calendar .days > .day .events .event:active {
-    color: white;
-    background: #b62b10;
-  }
-}
-</style>
 
 <script>
 import PageHeader from '@/site/components/PageHeader';
@@ -281,6 +93,54 @@ export default {
       this.$store.dispatch('training/browse', {
         year: year,
         month: month
+      });
+    },
+    firstMonth() {
+      this.$router.push({
+        name: 'trainings.browse',
+        params: {
+          year: this.year,
+          month: 1
+        }
+      });
+    },
+    lastMonth() {
+      this.$router.push({
+        name: 'trainings.browse',
+        params: {
+          year: this.year,
+          month: 12
+        }
+      });
+    },
+    prevMonth() {
+      var year = this.year;
+      var month = this.month - 1;
+      if (month === 0) {
+        year = this.year - 1;
+        month = 12;
+      }
+      this.$router.push({
+        name: 'trainings.browse',
+        params: {
+          year,
+          month
+        }
+      });
+    },
+    nextMonth() {
+      var year = this.year;
+      var month = this.month + 1;
+      if (month === 13) {
+        year = this.year + 1;
+        month = 1;
+      }
+      this.$router.push({
+        name: 'trainings.browse',
+        params: {
+          year,
+          month
+        }
       });
     }
   }
