@@ -160,10 +160,10 @@ export default {
       return this.$store.state.team.teams || [];
     },
   },
-  created() {
-    this.$store.dispatch('season/browse');
-    this.$store.dispatch('training/coach/browse');
-    this.$store.dispatch('team/browse');
+  async created() {
+    await this.$store.dispatch('season/browse');
+    await this.$store.dispatch('training/coach/browse');
+    await this.$store.dispatch('team/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
