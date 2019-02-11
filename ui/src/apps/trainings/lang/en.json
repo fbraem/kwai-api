@@ -188,5 +188,6 @@
     "name" : "Name",
     "description" : "Description",
     "trainings" : "Trainings",
-    "cancelled" : "This training is cancelled!"
+    "cancelled" : "This training is cancelled!",
+    "no_coach" : "No coach"
 }

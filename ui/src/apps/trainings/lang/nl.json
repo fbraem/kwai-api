@@ -190,5 +190,6 @@
     "name" : "Naam",
     "description" : "Omschrijving",
     "trainings" : "Trainingen",
-    "cancelled" : "Opgelet, deze training is geannuleerd!"
+    "cancelled" : "Opgelet, deze training is geannuleerd!",
+    "no_coach" : "Nog geen coach aangeduid"
 }
