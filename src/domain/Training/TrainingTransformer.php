@@ -62,6 +62,7 @@ class TrainingTransformer extends Fractal\TransformerAbstract
     public function transform(Training $training)
     {
         $arr = $training->toArray();
+        unset($arr['_matchingData']);
         unset($arr['event']['id']);
         foreach ($arr['event']['contents'] as &$content) {
             unset($content['id']);
