@@ -68,10 +68,7 @@
             </table>
           </div>
           <div>
-            <h2>Overzicht Trainingen</h2>
-            <Calendar :year="calendar.year" :month="calendar.month" :trainings="trainings"
-              @prevMonth="prevMonth" @firstMonth="firstMonth"
-              @nextMonth="nextMonth" @lastMonth="lastMonth" />
+            <router-view name="coach_information"></router-view>
           </div>
         </div>
       </section>
@@ -79,8 +76,6 @@
 </template>
 
 <script>
-import moment from 'moment';
-
 import messages from './lang';
 
 import trainingStore from '@/stores/training';
@@ -88,11 +83,10 @@ import coachStore from '@/stores/training/coaches';
 import registerModule from '@/stores/mixin';
 
 import PageHeader from '@/site/components/PageHeader.vue';
-import Calendar from './Calendar.vue';
 
 export default {
   components: {
-    PageHeader, Calendar
+    PageHeader
   },
   i18n: messages,
   mixins: [
@@ -106,14 +100,6 @@ export default {
       }
     ),
   ],
-  data() {
-    return {
-      calendar: {
-        year: moment().year(),
-        month: moment().month() + 1
-      }
-    };
-  },
   computed: {
     coach() {
       return this.$store.getters['training/coach/coach'](
@@ -126,9 +112,6 @@ export default {
     updateAllowed() {
       return this.coach
         && this.$training_coach.isAllowed('update', this.coach);
-    },
-    trainings() {
-      return this.$store.state.training.trainings || [];
     },
     updateLink() {
       return {
@@ -144,21 +127,14 @@ export default {
       return this.error && this.error.response.status === 404;
     }
   },
-  watch: {
-    calendar(nv) {
-      this.fetchTrainings(this.coach.id);
-    }
-  },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
       await vm.fetchData(to.params.id);
-      vm.fetchTrainings(to.params.id);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
     await this.fetchData(to.params.id);
-    this.fetchTrainings(to.params.id);
     next();
   },
   methods: {
@@ -168,53 +144,6 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
-    },
-    fetchTrainings(coachId) {
-      this.$store.dispatch('training/browse', {
-        year: this.calendar.year,
-        month: this.calendar.month,
-        coach: coachId
-      });
-    },
-    firstMonth() {
-      this.calendar = {
-        year: this.calendar.year,
-        month: 1
-      };
-    },
-    lastMonth() {
-      this.calendar = {
-        year: this.calendar.year,
-        month: 12
-      };
-    },
-    prevMonth() {
-      var month = this.calendar.month - 1;
-      if (month === 0) {
-        this.calendar = {
-          year: this.calendar.year - 1,
-          month: 12
-        };
-      } else {
-        this.calendar = {
-          year: this.calendar.year,
-          month: month
-        };
-      }
-    },
-    nextMonth() {
-      var month = this.calendar.month + 1;
-      if (month === 13) {
-        this.calendar = {
-          year: this.calendar.year + 1,
-          month: 1
-        };
-      } else {
-        this.calendar = {
-          year: this.calendar.year,
-          month: month
-        };
-      }
     }
   }
 };

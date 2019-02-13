@@ -86,7 +86,8 @@
                 "active" : {
                     "label" : "Active"
                 }
-            }
+            },
+            "trainings" : "Your trainings"
         },
         "generator" : {
             "create" : "Create trainings by entering a start and enddate. It's also possible to attach coaches to these trainings.",

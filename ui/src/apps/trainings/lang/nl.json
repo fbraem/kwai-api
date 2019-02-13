@@ -86,7 +86,8 @@
                 "active" : {
                     "label" : "Actief"
                 }
-            }
+            },
+            "trainings" : "Overzicht van uw trainingen"
         },
         "generator" : {
             "create" : "Maak trainingen door een start en einddatum in te geven. Je kan ook meteen coaches koppelen aan deze trainingen.",
