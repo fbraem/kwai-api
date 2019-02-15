@@ -1,71 +1,50 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <PageHeader>
-      <div class="uk-grid">
-        <div class="uk-width-5-6">
-          <h1>{{ $t('training.coaches.title') }}</h1>
-        </div>
-        <div class="uk-width-1-6">
-          <div class="uk-flex uk-flex-right">
-            <router-link v-if="$training_coach.isAllowed('create')"
-              class="uk-icon-button uk-link-reset"
-              :to="{ name : 'trainings.coaches.create' }">
-              <i class="fas fa-plus"></i>
-            </router-link>
-          </div>
+  <section class="uk-section uk-section-small uk-container uk-container-expand">
+    <div v-if="$wait.is('training.coaches.browse')"
+      class="uk-flex-center" uk-grid>
+      <div class="uk-text-center">
+        <i class="fas fa-spinner fa-2x fa-spin"></i>
+      </div>
+    </div>
+    <div v-else class="uk-child-width-1-1" uk-grid>
+      <div v-if="noData">
+        <div class="uk-alert uk-alert-warning">
+          {{ $t('training.coaches.no_data') }}
         </div>
       </div>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('training.coaches.browse')"
-        class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
+      <div v-else>
+        <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
+          <tr>
+            <th>{{ $t('name') }}</th>
+            <th>{{ $t('training.coaches.form.diploma.label') }}</th>
+            <th>{{ $t('training.coaches.form.active.label') }}</th>
+            <th></th>
+          </tr>
+          <tr v-for="coach in coaches" :key="coach.id">
+            <td>
+              <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">{{ coach.member.person.name }}</router-link>
+            </td>
+            <td>
+              {{ coach.diploma }}
+            </td>
+            <td>
+              <i class="fas fa-check" v-if="coach.active"></i>
+              <i class="fas fa-times uk-text-danger" v-else name="times"></i>
+            </td>
+            <td>
+              <router-link class="uk-icon-button uk-link-reset" v-if="$training_coach.isAllowed('update', coach)" :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }">
+                <i class="fas fa-edit uk-text-muted"></i>
+              </router-link>
+            </td>
+          </tr>
+        </table>
       </div>
-      <div v-else class="uk-child-width-1-1" uk-grid>
-        <div v-if="noData">
-          <div class="uk-alert uk-alert-warning">
-            {{ $t('training.coaches.no_data') }}
-          </div>
-        </div>
-        <div v-else>
-          <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
-            <tr>
-              <th>{{ $t('name') }}</th>
-              <th>{{ $t('training.coaches.form.diploma.label') }}</th>
-              <th>{{ $t('training.coaches.form.active.label') }}</th>
-              <th></th>
-            </tr>
-            <tr v-for="coach in coaches" :key="coach.id">
-              <td>
-                <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">{{ coach.member.person.name }}</router-link>
-              </td>
-              <td>
-                {{ coach.diploma }}
-              </td>
-              <td>
-                <i class="fas fa-check" v-if="coach.active"></i>
-                <i class="fas fa-times uk-text-danger" v-else name="times"></i>
-              </td>
-              <td>
-                <router-link class="uk-icon-button uk-link-reset" v-if="$training_coach.isAllowed('update', coach)" :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }">
-                  <i class="fas fa-edit uk-text-muted"></i>
-                </router-link>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
-
 <script>
-import PageHeader from '@/site/components/PageHeader';
-
 import messages from './lang';
 
 import trainingStore from '@/stores/training';
@@ -73,9 +52,6 @@ import coachStore from '@/stores/training/coaches';
 import registerModule from '@/stores/mixin';
 
 export default {
-  components: {
-    PageHeader
-  },
   i18n: messages,
   mixins: [
     registerModule(

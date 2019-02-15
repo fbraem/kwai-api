@@ -1,38 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader v-if="story" :picture="story.detail_picture">
-      <div uk-grid>
-        <div class="uk-width-expand">
-          <div class="uk-card uk-card-body">
-            <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
-              <router-link :to="{ name : 'news.category', params : { category : story.category.id }}" class="uk-link-reset">
-                {{ story.category.name }}
-              </router-link>
-            </div>
-            <div class="uk-light">
-              <h1 class="uk-margin-remove">{{ $t('news')}}</h1>
-              <h2 class="uk-margin-remove">{{ story.title }}</h2>
-              <div class="uk-article-meta" v-if="story.publish_date">{{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <div v-if="$story.isAllowed('update', story)" class="uk-margin-small-left">
-              <router-link :to="{ name : 'news.update', params : { id : story.id }}" class="uk-icon-button uk-link-reset">
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </div>
-            <div v-if="$story.isAllowed('remove', story)" class="uk-margin-small-left">
-              <a uk-toggle="target: #delete-story" class="uk-icon-button uk-link-reset">
-                <i class="fas fa-trash"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </PageHeader>
     <Page>
       <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
         <div class="uk-text-center">
@@ -125,7 +93,6 @@ import messages from './lang';
 import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 
 import Page from './Page.vue';
-import PageHeader from '@/site/components/PageHeader.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 
 import newsStore from '@/stores/news';
@@ -134,7 +101,6 @@ import registerModule from '@/stores/mixin';
 export default {
   components: {
     Page,
-    PageHeader,
     AreYouSure,
     VueGoodshareFacebook
   },
@@ -149,12 +115,6 @@ export default {
   computed: {
     story() {
       return this.$store.getters['news/story'](this.$route.params.id);
-    },
-    picture() {
-      if (this.story) {
-        return this.story.header_detail_crop;
-      }
-      return null;
     },
     facebookUrl() {
       // TODO: remove the host

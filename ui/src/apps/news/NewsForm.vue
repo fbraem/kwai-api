@@ -1,42 +1,35 @@
 <template>
-  <div>
-    <PageHeader>
-      <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
-      <h3 v-if="creating" class="uk-margin-remove">{{ $t('create') }}</h3>
-      <h3 v-else class="uk-margin-remove">{{ $t('update') }}</h3>
-    </PageHeader>
-    <section class="uk-section uk-section-default uk-section-small">
-      <div class="uk-container">
-        <div uk-grid>
-          <div class="uk-width-1-1">
-            <h3 class="uk-heading-line"><span>{{ $t('story') }}</span></h3>
-            <StoryForm :story="story"
-              @validation="storyValidation"
-              @formHandler="setStoryFormHandler">
-            </StoryForm>
-          </div>
-        </div>
+  <section class="uk-section uk-section-default uk-section-small">
+    <div class="uk-container">
+      <div uk-grid>
         <div class="uk-width-1-1">
-          <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
-          <ContentForm
-            :content="content"
-            @validation="contentValidation"
-            @formHandler="setContentFormHandler">
-          </ContentForm>
-        </div>
-        <div uk-grid class="uk-width-1-1">
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary"
-              :disabled="!valid" @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
-          </div>
+          <h3 class="uk-heading-line"><span>{{ $t('story') }}</span></h3>
+          <StoryForm :story="story"
+            @validation="storyValidation"
+            @formHandler="setStoryFormHandler">
+          </StoryForm>
         </div>
       </div>
-    </section>
-  </div>
+      <div class="uk-width-1-1">
+        <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
+        <ContentForm
+          :content="content"
+          @validation="contentValidation"
+          @formHandler="setContentFormHandler">
+        </ContentForm>
+      </div>
+      <div uk-grid class="uk-width-1-1">
+        <div class="uk-width-expand">
+        </div>
+        <div class="uk-width-auto">
+          <button class="uk-button uk-button-primary"
+            :disabled="!valid" @click="submit">
+            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <style scoped>
@@ -59,7 +52,6 @@ import registerModule from '@/stores/mixin';
 import Content from '@/models/Content';
 import Story from '@/models/Story';
 
-import PageHeader from '@/site/components/PageHeader.vue';
 import StoryForm from './StoryForm.vue';
 import ContentForm from './ContentForm.vue';
 
@@ -76,7 +68,6 @@ export default {
     ),
   ],
   components: {
-    PageHeader,
     StoryForm,
     ContentForm,
   },
@@ -91,9 +82,6 @@ export default {
   computed: {
     dateFormat() {
       return '(' + moment.localeData().longDateFormat('L') + ')';
-    },
-    creating() {
-      return this.story != null && this.story.id == null;
     },
     valid() {
       return this.storyValid && this.contentValid;

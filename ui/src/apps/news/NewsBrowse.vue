@@ -1,34 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader :picture="picture">
-      <div uk-grid class="uk-light">
-        <div v-if="category" class="uk-width-1-1 uk-width-5-6@m">
-          <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
-          <h3 class="uk-margin-remove">{{ category.name }}</h3>
-          <p>
-            {{ category.description }}
-          </p>
-        </div>
-        <div v-else-if="year && month" class="uk-width-1-1 uk-width-5-6@m">
-          <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
-          <h3 class="uk-margin-remove">{{ $t('archive_title', { monthName : monthName, year : year }) }}</h3>
-        </div>
-        <div v-else class="uk-width-1-1 uk-width-5-6@m">
-          <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
-          <p>
-            {{ $t('all_news') }}
-          </p>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <router-link v-if="$story.isAllowed('create')" class="uk-icon-button uk-link-reset" :to="{ name : 'news.create' }">
-              <i class="fas fa-plus"></i>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </PageHeader>
     <Page>
       <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
         <div class="uk-text-center">
@@ -59,8 +31,6 @@
 </template>
 
 <script>
-import moment from 'moment';
-import PageHeader from '@/site/components/PageHeader.vue';
 import Page from './Page.vue';
 import NewsCard from './components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
@@ -77,7 +47,6 @@ import registerModule from '@/stores/mixin';
 export default {
   i18n: messages,
   components: {
-    PageHeader,
     Page,
     NewsCard,
     Paginator,
@@ -109,29 +78,6 @@ export default {
     newsCount() {
       if (this.stories) return this.stories.length;
       return -1;
-    },
-    category() {
-      /* eslint-disable max-len */
-      if (this.$route.params.category) {
-        return this.$store.getters['category/category'](this.$route.params.category);
-      }
-      return null;
-      /* eslint-enable max-len */
-    },
-    picture() {
-      if (this.category && this.category.images) {
-        return this.category.images.normal;
-      }
-      return null;
-    },
-    year() {
-      return this.$route.params.year;
-    },
-    month() {
-      return this.$route.params.month;
-    },
-    monthName() {
-      return moment.months()[this.month - 1];
     }
   },
   beforeRouteEnter(to, from, next) {

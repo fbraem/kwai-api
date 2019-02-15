@@ -1,5 +1,17 @@
 import moment from 'moment';
 
+const Coaches = () =>
+import(/* webpackChunkName: "trainings_admin_chunck" */
+  '@/apps/trainings/Coaches.vue');
+
+const CoachesHeader = () =>
+import(/* webpackChunkName: "trainings_admin_chunck" */
+  '@/apps/trainings/CoachesHeader.vue');
+
+const CoachHeader = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/CoachHeader.vue');
+
 const CoachBrowse = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/CoachBrowse.vue');
@@ -19,60 +31,72 @@ const CoachForm = () =>
 export default [
   {
     path: '/trainings/coaches',
-    component: CoachBrowse,
-    name: 'trainings.coaches.browse',
-  },
-  {
-    path: '/trainings/coaches/:id(\\d+)',
-    component: CoachRead,
+    component: Coaches,
     children: [
       {
-        path: 'trainings/:year(\\d+)/:month(\\d+)',
-        name: 'trainings.coaches.trainings',
+        path: ':id(\\d+)',
         components: {
-          coach_information: CoachTrainings
+          coach_header: CoachHeader,
+          coach_main: CoachRead
         },
-        props: {
-          coach_information: (route) => {
-            return {
-              year: Number(route.params.year),
-              month: Number(route.params.month)
-            };
-          }
-        }
+        children: [
+          {
+            path: 'trainings/:year(\\d+)/:month(\\d+)',
+            name: 'trainings.coaches.trainings',
+            components: {
+              coach_information: CoachTrainings
+            },
+            props: {
+              coach_information: (route) => {
+                return {
+                  year: Number(route.params.year),
+                  month: Number(route.params.month)
+                };
+              }
+            }
+          },
+          {
+            path: 'trainings',
+            name: 'trainings.coaches.trainings.default',
+            components: {
+              coach_information: CoachTrainings
+            },
+            props: {
+              coach_information: (route) => {
+                return {
+                  year: moment().year(),
+                  month: moment().month() + 1
+                };
+              }
+            }
+          },
+          {
+            path: '',
+            redirect: {
+              name: 'trainings.coaches.trainings.default'
+            },
+            name: 'trainings.coaches.read'
+          },
+        ]
       },
       {
-        path: 'trainings',
-        name: 'trainings.coaches.trainings.default',
-        components: {
-          coach_information: CoachTrainings
-        },
-        props: {
-          coach_information: (route) => {
-            return {
-              year: moment().year(),
-              month: moment().month() + 1
-            };
-          }
-        }
+        path: 'create',
+        component: CoachForm,
+        name: 'trainings.coaches.create',
+      },
+      {
+        path: 'update/:id(\\d+)',
+        component: CoachForm,
+        name: 'trainings.coaches.update',
       },
       {
         path: '',
-        redirect: {
-          name: 'trainings.coaches.trainings.default'
-        },
-        name: 'trainings.coaches.read'
+        name: 'trainings.coaches',
+        components: {
+          coach_header: CoachesHeader,
+          coach_main: CoachBrowse
+        }
       },
     ]
-  },
-  {
-    path: '/trainings/coaches/create',
-    component: CoachForm,
-    name: 'trainings.coaches.create',
-  },
-  {
-    path: '/trainings/coaches/update/:id(\\d+)',
-    component: CoachForm,
-    name: 'trainings.coaches.update',
   },
 ];

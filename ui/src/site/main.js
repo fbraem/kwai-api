@@ -39,8 +39,8 @@ Vue.use(VueWait);
 import Notifications from 'vue-notification';
 Vue.use(Notifications);
 
-import { VueExtendLayout, layout } from 'vue-extend-layout';
-Vue.use(VueExtendLayout);
+// import { VueExtendLayout, layout } from 'vue-extend-layout';
+// Vue.use(VueExtendLayout);
 
 import routes from '@/routes';
 
@@ -55,7 +55,6 @@ new Vue({
   router,
   store,
   perimeters: perimeters(),
-  ...layout,
   wait: new VueWait({
     useVuex: true,
   }),

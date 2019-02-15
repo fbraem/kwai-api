@@ -1,50 +1,36 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="uk-section uk-section-default uk-section-small">
-    <div class="uk-container">
-      <div uk-grid>
-        <div class="uk-width-1-1">
-          <h4 class="uk-heading-line">
-            <span>{{ $t('category') }} &ndash;
-              <template v-if="creating">{{ $t('create') }}</template>
-              <template v-else>{{ $t('update') }}</template>
-            </span>
-          </h4>
-        </div>
-        <div class="uk-width-1-1" uk-grid>
-          <div class="uk-width-1-1">
-            <form class="uk-form-stacked">
-              <field name="name" :label="$t('form.name.label')">
-                <uikit-input-text :placeholder="$t('form.name.placeholder')">
-                </uikit-input-text>
-              </field>
-              <field name="short_description" :label="$t('form.short_description.label')">
-                <uikit-textarea :placeholder="$t('form.short_description.placeholder')">
-                </uikit-textarea>
-              </field>
-              <field name="description" :label="$t('form.description.label')">
-                <uikit-textarea :placeholder="$t('form.description.placeholder')">
-                </uikit-textarea>
-              </field>
-              <field name="remark" :label="$t('form.remark.label')">
-                <uikit-textarea :placeholder="$t('form.remark.placeholder')">
-                </uikit-textarea>
-              </field>
-            </form>
-          </div>
-          <div uk-grid class="uk-width-1-1">
-            <div class="uk-width-expand">
-            </div>
-            <div class="uk-width-auto">
-              <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-                <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-              </button>
-            </div>
-          </div>
-        </div>
+  <div uk-grid>
+    <div class="uk-width-1-1">
+      <form class="uk-form-stacked">
+        <field name="name" :label="$t('form.name.label')">
+          <uikit-input-text :placeholder="$t('form.name.placeholder')">
+          </uikit-input-text>
+        </field>
+        <field name="short_description" :label="$t('form.short_description.label')">
+          <uikit-textarea :placeholder="$t('form.short_description.placeholder')">
+          </uikit-textarea>
+        </field>
+        <field name="description" :label="$t('form.description.label')">
+          <uikit-textarea :placeholder="$t('form.description.placeholder')">
+          </uikit-textarea>
+        </field>
+        <field name="remark" :label="$t('form.remark.label')">
+          <uikit-textarea :placeholder="$t('form.remark.placeholder')">
+          </uikit-textarea>
+        </field>
+      </form>
+    </div>
+    <div uk-grid class="uk-width-1-1">
+      <div class="uk-width-expand">
+      </div>
+      <div class="uk-width-auto">
+        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

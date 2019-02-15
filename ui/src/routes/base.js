@@ -1,9 +1,20 @@
-import SiteApp from '@/site/App.vue';
+import App from '@/site/App.vue';
+import Header from '@/site/Header.vue';
+import SiteApp from '@/site/Home.vue';
 
 export default [
   {
     path: '/',
-    component: SiteApp,
-    name: 'home',
+    component: App,
+    children: [
+      {
+        name: 'home',
+        path: '',
+        components: {
+          header: Header,
+          main: SiteApp
+        }
+      },
+    ]
   },
 ];
