@@ -1,58 +1,43 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <PageHeader>
-      <h1>{{ $t('teams') }}</h1>
-      <h3 v-if="creating" class="uk-h3 uk-margin-remove">
-        {{ $t('create') }}
-      </h3>
-      <h3 v-else class="uk-h3 uk-margin-remove">
-        {{ $t('update') }}
-      </h3>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div uk-grid>
-        <div class="uk-width-1-1">
-          <form class="uk-form-stacked">
-            <field name="name" :label="$t('form.team.name.label')">
-              <uikit-input-text :placeholder="$t('form.team.name.placeholder')">
-              </uikit-input-text>
-            </field>
-            <field name="season" :label="$t('form.team.season.label')">
-              <uikit-select :items="seasons">
-              </uikit-select>
-            </field>
-            <p class="uk-text-meta">{{ $t('form.team.season.hint')}}</p>
-            <field name="team_type" :label="$t('form.team.team_type.label')">
-              <uikit-select :items="team_types">
-              </uikit-select>
-            </field>
-            <p class="uk-text-meta">{{ $t('form.team.team_type.hint')}}</p>
-            <field name="remark" :label="$t('form.team.remark.label')">
-              <uikit-textarea :rows="5" id="remark"
-                :placeholder="$t('form.team.remark.placeholder')">
-              </uikit-textarea>
-            </field>
-          </form>
-        </div>
-        <div uk-grid class="uk-width-1-1">
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
-          </div>
-        </div>
+  <div uk-grid>
+    <div class="uk-width-1-1">
+      <form class="uk-form-stacked">
+        <field name="name" :label="$t('form.team.name.label')">
+          <uikit-input-text :placeholder="$t('form.team.name.placeholder')">
+          </uikit-input-text>
+        </field>
+        <field name="season" :label="$t('form.team.season.label')">
+          <uikit-select :items="seasons">
+          </uikit-select>
+        </field>
+        <p class="uk-text-meta">{{ $t('form.team.season.hint')}}</p>
+        <field name="team_type" :label="$t('form.team.team_type.label')">
+          <uikit-select :items="team_types">
+          </uikit-select>
+        </field>
+        <p class="uk-text-meta">{{ $t('form.team.team_type.hint')}}</p>
+        <field name="remark" :label="$t('form.team.remark.label')">
+          <uikit-textarea :rows="5" id="remark"
+            :placeholder="$t('form.team.remark.placeholder')">
+          </uikit-textarea>
+        </field>
+      </form>
+    </div>
+    <div uk-grid class="uk-width-1-1">
+      <div class="uk-width-expand">
       </div>
-    </section>
+      <div class="uk-width-auto">
+        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Team from '@/models/Team';
-
-import PageHeader from '@/site/components/PageHeader.vue';
 
 import TeamForm from './TeamForm';
 import Field from '@/components/forms/Field.vue';
@@ -69,7 +54,7 @@ import registerModule from '@/stores/mixin';
 
 export default {
   components: {
-    PageHeader, Field, UikitInputText, UikitTextarea, UikitSelect
+    Field, UikitInputText, UikitTextarea, UikitSelect
   },
   i18n: messages,
   mixins: [

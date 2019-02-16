@@ -1,30 +1,71 @@
+import App from '@/site/App.vue';
+
+const TeamRead = () => import(
+  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamRead.vue'
+);
+const TeamHeader = () => import(
+  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamHeader.vue'
+);
+const TeamBrowse = () => import(
+  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamBrowse.vue'
+);
+const TeamsHeader = () => import(
+  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamsHeader.vue'
+);
+const TeamForm = () => import(
+  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamForm.vue'
+);
+const TeamFormHeader = () => import(
+  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamFormHeader.vue'
+);
+
 export default [
   {
-    path: '/teams/:id(\\d+)',
-    component: () => import(
-      /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamRead.vue'
-    ),
-    name: 'teams.read',
-  },
-  {
-    path: '/teams/create',
-    component: () => import(
-      /* webpackChunkName: "teams_admin" */ '@/apps/teams/TeamForm.vue'
-    ),
-    name: 'teams.create',
-  },
-  {
-    path: '/teams/update/:id(\\d+)',
-    component: () => import(
-      /* webpackChunkName: "teams_admin" */ '@/apps/teams/TeamForm.vue'
-    ),
-    name: 'teams.update',
-  },
-  {
     path: '/teams',
-    component: () => import(
-      /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamBrowse.vue'
-    ),
-    name: 'teams.browse',
+    component: App,
+    children: [
+      {
+        path: ':id(\\d+)',
+        components: {
+          header: TeamHeader,
+          main: TeamRead
+        },
+        name: 'teams.read',
+      },
+      {
+        path: 'create',
+        components: {
+          header: TeamFormHeader,
+          main: TeamForm
+        },
+        props: {
+          header: {
+            creating: true
+          }
+        },
+        name: 'teams.create',
+      },
+      {
+        path: 'update/:id(\\d+)',
+        components: {
+          header: TeamFormHeader,
+          main: TeamForm
+        },
+        props: {
+          header: {
+            creating: false
+          }
+        },
+        name: 'teams.update',
+      },
+      {
+        path: '',
+        components: {
+          header: TeamsHeader,
+          main: TeamBrowse
+        },
+        name: 'teams.browse',
+      },
+    ]
   },
 ];
