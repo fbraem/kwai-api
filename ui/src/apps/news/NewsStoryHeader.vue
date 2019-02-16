@@ -60,7 +60,6 @@ export default {
       return this.$store.getters['news/story'](this.$route.params.id);
     },
     picture() {
-      console.log(this.story);
       if (this.story) {
         return this.story.detail_picture;
       }
