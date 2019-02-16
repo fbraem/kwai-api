@@ -1,49 +1,40 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <PageHeader>
-      <h1>{{ $t('types') }}</h1>
-      <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('create') }}</h3>
-      <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('update') }}</h3>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div uk-grid>
-        <div class="uk-width-1-1">
-          <form class="uk-form-stacked">
-            <field name="name" :label="$t('form.team_type.name.label')">
-              <uikit-input-text :placeholder="$t('form.team_type.name.placeholder')" />
-            </field>
-            <field name="start_age" :label="$t('form.team_type.start_age.label')">
-              <uikit-input-text :placeholder="$t('form.team_type.start_age.placeholder')" />
-            </field>
-            <field name="end_age" :label="$t('form.team_type.end_age.label')">
-              <uikit-input-text :placeholder="$t('form.team_type.end_age.placeholder')" />
-            </field>
-            <field name="gender" :label="$t('form.team_type.gender.label')">
-              <uikit-select :items="genders" />
-            </field>
-            <field name="active" :label="$t('form.team_type.active.label')">
-              <uikit-checkbox />
-            </field>
-            <field name="competition" :label="$t('form.team_type.competition.label')">
-              <uikit-checkbox />
-            </field>
-            <field name="remark" :label="$t('form.team_type.remark.label')">
-              <uikit-textarea :placeholder="$t('form.team_type.remark.placeholder')" />
-            </field>
-          </form>
-        </div>
-        <div uk-grid class="uk-width-1-1">
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
-          </div>
-        </div>
+  <div uk-grid>
+    <div class="uk-width-1-1">
+      <form class="uk-form-stacked">
+        <field name="name" :label="$t('form.team_type.name.label')">
+          <uikit-input-text :placeholder="$t('form.team_type.name.placeholder')" />
+        </field>
+        <field name="start_age" :label="$t('form.team_type.start_age.label')">
+          <uikit-input-text :placeholder="$t('form.team_type.start_age.placeholder')" />
+        </field>
+        <field name="end_age" :label="$t('form.team_type.end_age.label')">
+          <uikit-input-text :placeholder="$t('form.team_type.end_age.placeholder')" />
+        </field>
+        <field name="gender" :label="$t('form.team_type.gender.label')">
+          <uikit-select :items="genders" />
+        </field>
+        <field name="active" :label="$t('form.team_type.active.label')">
+          <uikit-checkbox />
+        </field>
+        <field name="competition" :label="$t('form.team_type.competition.label')">
+          <uikit-checkbox />
+        </field>
+        <field name="remark" :label="$t('form.team_type.remark.label')">
+          <uikit-textarea :placeholder="$t('form.team_type.remark.placeholder')" />
+        </field>
+      </form>
+    </div>
+    <div uk-grid class="uk-width-1-1">
+      <div class="uk-width-expand">
       </div>
-    </section>
+      <div class="uk-width-auto">
+        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -52,8 +43,6 @@ import teamTypeStore from '@/stores/team_types';
 import registerModule from '@/stores/mixin';
 
 import TeamType from '@/models/TeamType';
-
-import PageHeader from '@/site/components/PageHeader.vue';
 
 import TeamTypeForm from './TeamTypeForm';
 import Field from '@/components/forms/Field.vue';
@@ -66,7 +55,7 @@ import messages from './lang';
 
 export default {
   components: {
-    PageHeader, Field, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
+    Field, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
   },
   i18n: messages,
   mixins: [
