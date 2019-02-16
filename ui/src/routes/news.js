@@ -1,5 +1,22 @@
 import App from '@/site/App.vue';
 
+const NewsHeader = () => import(
+  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsHeader.vue');
+const NewsStoryHeader = () => import(
+  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsStoryHeader.vue');
+const NewsCategoryHeader = () => import(
+    /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsCategoryHeader.vue');
+const NewsArchiveHeader = () => import(
+  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsArchiveHeader.vue');
+const NewsFormHeader = () => import(
+  /* webpackChunkName: "news_admin" */ '@/apps/news/NewsFormHeader.vue');
+const NewsRead = () => import(
+  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsRead.vue');
+const NewsBrowse = () => import(
+  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue');
+const NewsForm = () => import(
+  /* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue');
+
 export default [
   {
     path: '/news',
@@ -8,47 +25,32 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsStoryHeader.vue'
-          ),
-          main: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsRead.vue')
+          header: NewsStoryHeader,
+          main: NewsRead
         },
         name: 'news.story',
       },
       {
         path: 'category/:category(\\d+)',
         components: {
-          header: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsCategoryHeader.vue'
-          ),
-          main: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue'
-          )
+          header: NewsCategoryHeader,
+          main: NewsBrowse
         },
         name: 'news.category',
       },
       {
         path: 'archive/:year(\\d+)/:month(\\d+)',
         components: {
-          header: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsArchiveHeader.vue'
-          ),
-          main: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue'
-          )
+          header: NewsArchiveHeader,
+          main: NewsBrowse
         },
         name: 'news.archive',
       },
       {
         path: 'create',
         components: {
-          header: () => import(
-            /* webpackChunkName: "news_admin" */ '@/apps/news/NewsFormHeader.vue'
-          ),
-          main: () => import(
-            /* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue'
-          )
+          header: NewsFormHeader,
+          main: NewsForm
         },
         props: {
           header: {
@@ -60,12 +62,8 @@ export default [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: () => import(
-            /* webpackChunkName: "news_admin" */ '@/apps/news/NewsFormHeader.vue'
-          ),
-          main: () => import(
-            /* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue'
-          )
+          header: NewsFormHeader,
+          main: NewsForm
         },
         props: {
           header: {
@@ -77,9 +75,8 @@ export default [
       {
         path: '',
         components: {
-          main: () => import(
-            /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue'
-          )
+          header: NewsHeader,
+          main: NewsBrowse
         },
         name: 'news.browse',
       },
