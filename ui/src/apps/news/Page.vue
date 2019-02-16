@@ -1,35 +1,31 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="uk-section uk-section-small uk-container uk-container-expand">
-    <div>
-      <div uk-grid>
-        <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
-          <slot></slot>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
-          <ListCategories v-if="categories" :categories="categories" />
-          <h4 class="uk-heading-line uk-text-bold">
-            <span>{{ $t('archive') }}</span>
-          </h4>
-          <template v-for="(year) in archiveYears">
-            <div :key="year">
-              <h5>{{ year }}</h5>
-              <ul class="uk-list">
-                <li v-for="(month) in archive[year]" :key="month.month">
-                  <router-link :to="{ name : 'news.archive', params : { year : year, month : month.month }}">
-                    {{ month.monthName }} {{ year }}
-                    <span class="uk-badge uk-float-right">
-                      {{ month.count }}
-                    </span>
-                  </router-link>
-                </li>
-              </ul>
-            </div>
-          </template>
-        </div>
-      </div>
+  <div uk-grid>
+    <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
+      <slot></slot>
     </div>
-  </section>
+    <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
+      <ListCategories v-if="categories" :categories="categories" />
+      <h4 class="uk-heading-line uk-text-bold">
+        <span>{{ $t('archive') }}</span>
+      </h4>
+      <template v-for="(year) in archiveYears">
+        <div :key="year">
+          <h5>{{ year }}</h5>
+          <ul class="uk-list">
+            <li v-for="(month) in archive[year]" :key="month.month">
+              <router-link :to="{ name : 'news.archive', params : { year : year, month : month.month }}">
+                {{ month.monthName }} {{ year }}
+                <span class="uk-badge uk-float-right">
+                  {{ month.count }}
+                </span>
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script>
