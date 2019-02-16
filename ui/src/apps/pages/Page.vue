@@ -1,14 +1,12 @@
 <template>
-  <section class="uk-section uk-section-small uk-container uk-container-expand">
-    <div uk-grid>
-      <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
-        <slot></slot>
-      </div>
-      <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
-        <ListCategories v-if="categories" :categories="categories" />
-      </div>
+  <div uk-grid>
+    <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
+      <slot></slot>
     </div>
-  </section>
+    <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
+      <ListCategories v-if="categories" :categories="categories" />
+    </div>
+  </div>
 </template>
 
 <script>

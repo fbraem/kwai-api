@@ -1,38 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader v-if="page" :picture="page.picture">
-      <div uk-grid>
-        <div class="uk-width-expand">
-          <div class="uk-card uk-card-body">
-            <div class="uk-card-badge uk-label" style="font-size: 0.75rem;background-color:#c61c18;color:white">
-              <router-link :to="categoryLink" class="uk-link-reset">
-                {{ page.category.name }}
-              </router-link>
-            </div>
-            <div class="uk-light">
-              <h1>{{ page.title }}</h1>
-            </div>
-            <p v-html="page.summary">
-            </p>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <div v-if="$page.isAllowed('update', page)" class="uk-margin-small-left">
-              <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button uk-link-reset">
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </div>
-            <div v-if="$page.isAllowed('remove', page)" class="uk-margin-small-left">
-              <a uk-toggle="target: #delete-page" class="uk-icon-button uk-link-reset">
-                <i class="fas fa-trash"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </PageHeader>
     <Page>
       <div v-if="error">
         {{ error.response.statusText }}
@@ -146,7 +114,6 @@
 import messages from './lang';
 
 import Page from './Page.vue';
-import PageHeader from '@/site/components/PageHeader.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 
 import pageStore from '@/stores/pages';
@@ -154,7 +121,6 @@ import registerModule from '@/stores/mixin';
 
 export default {
   components: {
-    PageHeader,
     Page,
     AreYouSure
   },

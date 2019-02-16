@@ -1,32 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader :picture="picture">
-      <div class="uk-light" uk-grid>
-        <div class="uk-width-1-1 uk-width-5-6@m">
-          <div v-if="category">
-            <h1 class="uk-margin-remove">{{ category.name }}</h1>
-            <h3 class="uk-margin-remove">{{ $t('page') }}</h3>
-            <p>
-              {{ category.description }}
-            </p>
-          </div>
-          <div v-else>
-            <h1 class="uk-margin-remove">{{ $t('page') }}</h1>
-            <p>
-              {{ $t('all_pages') }}
-            </p>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <router-link v-if="$page.isAllowed('create')" class="uk-icon-button uk-link-reset" :to="{ name : 'pages.create' }">
-              <i class="fas fa-plus"></i>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </PageHeader>
     <Page>
       <div v-if="$wait.is('pages.browse')" class="uk-flex-center" uk-grid>
         <div class="uk-text-center">
@@ -49,7 +23,6 @@
 </template>
 
 <script>
-import PageHeader from '@/site/components/PageHeader.vue';
 import Page from './Page.vue';
 import PageSummary from './components/PageSummary.vue';
 import Paginator from '@/components/Paginator.vue';
@@ -63,7 +36,6 @@ import registerModule from '@/stores/mixin';
 export default {
   i18n: messages,
   components: {
-    PageHeader,
     Page,
     PageSummary,
     Paginator
@@ -91,18 +63,6 @@ export default {
       return -1;
     },
     pagesMeta() {
-      return null;
-    },
-    category() {
-      if (this.$route.params.category) {
-        return this.$store.getters['category/category'](this.$route.params.category);
-      }
-      return null;
-    },
-    picture() {
-      if (this.category && this.category.images) {
-        return this.category.images.normal;
-      }
       return null;
     }
   },

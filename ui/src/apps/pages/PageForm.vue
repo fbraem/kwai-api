@@ -1,41 +1,30 @@
 <template>
-  <div>
-    <PageHeader>
-      <h1 class="uk-margin-remove">{{ $t('page') }}</h1>
-      <h3 v-if="creating" class="uk-margin-remove">{{ $t('create') }}</h3>
-      <h3 v-else class="uk-margin-remove">{{ $t('update') }}</h3>
-    </PageHeader>
-    <section class="uk-section uk-section-default uk-section-small">
-      <div class="uk-container">
-        <div class="uk-child-width-1-1" uk-grid>
-          <div>
-            <h3 class="uk-heading-line"><span>{{ $t('page') }}</span></h3>
-            <MainForm :page="page"
-              @validation="pageValidation"
-              @formHandler="setPageFormHandler">
-            </MainForm>
-          </div>
-          <div>
-            <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
-            <ContentForm
-              :content="content"
-              @validation="contentValidation"
-              @formHandler="setContentFormHandler">
-            </ContentForm>
-          </div>
-          <div uk-grid>
-            <div class="uk-width-expand">
-            </div>
-            <div class="uk-width-auto">
-              <button class="uk-button uk-button-primary"
-                :disabled="!valid" @click="submit">
-                <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-              </button>
-            </div>
-          </div>
-        </div>
+  <div class="uk-child-width-1-1" uk-grid>
+    <div>
+      <h3 class="uk-heading-line"><span>{{ $t('page') }}</span></h3>
+      <MainForm :page="page"
+        @validation="pageValidation"
+        @formHandler="setPageFormHandler">
+      </MainForm>
+    </div>
+    <div>
+      <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
+      <ContentForm
+        :content="content"
+        @validation="contentValidation"
+        @formHandler="setContentFormHandler">
+      </ContentForm>
+    </div>
+    <div uk-grid>
+      <div class="uk-width-expand">
       </div>
-    </section>
+      <div class="uk-width-auto">
+        <button class="uk-button uk-button-primary"
+          :disabled="!valid" @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -49,7 +38,6 @@ import Page from '@/models/Page';
 
 import messages from './lang';
 
-import PageHeader from '@/site/components/PageHeader.vue';
 import MainForm from './MainForm.vue';
 import ContentForm from './ContentForm.vue';
 
@@ -66,7 +54,6 @@ export default {
     ),
   ],
   components: {
-    PageHeader,
     MainForm,
     ContentForm,
   },
