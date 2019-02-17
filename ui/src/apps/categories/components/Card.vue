@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
+  <div class="uk-margin-left uk-margin-right">
     <div class="uk-card uk-card-hover uk-card-body" uk-scrollspy="cls:uk-animation-slide-top-small">
       <router-link :to="{ name : 'categories.read', params : { id : category.id } }"
         class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent" />
