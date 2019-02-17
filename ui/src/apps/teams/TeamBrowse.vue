@@ -41,15 +41,10 @@
 <script>
 import messages from './lang';
 
-import PageHeader from '@/site/components/PageHeader';
-
 import teamStore from '@/stores/teams';
 import registerModule from '@/stores/mixin';
 
 export default {
-  components: {
-    PageHeader
-  },
   mixins: [
     registerModule({team: teamStore}),
   ],

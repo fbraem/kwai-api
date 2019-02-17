@@ -1,26 +1,65 @@
+const DefinitionsHeader = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/DefinitionsHeader.vue');
+const DefinitionBrowse = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/DefinitionBrowse.vue');
+
+const DefinitionFormHeader = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/DefinitionFormHeader.vue');
+const DefinitionForm = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/DefinitionForm.vue');
+
+const DefinitionHeader = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/DefinitionHeader.vue');
+const DefinitionRead = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/DefinitionRead.vue');
+
 export default [
   {
-    path: '/trainings/definitions/:id(\\d+)',
-    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
-      '@/apps/trainings/DefinitionRead.vue'),
+    path: 'definitions/:id(\\d+)',
+    components: {
+      header: DefinitionHeader,
+      main: DefinitionRead
+    },
     name: 'trainings.definitions.read',
   },
   {
-    path: '/trainings/definitions/create',
-    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
-      '@/apps/trainings/DefinitionForm.vue'),
+    path: 'definitions/create',
+    components: {
+      header: DefinitionFormHeader,
+      main: DefinitionForm
+    },
+    props: {
+      header: {
+        creating: true
+      }
+    },
     name: 'trainings.definitions.create',
   },
   {
-    path: '/trainings/definitions/update/:id(\\d+)',
-    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
-      '@/apps/trainings/DefinitionForm.vue'),
+    path: 'definitions/update/:id(\\d+)',
+    components: {
+      header: DefinitionFormHeader,
+      main: DefinitionForm
+    },
+    props: {
+      header: {
+        creating: false
+      }
+    },
     name: 'trainings.definitions.update',
   },
   {
-    path: '/trainings/definitions',
-    component: () => import(/* webpackChunkName: "trainings_admin_chunck" */
-      '@/apps/trainings/DefinitionBrowse.vue'),
+    path: 'definitions',
+    components: {
+      header: DefinitionsHeader,
+      main: DefinitionBrowse
+    },
     name: 'trainings.definitions.browse',
   },
 ];

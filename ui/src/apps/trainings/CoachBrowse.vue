@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="uk-section uk-section-small uk-container uk-container-expand">
+  <div>
     <div v-if="$wait.is('training.coaches.browse')"
       class="uk-flex-center" uk-grid>
       <div class="uk-text-center">
@@ -41,7 +41,7 @@
         </table>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

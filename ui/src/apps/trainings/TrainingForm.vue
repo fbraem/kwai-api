@@ -1,85 +1,76 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <PageHeader>
-      <h1>{{ $t('training.events.title') }}</h1>
-      <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('training.events.create') }}</h3>
-      <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('training.events.update') }}</h3>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div uk-grid>
-        <div class="uk-width-1-1">
-          <form class="uk-form-stacked">
-            <div uk-grid>
-              <div class="uk-width-expand">
-                <field name="title" :label="$t('training.events.form.title.label')">
-                  <uikit-input-text :placeholder="$t('training.events.form.title.placeholder')" />
-                </field>
-              </div>
-              <div>
-                <field name="active" :label="$t('training.events.form.active.label')">
-                  <uikit-switch />
-                </field>
-              </div>
-              <div>
-                <field name="cancelled" :label="$t('training.events.form.cancelled.label')">
-                  <uikit-switch />
-                </field>
-              </div>
-            </div>
-            <field name="summary" :label="$t('training.events.form.summary.label')">
-              <uikit-textarea :rows="5" :placeholder="$t('training.events.form.summary.placeholder')" />
-            </field>
-            <div class="uk-child-width-1-3" uk-grid>
-              <div>
-                <field name="start_date" :label="$t('training.events.form.start_date.label')">
-                  <uikit-input-text :placeholder="$t('training.events.form.start_date.placeholder')" />
-                </field>
-              </div>
-              <div>
-                <field name="start_time" :label="$t('training.events.form.start_time.label')">
-                  <uikit-input-text :placeholder="$t('training.events.form.start_time.placeholder')" />
-                </field>
-              </div>
-              <div>
-                <field name="end_time" :label="$t('training.events.form.end_time.label')">
-                  <uikit-input-text :placeholder="$t('training.events.form.end_time.placeholder')" />
-                </field>
-              </div>
-            </div>
-            <field name="season" :label="$t('training.events.form.season.label')">
-              <uikit-select :items="seasons" />
-            </field>
-            <field name="teams" :label="$t('training.events.form.teams.label')">
-              <multiselect :options="teams" label="name"
-                track-by="id" :multiple="true" :close-on-select="false"
-                :selectLabel="$t('training.events.form.teams.selectLabel')"
-                :deselectLabel="$t('training.events.form.teams.deselectLabel')">
-              </multiselect>
-            </field>
-            <field name="coaches" :label="$t('training.events.form.coaches.label')">
-              <multiselect :options="coaches" label="name"
-                track-by="id" :multiple="true" :close-on-select="false"
-                :selectLabel="$t('training.events.form.coaches.selectLabel')"
-                :deselectLabel="$t('training.events.form.coaches.deselectLabel')">
-              </multiselect>
-            </field>
-            <field name="remark" :label="$t('training.events.form.remark.label')">
-              <uikit-textarea :rows="5" :placeholder="$t('training.events.form.remark.placeholder')" />
-            </field>
-          </form>
-        </div>
-        <div uk-grid class="uk-width-1-1">
+  <div uk-grid>
+    <div class="uk-width-1-1">
+      <form class="uk-form-stacked">
+        <div uk-grid>
           <div class="uk-width-expand">
+            <field name="title" :label="$t('training.events.form.title.label')">
+              <uikit-input-text :placeholder="$t('training.events.form.title.placeholder')" />
+            </field>
           </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
+          <div>
+            <field name="active" :label="$t('training.events.form.active.label')">
+              <uikit-switch />
+            </field>
+          </div>
+          <div>
+            <field name="cancelled" :label="$t('training.events.form.cancelled.label')">
+              <uikit-switch />
+            </field>
           </div>
         </div>
+        <field name="summary" :label="$t('training.events.form.summary.label')">
+          <uikit-textarea :rows="5" :placeholder="$t('training.events.form.summary.placeholder')" />
+        </field>
+        <div class="uk-child-width-1-3" uk-grid>
+          <div>
+            <field name="start_date" :label="$t('training.events.form.start_date.label')">
+              <uikit-input-text :placeholder="$t('training.events.form.start_date.placeholder')" />
+            </field>
+          </div>
+          <div>
+            <field name="start_time" :label="$t('training.events.form.start_time.label')">
+              <uikit-input-text :placeholder="$t('training.events.form.start_time.placeholder')" />
+            </field>
+          </div>
+          <div>
+            <field name="end_time" :label="$t('training.events.form.end_time.label')">
+              <uikit-input-text :placeholder="$t('training.events.form.end_time.placeholder')" />
+            </field>
+          </div>
+        </div>
+        <field name="season" :label="$t('training.events.form.season.label')">
+          <uikit-select :items="seasons" />
+        </field>
+        <field name="teams" :label="$t('training.events.form.teams.label')">
+          <multiselect :options="teams" label="name"
+            track-by="id" :multiple="true" :close-on-select="false"
+            :selectLabel="$t('training.events.form.teams.selectLabel')"
+            :deselectLabel="$t('training.events.form.teams.deselectLabel')">
+          </multiselect>
+        </field>
+        <field name="coaches" :label="$t('training.events.form.coaches.label')">
+          <multiselect :options="coaches" label="name"
+            track-by="id" :multiple="true" :close-on-select="false"
+            :selectLabel="$t('training.events.form.coaches.selectLabel')"
+            :deselectLabel="$t('training.events.form.coaches.deselectLabel')">
+          </multiselect>
+        </field>
+        <field name="remark" :label="$t('training.events.form.remark.label')">
+          <uikit-textarea :rows="5" :placeholder="$t('training.events.form.remark.placeholder')" />
+        </field>
+      </form>
+    </div>
+    <div uk-grid class="uk-width-1-1">
+      <div class="uk-width-expand">
       </div>
-    </section>
+      <div class="uk-width-auto">
+        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -92,7 +83,6 @@ import registerModule from '@/stores/mixin';
 
 import Training from '@/models/trainings/Training';
 
-import PageHeader from '@/site/components/PageHeader.vue';
 import Field from '@/components/forms/Field.vue';
 import UikitInputText from '@/components/forms/InputText.vue';
 import UikitTextarea from '@/components/forms/Textarea.vue';
@@ -106,7 +96,6 @@ import TrainingForm from './TrainingForm';
 
 export default {
   components: {
-    PageHeader,
     Field,
     UikitInputText,
     UikitSwitch,

@@ -1,70 +1,61 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <PageHeader>
-      <h1>{{ $t('training.definitions.title') }}</h1>
-      <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('training.definitions.create') }}</h3>
-      <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('training.definitions.update') }}</h3>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div uk-grid>
-        <div class="uk-width-1-1">
-          <form class="uk-form-stacked">
-            <div uk-grid>
-              <div class="uk-width-expand">
-                <field name="name" :label="$t('training.definitions.form.name.label')">
-                  <uikit-input-text :placeholder="$t('training.definitions.form.name.placeholder')" />
-                </field>
-              </div>
-              <div>
-                <field name="active" :label="$t('training.definitions.form.active.label')">
-                  <uikit-switch />
-                </field>
-              </div>
-            </div>
-            <field name="description" :label="$t('training.definitions.form.description.label')">
-              <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.description.placeholder')" />
-            </field>
-            <field name="weekday" :label="$t('training.definitions.form.weekday.label')">
-              <uikit-select :items="weekdays" />
-            </field>
-            <div class="uk-child-width-1-2" uk-grid>
-              <div>
-                <field name="start_time" :label="$t('training.definitions.form.start_time.label')">
-                  <uikit-input-text :placeholder="$t('training.definitions.form.start_time.placeholder')" />
-                </field>
-              </div>
-              <div>
-                <field name="end_time" :label="$t('training.definitions.form.end_time.label')">
-                  <uikit-input-text :placeholder="$t('training.definitions.form.end_time.placeholder')" />
-                </field>
-              </div>
-            </div>
-            <field name="season" :label="$t('training.definitions.form.season.label')">
-              <uikit-select :items="seasons" />
-            </field>
-            <field name="team" :label="$t('training.definitions.form.team.label')">
-              <uikit-select :items="teams" />
-            </field>
-            <field name="location" :label="$t('training.definitions.form.location.label')">
-              <uikit-input-text :placeholder="$t('training.definitions.form.location.placeholder')" />
-            </field>
-            <field name="remark" :label="$t('training.definitions.form.remark.label')">
-              <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.remark.placeholder')" />
-            </field>
-          </form>
-        </div>
-        <div uk-grid class="uk-width-1-1">
+  <div uk-grid>
+    <div class="uk-width-1-1">
+      <form class="uk-form-stacked">
+        <div uk-grid>
           <div class="uk-width-expand">
+            <field name="name" :label="$t('training.definitions.form.name.label')">
+              <uikit-input-text :placeholder="$t('training.definitions.form.name.placeholder')" />
+            </field>
           </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
+          <div>
+            <field name="active" :label="$t('training.definitions.form.active.label')">
+              <uikit-switch />
+            </field>
           </div>
         </div>
+        <field name="description" :label="$t('training.definitions.form.description.label')">
+          <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.description.placeholder')" />
+        </field>
+        <field name="weekday" :label="$t('training.definitions.form.weekday.label')">
+          <uikit-select :items="weekdays" />
+        </field>
+        <div class="uk-child-width-1-2" uk-grid>
+          <div>
+            <field name="start_time" :label="$t('training.definitions.form.start_time.label')">
+              <uikit-input-text :placeholder="$t('training.definitions.form.start_time.placeholder')" />
+            </field>
+          </div>
+          <div>
+            <field name="end_time" :label="$t('training.definitions.form.end_time.label')">
+              <uikit-input-text :placeholder="$t('training.definitions.form.end_time.placeholder')" />
+            </field>
+          </div>
+        </div>
+        <field name="season" :label="$t('training.definitions.form.season.label')">
+          <uikit-select :items="seasons" />
+        </field>
+        <field name="team" :label="$t('training.definitions.form.team.label')">
+          <uikit-select :items="teams" />
+        </field>
+        <field name="location" :label="$t('training.definitions.form.location.label')">
+          <uikit-input-text :placeholder="$t('training.definitions.form.location.placeholder')" />
+        </field>
+        <field name="remark" :label="$t('training.definitions.form.remark.label')">
+          <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.remark.placeholder')" />
+        </field>
+      </form>
+    </div>
+    <div uk-grid class="uk-width-1-1">
+      <div class="uk-width-expand">
       </div>
-    </section>
+      <div class="uk-width-auto">
+        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -79,7 +70,6 @@ import registerModule from '@/stores/mixin';
 
 import TrainingDefinition from '@/models/trainings/Definition';
 
-import PageHeader from '@/site/components/PageHeader.vue';
 import Field from '@/components/forms/Field.vue';
 import UikitInputText from '@/components/forms/InputText.vue';
 import UikitTextarea from '@/components/forms/Textarea.vue';
@@ -92,7 +82,7 @@ import DefinitionForm from './DefinitionForm';
 
 export default {
   components: {
-    PageHeader, Field, UikitInputText, UikitTextarea,
+    Field, UikitInputText, UikitTextarea,
     UikitSelect, UikitSwitch
   },
   mixins: [

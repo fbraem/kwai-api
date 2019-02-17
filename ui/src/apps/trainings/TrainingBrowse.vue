@@ -1,45 +1,26 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader>
-      <div class="uk-grid">
-        <div class="uk-width-5-6">
-          <h1>{{ $t('training.events.title') }}</h1>
-        </div>
-        <div class="uk-width-1-6">
-          <div class="uk-flex uk-flex-right">
-            <router-link v-if="$training.isAllowed('create')"
-              class="uk-icon-button uk-link-reset"
-              :to="{ name : 'trainings.create' }">
-              <i class="fas fa-plus"></i>
-            </router-link>
-          </div>
+    <div v-if="$wait.is('training.browse')"
+      class="uk-flex-center" uk-grid>
+      <div class="uk-text-center">
+        <i class="fas fa-spinner fa-2x fa-spin"></i>
+      </div>
+    </div>
+    <div v-else class="uk-child-width-1-1" uk-grid>
+      <Calendar :year="year" :month="month" :trainings="trainings"
+        @prevMonth="prevMonth" @firstMonth="firstMonth"
+        @nextMonth="nextMonth" @lastMonth="lastMonth" />
+      <div v-if="noData">
+        <div class="uk-alert uk-alert-warning">
+          {{ $t('training.events.no_data') }}
         </div>
       </div>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('training.browse')"
-        class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-      <div v-else class="uk-child-width-1-1" uk-grid>
-        <Calendar :year="year" :month="month" :trainings="trainings"
-          @prevMonth="prevMonth" @firstMonth="firstMonth"
-          @nextMonth="nextMonth" @lastMonth="lastMonth" />
-        <div v-if="noData">
-          <div class="uk-alert uk-alert-warning">
-            {{ $t('training.events.no_data') }}
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
   </div>
 </template>
 
 <script>
-import PageHeader from '@/site/components/PageHeader';
 import Calendar from './Calendar.vue';
 
 import messages from './lang';
@@ -49,7 +30,7 @@ import registerModule from '@/stores/mixin';
 
 export default {
   components: {
-    PageHeader, Calendar
+    Calendar
   },
   props: {
     year: {

@@ -1,70 +1,52 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader>
-      <div class="uk-grid">
-        <div class="uk-width-5-6">
-          <h1>{{ $t('events') }}</h1>
-        </div>
-        <div class="uk-width-1-6">
-          <div class="uk-flex uk-flex-right">
-            <router-link v-if="$event.isAllowed('create')"
-              class="uk-icon-button uk-link-reset"
-              :to="{ name : 'create' }">
-              <i class="fas fa-plus"></i>
-            </router-link>
+    <div v-if="$wait.is('events.browse')"
+      class="uk-flex-center" uk-grid>
+      <div class="uk-text-center">
+        <i class="fas fa-spinner fa-2x fa-spin"></i>
+      </div>
+    </div>
+    <div v-else class="uk-child-width-1-1" uk-grid>
+      <div class="calendar">
+        <div class="title">
+          <router-link :to="prevMonth" class="fas fa-caret-left uk-link-reset">
+          </router-link>
+          <div class="month" style="text-transform:capitalize">
+            {{ monthName }}
           </div>
+          <div class="year">
+            {{ year }}
+          </div>
+          <router-link :to="nextMonth" class="fas fa-caret-right uk-link-reset">
+          </router-link>
         </div>
-      </div>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div v-if="$wait.is('events.browse')"
-        class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-      <div v-else class="uk-child-width-1-1" uk-grid>
-        <div class="calendar">
-          <div class="title">
-            <router-link :to="prevMonth" class="fas fa-caret-left uk-link-reset">
-            </router-link>
-            <div class="month" style="text-transform:capitalize">
-              {{ monthName }}
+        <ol class="days">
+          <li class="day" v-for="(day, index) in days" :key="index"
+            :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }">
+            <div class="date">
+              <span class="weekday">{{ day.weekday }}</span>
+              <span class="day">{{ day.number }}</span>
+              <span class="month">{{ day.month }}</span>
+              <span class="year">{{ day.year }}</span>
             </div>
-            <div class="year">
-              {{ year }}
+            <div class="events">
+              <div v-for="(event, index) in day.events" :key="index">
+                {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
+                <router-link :to="{ name: 'events.read', params: { id: event.id }}">
+                  {{ event.name }}
+                </router-link>
+              </div>
             </div>
-            <router-link :to="nextMonth" class="fas fa-caret-right uk-link-reset">
-            </router-link>
-          </div>
-          <ol class="days">
-            <li class="day" v-for="(day, index) in days" :key="index"
-              :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }">
-              <div class="date">
-                <span class="weekday">{{ day.weekday }}</span>
-                <span class="day">{{ day.number }}</span>
-                <span class="month">{{ day.month }}</span>
-                <span class="year">{{ day.year }}</span>
-              </div>
-              <div class="events">
-                <div v-for="(event, index) in day.events" :key="index">
-                  {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
-                  <router-link :to="{ name: 'events.read', params: { id: event.id }}">
-                    {{ event.name }}
-                  </router-link>
-                </div>
-              </div>
-            </li>
-          </ol>
-        </div>
-        <div v-if="noData">
-          <div class="uk-alert uk-alert-warning">
-            {{ $t('no_data') }}
-          </div>
+          </li>
+        </ol>
+      </div>
+      <div v-if="noData">
+        <div class="uk-alert uk-alert-warning">
+          {{ $t('no_data') }}
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -260,7 +242,6 @@
 
 <script>
 import moment from 'moment';
-import PageHeader from '@/site/components/PageHeader';
 
 import messages from './lang';
 
@@ -268,9 +249,6 @@ import eventStore from '@/stores/events';
 import registerModule from '@/stores/mixin';
 
 export default {
-  components: {
-    PageHeader
-  },
   props: {
     year: {
       type: Number,

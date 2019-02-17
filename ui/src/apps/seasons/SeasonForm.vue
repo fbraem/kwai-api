@@ -1,40 +1,33 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <PageHeader>
-      <h1>{{ $t('seasons') }}</h1>
-      <h3 v-if="creating" class="uk-h3 uk-margin-remove">{{ $t('create') }}</h3>
-      <h3 v-else class="uk-h3 uk-margin-remove">{{ $t('update') }}</h3>
-    </PageHeader>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
-      <div uk-grid>
-        <div class="uk-width-1-1">
-          <form class="uk-form-stacked">
-            <field name="name" :label="$t('form.season.name.label')">
-              <uikit-input-text :placeholder="$t('form.season.name.placeholder')" />
-            </field>
-            <field name="start_date" :label="$t('form.season.start_date.label')">
-              <uikit-input-text :placeholder="$t('form.season.start_date.placeholder')" />
-            </field>
-            <field name="end_date" :label="$t('form.season.end_date.label')">
-              <uikit-input-text :placeholder="$t('form.season.end_date.placeholder')" />
-            </field>
-            <field name="remark" :label="$t('form.season.remark.label')">
-              <uikit-textarea :placeholder="$t('form.season.remark.placeholder')" />
-            </field>
-          </form>
+    <div uk-grid>
+      <div class="uk-width-1-1">
+        <form class="uk-form-stacked">
+          <field name="name" :label="$t('form.season.name.label')">
+            <uikit-input-text :placeholder="$t('form.season.name.placeholder')" />
+          </field>
+          <field name="start_date" :label="$t('form.season.start_date.label')">
+            <uikit-input-text :placeholder="$t('form.season.start_date.placeholder')" />
+          </field>
+          <field name="end_date" :label="$t('form.season.end_date.label')">
+            <uikit-input-text :placeholder="$t('form.season.end_date.placeholder')" />
+          </field>
+          <field name="remark" :label="$t('form.season.remark.label')">
+            <uikit-textarea :placeholder="$t('form.season.remark.placeholder')" />
+          </field>
+        </form>
+      </div>
+      <div uk-grid class="uk-width-1-1">
+        <div class="uk-width-expand">
         </div>
-        <div uk-grid class="uk-width-1-1">
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
-          </div>
+        <div class="uk-width-auto">
+          <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
+            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -43,8 +36,6 @@ import Season from '@/models/Season';
 
 import seasonStore from '@/stores/seasons';
 import registerModule from '@/stores/mixin';
-
-import PageHeader from '@/site/components/PageHeader.vue';
 
 import SeasonForm from './SeasonForm';
 
@@ -57,7 +48,6 @@ import messages from './lang';
 export default {
   i18n: messages,
   components: {
-    PageHeader,
     Field,
     UikitInputText,
     UikitTextarea

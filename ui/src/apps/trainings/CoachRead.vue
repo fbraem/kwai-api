@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="uk-section uk-section-small uk-container uk-container-expand">
+  <div>
     <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
         {{ $t('not_allowed') }}
     </div>
@@ -44,7 +44,7 @@
         <router-view name="coach_information"></router-view>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

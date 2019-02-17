@@ -41,12 +41,11 @@ import registerModule from '@/stores/mixin';
 import messages from './lang';
 import jump from 'jump.js';
 
-import PageHeader from '@/site/components/PageHeader';
 import MemberListItem from './MemberListItem.vue';
 
 export default {
   components: {
-    PageHeader, MemberListItem
+    MemberListItem
   },
   mixins: [
     registerModule({ member: memberStore }),
