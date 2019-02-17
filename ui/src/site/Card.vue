@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="uk-margin-left">
         <div class="uk-card uk-card-hover uk-card-body" uk-scrollspy="cls:uk-animation-slide-top-small">
             <a v-if="isLink" :href="to" class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent"></a>
             <router-link v-else :to="to" class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent">
