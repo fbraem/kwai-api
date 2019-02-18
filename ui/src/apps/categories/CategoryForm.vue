@@ -35,8 +35,6 @@
 
 <script>
 import Category from '@/models/Category';
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
 
 import CategoryForm from './CategoryForm';
 import Field from '@/components/forms/Field.vue';
@@ -52,10 +50,7 @@ export default {
     Field
   },
   i18n: messages,
-  mixins: [
-    CategoryForm,
-    registerModule({ category: categoryStore }),
-  ],
+  mixins: [ CategoryForm ],
   data() {
     return {
       category: new Category()

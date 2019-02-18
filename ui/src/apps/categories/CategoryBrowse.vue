@@ -14,21 +14,11 @@ import Card from './components/Card.vue';
 
 import messages from './lang';
 
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     Card
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   computed: {
     categories() {
       return this.$store.state.category.categories;

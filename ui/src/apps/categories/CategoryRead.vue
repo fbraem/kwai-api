@@ -66,11 +66,6 @@
 <script>
 import messages from './lang';
 
-import categoryStore from '@/stores/categories';
-import newsStore from '@/stores/news';
-import pageStore from '@/stores/pages';
-import registerModule from '@/stores/mixin';
-
 import NewsCard from '@/apps/news/components/NewsCard.vue';
 import PageSummary from '@/apps/pages/components/PageSummary.vue';
 
@@ -80,19 +75,6 @@ export default {
     NewsCard,
     PageSummary
   },
-  mixins: [
-    registerModule(
-      {
-        category: categoryStore
-      },
-      {
-        news: newsStore
-      },
-      {
-        page: pageStore
-      }
-    ),
-  ],
   computed: {
     category() {
       return this.$store.getters['category/category'](this.$route.params.id);
