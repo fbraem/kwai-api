@@ -1,3 +1,5 @@
+import App from '@/site/App.vue';
+
 import moment from 'moment';
 
 const CoachesHeader = () =>
@@ -27,85 +29,130 @@ const CoachFormHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/CoachFormHeader.vue');
 
+const TrainingStore = () =>
+  import(/* webpackChunckName: "trainings_store_chunck" */
+    '@/stores/training');
+const CoachStore = () =>
+  import(/* webpackChunckName: "trainings_store_chunck" */
+    '@/stores/training/coaches');
+const MemberStore = () =>
+  import(/* webpackChunckName: "trainings_store_chunck" */
+    '@/stores/members');
+
+
 export default [
   {
-    path: 'coaches/:id(\\d+)',
-    components: {
-      header: CoachHeader,
-      main: CoachRead
+    path: '/trainings/coaches',
+    component: App,
+    meta: {
+      stores: [
+        {
+          ns: [ 'training' ],
+          create: TrainingStore
+        },
+        {
+          ns: [ 'training', 'coach' ],
+          create: CoachStore
+        },
+      ]
     },
     children: [
       {
-        path: 'trainings/:year(\\d+)/:month(\\d+)',
-        name: 'trainings.coaches.trainings',
+        path: ':id(\\d+)',
         components: {
-          coach_information: CoachTrainings
+          header: CoachHeader,
+          main: CoachRead
         },
-        props: {
-          coach_information: (route) => {
-            return {
-              year: Number(route.params.year),
-              month: Number(route.params.month)
-            };
-          }
-        }
+        children: [
+          {
+            path: 'trainings/:year(\\d+)/:month(\\d+)',
+            name: 'trainings.coaches.trainings',
+            components: {
+              coach_information: CoachTrainings
+            },
+            props: {
+              coach_information: (route) => {
+                return {
+                  year: Number(route.params.year),
+                  month: Number(route.params.month)
+                };
+              }
+            }
+          },
+          {
+            path: 'trainings',
+            name: 'trainings.coaches.trainings.default',
+            components: {
+              coach_information: CoachTrainings
+            },
+            props: {
+              coach_information: (route) => {
+                return {
+                  year: moment().year(),
+                  month: moment().month() + 1
+                };
+              }
+            }
+          },
+          {
+            path: '',
+            redirect: {
+              name: 'trainings.coaches.trainings.default'
+            },
+            name: 'trainings.coaches.read'
+          },
+        ]
       },
       {
-        path: 'trainings',
-        name: 'trainings.coaches.trainings.default',
+        path: 'create',
+        meta: {
+          stores: [
+            {
+              ns: ['member'],
+              create: MemberStore
+            },
+          ]
+        },
         components: {
-          coach_information: CoachTrainings
+          header: CoachFormHeader,
+          main: CoachForm
         },
         props: {
-          coach_information: (route) => {
-            return {
-              year: moment().year(),
-              month: moment().month() + 1
-            };
+          header: {
+            creating: true
           }
-        }
+        },
+        name: 'trainings.coaches.create',
+      },
+      {
+        path: 'update/:id(\\d+)',
+        meta: {
+          stores: [
+            {
+              ns: ['member'],
+              create: MemberStore
+            },
+          ]
+        },
+        components: {
+          header: CoachFormHeader,
+          main: CoachForm
+        },
+        props: {
+          header: {
+            creating: true
+          }
+        },
+        name: 'trainings.coaches.update',
       },
       {
         path: '',
-        redirect: {
-          name: 'trainings.coaches.trainings.default'
-        },
-        name: 'trainings.coaches.read'
+        name: 'trainings.coaches',
+        components: {
+          header: CoachesHeader,
+          main: CoachBrowse
+        }
       },
     ]
-  },
-  {
-    path: 'coaches/create',
-    components: {
-      header: CoachFormHeader,
-      main: CoachForm
-    },
-    props: {
-      header: {
-        creating: true
-      }
-    },
-    name: 'trainings.coaches.create',
-  },
-  {
-    path: 'coaches/update/:id(\\d+)',
-    components: {
-      header: CoachFormHeader,
-      main: CoachForm
-    },
-    props: {
-      header: {
-        creating: true
-      }
-    },
-    name: 'trainings.coaches.update',
-  },
-  {
-    path: 'coaches',
-    name: 'trainings.coaches',
-    components: {
-      header: CoachesHeader,
-      main: CoachBrowse
-    }
   },
 ];

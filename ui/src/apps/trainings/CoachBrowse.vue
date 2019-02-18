@@ -47,20 +47,8 @@
 <script>
 import messages from './lang';
 
-import trainingStore from '@/stores/training';
-import coachStore from '@/stores/training/coaches';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        training: trainingStore,
-        coach: coachStore,
-      }
-    ),
-  ],
   computed: {
     coaches() {
       return this.$store.state.training.coach.coaches;

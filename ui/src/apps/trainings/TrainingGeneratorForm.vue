@@ -57,11 +57,6 @@ import messages from './lang';
 
 import Training from '@/models/trainings/Training';
 
-import trainingStore from '@/stores/training';
-import definitionStore from '@/stores/training/definitions';
-import coachStore from '@/stores/training/coaches';
-import registerModule from '@/stores/mixin';
-
 import Field from '@/components/forms/Field.vue';
 import UikitInputText from '@/components/forms/InputText.vue';
 import Multiselect from '@/components/forms/MultiSelect.vue';
@@ -77,22 +72,7 @@ export default {
     Multiselect, Field, UikitInputText, EventGenerate
   },
   i18n: messages,
-  mixins: [
-    TrainingGeneratorForm,
-    registerModule(
-      {
-        training: trainingStore
-      },
-      {
-        training: trainingStore,
-        definition: definitionStore
-      },
-      {
-        training: trainingStore,
-        coach: coachStore,
-      }
-    ),
-  ],
+  mixins: [ TrainingGeneratorForm ],
   data() {
     return {
       trainings: null

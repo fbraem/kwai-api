@@ -6,6 +6,30 @@ Vue.use(VueRouter);
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+/**
+ * Check registred module
+ * @param {Array} aPath - path to module - ex: ['my', 'nested', 'module']
+ * @return {Boolean}
+ */
+Vuex.Store.prototype.hasModule = function(aPath) {
+  let m = this._modules.root;
+  return aPath.every((p) => {
+    m = m._children[p];
+    return m;
+  });
+};
+Vuex.Store.prototype.setModule = async function(aPath, createFn) {
+  if (!this.hasModule(aPath)) {
+    var m = await createFn();
+    console.log(aPath);
+    if (!m) {
+      console.log("Can't create module ", aPath);
+    } else {
+      this.registerModule(aPath, m.default);
+    }
+  }
+};
+
 import UIkit from 'uikit';
 import UIkitIcons from 'uikit/dist/js/uikit-icons';
 UIkit.use(UIkitIcons);
@@ -43,6 +67,20 @@ import routes from '@/routes';
 
 const router = new VueRouter({
   routes: routes(),
+});
+router.beforeEach((to, from, next) => {
+  for (var r in to.matched) {
+    var matched = to.matched[r];
+    if (matched.meta.stores) {
+      for (var s in matched.meta.stores) {
+        store.setModule(
+          matched.meta.stores[s].ns,
+          matched.meta.stores[s].create
+        );
+      }
+    }
+  }
+  next();
 });
 
 import VueScrollBehavior from 'vue-scroll-behavior';

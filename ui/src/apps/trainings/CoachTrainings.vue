@@ -8,9 +8,6 @@
 </template>
 
 <script>
-import trainingStore from '@/stores/training';
-import registerModule from '@/stores/mixin';
-
 import Calendar from './Calendar.vue';
 
 import messages from './lang';
@@ -28,13 +25,6 @@ export default {
     }
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        training: trainingStore
-      }
-    ),
-  ],
   computed: {
     trainings() {
       return this.$store.state.training.trainings || [];

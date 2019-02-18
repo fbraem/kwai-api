@@ -62,12 +62,6 @@
 <script>
 import moment from 'moment';
 
-import trainingStore from '@/stores/training';
-import definitionStore from '@/stores/training/definitions';
-import seasonStore from '@/stores/seasons';
-import teamStore from '@/stores/teams';
-import registerModule from '@/stores/mixin';
-
 import TrainingDefinition from '@/models/trainings/Definition';
 
 import Field from '@/components/forms/Field.vue';
@@ -85,21 +79,7 @@ export default {
     Field, UikitInputText, UikitTextarea,
     UikitSelect, UikitSwitch
   },
-  mixins: [
-    DefinitionForm,
-    registerModule(
-      {
-        training: trainingStore,
-        definition: definitionStore,
-      },
-      {
-        season: seasonStore
-      },
-      {
-        team: teamStore
-      }
-    ),
-  ],
+  mixins: [ DefinitionForm ],
   i18n: messages,
   data() {
     return {

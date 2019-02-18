@@ -61,10 +61,6 @@
 <script>
 import messages from './lang';
 
-import trainingStore from '@/stores/training';
-import definitionStore from '@/stores/training/definitions';
-import registerModule from '@/stores/mixin';
-
 import TrainingGeneratorForm from './TrainingGeneratorForm.vue';
 
 export default {
@@ -72,14 +68,6 @@ export default {
     TrainingGeneratorForm
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        training: trainingStore,
-        definition: definitionStore,
-      }
-    ),
-  ],
   computed: {
     definition() {
       return this.$store.getters['training/definition/definition'](

@@ -75,12 +75,6 @@
 </template>
 
 <script>
-import trainingStore from '@/stores/training';
-import coachStore from '@/stores/training/coaches';
-import seasonStore from '@/stores/seasons';
-import teamStore from '@/stores/teams';
-import registerModule from '@/stores/mixin';
-
 import Training from '@/models/trainings/Training';
 
 import Field from '@/components/forms/Field.vue';
@@ -106,21 +100,6 @@ export default {
   i18n: messages,
   mixins: [
     TrainingForm,
-    registerModule(
-      {
-        training: trainingStore
-      },
-      {
-        training: trainingStore,
-        coach: coachStore,
-      },
-      {
-        season: seasonStore
-      },
-      {
-        team: teamStore
-      }
-    ),
   ],
   data() {
     return {

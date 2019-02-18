@@ -58,11 +58,6 @@
 </template>
 
 <script>
-import trainingStore from '@/stores/training';
-import coachStore from '@/stores/training/coaches';
-import memberStore from '@/stores/members';
-import registerModule from '@/stores/mixin';
-
 import TrainingCoach from '@/models/trainings/Coach';
 
 import Field from '@/components/forms/Field.vue';
@@ -80,18 +75,7 @@ export default {
     Field, UikitInputText, UikitTextarea,
     UikitSwitch, AutoComplete
   },
-  mixins: [
-    CoachForm,
-    registerModule(
-      {
-        training: trainingStore,
-        coach: coachStore,
-      },
-      {
-        member: memberStore
-      }
-    ),
-  ],
+  mixins: [ CoachForm ],
   i18n: messages,
   data() {
     return {

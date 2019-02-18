@@ -25,9 +25,6 @@ import Calendar from './Calendar.vue';
 
 import messages from './lang';
 
-import trainingStore from '@/stores/training';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     Calendar
@@ -43,13 +40,6 @@ export default {
     }
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        training: trainingStore
-      }
-    ),
-  ],
   computed: {
     trainings() {
       var trainings = this.$store.state.training.trainings;
