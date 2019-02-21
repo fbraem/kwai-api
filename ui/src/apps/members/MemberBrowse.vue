@@ -35,9 +35,6 @@
 <script>
 import 'flag-icon-css/css/flag-icon.css';
 
-import memberStore from '@/stores/members';
-import registerModule from '@/stores/mixin';
-
 import messages from './lang';
 import jump from 'jump.js';
 
@@ -47,9 +44,6 @@ export default {
   components: {
     MemberListItem
   },
-  mixins: [
-    registerModule({ member: memberStore }),
-  ],
   i18n: messages,
   computed: {
     members() {

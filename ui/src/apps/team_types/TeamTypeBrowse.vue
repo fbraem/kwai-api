@@ -35,14 +35,8 @@
 <script>
 import messages from './lang';
 
-import teamTypeStore from '@/stores/team_types';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
-  mixins: [
-    registerModule({teamType: teamTypeStore}),
-  ],
   computed: {
     types() {
       return this.$store.state.teamType.types;

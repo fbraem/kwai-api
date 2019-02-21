@@ -47,30 +47,12 @@ import UikitSelect from '@/components/forms/Select.vue';
 
 import messages from './lang';
 
-import teamStore from '@/stores/teams';
-import teamTypeStore from '@/stores/team_types';
-import seasonStore from '@/stores/seasons';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     Field, UikitInputText, UikitTextarea, UikitSelect
   },
   i18n: messages,
-  mixins: [
-    TeamForm,
-    registerModule(
-      {
-        teamType: teamTypeStore
-      },
-      {
-        team: teamStore
-      },
-      {
-        season: seasonStore
-      }
-    ),
-  ],
+  mixins: [ TeamForm ],
   data() {
     return {
       team: new Team()

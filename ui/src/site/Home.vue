@@ -201,10 +201,6 @@ import AreYouSure from '@/components/AreYouSure.vue';
 import CategoryCard from '@/apps/categories/components/Card.vue';
 import CategoryList from '@/apps/categories/components/List.vue';
 
-import newsStore from '@/stores/news';
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 import UIkit from 'uikit';
 
 import messages from './lang';
@@ -219,16 +215,6 @@ export default {
     CategoryCard,
     CategoryList
   },
-  mixins: [
-    registerModule(
-      {
-        news: newsStore
-      },
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   data() {
     return {
       storyToDelete: null

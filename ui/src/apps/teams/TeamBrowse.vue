@@ -41,13 +41,7 @@
 <script>
 import messages from './lang';
 
-import teamStore from '@/stores/teams';
-import registerModule from '@/stores/mixin';
-
 export default {
-  mixins: [
-    registerModule({team: teamStore}),
-  ],
   i18n: messages,
   computed: {
     teams() {

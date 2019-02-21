@@ -27,18 +27,8 @@
 <script>
 import messages from './lang';
 
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   computed: {
     category() {
       /* eslint-disable max-len */

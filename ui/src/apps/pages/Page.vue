@@ -12,9 +12,6 @@
 <script>
 import messages from './lang';
 
-import registerModule from '@/stores/mixin';
-import categoryStore from '@/stores/categories';
-
 import ListCategories from '@/apps/categories/components/List.vue';
 
 export default {
@@ -22,13 +19,6 @@ export default {
   components: {
     ListCategories
   },
-  mixins: [
-    registerModule(
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   computed: {
     categories() {
       return this.$store.state.category.categories;

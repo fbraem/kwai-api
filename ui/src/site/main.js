@@ -18,14 +18,19 @@ Vuex.Store.prototype.hasModule = function(aPath) {
     return m;
   });
 };
+/**
+ * Register a module if it is not yet registered
+ */
 Vuex.Store.prototype.setModule = async function(aPath, createFn) {
-  if (!this.hasModule(aPath)) {
+  var has = await this.hasModule(aPath);
+  if (!has) {
+    console.log('importing ...', aPath);
     var m = await createFn();
-    console.log(aPath);
+    console.log('imported');
     if (!m) {
       console.log("Can't create module ", aPath);
     } else {
-      this.registerModule(aPath, m.default);
+      await this.registerModule(aPath, m.default);
     }
   }
 };
@@ -68,12 +73,13 @@ import routes from '@/routes';
 const router = new VueRouter({
   routes: routes(),
 });
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   for (var r in to.matched) {
     var matched = to.matched[r];
-    if (matched.meta.stores) {
+    if (!matched.meta.called && matched.meta.stores) {
+      matched.meta.called = true;
       for (var s in matched.meta.stores) {
-        store.setModule(
+        await store.setModule(
           matched.meta.stores[s].ns,
           matched.meta.stores[s].create
         );

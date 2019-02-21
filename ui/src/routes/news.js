@@ -17,9 +17,28 @@ const NewsBrowse = () => import(
 const NewsForm = () => import(
   /* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue');
 
+const CategoryStore = () =>
+  import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
+  );
+const NewsStore = () =>
+  import(/* webpackChunkName: "news_chunck" */ '@/stores/news'
+  );
+
 export default [
   {
     path: '/news',
+    meta: {
+      stores: [
+        {
+          ns: [ 'category' ],
+          create: CategoryStore
+        },
+        {
+          ns: [ 'news' ],
+          create: NewsStore
+        },
+      ]
+    },
     component: App,
     children: [
       {

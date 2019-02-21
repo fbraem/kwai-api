@@ -25,14 +25,8 @@
 <script>
 import messages from './lang';
 
-import teamStore from '@/stores/teams';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
-  mixins: [
-    registerModule({team: teamStore}),
-  ],
   computed: {
     team() {
       return this.$store.getters['team/team'](this.$route.params.id);

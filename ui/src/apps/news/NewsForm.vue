@@ -45,10 +45,6 @@ import 'moment-timezone';
 
 import messages from './lang';
 
-import newsStore from '@/stores/news';
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 import Content from '@/models/Content';
 import Story from '@/models/Story';
 
@@ -57,16 +53,6 @@ import ContentForm from './ContentForm.vue';
 
 export default {
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        news: newsStore
-      },
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   components: {
     StoryForm,
     ContentForm,

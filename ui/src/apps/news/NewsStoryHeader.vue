@@ -43,18 +43,8 @@
 <script>
 import messages from './lang';
 
-import newsStore from '@/stores/news';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        news: newsStore
-      }
-    ),
-  ],
   computed: {
     story() {
       return this.$store.getters['news/story'](this.$route.params.id);

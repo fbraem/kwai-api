@@ -29,10 +29,6 @@ import Paginator from '@/components/Paginator.vue';
 
 import messages from './lang';
 
-import pageStore from '@/stores/pages';
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
   components: {
@@ -40,16 +36,6 @@ export default {
     PageSummary,
     Paginator
   },
-  mixins: [
-    registerModule(
-      {
-        page: pageStore
-      },
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   data() {
     return {
     };

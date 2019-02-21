@@ -1,13 +1,13 @@
 import App from '@/site/App.vue';
 
 const PagesHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/pages/PagesHeader.vue');
+  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PagesHeader.vue');
 const PageHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/pages/PageHeader.vue');
+  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageHeader.vue');
 const PageCategoryHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/pages/PageCategoryHeader.vue');
+  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageCategoryHeader.vue');
 const PageFormHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/pages/PageFormHeader.vue');
+  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageFormHeader.vue');
 const PageRead = () => import(
 /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageRead.vue');
 const PageBrowse = () => import(
@@ -15,10 +15,29 @@ const PageBrowse = () => import(
 const PageForm = () => import(
   /* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue');
 
+const CategoryStore = () =>
+  import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
+  );
+const PageStore = () =>
+  import(/* webpackChunkName: "news_chunck" */ '@/stores/pages'
+  );
+
 export default [
   {
     path: '/pages',
     component: App,
+    meta: {
+      stores: [
+        {
+          ns: [ 'category' ],
+          create: CategoryStore
+        },
+        {
+          ns: [ 'page' ],
+          create: PageStore
+        },
+      ]
+    },
     children: [
       {
         path: ':id(\\d+)',

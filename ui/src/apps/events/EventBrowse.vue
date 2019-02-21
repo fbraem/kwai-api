@@ -245,9 +245,6 @@ import moment from 'moment';
 
 import messages from './lang';
 
-import eventStore from '@/stores/events';
-import registerModule from '@/stores/mixin';
-
 export default {
   props: {
     year: {
@@ -260,13 +257,6 @@ export default {
     }
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        event: eventStore,
-      }
-    ),
-  ],
   data() {
     return {
       dayNames: moment.weekdays(true),

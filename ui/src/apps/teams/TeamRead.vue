@@ -106,18 +106,12 @@ import AreYouSure from '@/components/AreYouSure.vue';
 
 import Member from '@/models/Member';
 
-import teamStore from '@/stores/teams';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     AreYouSure,
     AddMembersDialog,
   },
   i18n: messages,
-  mixins: [
-    registerModule({team: teamStore}),
-  ],
   data() {
     return {
       selectedMembers: []

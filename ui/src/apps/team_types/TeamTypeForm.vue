@@ -39,9 +39,6 @@
 </template>
 
 <script>
-import teamTypeStore from '@/stores/team_types';
-import registerModule from '@/stores/mixin';
-
 import TeamType from '@/models/TeamType';
 
 import TeamTypeForm from './TeamTypeForm';
@@ -60,9 +57,6 @@ export default {
   i18n: messages,
   mixins: [
     TeamTypeForm,
-    registerModule({
-      teamType: teamTypeStore
-    }),
   ],
   data() {
     return {

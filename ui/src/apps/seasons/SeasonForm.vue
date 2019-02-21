@@ -34,9 +34,6 @@
 <script>
 import Season from '@/models/Season';
 
-import seasonStore from '@/stores/seasons';
-import registerModule from '@/stores/mixin';
-
 import SeasonForm from './SeasonForm';
 
 import Field from '@/components/forms/Field.vue';
@@ -54,7 +51,6 @@ export default {
   },
   mixins: [
     SeasonForm,
-    registerModule({ season: seasonStore }),
   ],
   data() {
     return {

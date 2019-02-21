@@ -1,28 +1,40 @@
 import App from '@/site/App.vue';
 
-const TeamTypeRead = () => import(
-  /* webpackChunkName: "team_types_chunck" */ '@/apps/team_types/TeamTypeRead.vue'
+const TeamTypeRead = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/apps/team_types/TeamTypeRead.vue'
 );
-const TeamTypeHeader = () => import(
-  /* webpackChunkName: "team_types_chunck" */ '@/apps/team_types/TeamTypeHeader.vue'
+const TeamTypeHeader = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/apps/team_types/TeamTypeHeader.vue'
 );
-const TeamTypeBrowse = () => import(
-  /* webpackChunkName: "team_types_chunck" */ '@/apps/team_types/TeamTypeBrowse.vue'
+const TeamTypeBrowse = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/apps/team_types/TeamTypeBrowse.vue'
 );
-const TeamTypesHeader = () => import(
-  /* webpackChunkName: "team_types_chunck" */ '@/apps/team_types/TeamTypesHeader.vue'
+const TeamTypesHeader = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/apps/team_types/TeamTypesHeader.vue'
 );
-const TeamTypeForm = () => import(
-  /* webpackChunkName: "team_types_chunck" */ '@/apps/team_types/TeamTypeForm.vue'
+const TeamTypeForm = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/apps/team_types/TeamTypeForm.vue'
 );
-const TeamTypeFormHeader = () => import(
-  /* webpackChunkName: "team_types_chunck" */ '@/apps/team_types/TeamTypeFormHeader.vue'
+const TeamTypeFormHeader = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/apps/team_types/TeamTypeFormHeader.vue'
+);
+
+const TeamTypeStore = () => import(/* webpackChunkName: "team_types_chunck" */
+  '@/stores/team_types'
 );
 
 export default [
   {
     path: '/team_types',
     component: App,
+    meta: {
+      stores: [
+        {
+          ns: [ 'teamType' ],
+          create: TeamTypeStore
+        },
+      ]
+    },
     children: [
       {
         path: ':id(\\d+)',

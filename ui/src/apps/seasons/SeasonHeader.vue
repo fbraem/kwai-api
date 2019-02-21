@@ -32,12 +32,8 @@
 <script>
 import messages from './lang';
 
-import seasonStore from '@/stores/seasons';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
-  mixins: [ registerModule({ season: seasonStore }) ],
   computed: {
     season() {
       return this.$store.getters['season/season'](this.$route.params.id);

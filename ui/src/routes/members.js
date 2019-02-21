@@ -16,10 +16,22 @@ const MemberBrowse = () => import(
   /* webpackChunkName: "member_admin" */ '@/apps/members/MemberBrowse.vue'
 );
 
+const MemberStore = () => import(
+  /* webpackChunkName: "member_admin" */ '@/stores/members'
+);
+
 export default [
   {
     path: '/members',
     component: App,
+    meta: {
+      stores: [
+        {
+          ns: ['member'],
+          create: MemberStore
+        },
+      ]
+    },
     children: [
       {
         path: ':id(\\d+)',

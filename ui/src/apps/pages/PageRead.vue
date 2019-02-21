@@ -116,22 +116,12 @@ import messages from './lang';
 import Page from './Page.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 
-import pageStore from '@/stores/pages';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     Page,
     AreYouSure
   },
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        page: pageStore
-      }
-    ),
-  ],
   computed: {
     page() {
       return this.$store.getters['page/page'](this.$route.params.id);

@@ -95,22 +95,12 @@ import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 import Page from './Page.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 
-import newsStore from '@/stores/news';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     Page,
     AreYouSure,
     VueGoodshareFacebook
   },
-  mixins: [
-    registerModule(
-      {
-        news: newsStore
-      }
-    ),
-  ],
   i18n: messages,
   computed: {
     story() {

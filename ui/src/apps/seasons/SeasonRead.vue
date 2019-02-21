@@ -78,15 +78,11 @@ import messages from './lang';
 
 import AreYouSure from '@/components/AreYouSure.vue';
 
-import seasonStore from '@/stores/seasons';
-import registerModule from '@/stores/mixin';
-
 export default {
   components: {
     AreYouSure
   },
   i18n: messages,
-  mixins: [ registerModule({ season: seasonStore }) ],
   computed: {
     season() {
       return this.$store.getters['season/season'](this.$route.params.id);

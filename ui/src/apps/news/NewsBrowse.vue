@@ -40,10 +40,6 @@ import UIkit from 'uikit';
 
 import messages from './lang';
 
-import newsStore from '@/stores/news';
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 export default {
   i18n: messages,
   components: {
@@ -52,16 +48,6 @@ export default {
     Paginator,
     AreYouSure
   },
-  mixins: [
-    registerModule(
-      {
-        news: newsStore
-      },
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   data() {
     return {
       showAreYouSure: false,

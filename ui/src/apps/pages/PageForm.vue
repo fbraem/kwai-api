@@ -29,10 +29,6 @@
 </template>
 
 <script>
-import pageStore from '@/stores/pages';
-import categoryStore from '@/stores/categories';
-import registerModule from '@/stores/mixin';
-
 import Content from '@/models/Content';
 import Page from '@/models/Page';
 
@@ -43,16 +39,6 @@ import ContentForm from './ContentForm.vue';
 
 export default {
   i18n: messages,
-  mixins: [
-    registerModule(
-      {
-        page: pageStore
-      },
-      {
-        category: categoryStore
-      }
-    ),
-  ],
   components: {
     MainForm,
     ContentForm,

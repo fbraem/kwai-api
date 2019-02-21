@@ -1,38 +1,58 @@
+import App from '@/site/App.vue';
+
+const EventBrowse = () => import(/* webpackChunkName: "trainings_chunck" */
+  '@/apps/events/EventBrowse.vue'
+);
+const EventRead = () => import(/* webpackChunkName: "trainings_chunck" */
+  '@/apps/events/EventRead.vue'
+);
+
+const EventStore = () => import(/* webpackChunkName: "trainings_chunck" */
+  '@/stores/events'
+);
+
 export default [
-  // {
-  //   path: '/events/create',
-  //   component: () => import(/* webpackChunkName: "events_admin_chunck" */
-  //     '@/apps/events/EventForm.vue'),
-  //   name: 'events.create',
-  // },
-  // {
-  //   path: '/events/update/:id(\\d+)',
-  //   component: () => import(/* webpackChunkName: "events_admin_chunck" */
-  //     '@/apps/events/EventForm.vue'),
-  //   name: 'events.update',
-  // },
-  {
-    path: '/events/:year(\\d+)/:month(\\d+)',
-    component: () => import(/* webpackChunkName: "trainings_chunck" */
-      '@/apps/events/EventBrowse.vue'),
-    name: 'events.browse',
-    props(route) {
-      var result = {};
-      if (route.params.year) result.year = Number(route.params.year);
-      if (route.params.month) result.month = Number(route.params.month);
-      return result;
-    }
-  },
-  {
-    path: '/events/:id(\\d+)',
-    component: () => import(/* webpackChunkName: "events_chunck" */
-      '@/apps/events/EventRead.vue'),
-    name: 'events.read'
-  },
   {
     path: '/events',
-    component: () => import(/* webpackChunkName: "events_chunck" */
-      '@/apps/events/EventBrowse.vue'),
-    name: 'events.home'
+    component: App,
+    meta: {
+      stores: [
+        {
+          ns: ['event'],
+          create: EventStore
+        },
+      ]
+    },
+    children: [
+      {
+        path: '/events/:year(\\d+)/:month(\\d+)',
+        components: {
+          main: EventBrowse
+        },
+        name: 'events.browse',
+        props: {
+          main: (route) => {
+            var result = {};
+            if (route.params.year) result.year = Number(route.params.year);
+            if (route.params.month) result.month = Number(route.params.month);
+            return result;
+          }
+        }
+      },
+      {
+        path: '/events/:id(\\d+)',
+        components: {
+          main: EventRead
+        },
+        name: 'events.read'
+      },
+      {
+        path: '',
+        components: {
+          main: EventBrowse
+        },
+        name: 'events.home'
+      },
+    ]
   },
 ];

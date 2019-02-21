@@ -19,9 +19,21 @@ const SeasonBrowse = () => import(
   /* webpackChunkName: "seasons_chunck" */ '@/apps/seasons/SeasonBrowse.vue'
 );
 
+const SeasonStore = () => import(
+  /* webpackChunkName: "seasons_chunck" */ '@/stores/seasons'
+);
+
 export default [
   {
     path: '/seasons',
+    meta: {
+      stores: [
+        {
+          ns: [ 'season' ],
+          create: SeasonStore
+        },
+      ]
+    },
     component: App,
     children: [
       {

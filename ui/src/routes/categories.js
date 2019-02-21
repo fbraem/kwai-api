@@ -1,33 +1,32 @@
 import App from '@/site/App.vue';
 
-const CategoryHeader = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/CategoryHeader.vue'
-  );
-const CategoryRead = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/CategoryRead.vue'
-  );
-const CategoryFormHeader = () =>
-  import(/* webpackChunkName: "category_admin_chunck" */ '@/apps/categories/CategoryFormHeader.vue'
-  );
-const CategoryForm = () =>
-  import(/* webpackChunkName: "category_admin_chunck" */ '@/apps/categories/CategoryForm.vue'
-  );
-const CategoriesHeader = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/CategoriesHeader.vue'
-  );
-const CategoryBrowse = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/apps/categories/CategoryBrowse.vue'
-  );
-
+const CategoryHeader = () => import(/* webpackChunkName: "category_chunck" */
+  '@/apps/categories/CategoryHeader.vue'
+);
+const CategoryRead = () => import(/* webpackChunkName: "category_chunck" */
+  '@/apps/categories/CategoryRead.vue'
+);
+const CategoryFormHeader = () => import(/* webpackChunkName: "category_admin_chunck" */
+  '@/apps/categories/CategoryFormHeader.vue'
+);
+const CategoryForm = () => import(/* webpackChunkName: "category_admin_chunck" */
+  '@/apps/categories/CategoryForm.vue'
+);
+const CategoriesHeader = () => import(/* webpackChunkName: "category_chunck" */
+  '@/apps/categories/CategoriesHeader.vue'
+);
+const CategoryBrowse = () => import(/* webpackChunkName: "category_chunck" */
+  '@/apps/categories/CategoryBrowse.vue'
+);
 
 const CategoryStore = () =>
   import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
   );
 const NewsStore = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/stores/news'
+  import(/* webpackChunkName: "news_chunck" */ '@/stores/news'
   );
 const PageStore = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/stores/pages'
+  import(/* webpackChunkName: "pages_chunck" */ '@/stores/pages'
   );
 
 export default [
