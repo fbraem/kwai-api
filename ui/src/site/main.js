@@ -24,9 +24,7 @@ Vuex.Store.prototype.hasModule = function(aPath) {
 Vuex.Store.prototype.setModule = async function(aPath, createFn) {
   var has = await this.hasModule(aPath);
   if (!has) {
-    console.log('importing ...', aPath);
     var m = await createFn();
-    console.log('imported');
     if (!m) {
       console.log("Can't create module ", aPath);
     } else {
