@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div class="uk-offcanvas-content">
     <div class="uk-container uk-container-expand uk-light" style="background-color:#c61c18">
       <nav class="uk-navbar">
