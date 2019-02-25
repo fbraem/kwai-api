@@ -20,7 +20,7 @@ class ContentsSummaryMigration extends AbstractMigration
     {
         $this->table('contents')
             ->changeColumn('summary', 'text', ['null' => true])
-            ->changeColumn('content', 'text', ['null' => false])
+            ->changeColumn('content', 'text', ['null' => true])
             ->save()
         ;
     }
