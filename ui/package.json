@@ -60,6 +60,8 @@
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
+    "@casl/ability": "^3.0.1",
+    "@casl/vue": "^0.5.1",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
