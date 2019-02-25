@@ -39,6 +39,7 @@ class TrainingCoachesTable extends \Cake\ORM\Table
             ->addColumn('coach_id', ['type' => 'integer'])
             ->addColumn('coach_type', ['type' => 'integer'])
             ->addColumn('present', ['type' => 'boolean'])
+            ->addColumn('payed', ['type' => 'boolean'])
             ->addColumn('remark', ['type' => 'text'])
             ->addColumn('user_id', ['type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
