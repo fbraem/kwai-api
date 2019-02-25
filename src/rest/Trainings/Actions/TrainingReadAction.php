@@ -28,7 +28,7 @@ class TrainingReadAction
     {
         $table = TrainingsTable::getTableFromRegistry();
         try {
-            $coach = $table->get($args['id'], [
+            $training = $table->get($args['id'], [
                 'contain' => [
                     'TrainingDefinition',
                     'Season',
@@ -43,7 +43,7 @@ class TrainingReadAction
 
             $response = (new ResourceResponse(
                 TrainingTransformer::createForItem(
-                    $coach
+                    $training
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
