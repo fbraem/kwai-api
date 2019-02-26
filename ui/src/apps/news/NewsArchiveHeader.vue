@@ -8,7 +8,7 @@
     </div>
     <div class="uk-width-1-1 uk-width-1-6@m">
       <div class="uk-flex uk-flex-right">
-        <router-link v-if="$story.isAllowed('create')"
+        <router-link v-if="canCreate"
           class="uk-icon-button uk-link-reset" :to="{ name : 'news.create' }">
           <i class="fas fa-plus"></i>
         </router-link>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import Story from '@/models/Story';
+
 import moment from 'moment';
 
 import messages from './lang';
@@ -25,6 +27,9 @@ import messages from './lang';
 export default {
   i18n: messages,
   computed: {
+    canCreate() {
+      return this.$can('create', Story.type());
+    },
     year() {
       return this.$route.params.year;
     },

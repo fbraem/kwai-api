@@ -18,7 +18,7 @@
         </div>
         <div class="uk-width-1-1 uk-width-1-6@m">
           <div class="uk-flex uk-flex-right">
-            <router-link v-if="$page.isAllowed('create')" class="uk-icon-button uk-link-reset" :to="{ name : 'pages.create' }">
+            <router-link v-if="canCreate" class="uk-icon-button uk-link-reset" :to="{ name : 'pages.create' }">
               <i class="fas fa-plus"></i>
             </router-link>
           </div>
@@ -29,11 +29,16 @@
 </template>
 
 <script>
+import Page from '@/models/Page';
+
 import messages from './lang';
 
 export default {
   i18n: messages,
   computed: {
+    canCreate() {
+      return this.$can('create', Page.type());
+    },
     category() {
       return this.$store.getters['category/category'](this.$route.params.category);
     },

@@ -23,12 +23,12 @@
         </div>
         <div class="uk-width-1-1 uk-width-1-6@m">
           <div class="uk-flex uk-flex-right">
-            <div v-if="$page.isAllowed('update', page)" class="uk-margin-small-left">
+            <div v-if="$can('update', page)" class="uk-margin-small-left">
               <router-link :to="{ name : 'pages.update', params : { id : page.id }}" class="uk-icon-button uk-link-reset">
                 <i class="fas fa-edit"></i>
               </router-link>
             </div>
-            <div v-if="$page.isAllowed('remove', page)" class="uk-margin-small-left">
+            <div v-if="$can('delete', page)" class="uk-margin-small-left">
               <a uk-toggle="target: #delete-page" class="uk-icon-button uk-link-reset">
                 <i class="fas fa-trash"></i>
               </a>

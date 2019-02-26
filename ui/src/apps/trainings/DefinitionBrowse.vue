@@ -50,7 +50,7 @@
               <i class="fas fa-times uk-text-danger" v-else name="times"></i>
             </td>
             <td>
-              <router-link class="uk-icon-button uk-link-reset" v-if="$training_definition.isAllowed('update', definition)" :to="{ name : 'trainings.definitions.update', params : { id : definition.id } }">
+              <router-link class="uk-icon-button uk-link-reset" v-if="$can('update', definition)" :to="{ name : 'trainings.definitions.update', params : { id : definition.id } }">
                 <i class="fas fa-edit uk-text-muted"></i>
               </router-link>
             </td>

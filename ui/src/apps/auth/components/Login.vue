@@ -21,12 +21,7 @@
         </form>
       </div>
     </div>
-    <div v-if="$base.isAllowed('login')" class="uk-inline">
-      <a class="uk-icon-button uk-link-reset" @click="login">
-        <i class="fas fa-lock"></i>
-      </a>
-    </div>
-    <div v-else class="uk-inline">
+    <div v-if="isLoggedIn" class="uk-inline">
       <a class="uk-icon-button uk-link-reset">
         <i class="fas fa-user"></i>
       </a>
@@ -40,6 +35,11 @@
           </li>
         </ul>
       </div>
+    </div>
+    <div v-else class="uk-inline">
+      <a class="uk-icon-button uk-link-reset" @click="login">
+        <i class="fas fa-lock"></i>
+      </a>
     </div>
   </div>
 </template>
@@ -71,6 +71,12 @@ export default {
       user: new User(),
       error: null
     };
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.global.user
+        && this.$store.state.global.user.authenticated;
+    }
   },
   methods: {
     clear() {

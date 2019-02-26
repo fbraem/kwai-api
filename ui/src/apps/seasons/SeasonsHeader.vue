@@ -5,7 +5,7 @@
     </div>
     <div class="uk-width-1-6">
       <div class="uk-flex uk-flex-right">
-        <router-link v-if="$season.isAllowed('create')"
+        <router-link v-if="canCreate"
           class="uk-icon-button"
           :to="{ name: 'seasons.create' }">
           <i class="fas fa-plus"></i>
@@ -16,9 +16,16 @@
 </template>
 
 <script>
+import Season from '@/models/Season';
+
 import messages from './lang';
 
 export default {
-  i18n: messages
+  i18n: messages,
+  computed: {
+    canCreate() {
+      return this.$can('create', Season.type());
+    }
+  }
 };
 </script>

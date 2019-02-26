@@ -13,7 +13,7 @@
           </router-link>
         </div>
         <div class="uk-margin-small-left">
-          <router-link v-if="team && $team.isAllowed('update', team)" class="uk-icon-button uk-link-reset" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
+          <router-link v-if="team && $can('update', team)" class="uk-icon-button uk-link-reset" :to="{ 'name' : 'teams.update', params : { id : team.id } }">
             <i class="fas fa-edit"></i>
           </router-link>
         </div>

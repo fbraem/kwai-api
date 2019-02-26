@@ -52,13 +52,12 @@ moment.locale('nl');
 
 import store from '@/stores/root';
 
-import VueKindergarten from 'vue-kindergarten';
-Vue.use(VueKindergarten, {
-  child: (store) => {
-    return store ? store.getters.user : null;
-  },
-});
-import perimeters from '@/perimeters';
+/**
+ * Initialise casl
+ */
+import { abilitiesPlugin } from '@casl/vue';
+import ability from '@/js/ability';
+Vue.use(abilitiesPlugin, ability);
 
 import VueWait from 'vue-wait';
 Vue.use(VueWait);

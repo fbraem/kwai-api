@@ -36,7 +36,7 @@
               {{ season.formatted_end_date }}
             </td>
             <td>
-              <router-link v-if="$season.isAllowed('update', season)"
+              <router-link v-if="$can('update', season)"
                 class="uk-icon-button"
                 style="margin-top:-10px"
                 :to="{ name: 'seasons.update', params: { id: season.id } }">

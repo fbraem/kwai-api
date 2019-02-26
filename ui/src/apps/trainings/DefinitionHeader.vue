@@ -38,7 +38,7 @@ export default {
     },
     updateAllowed() {
       return this.definition
-        && this.$training_definition.isAllowed('update', this.definition);
+        && this.$can('update', this.definition);
     },
     updateLink() {
       return {

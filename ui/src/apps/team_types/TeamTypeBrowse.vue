@@ -21,7 +21,7 @@
               <router-link :to="{ name: 'team_types.read', params: { id : type.id} }">{{ type.name }}</router-link>
             </td>
             <td>
-              <router-link v-if="$team_type.isAllowed('update', type)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'team_types.update', params : { id : type.id } }">
+              <router-link v-if="$can('update', type)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'team_types.update', params : { id : type.id } }">
                 <i class="fas fa-edit"></i>
               </router-link>
             </td>

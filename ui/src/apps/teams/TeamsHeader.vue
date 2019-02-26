@@ -5,7 +5,7 @@
     </div>
     <div class="uk-width-1-6">
       <div class="uk-flex uk-flex-right">
-        <router-link v-if="$team.isAllowed('create')" class="uk-icon-button uk-link-reset" :to="{ name : 'teams.create' }">
+        <router-link v-if="canCreate" class="uk-icon-button uk-link-reset" :to="{ name : 'teams.create' }">
           <i class="fas fa-plus"></i>
         </router-link>
       </div>
@@ -14,9 +14,15 @@
 </template>
 
 <script>
+import Team from '@/models/Team';
 import messages from './lang';
 
 export default {
-  i18n: messages
+  i18n: messages,
+  computed: {
+    canCreate() {
+      return this.$can('create', Team.type());
+    }
+  }
 };
 </script>

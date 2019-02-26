@@ -60,7 +60,7 @@
             </router-link>
           </div>
           <div class="uk-margin-small-left">
-            <router-link v-if="$team.isAllowed('create')" class="uk-icon-button" :to="{ 'name' : 'teams.create', params : { season : season.id } }">
+            <router-link v-if="canCreateTeam()" class="uk-icon-button" :to="{ 'name' : 'teams.create', params : { season : season.id } }">
               <i class="fas fa-plus"></i>
             </router-link>
           </div>
@@ -74,6 +74,8 @@
 </template>
 
 <script>
+import Team from '@/models/Team';
+
 import messages from './lang';
 
 import AreYouSure from '@/components/AreYouSure.vue';
@@ -84,6 +86,9 @@ export default {
   },
   i18n: messages,
   computed: {
+    canCreateTeam() {
+      return this.$can('create', Team.type());
+    },
     season() {
       return this.$store.getters['season/season'](this.$route.params.id);
     }

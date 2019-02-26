@@ -15,7 +15,7 @@
           </router-link>
         </div>
         <div class="uk-margin-small-left">
-          <router-link v-if="$team_type.isAllowed('update',teamtype)" class="uk-icon-button uk-link-reset" :to="{ name : 'team_types.update' }">
+          <router-link v-if="$can('update', teamtype)" class="uk-icon-button uk-link-reset" :to="{ name : 'team_types.update' }">
             <i class="fas fa-edit"></i>
           </router-link>
         </div>

@@ -6,7 +6,7 @@
                     <span class="uk-navbar-item uk-logo"><slot name="title"></slot></span>
                 </div>
                 <div class="uk-navbar-right uk-padding">
-                    <router-link v-if="$user.isAllowed('create')" class="uk-icon-button" :to="{ 'name' : 'users.create' }">
+                    <router-link v-if="canCreate" class="uk-icon-button" :to="{ 'name' : 'users.create' }">
                         <i class="fas fa-plus"></i>
                     </router-link>
                     <slot name="toolbar"></slot>
@@ -23,8 +23,14 @@
 </template>
 
 <script>
-    import userStore from '@/stores/users';
+import User from '@/models/User';
+import userStore from '@/stores/users';
 
-    export default {
-    };
+export default {
+  computed: {
+    canCreate() {
+      return this.$can('create', User.type());
+    }
+  }
+};
 </script>

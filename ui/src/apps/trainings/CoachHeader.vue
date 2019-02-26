@@ -38,7 +38,7 @@ export default {
     },
     updateAllowed() {
       return this.coach
-        && this.$training_coach.isAllowed('update', this.coach);
+        && this.$can('update', this.coach);
     },
     updateLink() {
       return {

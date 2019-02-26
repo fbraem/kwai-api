@@ -5,7 +5,7 @@
     </div>
     <div class="uk-width-1-6">
       <div class="uk-flex uk-flex-right">
-        <router-link v-if="$training_coach.isAllowed('create')"
+        <router-link v-if="canCreate"
           class="uk-icon-button uk-link-reset"
           :to="{ name : 'trainings.coaches.create' }">
           <i class="fas fa-plus"></i>
@@ -16,9 +16,14 @@
 </template>
 
 <script>
+import Coach from '@/models/trainings/Coach';
+
 import messages from './lang';
 
 export default {
-  i18n: messages
+  i18n: messages,
+  canCreate() {
+    return this.$can('create', Coach.type());
+  }
 };
 </script>

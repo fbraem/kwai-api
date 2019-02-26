@@ -22,12 +22,12 @@
           </div>
           <div class="uk-width-1-1 uk-width-1-6@m">
             <div class="uk-flex uk-flex-right">
-              <div v-if="$category.isAllowed('create')">
+              <div v-if="canCreate">
                 <router-link  class="uk-icon-button" :to="{ name : 'categories.create' }">
                   <i class="fas fa-plus"></i>
                 </router-link>
               </div>
-              <div v-if="$category.isAllowed('update', category)">
+              <div v-if="$can('update', category)">
                 <router-link class="uk-icon-button uk-margin-small-left"
                   :to="{ name : 'categories.update', params : { id : category.id } }">
                   <i class="fas fa-edit"></i>
@@ -47,11 +47,16 @@
   </style>
 
 <script>
+import Category from '@/models/Category';
+
 import messages from './lang';
 
 export default {
   i18n: messages,
   computed: {
+    canCreate() {
+      return this.$can('create', Category.type());
+    },
     category() {
       return this.$store.getters['category/category'](this.$route.params.id);
     },

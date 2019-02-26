@@ -58,7 +58,7 @@
             {{ $t('no_members') }}
           </div>
           <div v-if="members && members.length > 10">
-            <a v-if="team && $team.isAllowed('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
+            <a v-if="team && $can('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
               <i class="fas fa-plus"></i>
             </a>
             <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-link-reset uk-button-danger">
@@ -85,7 +85,7 @@
             </table>
           </div>
           <div>
-            <a v-if="team && $team.isAllowed('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
+            <a v-if="team && $can('attachMember', team)" uk-toggle="target: #add-member-dialog" class="uk-icon-button uk-link-reset">
               <i class="fas fa-plus"></i>
             </a>
             <a v-if="selectedMembers.length > 0" uk-toggle="target: #delete-member" class="uk-icon-button uk-button-danger uk-link-reset">

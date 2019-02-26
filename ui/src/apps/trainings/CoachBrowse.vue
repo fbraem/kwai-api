@@ -33,7 +33,7 @@
               <i class="fas fa-times uk-text-danger" v-else name="times"></i>
             </td>
             <td>
-              <router-link class="uk-icon-button uk-link-reset" v-if="$training_coach.isAllowed('update', coach)" :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }">
+              <router-link class="uk-icon-button uk-link-reset" v-if="$can('update', coach)" :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }">
                 <i class="fas fa-edit uk-text-muted"></i>
               </router-link>
             </td>

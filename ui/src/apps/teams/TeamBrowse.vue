@@ -28,7 +28,7 @@
             {{ team.members_count }}
           </td>
           <td>
-            <router-link class="uk-icon-button uk-link-reset" v-if="$team.isAllowed('update', team)" :to="{ name : 'teams.update', params : { id : team.id } }">
+            <router-link class="uk-icon-button uk-link-reset" v-if="$can('update', team)" :to="{ name : 'teams.update', params : { id : team.id } }">
               <i class="fas fa-edit uk-text-muted"></i>
             </router-link>
           </td>

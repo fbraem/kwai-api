@@ -15,11 +15,11 @@
           </router-link>
         </div>
         <div class="uk-margin-small-left">
-          <router-link v-if="season && $season.isAllowed('update', season)" class="uk-icon-button uk-link-reset" :to="{ name: 'seasons.update', params: { id:  season.id } }">
+          <router-link v-if="season && $can('update', season)" class="uk-icon-button uk-link-reset" :to="{ name: 'seasons.update', params: { id:  season.id } }">
             <i class="fas fa-edit"></i>
           </router-link>
         </div>
-        <div v-if="season && $season.isAllowed('remove', season)" class="uk-margin-small-left">
+        <div v-if="season && $can('remove', season)" class="uk-margin-small-left">
           <a uk-toggle="target: #delete-season" class="uk-icon-button uk-link-reset">
             <i class="fas fa-trash"></i>
           </a>
