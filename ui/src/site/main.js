@@ -92,7 +92,6 @@ Vue.use(VueScrollBehavior, { router: router });
 new Vue({
   router,
   store,
-  perimeters: perimeters(),
   wait: new VueWait({
     useVuex: true,
   }),
