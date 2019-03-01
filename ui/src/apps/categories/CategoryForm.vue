@@ -2,32 +2,30 @@
   <!-- eslint-disable max-len -->
   <div uk-grid>
     <div class="uk-width-1-1">
-      <form class="uk-form-stacked">
-        <field name="name" :label="$t('form.name.label')">
-          <uikit-input-text :placeholder="$t('form.name.placeholder')">
-          </uikit-input-text>
-        </field>
-        <field name="short_description" :label="$t('form.short_description.label')">
-          <uikit-textarea :placeholder="$t('form.short_description.placeholder')">
-          </uikit-textarea>
-        </field>
-        <field name="description" :label="$t('form.description.label')">
-          <uikit-textarea :placeholder="$t('form.description.placeholder')">
-          </uikit-textarea>
-        </field>
-        <field name="remark" :label="$t('form.remark.label')">
-          <uikit-textarea :placeholder="$t('form.remark.placeholder')">
-          </uikit-textarea>
-        </field>
-      </form>
+      <KwaiForm :form="form" :error="error">
+        <KwaiField name="name" :label="$t('form.name.label')">
+          <KwaiInputText :placeholder="$t('form.name.placeholder')" />
+        </KwaiField>
+        <KwaiField name="short_description" :label="$t('form.short_description.label')">
+          <KwaiTextarea :placeholder="$t('form.short_description.placeholder')" />
+        </KwaiField>
+        <KwaiField name="description" :label="$t('form.description.label')">
+          <KwaiTextarea :placeholder="$t('form.description.placeholder')" />
+        </KwaiField>
+        <KwaiField name="remark" :label="$t('form.remark.label')">
+          <KwaiTextarea :placeholder="$t('form.remark.placeholder')" />
+        </KwaiField>
+      </KwaiForm>
     </div>
-    <div uk-grid class="uk-width-1-1">
-      <div class="uk-width-expand">
-      </div>
-      <div class="uk-width-auto">
-        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-        </button>
+    <div class="uk-width-1-1">
+      <div uk-grid>
+        <div class="uk-width-expand">
+        </div>
+        <div class="uk-width-auto">
+          <button class="uk-button uk-button-primary" :disabled="!form.$valid" @click="submit">
+            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -36,24 +34,71 @@
 <script>
 import Category from '@/models/Category';
 
-import CategoryForm from './CategoryForm';
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
-import UikitTextarea from '@/components/forms/Textarea.vue';
+import makeForm from '@/js/Form.js';
+import KwaiForm from '@/components/forms/KwaiForm.vue';
+import KwaiField from '@/components/forms/Field.vue';
+import KwaiInputText from '@/components/forms/KwaiInputText.vue';
+import KwaiTextarea from '@/components/forms/Textarea.vue';
+
+const makeCategoryForm = (fields) => {
+  const writeForm = (category) => {
+    fields.name.value = category.name;
+    fields.description.value = category.description;
+    fields.remark.value = category.remark;
+    fields.short_description.value = category.short_description;
+  };
+  const readForm = (category) => {
+    category.name = fields.name.value;
+    category.description = fields.description.value;
+    category.remark = fields.remark.value;
+    category.short_description = fields.short_description.value;
+  };
+  return { ...makeForm(fields), writeForm, readForm };
+};
 
 import messages from './lang';
 
+import { notEmpty } from '@/js/VueForm';
+
 export default {
   components: {
-    UikitInputText,
-    UikitTextarea,
-    Field
+    KwaiForm,
+    KwaiInputText,
+    KwaiTextarea,
+    KwaiField
   },
   i18n: messages,
-  mixins: [ CategoryForm ],
   data() {
     return {
-      category: new Category()
+      category: new Category(),
+      form: makeCategoryForm({
+        name: {
+          required: true,
+          value: '',
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.name.required'),
+            },
+          ]
+        },
+        description: {
+          value: '',
+        },
+        remark: {
+          value: ''
+        },
+        short_description: {
+          required: true,
+          value: '',
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.short_description.required'),
+            },
+          ]
+        },
+      })
     };
   },
   computed: {
@@ -74,32 +119,18 @@ export default {
     await this.fetchData(to.params);
     next();
   },
-  watch: {
-    error(nv) {
-      if (nv) {
-        if (nv.response.status === 422) {
-          this.handleErrors(nv.response.data.errors);
-        } else if (nv.response.status === 404){
-          // this.error = err.response.statusText;
-        } else {
-          // TODO: check if we can get here ...
-          console.log(nv);
-        }
-      }
-    }
-  },
   methods: {
     async fetchData(params) {
       if (params.id) {
         this.category = await this.$store.dispatch('category/read', {
           id: params.id
         });
-        this.writeForm(this.category);
+        this.form.writeForm(this.category);
       }
     },
     submit() {
-      this.clearErrors();
-      this.readForm(this.category);
+      this.form.clearErrors();
+      this.form.readForm(this.category);
       this.$store.dispatch('category/save', this.category)
         .then((newCategory) => {
           this.$router.push({
