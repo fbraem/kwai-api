@@ -198,8 +198,8 @@ import NewsCard from '@/apps/news/components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
 import Card from './Card.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
-import CategoryCard from '@/apps/categories/components/Card.vue';
-import CategoryList from '@/apps/categories/components/List.vue';
+import CategoryCard from '@/apps/categories/components/CategoryCard.vue';
+import CategoryList from '@/apps/categories/components/CategoryList.vue';
 
 import UIkit from 'uikit';
 

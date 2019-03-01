@@ -5,7 +5,10 @@
       <slot></slot>
     </div>
     <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
-      <ListCategories v-if="categories" :categories="categories" />
+      <CategoryList
+        v-if="categories"
+        :categories="categories"
+      />
       <h4 class="uk-heading-line uk-text-bold">
         <span>{{ $t('archive') }}</span>
       </h4>
@@ -14,7 +17,9 @@
           <h5>{{ year }}</h5>
           <ul class="uk-list">
             <li v-for="(month) in archive[year]" :key="month.month">
-              <router-link :to="{ name : 'news.archive', params : { year : year, month : month.month }}">
+              <router-link
+                :to="{ name : 'news.archive', params : { year : year, month : month.month }}"
+              >
                 {{ month.monthName }} {{ year }}
                 <span class="uk-badge uk-float-right">
                   {{ month.count }}
@@ -31,12 +36,12 @@
 <script>
 import messages from './lang';
 
-import ListCategories from '@/apps/categories/components/List.vue';
+import CategoryList from '@/apps/categories/components/CategoryList.vue';
 
 export default {
   i18n: messages,
   components: {
-    ListCategories
+    CategoryList
   },
   computed: {
     categories() {

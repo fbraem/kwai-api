@@ -4,7 +4,10 @@
       <slot></slot>
     </div>
     <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
-      <ListCategories v-if="categories" :categories="categories" />
+      <CategoryList
+        v-if="categories"
+        :categories="categories"
+      />
     </div>
   </div>
 </template>
@@ -12,12 +15,12 @@
 <script>
 import messages from './lang';
 
-import ListCategories from '@/apps/categories/components/List.vue';
+import CategoryList from '@/apps/categories/components/CategoryList.vue';
 
 export default {
   i18n: messages,
   components: {
-    ListCategories
+    CategoryList
   },
   computed: {
     categories() {
