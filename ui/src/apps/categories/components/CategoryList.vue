@@ -10,35 +10,11 @@
     </div>
     <div>
       <ul class="uk-list uk-list-divider">
-        <li
+        <CategoryListItem
           v-for="(category, index) in categories"
+          :category="category"
           :key="index"
-        >
-          <div class="uk-flex uk-flex-middle uk-inline" uk-grid>
-            <div
-              v-if="category.icon_picture"
-              class="uk-width-auto"
-            >
-              <img
-                :src="category.icon_picture"
-                style="color:#c61c18;height:32px;"
-                width="40" height="32" uk-svg
-              />
-            </div>
-            <div class="uk-width-expand">
-              <router-link
-                :to="{ name : 'categories.read', params : { id : category.id }}"
-                class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent"
-              />
-              <h4 class="uk-h4 uk-margin-remove">
-                {{ category.name }}
-              </h4>
-              <div class="uk-text-meta">
-                {{ category.short_description }}
-              </div>
-            </div>
-          </div>
-        </li>
+        />
       </ul>
     </div>
   </div>
@@ -47,15 +23,23 @@
 <script>
 import messages from '../lang';
 
+import CategoryListItem from './CategoryListItem.vue';
+
 /**
  * Component for showing a list of categories
  */
 export default {
+  /**
+   * Categories to show in the list
+   */
   props: {
     categories: {
       type: Array,
       required: true
     }
+  },
+  components: {
+    CategoryListItem
   },
   i18n: messages
 };
