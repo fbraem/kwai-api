@@ -1,24 +1,52 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <div id="login-form" uk-modal ref="dialog">
+    <div
+      id="login-form"
+      uk-modal
+      ref="dialog"
+    >
       <div class="uk-modal-dialog uk-modal-body">
-        <h2 class="uk-modal-title">{{ $t('login') }}</h2>
-        <div v-if="error" class="uk-alert-danger" uk-alert>
+        <h2 class="uk-modal-title">
+          {{ $t('login') }}
+        </h2>
+        <div
+          v-if="error"
+          class="uk-alert-danger"
+          uk-alert
+        >
           {{error}}
         </div>
-        <form class="uk-form-stacked">
-          <field name="email" :label="$t('email.label')">
-            <uikit-email :placeholder="$t('email.placeholder')" />
-          </field>
-          <field name="password" :label="$t('password.label')">
-            <uikit-password :placeholder="$t('password.placeholder')" />
-          </field>
+        <KwaiForm :form="form">
+          <KwaiField
+            name="email"
+            :label="$t('email.label')"
+          >
+            <KwaiEmail :placeholder="$t('email.placeholder')" />
+          </KwaiField>
+          <KwaiField
+            name="password"
+            :label="$t('password.label')"
+          >
+            <KwaiPassword :placeholder="$t('password.placeholder')" />
+          </KwaiField>
           <p class="uk-text-right">
-            <button class="uk-button uk-button-default uk-modal-close" type="button">{{ $t('cancel') }}</button>
-            <button class="uk-button uk-button-primary" type="button" :disabled="!$valid" @click="submit">{{ $t('login') }}</button>
+            <button
+              class="uk-button uk-button-default uk-modal-close"
+              type="button"
+            >
+              {{ $t('cancel') }}
+            </button>
+            <button
+              class="uk-button uk-button-primary"
+              type="button"
+              :disabled="!form.$valid"
+              @click="submit"
+            >
+              {{ $t('login') }}
+            </button>
           </p>
-        </form>
+        </KwaiForm>
       </div>
     </div>
     <div v-if="isLoggedIn" class="uk-inline">
@@ -49,27 +77,66 @@ import User from '@/models/User';
 
 import UIkit from 'uikit';
 
-import LoginForm from './Login';
-import Field from '@/components/forms/Field.vue';
-import UikitEmail from '@/components/forms/Email.vue';
-import UikitPassword from '@/components/forms/Password.vue';
+import { notEmpty, isEmail } from '@/js/VueForm';
+import makeForm from '@/js/Form.js';
+
+import KwaiForm from '@/components/forms/KwaiForm.vue';
+import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiEmail from '@/components/forms/KwaiEmail.vue';
+import KwaiPassword from '@/components/forms/KwaiPassword.vue';
+
+const makeLoginForm = (fields) => {
+  const writeForm = (user) => {
+    fields.email.value = user.email;
+    fields.password.value = user.password;
+  };
+  const readForm = (user) => {
+    user.email = fields.email.value;
+    user.password = fields.password.value;
+  };
+  return { ...makeForm(fields), writeForm, readForm };
+};
 
 import messages from '../lang';
 
 export default {
   i18n: messages,
   components: {
-    Field,
-    UikitEmail,
-    UikitPassword
+    KwaiForm,
+    KwaiField,
+    KwaiEmail,
+    KwaiPassword
   },
-  mixins: [
-    LoginForm,
-  ],
   data() {
     return {
       user: new User(),
-      error: null
+      error: null,
+      form: makeLoginForm({
+        email: {
+          required: true,
+          value: '',
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('email.required')
+            },
+            {
+              v: isEmail,
+              error: this.$t('email.invalid')
+            },
+          ]
+        },
+        password: {
+          required: true,
+          value: '',
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('password.required')
+            },
+          ]
+        }
+      })
     };
   },
   computed: {
@@ -89,7 +156,8 @@ export default {
     },
     submit() {
       this.error = null;
-      this.readForm(this.user);
+      this.form.clearErrors();
+      this.form.readForm(this.user);
       this.$store.dispatch('login', this.user)
         .then(() => {
           this.clear();
