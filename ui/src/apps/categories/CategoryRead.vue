@@ -2,55 +2,131 @@
   <!-- eslint-disable max-len -->
     <div uk-grid class="uk-flex uk-margin">
       <div class="uk-width-1-1">
-        <h4 class="uk-heading-line"><span>{{ $t('featured_news') }}</span></h4>
-        <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
+        <h4 class="uk-heading-line">
+          <span>{{ $t('featured_news') }}</span>
+        </h4>
+        <div
+          v-if="$wait.is('news.browse')"
+          class="uk-flex-center"
+          uk-grid
+        >
           <div class="uk-text-center">
             <i class="fas fa-spinner fa-2x fa-spin"></i>
           </div>
         </div>
-        <div v-if="storyCount == 0" class="uk-margin">
+        <div
+          v-if="storyCount == 0"
+          class="uk-margin"
+        >
           {{ $t('no_featured_news') }}
         </div>
-        <div v-else-if="storyCount > 2" uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true;">
+        <div
+          v-else-if="storyCount > 2"
+          uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true;"
+        >
           <div class="uk-position-relative">
             <div class="uk-slider-container">
-              <ul class="uk-slider-items uk-child-width-1-2@m uk-grid-medium uk-grid" uk-height-match="target: > li > div > .uk-card">
-                <li v-for="story in stories" :key="story.id">
-                  <NewsCard :story="story" :showCategory="false"></NewsCard>
+              <ul
+                class="uk-slider-items uk-child-width-1-2@m uk-grid-medium uk-grid"
+                uk-height-match="target: > li > div > .uk-card"
+              >
+                <li
+                  v-for="story in stories"
+                  :key="story.id"
+                >
+                  <NewsCard
+                    :story="story"
+                    :showCategory="false"
+                  />
                 </li>
               </ul>
             </div>
             <div class="uk-hidden@m uk-light">
-              <a class="uk-position-bottom-left uk-position-small" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
-              <a class="uk-position-bottom-right uk-position-small" href="#" uk-slidenav-next uk-slider-item="next"></a>
+              <a
+                class="uk-position-bottom-left uk-position-small"
+                href="#"
+                uk-slidenav-previous
+                uk-slider-item="previous"
+              >
+              </a>
+              <a
+                class="uk-position-bottom-right uk-position-small"
+                href="#"
+                uk-slidenav-next
+                uk-slider-item="next"
+              >
+              </a>
             </div>
             <div class="uk-visible@m">
-              <a class="uk-position-center-left-out uk-position-small" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
-              <a class="uk-position-center-right-out uk-position-small" href="#" uk-slidenav-next uk-slider-item="next"></a>
+              <a
+                class="uk-position-center-left-out uk-position-small"
+                href="#"
+                uk-slidenav-previous
+                uk-slider-item="previous"
+              >
+              </a>
+              <a
+                class="uk-position-center-right-out uk-position-small"
+                href="#"
+                uk-slidenav-next
+                uk-slider-item="next"
+              >
+              </a>
             </div>
-            <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>
+            <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin">
+            </ul>
           </div>
         </div>
-        <div v-else class="uk-child-width-1-1 uk-child-width-1-2@m uk-flex uk-flex-center" uk-grid>
-          <NewsCard v-for="story in stories" :story="story" :key="story.id" :showCategory="false"></NewsCard>
+        <div
+          v-else
+          class="uk-child-width-1-1 uk-child-width-1-2@m uk-flex uk-flex-center"
+          uk-grid
+        >
+          <NewsCard
+            v-for="story in stories"
+            :story="story"
+            :key="story.id"
+            :showCategory="false"
+          />
         </div>
-        <div v-if="category" class="uk-margin">
-          <router-link :to="moreNewsLink"
-            class="uk-button uk-button-default">
+        <div
+          v-if="category"
+          class="uk-margin"
+        >
+          <router-link
+            :to="moreNewsLink"
+            class="uk-button uk-button-default"
+          >
             {{ $t('more_news') }}
           </router-link>
         </div>
       </div>
-      <div v-if="$wait.is('pages.browse')" class="uk-flex-center" uk-grid>
+      <div
+        v-if="$wait.is('pages.browse')"
+        class="uk-flex-center"
+        uk-grid
+      >
         <div class="uk-text-center">
           <i class="fas fa-spinner fa-2x fa-spin"></i>
         </div>
       </div>
-      <div v-if="pageCount > 0" class="uk-width-1-1">
-        <h4 class="uk-heading-line"><span>Informatie</span></h4>
-        <div class="uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match" uk-grid="masonry: true">
-          <div v-for="page in pages" :page="page" :key="page.id">
-            <PageSummary :page="page"></PageSummary>
+      <div
+        v-if="pageCount > 0"
+        class="uk-width-1-1"
+      >
+        <h4 class="uk-heading-line">
+          <span>Informatie</span>
+        </h4>
+        <div
+          class="uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+          uk-grid="masonry: true"
+        >
+          <div
+            v-for="page in pages"
+            :page="page"
+            :key="page.id"
+          >
+            <PageSummary :page="page" />
           </div>
         </div>
       </div>
@@ -69,6 +145,9 @@ import messages from './lang';
 import NewsCard from '@/apps/news/components/NewsCard.vue';
 import PageSummary from '@/apps/pages/components/PageSummary.vue';
 
+/**
+ * Page for showing category news and information
+ */
 export default {
   i18n: messages,
   components: {

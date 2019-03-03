@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div uk-grid class="uk-margin-left uk-grid-small uk-child-width-1-1">
     <div>
       <h4 class="uk-heading-line uk-text-bold">

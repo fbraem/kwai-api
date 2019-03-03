@@ -22,6 +22,9 @@ import CategoryCard from './components/CategoryCard.vue';
 
 import messages from './lang';
 
+/**
+ * Page for showing all categories
+ */
 export default {
   components: {
     CategoryCard

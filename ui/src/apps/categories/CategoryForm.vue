@@ -22,8 +22,13 @@
         <div class="uk-width-expand">
         </div>
         <div class="uk-width-auto">
-          <button class="uk-button uk-button-primary" :disabled="!form.$valid" @click="submit">
-            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+          <button
+            class="uk-button uk-button-primary"
+            :disabled="!form.$valid"
+            @click="submit"
+          >
+            <i class="fas fa-save"></i>
+            &nbsp; {{ $t('save') }}
           </button>
         </div>
       </div>
@@ -60,6 +65,9 @@ import messages from './lang';
 
 import { notEmpty } from '@/js/VueForm';
 
+/**
+ * Component for creating or updating a category
+ */
 export default {
   components: {
     KwaiForm,

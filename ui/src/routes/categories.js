@@ -1,21 +1,27 @@
 import App from '@/site/App.vue';
 
-const CategoryHeader = () => import(/* webpackChunkName: "category_chunck" */
-  '@/apps/categories/CategoryHeader.vue'
+const CategoryHeader = () => import(
+  /* webpackChunkName: "category_chunck" */
+  '@/apps/categories/TheCategoryHeader.vue'
 );
-const CategoryRead = () => import(/* webpackChunkName: "category_chunck" */
+const CategoryRead = () => import(
+  /* webpackChunkName: "category_chunck" */
   '@/apps/categories/CategoryRead.vue'
 );
-const CategoryFormHeader = () => import(/* webpackChunkName: "category_admin_chunck" */
-  '@/apps/categories/CategoryFormHeader.vue'
+const CategoryFormHeader = () => import(
+  /* webpackChunkName: "category_admin_chunck" */
+  '@/apps/categories/TheCategoryFormHeader.vue'
 );
-const CategoryForm = () => import(/* webpackChunkName: "category_admin_chunck" */
+const CategoryForm = () => import(
+  /* webpackChunkName: "category_admin_chunck" */
   '@/apps/categories/CategoryForm.vue'
 );
-const CategoriesHeader = () => import(/* webpackChunkName: "category_chunck" */
-  '@/apps/categories/CategoriesHeader.vue'
+const CategoriesHeader = () => import(
+  /* webpackChunkName: "category_chunck" */
+  '@/apps/categories/TheCategoriesHeader.vue'
 );
-const CategoryBrowse = () => import(/* webpackChunkName: "category_chunck" */
+const CategoryBrowse = () => import(
+  /* webpackChunkName: "category_chunck" */
   '@/apps/categories/CategoryBrowse.vue'
 );
 
