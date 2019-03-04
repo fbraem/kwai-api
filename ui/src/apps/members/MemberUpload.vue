@@ -8,8 +8,13 @@
           Attach binaries by dropping them here or
         </span>
         <div uk-form-custom>
-          <input type="file" multiple>
-          <span class="uk-link">selecting one</span>
+          <input
+            type="file"
+            multiple
+          />
+          <span class="uk-link">
+            selecting one
+          </span>
         </div>
       </div>
     </div>
@@ -24,6 +29,9 @@ import UIkit from 'uikit';
 
 import messages from './lang';
 
+/**
+ * Page for uploading members file
+ */
 export default {
   i18n: messages,
   mounted() {

@@ -1,23 +1,29 @@
 import App from '@/site/App';
 
 const MembersHeader = () => import(
-  /* webpackChunkName: "member_admin" */ '@/apps/members/MembersHeader.vue'
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/TheMembersHeader.vue'
 );
 const MemberRead = () => import(
-  /* webpackChunkName: "member_admin" */ '@/apps/members/MemberRead.vue'
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/MemberRead.vue'
 );
 const MemberUploadHeader = () => import(
-  /* webpackChunkName: "member_admin" */ '@/apps/members/MemberUploadHeader.vue'
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/TheMemberUploadHeader.vue'
 );
 const MemberUpload = () => import(
-  /* webpackChunkName: "member_admin" */ '@/apps/members/MemberUpload.vue'
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/MemberUpload.vue'
 );
 const MemberBrowse = () => import(
-  /* webpackChunkName: "member_admin" */ '@/apps/members/MemberBrowse.vue'
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/MemberBrowse.vue'
 );
 
 const MemberStore = () => import(
-  /* webpackChunkName: "member_admin" */ '@/stores/members'
+  /* webpackChunkName: "member_admin" */
+  '@/stores/members'
 );
 
 export default [
