@@ -11,11 +11,11 @@
         <div uk-grid class="uk-margin">
           <div class="uk-width-expand">
             <blockquote>
-              <div v-html="story.summary"></div>
+              <div v-html="story.content.html_summary"></div>
             </blockquote>
           </div>
         </div>
-        <div class="news-content" v-html="story.content">
+        <div class="news-content" v-html="story.content.html_content">
         </div>
         <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
         {{ $t('are_you_sure') }}
