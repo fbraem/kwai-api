@@ -1,28 +1,46 @@
 import App from '@/site/App.vue';
 
 const NewsHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsHeader.vue');
+  /* webpackChunkName: "news_chunck" */
+  '@/apps/news/TheNewsHeader.vue'
+);
 const NewsStoryHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsStoryHeader.vue');
+  /* webpackChunkName: "news_chunck" */
+  '@/apps/news/TheNewsStoryHeader.vue'
+);
 const NewsCategoryHeader = () => import(
-    /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsCategoryHeader.vue');
+  /* webpackChunkName: "news_chunck" */
+  '@/apps/news/TheNewsCategoryHeader.vue'
+);
 const NewsArchiveHeader = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsArchiveHeader.vue');
+  /* webpackChunkName: "news_chunck" */
+  '@/apps/news/TheNewsArchiveHeader.vue'
+);
 const NewsFormHeader = () => import(
-  /* webpackChunkName: "news_admin" */ '@/apps/news/NewsFormHeader.vue');
+  /* webpackChunkName: "news_admin" */
+  '@/apps/news/TheNewsFormHeader.vue'
+);
 const NewsRead = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsRead.vue');
+  /* webpackChunkName: "news_chunck" */
+  '@/apps/news/NewsRead.vue'
+);
 const NewsBrowse = () => import(
-  /* webpackChunkName: "news_chunck" */ '@/apps/news/NewsBrowse.vue');
+  /* webpackChunkName: "news_chunck" */
+  '@/apps/news/NewsBrowse.vue'
+);
 const NewsForm = () => import(
-  /* webpackChunkName: "news_admin" */ '@/apps/news/NewsForm.vue');
+  /* webpackChunkName: "news_admin" */
+  '@/apps/news/NewsForm.vue'
+);
 
-const CategoryStore = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
-  );
-const NewsStore = () =>
-  import(/* webpackChunkName: "news_chunck" */ '@/stores/news'
-  );
+const CategoryStore = () => import(
+  /* webpackChunkName: "category_chunck" */
+  '@/stores/categories'
+);
+const NewsStore = () => import(
+  /* webpackChunkName: "news_chunck" */
+  '@/stores/news'
+);
 
 export default [
   {

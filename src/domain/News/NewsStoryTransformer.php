@@ -4,11 +4,19 @@ namespace Domain\News;
 
 use League\Fractal;
 
+use League\CommonMark\Converter;
+use League\CommonMark\DocParser;
+use League\CommonMark\Environment;
+use League\CommonMark\HtmlRenderer;
+use Webuni\CommonMark\TableExtension\TableExtension;
+
 class NewsStoryTransformer extends Fractal\TransformerAbstract
 {
     private $filesystem;
 
     private static $type = 'stories';
+
+    private $converter = null;
 
     public static function createForItem(NewsStory $story, $filesystem)
     {
@@ -21,19 +29,35 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
     }
 
     protected $defaultIncludes = [
-        'contents',
         'category'
     ];
 
     public function __construct($filesystem = null)
     {
         $this->filesystem = $filesystem;
+
+        $environment = Environment::createCommonMarkEnvironment();
+        $environment->addExtension(new TableExtension());
+        $this->converter = new Converter(new DocParser($environment), new HtmlRenderer($environment));
     }
 
     public function transform(NewsStory $story)
     {
         $result = $story->toArray();
         unset($result['_matchingData']);
+        foreach ($result['contents'] as &$content) {
+            unset($content['id']);
+            unset($content['_joinData']);
+            if ($content['format'] == 'md') {
+                $content['html_summary']
+                    = $this->converter->convertToHtml($content['summary']);
+                $content['html_content']
+                    = $this->converter->convertToHtml($content['content']);
+            } else {
+                $content['html_summary'] = $content['summary'];
+                $content['html_content'] = $content['content'];
+            }
+        }
 
         if ($this->filesystem) {
             $images = $this->filesystem->listContents('images/news/' . $story->id);
@@ -46,14 +70,6 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
         }
 
         return $result;
-    }
-
-    public function includeContents(NewsStory $story)
-    {
-        $contents = $story->contents;
-        if ($contents) {
-            return \Domain\Content\ContentTransformer::createForCollection($contents);
-        }
     }
 
     public function includeCategory(NewsStory $story)

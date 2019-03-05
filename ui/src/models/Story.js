@@ -1,8 +1,9 @@
 import Model from './Model';
-import { Attribute, DateAttribute } from './Attribute';
+import {
+  Attribute, DateAttribute, ObjectAttribute, ArrayAttribute
+} from './Attribute';
 
 import Category from './Category';
-import Content from './Content';
 import moment from 'moment-timezone';
 
 /**
@@ -29,43 +30,32 @@ export default class Story extends Model {
       images: new Attribute(true),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+      contents: new ArrayAttribute(
+        new ObjectAttribute({
+          locale: new Attribute(),
+          format: new Attribute(),
+          title: new Attribute(),
+          content: new Attribute(),
+          html_content: new Attribute(true),
+          summary: new Attribute(),
+          html_summary: new Attribute(true),
+          created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+          updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
+        })
+      )
     };
   }
 
   static computed() {
     return {
-      summary(story) {
-        if (story.contents) {
-          let content = story.contents.find((o) => {
-            return o.locale === 'nl';
-          });
-          if (content) {
-            return content.html_summary;
-          }
-        }
-        return '';
-      },
       content(story) {
         if (story.contents) {
           let content = story.contents.find((o) => {
             return o.locale === 'nl';
           });
-          if (content) {
-            return content.html_content;
-          }
+          return content || story.contents[0];
         }
-        return '';
-      },
-      title(story) {
-        if (story.contents) {
-          let content = story.contents.find((o) => {
-            return o.locale === 'nl';
-          });
-          if (content) {
-            return content.title;
-          }
-        }
-        return '';
+        return null;
       },
       localPublishDate(story) {
         var utc = story.publish_date.clone();
@@ -112,17 +102,12 @@ export default class Story extends Model {
         return utc.local().format('HH:mm');
       },
       authorName(story) {
-        if (story.contents) {
-          var content = story.contents.find((o) => {
-            return o.locale === 'nl';
-          });
-          if (content) {
-            var author = content.user;
-            if (author) {
-              return [
-                author.first_name,
-                author.last_name].filter(n => n != null).join(' ');
-            }
+        if (story.content) {
+          var author = story.content.user;
+          if (author) {
+            return [
+              author.first_name,
+              author.last_name].filter(n => n != null).join(' ');
           }
         }
         return '';
@@ -142,8 +127,7 @@ export default class Story extends Model {
 
   static relationships() {
     return {
-      category: Category,
-      contents: Content,
+      category: Category
     };
   }
 }

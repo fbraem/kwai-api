@@ -1,22 +1,35 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div uk-grid class="uk-light">
-    <div v-if="picture" class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle">
-        <div>
-            <img :src="picture" />
-        </div>
+    <div
+      v-if="picture"
+      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
+    >
+      <div>
+        <img :src="picture" />
+      </div>
     </div>
-    <div v-if="category" class="uk-width-1-1 uk-width-5-6@m">
-      <h1 class="uk-margin-remove">{{ $t('news') }}</h1>
-      <h3 class="uk-margin-remove">{{ category.name }}</h3>
+    <div
+      v-if="category"
+      class="uk-width-1-1 uk-width-5-6@m"
+    >
+      <h1 class="uk-margin-remove">
+        {{ $t('news') }}
+      </h1>
+      <h3 class="uk-margin-remove">
+        {{ category.name }}
+      </h3>
       <p>
         {{ category.description }}
       </p>
     </div>
     <div class="uk-width-1-1 uk-width-1-6@m">
       <div class="uk-flex uk-flex-right">
-        <router-link v-if="canCreate"
+        <router-link
+          v-if="canCreate"
           class="uk-icon-button uk-link-reset"
-          :to="{ name : 'news.create' }">
+          :to="{ name : 'news.create' }"
+        >
           <i class="fas fa-plus"></i>
         </router-link>
       </div>
@@ -28,6 +41,9 @@
 import Story from '@/models/Story';
 import messages from './lang';
 
+/**
+ * Component for header of category page
+ */
 export default {
   i18n: messages,
   computed: {

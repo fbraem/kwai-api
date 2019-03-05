@@ -18,6 +18,7 @@ use Core\Responses\ResourceResponse;
 
 use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
+use Domain\Content\ContentsTable;
 
 class CreateStoryAction
 {
@@ -57,6 +58,15 @@ class CreateStoryAction
             $story->featured_end_date = $attributes['featured_end_date'] ?? null;
             $story->enabled = $attributes['enabled'];
             $story->remark = $attributes['remark'] ?? null;
+
+            $content = ContentsTable::getTableFromRegistry()->newEntity();
+            $story->contents = [ $content ];
+            $story->title = $attributes['event']['contents'][0]['title'];
+            $story->locale = $attributes['event']['contents'][0]['locale'] ?? 'nl';
+            $story->format = $attributes['event']['contents'][0]['format'] ?? 'md';
+            $story->summary = $attributes['event']['contents'][0]['summary'];
+            $story->content = $attributes['event']['contents'][0]['content'];
+            $story->user = $request->getAttribute('clubman.user');
 
             $storiesTable->save($story);
 

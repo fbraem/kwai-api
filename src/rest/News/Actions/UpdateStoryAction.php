@@ -60,6 +60,23 @@ class UpdateStoryAction
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
+            if (isset($attributes['contents'][0]['title'])) {
+                $story->contents[0]->title = $attributes['contents'][0]['title'];
+            }
+            if (isset($attributes['contents'][0]['summary'])) {
+                $story->contents[0]->summary = $attributes['contents'][0]['summary'];
+            }
+            if (isset($attributes['contents'][0]['content'])) {
+                $story->contents[0]->content = $attributes['contents'][0]['content'];
+            }
+            if (isset($attributes['contents'][0]['format'])) {
+                $story->contents[0]->format = $attributes['contents'][0]['format'];
+            }
+            if (isset($attributes['contents'][0]['locale'])) {
+                $story->contents[0]->locale = $attributes['contents'][0]['locale'];
+            }
+            $story->contents[0]->user = $request->getAttribute('clubman.user');
+
             if (isset($category)) {
                 $story->category = $category;
             }
