@@ -56,8 +56,8 @@ import store from '@/stores/root';
  * Initialise casl
  */
 import { abilitiesPlugin } from '@casl/vue';
-import ability from '@/js/ability';
-Vue.use(abilitiesPlugin, ability);
+import makeAbilities from '@/js/ability';
+Vue.use(abilitiesPlugin, makeAbilities());
 
 import VueWait from 'vue-wait';
 Vue.use(VueWait);

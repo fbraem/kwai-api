@@ -12,10 +12,15 @@ function subjectName(item) {
   return item.constructor.type();
 }
 
-export default AbilityBuilder.define({ subjectName }, (can, cannot) => {
-  if (store.state.global.user && store.state.global.user.authenticated) {
-    can('manage', 'all');
-  } else {
-    can('read', 'stories');
-  }
-});
+/**
+ * Returns a function that defines the abilities
+ */
+export default () => {
+  return AbilityBuilder.define({ subjectName }, (can, cannot) => {
+    if (store.state.global.user && store.state.global.user.authenticated) {
+      can('manage', 'all');
+    } else {
+      can('read', 'stories');
+    }
+  });
+};
