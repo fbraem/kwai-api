@@ -2,11 +2,7 @@
   <!-- eslint-disable max-len -->
   <div>
     <Page>
-      <div v-if="$wait.is('pages.browse')" class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
+      <Spinner v-if="$wait.is('pages.browse')" />
       <div v-else class="uk-child-width-1-1" uk-grid>
         <div v-if="pagesMeta">
           <Paginator :count="pagesMeta.count" :limit="pagesMeta.limit" :offset="pagesMeta.offset" @page="readPage"></Paginator>
@@ -26,6 +22,7 @@
 import Page from './Page.vue';
 import PageSummary from './components/PageSummary.vue';
 import Paginator from '@/components/Paginator.vue';
+import Spinner from '@/components/Spinner.vue';
 
 import messages from './lang';
 
@@ -34,7 +31,8 @@ export default {
   components: {
     Page,
     PageSummary,
-    Paginator
+    Paginator,
+    Spinner
   },
   data() {
     return {
