@@ -36,7 +36,11 @@ class UpdateAction
         $pagesTable = PagesTable::getTableFromRegistry();
         try {
             $page = $pagesTable->get($args['id'], [
-                'contain' => ['Contents', 'Category', 'Contents.User']
+                'contain' => [
+                    'Contents',
+                    'Category',
+                    'Contents.User'
+                ]
             ]);
 
             $data = $request->getParsedBody();
@@ -67,7 +71,34 @@ class UpdateAction
                 $page->remark = $attributes['remark'];
             }
 
-            $pagesTable->save($page);
+            if (isset($attributes['contents'][0]['title'])) {
+                $page->contents[0]->title = $attributes['contents'][0]['title'];
+                $page->dirty('contents', true);
+            }
+            if (isset($attributes['contents'][0]['summary'])) {
+                $page->contents[0]->summary = $attributes['contents'][0]['summary'];
+                $page->dirty('contents', true);
+            }
+            if (isset($attributes['contents'][0]['content'])) {
+                $page->contents[0]->content = $attributes['contents'][0]['content'];
+                $page->dirty('contents', true);
+            }
+            if (isset($attributes['contents'][0]['format'])) {
+                $page->contents[0]->format = $attributes['contents'][0]['format'];
+                $page->dirty('contents', true);
+            }
+            if (isset($attributes['contents'][0]['locale'])) {
+                $page->contents[0]->locale = $attributes['contents'][0]['locale'];
+                $page->dirty('contents', true);
+            }
+            if ($page->isDirty('contents')) {
+                $page->contents[0]->user = $request->getAttribute('clubman.user');
+            }
+            $pagesTable->save($page, [
+                'associated' => [
+                    'Contents'
+                ]
+            ]);
 
             $filesystem = $this->container->get('filesystem');
 

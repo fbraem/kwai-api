@@ -3,15 +3,36 @@
   <div>
     <Page>
       <Spinner v-if="$wait.is('pages.browse')" />
-      <div v-else class="uk-child-width-1-1" uk-grid>
+      <div
+        v-else
+        class="uk-child-width-1-1"
+        uk-grid
+      >
         <div v-if="pagesMeta">
-          <Paginator :count="pagesMeta.count" :limit="pagesMeta.limit" :offset="pagesMeta.offset" @page="readPage"></Paginator>
+          <Paginator
+            :count="pagesMeta.count"
+            :limit="pagesMeta.limit"
+            :offset="pagesMeta.offset"
+            @page="readPage"
+          />
         </div>
-        <div class="uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match" uk-grid>
-          <PageSummary v-for="page in pages" :page="page" :key="page.id"></PageSummary>
+        <div
+          class="uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
+          uk-grid
+          >
+          <PageSummary
+            v-for="page in pages"
+            :page="page"
+            :key="page.id"
+          />
         </div>
         <div v-if="pagesMeta">
-          <Paginator :count="pagesMeta.count" :limit="pagesMeta.limit" :offset="pagesMeta.offset" @page="readPage"></Paginator>
+          <Paginator
+            :count="pagesMeta.count"
+            :limit="pagesMeta.limit"
+            :offset="pagesMeta.offset"
+            @page="readPage"
+          />
         </div>
       </div>
     </Page>
@@ -26,6 +47,9 @@ import Spinner from '@/components/Spinner.vue';
 
 import messages from './lang';
 
+/**
+ * Page for browsing information
+ */
 export default {
   i18n: messages,
   components: {
@@ -33,10 +57,6 @@ export default {
     PageSummary,
     Paginator,
     Spinner
-  },
-  data() {
-    return {
-    };
   },
   computed: {
     pages() {

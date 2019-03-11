@@ -1,23 +1,33 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
     <Page>
       <div v-if="error">
         {{ error.response.statusText }}
       </div>
-      <div v-if="$wait.is('pages.read')" class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-      <section v-if="page" class="uk-section uk-section-small uk-padding-remove-top">
-        <div class="uk-flex-center" uk-grid>
+      <Spinner v-if="$wait.is('pages.read')" />
+      <section
+        v-if="page"
+        class="uk-section uk-section-small uk-padding-remove-top"
+      >
+        <div
+          class="uk-flex-center"
+          uk-grid
+        >
           <figure v-if="page.header_detail_crop">
             <img :src="page.header_detail_crop" />
           </figure>
-          <article class="page-content uk-article" style="overflow-x: auto;" v-html="page.content">
+          <article
+            class="page-content uk-article"
+            style="overflow-x: auto;"
+            v-html="page.content.html_content"
+          >
           </article>
-          <AreYouSure id="delete-page" :yes="$t('delete')" :no="$t('cancel')" @sure="deletePage">
+          <AreYouSure
+            id="delete-page"
+            :yes="$t('delete')"
+            :no="$t('cancel')"
+            @sure="deletePage"
+          >
             {{ $t('are_you_sure') }}
           </AreYouSure>
         </div>
@@ -115,11 +125,16 @@ import messages from './lang';
 
 import Page from './Page.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
+import Spinner from '@/components/Spinner.vue';
 
+/**
+ * Page for an information page
+ */
 export default {
   components: {
     Page,
-    AreYouSure
+    AreYouSure,
+    Spinner
   },
   i18n: messages,
   computed: {

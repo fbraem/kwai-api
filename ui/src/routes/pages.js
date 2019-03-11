@@ -1,26 +1,42 @@
 import App from '@/site/App.vue';
 
 const PagesHeader = () => import(
-  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PagesHeader.vue');
+  /* webpackChunkName: "pages_chunck" */
+  '@/apps/pages/ThePagesHeader.vue'
+);
 const PageHeader = () => import(
-  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageHeader.vue');
+  /* webpackChunkName: "pages_chunck" */
+  '@/apps/pages/ThePageHeader.vue'
+);
 const PageCategoryHeader = () => import(
-  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageCategoryHeader.vue');
+  /* webpackChunkName: "pages_chunck" */
+  '@/apps/pages/ThePageCategoryHeader.vue'
+);
 const PageFormHeader = () => import(
-  /* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageFormHeader.vue');
+  /* webpackChunkName: "pages_chunck" */
+  '@/apps/pages/ThePageFormHeader.vue'
+);
 const PageRead = () => import(
-/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageRead.vue');
+  /* webpackChunkName: "pages_chunck" */
+  '@/apps/pages/PageRead.vue'
+);
 const PageBrowse = () => import(
-/* webpackChunkName: "pages_chunck" */ '@/apps/pages/PageBrowse.vue');
+  /* webpackChunkName: "pages_chunck" */
+  '@/apps/pages/PageBrowse.vue'
+);
 const PageForm = () => import(
-  /* webpackChunkName: "pages_admin" */ '@/apps/pages/PageForm.vue');
+  /* webpackChunkName: "pages_admin" */
+  '@/apps/pages/PageForm.vue'
+);
 
-const CategoryStore = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
-  );
-const PageStore = () =>
-  import(/* webpackChunkName: "news_chunck" */ '@/stores/pages'
-  );
+const CategoryStore = () => import(
+  /* webpackChunkName: "category_chunck" */
+  '@/stores/categories'
+);
+const PageStore = () => import(
+  /* webpackChunkName: "news_chunck" */
+  '@/stores/pages'
+);
 
 export default [
   {

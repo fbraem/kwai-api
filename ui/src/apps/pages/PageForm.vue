@@ -1,26 +1,72 @@
 <template>
   <div class="uk-child-width-1-1" uk-grid>
     <div>
-      <h3 class="uk-heading-line"><span>{{ $t('page') }}</span></h3>
-      <MainForm :page="page"
-        @validation="pageValidation"
-        @formHandler="setPageFormHandler">
-      </MainForm>
-    </div>
-    <div>
-      <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
-      <ContentForm
-        :content="content"
-        @validation="contentValidation"
-        @formHandler="setContentFormHandler">
-      </ContentForm>
+      <h3 class="uk-heading-line">
+        <span>
+          {{ $t('page') }}
+        </span>
+      </h3>
+      <KwaiForm :form="form">
+        <div uk-grid>
+          <div class="uk-width-expand">
+            <KwaiField
+              name="category"
+              :label="$t('form.page.category.label')"
+            >
+              <KwaiSelect :items="categories" />
+            </KwaiField>
+          </div>
+          <div class="uk-flex uk-flex-bottom">
+            <KwaiField name="enabled">
+              <KwaiSwitch />
+            </KwaiField>
+          </div>
+        </div>
+        <div class="uk-child-width-1-1" uk-grid>
+          <KwaiField
+            name="remark"
+            :label="$t('form.page.remark.label')"
+          >
+            <KwaiTextarea
+              :rows="5"
+              :placeholder="$t('form.page.remark.placeholder')"
+            />
+          </KwaiField>
+        </div>
+        <div>
+          <KwaiField
+            name="title"
+            :label="$t('form.content.title.label')"
+          >
+            <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
+          </KwaiField>
+          <KwaiField
+            name="summary"
+            :label="$t('form.content.summary.label')"
+          >
+            <KwaiTextarea
+              :placeholder="$t('form.content.summary.placeholder')"
+              :rows="5"
+            />
+          </KwaiField>
+          <KwaiField name="content" :label="$t('form.content.content.label')">
+            <KwaiTextarea
+              :placeholder="$t('form.content.content.placeholder')"
+              :rows="15"
+            />
+          </KwaiField>
+        </div>
+      </KwaiForm>
     </div>
     <div uk-grid>
       <div class="uk-width-expand">
       </div>
       <div class="uk-width-auto">
-        <button class="uk-button uk-button-primary"
-          :disabled="!valid" @click="submit">
+        <button
+          class="uk-button uk-button-primary"
+          :disabled="!form.$valid"
+          @click="submit"
+        >
           <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
         </button>
       </div>
@@ -29,26 +75,118 @@
 </template>
 
 <script>
-import Content from '@/models/Content';
+import Category from '@/models/Category';
 import Page from '@/models/Page';
+
+import { notEmpty } from '@/js/VueForm';
 
 import messages from './lang';
 
-import MainForm from './MainForm.vue';
-import ContentForm from './ContentForm.vue';
+import makeForm from '@/js/Form';
+const makePageForm = (fields) => {
+  const writeForm = (page) => {
+    fields.enabled.value = page.enabled;
+    fields.remark.value = page.remark;
+    fields.category.value = page.category.id;
+    fields.priority.value = page.priority;
+
+    fields.title.value = page.content.title;
+    fields.summary.value = page.content.summary;
+    fields.content.value = page.content.content;
+  };
+  const readForm = (page) => {
+    page.enabled = fields.enabled.value;
+    page.remark = fields.remark.value;
+    page.category = new Category();
+    page.category.id = fields.category.value;
+    page.priority = fields.priority.value;
+
+    if (!page.contents) {
+      page.contents = [ Object.create(null) ];
+    }
+    page.contents[0].title = fields.title.value;
+    page.contents[0].summary = fields.summary.value;
+    page.contents[0].content = fields.content.value;
+  };
+  return {
+    ...makeForm(fields),
+    writeForm,
+    readForm
+  };
+};
+
+import KwaiForm from '@/components/forms/KwaiForm.vue';
+import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiInputText from '@/components/forms/KwaiInputText.vue';
+import KwaiSelect from '@/components/forms/KwaiSelect.vue';
+import KwaiTextarea from '@/components/forms/KwaiTextarea.vue';
+import KwaiSwitch from '@/components/forms/KwaiSwitch.vue';
 
 export default {
   i18n: messages,
   components: {
-    MainForm,
-    ContentForm,
+    KwaiForm,
+    KwaiField,
+    KwaiInputText,
+    KwaiSwitch,
+    KwaiSelect,
+    KwaiTextarea,
   },
   data() {
     return {
       page: new Page(),
-      content: new Content(),
-      pageValid: false,
-      contentValid: false
+      form: makePageForm({
+        enabled: {
+          value: true
+        },
+        category: {
+          value: null,
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.page.category.required'),
+            },
+          ]
+        },
+        priority: {
+          value: 0,
+          required: true
+        },
+        remark: {
+          value: ''
+        },
+        title: {
+          required: true,
+          value: '',
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.content.title.required'),
+            },
+          ]
+        },
+        summary: {
+          required: true,
+          value: '',
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.content.summary.required'),
+            },
+          ]
+        },
+        content: {
+          value: '',
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.content.content.required'),
+            },
+          ]
+        }
+      })
     };
   },
   computed: {
@@ -58,8 +196,8 @@ export default {
     error() {
       return this.$store.state.page.error;
     },
-    valid() {
-      return this.pageValid && this.contentValid;
+    categories() {
+      return this.$store.getters['category/categoriesAsOptions'];
     }
   },
   async created() {
@@ -81,30 +219,14 @@ export default {
         this.page = await this.$store.dispatch('page/read', {
           id: params.id
         });
-        this.content = this.page.contents[0];
+        this.form.writeForm(this.page);
       }
     },
-    setPageFormHandler(fn) {
-      this.pageFormHandler = fn;
-    },
-    setContentFormHandler(fn) {
-      this.contentFormHandler = fn;
-    },
-    pageValidation(valid) {
-      this.pageValid = valid;
-    },
-    contentValidation(valid) {
-      this.contentValid = valid;
-    },
     async submit() {
-      this.pageFormHandler();
+      this.form.clearErrors();
+      this.form.readForm(this.page);
       try {
         this.page = await this.$store.dispatch('page/save', this.page);
-        this.contentFormHandler();
-        await this.$store.dispatch('page/saveContent', {
-          page: this.page,
-          content: this.content
-        });
         this.$router.push({
           name: 'pages.read',
           params: {

@@ -12,11 +12,11 @@
       </div>
       <div class="uk-card-body">
         <h5 class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold">
-          {{ page.title }}
+          {{ page.content.title }}
         </h5>
         <p
           class="uk-text-small uk-text-muted"
-          v-html="page.summary"
+          v-html="page.content.html_summary"
         >
         </p>
         <span class="uk-float-right">
@@ -40,6 +40,9 @@ import Page from '@/models/Page';
  */
 export default {
   props: {
+    /**
+     * The page for the summary
+     */
     page: {
       type: Page,
       required: true

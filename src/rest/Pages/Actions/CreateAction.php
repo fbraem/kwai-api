@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
+use Domain\Content\ContentsTable;
 
 use Core\Responses\UnprocessableEntityResponse;
 use Core\Responses\ResourceResponse;
@@ -49,6 +50,16 @@ class CreateAction
             $page->remark = $attributes['remark'];
             $page->enabled = $attributes['enabled'];
             $page->priority = $attributes['priority'];
+
+            $content = ContentsTable::getTableFromRegistry()->newEntity();
+            $page->contents = [ $content ];
+            $content->title = $attributes['contents'][0]['title'];
+            $content->locale = $attributes['contents'][0]['locale'] ?? 'nl';
+            $content->format = $attributes['contents'][0]['format'] ?? 'md';
+            $content->summary = $attributes['contents'][0]['summary'];
+            $content->content = $attributes['contents'][0]['content'];
+            $content->user = $request->getAttribute('clubman.user');
+
             $pagesTable->save($page);
 
             $route = $request->getAttribute('route');

@@ -1,8 +1,9 @@
 import Model from './Model';
-import { Attribute, DateAttribute } from './Attribute';
+import {
+  Attribute, DateAttribute, ArrayAttribute, ObjectAttribute
+} from './Attribute';
 
 import Category from './Category';
-import Content from './Content';
 
 /**
  * Page model
@@ -19,6 +20,19 @@ export default class Page extends Model {
       remark: new Attribute(),
       priority: new Attribute(),
       images: new Attribute(true),
+      contents: new ArrayAttribute(
+        new ObjectAttribute({
+          locale: new Attribute(),
+          format: new Attribute(),
+          title: new Attribute(),
+          content: new Attribute(),
+          html_content: new Attribute(true),
+          summary: new Attribute(),
+          html_summary: new Attribute(true),
+          created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
+          updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
+        })
+      ),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
@@ -26,38 +40,14 @@ export default class Page extends Model {
 
   static computed() {
     return {
-      summary(page) {
-        if (page.contents) {
-          var content = page.contents.find((o) => {
-            return o.locale === 'nl';
-          });
-          if (content) {
-            return content.html_summary;
-          }
-        }
-        return '';
-      },
       content(page) {
         if (page.contents) {
-          var content = page.contents.find((o) => {
+          let content = page.contents.find((o) => {
             return o.locale === 'nl';
           });
-          if (content) {
-            return content.html_content;
-          }
+          return content || page.contents[0];
         }
-        return '';
-      },
-      title(page) {
-        if (page.contents) {
-          var content = page.contents.find((o) => {
-            return o.locale === 'nl';
-          });
-          if (content) {
-            return content.title;
-          }
-        }
-        return '';
+        return null;
       },
       authorName(page) {
         if (page.contents) {
@@ -86,8 +76,7 @@ export default class Page extends Model {
 
   static relationships() {
     return {
-      category: Category,
-      contents: Content,
+      category: Category
     };
   }
 }

@@ -4,14 +4,21 @@ namespace Domain\Page;
 
 use League\Fractal;
 
+use League\CommonMark\Converter;
+use League\CommonMark\DocParser;
+use League\CommonMark\Environment;
+use League\CommonMark\HtmlRenderer;
+use Webuni\CommonMark\TableExtension\TableExtension;
+
 class PageTransformer extends Fractal\TransformerAbstract
 {
     private static $type = 'pages';
 
     private $filesystem;
 
+    private $converter = null;
+
     protected $defaultIncludes = [
-        'contents',
         'category'
     ];
 
@@ -28,12 +35,33 @@ class PageTransformer extends Fractal\TransformerAbstract
     public function __construct($filesystem = null)
     {
         $this->filesystem = $filesystem;
+
+        $environment = Environment::createCommonMarkEnvironment();
+        $environment->addExtension(new TableExtension());
+        $this->converter = new Converter(
+            new DocParser($environment),
+            new HtmlRenderer($environment)
+        );
     }
 
     public function transform(Page $page)
     {
         $result = $page->toArray();
         unset($result['_matchingData']);
+
+        foreach ($result['contents'] as &$content) {
+            unset($content['id']);
+            unset($content['_joinData']);
+            if ($content['format'] == 'md') {
+                $content['html_summary']
+                    = $this->converter->convertToHtml($content['summary']);
+                $content['html_content']
+                    = $this->converter->convertToHtml($content['content']);
+            } else {
+                $content['html_summary'] = $content['summary'];
+                $content['html_content'] = $content['content'];
+            }
+        }
 
         if ($this->filesystem) {
             $images = $this->filesystem->listContents('images/pages/' . $page->id);
@@ -45,14 +73,6 @@ class PageTransformer extends Fractal\TransformerAbstract
             }
         }
         return $result;
-    }
-
-    public function includeContents(Page $page)
-    {
-        $contents = $page->contents;
-        if ($contents) {
-            return \Domain\Content\ContentTransformer::createForCollection($contents);
-        }
     }
 
     public function includeCategory(Page $page)
