@@ -22,14 +22,6 @@ $app->group('/pages', function () {
         ->setName('pages.delete')
         ->setArgument('auth', true)
     ;
-    $this->post('/{id:[0-9]+}/contents', \REST\Pages\Actions\CreateContentAction::class)
-        ->setName('pages.contents.create')
-        ->setArgument('auth', true)
-    ;
-    $this->patch('/{id:[0-9]+}/contents/{contentId:[0-9]+}', \REST\Pages\Actions\UpdateContentAction::class)
-        ->setName('pages.contents.update')
-        ->setArgument('auth', true)
-    ;
 });
 
 $app->run();
