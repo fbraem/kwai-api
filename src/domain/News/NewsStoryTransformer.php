@@ -38,7 +38,10 @@ class NewsStoryTransformer extends Fractal\TransformerAbstract
 
         $environment = Environment::createCommonMarkEnvironment();
         $environment->addExtension(new TableExtension());
-        $this->converter = new Converter(new DocParser($environment), new HtmlRenderer($environment));
+        $this->converter = new Converter(
+            new DocParser($environment),
+            new HtmlRenderer($environment)
+        );
     }
 
     public function transform(NewsStory $story)
