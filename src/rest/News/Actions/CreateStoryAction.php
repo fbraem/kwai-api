@@ -61,12 +61,12 @@ class CreateStoryAction
 
             $content = ContentsTable::getTableFromRegistry()->newEntity();
             $story->contents = [ $content ];
-            $story->title = $attributes['event']['contents'][0]['title'];
-            $story->locale = $attributes['event']['contents'][0]['locale'] ?? 'nl';
-            $story->format = $attributes['event']['contents'][0]['format'] ?? 'md';
-            $story->summary = $attributes['event']['contents'][0]['summary'];
-            $story->content = $attributes['event']['contents'][0]['content'];
-            $story->user = $request->getAttribute('clubman.user');
+            $content->title = $attributes['contents'][0]['title'];
+            $content->locale = $attributes['contents'][0]['locale'] ?? 'nl';
+            $content->format = $attributes['contents'][0]['format'] ?? 'md';
+            $content->summary = $attributes['contents'][0]['summary'];
+            $content->content = $attributes['contents'][0]['content'];
+            $content->user = $request->getAttribute('clubman.user');
 
             $storiesTable->save($story);
 

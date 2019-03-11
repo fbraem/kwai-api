@@ -38,7 +38,11 @@ class UpdateStoryAction
         $storiesTable = NewsStoriesTable::getTableFromRegistry();
         try {
             $story = $storiesTable->get($args['id'], [
-                'contain' => ['Category']
+                'contain' => [
+                    'Category',
+                    'Contents',
+                    'Contents.User'
+                ]
             ]);
         } catch (RecordNotFoundException $rnfe) {
             return (new NotFoundResponse(_("Story doesn't exist")))($response);
@@ -62,20 +66,27 @@ class UpdateStoryAction
 
             if (isset($attributes['contents'][0]['title'])) {
                 $story->contents[0]->title = $attributes['contents'][0]['title'];
+                $story->dirty('contents', true);
             }
             if (isset($attributes['contents'][0]['summary'])) {
                 $story->contents[0]->summary = $attributes['contents'][0]['summary'];
+                $story->dirty('contents', true);
             }
             if (isset($attributes['contents'][0]['content'])) {
                 $story->contents[0]->content = $attributes['contents'][0]['content'];
+                $story->dirty('contents', true);
             }
             if (isset($attributes['contents'][0]['format'])) {
                 $story->contents[0]->format = $attributes['contents'][0]['format'];
+                $story->dirty('contents', true);
             }
             if (isset($attributes['contents'][0]['locale'])) {
                 $story->contents[0]->locale = $attributes['contents'][0]['locale'];
+                $story->dirty('contents', true);
             }
-            $story->contents[0]->user = $request->getAttribute('clubman.user');
+            if ($story->isDirty('contents')) {
+                $story->contents[0]->user = $request->getAttribute('clubman.user');
+            }
 
             if (isset($category)) {
                 $story->category = $category;
@@ -102,7 +113,11 @@ class UpdateStoryAction
                 $story->remark = $attributes['remark'];
             }
 
-            $storiesTable->save($story);
+            $storiesTable->save($story, [
+                'associated' => [
+                    'Contents'
+                ]
+            ]);
 
             $filesystem = $this->container->get('filesystem');
 
