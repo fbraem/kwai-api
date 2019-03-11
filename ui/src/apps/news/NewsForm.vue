@@ -240,6 +240,7 @@ const makeStoryForm = (fields) => {
     }
     story.contents[0].title = fields.title.value;
     story.contents[0].summary = fields.summary.value;
+    story.contents[0].content = fields.content.value;
   };
 
   return {
