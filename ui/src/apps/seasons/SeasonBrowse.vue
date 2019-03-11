@@ -1,13 +1,15 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
-    <div v-if="$wait.is('seasons.browse')" class="uk-flex-center" uk-grid>
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div v-else class="uk-child-width-1-1" uk-grid>
-      <div v-if="noSeasons" class="uk-alert uk-alert-warning">
+    <Spinner v-if="$wait.is('seasons.browse')" />
+    <div
+      v-else
+      class="uk-child-width-1-1"
+      uk-grid
+    >
+      <div
+        v-if="noSeasons"
+        class="uk-alert uk-alert-warning"
+      >
         {{ $t('no_seasons') }}
       </div>
       <div v-else>
@@ -25,7 +27,8 @@
             </td>
             <td>
               <router-link
-                :to="{ name: 'seasons.read', params: { id: season.id} }">
+                :to="{ name: 'seasons.read', params: { id: season.id} }"
+              >
                 {{ season.name }}
               </router-link>
             </td>
@@ -36,10 +39,12 @@
               {{ season.formatted_end_date }}
             </td>
             <td>
-              <router-link v-if="$can('update', season)"
+              <router-link
+                v-if="$can('update', season)"
                 class="uk-icon-button"
                 style="margin-top:-10px"
-                :to="{ name: 'seasons.update', params: { id: season.id } }">
+                :to="{ name: 'seasons.update', params: { id: season.id } }"
+              >
                 <i class="fas fa-edit"></i>
               </router-link>
             </td>
@@ -53,8 +58,13 @@
 <script>
 import messages from './lang';
 
+import Spinner from '@/components/Spinner';
+
 export default {
   i18n: messages,
+  components: {
+    Spinner
+  },
   computed: {
     seasons() {
       return this.$store.state.season.seasons;

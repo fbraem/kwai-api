@@ -5,9 +5,11 @@
     </div>
     <div class="uk-width-1-6">
       <div class="uk-flex uk-flex-right">
-        <router-link v-if="canCreate"
+        <router-link
+          v-if="canCreate"
           class="uk-icon-button"
-          :to="{ name: 'seasons.create' }">
+          :to="{ name: 'seasons.create' }"
+        >
           <i class="fas fa-plus"></i>
         </router-link>
       </div>

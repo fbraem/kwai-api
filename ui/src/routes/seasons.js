@@ -1,26 +1,33 @@
 import App from '@/site/App.vue';
 
 const SeasonHeader = () => import(
-  /* webpackChunkName: "seasons_chunck" */ '@/apps/seasons/SeasonHeader.vue'
+  /* webpackChunkName: "seasons_chunck" */
+  '@/apps/seasons/TheSeasonHeader.vue'
 );
 const SeasonRead = () => import(
-  /* webpackChunkName: "seasons_chunck" */ '@/apps/seasons/SeasonRead.vue'
+  /* webpackChunkName: "seasons_chunck" */
+  '@/apps/seasons/SeasonRead.vue'
 );
 const SeasonFormHeader = () => import(
-  /* webpackChunkName: "seasons_admin" */ '@/apps/seasons/SeasonFormHeader.vue'
+  /* webpackChunkName: "seasons_admin" */
+  '@/apps/seasons/TheSeasonFormHeader.vue'
 );
 const SeasonForm = () => import(
-  /* webpackChunkName: "seasons_admin" */ '@/apps/seasons/SeasonForm.vue'
+  /* webpackChunkName: "seasons_admin" */
+  '@/apps/seasons/SeasonForm.vue'
 );
 const SeasonsHeader = () => import(
-  /* webpackChunkName: "seasons_chunck" */ '@/apps/seasons/SeasonsHeader.vue'
+  /* webpackChunkName: "seasons_chunck" */
+  '@/apps/seasons/TheSeasonsHeader.vue'
 );
 const SeasonBrowse = () => import(
-  /* webpackChunkName: "seasons_chunck" */ '@/apps/seasons/SeasonBrowse.vue'
+  /* webpackChunkName: "seasons_chunck" */
+  '@/apps/seasons/SeasonBrowse.vue'
 );
 
 const SeasonStore = () => import(
-  /* webpackChunkName: "seasons_chunck" */ '@/stores/seasons'
+  /* webpackChunkName: "seasons_chunck" */
+  '@/stores/seasons'
 );
 
 export default [
