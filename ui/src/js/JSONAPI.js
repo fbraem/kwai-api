@@ -171,7 +171,7 @@ class JSONAPI {
       method: 'DELETE',
       url: uri.href()
     };
-    await this.axios(config);
+    await axios(config);
   }
 
   /**
