@@ -1,61 +1,120 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <form class="uk-form-stacked">
-        <field name="name" :label="$t('form.team.name.label')">
-          <uikit-input-text :placeholder="$t('form.team.name.placeholder')">
-          </uikit-input-text>
-        </field>
-        <field name="season" :label="$t('form.team.season.label')">
-          <uikit-select :items="seasons">
-          </uikit-select>
-        </field>
-        <p class="uk-text-meta">{{ $t('form.team.season.hint')}}</p>
-        <field name="team_type" :label="$t('form.team.team_type.label')">
-          <uikit-select :items="team_types">
-          </uikit-select>
-        </field>
-        <p class="uk-text-meta">{{ $t('form.team.team_type.hint')}}</p>
-        <field name="remark" :label="$t('form.team.remark.label')">
-          <uikit-textarea :rows="5" id="remark"
-            :placeholder="$t('form.team.remark.placeholder')">
-          </uikit-textarea>
-        </field>
-      </form>
-    </div>
-    <div uk-grid class="uk-width-1-1">
-      <div class="uk-width-expand">
-      </div>
-      <div class="uk-width-auto">
-        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-        </button>
-      </div>
-    </div>
-  </div>
+  <KwaiForm
+    :form="form"
+    :error="error"
+    :save="$t('save')"
+    @submit="submit"
+  >
+    <KwaiField
+      name="name"
+      :label="$t('form.team.name.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.team.name.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="season"
+      :label="$t('form.team.season.label')"
+    >
+      <KwaiSelect :items="seasons" />
+    </KwaiField>
+    <p class="uk-text-meta">
+      {{ $t('form.team.season.hint')}}
+    </p>
+    <KwaiField
+      name="team_type"
+      :label="$t('form.team.team_type.label')"
+    >
+      <KwaiSelect :items="team_types" />
+    </KwaiField>
+    <p class="uk-text-meta">
+      {{ $t('form.team.team_type.hint')}}
+    </p>
+    <KwaiField
+      name="remark"
+      :label="$t('form.team.remark.label')"
+    >
+      <KwaiTextarea
+        :rows="5"
+        :placeholder="$t('form.team.remark.placeholder')"
+      />
+    </KwaiField>
+  </KwaiForm>
 </template>
 
 <script>
 import Team from '@/models/Team';
+import TeamType from '@/models/TeamType';
+import Season from '@/models/Season';
 
-import TeamForm from './TeamForm';
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
-import UikitTextarea from '@/components/forms/Textarea.vue';
-import UikitSelect from '@/components/forms/Select.vue';
+import makeForm from '@/js/Form';
+const makeTeamForm = (fields) => {
+  const writeForm = (team) => {
+    fields.name.value = team.name;
+    fields.remark.value = team.remark;
+    if (team.season) {
+      fields.season.value = team.season.id;
+    }
+    if (team.team_type) {
+      fields.team_type.value = team.team_type.id;
+    }
+  };
+  const readForm = (team) => {
+    team.name = fields.name.value;
+    team.remark = fields.remark.value;
+    if (fields.season.value === 0) {
+      team.season = null;
+    } else {
+      team.season = new Season();
+      team.season.id = fields.season.value;
+    }
+    if (fields.team_type.value === 0) {
+      team.team_type = null;
+    } else {
+      team.team_type = new TeamType();
+      team.team_type.id = fields.team_type.value;
+    }
+  };
+  return { ...makeForm(fields), writeForm, readForm };
+};
+import { notEmpty } from '@/js/VueForm';
+
+import KwaiForm from '@/components/forms/KwaiForm';
+import KwaiField from '@/components/forms/KwaiField';
+import KwaiInputText from '@/components/forms/KwaiInputText';
+import KwaiTextarea from '@/components/forms/KwaiTextarea';
+import KwaiSelect from '@/components/forms/KwaiSelect';
 
 import messages from './lang';
 
 export default {
   components: {
-    Field, UikitInputText, UikitTextarea, UikitSelect
+    KwaiForm, KwaiField, KwaiInputText, KwaiTextarea, KwaiSelect
   },
   i18n: messages,
-  mixins: [ TeamForm ],
   data() {
     return {
-      team: new Team()
+      team: new Team(),
+      form: makeTeamForm({
+        name: {
+          value: '',
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.team.name.required'),
+            },
+          ]
+        },
+        season: {
+          value: 0
+        },
+        team_type: {
+          value: 0
+        },
+        remark: {
+          value: ''
+        }
+      })
     };
   },
   computed: {
@@ -115,11 +174,11 @@ export default {
       this.team = await this.$store.dispatch('team/read', {
         id: params.id
       });
-      this.writeForm(this.team);
+      this.form.writeForm(this.team);
     },
     async submit() {
-      this.clearErrors();
-      this.readForm(this.team);
+      this.form.clearErrors();
+      this.form.readForm(this.team);
       try {
         this.team = await this.$store.dispatch('team/save', this.team);
         this.$router.push({

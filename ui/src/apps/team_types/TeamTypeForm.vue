@@ -1,63 +1,100 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <form class="uk-form-stacked">
-        <field name="name" :label="$t('form.team_type.name.label')">
-          <uikit-input-text :placeholder="$t('form.team_type.name.placeholder')" />
-        </field>
-        <field name="start_age" :label="$t('form.team_type.start_age.label')">
-          <uikit-input-text :placeholder="$t('form.team_type.start_age.placeholder')" />
-        </field>
-        <field name="end_age" :label="$t('form.team_type.end_age.label')">
-          <uikit-input-text :placeholder="$t('form.team_type.end_age.placeholder')" />
-        </field>
-        <field name="gender" :label="$t('form.team_type.gender.label')">
-          <uikit-select :items="genders" />
-        </field>
-        <field name="active" :label="$t('form.team_type.active.label')">
-          <uikit-checkbox />
-        </field>
-        <field name="competition" :label="$t('form.team_type.competition.label')">
-          <uikit-checkbox />
-        </field>
-        <field name="remark" :label="$t('form.team_type.remark.label')">
-          <uikit-textarea :placeholder="$t('form.team_type.remark.placeholder')" />
-        </field>
-      </form>
-    </div>
-    <div uk-grid class="uk-width-1-1">
-      <div class="uk-width-expand">
-      </div>
-      <div class="uk-width-auto">
-        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-        </button>
-      </div>
-    </div>
-  </div>
+  <KwaiForm
+    :form="form"
+    :save="$t('save')"
+    @submit="submit"
+  >
+    <KwaiField
+      name="name"
+      :label="$t('form.team_type.name.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.team_type.name.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="start_age"
+      :label="$t('form.team_type.start_age.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.team_type.start_age.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="end_age"
+      :label="$t('form.team_type.end_age.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.team_type.end_age.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="gender"
+      :label="$t('form.team_type.gender.label')"
+    >
+      <KwaiSelect :items="genders" />
+    </KwaiField>
+    <KwaiField
+      name="active"
+      :label="$t('form.team_type.active.label')"
+    >
+      <KwaiCheckbox />
+    </KwaiField>
+    <KwaiField
+      name="competition"
+      :label="$t('form.team_type.competition.label')"
+    >
+      <KwaiCheckbox />
+    </KwaiField>
+    <KwaiField
+      name="remark"
+      :label="$t('form.team_type.remark.label')"
+    >
+      <KwaiTextarea
+        :placeholder="$t('form.team_type.remark.placeholder')"
+        :rows="5"
+      />
+    </KwaiField>
+  </KwaiForm>
 </template>
 
 <script>
 import TeamType from '@/models/TeamType';
 
-import TeamTypeForm from './TeamTypeForm';
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
-import UikitTextarea from '@/components/forms/Textarea.vue';
-import UikitSelect from '@/components/forms/Select.vue';
-import UikitCheckbox from '@/components/forms/Checkbox.vue';
+import makeForm from '@/js/Form';
+const makeTeamTypeForm = (fields) => {
+  const writeForm = (teamType) => {
+    fields.name.value = teamType.name;
+    fields.start_age.value = teamType.start_age;
+    fields.end_age.value = teamType.end_age;
+    fields.gender.value = teamType.gender;
+    fields.active.value = teamType.active;
+    fields.competition.value = teamType.competition;
+    fields.remark.value = teamType.remark;
+  };
+  const readForm = (teamType) => {
+    teamType.name = fields.name.value;
+    teamType.start_age = fields.start_age.value;
+    teamType.end_age = fields.end_age.value;
+    teamType.gender = fields.gender.value;
+    teamType.active = fields.active.value;
+    teamType.competition = fields.competition.value;
+    teamType.remark = fields.remark.value;
+  };
+  return { ...makeForm(fields), writeForm, readForm };
+};
+
+import { notEmpty, isInteger } from '@/js/VueForm';
+
+import KwaiForm from '@/components/forms/KwaiForm.vue';
+import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiInputText from '@/components/forms/KwaiInputText.vue';
+import KwaiTextarea from '@/components/forms/KwaiTextarea.vue';
+import KwaiSelect from '@/components/forms/KwaiSelect.vue';
+import KwaiCheckbox from '@/components/forms/KwaiCheckbox.vue';
 
 import messages from './lang';
 
 export default {
   components: {
-    Field, UikitInputText, UikitTextarea, UikitSelect, UikitCheckbox
+    KwaiForm, KwaiField, KwaiInputText, KwaiTextarea, KwaiSelect, KwaiCheckbox
   },
   i18n: messages,
-  mixins: [
-    TeamTypeForm,
-  ],
   data() {
     return {
       teamType: new TeamType(),
@@ -74,7 +111,49 @@ export default {
           value: 2,
           text: this.$t('female')
         },
-      ]
+      ],
+      form: makeTeamTypeForm({
+        name: {
+          value: '',
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.team_type.name.required'),
+            },
+          ]
+        },
+        start_age: {
+          value: null,
+          validators: [
+            {
+              v: isInteger,
+              error: this.$t('form.team_type.start_age.numeric'),
+            },
+          ]
+        },
+        end_age: {
+          value: null,
+          validators: [
+            {
+              v: isInteger,
+              error: this.$t('form.team_type.start_age.numeric'),
+            },
+          ]
+        },
+        gender: {
+          value: 0,
+        },
+        active: {
+          value: true
+        },
+        competition: {
+          value: true
+        },
+        remark: {
+          value: ''
+        }
+      })
     };
   },
   computed: {
@@ -114,11 +193,11 @@ export default {
       this.teamType = await this.$store.dispatch('teamType/read', {
         id: params.id
       });
-      this.writeForm(this.teamType);
+      this.form.writeForm(this.teamType);
     },
     submit() {
-      this.clearErrors();
-      this.readForm(this.teamType);
+      this.form.clearErrors();
+      this.form.readForm(this.teamType);
       this.$store.dispatch('teamType/save', this.teamType)
         .then((newType) => {
           this.$router.push({

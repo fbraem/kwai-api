@@ -1,11 +1,18 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
-    <h1>{{ $t('teams') }}</h1>
-    <h3 v-if="creating" class="uk-h3 uk-margin-remove">
+    <h1>
+      {{ $t('types') }}
+    </h1>
+    <h3
+      v-if="creating"
+      class="uk-h3 uk-margin-remove"
+    >
       {{ $t('create') }}
     </h3>
-    <h3 v-else class="uk-h3 uk-margin-remove">
+    <h3
+      v-else
+      class="uk-h3 uk-margin-remove"
+    >
       {{ $t('update') }}
     </h3>
   </div>

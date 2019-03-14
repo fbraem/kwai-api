@@ -1,13 +1,15 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
-    <div v-if="$wait.is('teamtypes.browse')" class="uk-flex-center" uk-grid>
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div v-else class="uk-child-width-1-1" uk-grid>
-      <div v-if="noTypes" class="uk-alert uk-alert-warning">
+    <Spinner v-if="$wait.is('teamtypes.browse')" />
+    <div
+      v-else
+      class="uk-child-width-1-1"
+      uk-grid
+    >
+      <div
+        v-if="noTypes"
+        class="uk-alert uk-alert-warning"
+      >
         {{ $t('no_types') }}
       </div>
       <div v-else>
@@ -16,12 +18,24 @@
             <th>{{ $t('name') }}</th>
             <th class="uk-table-shrink"></th>
           </tr>
-          <tr v-for="type in types" :key="type.id">
+          <tr
+            v-for="type in types"
+            :key="type.id"
+          >
             <td>
-              <router-link :to="{ name: 'team_types.read', params: { id : type.id} }">{{ type.name }}</router-link>
+              <router-link
+                :to="{ name: 'team_types.read', params: { id : type.id} }"
+              >
+                {{ type.name }}
+              </router-link>
             </td>
             <td>
-              <router-link v-if="$can('update', type)" class="uk-icon-button" style="margin-top:-10px" :to="{ name : 'team_types.update', params : { id : type.id } }">
+              <router-link
+                v-if="$can('update', type)"
+                class="uk-icon-button"
+                style="margin-top:-10px"
+                :to="{ name : 'team_types.update', params : { id : type.id } }"
+              >
                 <i class="fas fa-edit"></i>
               </router-link>
             </td>
@@ -35,8 +49,13 @@
 <script>
 import messages from './lang';
 
+import Spinner from '@/components/Spinner';
+
 export default {
   i18n: messages,
+  components: {
+    Spinner
+  },
   computed: {
     types() {
       return this.$store.state.teamType.types;

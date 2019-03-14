@@ -1,32 +1,41 @@
 import App from '@/site/App.vue';
 
 const TeamRead = () => import(
-  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamRead.vue'
+  /* webpackChunkName: "teams_chunck" */
+  '@/apps/teams/TeamRead.vue'
 );
 const TeamHeader = () => import(
-  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamHeader.vue'
+  /* webpackChunkName: "teams_chunck" */
+  '@/apps/teams/TheTeamHeader.vue'
 );
 const TeamBrowse = () => import(
-  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamBrowse.vue'
+  /* webpackChunkName: "teams_chunck" */
+  '@/apps/teams/TeamBrowse.vue'
 );
 const TeamsHeader = () => import(
-  /* webpackChunkName: "teams_chunck" */ '@/apps/teams/TeamsHeader.vue'
+  /* webpackChunkName: "teams_chunck" */
+  '@/apps/teams/TheTeamsHeader.vue'
 );
 const TeamForm = () => import(
-  /* webpackChunkName: "teams_admin_chunck" */ '@/apps/teams/TeamForm.vue'
+  /* webpackChunkName: "teams_admin_chunck" */
+  '@/apps/teams/TeamForm.vue'
 );
 const TeamFormHeader = () => import(
-  /* webpackChunkName: "teams_admin_chunck" */ '@/apps/teams/TeamFormHeader.vue'
+  /* webpackChunkName: "teams_admin_chunck" */
+  '@/apps/teams/TheTeamFormHeader.vue'
 );
 
-const TeamStore = () => import(/* webpackChunkName: "teams_chunck" */
+const TeamStore = () => import(
+  /* webpackChunkName: "teams_chunck" */
   '@/stores/teams'
 );
 
-const TeamTypeStore = () => import(/* webpackChunkName: "teams_admin_chunck" */
+const TeamTypeStore = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
   '@/stores/team_types'
 );
-const SeasonStore = () => import(/* webpackChunkName: "teams_admin_chunck" */
+const SeasonStore = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
   '@/stores/seasons'
 );
 
