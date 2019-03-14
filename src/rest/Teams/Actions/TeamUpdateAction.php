@@ -54,6 +54,7 @@ class TeamUpdateAction
                     $team->season = $season;
                 } else {
                     $team->season_id = null;
+                    $team->season = null;
                 }
             }
 
@@ -64,10 +65,9 @@ class TeamUpdateAction
                     $team->team_type = $team_type;
                 } else {
                     $team->team_type_id = null;
+                    $team->team_type = null;
                 }
             }
-
-            $teamType = (new EntityExistValidator('data.relationships.team_type', $teamsTable->TeamType, false))->validate($data);
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
