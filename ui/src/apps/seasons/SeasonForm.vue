@@ -1,54 +1,36 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div>
-    <div uk-grid>
-      <div class="uk-width-1-1">
-        <KwaiForm :form="form" :validations="validations">
-          <KwaiField
-            name="name"
-            :label="$t('form.season.name.label')"
-          >
-            <KwaiInputText :placeholder="$t('form.season.name.placeholder')" />
-          </KwaiField>
-          <KwaiField
-            name="start_date"
-            :label="$t('form.season.start_date.label')"
-          >
-            <KwaiInputText :placeholder="$t('form.season.start_date.placeholder')" />
-          </KwaiField>
-          <KwaiField
-            name="end_date"
-            :label="$t('form.season.end_date.label')"
-          >
-            <KwaiInputText :placeholder="$t('form.season.end_date.placeholder')" />
-          </KwaiField>
-          <KwaiField
-            name="remark"
-            :label="$t('form.season.remark.label')"
-          >
-            <KwaiTextarea :placeholder="$t('form.season.remark.placeholder')" />
-          </KwaiField>
-        </KwaiForm>
-      </div>
-      <div
-        uk-grid
-        class="uk-width-1-1"
-      >
-        <div class="uk-width-expand">
-        </div>
-        <div class="uk-width-auto">
-          <button
-            class="uk-button uk-button-primary"
-            :disabled="!form.$valid"
-            @click="submit"
-          >
-            <i class="fas fa-save"></i>
-            &nbsp; {{ $t('save') }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <KwaiForm
+    :form="form"
+    :validations="validations"
+    :error="error"
+    :save="$t('save')"
+    @submit="submit"
+  >
+    <KwaiField
+      name="name"
+      :label="$t('form.season.name.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.season.name.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="start_date"
+      :label="$t('form.season.start_date.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.season.start_date.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="end_date"
+      :label="$t('form.season.end_date.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.season.end_date.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="remark"
+      :label="$t('form.season.remark.label')"
+    >
+      <KwaiTextarea :placeholder="$t('form.season.remark.placeholder')" />
+    </KwaiField>
+  </KwaiForm>
 </template>
 
 <script>

@@ -1,26 +1,64 @@
 <template>
-  <form class="{ 'uk-form-stacked': stacked }">
-    <slot></slot>
-  </form>
+  <div class="uk-grid-small" uk-grid>
+    <div class="uk-width-1-1">
+      <form class="{ 'uk-form-stacked': stacked }">
+        <slot></slot>
+      </form>
+    </div>
+    <div class="uk-width-1-1">
+      <div uk-grid>
+        <div class="uk-width-expand">
+        </div>
+        <div class="uk-width-auto">
+          <button
+            class="uk-button uk-button-primary"
+            :disabled="!form.$valid"
+            @click="submit"
+          >
+            <i class="fas fa-save"></i>&nbsp; {{ save }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
+    /**
+     * Is this form stacked? The uk-form-stacked class will be applied
+     */
     stacked: {
       type: Boolean,
       default: true
     },
+    /**
+     * The form
+     */
     form: {
       type: Object,
       required: true
     },
+    /**
+     * Validations that depends on multiple fields
+     */
     validations: {
       type: Array
     },
+    /**
+     * The error that can be returned by JSONAPI
+     */
     error: {
       type: Error,
       required: false
+    },
+    /**
+     * The label of the submit button
+     */
+    save: {
+      type: String,
+      default: 'Save'
     }
   },
   provide() {
@@ -118,6 +156,9 @@ export default {
         }
         return true;
       });
+    },
+    submit() {
+      this.$emit('submit');
     }
   },
   mounted() {

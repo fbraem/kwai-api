@@ -1,77 +1,60 @@
 <template>
-  <div class="uk-child-width-1-1" uk-grid>
-    <div>
-      <h3 class="uk-heading-line">
-        <span>
-          {{ $t('page') }}
-        </span>
-      </h3>
-      <KwaiForm :form="form">
-        <div uk-grid>
-          <div class="uk-width-expand">
-            <KwaiField
-              name="category"
-              :label="$t('form.page.category.label')"
-            >
-              <KwaiSelect :items="categories" />
-            </KwaiField>
-          </div>
-          <div class="uk-flex uk-flex-bottom">
-            <KwaiField name="enabled">
-              <KwaiSwitch />
-            </KwaiField>
-          </div>
-        </div>
-        <div class="uk-child-width-1-1" uk-grid>
-          <KwaiField
-            name="remark"
-            :label="$t('form.page.remark.label')"
-          >
-            <KwaiTextarea
-              :rows="5"
-              :placeholder="$t('form.page.remark.placeholder')"
-            />
-          </KwaiField>
-        </div>
-        <div>
-          <KwaiField
-            name="title"
-            :label="$t('form.content.title.label')"
-          >
-            <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
-          </KwaiField>
-          <KwaiField
-            name="summary"
-            :label="$t('form.content.summary.label')"
-          >
-            <KwaiTextarea
-              :placeholder="$t('form.content.summary.placeholder')"
-              :rows="5"
-            />
-          </KwaiField>
-          <KwaiField name="content" :label="$t('form.content.content.label')">
-            <KwaiTextarea
-              :placeholder="$t('form.content.content.placeholder')"
-              :rows="15"
-            />
-          </KwaiField>
-        </div>
-      </KwaiForm>
-    </div>
+  <KwaiForm
+    :form="form"
+    :error="error"
+    :save="$t('save')"
+    @submit="submit"
+  >
     <div uk-grid>
       <div class="uk-width-expand">
-      </div>
-      <div class="uk-width-auto">
-        <button
-          class="uk-button uk-button-primary"
-          :disabled="!form.$valid"
-          @click="submit"
+        <KwaiField
+          name="category"
+          :label="$t('form.page.category.label')"
         >
-          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-        </button>
+          <KwaiSelect :items="categories" />
+        </KwaiField>
+      </div>
+      <div class="uk-flex uk-flex-bottom">
+        <KwaiField name="enabled">
+          <KwaiSwitch />
+        </KwaiField>
       </div>
     </div>
-  </div>
+    <div class="uk-child-width-1-1" uk-grid>
+      <KwaiField
+        name="remark"
+        :label="$t('form.page.remark.label')"
+      >
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('form.page.remark.placeholder')"
+        />
+      </KwaiField>
+    </div>
+    <div>
+      <KwaiField
+        name="title"
+        :label="$t('form.content.title.label')"
+      >
+        <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="summary"
+        :label="$t('form.content.summary.label')"
+      >
+        <KwaiTextarea
+          :placeholder="$t('form.content.summary.placeholder')"
+          :rows="5"
+        />
+      </KwaiField>
+      <KwaiField name="content" :label="$t('form.content.content.label')">
+        <KwaiTextarea
+          :placeholder="$t('form.content.content.placeholder')"
+          :rows="15"
+        />
+      </KwaiField>
+    </div>
+  </KwaiForm>
 </template>
 
 <script>

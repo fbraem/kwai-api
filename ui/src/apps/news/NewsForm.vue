@@ -1,147 +1,135 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <h3 class="uk-heading-line"><span>{{ $t('story') }}</span></h3>
-      <KwaiForm :form="form">
-        <div uk-grid>
-          <div class="uk-width-expand">
-            <KwaiField
-              name="category"
-              :label="$t('form.story.category.label')"
-            >
-              <KwaiSelect :items="categories" />
-            </KwaiField>
-          </div>
-          <div class="uk-flex uk-flex-bottom">
-            <KwaiField name="enabled">
-              <KwaiSwitch />
-            </KwaiField>
-          </div>
-        </div>
-        <div uk-grid>
-          <div class="uk-width-1-2">
-            <KwaiField
-              name="publish_date"
-              :label="$t('form.story.publish_date.label')"
-            >
-              <KwaiInputText :placeholder="$t('form.story.publish_date.placeholder', { format : dateFormat })" />
-            </KwaiField>
-          </div>
-          <div class="uk-width-1-2">
-            <KwaiField
-              name="publish_time"
-              :label="$t('form.story.publish_time.label')"
-            >
-              <KwaiInputText :placeholder="$t('form.story.publish_time.placeholder', { format : 'HH:MM' })" />
-            </KwaiField>
-          </div>
-        </div>
-        <div uk-grid>
-          <div class="uk-width-1-2">
-            <KwaiField
-              name="end_date"
-              :label="$t('form.story.end_date.label')"
-            >
-              <KwaiInputText :placeholder="$t('form.story.end_date.placeholder', { format : dateFormat })" />
-            </KwaiField>
-          </div>
-          <div class="uk-width-1-2">
-            <KwaiField
-              name="end_time"
-              :label="$t('form.story.end_time.label')"
-            >
-              <KwaiInputText :placeholder="$t('form.story.end_time.placeholder', { format : 'HH:MM' })" />
-            </KwaiField>
-          </div>
-        </div>
-        <KwaiField name="remark" :label="$t('form.story.remark.label')">
-          <KwaiTextarea
-            :rows="5"
-            :placeholder="$t('form.story.remark.placeholder')"
-          />
+  <KwaiForm
+    :form="form"
+    :error="error"
+    :save="$t('save')"
+    @submit="submit"
+  >
+    <div uk-grid>
+      <div class="uk-width-expand">
+        <KwaiField
+          name="category"
+          :label="$t('form.story.category.label')"
+        >
+          <KwaiSelect :items="categories" />
         </KwaiField>
-        <div uk-grid>
-          <div class="uk-width-1-1">
-            <div class="uk-tile uk-tile-default uk-tile-muted uk-padding-small">
+      </div>
+      <div class="uk-flex uk-flex-bottom">
+        <KwaiField name="enabled">
+          <KwaiSwitch />
+        </KwaiField>
+      </div>
+    </div>
+    <div uk-grid>
+      <div class="uk-width-1-2">
+        <KwaiField
+          name="publish_date"
+          :label="$t('form.story.publish_date.label')"
+        >
+          <KwaiInputText :placeholder="$t('form.story.publish_date.placeholder', { format : dateFormat })" />
+        </KwaiField>
+      </div>
+      <div class="uk-width-1-2">
+        <KwaiField
+          name="publish_time"
+          :label="$t('form.story.publish_time.label')"
+        >
+          <KwaiInputText :placeholder="$t('form.story.publish_time.placeholder', { format : 'HH:MM' })" />
+        </KwaiField>
+      </div>
+    </div>
+    <div uk-grid>
+      <div class="uk-width-1-2">
+        <KwaiField
+          name="end_date"
+          :label="$t('form.story.end_date.label')"
+        >
+          <KwaiInputText :placeholder="$t('form.story.end_date.placeholder', { format : dateFormat })" />
+        </KwaiField>
+      </div>
+      <div class="uk-width-1-2">
+        <KwaiField
+          name="end_time"
+          :label="$t('form.story.end_time.label')"
+        >
+          <KwaiInputText :placeholder="$t('form.story.end_time.placeholder', { format : 'HH:MM' })" />
+        </KwaiField>
+      </div>
+    </div>
+    <KwaiField name="remark" :label="$t('form.story.remark.label')">
+      <KwaiTextarea
+        :rows="5"
+        :placeholder="$t('form.story.remark.placeholder')"
+      />
+    </KwaiField>
+    <div uk-grid>
+      <div class="uk-width-1-1">
+        <div class="uk-tile uk-tile-default uk-tile-muted uk-padding-small">
+          <div uk-grid>
+            <div class="uk-width-1-1">
+              <h3>{{ $t('featured') }}</h3>
+              <blockquote class="uk-text-meta">
+                {{ $t('featured_hint') }}
+              </blockquote>
+            </div>
+            <div class="uk-width-1-1">
               <div uk-grid>
-                <div class="uk-width-1-1">
-                  <h3>{{ $t('featured') }}</h3>
-                  <blockquote class="uk-text-meta">
-                    {{ $t('featured_hint') }}
-                  </blockquote>
-                </div>
-                <div class="uk-width-1-1">
-                  <div uk-grid>
-                    <div class="uk-width-expand">
-                      <KwaiField name="featured" :label="$t('form.story.featured_priority.label')">
-                        <KwaiRange />
-                      </KwaiField>
-                    </div>
-                    <div>
-                      {{ form.featured.value }}
-                    </div>
-                  </div>
-                </div>
-                <div class="uk-width-1-2">
-                  <KwaiField
-                    name="featured_end_date"
-                    :label="$t('form.story.featured_end_date.label')"
-                  >
-                    <KwaiInputText :placeholder="$t('form.story.featured_end_date.placeholder', { format : dateFormat })" />
+                <div class="uk-width-expand">
+                  <KwaiField name="featured" :label="$t('form.story.featured_priority.label')">
+                    <KwaiRange />
                   </KwaiField>
                 </div>
-                <div class="uk-width-1-2">
-                  <KwaiField
-                    name="featured_end_time"
-                    :label="$t('form.story.featured_end_time.label')"
-                  >
-                    <KwaiInputText :placeholder="$t('form.story.featured_end_time.placeholder', { format : 'HH:MM' })" />
-                  </KwaiField>
+                <div>
+                  {{ form.featured.value }}
                 </div>
               </div>
             </div>
-          </div>
-          <div class="uk-width-1-1">
-              <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
+            <div class="uk-width-1-2">
               <KwaiField
-                name="title"
-                :label="$t('form.content.title.label')"
+                name="featured_end_date"
+                :label="$t('form.story.featured_end_date.label')"
               >
-                <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
+                <KwaiInputText :placeholder="$t('form.story.featured_end_date.placeholder', { format : dateFormat })" />
               </KwaiField>
-              <KwaiField name="summary" :label="$t('form.content.summary.label')">
-                <KwaiTextarea
-                  :placeholder="$t('form.content.summary.placeholder')"
-                  :rows="5"
-                />
-              </KwaiField>
+            </div>
+            <div class="uk-width-1-2">
               <KwaiField
-                name="content"
-                :label="$t('form.content.content.label')"
+                name="featured_end_time"
+                :label="$t('form.story.featured_end_time.label')"
               >
-                <KwaiTextarea
-                  :placeholder="$t('form.content.content.placeholder')"
-                  :rows="15"
-                />
+                <KwaiInputText :placeholder="$t('form.story.featured_end_time.placeholder', { format : 'HH:MM' })" />
               </KwaiField>
+            </div>
           </div>
-        </div>
-      </KwaiForm>
-    </div>
-    <div class="uk-width-1-1">
-      <div uk-grid>
-        <div class="uk-width-expand">
-        </div>
-        <div class="uk-width-auto">
-          <button class="uk-button uk-button-primary"
-            :disabled="!form.$valid" @click="submit">
-            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-          </button>
         </div>
       </div>
+      <div class="uk-width-1-1">
+          <h3 class="uk-heading-line"><span>{{ $t('content') }}</span></h3>
+          <KwaiField
+            name="title"
+            :label="$t('form.content.title.label')"
+          >
+            <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
+          </KwaiField>
+          <KwaiField name="summary" :label="$t('form.content.summary.label')">
+            <KwaiTextarea
+              :placeholder="$t('form.content.summary.placeholder')"
+              :rows="5"
+            />
+          </KwaiField>
+          <KwaiField
+            name="content"
+            :label="$t('form.content.content.label')"
+          >
+            <KwaiTextarea
+              :placeholder="$t('form.content.content.placeholder')"
+              :rows="15"
+            />
+          </KwaiField>
+      </div>
     </div>
-  </div>
+  </KwaiForm>
 </template>
 
 <style scoped>
@@ -397,6 +385,9 @@ export default {
     },
     categories() {
       return this.$store.getters['category/categoriesAsOptions'];
+    },
+    error() {
+      return this.$store.state.news.error;
     }
   },
   async created() {

@@ -1,51 +1,35 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <KwaiForm :form="form" :error="error">
-        <KwaiField
-          name="name"
-          :label="$t('form.name.label')"
-        >
-          <KwaiInputText :placeholder="$t('form.name.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="short_description"
-          :label="$t('form.short_description.label')"
-        >
-          <KwaiTextarea :placeholder="$t('form.short_description.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="description"
-          :label="$t('form.description.label')"
-        >
-          <KwaiTextarea :placeholder="$t('form.description.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="remark"
-          :label="$t('form.remark.label')"
-        >
-          <KwaiTextarea :placeholder="$t('form.remark.placeholder')" />
-        </KwaiField>
-      </KwaiForm>
-    </div>
-    <div class="uk-width-1-1">
-      <div uk-grid>
-        <div class="uk-width-expand">
-        </div>
-        <div class="uk-width-auto">
-          <button
-            class="uk-button uk-button-primary"
-            :disabled="!form.$valid"
-            @click="submit"
-          >
-            <i class="fas fa-save"></i>
-            &nbsp; {{ $t('save') }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <KwaiForm
+    :form="form"
+    :error="error"
+    :save="t('save')"
+    @submit="submit"
+  >
+    <KwaiField
+      name="name"
+      :label="$t('form.name.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.name.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="short_description"
+      :label="$t('form.short_description.label')"
+    >
+      <KwaiTextarea :placeholder="$t('form.short_description.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="description"
+      :label="$t('form.description.label')"
+    >
+      <KwaiTextarea :placeholder="$t('form.description.placeholder')" />
+    </KwaiField>
+    <KwaiField
+      name="remark"
+      :label="$t('form.remark.label')"
+    >
+      <KwaiTextarea :placeholder="$t('form.remark.placeholder')" />
+    </KwaiField>
+  </KwaiForm>
 </template>
 
 <script>
