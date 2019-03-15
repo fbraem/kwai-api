@@ -34,7 +34,6 @@
     <Spinner v-if="$wait.is('teams.read')" />
     <div
       v-if="team"
-      class="uk-child-width-1-1"
       uk-grid
     >
       <div>
@@ -89,10 +88,7 @@
         <h3 class="uk-heading-line">
           <span>{{ $t('members') }}</span>
         </h3>
-        <div
-          class="uk-child-width-1-1"
-          uk-grid
-        >
+        <div uk-grid>
           <div v-if="team.season">
             <p
               class="uk-text-meta"

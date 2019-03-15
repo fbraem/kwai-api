@@ -3,7 +3,6 @@
     <Spinner v-if="$wait.is('teams.browse')" />
     <div
       v-else
-      class="uk-child-width-1-1"
       uk-grid
     >
       <div v-if="teams && teams.length == 0">
