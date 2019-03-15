@@ -32,7 +32,7 @@
     </section>
     <section class="uk-section uk-section-small uk-section-muted uk-hidden@m">
       <div class="uk-container uk-container-large">
-        <div class="uk-margin uk-child-width-1-1 uk-child-width-1-2@m uk-child-width-1-4@l uk-grid-medium uk-grid-match uk-flex uk-flex-center" uk-height-match=".uk-card" uk-grid>
+        <div class="uk-margin uk-child-width-1-2@m uk-child-width-1-4@l uk-grid-medium uk-grid-match uk-flex uk-flex-center" uk-height-match=".uk-card" uk-grid>
           <div class="uk-text-center">
             <Card :to="{ name : 'news.browse' }" title="Nieuws">
               <template slot="icon">
@@ -66,24 +66,26 @@
     </section>
     <section class="uk-section uk-section-small">
       <div class="uk-container uk-container-large">
-        <div class="uk-child-width-1-1" uk-grid>
+        <div uk-grid>
           <div v-if="$wait.is('news.browse')" class="uk-flex-center">
             <div class="uk-text-center">
               <i class="fas fa-spinner fa-2x fa-spin"></i>
             </div>
           </div>
-          <div v-else class="uk-child-width-1-1" uk-grid>
+          <div v-else uk-grid>
             <div>
               <h4 class="uk-heading-line uk-text-bold" id="newsgrid">
                 <span>Belangrijk Nieuws</span>
               </h4>
             </div>
-            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
-            <div class="uk-child-width-1-1 uk-child-width-1-2@m uk-grid" uk-grid>
-              <NewsCard v-for="story in stories" :story="story" :key="story.id" @deleteStory="deleteStory"></NewsCard>
+            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+            <div>
+              <div class="uk-child-width-1-1@s uk-child-width-1-2@m" uk-grid>
+                <NewsCard v-for="story in stories" :story="story" :key="story.id" @deleteStory="deleteStory"></NewsCard>
+              </div>
             </div>
             <div style="clear:both"></div>
-            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories"></Paginator>
+            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
             <div>
               <router-link class="uk-button uk-button-default" :to="{ name : 'news.browse' }">
                 {{ $t('more_news') }}
