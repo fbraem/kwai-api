@@ -1,5 +1,5 @@
 <template>
-  <div uk-grid class="uk-margin-left uk-grid-small uk-child-width-1-1">
+  <div class="uk-margin-small-left uk-grid-small" uk-grid>
     <div>
       <h4 class="uk-heading-line uk-text-bold">
         <span>
