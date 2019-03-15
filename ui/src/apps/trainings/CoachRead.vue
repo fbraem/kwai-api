@@ -12,7 +12,7 @@
         <i class="fas fa-spinner fa-2x fa-spin"></i>
       </div>
     </div>
-    <div v-if="coach" class="uk-child-width-1-1" uk-grid>
+    <div v-if="coach" uk-grid>
       <div>
         <table class="uk-table uk-table-striped">
           <tr>

@@ -11,7 +11,6 @@
     </div>
     <div
       v-else-if="members"
-      class="uk-child-width-1-1"
       uk-grid
     >
       <div

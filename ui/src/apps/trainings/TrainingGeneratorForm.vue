@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="uk-child-width-1-1" uk-grid>
+  <div uk-grid>
     <div>
       <div class="uk-width-auto">
         <button class="uk-button" uk-toggle="target: #events">

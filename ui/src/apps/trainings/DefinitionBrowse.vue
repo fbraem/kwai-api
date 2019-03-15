@@ -6,7 +6,7 @@
         <i class="fas fa-spinner fa-2x fa-spin"></i>
       </div>
     </div>
-    <div v-else class="uk-child-width-1-1" uk-grid>
+    <div v-else uk-grid>
       <div v-if="noData">
         <div class="uk-alert uk-alert-warning">
           {{ $t('training.definitions.no_data') }}

@@ -3,7 +3,7 @@
   <div class="uk-grid-small uk-grid-margin-small uk-grid-stack" uk-grid>
     <div class="uk-width-1-1@m">
       <div
-        class="uk-margin uk-text-center uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-medium uk-grid-match uk-flex-center"
+        class="uk-margin uk-text-center uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-medium uk-grid-match uk-flex-center"
         uk-height-match=".uk-card"
         uk-grid
       >

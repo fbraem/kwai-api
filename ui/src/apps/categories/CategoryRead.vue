@@ -79,7 +79,7 @@
         </div>
         <div
           v-else
-          class="uk-child-width-1-1 uk-child-width-1-2@m uk-flex uk-flex-center"
+          class="uk-child-width-1-1@s uk-child-width-1-2@m uk-flex uk-flex-center"
           uk-grid
         >
           <NewsCard

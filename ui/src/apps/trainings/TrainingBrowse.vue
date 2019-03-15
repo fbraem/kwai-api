@@ -7,7 +7,7 @@
         <i class="fas fa-spinner fa-2x fa-spin"></i>
       </div>
     </div>
-    <div v-else class="uk-child-width-1-1" uk-grid>
+    <div v-else uk-grid>
       <Calendar :year="year" :month="month" :trainings="trainings"
         @prevMonth="prevMonth" @firstMonth="firstMonth"
         @nextMonth="nextMonth" @lastMonth="lastMonth" />

@@ -1,13 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
   <section class="uk-section uk-section-small uk-container uk-container-expand">
-    <div class="uk-child-width-1-1" uk-grid>
+    <div uk-grid>
       <div v-if="count === 0">
         <div class="uk-alert uk-alert-warning">
           {{ $t('training.events.no_generated_data') }}
         </div>
       </div>
-      <div v-else class="uk-child-width-1-1" uk-grid>
+      <div v-else uk-grid>
         <div>
           <div uk-alert>
             {{ $t('training.generator.help') }}

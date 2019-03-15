@@ -19,7 +19,6 @@
     <Spinner v-if="$wait.is('teams.read')" />
     <div
       v-if="teamtype"
-      class="uk-child-width-1-1"
       uk-grid
     >
       <div>

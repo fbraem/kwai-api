@@ -1,5 +1,5 @@
 <template>
-  <div class="uk-child-width-1-1" uk-grid>
+  <div uk-grid>
     <div>
       <div ref="upload" class="uk-placeholder uk-text-center">
         <i class="uk-text-middle fas fa-cloud-upload-alt fa-2x uk-margin-right">

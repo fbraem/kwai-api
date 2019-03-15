@@ -20,7 +20,7 @@
         </KwaiField>
       </div>
     </div>
-    <div class="uk-child-width-1-1" uk-grid>
+    <div uk-grid>
       <KwaiField
         name="remark"
         :label="$t('form.page.remark.label')"

@@ -7,11 +7,11 @@
           <i class="fas fa-spinner fa-2x fa-spin"></i>
         </div>
       </div>
-      <div v-else class="uk-child-width-1-1" uk-grid>
+      <div v-else uk-grid>
         <div v-if="storiesMeta">
           <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
         </div>
-        <div class="uk-child-width-1-1 uk-child-width-1-2@xl" uk-grid>
+        <div class="uk-child-width-1-1@s uk-child-width-1-2@xl" uk-grid>
           <NewsCard v-for="story in stories" :key="story.id" :story="story" @deleteStory="deleteStory"></NewsCard>
         </div>
         <div v-if="storiesMeta">

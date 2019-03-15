@@ -3,7 +3,6 @@
     <Spinner v-if="$wait.is('seasons.browse')" />
     <div
       v-else
-      class="uk-child-width-1-1"
       uk-grid
     >
       <div

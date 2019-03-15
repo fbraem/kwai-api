@@ -17,7 +17,6 @@
         </router-link>
       </div>
       <div
-        class="uk-child-width-1-1"
         :class="{ 'uk-margin-medium-top' : showCategory }"
         uk-grid
       >
