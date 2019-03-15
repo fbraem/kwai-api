@@ -65,30 +65,35 @@
             </div>
           </div>
         </div>
-        <div class="uk-margin-remove-top">
-          <span class="uk-float-right">
-            <router-link
-              v-if="story.content"
-              class="uk-icon-button uk-link-reset"
-              :to="contentLink"
-            >
-              <i class="fas fa-ellipsis-h"></i>
-            </router-link>
-            <router-link
-              v-if="$can('update', story)"
-              :to="{ name : 'news.update', params : { id : story.id }}"
-              class="uk-icon-button uk-link-reset"
-            >
-              <i class="fas fa-edit"></i>
-            </router-link>
-            <a
-              v-if="$can('delete', story)"
-              @click="deleteStory"
-              class="uk-icon-button uk-link-reset"
-            >
-              <i class="fas fa-trash"></i>
-            </a>
-          </span>
+        <div class="uk-width-expand uk-margin-remove-top">
+          <div class="uk-grid-small" uk-grid>
+            <div class="uk-width-expand"></div>
+            <div class="uk-width-auto">
+              <div>
+                <router-link
+                  v-if="story.content"
+                  class="uk-icon-button uk-link-reset"
+                  :to="contentLink"
+                >
+                  <i class="fas fa-ellipsis-h"></i>
+                </router-link>
+                <router-link
+                  v-if="$can('update', story)"
+                  :to="{ name : 'news.update', params : { id : story.id }}"
+                  class="uk-icon-button uk-link-reset"
+                >
+                  <i class="fas fa-edit"></i>
+                </router-link>
+                <a
+                  v-if="$can('delete', story)"
+                  @click="deleteStory"
+                  class="uk-icon-button uk-link-reset"
+                >
+                  <i class="fas fa-trash"></i>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
