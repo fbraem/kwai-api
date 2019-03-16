@@ -8,7 +8,7 @@
       <div v-if="teams && teams.length == 0">
         {{ $t('no_teams') }}
       </div>
-      <div v-else>
+      <div class="uk-width-expand" v-else>
         <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
           <tr>
             <th>{{ $t('name') }}</th>
