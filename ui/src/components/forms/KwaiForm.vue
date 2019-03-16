@@ -1,7 +1,7 @@
 <template>
   <div class="uk-grid-small" uk-grid>
     <div class="uk-width-1-1">
-      <form class="{ 'uk-form-stacked': stacked }">
+      <form :class="{ 'uk-form-stacked': stacked }">
         <slot></slot>
       </form>
     </div>
@@ -13,7 +13,7 @@
           <button
             class="uk-button uk-button-primary"
             :disabled="!form.$valid"
-            @click="submit"
+            @click.prevent.stop="submit"
           >
             <i class="fas fa-save"></i>&nbsp; {{ save }}
           </button>
