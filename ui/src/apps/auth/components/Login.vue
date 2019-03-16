@@ -17,7 +17,11 @@
         >
           {{error}}
         </div>
-        <KwaiForm :form="form">
+        <KwaiForm
+          :form="form"
+          @submit="submit"
+          :save="$t('login')"
+        >
           <KwaiField
             name="email"
             :label="$t('email.label')"
@@ -30,22 +34,6 @@
           >
             <KwaiPassword :placeholder="$t('password.placeholder')" />
           </KwaiField>
-          <p class="uk-text-right">
-            <button
-              class="uk-button uk-button-default uk-modal-close"
-              type="button"
-            >
-              {{ $t('cancel') }}
-            </button>
-            <button
-              class="uk-button uk-button-primary"
-              type="button"
-              :disabled="!form.$valid"
-              @click="submit"
-            >
-              {{ $t('login') }}
-            </button>
-          </p>
         </KwaiForm>
       </div>
     </div>
@@ -73,6 +61,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 import User from '@/models/User';
 
 import UIkit from 'uikit';
@@ -147,8 +137,11 @@ export default {
   },
   methods: {
     clear() {
-      this.user.email = '';
-      this.user.password = '';
+      this.form.email.value = '';
+      this.form.password.value = '';
+      Vue.nextTick().then(() => {
+        this.form.clearErrors();
+      });
     },
     login() {
       var modal = UIkit.modal(this.$refs.dialog);
