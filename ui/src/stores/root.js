@@ -86,9 +86,11 @@ const actions = {
   },
   async logout({ commit }) {
     var form = new FormData();
-    form.append('refresh_token', this.refresh_token);
+    form.append('refresh_token', tokenStore.getRefreshToken());
     try {
-      await axios.post(config.api + '/auth/logout', {
+      await axios.request({
+        method: 'POST',
+        url: config.api + '/auth/logout',
         data: form
       });
     } catch (error) {
