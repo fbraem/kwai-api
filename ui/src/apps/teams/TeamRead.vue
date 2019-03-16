@@ -36,7 +36,7 @@
       v-if="team"
       uk-grid
     >
-      <div>
+      <div class="uk-width-1-1@s uk-width-1-2@m">
         <table class="uk-table uk-table-striped">
           <tr>
             <th>
@@ -84,25 +84,37 @@
           </tr>
         </table>
       </div>
-      <div>
+      <div class="uk-width-1-1@s uk-width-1-2@m">
         <h3 class="uk-heading-line">
           <span>{{ $t('members') }}</span>
         </h3>
         <div uk-grid>
-          <div v-if="team.season">
+          <div
+            v-if="team.season"
+            class="uk-width-1-1"
+          >
             <p
               class="uk-text-meta"
               v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"
             >
             </p>
           </div>
-          <div v-if="hasMembers">
+          <div
+            v-if="hasMembers"
+            class="uk-width-1-1"
+          >
             {{ $t('count') }} : {{members.length}}
           </div>
-          <div v-else>
+          <div
+            v-else
+            class="uk-width-1-1"
+          >
             {{ $t('no_members') }}
           </div>
-          <div v-if="members && members.length > 10">
+          <div
+            v-if="members && members.length > 10"
+            class="uk-width-1-1"
+          >
             <a
               v-if="team && $can('attachMember', team)"
               uk-toggle="target: #add-member-dialog"
@@ -118,7 +130,10 @@
               <i class="fas fa-trash" style="color:#fff"></i>
             </a>
           </div>
-          <div v-if="members && members.length > 0">
+          <div
+            v-if="members && members.length > 0"
+            class="uk-width-1-1"
+          >
             <table class="uk-table uk-table-small uk-table-middle uk-table-divider">
               <tr
                 v-for="member in members"
@@ -150,7 +165,7 @@
               </tr>
             </table>
           </div>
-          <div>
+          <div class="uk-width-1-1">
             <a
               v-if="team && $can('attachMember', team)"
               uk-toggle="target: #add-member-dialog"
