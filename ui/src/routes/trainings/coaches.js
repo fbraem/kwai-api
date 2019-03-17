@@ -140,7 +140,7 @@ export default [
         },
         props: {
           header: {
-            creating: true
+            creating: false
           }
         },
         name: 'trainings.coaches.update',
