@@ -8,7 +8,7 @@ const Form = (fields) => {
       field.errors = field.errors.splice(0, field.errors.length);
     });
   };
-  const $valid = false;
+  const $valid = true;
   return { fields, $valid, clearErrors };
 };
 export default Form;
