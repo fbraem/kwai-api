@@ -38,16 +38,28 @@
 </template>
 
 <script>
+/**
+ * Component for a header of a page
+ */
 export default {
   props: {
+    /**
+     * Title of the header
+     */
     title: {
       type: String,
       required: true
     },
+    /**
+     * Sub title
+     */
     subtitle: {
       type: String,
       required: false
     },
+    /**
+     * toolbar
+     */
     toolbar: {
       type: Array,
       required: false
