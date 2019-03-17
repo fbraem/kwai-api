@@ -52,7 +52,7 @@
             </th>
             <td v-if="team.season">
               <router-link
-                :to="{ name: 'seasons.read', params: { id : team.season.id } }"
+                :to="seasonLink"
               >
                 {{ team.season.name }}
               </router-link>
@@ -65,7 +65,7 @@
             <th>{{ $t('form.team.team_type.label') }}</th>
             <td v-if="team.team_type">
               <router-link
-                :to="{ name: 'team_types.read', params: { id : team.team_type.id } }"
+                :to="teamTypeLink"
               >
                 {{ team.team_type.name }}
               </router-link>
@@ -95,7 +95,7 @@
           >
             <p
               class="uk-text-meta"
-              v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"
+              v-html="seasonAgeRemark"
             >
             </p>
           </div>
@@ -226,6 +226,29 @@ export default {
     },
     notFound() {
       return this.error && this.error.response.status === 404;
+    },
+    seasonAgeRemark() {
+      return this.$t('age_remark', {
+        season: this.team.season.name,
+        start: this.team.season.formatted_start_date,
+        end: this.team.season.formatted_end_date
+      });
+    },
+    teamTypeLink() {
+      return {
+        name: 'team_types.read',
+        params: {
+          id: this.team.team_type.id
+        }
+      };
+    },
+    seasonLink() {
+      return {
+        name: 'seasons.read',
+        params: {
+          id: this.team.season.id
+        }
+      };
     }
   },
   beforeRouteEnter(to, from, next) {
