@@ -11,7 +11,10 @@
       >
         {{ $t('no_seasons') }}
       </div>
-      <div v-else>
+      <div
+        class="uk-width-1-1"
+        v-else
+      >
         <table class="uk-table uk-table-striped">
           <tr>
             <th></th>
