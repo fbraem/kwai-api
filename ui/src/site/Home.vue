@@ -54,11 +54,7 @@
             </Card>
           </div>
           <div>
-            <div v-if="$wait.is('categories.browse')" class="uk-flex-center">
-              <div class="uk-text-center">
-                <i class="fas fa-spinner fa-2x fa-spin"></i>
-              </div>
-            </div>
+            <Spinner v-if="$wait.is('categories.browse')" />
             <CategoryList v-if="categories" :categories="categories" />
           </div>
         </div>
@@ -67,11 +63,7 @@
     <section class="uk-section uk-section-small">
       <div class="uk-container uk-container-large">
         <div uk-grid>
-          <div v-if="$wait.is('news.browse')" class="uk-flex-center">
-            <div class="uk-text-center">
-              <i class="fas fa-spinner fa-2x fa-spin"></i>
-            </div>
-          </div>
+          <Spinner v-if="$wait.is('news.browse')"/>
           <div v-else uk-grid>
             <div>
               <h4 class="uk-heading-line uk-text-bold" id="newsgrid">
@@ -198,6 +190,7 @@
 <script>
 import NewsCard from '@/apps/news/components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
+import Spinner from '@/components/Spinner.vue';
 import Card from './Card.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 import CategoryCard from '@/apps/categories/components/CategoryCard.vue';
@@ -212,6 +205,7 @@ export default {
   components: {
     NewsCard,
     Paginator,
+    Spinner,
     Card,
     AreYouSure,
     CategoryCard,
