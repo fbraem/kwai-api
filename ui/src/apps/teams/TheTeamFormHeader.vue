@@ -1,32 +1,29 @@
 <template>
-  <div>
-    <h1>
-      {{ $t('teams') }}
-    </h1>
-    <h3
-      v-if="creating"
-      class="uk-h3 uk-margin-remove"
-    >
-      {{ $t('create') }}
-    </h3>
-    <h3
-      v-else
-      class="uk-h3 uk-margin-remove"
-    >
-      {{ $t('update') }}
-    </h3>
-  </div>
+  <Header
+    :title="$t('teams')"
+    :subtitle="subtitle"
+  />
 </template>
 
 <script>
+import Header from '@/components/Header';
+
 import messages from './lang';
 
 export default {
-  i18n: messages,
   props: {
     creating: {
       type: Boolean,
       required: true
+    }
+  },
+  i18n: messages,
+  components: {
+    Header
+  },
+  computed: {
+    subtitle() {
+      return this.$t(this.creating ? 'create' : 'update');
     }
   }
 };

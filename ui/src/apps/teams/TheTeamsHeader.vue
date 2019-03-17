@@ -1,33 +1,34 @@
 <template>
-  <div class="uk-grid">
-    <div class="uk-width-5-6">
-      <h1>
-        {{ $t('teams') }}
-      </h1>
-    </div>
-    <div class="uk-width-1-6">
-      <div class="uk-flex uk-flex-right">
-        <router-link
-          v-if="canCreate"
-          class="uk-icon-button uk-link-reset"
-          :to="{ name : 'teams.create' }"
-        >
-          <i class="fas fa-plus"></i>
-        </router-link>
-      </div>
-    </div>
-  </div>
+  <Header
+    :title="$t('teams')"
+    :toolbar="toolbar"
+  />
 </template>
 
 <script>
 import Team from '@/models/Team';
+
 import messages from './lang';
+
+import Header from '@/components/Header';
 
 export default {
   i18n: messages,
+  components: {
+    Header
+  },
   computed: {
-    canCreate() {
-      return this.$can('create', Team.type());
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Team.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'teams.create'
+          }
+        });
+      }
+      return buttons;
     }
   }
 };
