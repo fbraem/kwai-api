@@ -1,57 +1,107 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div :id="id" uk-modal ref="addMemberDialog">
+  <div
+    :id="id"
+    uk-modal
+    ref="addMemberDialog"
+  >
     <div class="uk-modal-dialog uk-modal-body">
-      <div class="uk-child-width-1-1" uk-grid>
-        <div>
-          <h2 class="uk-modal-title">{{ $t('add_members') }}</h2>
-          <p class="uk-text-meta" v-if="team.team_type">
+      <div uk-grid>
+        <div class="uk-width-1-1">
+          <h2 class="uk-modal-title">
+            {{ $t('add_members') }}
+          </h2>
+          <p
+            v-if="team.team_type"
+            class="uk-text-meta"
+          >
             {{ $t('add_members_info') }}
           </p>
         </div>
-        <div>
-          <form class="uk-form uk-child-width-1-4 uk-flex-middle" v-if="! team.team_type" uk-grid>
-            <div>
-              <field name="start_age" :label="$t('min_age')">
-                <uikit-input-text />
-              </field>
+        <div class="uk-width-1-1">
+          <KwaiForm
+             v-if="!team.team_type"
+             :form="form"
+             :stacked="false"
+          >
+            <div class="uk-child-width-1-4 uk-flex-middle" uk-grid>
+              <div>
+                <KwaiField
+                  name="start_age"
+                  :label="$t('min_age')"
+                >
+                  <KwaiInputText />
+                </KwaiField>
+              </div>
+              <div>
+                <KwaiField
+                  name="end_age"
+                  :label="$t('max_age')"
+                >
+                  <KwaiInputText />
+                </KwaiField>
+              </div>
+              <div>
+                <KwaiField
+                  name="gender"
+                  :label="$t('gender')"
+                >
+                  <KwaiSelect :items="genders" />
+                </KwaiField>
+              </div>
+              <div>
+                <label class="uk-form-label">
+                  &nbsp;
+                </label>
+                <button
+                  class="uk-button uk-button-primary"
+                  @click.prevent.stop="filterAvailableMembers"
+                >
+                  {{ $t('filter') }}
+                </button>
+              </div>
             </div>
-            <div>
-              <field name="end_age" :label="$t('max_age')">
-                <uikit-input-text />
-              </field>
-            </div>
-            <div>
-              <field name="gender" :label="$t('gender')">
-                <uikit-select :items="genders" />
-              </field>
-            </div>
-            <div>
-              <label class="uk-form-label">&nbsp;</label>
-              <button class="uk-button uk-button-primary" @click="filterAvailableMembers">
-                {{ $t('filter') }}
-              </button>
-            </div>
-          </form>
-          <p v-if="! team.team_type" class="uk-text-meta">
+          </KwaiForm>
+          <p
+            v-if="! team.team_type"
+            class="uk-text-meta"
+          >
             {{ $t('use_filter') }}
           </p>
-          <p class="uk-text-meta" v-if="team.season && availableMembers.length > 0" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"></p>
+          <p
+            v-if="team.season && availableMembers.length > 0"
+            class="uk-text-meta" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"
+          >
+          </p>
           <hr />
         </div>
-        <div v-if="$wait.is('teams.availableMembers')" class="uk-flex-center" uk-grid>
-          <div class="uk-text-center">
-            <i class="fas fa-spinner fa-2x fa-spin"></i>
-          </div>
+        <div
+          v-if="$wait.is('teams.availableMembers')"
+          class="uk-width-1-1">
+          <Spinner />
         </div>
-        <div class="uk-overflow-auto uk-height-medium">
-          <table v-if="availableMembers.length > 0" class="uk-table uk-table-small uk-table-middle uk-table-divider">
-            <tr v-for="member in availableMembers" :key="member.id">
+        <div class="uk-width-1-1 uk-overflow-auto uk-height-medium">
+          <table
+            v-if="availableMembers.length > 0"
+            class="uk-table uk-table-small uk-table-middle uk-table-divider"
+          >
+            <tr
+              v-for="member in availableMembers"
+              :key="member.id"
+            >
               <td>
-                <input class="uk-checkbox" type="checkbox" v-model="selectedAvailableMembers" :value="member.id" />
+                <input
+                  class="uk-checkbox"
+                  type="checkbox"
+                  v-model="selectedAvailableMembers"
+                  :value="member.id"
+                />
               </td>
               <td>
-                <strong>{{ member.person.name }}</strong><br />
+                <strong>
+                  {{ member.person.name }}
+                </strong>
+                <br />
                 {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
               </td>
               <td>
@@ -66,12 +116,18 @@
             {{ $t('no_available_members') }}
           </p>
         </div>
-        <div>
+        <div class="uk-width-1-1">
           <hr />
-          <button class="uk-button uk-button-default" @click="hideAddMemberDialog">
+          <button
+            class="uk-button uk-button-default"
+            @click="hideAddMemberDialog"
+          >
             <i class="fas fa-ban"></i>&nbsp; {{ $t('cancel') }}
           </button>
-          <button class="uk-button uk-button-primary" :disabled="selectedAvailableMembers.length == 0" @click="addMembers">
+          <button
+            class="uk-button uk-button-primary"
+            :disabled="selectedAvailableMembers.length == 0"
+            @click="addMembers">
             <i class="fas fa-plus"></i>&nbsp; {{ $t('add') }}
           </button>
         </div>
@@ -81,11 +137,26 @@
 </template>
 
 <script>
-import AddMembersDialog from './AddMembersDialog';
+import makeForm, { makeField } from '@/js/Form';
+const makeAddMembersForm = (fields) => {
+  const writeForm = (filter) => {
+    fields.start_age.value = filter.start_age;
+    fields.end_age.value = filter.end_age;
+    fields.gender.value = filter.gender;
+  };
+  const readForm = (filter) => {
+    filter.start_age = fields.start_age.value;
+    filter.end_age = fields.end_age.value;
+    filter.gender = fields.gender.value;
+  };
+  return { ...makeForm(fields), writeForm, readForm };
+};
 
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
-import UikitSelect from '@/components/forms/Select.vue';
+import KwaiForm from '@/components/forms/KwaiForm.vue';
+import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiInputText from '@/components/forms/KwaiInputText.vue';
+import KwaiSelect from '@/components/forms/KwaiSelect.vue';
+import Spinner from '@/components/Spinner';
 
 import UIkit from 'uikit';
 
@@ -95,13 +166,19 @@ import Member from '@/models/Member';
 
 export default {
   components: {
-    Field,
-    UikitInputText,
-    UikitSelect
+    Spinner,
+    KwaiForm,
+    KwaiField,
+    KwaiInputText,
+    KwaiSelect
   },
   i18n: messages,
   props: [ 'id', 'team' ],
-  mixins: [ AddMembersDialog ],
+  provide() {
+    return {
+      form: this.form
+    };
+  },
   data() {
     return {
       selectedAvailableMembers: [],
@@ -109,7 +186,16 @@ export default {
         { text: 'None', value: 0 },
         { text: 'Male', value: 1 },
         { text: 'Female', value: 2 },
-      ]
+      ],
+      form: makeAddMembersForm({
+        start_age: makeField({
+          value: 0
+        }),
+        end_age: makeField(),
+        gender: makeField({
+          value: 0
+        })
+      })
     };
   },
   computed: {
@@ -134,9 +220,9 @@ export default {
       this.$store.dispatch('team/availableMembers', {
         id: this.$route.params.id,
         filter: {
-          start_age: this.form.start_age.value,
-          end_age: this.form.end_age.value,
-          gender: this.form.gender.value
+          start_age: this.form.fields.start_age.value,
+          end_age: this.form.fields.end_age.value,
+          gender: this.form.fields.gender.value
         }
       });
     },

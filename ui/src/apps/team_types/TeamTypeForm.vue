@@ -56,7 +56,7 @@
 <script>
 import TeamType from '@/models/TeamType';
 
-import makeForm from '@/js/Form';
+import makeForm, { makeField, notEmpty, isInteger } from '@/js/Form';
 const makeTeamTypeForm = (fields) => {
   const writeForm = (teamType) => {
     fields.name.value = teamType.name;
@@ -78,8 +78,6 @@ const makeTeamTypeForm = (fields) => {
   };
   return { ...makeForm(fields), writeForm, readForm };
 };
-
-import { notEmpty, isInteger } from '@/js/VueForm';
 
 import KwaiForm from '@/components/forms/KwaiForm.vue';
 import KwaiField from '@/components/forms/KwaiField.vue';
@@ -113,7 +111,7 @@ export default {
         },
       ],
       form: makeTeamTypeForm({
-        name: {
+        name: makeField({
           value: '',
           required: true,
           validators: [
@@ -122,37 +120,35 @@ export default {
               error: this.$t('form.team_type.name.required'),
             },
           ]
-        },
-        start_age: {
-          value: null,
+        }),
+        start_age: makeField({
           validators: [
             {
               v: isInteger,
               error: this.$t('form.team_type.start_age.numeric'),
             },
           ]
-        },
-        end_age: {
-          value: null,
+        }),
+        end_age: makeField({
           validators: [
             {
               v: isInteger,
               error: this.$t('form.team_type.start_age.numeric'),
             },
           ]
-        },
-        gender: {
+        }),
+        gender: makeField({
           value: 0,
-        },
-        active: {
+        }),
+        active: makeField({
           value: true
-        },
-        competition: {
+        }),
+        competition: makeField({
           value: true
-        },
-        remark: {
+        }),
+        remark: makeField({
           value: ''
-        }
+        })
       })
     };
   },

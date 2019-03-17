@@ -2,7 +2,7 @@
   <KwaiForm
     :form="form"
     :error="error"
-    :save="t('save')"
+    :save="$t('save')"
     @submit="submit"
   >
     <KwaiField
@@ -35,9 +35,9 @@
 <script>
 import Category from '@/models/Category';
 
-import makeForm from '@/js/Form.js';
+import makeForm, { makeField, notEmpty } from '@/js/Form.js';
 import KwaiForm from '@/components/forms/KwaiForm.vue';
-import KwaiField from '@/components/forms/Field.vue';
+import KwaiField from '@/components/forms/KwaiField.vue';
 import KwaiInputText from '@/components/forms/KwaiInputText.vue';
 import KwaiTextarea from '@/components/forms/Textarea.vue';
 
@@ -59,8 +59,6 @@ const makeCategoryForm = (fields) => {
 
 import messages from './lang';
 
-import { notEmpty } from '@/js/VueForm';
-
 /**
  * Component for creating or updating a category
  */
@@ -76,7 +74,7 @@ export default {
     return {
       category: new Category(),
       form: makeCategoryForm({
-        name: {
+        name: makeField({
           required: true,
           value: '',
           validators: [
@@ -85,14 +83,14 @@ export default {
               error: this.$t('form.name.required'),
             },
           ]
-        },
-        description: {
+        }),
+        description: makeField({
           value: '',
-        },
-        remark: {
+        }),
+        remark: makeField({
           value: ''
-        },
-        short_description: {
+        }),
+        short_description: makeField({
           required: true,
           value: '',
           validators: [
@@ -101,7 +99,7 @@ export default {
               error: this.$t('form.short_description.required'),
             },
           ]
-        },
+        }),
       })
     };
   },

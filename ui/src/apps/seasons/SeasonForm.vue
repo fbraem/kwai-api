@@ -37,7 +37,7 @@
 import moment from 'moment';
 import Season from '@/models/Season';
 
-import makeForm from '@/js/Form.js';
+import makeForm, { makeField, notEmpty, isDate } from '@/js/Form.js';
 const makeSeasonForm = (fields) => {
   const writeForm = (season) => {
     fields.name.value = season.name;
@@ -58,7 +58,6 @@ import KwaiForm from '@/components/forms/KwaiForm';
 import KwaiField from '@/components/forms/KwaiField';
 import KwaiInputText from '@/components/forms/KwaiInputText';
 import KwaiTextarea from '@/components/forms/KwaiTextarea';
-import { notEmpty, isDate } from '@/js/VueForm';
 
 import messages from './lang';
 
@@ -74,7 +73,7 @@ export default {
     return {
       season: new Season(),
       form: makeSeasonForm({
-        name: {
+        name: makeField({
           required: true,
           value: '',
           validators: [
@@ -83,8 +82,8 @@ export default {
               error: this.$t('form.season.name.required'),
             },
           ]
-        },
-        start_date: {
+        }),
+        start_date: makeField({
           required: true,
           value: moment().format('L'),
           validators: [
@@ -99,8 +98,8 @@ export default {
               }),
             },
           ]
-        },
-        end_date: {
+        }),
+        end_date: makeField({
           required: true,
           value: '',
           validators: [
@@ -115,10 +114,10 @@ export default {
               }),
             },
           ]
-        },
-        remark: {
+        }),
+        remark: makeField({
           value: ''
-        }
+        })
       }),
       validations: [
         () => {

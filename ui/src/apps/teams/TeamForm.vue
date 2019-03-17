@@ -46,7 +46,7 @@ import Team from '@/models/Team';
 import TeamType from '@/models/TeamType';
 import Season from '@/models/Season';
 
-import makeForm from '@/js/Form';
+import makeForm, { makeField, notEmpty } from '@/js/Form';
 const makeTeamForm = (fields) => {
   const writeForm = (team) => {
     fields.name.value = team.name;
@@ -76,7 +76,6 @@ const makeTeamForm = (fields) => {
   };
   return { ...makeForm(fields), writeForm, readForm };
 };
-import { notEmpty } from '@/js/VueForm';
 
 import KwaiForm from '@/components/forms/KwaiForm';
 import KwaiField from '@/components/forms/KwaiField';
@@ -95,7 +94,7 @@ export default {
     return {
       team: new Team(),
       form: makeTeamForm({
-        name: {
+        name: makeField({
           value: '',
           required: true,
           validators: [
@@ -104,16 +103,16 @@ export default {
               error: this.$t('form.team.name.required'),
             },
           ]
-        },
-        season: {
+        }),
+        season: makeField({
           value: 0
-        },
-        team_type: {
+        }),
+        team_type: makeField({
           value: 0
-        },
-        remark: {
+        }),
+        remark: makeField({
           value: ''
-        }
+        })
       })
     };
   },

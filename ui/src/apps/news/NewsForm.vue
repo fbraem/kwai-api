@@ -149,9 +149,7 @@ import Content from '@/models/Content';
 import Category from '@/models/Category';
 import Story from '@/models/Story';
 
-import { notEmpty, isDate, isTime } from '@/js/VueForm';
-
-import makeForm from '@/js/Form';
+import makeForm, { makeField, notEmpty, isDate, isTime } from '@/js/Form';
 const makeStoryForm = (fields) => {
 
   const createDatetime = (date, time) => {
@@ -264,14 +262,14 @@ export default {
       storyValid: false,
       contentValid: false,
       form: makeStoryForm({
-        enabled: {
+        enabled: makeField({
           value: false
-        },
-        category: {
+        }),
+        category: makeField({
           value: 0,
           required: true
-        },
-        publish_date: {
+        }),
+        publish_date: makeField({
           value: moment().format('L'),
           required: true,
           validators: [
@@ -286,8 +284,8 @@ export default {
               })
             },
           ]
-        },
-        publish_time: {
+        }),
+        publish_time: makeField({
           value: moment().format('HH:MM'),
           required: true,
           validators: [
@@ -302,8 +300,8 @@ export default {
               })
             },
           ]
-        },
-        end_date: {
+        }),
+        end_date: makeField({
           value: null,
           validators: [
             {
@@ -313,8 +311,8 @@ export default {
               })
             },
           ]
-        },
-        end_time: {
+        }),
+        end_time: makeField({
           value: null,
           validators: [
             {
@@ -324,11 +322,11 @@ export default {
               })
             },
           ]
-        },
-        featured: {
+        }),
+        featured: makeField({
           value: 0
-        },
-        featured_end_date: {
+        }),
+        featured_end_date: makeField({
           value: null,
           validators: [
             {
@@ -338,8 +336,8 @@ export default {
               })
             },
           ]
-        },
-        featured_end_time: {
+        }),
+        featured_end_time: makeField({
           value: null,
           validators: [
             {
@@ -349,11 +347,11 @@ export default {
               })
             },
           ]
-        },
-        remark: {
+        }),
+        remark: makeField({
           value: ''
-        },
-        title: {
+        }),
+        title: makeField({
           required: true,
           value: '',
           validators: [
@@ -362,8 +360,8 @@ export default {
               error: this.$t('form.content.title.required'),
             },
           ]
-        },
-        summary: {
+        }),
+        summary: makeField({
           required: true,
           value: '',
           validators: [
@@ -372,10 +370,10 @@ export default {
               error: this.$t('form.content.summary.required'),
             },
           ]
-        },
-        content: {
+        }),
+        content: makeField({
           value: '',
-        }
+        })
       })
     };
   },

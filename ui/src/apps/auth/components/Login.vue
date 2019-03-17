@@ -21,6 +21,7 @@
           :form="form"
           @submit="submit"
           :save="$t('login')"
+          icon="fas fa-unlock"
         >
           <KwaiField
             name="email"
@@ -67,8 +68,7 @@ import User from '@/models/User';
 
 import UIkit from 'uikit';
 
-import { notEmpty, isEmail } from '@/js/VueForm';
-import makeForm from '@/js/Form.js';
+import makeForm, { makeField, notEmpty, isEmail } from '@/js/Form.js';
 
 import KwaiForm from '@/components/forms/KwaiForm.vue';
 import KwaiField from '@/components/forms/KwaiField.vue';
@@ -102,7 +102,7 @@ export default {
       user: new User(),
       error: null,
       form: makeLoginForm({
-        email: {
+        email: makeField({
           required: true,
           value: '',
           validators: [
@@ -115,8 +115,8 @@ export default {
               error: this.$t('email.invalid')
             },
           ]
-        },
-        password: {
+        }),
+        password: makeField({
           required: true,
           value: '',
           validators: [
@@ -125,7 +125,7 @@ export default {
               error: this.$t('password.required')
             },
           ]
-        }
+        })
       })
     };
   },

@@ -17,11 +17,11 @@
 export default {
   props: [ 'name', 'label' ],
   inject: {
-    form: 'form'
+    fields: 'fields'
   },
   computed: {
     field() {
-      return this.form[this.name];
+      return this.fields[this.name];
     },
     hasLabel() {
       return this.label && this.label.length > 0;

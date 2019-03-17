@@ -61,11 +61,9 @@
 import Category from '@/models/Category';
 import Page from '@/models/Page';
 
-import { notEmpty } from '@/js/VueForm';
-
 import messages from './lang';
 
-import makeForm from '@/js/Form';
+import makeForm, { makeField, notEmpty } from '@/js/Form';
 const makePageForm = (fields) => {
   const writeForm = (page) => {
     fields.enabled.value = page.enabled;
@@ -119,10 +117,10 @@ export default {
     return {
       page: new Page(),
       form: makePageForm({
-        enabled: {
+        enabled: makeField({
           value: true
-        },
-        category: {
+        }),
+        category: makeField({
           value: null,
           required: true,
           validators: [
@@ -131,15 +129,15 @@ export default {
               error: this.$t('form.page.category.required'),
             },
           ]
-        },
-        priority: {
+        }),
+        priority: makeField({
           value: 0,
           required: true
-        },
-        remark: {
+        }),
+        remark: makeField({
           value: ''
-        },
-        title: {
+        }),
+        title: makeField({
           required: true,
           value: '',
           validators: [
@@ -148,8 +146,8 @@ export default {
               error: this.$t('form.content.title.required'),
             },
           ]
-        },
-        summary: {
+        }),
+        summary: makeField({
           required: true,
           value: '',
           validators: [
@@ -158,8 +156,8 @@ export default {
               error: this.$t('form.content.summary.required'),
             },
           ]
-        },
-        content: {
+        }),
+        content: makeField({
           value: '',
           required: true,
           validators: [
@@ -168,7 +166,7 @@ export default {
               error: this.$t('form.content.content.required'),
             },
           ]
-        }
+        })
       })
     };
   },
