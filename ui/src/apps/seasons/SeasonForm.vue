@@ -1,7 +1,6 @@
 <template>
   <KwaiForm
     :form="form"
-    :validations="validations"
     :error="error"
     :save="$t('save')"
     @submit="submit"
@@ -38,7 +37,7 @@ import moment from 'moment';
 import Season from '@/models/Season';
 
 import makeForm, { makeField, notEmpty, isDate } from '@/js/Form.js';
-const makeSeasonForm = (fields) => {
+const makeSeasonForm = (fields, validations) => {
   const writeForm = (season) => {
     fields.name.value = season.name;
     fields.start_date.value = season.formatted_start_date;
@@ -51,7 +50,7 @@ const makeSeasonForm = (fields) => {
     season.end_date = moment(fields.end_date.value, 'L');
     season.remark = fields.remark.value;
   };
-  return { ...makeForm(fields), writeForm, readForm };
+  return { ...makeForm(fields, validations), writeForm, readForm };
 };
 
 import KwaiForm from '@/components/forms/KwaiForm';
@@ -118,20 +117,19 @@ export default {
         remark: makeField({
           value: ''
         })
-      }),
-      validations: [
-        () => {
-          var start = moment(this.form.start_date.value, 'L', true);
-          var end = moment(this.form.end_date.value, 'L', true);
+      },
+      [
+        ({start_date, end_date}) => {
+          var start = moment(start_date.value, 'L', true);
+          var end = moment(end_date.value, 'L', true);
           if (end.isAfter(start)) {
+            end_date.errors.splice(0, end_date.errors.length);
             return true;
           }
-          this.form.end_date.errors = [
-            this.$t('form.season.end_date.after'),
-          ];
+          end_date.errors.push(this.$t('form.season.end_date.after'));
           return false;
         },
-      ]
+      ]),
     };
   },
   computed: {
