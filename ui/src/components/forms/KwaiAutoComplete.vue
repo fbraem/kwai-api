@@ -121,6 +121,7 @@ export default {
         this.results = [];
         this.isOpen = false;
         this.arrowCounter = -1;
+        this.field.value = null;
         return;
       }
 
@@ -158,6 +159,9 @@ export default {
       if (!this.$el.contains(evt.target)) {
         this.isOpen = false;
         this.arrowCounter = -1;
+      }
+      if (this.field.value) {
+        this.setResult(this.field.value);
       }
     },
     filterResults() {
