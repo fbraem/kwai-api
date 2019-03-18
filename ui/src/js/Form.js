@@ -1,23 +1,59 @@
 /**
  * A factory method for creating a form
  */
-const Form = (fields) => {
+const Form = (fields, validators) => {
+  if (typeof validators === 'undefined') validators = [];
+  let state = {
+    valid: true
+  };
+
   const clearErrors = () => {
     Object.entries(fields).forEach((entry) => {
       const [, field] = entry;
       field.errors = field.errors.splice(0, field.errors.length);
     });
   };
-  const $valid = true;
-  return { fields, $valid, clearErrors };
+
+  const validate = (showErrors) => {
+    Object.keys(fields).forEach((name) => {
+      validateField(name, showErrors);
+    });
+  };
+
+  const validateField = (name, showErrors = true) => {
+    var field = fields[name];
+    field.errors = [];
+    var valid = field.validators.every((validator) => {
+      var vFn = validator.v.bind(field);
+      field.valid = vFn(field.value);
+      if (!field.valid && showErrors) {
+        field.errors.push(validator.error);
+      }
+      return field.valid;
+    });
+
+    if (valid) {
+      state.valid = Object.entries(fields).every((entry) => {
+        const [, field] = entry;
+        return field.valid;
+      });
+    } else {
+      state.valid = false;
+    }
+
+    return valid;
+  };
+
+  return { fields, state, validators, validate, validateField, clearErrors };
 };
+
 export default Form;
 
 
 export const makeField = ({value, validators, required} = {}) => {
-  if (typeof value === undefined) value = null;
+  if (typeof value === 'undefined') value = null;
   if (!validators) validators = [];
-  if (typeof required === undefined) required = false;
+  if (typeof required === 'undefined') required = false;
   let errors = [];
   let valid = true;
 
@@ -26,18 +62,7 @@ export const makeField = ({value, validators, required} = {}) => {
     valid,
     errors,
     required,
-    validators,
-    validate(showErrors) {
-      this.errors.splice(0, this.errors.length);
-      this.valid = validators.every((validator) => {
-        var validatorFn = validator.v;
-        if (!validatorFn(this.value)) {
-          if (showErrors) this.errors.push(validator.error);
-          return false;
-        }
-        return true;
-      });
-    }
+    validators
   };
 };
 

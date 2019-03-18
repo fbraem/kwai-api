@@ -14,7 +14,7 @@
         <div class="uk-width-auto">
           <button
             class="uk-button uk-button-primary"
-            :disabled="!form.$valid"
+            :disabled="!valid"
             @click.prevent.stop="submit"
           >
             <i :class="icon"></i>&nbsp; {{ save }}
@@ -75,7 +75,7 @@ export default {
   created() {
     for (let f in this.form.fields) {
       this.$watch('form.fields.' + f + '.value', (nv, ov) => {
-        this.form.fields[f].validate(true);
+        this.form.validateField(f, true);
       });
     }
   },
@@ -87,12 +87,54 @@ export default {
       return false;
     },
     valid() {
-      var result = Object.entries(this.form.fields).every((entry) => {
-        const [key, field] = entry;
-        if (!key.startsWith('$')) {
-          return field.valid;
+      var valid = this.form.state.valid;
+
+      if (valid) {
+        this.form.validators.forEach((validator) => {
+          if (!validator(this.form.fields)) {
+            valid = false;
+          }
+        });
+      }
+      if (valid) {
+        this.form.clearErrors();
+      }
+      return valid;
+    }
+  },
+  watch: {
+    error(nv) {
+      if (nv) {
+        if (nv.response.status === 422) {
+          this.handleErrors(nv.response.data.errors);
+        } else if (nv.response.status === 404){
+          // this.error = err.response.statusText;
+        } else {
+          // TODO: check if we can get here ...
+          console.log(nv);
         }
-        return true;
+      }
+    },
+  },
+  methods: {
+    /**
+     * Tries to set JSONAPI errors to the corresponding fields
+     * @param {array} errors The JSONAPI errors
+     */
+    handleErrors(errors) {
+      errors.forEach((item, index) => {
+        if (item.source && item.source.pointer) {
+          var attr = item.source.pointer.split('/').pop();
+          if (this.form[attr]) {
+            this.form.fields[attr].errors.push(item.title);
+          }
+        }
+      });
+    },
+    validate() {
+      var result = Object.entries(this.form.fields).every((entry) => {
+        const [, field] = entry;
+        return field.valid;
       });
       if (result) {
         if (this.validations) {
@@ -108,41 +150,6 @@ export default {
         this.form.clearErrors();
       }
       return result;
-    }
-  },
-  watch: {
-    valid(nv, ov) {
-      if (nv !== ov) {
-        this.form.$valid = nv;
-      }
-    },
-    error(nv) {
-      if (nv) {
-        if (nv.response.status === 422) {
-          this.handleErrors(nv.response.data.errors);
-        } else if (nv.response.status === 404){
-          // this.error = err.response.statusText;
-        } else {
-          // TODO: check if we can get here ...
-          console.log(nv);
-        }
-      }
-    }
-  },
-  methods: {
-    /**
-     * Tries to set JSONAPI errors to the corresponding fields
-     * @param {array} errors The JSONAPI errors
-     */
-    handleErrors(errors) {
-      errors.forEach((item, index) => {
-        if (item.source && item.source.pointer) {
-          var attr = item.source.pointer.split('/').pop();
-          if (this.form[attr]) {
-            this.form[attr].errors.push(item.title);
-          }
-        }
-      });
     },
     submit() {
       this.$emit('submit');
@@ -150,9 +157,7 @@ export default {
   },
   mounted() {
     // Run all validations now to initialize
-    for (var f in this.form.fields) {
-      this.form.fields[f].validate(false);
-    }
-  }
+    this.form.validate(false);
+  },
 };
 </script>
