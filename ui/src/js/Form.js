@@ -22,7 +22,7 @@ const Form = (fields, validators) => {
 
   const validateField = (name, showErrors = true) => {
     var field = fields[name];
-    field.errors = [];
+    field.errors.splice(0, field.errors.length);
     var valid = field.validators.every((validator) => {
       var vFn = validator.v.bind(field);
       field.valid = vFn(field.value);
