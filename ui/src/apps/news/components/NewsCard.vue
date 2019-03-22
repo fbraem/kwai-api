@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div>
     <div
-      class="uk-card uk-card-body uk-card-default uk-card-small uk-border-rounded"
+      class="uk-width-1-1 uk-card uk-card-body uk-card-default uk-card-small uk-border-rounded"
       style="box-shadow:none;border:  1px solid rgba(0,0,0,0.075);"
     >
       <div
@@ -65,7 +65,7 @@
             </div>
           </div>
         </div>
-        <div class="uk-width-expand uk-margin-remove-top">
+        <div class="uk-width-1-1 uk-margin-remove-top">
           <div class="uk-grid-small" uk-grid>
             <div class="uk-width-expand"></div>
             <div class="uk-width-auto">
