@@ -2,59 +2,94 @@
   <!-- eslint-disable max-len -->
   <div uk-grid>
     <div class="uk-width-1-1">
-      <form class="uk-form-stacked">
+      <KwaiForm
+        :form="form"
+        :save="$t('save')"
+        :error="error"
+        @submit="submit"
+      >
         <div uk-grid>
           <div class="uk-width-expand">
-            <field name="name" :label="$t('training.definitions.form.name.label')">
-              <uikit-input-text :placeholder="$t('training.definitions.form.name.placeholder')" />
-            </field>
+            <KwaiField
+              name="name"
+              :label="$t('training.definitions.form.name.label')"
+            >
+              <KwaiInputText :placeholder="$t('training.definitions.form.name.placeholder')" />
+            </KwaiField>
           </div>
           <div>
-            <field name="active" :label="$t('training.definitions.form.active.label')">
-              <uikit-switch />
-            </field>
+            <KwaiField
+              name="active"
+              :label="$t('training.definitions.form.active.label')"
+            >
+              <KwaiSwitch />
+            </KwaiField>
           </div>
         </div>
-        <field name="description" :label="$t('training.definitions.form.description.label')">
-          <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.description.placeholder')" />
-        </field>
-        <field name="weekday" :label="$t('training.definitions.form.weekday.label')">
-          <uikit-select :items="weekdays" />
-        </field>
-        <div class="uk-child-width-1-2" uk-grid>
+        <KwaiField
+          name="description"
+          :label="$t('training.definitions.form.description.label')"
+        >
+          <KwaiTextarea
+            :rows="5"
+            :placeholder="$t('training.definitions.form.description.placeholder')"
+          />
+        </KwaiField>
+        <KwaiField
+          name="weekday"
+          :label="$t('training.definitions.form.weekday.label')"
+        >
+          <KwaiSelect :items="weekdays" />
+        </KwaiField>
+        <div
+          class="uk-child-width-1-2"
+          uk-grid
+        >
           <div>
-            <field name="start_time" :label="$t('training.definitions.form.start_time.label')">
-              <uikit-input-text :placeholder="$t('training.definitions.form.start_time.placeholder')" />
-            </field>
+            <KwaiField
+              name="start_time"
+              :label="$t('training.definitions.form.start_time.label')"
+            >
+              <KwaiInputText :placeholder="$t('training.definitions.form.start_time.placeholder')" />
+            </KwaiField>
           </div>
           <div>
-            <field name="end_time" :label="$t('training.definitions.form.end_time.label')">
-              <uikit-input-text :placeholder="$t('training.definitions.form.end_time.placeholder')" />
-            </field>
+            <KwaiField
+              name="end_time"
+              :label="$t('training.definitions.form.end_time.label')"
+            >
+              <KwaiInputText :placeholder="$t('training.definitions.form.end_time.placeholder')" />
+            </KwaiField>
           </div>
         </div>
-        <field name="season" :label="$t('training.definitions.form.season.label')">
-          <uikit-select :items="seasons" />
-        </field>
-        <field name="team" :label="$t('training.definitions.form.team.label')">
-          <uikit-select :items="teams" />
-        </field>
-        <field name="location" :label="$t('training.definitions.form.location.label')">
-          <uikit-input-text :placeholder="$t('training.definitions.form.location.placeholder')" />
-        </field>
-        <field name="remark" :label="$t('training.definitions.form.remark.label')">
-          <uikit-textarea :rows="5" :placeholder="$t('training.definitions.form.remark.placeholder')" />
-        </field>
-      </form>
-    </div>
-    <div uk-grid class="uk-width-1-1">
-      <div class="uk-width-expand">
-      </div>
-      <div class="uk-width-auto">
-        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-        </button>
-      </div>
+        <KwaiField
+          name="season"
+          :label="$t('training.definitions.form.season.label')"
+        >
+          <KwaiSelect :items="seasons" />
+        </KwaiField>
+        <KwaiField
+          name="team"
+          :label="$t('training.definitions.form.team.label')"
+        >
+          <KwaiSelect :items="teams" />
+        </KwaiField>
+        <KwaiField
+          name="location"
+          :label="$t('training.definitions.form.location.label')"
+        >
+          <KwaiInputText :placeholder="$t('training.definitions.form.location.placeholder')" />
+        </KwaiField>
+        <KwaiField
+          name="remark"
+          :label="$t('training.definitions.form.remark.label')"
+        >
+          <KwaiTextarea
+            :rows="5"
+            :placeholder="$t('training.definitions.form.remark.placeholder')"
+          />
+        </KwaiField>
+      </KwaiForm>
     </div>
   </div>
 </template>
@@ -63,23 +98,80 @@
 import moment from 'moment';
 
 import TrainingDefinition from '@/models/trainings/Definition';
+import Season from '@/models/Season';
+import Team from '@/models/Team';
 
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
-import UikitTextarea from '@/components/forms/Textarea.vue';
-import UikitSelect from '@/components/forms/Select.vue';
-import UikitSwitch from '@/components/forms/Switch.vue';
+import KwaiForm from '@/components/forms/KwaiForm';
+import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiInputText from '@/components/forms/KwaiInputText.vue';
+import KwaiTextarea from '@/components/forms/KwaiTextarea.vue';
+import KwaiSelect from '@/components/forms/KwaiSelect.vue';
+import KwaiSwitch from '@/components/forms/KwaiSwitch.vue';
+
+import makeForm, { makeField, notEmpty, isTime } from '@/js/Form';
+const makeDefinitionForm = (fields, validations) => {
+  const writeForm = (definition) => {
+    fields.name.value = definition.name;
+    fields.description.value = definition.description;
+    fields.active.value = definition.active;
+    fields.location.value = definition.location;
+    fields.start_time.value = definition.formattedStartTime;
+    fields.end_time.value = definition.formattedEndTime;
+    fields.weekday.value = definition.weekday;
+    if (definition.season) {
+      fields.season.value = definition.season.id;
+    }
+    if (definition.team) {
+      fields.team.value = definition.team.id;
+    }
+    fields.remark.value = definition.remark;
+  };
+
+  const readForm = (definition) => {
+    definition.name = fields.name.value;
+    definition.description = fields.description.value;
+    definition.active = fields.active.value;
+    definition.weekday = fields.weekday.value;
+    definition.location = fields.location.value;
+    var tz = moment.tz.guess();
+    if (fields.start_time.value) {
+      definition.start_time
+        = moment(fields.start_time.value, 'HH:mm', true);
+    }
+    if (fields.end_time.value) {
+      definition.end_time
+        = moment(fields.end_time.value, 'HH:mm', true);
+    }
+    definition.time_zone = tz;
+    definition.remark = fields.remark.value;
+    if (fields.season.value) {
+      if (fields.season.value === 0) {
+        definition.season = null;
+      } else {
+        definition.season = new Season();
+        definition.season.id = fields.season.value;
+      }
+    }
+    if (fields.team.value) {
+      if (fields.team.value === 0) {
+        definition.team = null;
+      } else {
+        definition.team = new Team();
+        definition.team.id = fields.team.value;
+      }
+    }
+  };
+
+  return { ...makeForm(fields, validations), writeForm, readForm };
+};
 
 import messages from './lang';
 
-import DefinitionForm from './DefinitionForm';
-
 export default {
   components: {
-    Field, UikitInputText, UikitTextarea,
-    UikitSelect, UikitSwitch
+    KwaiForm, KwaiField, KwaiInputText, KwaiTextarea,
+    KwaiSelect, KwaiSwitch
   },
-  mixins: [ DefinitionForm ],
   i18n: messages,
   data() {
     return {
@@ -89,6 +181,73 @@ export default {
           value: i + 1,
           text: d
         };
+      }),
+      form: makeDefinitionForm({
+        name: makeField({
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('training.definitions.form.name.required'),
+            },
+          ]
+        }),
+        description: makeField({
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('training.definitions.form.description.required'),
+            },
+          ]
+        }),
+        season: makeField({
+          value: 0
+        }),
+        team: makeField({
+          value: 0
+        }),
+        weekday: makeField({
+          value: 1,
+          required: true,
+          validators: [
+            {
+              v: (value) => value > 0,
+              error: this.$t('training.definitions.form.weekday.required')
+            },
+          ]
+        }),
+        start_time: makeField({
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('training.definitions.form.start_time.required')
+            },
+            {
+              v: isTime,
+              error: this.$t('training.definitions.form.start_time.invalid')
+            },
+          ]
+        }),
+        end_time: makeField({
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('training.definitions.form.end_time.required')
+            },
+            {
+              v: isTime,
+              error: this.$t('training.definitions.form.end_time.invalid')
+            },
+          ]
+        }),
+        active: makeField({
+          value: true
+        }),
+        location: makeField(),
+        remark: makeField()
       })
     };
   },
@@ -126,20 +285,6 @@ export default {
       next();
     });
   },
-  watch: {
-    error(nv) {
-      if (nv) {
-        if (nv.response.status === 422) {
-          this.handleErrors(nv.response.data.errors);
-        } else if (nv.response.status === 404){
-          // this.error = err.response.statusText;
-        } else {
-          // TODO: check if we can get here ...
-          console.log(nv);
-        }
-      }
-    }
-  },
   methods: {
     clear() {
       // this.$v.$reset();
@@ -150,11 +295,11 @@ export default {
         = await this.$store.dispatch('training/definition/read', {
           id: id
         });
-      this.writeForm(this.definition);
+      this.form.writeForm(this.definition);
     },
     submit() {
-      this.clearErrors();
-      this.readForm(this.definition);
+      this.form.clearErrors();
+      this.form.readForm(this.definition);
       this.$store.dispatch('training/definition/save', this.definition)
         .then((newDefinition) => {
           this.$router.push({

@@ -2,21 +2,21 @@ import App from '@/site/App.vue';
 
 const DefinitionsHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/DefinitionsHeader.vue');
+    '@/apps/trainings/TheDefinitionsHeader.vue');
 const DefinitionBrowse = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/DefinitionBrowse.vue');
 
 const DefinitionFormHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/DefinitionFormHeader.vue');
+    '@/apps/trainings/TheDefinitionFormHeader.vue');
 const DefinitionForm = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/DefinitionForm.vue');
 
 const DefinitionHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/DefinitionHeader.vue');
+    '@/apps/trainings/TheDefinitionHeader.vue');
 const DefinitionRead = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/DefinitionRead.vue');

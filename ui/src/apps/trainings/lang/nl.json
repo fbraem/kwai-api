@@ -69,7 +69,8 @@
                 "member" : {
                     "label" : "Lid",
                     "placeholder" : "Zoek een lid",
-                    "not_found" : "Geen leden gevonden"
+                    "not_found" : "Geen leden gevonden",
+                    "required" : "Dit veld is verplicht in te vullen"
                 },
                 "diploma" : {
                     "label" : "Diploma",

@@ -1,59 +1,100 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
+    <div
+      v-if="notAllowed"
+      class="uk-alert-danger"
+      uk-alert
+    >
         {{ $t('not_allowed') }}
     </div>
-    <div v-if="notFound" class="uk-alert-danger" uk-alert>
+    <div
+      v-if="notFound"
+      class="uk-alert-danger"
+      uk-alert
+    >
         {{ $t('training.definitions.not_found') }}
     </div>
-    <div v-if="$wait.is('training.definitions.read')" class="uk-flex-center" uk-grid>
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div v-if="definition" uk-grid>
+    <Spinner v-if="$wait.is('training.definitions.read')" />
+    <div
+      v-if="definition"
+      uk-grid
+    >
       <div>
         <table class="uk-table uk-table-striped">
           <tr>
-            <th>{{ $t('training.definitions.form.name.label') }}</th>
-            <td>{{ definition.name }}</td>
+            <th>
+              {{ $t('training.definitions.form.name.label') }}
+            </th>
+            <td>
+              {{ definition.name }}
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.form.location.label') }}</th>
-            <td>{{ definition.location }}</td>
+            <th>
+              {{ $t('training.definitions.form.location.label') }}
+            </th>
+            <td>
+              {{ definition.location }}
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.form.description.label') }}</th>
-            <td>{{ definition.description }}</td>
+            <th>
+              {{ $t('training.definitions.form.description.label') }}
+            </th>
+            <td>
+              {{ definition.description }}
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.form.weekday.label') }}</th>
-            <td>{{ definition.weekdayText }}</td>
+            <th>
+              {{ $t('training.definitions.form.weekday.label') }}
+            </th>
+            <td>
+              {{ definition.weekdayText }}
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.time') }}</th>
+            <th>
+              {{ $t('training.definitions.time') }}
+            </th>
             <td>
               {{ definition.start_time.format('HH:mm') }} - {{ definition.end_time.format('HH:mm') }}
             </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.form.team.label') }}</th>
-            <td v-if="definition.team">{{ definition.team.name }}</td>
-            <td v-else><i class="fas fa-minus"></i></td>
+            <th>
+              {{ $t('training.definitions.form.team.label') }}
+            </th>
+            <td v-if="definition.team">
+              {{ definition.team.name }}
+            </td>
+            <td v-else>
+              <i class="fas fa-minus"></i>
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.form.season.label') }}</th>
-            <td v-if="definition.season">{{ definition.season.name }}</td>
-            <td v-else><i class="fas fa-minus"></i></td>
+            <th>
+              {{ $t('training.definitions.form.season.label') }}
+            </th>
+            <td v-if="definition.season">
+              {{ definition.season.name }}
+            </td>
+            <td v-else>
+              <i class="fas fa-minus"></i>
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.definitions.form.remark.label') }}</th>
-            <td>{{ definition.remark }}</td>
+            <th>
+              {{ $t('training.definitions.form.remark.label') }}
+            </th>
+            <td>
+              {{ definition.remark }}
+            </td>
           </tr>
         </table>
       </div>
-      <TrainingGeneratorForm :definition="definition"></TrainingGeneratorForm>
+      <TrainingGeneratorForm :definition="definition" />
     </div>
   </div>
 </template>
@@ -62,9 +103,11 @@
 import messages from './lang';
 
 import TrainingGeneratorForm from './TrainingGeneratorForm.vue';
+import Spinner from '@/components/Spinner';
 
 export default {
   components: {
+    Spinner,
     TrainingGeneratorForm
   },
   i18n: messages,

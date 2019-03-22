@@ -2,9 +2,18 @@
   <!-- eslint-disable max-len -->
   <div uk-grid>
     <div class="uk-width-1-1">
-      <form class="uk-form-stacked">
-        <field v-if="creating" name="member">
-          <AutoComplete :placeholder="$t('training.coaches.form.member.placeholder')"
+      <KwaiForm
+        :form="form"
+        :error="error"
+        :save="$t('save')"
+        @submit="submit"
+      >
+        <KwaiField
+          v-if="creating"
+          name="member"
+          :label="$t('training.coaches.form.member.label')"
+        >
+          <KwaiAutoComplete :placeholder="$t('training.coaches.form.member.placeholder')"
             :items="members"
             :stringResult="(value) => { return value.person.name }">
             <template slot-scope="row">
@@ -13,74 +22,133 @@
             <span slot="empty">
               {{ $t('training.coaches.form.member.not_found') }}
             </span>
-          </AutoComplete>
-        </field>
+          </KwaiAutoComplete>
+        </KwaiField>
         <div v-else>
-          <field name="member">
+          <KwaiField
+            name="member"
+            :label="$t('training.coaches.form.member.label')"
+          >
             <input class="uk-input" type="text" readonly="readonly" v-model="coach.name" />
-          </field>
+          </KwaiField>
         </div>
         <div uk-grid>
           <div class="uk-width-expand">
-            <field name="diploma">
-              <uikit-input-text :placeholder="$t('training.coaches.form.diploma.placeholder')" />
-            </field>
+            <KwaiField
+              name="diploma"
+              :label="$t('training.coaches.form.diploma.label')"
+            >
+              <KwaiInputText :placeholder="$t('training.coaches.form.diploma.placeholder')" />
+            </KwaiField>
           </div>
           <div>
-            <field name="active">
-              <uikit-switch />
-            </field>
+            <KwaiField
+              name="active"
+              :label="$t('training.coaches.form.active.label')"
+            >
+              <KwaiSwitch />
+            </KwaiField>
           </div>
         </div>
-        <field name="description">
-          <uikit-textarea :rows="5" :placeholder="$t('training.coaches.form.description.placeholder')" />
-        </field>
-<!--
-        <field name="season">
-          <uikit-select :items="seasons" />
-        </field>
--->
-        <field name="remark">
-          <uikit-textarea :rows="5" :placeholder="$t('training.coaches.form.remark.placeholder')" />
-        </field>
-      </form>
-    </div>
-    <div uk-grid class="uk-width-1-1">
-      <div class="uk-width-expand">
-      </div>
-      <div class="uk-width-auto">
-        <button class="uk-button uk-button-primary" :disabled="!$valid" @click="submit">
-          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-        </button>
-      </div>
+        <KwaiField
+          name="description"
+          :label="$t('training.coaches.form.description.label')"
+        >
+          <KwaiTextarea :rows="5" :placeholder="$t('training.coaches.form.description.placeholder')" />
+        </KwaiField>
+        <KwaiField
+          name="remark"
+          :label="$t('training.coaches.form.remark.label')"
+        >
+          <KwaiTextarea :rows="5" :placeholder="$t('training.coaches.form.remark.placeholder')" />
+        </KwaiField>
+      </KwaiForm>
     </div>
   </div>
 </template>
 
 <script>
 import TrainingCoach from '@/models/trainings/Coach';
+import Member from '@/models/Member';
 
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
-import UikitTextarea from '@/components/forms/Textarea.vue';
-import UikitSwitch from '@/components/forms/Switch.vue';
-import AutoComplete from '@/components/forms/AutoComplete.vue';
+import makeForm, { makeField } from '@/js/Form';
+const makeCoachForm = (fields) => {
+  const writeForm = (coach) => {
+    fields.description.value = coach.description;
+    fields.active.value = coach.active;
+    fields.diploma.value = coach.diploma;
+    if (coach.member) {
+      fields.member.value = coach.member;
+    }
+    fields.remark.value = coach.remark;
+  };
+
+  const readForm = (coach) => {
+    coach.description = fields.description.value;
+    coach.diploma = fields.diploma.value;
+    coach.active = fields.active.value;
+    coach.remark = fields.remark.value;
+    if (fields.member.value) {
+      if (fields.member.value === null) {
+        coach.member = null;
+      } else {
+        coach.member = new Member();
+        coach.member.id = fields.member.value.id;
+      }
+    }
+  };
+
+  return { ...makeForm(fields), writeForm, readForm };
+};
+
+import KwaiForm from '@/components/forms/KwaiForm';
+import KwaiField from '@/components/forms/KwaiField';
+import KwaiInputText from '@/components/forms/KwaiInputText';
+import KwaiTextarea from '@/components/forms/KwaiTextarea';
+import KwaiSwitch from '@/components/forms/KwaiSwitch.vue';
+import KwaiAutoComplete from '@/components/forms/KwaiAutoComplete.vue';
 
 import messages from './lang';
 
-import CoachForm from './CoachForm';
-
 export default {
   components: {
-    Field, UikitInputText, UikitTextarea,
-    UikitSwitch, AutoComplete
+    KwaiForm, KwaiField, KwaiInputText, KwaiTextarea,
+    KwaiSwitch, KwaiAutoComplete
   },
-  mixins: [ CoachForm ],
   i18n: messages,
   data() {
     return {
       coach: new TrainingCoach(),
-      items: []
+      items: [],
+      form: makeCoachForm({
+        member: makeField({
+          required: true,
+          value: null,
+          validators: [
+            {
+              v: (value) => value !== null,
+              error: this.$t('training.coaches.form.member.required')
+            },
+          ],
+          label: this.$t('training.coaches.form.member.label')
+        }),
+        description: makeField({
+          value: '',
+          label: this.$t('training.coaches.form.description.label'),
+        }),
+        diploma: makeField({
+          value: null,
+          label: this.$t('training.coaches.form.diploma.label')
+        }),
+        active: makeField({
+          value: true,
+          label: this.$t('training.coaches.form.active.label')
+        }),
+        remark: makeField({
+          value: '',
+          label: this.$t('training.coaches.form.remark.label')
+        })
+      })
     };
   },
   computed: {
@@ -125,14 +193,14 @@ export default {
           = await this.$store.dispatch('training/coach/read', {
             id: params.id
           });
-        this.writeForm(this.coach);
+        this.form.writeForm(this.coach);
       } else {
         await this.$store.dispatch('member/browse');
       }
     },
     submit() {
-      this.clearErrors();
-      this.readForm(this.coach);
+      this.form.clearErrors();
+      this.form.readForm(this.coach);
       this.$store.dispatch('training/coach/save', this.coach)
         .then((newCoach) => {
           this.$router.push({

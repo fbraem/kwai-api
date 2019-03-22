@@ -69,7 +69,8 @@
                 "member" : {
                     "label" : "Member",
                     "placeholder" : "Search a member",
-                    "not_found" : "No members found"
+                    "not_found" : "No members found",
+                    "required": "This is required"
                 },
                 "diploma" : {
                     "label" : "Diploma",

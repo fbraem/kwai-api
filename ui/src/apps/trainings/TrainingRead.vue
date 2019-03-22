@@ -1,38 +1,76 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <div v-if="training" class="uk-flex-center" uk-grid>
-      <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-default">
-          <div class="uk-card-header uk-padding-remove">
-            <div class="uk-grid-collapse" uk-grid>
-              <div class="uk-width-1-2@m uk-light uk-text-center uk-padding" style="background-color:rgb(198, 28, 24)">
-                <span style="font-size:2em; line-height:1em; text-transform:lowercase;">{{ dayName }}</span><br />
-                <span style="font-size:8em; font-weight:900; line-height:1em;">{{ day }}</span><br />
-                <span style="font-size:2em; line-height:1em; text-transform:lowercase;">{{ month }}</span>
-              </div>
-              <div class="uk-width-1-2@m uk-text-center uk-padding">
-                <span style="font-size:4em; line-height:1em; text-transform:lowercase;">{{ training.formattedStartTime}}</span><br />
-                <span style="font-size:4em; line-height:1em; text-transform:lowercase;">-</span><br />
-                <span style="font-size:4em; text-transform:lowercase;">{{ training.formattedEndTime}}</span><br />
-              </div>
+  <div
+    v-if="training"
+    class="uk-flex-center"
+    uk-grid
+  >
+    <div class="uk-width-1-2@s">
+      <div class="uk-card uk-card-default">
+        <div class="uk-card-header uk-padding-remove">
+          <div
+            class="uk-grid-collapse"
+            uk-grid
+          >
+            <div
+              class="uk-width-1-2@m uk-light uk-text-center uk-padding"
+              style="background-color:rgb(198, 28, 24)"
+            >
+              <span style="font-size:2em; line-height:1em; text-transform:lowercase;">
+                {{ dayName }}
+              </span>
+              <br />
+              <span style="font-size:8em; font-weight:900; line-height:1em;">
+                {{ day }}
+              </span>
+              <br />
+              <span style="font-size:2em; line-height:1em; text-transform:lowercase;">
+                {{ month }}
+              </span>
+            </div>
+            <div class="uk-width-1-2@m uk-text-center uk-padding">
+              <span style="font-size:4em; line-height:1em; text-transform:lowercase;">
+                {{ training.formattedStartTime}}
+              </span>
+              <br />
+              <span style="font-size:4em; line-height:1em; text-transform:lowercase;">
+                -
+              </span>
+              <br />
+              <span style="font-size:4em; text-transform:lowercase;">
+                {{ training.formattedEndTime}}
+              </span>
+              <br />
             </div>
           </div>
-          <div class="uk-card-body">
-            <h3 class="uk-card-title">Training &bull; {{ training.content.title }}</h3>
-            <p>
-              {{ training.content.summary }}
-            </p>
-            <p v-if="training.event.cancelled" class="uk-alert-danger" uk-alert>
-              {{ $t('cancelled' )}}
-            </p>
-          </div>
-          <div v-if="training.coaches" class="uk-card-footer">
-            <strong>Coaches:</strong>
-            <ul class="uk-list uk-list-bullet">
-              <li v-for="(coach, index) in training.coaches" :key="index">{{ coach.name }}</li>
-            </ul>
-          </div>
+        </div>
+        <div class="uk-card-body">
+          <h3 class="uk-card-title">
+            Training &bull; {{ training.content.title }}
+          </h3>
+          <p>
+            {{ training.content.summary }}
+          </p>
+          <p
+            v-if="training.event.cancelled"
+            class="uk-alert-danger"
+            uk-alert
+          >
+            {{ $t('cancelled' )}}
+          </p>
+        </div>
+        <div
+          v-if="training.coaches"
+          class="uk-card-footer"
+        >
+          <strong>Coaches:</strong>
+          <ul class="uk-list uk-list-bullet">
+            <li
+              v-for="(coach, index) in training.coaches"
+              :key="index">
+              {{ coach.name }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>

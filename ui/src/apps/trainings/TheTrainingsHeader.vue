@@ -1,0 +1,35 @@
+<template>
+  <Header
+    :title="$t('training.events.title')"
+    :toolbar="toolbar"
+  />
+</template>
+
+<script>
+import Training from '@/models/trainings/Training';
+
+import Header from '@/components/Header';
+
+import messages from './lang';
+
+export default {
+  components: {
+    Header
+  },
+  i18n: messages,
+  computed: {
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Training.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'trainings.create'
+          }
+        });
+      }
+      return buttons;
+    }
+  }
+};
+</script>

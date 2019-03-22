@@ -1,9 +1,17 @@
 <template>
   <div>
-    <h2>{{ $t('training.coaches.trainings') }}</h2>
-    <Calendar :year="year" :month="month" :trainings="trainings"
-      @prevMonth="prevMonth" @firstMonth="firstMonth"
-      @nextMonth="nextMonth" @lastMonth="lastMonth" />
+    <h2>
+      {{ $t('training.coaches.trainings') }}
+    </h2>
+    <Calendar
+      :year="year"
+      :month="month"
+      :trainings="trainings"
+      @prevMonth="prevMonth"
+      @firstMonth="firstMonth"
+      @nextMonth="nextMonth"
+      @lastMonth="lastMonth"
+    />
   </div>
 </template>
 

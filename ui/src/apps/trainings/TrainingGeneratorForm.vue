@@ -1,50 +1,60 @@
 <template>
   <!-- eslint-disable max-len -->
   <div uk-grid>
-    <div>
+    <div class="uk-width-1-1">
       <div class="uk-width-auto">
-        <button class="uk-button" uk-toggle="target: #events">
+        <button
+          class="uk-button"
+          uk-toggle="target: #events"
+        >
           <i class="far fa-calendar-alt"></i>&nbsp; {{ $t('trainings') }}
         </button>
       </div>
       <div class="uk-width-expand">
       </div>
     </div>
-    <div id="events" hidden>
+    <div
+      class="uk-width-1-1"
+      id="events"
+      hidden
+    >
       <p>
         {{ $t('training.generator.create') }}
       </p>
-      <form class="uk-form-stacked">
+      <KwaiForm
+        :form="form"
+        @submit="generate"
+        :save="$t('training.generator.form.generate')"
+      >
         <div class="uk-child-width-1-2" uk-grid>
           <div>
-            <field name="start_date">
-              <uikit-input-text :placeholder="$t('training.generator.form.start_date.placeholder')" />
-            </field>
+            <KwaiField name="start_date">
+              <KwaiInputText :placeholder="$t('training.generator.form.start_date.placeholder')" />
+            </KwaiField>
           </div>
           <div>
-            <field name="end_date">
-              <uikit-input-text :placeholder="$t('training.generator.form.end_date.placeholder')" />
-            </field>
+            <KwaiField name="end_date">
+              <KwaiInputText :placeholder="$t('training.generator.form.end_date.placeholder')" />
+            </KwaiField>
           </div>
         </div>
-        <field name="coaches">
-          <multiselect :options="coaches" label="name"
-            track-by="id" :multiple="true" :close-on-select="false"
+        <KwaiField name="coaches">
+          <multiselect
+            :options="coaches"
+            label="name"
+            track-by="id"
+            :multiple="true"
+            :close-on-select="false"
             :selectLabel="$t('training.generator.form.coaches.selectLabel')"
-            :deselectLabel="$t('training.generator.form.coaches.deselectLabel')">
-          </multiselect>
-        </field>
-        <div uk-grid class="uk-width-1-1">
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-auto">
-            <button class="uk-button uk-button-primary" :disabled="!$valid" @click.prevent="generate">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('training.generator.form.generate') }}
-            </button>
-          </div>
-        </div>
-      </form>
-      <EventGenerate v-if="trainings" :trainings="trainings" @generate="createAll" />
+            :deselectLabel="$t('training.generator.form.coaches.deselectLabel')"
+          />
+        </KwaiField>
+      </KwaiForm>
+      <EventGenerate
+        v-if="trainings"
+        :trainings="trainings"
+        @generate="createAll"
+      />
     </div>
     <notifications position="bottom right" />
   </div>
@@ -57,25 +67,66 @@ import messages from './lang';
 
 import Training from '@/models/trainings/Training';
 
-import Field from '@/components/forms/Field.vue';
-import UikitInputText from '@/components/forms/InputText.vue';
+import KwaiForm from '@/components/forms/KwaiForm';
+import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiInputText from '@/components/forms/KwaiInputText.vue';
 import Multiselect from '@/components/forms/MultiSelect.vue';
 
-import TrainingGeneratorForm from './TrainingGeneratorForm';
 import EventGenerate from './TrainingGenerate.vue';
+
+import makeForm, { makeField, notEmpty, isDate } from '@/js/Form';
 
 export default {
   props: [
     'definition',
   ],
   components: {
-    Multiselect, Field, UikitInputText, EventGenerate
+    KwaiForm, Multiselect, KwaiField, KwaiInputText, EventGenerate
   },
   i18n: messages,
-  mixins: [ TrainingGeneratorForm ],
   data() {
     return {
-      trainings: null
+      trainings: null,
+      form: makeForm({
+        start_date: makeField({
+          value: moment().format('L'),
+          label: this.$t('training.generator.form.start_date.label'),
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('training.generator.form.start_date.required')
+            },
+            {
+              v: isDate,
+              error: this.$t('training.generator.form.start_date.invalid', {
+                format: moment.localeData().longDateFormat('L')
+              })
+            },
+          ]
+        }),
+        end_date: makeField({
+          required: true,
+          label: this.$t('training.generator.form.end_date.label'),
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('training.generator.form.end_date.required')
+            },
+            {
+              v: isDate,
+              error: this.$t('training.generator.form.end_date.invalid', {
+                format: moment.localeData().longDateFormat('L')
+              })
+            },
+          ]
+        }),
+        coaches: makeField({
+          value: [],
+          label: this.$t('training.generator.form.coaches.label'),
+          placeholder: this.$t('training.generator.form.coaches.placeholder')
+        })
+      })
     };
   },
   computed: {
@@ -98,8 +149,8 @@ export default {
     },
     generate() {
       var tz = moment.tz.guess();
-      var start = moment(this.form.start_date.value, 'L');
-      var end = moment(this.form.end_date.value, 'L');
+      var start = moment(this.form.fields.start_date.value, 'L');
+      var end = moment(this.form.fields.end_date.value, 'L');
       var next = start.day(this.definition.weekday + 7);
       var trainings = [];
       while (next.isBefore(end)) {
@@ -126,7 +177,7 @@ export default {
         if (this.definition.team) {
           training.teams = [ this.definition.team ];
         }
-        training.coaches = this.form.coaches.value;
+        training.coaches = this.form.fields.coaches.value;
         trainings.push(training);
         next = next.day(this.definition.weekday + 7);
       }

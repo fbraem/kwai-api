@@ -1,47 +1,78 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
-    <div v-if="notAllowed" class="uk-alert-danger" uk-alert>
+    <div
+      v-if="notAllowed"
+      class="uk-alert-danger"
+      uk-alert
+    >
         {{ $t('not_allowed') }}
     </div>
-    <div v-if="notFound" class="uk-alert-danger" uk-alert>
+    <div
+      v-if="notFound"
+      class="uk-alert-danger"
+      uk-alert
+    >
         {{ $t('training.coaches.not_found') }}
     </div>
-    <div v-if="$wait.is('training.coaches.read')" class="uk-flex-center" uk-grid>
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div v-if="coach" uk-grid>
-      <div>
+    <Spinner v-if="$wait.is('training.coaches.read')" />
+    <div
+      v-if="coach"
+      uk-grid
+    >
+      <div class="uk-width-1-1">
         <table class="uk-table uk-table-striped">
           <tr>
-            <th>{{ $t('name') }}</th>
-            <td>{{ coach.name }}</td>
+            <th>
+              {{ $t('name') }}
+            </th>
+            <td>
+              {{ coach.name }}
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.coaches.form.diploma.label') }}</th>
-            <td>{{ coach.diploma }}</td>
+            <th>
+              {{ $t('training.coaches.form.diploma.label') }}
+            </th>
+            <td>
+              {{ coach.diploma }}
+            </td>
           </tr>
           <tr>
-            <th>{{ $t('training.coaches.form.description.label') }}</th>
-            <td>{{ coach.description }}</td>
+            <th>
+              {{ $t('training.coaches.form.description.label') }}
+            </th>
+            <td>
+              {{ coach.description }}
+            </td>
           </tr>
           <tr>
-              <th>{{ $t('training.coaches.form.active.label') }}</th>
+              <th>
+                {{ $t('training.coaches.form.active.label') }}
+              </th>
               <td>
-                  <i class="fas fa-check" v-if="coach.active"></i>
-                  <i class="fas fa-times uk-text-danger" v-else name="times"></i>
+                  <i
+                    v-if="coach.active"
+                    class="fas fa-check">
+                  </i>
+                  <i
+                    v-else
+                    class="fas fa-times uk-text-danger"
+                  >
+                  </i>
               </td>
           </tr>
           <tr>
-            <th>{{ $t('training.coaches.form.remark.label') }}</th>
-            <td>{{ coach.remark }}</td>
+            <th>
+              {{ $t('training.coaches.form.remark.label') }}
+            </th>
+            <td>
+              {{ coach.remark }}
+            </td>
           </tr>
         </table>
       </div>
-      <div>
-        <router-view name="coach_information"></router-view>
+      <div class="uk-width-1-1">
+        <router-view name="coach_information" />
       </div>
     </div>
   </div>
@@ -50,7 +81,12 @@
 <script>
 import messages from './lang';
 
+import Spinner from '@/components/Spinner';
+
 export default {
+  components: {
+    Spinner
+  },
   i18n: messages,
   computed: {
     coach() {

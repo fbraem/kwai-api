@@ -1,19 +1,24 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
-    <div v-if="$wait.is('training.browse')"
-      class="uk-flex-center" uk-grid>
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div v-else uk-grid>
-      <Calendar :year="year" :month="month" :trainings="trainings"
-        @prevMonth="prevMonth" @firstMonth="firstMonth"
-        @nextMonth="nextMonth" @lastMonth="lastMonth" />
-      <div v-if="noData">
-        <div class="uk-alert uk-alert-warning">
-          {{ $t('training.events.no_data') }}
+    <Spinner v-if="$wait.is('training.browse')" />
+    <div
+      v-else
+      uk-grid
+    >
+      <div class="uk-width-1-1">
+        <Calendar
+          :year="year"
+          :month="month"
+          :trainings="trainings"
+          @prevMonth="prevMonth"
+          @firstMonth="firstMonth"
+          @nextMonth="nextMonth"
+          @lastMonth="lastMonth"
+        />
+        <div v-if="noData">
+          <div class="uk-alert uk-alert-warning">
+            {{ $t('training.events.no_data') }}
+          </div>
         </div>
       </div>
     </div>
@@ -21,13 +26,14 @@
 </template>
 
 <script>
-import Calendar from './Calendar.vue';
+import Calendar from './Calendar';
+import Spinner from '@/components/Spinner';
 
 import messages from './lang';
 
 export default {
   components: {
-    Calendar
+    Calendar, Spinner
   },
   props: {
     year: {

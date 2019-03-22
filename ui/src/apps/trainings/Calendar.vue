@@ -1,48 +1,95 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="calendar">
-    <div class="uk-margin-bottom" uk-grid>
+    <div
+      class="uk-margin-bottom"
+      uk-grid
+    >
       <div>
-        <a @click="firstMonth" class="uk-link-reset uk-icon-button">
+        <a
+          @click="firstMonth"
+          class="uk-link-reset uk-icon-button"
+        >
           <i class="fas fa-angle-double-left"></i>
         </a>
-        <a @click="prevMonth" class="uk-link-reset uk-icon-button">
+        <a
+          @click="prevMonth"
+          class="uk-link-reset uk-icon-button"
+        >
           <i class="fas fa-angle-left "></i>
         </a>
       </div>
       <div class="uk-width-expand uk-text-center">
-        <span class="uk-h2 uk-text-capitalize">{{ monthName }} {{ year }}</span>
+        <span class="uk-h2 uk-text-capitalize">
+          {{ monthName }} {{ year }}
+        </span>
       </div>
       <div>
-        <a @click="nextMonth" class="uk-link-reset uk-icon-button">
+        <a
+          @click="nextMonth"
+          class="uk-link-reset uk-icon-button"
+        >
           <i class="fas fa-angle-right"></i>
         </a>
-        <a @click="lastMonth" class="uk-link-reset uk-icon-button">
+        <a
+          @click="lastMonth"
+          class="uk-link-reset uk-icon-button"
+        >
           <i class="fas fa-angle-double-right"></i>
         </a>
       </div>
     </div>
     <ol class="days">
-      <li class="day" v-for="(day, index) in days" :key="index"
-        :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }">
+      <li
+        v-for="(day, index) in days" :key="index"
+        class="day"
+        :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }"
+      >
         <div class="date">
-          <span class="weekday">{{ day.weekday }}</span>
-          <span class="day">{{ day.number }}</span>
-          <span class="month">{{ day.month }}</span>
-          <span class="year">{{ day.year }}</span>
+          <span class="weekday">
+            {{ day.weekday }}
+          </span>
+          <span class="day">
+            {{ day.number }}
+          </span>
+          <span class="month">
+            {{ day.month }}
+          </span>
+          <span class="year">
+            {{ day.year }}
+          </span>
         </div>
         <div class="events">
-          <div v-for="(event, index) in day.events" :key="index">
+          <div
+            v-for="(event, index) in day.events"
+            :key="index"
+          >
             {{ event.formattedStartTime }}&nbsp;
             <router-link :to="{ name: 'trainings.read', params: { id: event.id }}">
-              <del v-if="event.event.cancelled" :uk-tooltip="'title:' + $t('cancelled')">
+              <del
+                v-if="event.event.cancelled"
+                :uk-tooltip="'title:' + $t('cancelled')"
+              >
                 {{ event.content.title }}
               </del>
-              <span v-else>{{ event.content.title }}</span>
+              <span v-else>
+                {{ event.content.title }}
+              </span>
             </router-link>
-            <i v-if="event.event.cancelled" :uk-tooltip="'title:' + $t('cancelled')" class="fas fa-times" style="color: rgb(192,28,24)">
+            <i
+              v-if="event.event.cancelled"
+              :uk-tooltip="'title:' + $t('cancelled')"
+              class="fas fa-times"
+              style="color: rgb(192,28,24)"
+            >
             </i>
-            <i v-if="event.coaches == null || event.coaches.length == 0" :uk-tooltip="'title:' + $t('no_coach')" class="fas fa-user-times" style="color: rgb(192,28,24)"></i>
+            <i
+              v-if="event.coaches == null || event.coaches.length == 0"
+              :uk-tooltip="'title:' + $t('no_coach')"
+              class="fas fa-user-times"
+              style="color: rgb(192,28,24)"
+            >
+            </i>
           </div>
         </div>
       </li>
@@ -245,16 +292,28 @@ import moment from 'moment';
 
 import messages from './lang';
 
+/**
+ * Component for showing a calendar with trainings
+ */
 export default {
   props: {
+    /**
+     * The year of the calendar
+     */
     year: {
       type: Number,
       required: true
     },
+    /**
+     * The month of the calendar
+     */
     month: {
       type: Number,
       required: true
     },
+    /**
+     * The trainings of this year/month
+     */
     trainings: {
       type: Array,
       required: true

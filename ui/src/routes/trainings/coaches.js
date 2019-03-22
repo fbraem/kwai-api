@@ -3,42 +3,51 @@ import App from '@/site/App.vue';
 import moment from 'moment';
 
 const CoachesHeader = () =>
-import(/* webpackChunkName: "trainings_admin_chunck" */
-  '@/apps/trainings/CoachesHeader.vue');
+  import(/* webpackChunkName: "trainings_admin_chunck" */
+    '@/apps/trainings/TheCoachesHeader.vue'
+  );
 
 const CoachHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/CoachHeader.vue');
+    '@/apps/trainings/TheCoachHeader.vue'
+  );
 
 const CoachBrowse = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/CoachBrowse.vue');
+    '@/apps/trainings/CoachBrowse.vue'
+  );
 
 const CoachRead = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/CoachRead.vue');
+    '@/apps/trainings/CoachRead.vue'
+  );
 
 const CoachTrainings = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/CoachTrainings.vue');
+    '@/apps/trainings/CoachTrainings.vue'
+  );
 
 const CoachForm = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/CoachForm.vue');
+    '@/apps/trainings/CoachForm.vue'
+  );
 const CoachFormHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
-    '@/apps/trainings/CoachFormHeader.vue');
+    '@/apps/trainings/TheCoachFormHeader.vue'
+  );
 
 const TrainingStore = () =>
   import(/* webpackChunckName: "trainings_store_chunck" */
-    '@/stores/training');
+    '@/stores/training'
+  );
 const CoachStore = () =>
   import(/* webpackChunckName: "trainings_store_chunck" */
-    '@/stores/training/coaches');
+    '@/stores/training/coaches'
+  );
 const MemberStore = () =>
   import(/* webpackChunckName: "trainings_store_chunck" */
-    '@/stores/members');
-
+    '@/stores/members'
+  );
 
 export default [
   {

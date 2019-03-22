@@ -7,7 +7,7 @@ import coachesRouter from './coaches';
 
 const TrainingHeader = () =>
   import(/* webpackChunkName: "trainings_chunck" */
-    '@/apps/trainings/TrainingHeader.vue'
+    '@/apps/trainings/TheTrainingHeader.vue'
   );
 const TrainingRead = () =>
   import(/* webpackChunkName: "trainings_chunck" */
@@ -15,7 +15,7 @@ const TrainingRead = () =>
   );
 const TrainingsHeader = () =>
   import(/* webpackChunkName: "trainings_chunck" */
-    '@/apps/trainings/TrainingsHeader.vue'
+    '@/apps/trainings/TheTrainingsHeader.vue'
   );
 const TrainingBrowse = () =>
   import(/* webpackChunkName: "trainings_chunck" */
@@ -27,7 +27,7 @@ const TrainingForm = () =>
   );
 const TrainingFormHeader = () =>
   import(/* webpackChunkName: "trainings_chunck" */
-    '@/apps/trainings/TrainingFormHeader.vue'
+    '@/apps/trainings/TheTrainingFormHeader.vue'
   );
 
 const Store = () =>
@@ -127,6 +127,10 @@ function routes() {
               {
                 ns: ['team'],
                 create: TeamStore
+              },
+              {
+                ns: ['training', 'coach'],
+                create: CoachStore
               },
             ]
           },

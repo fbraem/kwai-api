@@ -1,39 +1,66 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <div v-if="$wait.is('training.coaches.browse')"
-      class="uk-flex-center" uk-grid>
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div v-else uk-grid>
-      <div v-if="noData">
-        <div class="uk-alert uk-alert-warning">
+    <Spinner v-if="$wait.is('training.coaches.browse')" />
+    <div
+      v-else
+      uk-grid
+    >
+      <div
+        v-if="noData"
+        class="uk-width-1-1"
+      >
+        <div class="uk-alert-warning" uk-alert>
           {{ $t('training.coaches.no_data') }}
         </div>
       </div>
-      <div v-else>
+      <div
+        v-else
+        class="uk-width-1-1"
+       >
         <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
           <tr>
-            <th>{{ $t('name') }}</th>
-            <th>{{ $t('training.coaches.form.diploma.label') }}</th>
-            <th>{{ $t('training.coaches.form.active.label') }}</th>
+            <th>
+              {{ $t('name') }}
+            </th>
+            <th>
+              {{ $t('training.coaches.form.diploma.label') }}
+            </th>
+            <th>
+              {{ $t('training.coaches.form.active.label') }}
+            </th>
             <th></th>
           </tr>
-          <tr v-for="coach in coaches" :key="coach.id">
+          <tr
+            v-for="coach in coaches"
+            :key="coach.id"
+          >
             <td>
-              <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">{{ coach.member.person.name }}</router-link>
+              <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">
+                {{ coach.member.person.name }}
+              </router-link>
             </td>
             <td>
               {{ coach.diploma }}
             </td>
             <td>
-              <i class="fas fa-check" v-if="coach.active"></i>
-              <i class="fas fa-times uk-text-danger" v-else name="times"></i>
+              <i
+                v-if="coach.active"
+                class="fas fa-check"
+              >
+              </i>
+              <i
+                v-else
+                class="fas fa-times uk-text-danger"
+              >
+              </i>
             </td>
             <td>
-              <router-link class="uk-icon-button uk-link-reset" v-if="$can('update', coach)" :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }">
+              <router-link
+                v-if="$can('update', coach)"
+                class="uk-icon-button uk-link-reset"
+                :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }"
+              >
                 <i class="fas fa-edit uk-text-muted"></i>
               </router-link>
             </td>
@@ -45,9 +72,13 @@
 </template>
 
 <script>
+import Spinner from '@/components/Spinner';
 import messages from './lang';
 
 export default {
+  components: {
+    Spinner
+  },
   i18n: messages,
   computed: {
     coaches() {
