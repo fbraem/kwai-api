@@ -1,7 +1,15 @@
 <template>
-  <multiselect v-model="field.value" :id="id"
-    placeholder="" v-bind="$attrs" :required="field.required">
-    <template v-if="field.placeholder" slot="placeholder">
+  <multiselect
+    v-model="field.value"
+    :id="id"
+    placeholder=""
+    v-bind="$attrs"
+    :required="field.required"
+  >
+    <template
+      v-if="field.placeholder"
+      slot="placeholder"
+    >
       {{ field.placeholder }}
     </template>
   </multiselect>
