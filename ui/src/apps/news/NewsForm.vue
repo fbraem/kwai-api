@@ -81,7 +81,7 @@
                   </KwaiField>
                 </div>
                 <div>
-                  {{ form.featured.value }}
+                  {{ form.fields.featured.value }}
                 </div>
               </div>
             </div>
