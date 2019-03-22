@@ -150,20 +150,6 @@ export default {
     if (to.params.id) await this.fetchData(to.params);
     next();
   },
-  watch: {
-    error(nv) {
-      if (nv) {
-        if (nv.response.status === 422) {
-          this.handleErrors(nv.response.data.errors);
-        } else if (nv.response.status === 404) {
-          // this.error = err.response.statusText;
-        } else {
-          // TODO: check if we can get here ...
-          console.log(nv);
-        }
-      }
-    }
-  },
   methods: {
     async fetchData(params) {
       this.season = await this.$store.dispatch('season/read', {
