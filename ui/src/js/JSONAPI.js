@@ -91,10 +91,8 @@ class JSONAPI {
    */
   async get(id) {
     var uri = this.uri.clone();
-    var segments = uri.segment();
-    segments.push(this.source.type());
-    if (id) segments.push(id);
-    uri.segment(segments);
+    uri.segment(this.source.type());
+    if (id) uri.segment(id);
     const config = {
       method: 'GET',
       url: uri.href(),
@@ -108,11 +106,9 @@ class JSONAPI {
 
   async custom({id, path}) {
     var uri = this.uri.clone();
-    var segments = uri.segment();
-    segments.push(this.source.type());
-    if (id) segments.push(id);
-    if (path) segments.push(path);
-    uri.segment(segments);
+    uri.segment(this.source.type());
+    if (id) uri.segment(id);
+    if (path) uri.segment(path);
     const config = {
       method: 'GET',
       url: uri.href(),
@@ -134,10 +130,8 @@ class JSONAPI {
    */
   async save(model) {
     var uri = this.uri.clone();
-    var segments = uri.segment();
-    segments.push(this.source.type());
-    if (model.id) segments.push(model.id);
-    uri.segment(segments);
+    uri.segment(this.source.type());
+    if (model.id) uri.segment(model.id);
 
     var data = Array.isArray(model) ?
       model.map(element => element.serialize()) : model.serialize();
@@ -162,10 +156,8 @@ class JSONAPI {
    */
   async delete(model) {
     var uri = this.uri.clone();
-    var segments = uri.segment();
-    segments.push(this.source.type());
-    if (model.id) segments.push(model.id);
-    uri.segment(segments);
+    uri.segment(this.source.type());
+    if (model.id) uri.segment(model.id);
 
     const config = {
       method: 'DELETE',
@@ -181,20 +173,18 @@ class JSONAPI {
    */
   async attach(model, relation) {
     var uri = this.uri.clone();
-    var segments = uri.segment();
-    segments.push(this.source.type());
+    uri.segment(this.source.type());
     if (!model.id) throw new Error('Model needs an id!');
 
-    segments.push(model.id);
+    uri.segment(model.id);
     if (Array.isArray(relation)) {
-      segments.push(relation[0].constructor.type());
+      uri.segment(relation[0].constructor.type());
     } else {
-      segments.push(relation.constructor.type());
+      uri.segment(relation.constructor.type());
       if (relation.id) {
-        segments.push(relation.id);
+        uri.segment(relation.id);
       }
     }
-    uri.segment(segments);
 
     var data = Array.isArray(relation) ?
       relation.map(element => element.serialize()) : relation.serialize();
@@ -220,20 +210,18 @@ class JSONAPI {
    */
   async detach(model, relation) {
     var uri = this.uri.clone();
-    var segments = uri.segment();
-    segments.push(this.source.type());
+    uri.segment(this.source.type());
     if (!model.id) throw new Error('Model needs an id!');
 
-    segments.push(model.id);
+    uri.segment(model.id);
     if (Array.isArray(relation)) {
-      segments.push(relation[0].constructor.type());
+      uri.segment(relation[0].constructor.type());
     } else {
-      segments.push(relation.constructor.type());
+      uri.segment(relation.constructor.type());
       if (relation.id) {
-        segments.push(relation.id);
+        uri.segment(relation.id);
       }
     }
-    uri.segment(segments);
 
     var data = Array.isArray(relation) ?
       relation.map(element => element.serialize()) : relation.serialize();
