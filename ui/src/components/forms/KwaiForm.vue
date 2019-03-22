@@ -46,7 +46,8 @@ export default {
      * Validations that depends on multiple fields
      */
     validations: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     /**
      * The error that can be returned by JSONAPI
