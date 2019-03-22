@@ -34,7 +34,7 @@ const CategoryStore = () => import(
   '@/stores/categories'
 );
 const PageStore = () => import(
-  /* webpackChunkName: "news_chunck" */
+  /* webpackChunkName: "pages_chunck" */
   '@/stores/pages'
 );
 
