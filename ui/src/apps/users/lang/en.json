@@ -21,15 +21,15 @@
     "form" : {
         "first_name" : {
             "label" : "Firstname",
-            "placeholder" : "Enter your firstname"
+            "placeholder" : "Enter the firstname"
         },
         "last_name" : {
             "label" : "Lastname",
-            "placeholder" : "Enter your lastname"
+            "placeholder" : "Enter the lastname"
         },
         "email" : {
             "label" : "Email",
-            "placeholder" : "Enter your email",
+            "placeholder" : "Enter email",
             "invalid" : "Invalid email"
         },
         "password" : {
@@ -47,5 +47,8 @@
     "required" : "This is a required field",
     "save" : "Save",
     "invite" : "Invite a new user",
-    "invite_intro" : "Your about to invite a user to become a member of your website. The invitation will be send to the given email address."
+    "invite_intro" : "Your about to invite a user to become a member of your website. The invitation will be send to the given email address.",
+    "no_data" : "There are no users defined",
+    "not_found" : "This user doesn't exist",
+    "not_allowed" : "You are not allowed to view this information"
 }

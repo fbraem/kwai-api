@@ -21,15 +21,15 @@
     "form" : {
         "first_name" : {
             "label" : "Voornaam",
-            "placeholder" : "Geef jouw voornaam in"
+            "placeholder" : "Geef de voornaam in"
         },
         "last_name" : {
             "label" : "Familienaam",
-            "placeholder" : "Geef jouw familienaam in"
+            "placeholder" : "Geef de familienaam in"
         },
         "email" : {
             "label" : "Email",
-            "placeholder" : "Geef jouw email adres in",
+            "placeholder" : "Geef het email adres in",
             "invalid" : "Ongeldig email adres"
         },
         "password" : {
@@ -47,5 +47,8 @@
     "required" : "Dit is een verplicht in te vullen veld",
     "save" : "Bewaar",
     "invite" : "Nodig een gebruiker uit",
-    "invite_intro" : "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd."
+    "invite_intro" : "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd.",
+    "no_data" : "Er zijn momenteel geen gebruikers",
+    "not_found" : "Deze gebruiker bestaat niet",
+    "not_allowed" : "Je hebt geen toelating om deze informatie te bekijken"
 }
