@@ -25,7 +25,7 @@ export default class User extends Model {
   static computed() {
     return {
       name(user) {
-        return user.first_name + ' ' + user.last_name;
+        return [user.last_name, user.first_name].filter(Boolean).join(' ');
       },
       lastLoginFormatted(story) {
         if (story.last_login) {
