@@ -39,7 +39,7 @@ import makeForm, { makeField, notEmpty } from '@/js/Form.js';
 import KwaiForm from '@/components/forms/KwaiForm.vue';
 import KwaiField from '@/components/forms/KwaiField.vue';
 import KwaiInputText from '@/components/forms/KwaiInputText.vue';
-import KwaiTextarea from '@/components/forms/Textarea.vue';
+import KwaiTextarea from '@/components/forms/KwaiTextarea.vue';
 
 const makeCategoryForm = (fields) => {
   const writeForm = (category) => {
