@@ -2,11 +2,7 @@
   <!-- eslint-disable max-len -->
   <div>
     <Page>
-      <div v-if="$wait.is('news.browse')" class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
+      <Spinner v-if="$wait.is('news.browse')" />
       <div v-else uk-grid>
         <div v-if="storiesMeta">
           <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
@@ -35,6 +31,7 @@ import Page from './Page.vue';
 import NewsCard from './components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
+import Spinner from '@/components/Spinner';
 
 import UIkit from 'uikit';
 
@@ -46,7 +43,8 @@ export default {
     Page,
     NewsCard,
     Paginator,
-    AreYouSure
+    AreYouSure,
+    Spinner
   },
   data() {
     return {
