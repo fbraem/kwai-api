@@ -3,30 +3,23 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+import JSONAPI from '@/js/JSONAPI';
+
 import User from '@/models/User';
 import UserInvitation from '@/models/UserInvitation';
 
 const state = () => {
   return {
+    meta: null,
     users: [],
     invitations: [],
-    status: {
-      loading: false,
-      success: false,
-      error: false,
-    },
+    error: null
   };
 };
 
 const getters = {
-  users(state) {
-    return state.users;
-  },
   user: (state) => (id) => {
     return state.users.find((user) => user.id === id);
-  },
-  invitations(state) {
-    return state.invitations;
   },
   invitationByToken: (state) => (token) => {
     return state.invitations.find((invitation) => invitation.token === token);
@@ -34,83 +27,70 @@ const getters = {
   invitationById: (state) => (id) => {
     return state.invitations.find((invitation) => invitation.id === id);
   },
-  loading(state) {
-    return state.status.loading;
-  },
-  success(state) {
-    return state.status.success;
-  },
-  error(state) {
-    return state.status.error;
-  },
 };
 
 const mutations = {
-  users(state, users) {
-    state.users = users;
+  users(state, { meta, data }) {
+    state.users = data;
+    state.error = null;
   },
-  user(state, user) {
-    var index = state.users.findIndex((u) => u.id === user.id);
+  user(state, { data }) {
+    var index = state.users.findIndex((u) => u.id === data.id);
     if (index !== -1) {
-      Vue.set(state.users, index, user);
+      Vue.set(state.users, index, data);
     } else {
-      state.users.push(user);
+      state.users.push(data);
     }
+    state.error = null;
   },
-  invitation(state, invitation) {
-    var index = state.invitations.findIndex((i) => i.id === invitation.id);
+  invitation(state, data) {
+    var index = state.invitations.findIndex((i) => i.id === data.id);
     if (index !== -1) {
-      Vue.set(state.invitations, index, invitation);
+      Vue.set(state.invitations, index, data);
     } else {
-      state.invitations.push(invitation);
+      state.invitations.push(data);
     }
+    state.error = null;
   },
-  loading(state) {
-    state.status = {
-      loading: true,
-      success: false,
-      error: false,
-    };
-  },
-  success(state) {
-    state.status = {
-      loading: false,
-      success: true,
-      error: false,
-    };
-  },
-  error(state, payload) {
-    state.status.loading = false;
-    state.status.success = false;
-    state.status.error = payload;
+  error(state, data) {
+    state.error = data;
   },
 };
 
 const actions = {
-  async browse({ state, getters, commit, context }, payload) {
-    commit('loading');
-    const user = new User();
-    let users = await user.get();
-    commit('users', users);
-    commit('success');
+  async browse({ dispatch, commit }, payload) {
+    dispatch('wait/start', 'users.browse', { root: true });
+    try {
+      var api = new JSONAPI({ source: User });
+      let result = await api.get();
+      commit('users', result);
+    } catch (error) {
+      commit('error', error);
+      throw error;
+    } finally {
+      dispatch('wait/end', 'users.browse', { root: true });
+    }
   },
-  async read({ state, getters, commit, context }, payload) {
-    commit('loading');
+  async read({ dispatch, getters, commit }, payload) {
     var user = getters['user'](payload.id);
     if (user) { // already read
-      commit('success');
-    } else {
-      let model = new User();
-      try {
-        user = await model.find(payload.id);
-        commit('user', user);
-        commit('success');
-      } catch (error) {
-        commit('error', error);
-      }
+      return user;
     }
-    return user;
+
+    dispatch('wait/start', 'users.read', { root: true });
+    try {
+      var api = new JSONAPI({ source: User });
+      var result = await api.get(payload.id);
+      commit('user', result);
+      return result.data;
+    } catch (error) {
+      commit('error', error);
+      throw error;
+    } finally {
+      dispatch('wait/end', 'users.read', { root: true });
+    }
   },
+
   async invite({ state, getters, commit, context }, invitation) {
     commit('loading');
     try {
