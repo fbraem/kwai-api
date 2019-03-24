@@ -25,7 +25,7 @@ const Form = (fields, validators) => {
     field.errors.splice(0, field.errors.length);
     var valid = field.validators.every((validator) => {
       var vFn = validator.v.bind(field);
-      field.valid = vFn(field.value);
+      field.valid = vFn(field.value, validator.params);
       if (!field.valid && showErrors) {
         field.errors.push(validator.error);
       }
@@ -71,6 +71,13 @@ export const makeField = ({value, validators, required} = {}) => {
  */
 export function notEmpty(value) {
   return value != null && value.length > 0;
+}
+
+/**
+ * Checks if a value has a mininum length
+ */
+export function minLength(value, { min }) {
+  return value != null && value.length > min;
 }
 
 import moment from 'moment';
