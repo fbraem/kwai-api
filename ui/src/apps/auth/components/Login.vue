@@ -24,13 +24,13 @@
           icon="fas fa-unlock"
         >
           <KwaiField
-            name="email"
+            name="login_email"
             :label="$t('email.label')"
           >
             <KwaiEmail :placeholder="$t('email.placeholder')" />
           </KwaiField>
           <KwaiField
-            name="password"
+            name="login_password"
             :label="$t('password.label')"
           >
             <KwaiPassword :placeholder="$t('password.placeholder')" />
@@ -38,7 +38,10 @@
         </KwaiForm>
       </div>
     </div>
-    <div v-if="isLoggedIn" class="uk-inline">
+    <div
+      v-if="isLoggedIn"
+      class="uk-inline"
+    >
       <a class="uk-icon-button uk-link-reset">
         <i class="fas fa-user"></i>
       </a>
@@ -53,7 +56,10 @@
         </ul>
       </div>
     </div>
-    <div v-else class="uk-inline">
+    <div
+      v-else
+      class="uk-inline"
+    >
       <a class="uk-icon-button uk-link-reset" @click="login">
         <i class="fas fa-lock"></i>
       </a>
@@ -62,8 +68,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import User from '@/models/User';
 
 import UIkit from 'uikit';
@@ -77,14 +81,18 @@ import KwaiPassword from '@/components/forms/KwaiPassword.vue';
 
 const makeLoginForm = (fields) => {
   const writeForm = (user) => {
-    fields.email.value = user.email;
-    fields.password.value = user.password;
+    fields.login_email.value = user.email;
+    fields.login_password.value = user.password;
   };
   const readForm = (user) => {
-    user.email = fields.email.value;
-    user.password = fields.password.value;
+    user.email = fields.login_email.value;
+    user.password = fields.login_password.value;
   };
-  return { ...makeForm(fields), writeForm, readForm };
+  const clear = () => {
+    fields.login_email.value = '';
+    fields.login_password.value = '';
+  };
+  return { ...makeForm(fields), writeForm, readForm, clear };
 };
 
 import messages from '../lang';
@@ -100,11 +108,11 @@ export default {
   data() {
     return {
       user: new User(),
+      modal: null,
       error: null,
       form: makeLoginForm({
-        email: makeField({
+        login_email: makeField({
           required: true,
-          value: '',
           validators: [
             {
               v: notEmpty,
@@ -116,9 +124,8 @@ export default {
             },
           ]
         }),
-        password: makeField({
+        login_password: makeField({
           required: true,
-          value: '',
           validators: [
             {
               v: notEmpty,
@@ -137,30 +144,28 @@ export default {
   },
   methods: {
     clear() {
-      this.form.email.value = '';
-      this.form.password.value = '';
-      Vue.nextTick().then(() => {
-        this.form.clearErrors();
-      });
+      this.form.clear();
+      this.form.clearErrors();
     },
     login() {
-      var modal = UIkit.modal(this.$refs.dialog);
-      modal.show();
+      if (!this.modal) {
+        this.modal = UIkit.modal(document.getElementById('login-form'));
+      }
+      this.modal.show();
     },
     submit() {
       this.error = null;
-      this.form.clearErrors();
       this.form.readForm(this.user);
       this.$store.dispatch('login', this.user)
         .then(() => {
           this.clear();
-          var modal = UIkit.modal(this.$refs.dialog);
-          modal.hide();
+          this.modal.hide();
         }).catch((e) => {
-          if (e.response.data.error === 'invalid_credentials') {
+          this.clear();
+          if (e.response && e.response.data.error === 'invalid_credentials') {
             this.error = this.$t('invalid_credentials');
           } else {
-            console.log(e.response.data);
+            console.log(e);
           }
         });
     },
