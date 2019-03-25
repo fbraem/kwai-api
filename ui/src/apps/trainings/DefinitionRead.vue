@@ -20,7 +20,7 @@
       v-if="definition"
       uk-grid
     >
-      <div>
+      <div class="uk-width-1-1">
         <table class="uk-table uk-table-striped">
           <tr>
             <th>
