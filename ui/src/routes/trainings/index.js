@@ -21,23 +21,54 @@ const TrainingBrowse = () =>
   import(/* webpackChunkName: "trainings_chunck" */
     '@/apps/trainings/TrainingBrowse.vue'
   );
-const TrainingForm = () =>
+const TrainingIndex = () =>
   import(/* webpackChunkName: "trainings_chunck" */
+    '@/apps/trainings/Index.vue'
+  );
+const TrainingForm = () =>
+  import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/TrainingForm.vue'
   );
 const TrainingFormHeader = () =>
-  import(/* webpackChunkName: "trainings_chunck" */
+  import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/TheTrainingFormHeader.vue'
   );
 
 const Store = () =>
-  import('@/stores/training');
+  import(
+    /* webpackChunkName: "trainings_chunck" */
+    '@/stores/training'
+  );
 const CoachStore = () =>
-  import('@/stores/training/coaches');
+  import(
+    /* webpackChunkName: "trainings_chunck" */
+    '@/stores/training/coaches'
+  );
 const SeasonStore = () =>
-  import('@/stores/seasons');
+  import(
+    /* webpackChunkName: "seasons_chunck" */
+    '@/stores/seasons'
+  );
 const TeamStore = () =>
-  import('@/stores/teams');
+  import(
+    /* webpackChunkName: "teams_chunck" */
+    '@/stores/teams'
+  );
+const NewsStore = () =>
+  import(
+    /* webpackChunkName: "news_chunck" */
+    '@/stores/news'
+  );
+const CategoryStore = () =>
+  import(
+    /* webpackChunkName: "categories_chunck" */
+    '@/stores/categories'
+  );
+const PageStore = () =>
+  import(
+    /* webpackChunkName: "pages_chunck" */
+    '@/stores/pages'
+  );
 
 function routes() {
   var route = [
@@ -138,13 +169,31 @@ function routes() {
         },
         {
           path: '',
-          redirect: {
-            name: 'trainings.browse',
-            params: {
-              year: moment().year(),
-              month: moment().month() + 1
-            }
-          }
+          meta: {
+            stores: [
+              {
+                ns: ['news'],
+                create: NewsStore
+              },
+              {
+                ns: ['page'],
+                create: PageStore
+              },
+              {
+                ns: ['category'],
+                create: CategoryStore
+              },
+              {
+                ns: ['training', 'coach'],
+                create: CoachStore
+              },
+            ]
+          },
+          components: {
+            header: TrainingsHeader,
+            main: TrainingIndex
+          },
+          name: 'trainings.index'
         },
       ]
     },

@@ -83,5 +83,9 @@
     "are_you_sure" : "Ben je zeker om dit nieuwsbericht te verwijderen?",
     "cancel" : "Annuleer",
     "delete" : "Verwijder",
-    "share" : "Deel"
+    "share" : "Deel",
+    "featured_news" : "Belangrijke Berichten",
+    "no_featured_news" : "Momenteel zijn er geen belangrijke berichten.",
+    "see_old_news" : "Bekijk de vorige berichten",
+    "more_news" : "Lees meer nieuws"
 }

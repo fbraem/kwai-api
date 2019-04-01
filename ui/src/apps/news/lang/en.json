@@ -88,5 +88,9 @@
     "are_you_sure" : "Are you sure to delete this newsstory?",
     "cancel" : "Cancel",
     "delete" : "Delete",
-    "share" : "Share"
+    "share" : "Share",
+    "featured_news" : "Headline News",
+    "no_featured_news" : "At the moment there are no important news items",
+    "see_old_news" : "Read old news",
+    "more_news" : "Read more news"
 }
