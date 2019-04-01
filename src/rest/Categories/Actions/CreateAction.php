@@ -49,6 +49,7 @@ class CreateAction
             $category->short_description = $attributes['short_description'];
             $category->description = $attributes['description'];
             $category->remark = $attributes['remark'];
+            $category->slug = $attributes['slug'];
             $category->user = $request->getAttribute('clubman.user');
             $categoriesTable->save($category);
 
