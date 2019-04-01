@@ -1,25 +1,59 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
     <Page>
       <Spinner v-if="$wait.is('news.browse')" />
-      <div v-else uk-grid>
-        <div v-if="storiesMeta">
-          <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
+      <div
+        v-else
+        uk-grid
+      >
+        <div
+          v-if="storiesMeta"
+          class="uk-width-1-1"
+        >
+          <Paginator
+            :count="storiesMeta.count"
+            :limit="storiesMeta.limit"
+            :offset="storiesMeta.offset"
+            @page="readPage"
+          />
         </div>
-        <div class="uk-child-width-1-1@s uk-child-width-1-2@xl" uk-grid>
-          <NewsCard v-for="story in stories" :key="story.id" :story="story" @deleteStory="deleteStory"></NewsCard>
+        <div
+          class="uk-child-width-1-1@s uk-child-width-1-2@xl"
+          uk-grid
+        >
+          <NewsCard
+            v-for="story in stories"
+            :key="story.id"
+            :story="story"
+            @deleteStory="deleteStory"
+          />
         </div>
-        <div v-if="storiesMeta">
-          <Paginator :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="readPage"></Paginator>
+        <div
+          v-if="storiesMeta"
+          class="uk-width-1-1"
+        >
+          <Paginator
+            :count="storiesMeta.count"
+            :limit="storiesMeta.limit"
+            :offset="storiesMeta.offset"
+            @page="readPage"
+          />
         </div>
       </div>
-      <div v-if="! $wait.is('news.browse') && newsCount == 0">
+      <div
+        v-if="! $wait.is('news.browse') && newsCount == 0"
+        class="uk-width-1-1"
+      >
         <div uk-alert>
           {{ $t('no_news') }}
         </div>
       </div>
-      <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
+      <AreYouSure
+        id="delete-story"
+        :yes="$t('delete')"
+        :no="$t('cancel')"
+        @sure="doDeleteStory"
+      >
         {{ $t('are_you_sure') }}
       </AreYouSure>
     </Page>
