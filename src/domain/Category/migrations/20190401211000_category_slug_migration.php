@@ -10,7 +10,7 @@ class CategorySlugMigration extends AbstractMigration
     public function up()
     {
         $this->table('categories', ['signed' => false])
-            ->addColumn('slung', 'string')
+            ->addColumn('slug', 'string')
             ->save()
         ;
     }
