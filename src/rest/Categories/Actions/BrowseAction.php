@@ -21,9 +21,25 @@ class BrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        $parameters = $request->getAttribute('parameters');
+
+        $query = CategoriesTable::getTableFromRegistry()->find();
+
+        if (isset($parameters['filter']['slug'])) {
+            $query->where(['slug' => $parameters['filter']['slug']]);
+        }
+
+        $count = $query->count();
+
+        $limit = $parameters['page']['limit'] ?? 10;
+        $offset = $parameters['page']['offset'] ?? 0;
+
+        $query->limit($limit);
+        $query->offset($offset);
+
         return (new \Core\Responses\ResourceResponse(
             CategoryTransformer::createForCollection(
-                CategoriesTable::getTableFromRegistry()->find()->all(),
+                $query->all(),
                 $this->container->get('filesystem')
             )
         ))($response);
