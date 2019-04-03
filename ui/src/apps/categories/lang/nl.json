@@ -16,6 +16,11 @@
             "placeholder" : "Geef een naam in",
             "required" : "Naam is verplicht in te vullen"
         },
+        "slug" : {
+            "label" : "Slug",
+            "placeholder" : "Geef een slug in",
+            "required" : "Slug is verplicht in te vullen"
+        },
         "description" : {
             "label" : "Omschrijving",
             "placeholder" : "Geef een omschrijving in"

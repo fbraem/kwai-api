@@ -15,6 +15,11 @@
             "placeholder" : "Enter a name",
             "required" : "A name is required"
         },
+        "slug" : {
+            "label" : "Slug",
+            "placeholder" : "Enter a slug",
+            "required" : "Slug is required"
+        },
         "description" : {
             "label" : "Description",
             "placeholder" : "Enter a description"

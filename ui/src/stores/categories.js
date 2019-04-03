@@ -19,6 +19,12 @@ const getters = {
     }
     return null;
   },
+  categoryWithSlug: (state) => (slug) => {
+    if (state.categories) {
+      return state.categories.find((category) => category.slug === slug);
+    }
+    return null;
+  },
   categoriesAsOptions(state) {
     var categories = state.categories;
     if (categories) {
@@ -65,6 +71,11 @@ const actions = {
     dispatch('wait/start', 'categories.browse', { root: true });
     try {
       var api = new JSONAPI({ source: Category });
+      if (payload) {
+        if (payload.slug) {
+          api.where('slug', payload.slug);
+        }
+      }
       commit('categories', await api.get());
     } catch (error) {
       commit('error', error);

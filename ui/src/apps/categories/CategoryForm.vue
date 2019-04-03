@@ -12,6 +12,12 @@
       <KwaiInputText :placeholder="$t('form.name.placeholder')" />
     </KwaiField>
     <KwaiField
+      name="slug"
+      :label="$t('form.slug.label')"
+    >
+      <KwaiInputText :placeholder="$t('form.slug.placeholder')" />
+    </KwaiField>
+    <KwaiField
       name="short_description"
       :label="$t('form.short_description.label')"
     >
@@ -44,12 +50,14 @@ import KwaiTextarea from '@/components/forms/KwaiTextarea.vue';
 const makeCategoryForm = (fields) => {
   const writeForm = (category) => {
     fields.name.value = category.name;
+    fields.slug.value = category.slug;
     fields.description.value = category.description;
     fields.remark.value = category.remark;
     fields.short_description.value = category.short_description;
   };
   const readForm = (category) => {
     category.name = fields.name.value;
+    category.slug = fields.slug.value;
     category.description = fields.description.value;
     category.remark = fields.remark.value;
     category.short_description = fields.short_description.value;
@@ -76,7 +84,6 @@ export default {
       form: makeCategoryForm({
         name: makeField({
           required: true,
-          value: '',
           validators: [
             {
               v: notEmpty,
@@ -84,15 +91,19 @@ export default {
             },
           ]
         }),
-        description: makeField({
-          value: '',
+        slug: makeField({
+          required: true,
+          validators: [
+            {
+              v: notEmpty,
+              error: this.$t('form.slug.required'),
+            },
+          ]
         }),
-        remark: makeField({
-          value: ''
-        }),
+        description: makeField(),
+        remark: makeField(),
         short_description: makeField({
           required: true,
-          value: '',
           validators: [
             {
               v: notEmpty,
