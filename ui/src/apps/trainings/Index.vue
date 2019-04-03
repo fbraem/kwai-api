@@ -40,6 +40,9 @@
 </template>
 
 <script>
+
+const CATEGORY_SLUG = 'training';
+
 import moment from 'moment';
 
 import NewsListCard from '@/apps/news/components/NewsListCard';
@@ -62,7 +65,7 @@ export default {
   },
   computed: {
     category() {
-      return this.$store.getters['category/category']('2');
+      return this.$store.getters['category/categoryWithSlug'](CATEGORY_SLUG);
     },
     stories() {
       return this.$store.state.news.stories || [];
@@ -100,16 +103,16 @@ export default {
     next();
   },
   methods: {
-    fetchData(params) {
-      this.$store.dispatch('category/read', {
-        id: '2'
+    async fetchData(params) {
+      await this.$store.dispatch('category/browse', {
+        slug: CATEGORY_SLUG
       });
       this.$store.dispatch('news/browse', {
-        category: '2',
+        category: this.category.id,
         featured: true
       });
       this.$store.dispatch('page/browse', {
-        category: '2'
+        category: this.category.id
       });
       this.$store.dispatch('training/browse', {
         year: this.year,
