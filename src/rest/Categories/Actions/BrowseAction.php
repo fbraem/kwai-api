@@ -29,14 +29,6 @@ class BrowseAction
             $query->where(['slug' => $parameters['filter']['slug']]);
         }
 
-        $count = $query->count();
-
-        $limit = $parameters['page']['limit'] ?? 10;
-        $offset = $parameters['page']['offset'] ?? 0;
-
-        $query->limit($limit);
-        $query->offset($offset);
-
         return (new \Core\Responses\ResourceResponse(
             CategoryTransformer::createForCollection(
                 $query->all(),
