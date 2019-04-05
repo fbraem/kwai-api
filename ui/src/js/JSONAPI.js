@@ -76,6 +76,22 @@ class JSONAPI {
   }
 
   /**
+   * Add a sort
+   * @param {string} field
+   *        The name of the field to use for sorting.
+   */
+  sort(field) {
+    var query = this.uri.query(true);
+    query.sort = query.sort || '';
+    if (query.sort.length > 0) {
+      query.sort += ',';
+    }
+    query.sort += field;
+    this.uri.query(query);
+    return this;
+  }
+
+  /**
   * @typedef {Object} Data
   * @property {object} meta The meta information of the request.
   * @property {object|array} data The returned data as object or array.
