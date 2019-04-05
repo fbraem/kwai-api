@@ -23,9 +23,21 @@ class CoachBrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        $parameters = $request->getAttribute('parameters');
+
         $table = CoachesTable::getTableFromRegistry();
         $query = $table->find();
-        $query->contain(['Member', 'Member.Person']);
+        $query->contain([
+            'Member',
+            'Member.Person'
+        ]);
+
+        if (in_array('name', $parameters['sort'])) {
+            $query->order([
+                'Person.lastname',
+                'Person.firstname'
+            ]);
+        }
 
         return (new ResourceResponse(
             CoachTransformer::createForCollection(
