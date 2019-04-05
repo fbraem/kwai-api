@@ -3,36 +3,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-import Vuex from 'vuex';
-Vue.use(Vuex);
-
-/**
- * Check registred module
- * @param {Array} aPath - path to module - ex: ['my', 'nested', 'module']
- * @return {Boolean}
- */
-Vuex.Store.prototype.hasModule = function(aPath) {
-  let m = this._modules.root;
-  return aPath.every((p) => {
-    m = m._children[p];
-    return m;
-  });
-};
-/**
- * Register a module if it is not yet registered
- */
-Vuex.Store.prototype.setModule = async function(aPath, createFn) {
-  var has = await this.hasModule(aPath);
-  if (!has) {
-    var m = await createFn();
-    if (!m) {
-      console.log("Can't create module ", aPath);
-    } else {
-      await this.registerModule(aPath, m.default);
-    }
-  }
-};
-
 import UIkit from 'uikit';
 import UIkitIcons from 'uikit/dist/js/uikit-icons';
 UIkit.use(UIkitIcons);
@@ -50,7 +20,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import moment from 'moment';
 moment.locale('nl');
 
-import store from '@/stores/root';
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
 
 /**
  * Initialise casl
@@ -71,18 +42,20 @@ const router = new VueRouter({
   routes: routes(),
 });
 router.beforeEach(async(to, from, next) => {
-  for (var r in to.matched) {
+  const promisses = [];
+  for (const r in to.matched) {
     var matched = to.matched[r];
     if (!matched.meta.called && matched.meta.stores) {
       matched.meta.called = true;
-      for (var s in matched.meta.stores) {
-        await store.setModule(
+      for (const s in matched.meta.stores) {
+        promisses.push(store.setModule(
           matched.meta.stores[s].ns,
           matched.meta.stores[s].create
-        );
+        ));
       }
     }
   }
+  await Promise.all(promisses);
   next();
 });
 
