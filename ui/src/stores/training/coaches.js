@@ -49,6 +49,7 @@ const actions = {
     dispatch('wait/start', 'training.coaches.browse', { root: true });
     try {
       var api = new JSONAPI({ source: TrainingCoach });
+      api.sort('name');
       commit('coaches', await api.get());
     } catch (error) {
       commit('error', error);
