@@ -27,6 +27,10 @@ class ParametersMiddleware
         if ($includeParameter !== null) {
             $parameters['include'] = explode(',', $includeParameter);
         }
+        $sortParameter = $this->getSortParameter($queryParameters);
+        if ($sortParameter !== null) {
+            $parameters['sort'] = explode(',', $sortParameter);
+        }
 
         $request = $request->withAttribute('parameters', $parameters);
 
@@ -41,6 +45,11 @@ class ParametersMiddleware
     private function getFilterParameters($parameters)
     {
         return $this->getArrayParameter($parameters, 'filter');
+    }
+
+    private function getSortParameter($parameters)
+    {
+        return $this->getParameter($parameters, 'sort');
     }
 
     private function getIncludeParameter($parameters)
