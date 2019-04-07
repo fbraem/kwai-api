@@ -31,7 +31,7 @@ class CategoriesTable extends \Cake\ORM\Table
             ->addColumn('description', [ 'type' => 'text' ])
             ->addColumn('remark', [ 'type' => 'text'])
             ->addColumn('short_description', [ 'type' => 'string'])
-            ->addColumn('slug', [ 'type' => 'string'])
+            ->addColumn('app', [ 'type' => 'string'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(

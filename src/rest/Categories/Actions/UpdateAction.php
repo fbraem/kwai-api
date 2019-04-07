@@ -61,8 +61,8 @@ class UpdateAction
             if (array_key_exists('description', $attributes)) {
                 $category->description = $attributes['description'];
             }
-            if (array_key_exists('slug', $attributes)) {
-                $category->slug = $attributes['slug'];
+            if (array_key_exists('app', $attributes)) {
+                $category->app = $attributes['app'];
             }
             if (array_key_exists('remark', $attributes)) {
                 $category->remark = $attributes['remark'];

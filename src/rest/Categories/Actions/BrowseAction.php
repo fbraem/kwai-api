@@ -25,8 +25,8 @@ class BrowseAction
 
         $query = CategoriesTable::getTableFromRegistry()->find();
 
-        if (isset($parameters['filter']['slug'])) {
-            $query->where(['slug' => $parameters['filter']['slug']]);
+        if (isset($parameters['filter']['app'])) {
+            $query->where(['app' => $parameters['filter']['app']]);
         }
 
         return (new \Core\Responses\ResourceResponse(

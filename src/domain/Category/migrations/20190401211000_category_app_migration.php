@@ -3,14 +3,14 @@
 use Phinx\Migration\AbstractMigration;
 
 /**
- * Add slug column
+ * Add app column
  */
-class CategorySlugMigration extends AbstractMigration
+class CategoryAppMigration extends AbstractMigration
 {
     public function up()
     {
         $this->table('categories', ['signed' => false])
-            ->addColumn('slug', 'string')
+            ->addColumn('app', 'string')
             ->save()
         ;
     }
@@ -18,7 +18,7 @@ class CategorySlugMigration extends AbstractMigration
     public function down()
     {
         $this->table('categories')
-            ->removeColumn('slug')
+            ->removeColumn('app')
             ->save();
     }
 }
