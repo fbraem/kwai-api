@@ -40,14 +40,6 @@ export default [
       }
       next();
     },
-    meta: {
-      stores: [
-        {
-          ns: ['member'],
-          create: MemberStore
-        },
-      ]
-    },
     children: [
       {
         path: ':id(\\d+)',
