@@ -26,10 +26,20 @@ const MemberStore = () => import(
   '@/stores/members'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/members',
     component: App,
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['member'], MemberStore);
+      }
+      next();
+    },
     meta: {
       stores: [
         {

@@ -30,17 +30,19 @@ const TeamTypeStore = () => import(
   '@/stores/team_types'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/team_types',
     component: App,
-    meta: {
-      stores: [
-        {
-          ns: [ 'teamType' ],
-          create: TeamTypeStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['teamType'], TeamTypeStore);
+      }
+      next();
     },
     children: [
       {

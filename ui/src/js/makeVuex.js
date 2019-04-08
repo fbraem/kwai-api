@@ -19,13 +19,13 @@ Vuex.Store.prototype.hasModule = function(aPath) {
  * Register a module if it is not yet registered
  */
 Vuex.Store.prototype.setModule = async function(aPath, createFn) {
-  var has = this.hasModule(aPath);
+  const has = this.hasModule(aPath);
   if (!has) {
-    var m = await createFn();
+    const m = await createFn();
     if (!m) {
       console.log("Can't create module ", aPath);
     } else {
-      console.log('Register module ', aPath);
+      // console.log('Register module ', aPath);
       await this.registerModule(aPath, m.default);
     }
   }

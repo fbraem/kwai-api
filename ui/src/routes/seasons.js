@@ -30,16 +30,18 @@ const SeasonStore = () => import(
   '@/stores/seasons'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/seasons',
-    meta: {
-      stores: [
-        {
-          ns: [ 'season' ],
-          create: SeasonStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['season'], SeasonStore);
+      }
+      next();
     },
     component: App,
     children: [

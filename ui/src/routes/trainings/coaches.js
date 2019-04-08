@@ -49,21 +49,20 @@ const MemberStore = () =>
     '@/stores/members'
   );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/trainings/coaches',
     component: App,
-    meta: {
-      stores: [
-        {
-          ns: [ 'training' ],
-          create: TrainingStore
-        },
-        {
-          ns: [ 'training', 'coach' ],
-          create: CoachStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['training'], TrainingStore);
+        await store.setModule(['training', 'coach'], CoachStore);
+      }
+      next();
     },
     children: [
       {
@@ -114,13 +113,9 @@ export default [
       },
       {
         path: 'create',
-        meta: {
-          stores: [
-            {
-              ns: ['member'],
-              create: MemberStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.setModule(['member'], MemberStore);
+          next();
         },
         components: {
           header: CoachFormHeader,
@@ -135,13 +130,9 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        meta: {
-          stores: [
-            {
-              ns: ['member'],
-              create: MemberStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.setModule(['member'], MemberStore);
+          next();
         },
         components: {
           header: CoachFormHeader,

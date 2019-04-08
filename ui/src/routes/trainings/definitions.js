@@ -32,32 +32,27 @@ const SeasonStore = () =>
 const TeamStore = () =>
   import('@/stores/teams');
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/trainings/definitions',
     component: App,
-    meta: {
-      stores: [
-        {
-          ns: [ 'training' ],
-          create: TrainingStore
-        },
-        {
-          ns: [ 'training', 'definition' ],
-          create: DefinitionStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['training'], TrainingStore);
+        await store.setModule(['training', 'definition'], DefinitionStore);
+      }
+      next();
     },
     children: [
       {
         path: ':id(\\d+)',
-        meta: {
-          stores: [
-            {
-              ns: [ 'training', 'coach' ],
-              create: CoachStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.setModule(['training', 'coach'], CoachStore);
+          next();
         },
         components: {
           header: DefinitionHeader,
@@ -67,17 +62,10 @@ export default [
       },
       {
         path: 'create',
-        meta: {
-          stores: [
-            {
-              ns: [ 'season' ],
-              create: SeasonStore
-            },
-            {
-              ns: [ 'team' ],
-              create: TeamStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.setModule(['season'], SeasonStore);
+          await store.setModule(['team'], TeamStore);
+          next();
         },
         components: {
           header: DefinitionFormHeader,
@@ -92,17 +80,10 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        meta: {
-          stores: [
-            {
-              ns: [ 'season' ],
-              create: SeasonStore
-            },
-            {
-              ns: [ 'team' ],
-              create: TeamStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.setModule(['season'], SeasonStore);
+          await store.setModule(['team'], TeamStore);
+          next();
         },
         components: {
           header: DefinitionFormHeader,

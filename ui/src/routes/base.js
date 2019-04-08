@@ -9,26 +9,22 @@ const NewsStore = () =>
   import(/* webpackChunkName: "news_chunck" */ '@/stores/news'
   );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/',
     component: App,
     children: [
       {
-        name: 'home',
-        meta: {
-          stores: [
-            {
-              ns: [ 'category'],
-              create: CategoryStore
-            },
-            {
-              ns: [ 'news'],
-              create: NewsStore
-            },
-          ]
-        },
         path: '',
+        name: 'home',
+        async beforeEnter(to, from, next) {
+          await store.setModule(['category'], CategoryStore);
+          await store.setModule(['news'], NewsStore);
+          next();
+        },
         components: {
           header: Header,
           main: SiteApp

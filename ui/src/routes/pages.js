@@ -38,22 +38,21 @@ const PageStore = () => import(
   '@/stores/pages'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/pages',
-    component: App,
-    meta: {
-      stores: [
-        {
-          ns: [ 'category' ],
-          create: CategoryStore
-        },
-        {
-          ns: [ 'page' ],
-          create: PageStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['category'], CategoryStore);
+        await store.setModule(['page'], PageStore);
+      }
+      next();
     },
+    component: App,
     children: [
       {
         path: ':id(\\d+)',

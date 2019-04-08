@@ -70,18 +70,20 @@ const PageStore = () =>
     '@/stores/pages'
   );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 function routes() {
   var route = [
     {
       path: '/trainings',
       component: App,
-      meta: {
-        stores: [
-          {
-            ns: ['training'],
-            create: Store
-          },
-        ]
+      async beforeEnter(to, from, next) {
+        if (!to.meta.called) {
+          to.meta.called = true;
+          await store.setModule(['training'], Store);
+        }
+        next();
       },
       children: [
         {
@@ -120,21 +122,11 @@ function routes() {
               creating: true
             }
           },
-          meta: {
-            stores: [
-              {
-                ns: ['season'],
-                create: SeasonStore
-              },
-              {
-                ns: ['team'],
-                create: TeamStore
-              },
-              {
-                ns: ['training', 'coach'],
-                create: CoachStore
-              },
-            ]
+          async beforeEnter(to, from, next) {
+            await store.setModule(['season'], SeasonStore);
+            await store.setModule(['team'], TeamStore);
+            await store.setModule(['training', 'coach'], CoachStore);
+            next();
           },
           name: 'trainings.create',
         },
@@ -149,45 +141,25 @@ function routes() {
               creating: false
             }
           },
-          meta: {
-            stores: [
-              {
-                ns: ['season'],
-                create: SeasonStore
-              },
-              {
-                ns: ['team'],
-                create: TeamStore
-              },
-              {
-                ns: ['training', 'coach'],
-                create: CoachStore
-              },
-            ]
+          async beforeEnter(to, from, next) {
+            await store.setModule(['season'], SeasonStore);
+            await store.setModule(['team'], TeamStore);
+            await store.setModule(['training', 'coach'], CoachStore);
+            next();
           },
           name: 'trainings.update',
         },
         {
           path: '',
+          async beforeEnter(to, from, next) {
+            await store.setModule(['news'], NewsStore);
+            await store.setModule(['page'], PageStore);
+            await store.setModule(['category'], CategoryStore);
+            await store.setModule(['training', 'coach'], CoachStore);
+            next();
+          },
           meta: {
-            stores: [
-              {
-                ns: ['news'],
-                create: NewsStore
-              },
-              {
-                ns: ['page'],
-                create: PageStore
-              },
-              {
-                ns: ['category'],
-                create: CategoryStore
-              },
-              {
-                ns: ['training', 'coach'],
-                create: CoachStore
-              },
-            ]
+            image: require('@/apps/trainings/images/sport-3468115_1920.jpg')
           },
           components: {
             header: TrainingsHeader,

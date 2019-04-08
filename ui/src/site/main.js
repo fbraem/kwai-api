@@ -41,23 +41,6 @@ import routes from '@/routes';
 const router = new VueRouter({
   routes: routes(),
 });
-router.beforeEach(async(to, from, next) => {
-  const promisses = [];
-  for (const r in to.matched) {
-    var matched = to.matched[r];
-    if (!matched.meta.called && matched.meta.stores) {
-      matched.meta.called = true;
-      for (const s in matched.meta.stores) {
-        promisses.push(store.setModule(
-          matched.meta.stores[s].ns,
-          matched.meta.stores[s].create
-        ));
-      }
-    }
-  }
-  await Promise.all(promisses);
-  next();
-});
 
 import VueScrollBehavior from 'vue-scroll-behavior';
 Vue.use(VueScrollBehavior, { router: router });

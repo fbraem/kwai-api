@@ -42,20 +42,19 @@ const NewsStore = () => import(
   '@/stores/news'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/news',
-    meta: {
-      stores: [
-        {
-          ns: [ 'category' ],
-          create: CategoryStore
-        },
-        {
-          ns: [ 'news' ],
-          create: NewsStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['category'], CategoryStore);
+        await store.setModule(['news'], NewsStore);
+      }
+      next();
     },
     component: App,
     children: [

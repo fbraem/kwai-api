@@ -39,17 +39,19 @@ const SeasonStore = () => import(
   '@/stores/seasons'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/teams',
     component: App,
-    meta: {
-      stores: [
-        {
-          ns: [ 'team' ],
-          create: TeamStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['team'], TeamStore);
+      }
+      next();
     },
     children: [
       {
@@ -62,17 +64,13 @@ export default [
       },
       {
         path: 'create',
-        meta: {
-          stores: [
-            {
-              ns: [ 'teamType' ],
-              create: TeamTypeStore
-            },
-            {
-              ns: [ 'season' ],
-              create: SeasonStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          if (!to.meta.called) {
+            to.meta.called = true;
+            await store.setModule(['teamType'], TeamTypeStore);
+            await store.setModule(['season'], SeasonStore);
+          }
+          next();
         },
         components: {
           header: TeamFormHeader,
@@ -87,17 +85,13 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        meta: {
-          stores: [
-            {
-              ns: [ 'teamType' ],
-              create: TeamTypeStore
-            },
-            {
-              ns: [ 'season' ],
-              create: SeasonStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          if (!to.meta.called) {
+            to.meta.called = true;
+            await store.setModule(['teamType'], TeamTypeStore);
+            await store.setModule(['season'], SeasonStore);
+          }
+          next();
         },
         components: {
           header: TeamFormHeader,

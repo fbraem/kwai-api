@@ -49,16 +49,18 @@ const PageStore = () => import(
   '@/stores/pages'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/users',
-    meta: {
-      stores: [
-        {
-          ns: [ 'user' ],
-          create: UserStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['user'], UserStore);
+      }
+      next();
     },
     component: App,
     children: [
@@ -80,17 +82,10 @@ export default [
       },
       {
         path: ':id',
-        meta: {
-          stores: [
-            {
-              ns: [ 'news' ],
-              create: NewsStore
-            },
-            {
-              ns: [ 'page' ],
-              create: PageStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.setModule(['news'], NewsStore);
+          await store.setModule(['page'], PageStore);
+          next();
         },
         components: {
           header: UserHeader,

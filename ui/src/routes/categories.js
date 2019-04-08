@@ -35,32 +35,35 @@ const PageStore = () =>
   import(/* webpackChunkName: "pages_chunck" */ '@/stores/pages'
   );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/categories',
     component: App,
-    meta: {
-      stores: [
-        {
-          ns: [ 'category' ],
-          create: CategoryStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['category'], CategoryStore);
+      }
+      next();
     },
     children: [
       {
         path: ':id(\\d+)',
-        meta: {
-          stores: [
-            {
-              ns: [ 'news' ],
-              create: NewsStore
-            },
-            {
-              ns: [ 'page' ],
-              create: PageStore
-            },
-          ]
+        async beforeEnter(to, from, next) {
+          await store.dispatch('category/read', { id: to.params.id });
+          const category = store.getters['category/category'](to.params.id);
+          if (category.app) {
+            next({
+              path: '/' + category.app
+            });
+            return;
+          }
+          await store.setModule(['news'], NewsStore);
+          await store.setModule(['page'], PageStore);
+          next();
         },
         components: {
           header: CategoryHeader,

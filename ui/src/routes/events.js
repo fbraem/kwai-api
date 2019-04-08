@@ -11,17 +11,19 @@ const EventStore = () => import(/* webpackChunkName: "trainings_chunck" */
   '@/stores/events'
 );
 
+import makeStore from '@/js/makeVuex';
+var store = makeStore();
+
 export default [
   {
     path: '/events',
     component: App,
-    meta: {
-      stores: [
-        {
-          ns: ['event'],
-          create: EventStore
-        },
-      ]
+    async beforeEnter(to, from, next) {
+      if (!to.meta.called) {
+        to.meta.called = true;
+        await store.setModule(['event'], EventStore);
+      }
+      next();
     },
     children: [
       {
