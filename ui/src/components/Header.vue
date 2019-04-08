@@ -1,5 +1,5 @@
 <template>
-  <div class="uk-grid">
+  <div uk-grid>
     <div
       class="uk-width-1-1@s"
       :class="{ 'uk-width-5-6@m' : hasToolbar }"
