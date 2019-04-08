@@ -15,13 +15,13 @@
         </div>
       </nav>
     </div>
-    <section class="uk-section uk-section-small uk-section-secondary uk-container uk-container-expand">
+    <section class="uk-section uk-section-xsmall uk-section-secondary uk-container uk-container-expand">
       <router-view name="header"></router-view>
     </section>
-    <section class="uk-section uk-section-small uk-container uk-container-expand">
+    <section class="uk-section uk-section-xsmall uk-container uk-container-expand">
       <router-view name="main"></router-view>
     </section>
-    <section class="uk-section uk-section-small uk-container uk-container-expand uk-section-secondary">
+    <section class="uk-section uk-section-xsmall uk-container uk-container-expand uk-section-secondary">
       <router-view name="footer"></router-view>
     </section>
   </div>
