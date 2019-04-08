@@ -10,8 +10,8 @@
       >
         <div
           v-for="coach in coaches"
-          class="uk-width-1-1"
           :key="coach.id"
+          class="uk-width-1-1"
         >
           <CoachComponent :coach="coach" />
         </div>
