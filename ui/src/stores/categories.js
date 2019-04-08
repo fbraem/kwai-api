@@ -19,9 +19,9 @@ const getters = {
     }
     return null;
   },
-  categoryWithSlug: (state) => (slug) => {
+  categoryApp: (state) => (app) => {
     if (state.categories) {
-      return state.categories.find((category) => category.slug === slug);
+      return state.categories.find((category) => category.app === app);
     }
     return null;
   },
