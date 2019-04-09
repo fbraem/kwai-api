@@ -16,6 +16,8 @@ use Domain\Person\CountriesTable;
 use Domain\Person\ContactsTable;
 use Domain\Person\PersonsTable;
 
+use Core\Responses\ResourceResponse;
+
 class UploadAction
 {
     private $countries = [
@@ -153,9 +155,19 @@ class UploadAction
             $membersTable->save($member);
         }
 
-        $connection->commit();
+        $membersTable->updateAll(
+            [
+                'active' => false
+            ],
+            [
+                'OR' => [
+                    'import_id !=' => $newImportId,
+                    'import_id IS NULL'
+                ]
+            ]
+        );
 
-        return (new \Core\ResourceResponse(
+        return (new ResourceResponse(
             MemberTransformer::createForCollection($members)
         ))($response);
     }
