@@ -1,47 +1,62 @@
 <template>
-  <div class="uk-grid-divider" uk-grid>
-    <div class="uk-width-1-1 uk-width-1-3@s">
-      <NewsListCard
-        :stories="stories"
-        :category="category"
-      />
-    </div>
-    <div class="uk-width-1-1 uk-width-1-3@s">
-      <PageListCard :pages="pages" />
-    </div>
-    <div class="uk-width-1-1 uk-width-1-3@s">
-      <CoachListCard :coaches="coaches" />
-    </div>
+  <div uk-grid>
     <div class="uk-width-1-1">
-      <div class="uk-margin" uk-grid>
-        <div class="uk-width-expand">
-          <h3>Kalender</h3>
-        </div>
-        <div class="uk-width-auto">
-          <router-link
-            class="uk-icon-button uk-link-reset"
-            :to="calendarLink"
+      <section class="uk-section uk-section-xsmall">
+        <div class="uk-container">
+          <div
+            uk-height-match="target: > div > .uk-card"
+            uk-grid
           >
-            <i class="fas fa-angle-up"></i>
-          </router-link>
+            <div class="uk-width-1-1 uk-width-1-3@m">
+              <NewsListCard
+                :stories="stories"
+                :category="category"
+              />
+            </div>
+            <div class="uk-width-1-1 uk-width-1-3@m">
+              <PageListCard :pages="pages" />
+            </div>
+            <div class="uk-width-1-1 uk-width-1-3@m">
+              <CoachListCard :coaches="coaches" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="uk-width-1-1" uk-grid>
+      <div class="uk-width-1-1">
+        <div class="uk-margin" uk-grid>
+          <div class="uk-width-expand">
+            <h3>Kalender</h3>
+          </div>
+          <div class="uk-width-auto">
+            <router-link
+              class="uk-icon-button uk-link-reset"
+              :to="calendarLink"
+            >
+              <i class="fas fa-angle-up"></i>
+            </router-link>
+          </div>
         </div>
       </div>
-      <Calendar
-        :year="year"
-        :month="month"
-        :trainings="trainings"
-        @prevMonth="prevMonth"
-        @firstMonth="firstMonth"
-        @nextMonth="nextMonth"
-        @lastMonth="lastMonth"
-      />
+      <div class="uk-width-1-1">
+        <Calendar
+          :year="year"
+          :month="month"
+          :trainings="trainings"
+          @prevMonth="prevMonth"
+          @firstMonth="firstMonth"
+          @nextMonth="nextMonth"
+          @lastMonth="lastMonth"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 
-const CATEGORY_SLUG = 'training';
+const CATEGORY_APP = 'trainings';
 
 import moment from 'moment';
 
@@ -65,7 +80,7 @@ export default {
   },
   computed: {
     category() {
-      return this.$store.getters['category/categoryWithSlug'](CATEGORY_SLUG);
+      return this.$store.getters['category/categoryApp'](CATEGORY_APP);
     },
     stories() {
       return this.$store.state.news.stories || [];
@@ -74,7 +89,7 @@ export default {
       return this.stories.length > 0;
     },
     pages() {
-      return this.$store.state.page.pages;
+      return this.$store.state.page.pages || [];
     },
     coaches() {
       return this.$store.state.training.coach.coaches || [];
@@ -105,7 +120,7 @@ export default {
   methods: {
     async fetchData(params) {
       await this.$store.dispatch('category/browse', {
-        slug: CATEGORY_SLUG
+        app: CATEGORY_APP
       });
       this.$store.dispatch('news/browse', {
         category: this.category.id,
