@@ -113,7 +113,9 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('member/browse', {});
+      this.$store.dispatch('member/browse', {
+        active: true
+      });
     },
     jumpIt(target) {
       jump(target);

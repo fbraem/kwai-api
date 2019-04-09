@@ -62,14 +62,15 @@ const actions = {
   /**
    * Get all members
    */
-  async browse({ dispatch, commit }, payload) {
-    payload = payload || {};
-
+  async browse({ dispatch, commit }, payload = {}) {
     dispatch('wait/start', 'members.browse', { root: true });
 
     var api = new JSONAPI({ source: Member });
     if (payload.name) {
       api.where('name', payload.name);
+    }
+    if (payload.active) {
+      api.where('active', payload.active);
     }
 
     try {

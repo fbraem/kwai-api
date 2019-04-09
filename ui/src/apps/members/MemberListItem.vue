@@ -15,7 +15,13 @@
       style="width:8px"
     >
     </i>
-    - {{ member.person.name }}
+    -
+    <span v-if="member.active">
+      {{ member.person.name }}
+    </span>
+    <del v-else>
+      {{ member.person.name }}
+    </del>
     &nbsp;({{ member.person.age }})
     <span
       :class="[ flagClass ]"

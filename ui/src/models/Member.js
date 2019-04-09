@@ -21,6 +21,7 @@ export default class Member extends Model {
       competition: new Attribute(),
       remark: new Attribute(),
       license: new Attribute(),
+      active: new Attribute(),
       license_date: new DateAttribute('YYYY-MM-DD'),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)

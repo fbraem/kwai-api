@@ -25,7 +25,9 @@ class BrowseAction
     {
         $parameters = $request->getAttribute('parameters');
 
-        $query = MembersTable::getTableFromRegistry()->find();
+        $membersTable = MembersTable::getTableFromRegistry();
+
+        $query = $membersTable->find();
         $concat = $query->func()->concat([
             'Person.lastname' => 'identifier',
             ' ',
@@ -45,6 +47,13 @@ class BrowseAction
                 $orCond = $orCond->like($concat, '%' . $parameters['filter']['name'] . '%');
                 return $orCond->like('Person.lastname', '%' . $parameters['filter']['name'] . '%');
             });
+        }
+
+        if (isset($parameters['filter']['active'])) {
+            $query->where([
+                $membersTable->getAlias() . '.active'
+                    => $parameters['filter']['active'] === 'true'
+            ]);
         }
 
         $count = $query->count();
