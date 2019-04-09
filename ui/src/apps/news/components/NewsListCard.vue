@@ -1,9 +1,15 @@
 <template>
   <div class="uk-card uk-card-default uk-card-small">
-    <div class="uk-card-header">
-      <h3 class="uk-card-title">{{ $t('featured_news') }}</h3>
+    <div class="uk-card-media-top uk-cover-container">
+      <img
+        :src="require('@/apps/news/images/exclamation-point-2620923_1920.jpg')"
+        alt=""
+        uk-cover
+      />
+      <canvas height="150"></canvas>
     </div>
     <div class="uk-card-body">
+      <h3 class="uk-card-title">{{ $t('featured_news') }}</h3>
       <NewsSummaryList
         v-if="hasStories"
         :stories="stories"
