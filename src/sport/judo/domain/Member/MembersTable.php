@@ -31,6 +31,7 @@ class MembersTable extends \Cake\ORM\Table
             ->addColumn('person_id', [ 'type' => 'integer' ])
             ->addColumn('remark', [ 'type' => 'text'])
             ->addColumn('competition', [ 'type' => 'boolean'])
+            ->addColumn('active', [ 'type' => 'boolean'])
             ->addColumn('import_id', [ 'type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
