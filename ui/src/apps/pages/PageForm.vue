@@ -5,7 +5,7 @@
     :save="$t('save')"
     @submit="submit"
   >
-    <div uk-grid>
+    <div class="uk-margin" uk-grid>
       <div class="uk-width-expand">
         <KwaiField
           name="category"
@@ -20,7 +20,7 @@
         </KwaiField>
       </div>
     </div>
-    <div uk-grid>
+    <div>
       <KwaiField
         name="remark"
         :label="$t('form.page.remark.label')"
