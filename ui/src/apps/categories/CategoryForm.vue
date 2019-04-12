@@ -27,13 +27,19 @@
       name="description"
       :label="$t('form.description.label')"
     >
-      <KwaiTextarea :placeholder="$t('form.description.placeholder')" />
+      <KwaiTextarea
+        :placeholder="$t('form.description.placeholder')"
+        :rows="5"
+      />
     </KwaiField>
     <KwaiField
       name="remark"
       :label="$t('form.remark.label')"
     >
-      <KwaiTextarea :placeholder="$t('form.remark.placeholder')" />
+      <KwaiTextarea
+        :placeholder="$t('form.remark.placeholder')"
+        :rows="5"
+      />
     </KwaiField>
   </KwaiForm>
 </template>
