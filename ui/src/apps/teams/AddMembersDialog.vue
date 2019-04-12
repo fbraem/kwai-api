@@ -6,7 +6,7 @@
     ref="addMemberDialog"
   >
     <div class="uk-modal-dialog uk-modal-body">
-      <div uk-grid>
+      <div class="uk-grid-small" uk-grid>
         <div class="uk-width-1-1">
           <h2 class="uk-modal-title">
             {{ $t('add_members') }}
@@ -85,6 +85,23 @@
             v-if="availableMembers.length > 0"
             class="uk-table uk-table-small uk-table-middle uk-table-divider"
           >
+            <tr>
+              <th>
+                <input
+                  class="uk-checkbox"
+                  type="checkbox"
+                  v-model="selectAll"
+                />
+              </th>
+              <th>
+                {{ $t('member.name')}}<br />
+                {{ $t('member.birthdate')}} ({{ $t('member.age')}})
+              </th>
+              <th>
+                {{ $t('member.license')}}<br />
+                {{ $t('member.gender')}}
+              </th>
+            </tr>
             <tr
               v-for="member in availableMembers"
               :key="member.id"
@@ -181,6 +198,7 @@ export default {
   },
   data() {
     return {
+      selectAll: false,
       selectedAvailableMembers: [],
       genders: [
         { text: 'None', value: 0 },
@@ -201,6 +219,12 @@ export default {
   computed: {
     availableMembers() {
       return this.$store.state.team.availableMembers;
+    }
+  },
+  watch: {
+    selectAll(nv) {
+      this.selectedAvailableMembers = nv ?
+        this.availableMembers.map((m, index) => m.id) : [];
     }
   },
   mounted() {

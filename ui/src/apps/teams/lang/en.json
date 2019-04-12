@@ -63,5 +63,12 @@
     "gender" : "Gender",
     "filter" : "Filter",
     "use_filter" : "Use filter to get a list of members that can be added this team. The age is calculated on the end of the year.",
-    "season" : "Season"
+    "season" : "Season",
+    "member" : {
+        "name" : "Name",
+        "birthdate" : "Birthdate",
+        "age" : "Age",
+        "license" : "License",
+        "gender" : "M/F"
+    }
 }

@@ -63,5 +63,12 @@
     "gender" : "Geslacht",
     "filter" : "Filter",
     "use_filter" : "Gebruik de filter om een lijst van leden te krijgen. De leeftijd wordt berekend op de laatste dag van het lopende jaar.",
-    "season" : "Seizoen"
+    "season" : "Seizoen",
+    "member" : {
+        "name" : "Naam",
+        "birthdate" : "Gebdat.",
+        "age" : "Leeftijd",
+        "license" : "Licensie",
+        "gender" : "M/V"
+    }
 }
