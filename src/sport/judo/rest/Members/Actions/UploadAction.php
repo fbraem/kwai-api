@@ -11,6 +11,7 @@ use League\Csv\Reader;
 
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
+use Domain\Member\MemberImportsTable;
 
 use Domain\Person\CountriesTable;
 use Domain\Person\ContactsTable;
@@ -47,7 +48,6 @@ class UploadAction
         if (!isset($files['csv'])) {
             return $response->withStatus(400);
         }
-        $uploadedFilename = $files['csv']->getClientFilename();
 
         $reader = Reader::createFromPath($files['csv']->getStream()->getMetadata('uri'));
         $reader->setDelimiter(';');
@@ -60,9 +60,11 @@ class UploadAction
         $contactsTable = ContactsTable::getTableFromRegistry();
         $personsTable = PersonsTable::getTableFromRegistry();
 
-        $query = $membersTable->find();
-        $lastImportId = $query->select(['last_import_id' => $query->func()->max('import_id')])->first()->last_import_id ?? 0;
-        $newImportId = $lastImportId + 1;
+        $memberImportsTable = MemberImportsTable::getTableFromRegistry();
+        $memberImport = $memberImportsTable->newEntity();
+        $memberImport->filename = $files['csv']->getClientFilename();
+        $memberImport->user = $request->getAttribute('clubman.user');
+        $memberImportsTable->save($memberImport);
 
         $members = $membersTable
             ->find()
@@ -150,7 +152,7 @@ class UploadAction
                 'd/m/Y',
                 $record['Geldig Tot']
             );
-            $member->import_id = $newImportId;
+            $member->import_id = $memberImport->id;
 
             $membersTable->save($member);
         }
@@ -161,7 +163,7 @@ class UploadAction
             ],
             [
                 'OR' => [
-                    'import_id !=' => $newImportId,
+                    'import_id !=' => $memberImport->id,
                     'import_id IS NULL'
                 ]
             ]

@@ -24,6 +24,7 @@ return [
             __DIR__ . '/domain/Event/migrations',
             __DIR__ . '/sport/judo/domain/Member/migrations',
             __DIR__ . '/domain/Training/migrations',
+            __DIR__ . '/domain/Member/migrations',
         ]
     ],
     'environments' => $environments
