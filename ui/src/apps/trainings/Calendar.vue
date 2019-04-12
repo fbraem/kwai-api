@@ -359,7 +359,10 @@ export default {
           month: current.format('MMMM'),
           year: current.format('YYYY'),
           events: this.trainings.filter((training) => {
-            return current.isSame(training.event.start_date, 'day');
+            if (training.event) {
+              return current.isSame(training.event.start_date, 'day');
+            }
+            return false;
           })
         });
       }
