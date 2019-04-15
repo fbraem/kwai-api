@@ -72,8 +72,8 @@ const actions = {
     try {
       var api = new JSONAPI({ source: Category });
       if (payload) {
-        if (payload.slug) {
-          api.where('slug', payload.slug);
+        if (payload.app) {
+          api.where('app', payload.app);
         }
       }
       commit('categories', await api.get());
@@ -84,9 +84,9 @@ const actions = {
       dispatch('wait/end', 'categories.browse', { root: true });
     }
   },
-  async read({ dispatch, getters, commit }, payload) {
+  async read({ dispatch, getters, commit }, { id }) {
     dispatch('wait/start', 'categories.read', { root: true });
-    var category = getters['category'](payload.id);
+    var category = getters['category'](id);
     if (category) { // already read
       return category;
     }
@@ -94,9 +94,30 @@ const actions = {
     dispatch('wait/start', 'categories.read', { root: true });
     try {
       var api = new JSONAPI({ source: Category });
-      var result = await api.get(payload.id);
+      var result = await api.get(id);
       commit('category', result);
       return result.data;
+    } catch (error) {
+      commit('error', error);
+      throw error;
+    } finally {
+      dispatch('wait/end', 'categories.read', { root: true });
+    }
+  },
+  async readApp({ dispatch, getters, commit }, { app }) {
+    dispatch('wait/start', 'categories.read', { root: true });
+    var category = getters['categoryApp'](app);
+    if (category) { // already read
+      return category;
+    }
+
+    dispatch('wait/start', 'categories.read', { root: true });
+    try {
+      var api = new JSONAPI({ source: Category });
+      api.where('app', app);
+      var result = await api.get();
+      commit('category', { data: result.data[0]});
+      return result.data[0];
     } catch (error) {
       commit('error', error);
       throw error;
