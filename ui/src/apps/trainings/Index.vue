@@ -56,8 +56,6 @@
 
 <script>
 
-const CATEGORY_APP = 'trainings';
-
 import moment from 'moment';
 
 import NewsListCard from '@/apps/news/components/NewsListCard';
@@ -80,7 +78,7 @@ export default {
   },
   computed: {
     category() {
-      return this.$store.getters['category/categoryApp'](CATEGORY_APP);
+      return this.$store.getters['category/categoryApp'](this.$route.meta.app);
     },
     stories() {
       return this.$store.state.news.stories || [];
@@ -119,9 +117,6 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      await this.$store.dispatch('category/browse', {
-        app: CATEGORY_APP
-      });
       this.$store.dispatch('news/browse', {
         category: this.category.id,
         featured: true

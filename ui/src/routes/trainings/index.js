@@ -73,6 +73,8 @@ const PageStore = () =>
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
 
+const CATEGORY_APP = 'trainings';
+
 function routes() {
   var route = [
     {
@@ -82,7 +84,12 @@ function routes() {
         if (!to.meta.called) {
           to.meta.called = true;
           await store.setModule(['training'], Store);
+          await store.setModule(['category'], CategoryStore);
         }
+        to.meta.app = CATEGORY_APP;
+        await store.dispatch('category/readApp', {
+          app: to.meta.app
+        });
         next();
       },
       children: [
@@ -154,7 +161,6 @@ function routes() {
           async beforeEnter(to, from, next) {
             await store.setModule(['news'], NewsStore);
             await store.setModule(['page'], PageStore);
-            await store.setModule(['category'], CategoryStore);
             await store.setModule(['training', 'coach'], CoachStore);
             next();
           },
