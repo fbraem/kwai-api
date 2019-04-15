@@ -4,7 +4,32 @@
       class="uk-width-1-1@s"
       :class="{ 'uk-width-5-6@m' : hasToolbar }"
     >
-      <h1 class="uk-h1">
+      <router-link
+        v-if="route"
+        :to="route"
+        class="uk-link-reset"
+      >
+        <h1 class="uk-h1">
+          <img
+            v-if="logo"
+            :src="logo"
+            width="42"
+            height="42"
+            uk-svg
+            style="margin-top:-10px"
+          />
+          {{ title }}
+        </h1>
+      </router-link>
+      <h1 v-else class="uk-h1">
+        <img
+          v-if="logo"
+          :src="logo"
+          width="42"
+          height="42"
+          uk-svg
+          style="margin-top:-10px"
+        />
         {{ title }}
       </h1>
       <h3
@@ -62,6 +87,20 @@ export default {
      */
     toolbar: {
       type: Array,
+      required: false
+    },
+    /**
+     * Logo
+     */
+    logo: {
+      type: String,
+      required: false
+    },
+    /**
+     * Link
+     */
+    route: {
+      type: Object,
       required: false
     }
   },

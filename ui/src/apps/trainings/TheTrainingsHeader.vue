@@ -2,6 +2,8 @@
   <Header
     :title="$t('training.events.title')"
     :toolbar="toolbar"
+    :logo="logo"
+    :route= "{ name: 'trainings.index' }"
   />
 </template>
 
@@ -18,6 +20,11 @@ export default {
   },
   i18n: messages,
   computed: {
+    logo() {
+      const category
+        = this.$store.getters['category/categoryApp'](this.$route.meta.app);
+      return category.icon_picture;
+    },
     toolbar() {
       const buttons = [];
       if (this.$can('create', Training.type())) {
