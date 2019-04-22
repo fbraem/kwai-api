@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 /**
- * Check registred module
+ * Check registered module
  * @param {Array} aPath - path to module - ex: ['my', 'nested', 'module']
  * @return {Boolean}
  */
@@ -18,16 +18,9 @@ Vuex.Store.prototype.hasModule = function(aPath) {
 /**
  * Register a module if it is not yet registered
  */
-Vuex.Store.prototype.setModule = async function(aPath, createFn) {
-  const has = this.hasModule(aPath);
-  if (!has) {
-    const m = await createFn();
-    if (!m) {
-      console.log("Can't create module ", aPath);
-    } else {
-      // console.log('Register module ', aPath);
-      await this.registerModule(aPath, m.default);
-    }
+Vuex.Store.prototype.setModule = function(aPath, module) {
+  if (!this.hasModule(aPath)) {
+    this.registerModule(aPath, module);
   }
 };
 
