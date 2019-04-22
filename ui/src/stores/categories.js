@@ -85,7 +85,6 @@ const actions = {
     }
   },
   async read({ dispatch, getters, commit }, { id }) {
-    dispatch('wait/start', 'categories.read', { root: true });
     var category = getters['category'](id);
     if (category) { // already read
       return category;
@@ -105,13 +104,12 @@ const actions = {
     }
   },
   async readApp({ dispatch, getters, commit }, { app }) {
-    dispatch('wait/start', 'categories.read', { root: true });
     var category = getters['categoryApp'](app);
     if (category) { // already read
       return category;
     }
 
-    dispatch('wait/start', 'categories.read', { root: true });
+    // dispatch('wait/start', 'categories.read', { root: true });
     try {
       var api = new JSONAPI({ source: Category });
       api.where('app', app);
@@ -122,7 +120,7 @@ const actions = {
       commit('error', error);
       throw error;
     } finally {
-      dispatch('wait/end', 'categories.read', { root: true });
+      // dispatch('wait/end', 'categories.read', { root: true });
     }
   },
   async save({ commit }, category) {
