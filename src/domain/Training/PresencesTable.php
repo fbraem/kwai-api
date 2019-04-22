@@ -20,7 +20,7 @@ class PresencesTable extends \Cake\ORM\Table
             ->setForeignKey('training_id')
         ;
         $this->belongsTo('Member', [
-            'className' => MembersTable::class
+            'className' => \Judo\Domain\Member\MembersTable::class
             ])
             ->setForeignKey('member_id')
         ;
