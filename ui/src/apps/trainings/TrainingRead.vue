@@ -65,7 +65,7 @@
                 <li
                   v-for="(coach, index) in training.coaches"
                   :key="index">
-                  {{ coach.coach.name }}
+                  {{ coach.name }}
                 </li>
               </ul>
             </div>
