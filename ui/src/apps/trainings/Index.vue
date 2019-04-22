@@ -73,7 +73,7 @@ export default {
   data() {
     return {
       year: moment().year(),
-      month: moment().month() + 1
+      month: moment().month() + 1,
     };
   },
   computed: {
