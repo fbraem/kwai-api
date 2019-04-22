@@ -16,30 +16,26 @@
               class="uk-width-1-2@m uk-light uk-text-center uk-padding"
               style="background-color:rgb(198, 28, 24)"
             >
-              <span style="font-size:2em; line-height:1em; text-transform:lowercase;">
+              <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
                 {{ dayName }}
-              </span>
-              <br />
-              <span style="font-size:8em; font-weight:900; line-height:1em;">
+              </div>
+              <div style="font-size:8em; font-weight:900; line-height:1em;">
                 {{ day }}
-              </span>
-              <br />
-              <span style="font-size:2em; line-height:1em; text-transform:lowercase;">
+              </div>
+              <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
                 {{ month }}
-              </span>
+              </div>
             </div>
             <div class="uk-width-1-2@m uk-text-center uk-padding">
-              <span style="font-size:4em; line-height:1em; text-transform:lowercase;">
+              <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
                 {{ training.formattedStartTime}}
-              </span>
-              <br />
-              <span style="font-size:4em; line-height:1em; text-transform:lowercase;">
+              </div>
+              <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
                 -
-              </span>
-              <br />
-              <span style="font-size:4em; text-transform:lowercase;">
+              </div>
+              <div style="font-size:4em; text-transform:lowercase;">
                 {{ training.formattedEndTime}}
-              </span>
+              </div>
               <br />
             </div>
           </div>
@@ -59,18 +55,29 @@
             {{ $t('cancelled' )}}
           </p>
         </div>
-        <div
-          v-if="training.coaches"
-          class="uk-card-footer"
-        >
-          <strong>Coaches:</strong>
-          <ul class="uk-list uk-list-bullet">
-            <li
-              v-for="(coach, index) in training.coaches"
-              :key="index">
-              {{ coach.name }}
-            </li>
-          </ul>
+        <div class="uk-card-footer">
+          <div uk-grid>
+            <div
+              v-if="training.coaches"
+              class="uk-width-1-1">
+              <strong>Coaches:</strong>
+              <ul class="uk-list uk-list-bullet">
+                <li
+                  v-for="(coach, index) in training.coaches"
+                  :key="index">
+                  {{ coach.coach.name }}
+                </li>
+              </ul>
+            </div>
+            <div class="uk-width-1-1">
+              <strong>Aanwezigheden:</strong>
+              <div>
+                <a class="uk-icon-button uk-link-reset">
+                  <i class="fas fa-address-book"></i>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
