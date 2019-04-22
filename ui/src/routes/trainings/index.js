@@ -34,149 +34,129 @@ const TrainingFormHeader = () =>
     '@/apps/trainings/TheTrainingFormHeader.vue'
   );
 
-const Store = () =>
-  import(
-    /* webpackChunkName: "trainings_chunck" */
-    '@/stores/training'
-  );
-const CoachStore = () =>
-  import(
-    /* webpackChunkName: "trainings_chunck" */
-    '@/stores/training/coaches'
-  );
-const SeasonStore = () =>
-  import(
-    /* webpackChunkName: "seasons_chunck" */
-    '@/stores/seasons'
-  );
-const TeamStore = () =>
-  import(
-    /* webpackChunkName: "teams_chunck" */
-    '@/stores/teams'
-  );
-const NewsStore = () =>
-  import(
-    /* webpackChunkName: "news_chunck" */
-    '@/stores/news'
-  );
-const CategoryStore = () =>
-  import(
-    /* webpackChunkName: "categories_chunck" */
-    '@/stores/categories'
-  );
-const PageStore = () =>
-  import(
-    /* webpackChunkName: "pages_chunck" */
-    '@/stores/pages'
-  );
+import TrainingStore from '@/stores/training';
+import CoachStore from '@/stores/training/coaches';
+import SeasonStore from '@/stores/seasons';
+import TeamStore from '@/stores/teams';
+import NewsStore from '@/stores/news';
+import CategoryStore from '@/stores/categories';
+import PageStore from '@/stores/pages';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
 
 const CATEGORY_APP = 'trainings';
 
-function routes() {
-  var route = [
-    {
-      path: '/trainings',
-      component: App,
-      async beforeEnter(to, from, next) {
-        if (!to.meta.called) {
-          to.meta.called = true;
-          await store.setModule(['training'], Store);
-          await store.setModule(['category'], CategoryStore);
-        }
-        to.meta.app = CATEGORY_APP;
-        await store.dispatch('category/readApp', {
-          app: to.meta.app
-        });
-        next();
-      },
-      children: [
-        {
-          path: ':id(\\d+)',
-          components: {
-            header: TrainingHeader,
-            main: TrainingRead
-          },
-          name: 'trainings.read'
+var routes = [
+  {
+    path: '/trainings',
+    component: App,
+    meta: {
+      app: CATEGORY_APP
+    },
+    beforeEnter(to, from, next) {
+      store.setModule(['training'], TrainingStore);
+      store.setModule(['category'], CategoryStore);
+      next();
+    },
+    children: [
+      {
+        path: ':id(\\d+)',
+        components: {
+          header: TrainingHeader,
+          main: TrainingRead
         },
-        {
-          path: ':year(\\d+)/:month(\\d+)',
-          components: {
-            header: TrainingsHeader,
-            main: TrainingBrowse
-          },
-          name: 'trainings.browse',
-          props: {
-            main: (route) => {
-              const year = route.params.year
-                ? Number(route.params.year) : moment().year();
-              const month = route.params.month
-                ? Number(route.params.month) : moment().month() + 1;
-              return { year, month };
-            }
+        name: 'trainings.read',
+      },
+      {
+        path: ':year(\\d+)/:month(\\d+)',
+        components: {
+          header: TrainingsHeader,
+          main: TrainingBrowse
+        },
+        name: 'trainings.browse',
+        meta: {
+          app: CATEGORY_APP
+        },
+        props: {
+          main: (route) => {
+            const year = route.params.year
+              ? Number(route.params.year) : moment().year();
+            const month = route.params.month
+              ? Number(route.params.month) : moment().month() + 1;
+            return { year, month };
+          }
+        }
+      },
+      {
+        path: 'create',
+        components: {
+          header: TrainingFormHeader,
+          main: TrainingForm
+        },
+        props: {
+          header: {
+            creating: true
           }
         },
-        {
-          path: 'create',
-          components: {
-            header: TrainingFormHeader,
-            main: TrainingForm
-          },
-          props: {
-            header: {
-              creating: true
-            }
-          },
-          async beforeEnter(to, from, next) {
-            await store.setModule(['season'], SeasonStore);
-            await store.setModule(['team'], TeamStore);
-            await store.setModule(['training', 'coach'], CoachStore);
-            next();
-          },
-          name: 'trainings.create',
+        beforeEnter(to, from, next) {
+          store.setModule(['season'], SeasonStore);
+          store.setModule(['team'], TeamStore);
+          store.setModule(['training', 'coach'], CoachStore);
+          next();
         },
-        {
-          path: 'update/:id(\\d+)',
-          components: {
-            header: TrainingFormHeader,
-            main: TrainingForm
-          },
-          props: {
-            header: {
-              creating: false
-            }
-          },
-          async beforeEnter(to, from, next) {
-            await store.setModule(['season'], SeasonStore);
-            await store.setModule(['team'], TeamStore);
-            await store.setModule(['training', 'coach'], CoachStore);
-            next();
-          },
-          name: 'trainings.update',
+        name: 'trainings.create',
+      },
+      {
+        path: 'update/:id(\\d+)',
+        components: {
+          header: TrainingFormHeader,
+          main: TrainingForm
         },
-        {
-          path: '',
-          async beforeEnter(to, from, next) {
-            await store.setModule(['news'], NewsStore);
-            await store.setModule(['page'], PageStore);
-            await store.setModule(['training', 'coach'], CoachStore);
-            next();
-          },
-          meta: {
-            image: require('@/apps/trainings/images/sport-3468115_1920.jpg')
-          },
-          components: {
-            header: TrainingsHeader,
-            main: TrainingIndex
-          },
-          name: 'trainings.index'
+        props: {
+          header: {
+            creating: false
+          }
         },
-      ]
-    },
-  ];
-  return route.concat(definitionsRouter).concat(coachesRouter);
-};
+        beforeEnter(to, from, next) {
+          store.setModule(['season'], SeasonStore);
+          store.setModule(['team'], TeamStore);
+          store.setModule(['training', 'coach'], CoachStore);
+          next();
+        },
+        name: 'trainings.update',
+      },
+      {
+        path: '',
+        beforeEnter(to, from, next) {
+          store.setModule(['category'], CategoryStore);
+          store.setModule(['news'], NewsStore);
+          store.setModule(['page'], PageStore);
+          store.setModule(['training'], TrainingStore);
+          store.setModule(['training', 'coach'], CoachStore);
+          next();
+        },
+        meta: {
+          app: CATEGORY_APP,
+          image: require('@/apps/trainings/images/sport-3468115_1920.jpg')
+        },
+        components: {
+          header: TrainingsHeader,
+          main: TrainingIndex
+        },
+        name: 'trainings.index'
+      },
+    ]
+  },
+];
 
-export default routes();
+routes = routes.concat(definitionsRouter);
+routes = routes.concat(coachesRouter);
+
+for (let route of routes) {
+  let meta = route.meta || {};
+  meta.app = CATEGORY_APP;
+  route.meta = meta;
+}
+
+export default routes;

@@ -25,10 +25,7 @@ const TeamTypeFormHeader = () => import(
   '@/apps/team_types/TheTeamTypeFormHeader.vue'
 );
 
-const TeamTypeStore = () => import(
-  /* webpackChunkName: "team_types_chunck" */
-  '@/stores/team_types'
-);
+import TeamTypeStore from '@/stores/team_types';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -37,11 +34,8 @@ export default [
   {
     path: '/team_types',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['teamType'], TeamTypeStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['teamType'], TeamTypeStore);
       next();
     },
     children: [

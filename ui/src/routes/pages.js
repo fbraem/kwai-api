@@ -29,14 +29,7 @@ const PageForm = () => import(
   '@/apps/pages/PageForm.vue'
 );
 
-const CategoryStore = () => import(
-  /* webpackChunkName: "category_chunck" */
-  '@/stores/categories'
-);
-const PageStore = () => import(
-  /* webpackChunkName: "pages_chunck" */
-  '@/stores/pages'
-);
+import PageStore from '@/stores/pages';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -44,12 +37,8 @@ var store = makeStore();
 export default [
   {
     path: '/pages',
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['category'], CategoryStore);
-        await store.setModule(['page'], PageStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['page'], PageStore);
       next();
     },
     component: App,

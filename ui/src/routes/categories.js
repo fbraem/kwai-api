@@ -25,15 +25,9 @@ const CategoryBrowse = () => import(
   '@/apps/categories/CategoryBrowse.vue'
 );
 
-const CategoryStore = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
-  );
-const NewsStore = () =>
-  import(/* webpackChunkName: "news_chunck" */ '@/stores/news'
-  );
-const PageStore = () =>
-  import(/* webpackChunkName: "pages_chunck" */ '@/stores/pages'
-  );
+import CategoryStore from '@/stores/categories';
+import NewsStore from '@/stores/news';
+import PageStore from '@/stores/pages';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -42,11 +36,8 @@ export default [
   {
     path: '/categories',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['category'], CategoryStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['category'], CategoryStore);
       next();
     },
     children: [
@@ -61,8 +52,8 @@ export default [
             });
             return;
           }
-          await store.setModule(['news'], NewsStore);
-          await store.setModule(['page'], PageStore);
+          store.setModule(['news'], NewsStore);
+          store.setModule(['page'], PageStore);
           next();
         },
         components: {

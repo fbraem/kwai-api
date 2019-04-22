@@ -7,9 +7,7 @@ const EventRead = () => import(/* webpackChunkName: "trainings_chunck" */
   '@/apps/events/EventRead.vue'
 );
 
-const EventStore = () => import(/* webpackChunkName: "trainings_chunck" */
-  '@/stores/events'
-);
+import EventStore from '@/stores/events';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -18,11 +16,8 @@ export default [
   {
     path: '/events',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['event'], EventStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['event'], EventStore);
       next();
     },
     children: [

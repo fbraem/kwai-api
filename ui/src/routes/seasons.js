@@ -25,10 +25,7 @@ const SeasonBrowse = () => import(
   '@/apps/seasons/SeasonBrowse.vue'
 );
 
-const SeasonStore = () => import(
-  /* webpackChunkName: "seasons_chunck" */
-  '@/stores/seasons'
-);
+import SeasonStore from '@/stores/seasons';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -36,11 +33,8 @@ var store = makeStore();
 export default [
   {
     path: '/seasons',
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['season'], SeasonStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['season'], SeasonStore);
       next();
     },
     component: App,

@@ -21,10 +21,7 @@ const MemberBrowse = () => import(
   '@/apps/members/MemberBrowse.vue'
 );
 
-const MemberStore = () => import(
-  /* webpackChunkName: "member_admin" */
-  '@/stores/members'
-);
+import MemberStore from '@/stores/members';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -33,11 +30,8 @@ export default [
   {
     path: '/members',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['member'], MemberStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['member'], MemberStore);
       next();
     },
     children: [

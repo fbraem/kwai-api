@@ -2,12 +2,7 @@ import App from '@/site/App.vue';
 import Header from '@/site/Header.vue';
 import SiteApp from '@/site/Home.vue';
 
-const CategoryStore = () =>
-  import(/* webpackChunkName: "category_chunck" */ '@/stores/categories'
-  );
-const NewsStore = () =>
-  import(/* webpackChunkName: "news_chunck" */ '@/stores/news'
-  );
+import NewsStore from '@/stores/news';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -20,9 +15,8 @@ export default [
       {
         path: '',
         name: 'home',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['category'], CategoryStore);
-          await store.setModule(['news'], NewsStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['news'], NewsStore);
           next();
         },
         components: {

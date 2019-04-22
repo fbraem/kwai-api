@@ -36,18 +36,9 @@ const CoachFormHeader = () =>
     '@/apps/trainings/TheCoachFormHeader.vue'
   );
 
-const TrainingStore = () =>
-  import(/* webpackChunckName: "trainings_store_chunck" */
-    '@/stores/training'
-  );
-const CoachStore = () =>
-  import(/* webpackChunckName: "trainings_store_chunck" */
-    '@/stores/training/coaches'
-  );
-const MemberStore = () =>
-  import(/* webpackChunckName: "trainings_store_chunck" */
-    '@/stores/members'
-  );
+import TrainingStore from '@/stores/training';
+import CoachStore from '@/stores/training/coaches';
+import MemberStore from '@/stores/members';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -56,12 +47,9 @@ export default [
   {
     path: '/trainings/coaches',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['training'], TrainingStore);
-        await store.setModule(['training', 'coach'], CoachStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['training'], TrainingStore);
+      store.setModule(['training', 'coach'], CoachStore);
       next();
     },
     children: [
@@ -113,8 +101,8 @@ export default [
       },
       {
         path: 'create',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['member'], MemberStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['member'], MemberStore);
           next();
         },
         components: {
@@ -130,8 +118,8 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['member'], MemberStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['member'], MemberStore);
           next();
         },
         components: {

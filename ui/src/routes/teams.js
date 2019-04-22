@@ -30,14 +30,8 @@ const TeamStore = () => import(
   '@/stores/teams'
 );
 
-const TeamTypeStore = () => import(
-  /* webpackChunkName: "teams_admin_chunck" */
-  '@/stores/team_types'
-);
-const SeasonStore = () => import(
-  /* webpackChunkName: "teams_admin_chunck" */
-  '@/stores/seasons'
-);
+import TeamTypeStore from '@/stores/team_types';
+import SeasonStore from '@/stores/seasons';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -46,11 +40,8 @@ export default [
   {
     path: '/teams',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['team'], TeamStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['team'], TeamStore);
       next();
     },
     children: [
@@ -64,12 +55,9 @@ export default [
       },
       {
         path: 'create',
-        async beforeEnter(to, from, next) {
-          if (!to.meta.called) {
-            to.meta.called = true;
-            await store.setModule(['teamType'], TeamTypeStore);
-            await store.setModule(['season'], SeasonStore);
-          }
+        beforeEnter(to, from, next) {
+          store.setModule(['teamType'], TeamTypeStore);
+          store.setModule(['season'], SeasonStore);
           next();
         },
         components: {
@@ -85,12 +73,9 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        async beforeEnter(to, from, next) {
-          if (!to.meta.called) {
-            to.meta.called = true;
-            await store.setModule(['teamType'], TeamTypeStore);
-            await store.setModule(['season'], SeasonStore);
-          }
+        beforeEnter(to, from, next) {
+          store.setModule(['teamType'], TeamTypeStore);
+          store.setModule(['season'], SeasonStore);
           next();
         },
         components: {

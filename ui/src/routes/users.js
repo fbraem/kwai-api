@@ -36,18 +36,9 @@ const UserRegisterWithInvite = () => import(
   '@/apps/users/UserRegisterWithInvite.vue'
 );
 
-const UserStore = () => import(
-  /* webpackChunkName: "user_chunck" */
-  '@/stores/users'
-);
-const NewsStore = () => import(
-  /* webpackChunkName: "news_chunck" */
-  '@/stores/news'
-);
-const PageStore = () => import(
-  /* webpackChunkName: "pages_chunck" */
-  '@/stores/pages'
-);
+import UserStore from '@/stores/users';
+import NewsStore from '@/stores/news';
+import PageStore from '@/stores/pages';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -55,11 +46,8 @@ var store = makeStore();
 export default [
   {
     path: '/users',
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['user'], UserStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['user'], UserStore);
       next();
     },
     component: App,
@@ -82,9 +70,9 @@ export default [
       },
       {
         path: ':id',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['news'], NewsStore);
-          await store.setModule(['page'], PageStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['news'], NewsStore);
+          store.setModule(['page'], PageStore);
           next();
         },
         components: {

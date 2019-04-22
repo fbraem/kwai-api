@@ -33,14 +33,7 @@ const NewsForm = () => import(
   '@/apps/news/NewsForm.vue'
 );
 
-const CategoryStore = () => import(
-  /* webpackChunkName: "category_chunck" */
-  '@/stores/categories'
-);
-const NewsStore = () => import(
-  /* webpackChunkName: "news_chunck" */
-  '@/stores/news'
-);
+import NewsStore from '@/stores/news';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -48,12 +41,8 @@ var store = makeStore();
 export default [
   {
     path: '/news',
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['category'], CategoryStore);
-        await store.setModule(['news'], NewsStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['news'], NewsStore);
       next();
     },
     component: App,

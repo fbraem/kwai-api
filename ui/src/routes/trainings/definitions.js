@@ -21,16 +21,11 @@ const DefinitionRead = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/DefinitionRead.vue');
 
-const TrainingStore = () =>
-  import('@/stores/training');
-const DefinitionStore = () =>
-  import('@/stores/training/definitions');
-const CoachStore = () =>
-  import('@/stores/training/coaches');
-const SeasonStore = () =>
-  import('@/stores/seasons');
-const TeamStore = () =>
-  import('@/stores/teams');
+import TrainingStore from '@/stores/training';
+import DefinitionStore from '@/stores/training/definitions';
+import CoachStore from '@/stores/training/coaches';
+import SeasonStore from '@/stores/seasons';
+import TeamStore from '@/stores/teams';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -39,19 +34,16 @@ export default [
   {
     path: '/trainings/definitions',
     component: App,
-    async beforeEnter(to, from, next) {
-      if (!to.meta.called) {
-        to.meta.called = true;
-        await store.setModule(['training'], TrainingStore);
-        await store.setModule(['training', 'definition'], DefinitionStore);
-      }
+    beforeEnter(to, from, next) {
+      store.setModule(['training'], TrainingStore);
+      store.setModule(['training', 'definition'], DefinitionStore);
       next();
     },
     children: [
       {
         path: ':id(\\d+)',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['training', 'coach'], CoachStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['training', 'coach'], CoachStore);
           next();
         },
         components: {
@@ -62,9 +54,9 @@ export default [
       },
       {
         path: 'create',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['season'], SeasonStore);
-          await store.setModule(['team'], TeamStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['season'], SeasonStore);
+          store.setModule(['team'], TeamStore);
           next();
         },
         components: {
@@ -80,9 +72,9 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        async beforeEnter(to, from, next) {
-          await store.setModule(['season'], SeasonStore);
-          await store.setModule(['team'], TeamStore);
+        beforeEnter(to, from, next) {
+          store.setModule(['season'], SeasonStore);
+          store.setModule(['team'], TeamStore);
           next();
         },
         components: {
