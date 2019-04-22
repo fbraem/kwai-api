@@ -20,8 +20,13 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import moment from 'moment';
 moment.locale('nl');
 
+/**
+ * Initialize vuex
+ */
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
+import CategoryStore from '@/stores/categories';
+store.setModule('category', CategoryStore);
 
 /**
  * Initialise casl
@@ -40,6 +45,14 @@ import routes from '@/routes';
 
 const router = new VueRouter({
   routes: routes(),
+});
+router.beforeEach(async(to, from, next) => {
+  if (to.meta.app) {
+    await store.dispatch('category/readApp', {
+      app: to.meta.app
+    });
+  }
+  next();
 });
 
 import VueScrollBehavior from 'vue-scroll-behavior';
