@@ -5,7 +5,7 @@ namespace Domain\Training;
 class TrainingsTable extends \Cake\ORM\Table
 {
     public static $registryName = 'Trainings';
-    public static $tableName = 'training_trainings';
+    public static $tableName = 'trainings';
     public static $entityClass = 'Domain\Training\Training';
 
     use \Domain\DomainTableTrait;
@@ -51,6 +51,16 @@ class TrainingsTable extends \Cake\ORM\Table
             ])
             ->setForeignKey('training_id')
             ->setProperty('teams')
+        ;
+        $this->belongsToMany('Members', [
+                'className' =>  \Judo\Domain\Member\MembersTable::class,
+                'targetForeignKey' => 'member_id',
+                'joinTable' => 'training_presences',
+                'through' => PresencesTable::getTableFromRegistry(),
+                'dependent' => true
+            ])
+            ->setForeignKey('training_id')
+            ->setProperty('presences')
         ;
     }
 

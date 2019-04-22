@@ -5,7 +5,7 @@ namespace Domain\Training;
 class CoachesTable extends \Cake\ORM\Table
 {
     public static $registryName = 'TrainingCoaches';
-    public static $tableName = 'training_coaches';
+    public static $tableName = 'coaches';
     public static $entityClass = 'Domain\Training\Coach';
 
     use \Domain\DomainTableTrait;
