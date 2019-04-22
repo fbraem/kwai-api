@@ -35,6 +35,7 @@ class TrainingCoachesTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
+            ->addColumn('id', ['type' => 'integer'])
             ->addColumn('training_id', ['type' => 'integer'])
             ->addColumn('coach_id', ['type' => 'integer'])
             ->addColumn('coach_type', ['type' => 'integer'])

@@ -29,6 +29,7 @@ class PresencesTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
+            ->addColumn('id', ['type' => 'integer'])
             ->addColumn('training_id', ['type' => 'integer'])
             ->addColumn('member_id', ['type' => 'integer'])
             ->addColumn('remark', ['type' => 'text'])
