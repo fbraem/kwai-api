@@ -45,7 +45,7 @@ function createModel(data, included) {
   // Set all fields
   Object.entries(this.fields()).forEach((entry) => {
     const [key, attr] = entry;
-    if (data.attributes[key]) {
+    if (key in data.attributes) {
       if (attr instanceof Attribute) {
         me[key] = attr.from(data.attributes[key]);
       } else {
@@ -57,7 +57,7 @@ function createModel(data, included) {
   // Set all relations
   var relationships = this.relationships();
   Object.keys(relationships).forEach((key) => {
-    if (data.relationships && data.relationships[key]) {
+    if (data.relationships && key in data.relationships) {
       if (Array.isArray(data.relationships[key].data)) {
         me[key] = [];
         data.relationships[key].data.forEach((relation) => {
