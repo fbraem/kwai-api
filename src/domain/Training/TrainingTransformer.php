@@ -14,7 +14,8 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         'season',
         'definition',
         'coaches',
-        'teams'
+        'teams',
+        'presences'
     ];
 
     public static function createForItem(Training $training)
@@ -48,6 +49,14 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         $coaches = $training->coaches;
         if ($coaches) {
             return TrainingCoachTransformer::createForCollection($coaches);
+        }
+    }
+
+    public function includePresences(Training $training)
+    {
+        $presences = $training->presences;
+        if ($presences) {
+            return PresenceTransformer::createForCollection($presences);
         }
     }
 
