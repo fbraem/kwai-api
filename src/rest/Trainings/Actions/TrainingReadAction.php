@@ -32,9 +32,11 @@ class TrainingReadAction
                 'contain' => [
                     'TrainingDefinition',
                     'Season',
-                    'TrainingCoaches',
-                    'TrainingCoaches.Member',
-                    'TrainingCoaches.Member.Person',
+                    'Coaches',
+                    'Coaches.Member',
+                    'Coaches.Member.Person',
+                    'Members',
+                    'Members.Person',
                     'Teams',
                     'Event',
                     'Event.Contents'

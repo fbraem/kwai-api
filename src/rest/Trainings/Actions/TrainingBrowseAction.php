@@ -28,9 +28,9 @@ class TrainingBrowseAction
         $query->contain([
             'Season',
             'TrainingDefinition',
-            'TrainingCoaches',
-            'TrainingCoaches.Member',
-            'TrainingCoaches.Member.Person',
+            'Coaches',
+            'Coaches.Member',
+            'Coaches.Member.Person',
             'Teams',
             'Event',
             'Event.Contents'

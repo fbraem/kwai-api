@@ -43,7 +43,7 @@ class TrainingUpdateAction
             $training = $table->get($args['id'], [
                 'contain' => [
                     'TrainingDefinition',
-                    'TrainingCoaches',
+                    'Coaches',
                     'Teams',
                     'Season',
                     'Event',
@@ -79,7 +79,7 @@ class TrainingUpdateAction
 
             $coaches = (new EntityExistValidator(
                 'data.relationships.coaches',
-                $table->TrainingCoaches,
+                $table->Coaches,
                 false
             ))->validate($data);
 
@@ -163,7 +163,7 @@ class TrainingUpdateAction
                     }
                 }
                 if (count($toDelete) > 0) {
-                    $table->TrainingCoaches->unlink($training, $toDelete);
+                    $table->Coaches->unlink($training, $toDelete);
                 }
 
                 // When a coach is passed to this function and it's not in the
@@ -183,7 +183,7 @@ class TrainingUpdateAction
                     }
                 }
                 if (count($toInsert) > 0) {
-                    $table->TrainingCoaches->link($training, $toInsert);
+                    $table->Coaches->link($training, $toInsert);
                 }
             }
 

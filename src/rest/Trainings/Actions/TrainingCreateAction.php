@@ -95,7 +95,7 @@ class TrainingCreateAction
 
         $coaches = (new EntityExistValidator(
             'data.relationships.coaches',
-            $trainingsTable->TrainingCoaches,
+            $trainingsTable->Coaches,
             false
         ))->validate($data);
 
@@ -141,7 +141,7 @@ class TrainingCreateAction
             ], [
                 'markNew' => true
             ]);
-            $trainingsTable->TrainingCoaches->link($training, [$coach]);
+            $trainingsTable->Coaches->link($training, [$coach]);
         }
 
         return $training;
