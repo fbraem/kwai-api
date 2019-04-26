@@ -7,7 +7,8 @@ import Season from '../Season';
 import User from '../User';
 import Team from '../Team';
 import Definition from './Definition';
-import Coach from './Coach';
+import TrainingCoach from './TrainingCoach';
+import Presence from './Presence';
 
 /**
  * Training model
@@ -55,8 +56,9 @@ export default class Training extends Model {
     return {
       season: Season,
       teams: Team,
-      coaches: Coach,
+      coaches: TrainingCoach,
       definition: Definition,
+      presences: Presence,
       user: User,
     };
   }
