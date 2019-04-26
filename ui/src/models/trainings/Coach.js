@@ -7,7 +7,7 @@ import Member from '../Member';
 /**
  * Coaches model
  */
-export default class TrainingCoach extends Model {
+export default class Coach extends Model {
   static type() {
     return 'coaches';
   }
