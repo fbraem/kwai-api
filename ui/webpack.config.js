@@ -118,7 +118,7 @@ module.exports = (env, argv) => {
       mainFiles: [ 'index' ],
     },
     plugins: [
-      new CleanWebpackPlugin('build', {}),
+      new CleanWebpackPlugin(),
       new VueLoaderPlugin(),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css',
