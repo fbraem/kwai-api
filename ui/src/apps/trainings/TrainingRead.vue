@@ -8,41 +8,11 @@
     <div class="uk-width-1-2@s">
       <div class="uk-card uk-card-default">
         <div class="uk-card-header uk-padding-remove">
-          <div
-            class="uk-grid-collapse"
-            uk-grid
-          >
-            <div
-              class="uk-width-1-2@m uk-light uk-text-center uk-padding"
-              style="background-color:rgb(198, 28, 24)"
-            >
-              <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
-                {{ dayName }}
-              </div>
-              <div style="font-size:8em; font-weight:900; line-height:1em;">
-                {{ day }}
-              </div>
-              <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
-                {{ month }}
-              </div>
-            </div>
-            <div class="uk-width-1-2@m uk-text-center uk-padding">
-              <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
-                {{ training.formattedStartTime}}
-              </div>
-              <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
-                -
-              </div>
-              <div style="font-size:4em; text-transform:lowercase;">
-                {{ training.formattedEndTime}}
-              </div>
-              <br />
-            </div>
-          </div>
+          <TrainingDayHour :training="training" />
         </div>
         <div class="uk-card-body">
           <h3 class="uk-card-title">
-            Training &bull; {{ training.content.title }}
+            {{ $t('title') }} &bull; {{ training.content.title }}
           </h3>
           <p>
             {{ training.content.summary }}
@@ -59,8 +29,9 @@
           <div uk-grid>
             <div
               v-if="training.coaches"
-              class="uk-width-1-1">
-              <strong>Coaches:</strong>
+              class="uk-width-1-1"
+            >
+              <strong>{{ $t('coaches') }}:</strong>
               <ul class="uk-list uk-list-bullet">
                 <li
                   v-for="(coach, index) in training.coaches"
@@ -70,11 +41,21 @@
               </ul>
             </div>
             <div class="uk-width-1-1">
-              <strong>Aanwezigheden:</strong>
+              <strong>{{ $t('training.presences.title') }}:</strong>
+              <ul class="uk-list uk-list-bullet">
+                <li
+                  v-for="(member, index) in training.presences"
+                  :key="index">
+                  {{ member.person.name }}
+                </li>
+              </ul>
               <div>
-                <a class="uk-icon-button uk-link-reset">
+                <router-link
+                  :to="{ name: 'trainings.presences', params: {id: training.id} }"
+                  class="uk-icon-button uk-link-reset"
+                >
                   <i class="fas fa-address-book"></i>
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -87,8 +68,13 @@
 <script>
 import messages from './lang';
 
+import TrainingDayHour from './TrainingDayHour';
+
 export default {
   i18n: messages,
+  components: {
+    TrainingDayHour
+  },
   computed: {
     training() {
       return this.$store.getters['training/training'](

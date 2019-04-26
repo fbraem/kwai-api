@@ -184,6 +184,13 @@
                 }
             },
             "no_data" : "Er zijn geen trainingen gevonden in deze periode."
+        },
+        "presences" : {
+            "title" : "Aanwezigheidslijst",
+            "attendees" : "Aanwezigen",
+            "possible" : "Mogelijke Aanwezigen",
+            "team" : "Verwijderde leden of leden van het team dat bij deze training hoort.",
+            "nobody" : "Niemand aanwezig"
         }
     },
     "save" : "Bewaar",
@@ -192,6 +199,8 @@
     "name" : "Naam",
     "description" : "Omschrijving",
     "trainings" : "Trainingen",
+    "title" : "Training",
+    "coaches" : "Trainers",
     "cancelled" : "Opgelet, deze training is geannuleerd!",
     "no_coach" : "Nog geen coach aangeduid"
 }

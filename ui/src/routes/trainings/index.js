@@ -33,6 +33,14 @@ const TrainingFormHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/TheTrainingFormHeader.vue'
   );
+const Presences = () =>
+  import(/* webpackChunkName: "trainings_chunck" */
+    '@/apps/trainings/Presences.vue'
+  );
+const ThePresencesHeader = () =>
+  import(/* webpackChunkName: "trainings_chunck" */
+    '@/apps/trainings/ThePresencesHeader.vue'
+  );
 
 import TrainingStore from '@/stores/training';
 import CoachStore from '@/stores/training/coaches';
@@ -51,9 +59,6 @@ var routes = [
   {
     path: '/trainings',
     component: App,
-    meta: {
-      app: CATEGORY_APP
-    },
     beforeEnter(to, from, next) {
       store.setModule(['training'], TrainingStore);
       store.setModule(['category'], CategoryStore);
@@ -67,6 +72,18 @@ var routes = [
           main: TrainingRead
         },
         name: 'trainings.read',
+      },
+      {
+        path: ':id(\\d+)/presences',
+        components: {
+          header: ThePresencesHeader,
+          main: Presences
+        },
+        beforeEnter(to, from, next) {
+          store.setModule(['team'], TeamStore);
+          next();
+        },
+        name: 'trainings.presences',
       },
       {
         path: ':year(\\d+)/:month(\\d+)',

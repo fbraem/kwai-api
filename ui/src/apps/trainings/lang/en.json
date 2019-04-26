@@ -182,6 +182,13 @@
                 }
             },
             "no_data" : "There are no events for this period."
+        },
+        "presences" : {
+            "title" : "Attendance List",
+            "attendees" : "Attendees",
+            "possible" : "Possible Attendees",
+            "team" : "Removed members or members of the team that belongs to this training.",
+            "nobody" : "No Attendees"
         }
     },
     "save" : "Save",
@@ -190,6 +197,8 @@
     "name" : "Name",
     "description" : "Description",
     "trainings" : "Trainings",
+    "title" : "Training",
+    "coaches" : "Coaches",
     "cancelled" : "This training is cancelled!",
     "no_coach" : "No coach"
 }
