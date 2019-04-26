@@ -4,7 +4,7 @@ namespace Domain\Training;
 
 class TrainingCoachesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'TrainingTrainingCoaches';
+    public static $registryName = 'TrainingCoaches';
     public static $tableName = 'training_coaches';
     public static $entityClass = 'Domain\Training\TrainingCoach';
 
@@ -35,7 +35,6 @@ class TrainingCoachesTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
-            ->addColumn('id', ['type' => 'integer'])
             ->addColumn('training_id', ['type' => 'integer'])
             ->addColumn('coach_id', ['type' => 'integer'])
             ->addColumn('coach_type', ['type' => 'integer'])
