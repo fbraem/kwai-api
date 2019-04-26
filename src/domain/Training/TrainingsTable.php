@@ -52,7 +52,7 @@ class TrainingsTable extends \Cake\ORM\Table
             ->setForeignKey('training_id')
             ->setProperty('teams')
         ;
-        $this->belongsToMany('Presences', [
+        $this->belongsToMany('Members', [
                 'className' =>  \Judo\Domain\Member\MembersTable::class,
                 'targetForeignKey' => 'member_id',
                 'joinTable' => 'training_presences',
