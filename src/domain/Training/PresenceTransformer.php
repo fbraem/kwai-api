@@ -4,35 +4,40 @@ namespace Domain\Training;
 
 use League\Fractal;
 
+//TODO; make it sport independent
+use Judo\Domain\Member\Member;
+
 class PresenceTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'presences';
+    private static $type = 'members';
 
     protected $defaultIncludes = [
-        'member'
+        'person'
     ];
 
-    public static function createForItem(Presence $presence)
+    public static function createForItem(Member $member)
     {
-        return new Fractal\Resource\Item($presence, new self(), self::$type);
+        return new Fractal\Resource\Item($member, new self(), self::$type);
     }
 
-    public static function createForCollection(iterable $presences)
+    public static function createForCollection(iterable $members)
     {
-        return new Fractal\Resource\Collection($presences, new self(), self::$type);
+        return new Fractal\Resource\Collection($members, new self(), self::$type);
     }
 
-    public function includeMember(Presence $presence)
+    public function includePerson(Member $member)
     {
-        $member = $presence->member;
-        if ($member) {
-            //TODO; make it sport independent
-            return \Judo\Domain\Member\MemberTransformer::createForItem($member);
+        $person = $member->person;
+        if ($person) {
+            return \Domain\Person\PersonTransformer::createForItem($person);
         }
     }
 
-    public function transform(Presence $presence)
+    public function transform(Member $member)
     {
-        return $presence->toArray();
+        $result = $member->toArray();
+        unset($result['_joinData']);
+        $result['presence_remark'] = $member['_joinData']['remark'];
+        return $result;
     }
 }
