@@ -140,10 +140,6 @@ class TrainingUpdateAction
             $training->dirty('event', true);
             $training->event->user = $request->getAttribute('clubman.user');
 
-            if (isset($teams)) {
-                $training->teams = $teams;
-            }
-
             (new \REST\Trainings\TrainingValidator())->validate($training);
 
             $table->save($training, [
@@ -151,6 +147,34 @@ class TrainingUpdateAction
                     'Event.Contents'
                 ]
             ]);
+
+            // Update teams
+            if ($teams) {
+                // When a team is not passed to this function, it must be deleted
+                $lookup = array_column($teams, null, 'id');
+                $toDelete = [];
+                foreach ($training->teams as $team) {
+                    if (!$lookup[$team->id]) {
+                        $toDelete[] = $team;
+                    }
+                }
+                if (count($toDelete) > 0) {
+                    $table->Teams->unlink($training, $toDelete);
+                }
+
+                // When a team is passed to this function and it's not in the
+                // table, it must be insert
+                $lookup = array_column($training->teams, null, 'id');
+                $toInsert = [];
+                foreach ($teams as $team) {
+                    if (!$lookup[$team->id]) {
+                        $toInsert[] = $team;
+                    }
+                }
+                if (count($toInsert) > 0) {
+                    $table->Teams->link($training, $toInsert);
+                }
+            }
 
             // Update coaches
             if ($coaches) {
