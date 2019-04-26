@@ -37,6 +37,8 @@ class TrainingCoachTransformer extends Fractal\TransformerAbstract
         unset($result['_joinData']);
         $result['present'] = $coach['_joinData']['present'];
         $result['coach_type'] = $coach['_joinData']['coach_type'];
+        $result['payed'] = $coach['_joinData']['payed'];
+        $result['coach_remark'] = $coach['_joinData']['remark'];
         return $result;
     }
 }
