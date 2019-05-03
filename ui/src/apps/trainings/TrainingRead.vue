@@ -113,7 +113,8 @@ export default {
   methods: {
     fetchData(id) {
       this.$store.dispatch('training/read', {
-        id: id
+        id,
+        cache: false
       }).catch((err) => {
         console.log(err);
       });
