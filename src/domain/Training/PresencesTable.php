@@ -24,6 +24,12 @@ class PresencesTable extends \Cake\ORM\Table
             ])
             ->setForeignKey('member_id')
         ;
+        $this->belongsTo('User', [
+                'className' => \Domain\User\UsersTable::class
+            ])
+            ->setForeignKey('user_id')
+            ->setProperty('user')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
@@ -32,6 +38,7 @@ class PresencesTable extends \Cake\ORM\Table
             ->addColumn('training_id', ['type' => 'integer'])
             ->addColumn('member_id', ['type' => 'integer'])
             ->addColumn('remark', ['type' => 'text'])
+            ->addColumn('user_id', ['type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(
