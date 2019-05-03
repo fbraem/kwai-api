@@ -62,6 +62,13 @@ class JSONAPI {
   }
 
   /**
+   * Add a path
+   */
+  path(p) {
+    this.uri.segment(p);
+  }
+
+  /**
    * Add a page filter
    * @param {object} page
    * @param {int} page.offset The page offset.
