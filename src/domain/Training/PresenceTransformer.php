@@ -9,7 +9,7 @@ use Judo\Domain\Member\Member;
 
 class PresenceTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'members';
+    private static $type = 'presences';
 
     protected $defaultIncludes = [
         'person'

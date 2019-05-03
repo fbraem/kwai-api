@@ -10,7 +10,7 @@ import Training from './Training';
  */
 export default class Presence extends Model {
   static type() {
-    return 'members';
+    return 'presences';
   }
 
   static namespace() {
