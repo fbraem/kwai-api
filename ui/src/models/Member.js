@@ -33,4 +33,15 @@ export default class Member extends Model {
       person: Person,
     };
   }
+
+  static computed() {
+    return {
+      name(member) {
+        if (member.person) {
+          return member.person.name;
+        }
+        return '';
+      }
+    };
+  }
 }
