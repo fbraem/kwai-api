@@ -52,12 +52,20 @@ $app->group('/trainings', function () {
         ->setName('trainings.update')
         ->setArgument('auth', true)
     ;
-    $this->get('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachBrowseAction::class)
-        ->setName('trainings.training.coaches.browse')
-        ->setArgument('auth', true)
-    ;
-    $this->post('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachCreateAction::class)
-        ->setName('trainings.training.coaches.create')
+    /*
+        $this->get('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachBrowseAction::class)
+            ->setName('trainings.training.coaches.browse')
+            ->setArgument('auth', true)
+        ;
+    */
+    /*
+        $this->post('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachCreateAction::class)
+            ->setName('trainings.training.coaches.create')
+            ->setArgument('auth', true)
+        ;
+    */
+    $this->post('/{id:[0-9]+}/presences', \REST\Trainings\Actions\PresenceCreateAction::class)
+        ->setName('trainings.training.presences.create')
         ->setArgument('auth', true)
     ;
 });

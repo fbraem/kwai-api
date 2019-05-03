@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 import JSONAPI from '@/js/JSONAPI';
 import Training from '@/models/trainings/Training';
+import Presence from '@/models/trainings/Presence';
 
 const state = {
   trainings: null,
@@ -77,17 +78,19 @@ const actions = {
       throw error;
     }
   },
-  async read({ dispatch, getters, commit }, payload) {
-    var training = getters['training'](payload.id);
-    if (training) { // already read
-      commit('error', null); // Reset error
-      return training;
+  async read({ dispatch, getters, commit }, { id, cache = true }) {
+    if (cache) {
+      var training = getters['training'](id);
+      if (training) { // already read
+        commit('error', null); // Reset error
+        return training;
+      }
     }
 
     dispatch('wait/start', 'training.read', { root: true });
     try {
       const api = new JSONAPI({ source: Training });
-      const result = await api.get(payload.id);
+      const result = await api.get(id);
       commit('training', result);
       return result.data;
     } catch (error) {
@@ -102,6 +105,18 @@ const actions = {
     try {
       const api = new JSONAPI({ source: Training });
       const result = await api.save(trainings);
+      commit('training', result);
+      return result.data;
+    } catch (error) {
+      commit('error', error);
+      throw error;
+    }
+  },
+  async updatePresences({commit, state}, {training, presences}) {
+    try {
+      const api = new JSONAPI({ source: Presence });
+      api.path(training.id);
+      const result = await api.save(presences);
       commit('training', result);
       return result.data;
     } catch (error) {

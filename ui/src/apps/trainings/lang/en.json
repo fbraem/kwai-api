@@ -188,7 +188,17 @@
             "attendees" : "Attendees",
             "possible" : "Possible Attendees",
             "team" : "Removed members or members of the team that belongs to this training.",
-            "nobody" : "No Attendees"
+            "nobody" : "No Attendees",
+            "form" : {
+                "other_members": {
+                    "label": "Other members"
+                },
+                "select_label" : "Press enter to select",
+                "deselect_label": "Press enter to deselect",
+                "add_others" : "Add"
+            },
+            "save_warning": "Click on SAVE to store the changes!",
+            "save": "save"
         }
     },
     "save" : "Save",

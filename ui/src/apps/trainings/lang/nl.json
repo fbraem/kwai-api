@@ -190,7 +190,17 @@
             "attendees" : "Aanwezigen",
             "possible" : "Mogelijke Aanwezigen",
             "team" : "Verwijderde leden of leden van het team dat bij deze training hoort.",
-            "nobody" : "Niemand aanwezig"
+            "nobody" : "Niemand aanwezig",
+            "form" : {
+                "other_members": {
+                    "label": "Andere leden"
+                },
+                "select_label" : "Druk enter om te selecteren",
+                "deselect_label": "Druk enter om te verwijderen",
+                "add_others" : "Voeg toe"
+            },
+            "save_warning": "Klik op BEWAAR om de wijzigingen definitief op te slaan!",
+            "save": "bewaar"
         }
     },
     "save" : "Bewaar",

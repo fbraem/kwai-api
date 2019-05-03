@@ -25,7 +25,7 @@
               :key="member.id"
             >
               <td>
-                {{ member.person.name }}
+                <MemberSummary :member="member" />
               </td>
               <td class="uk-table-shrink">
                 <a class="uk-icon-button uk-link-reset">
@@ -41,6 +41,7 @@
           <p v-else>
             {{ $t('training.presences.nobody') }}
           </p>
+          <WarningComponent v-if="changed" @save="saveAttendees" />
           <h1>
             {{ $t('training.presences.possible') }}
           </h1>
@@ -53,7 +54,7 @@
               :key="member.id"
             >
               <td>
-                {{ member.person.name }}
+                <MemberSummary :member="member" />
               </td>
               <td class="uk-table-shrink">
                 <a class="uk-icon-button uk-link-reset">
@@ -66,6 +67,43 @@
               </td>
             </tr>
           </table>
+          <div class="uk-width-1-1">
+            <KwaiForm
+              :form="form"
+            >
+              <div
+                class="uk-flex uk-flex-bottom"
+                uk-grid
+              >
+                <div class="uk-width-expand">
+                  <KwaiField
+                    name="otherMembers"
+                    :label="$t('training.presences.form.other_members.label')"
+                  >
+                    <multiselect
+                      :options="otherMembers"
+                      label="name"
+                      track-by="id"
+                      :multiple="true"
+                      :close-on-select="false"
+                      :selectLabel="$t('training.presences.form.select_label')"
+                      :deselectLabel="$t('training.presences.form.deselect_label')"
+                    />
+                  </KwaiField>
+                </div>
+                <div>
+                  <button
+                    class="uk-button uk-button-default"
+                    :disabled="disableAddOthers"
+                    @click.prevent.stop="addAttendeeFromList"
+                  >
+                    {{ $t('training.presences.form.add_others') }}
+                  </button>
+                </div>
+              </div>
+            </KwaiForm>
+          </div>
+          <WarningComponent v-if="changed" @save="saveAttendees" />
         </div>
       </div>
     </div>
@@ -76,16 +114,75 @@
 import messages from './lang';
 
 import TrainingDayHour from './TrainingDayHour';
+import MemberSummary from '@/apps/members/components/MemberSummary';
+
+import makeForm, { makeField } from '@/js/Form';
+import KwaiForm from '@/components/forms/KwaiForm';
+import KwaiField from '@/components/forms/KwaiField';
+import Multiselect from '@/components/forms/MultiSelect';
+
+const WarningComponent = {
+  i18n: messages,
+  render(h) {
+    return h('div', {
+      class: {
+        'uk-alert-warning': true
+      },
+      attrs: {
+        'uk-alert': true
+      }
+    }, [
+      h('div', {
+        class: {
+          'uk-grid-small': true,
+          'uk-flex': true,
+          'uk-flex-middle': true
+        },
+        attrs: {
+          'uk-grid': true
+        }
+      }, [
+        h('div', {
+          class: {
+            'uk-width-expand': true
+          }
+        },
+        this.$t('training.presences.save_warning')
+        ),
+        h('div', {},
+          [
+            h('button', {
+              class: {
+                'uk-button': true,
+                'uk-button-primary': true
+              },
+              on: {
+                click: () => { this.$emit('save'); }
+              }
+            }, this.$t('training.presences.save')),
+          ]
+        ),
+      ]),
+    ]);
+  }
+};
 
 export default {
   i18n: messages,
   components: {
-    TrainingDayHour
+    TrainingDayHour, MemberSummary, KwaiForm, KwaiField, Multiselect,
+    WarningComponent
   },
   data() {
     return {
       presences: [],
-      members: []
+      members: [],
+      form: makeForm({
+        otherMembers: makeField({
+          value: []
+        })
+      }),
+      changed: false
     };
   },
   computed: {
@@ -96,6 +193,19 @@ export default {
     },
     hasPresences() {
       return this.presences.length > 0;
+    },
+    otherMembers() {
+      var others = this.$store.state.member.members || [];
+      this.presences.forEach((p) => {
+        let index = others.findIndex(o => o.id === p.id);
+        if (index !== -1) {
+          others.splice(index, 1);
+        }
+      });
+      return others;
+    },
+    disableAddOthers() {
+      return this.form.fields.otherMembers.value.length === 0;
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -111,14 +221,16 @@ export default {
   methods: {
     async fetchData(id) {
       await this.$store.dispatch('training/read', {
-        id: id
+        id,
+        cache: false
       }).catch((err) => {
         console.log(err);
       });
       if (this.training) {
         // TODO: For the moment only one team!
         var teamId = this.training.teams[0].id;
-        this.presences = [ ... this.training.presences ];
+        this.presences = this.training.presences ?
+          [ ... this.training.presences ] : [];
         if (this.training) {
           await this.$store.dispatch('team/members', {
             id: teamId
@@ -126,14 +238,31 @@ export default {
           this.members = [ ... this.$store.getters['team/members'](teamId) ];
         }
       }
+      this.$store.dispatch('member/browse');
     },
     removePresence(member) {
-      this.presences = this.presences.filter((p) => p.id !== member.id);
+      this.presences = this.presences.filter(p => p.id !== member.id);
       this.members.push(member);
+      this.changed = true;
     },
     addPresence(member) {
       this.presences.push(member);
-      this.members = this.members.filter((m) => m.id !== member.id);
+      this.members = this.members.filter(m => m.id !== member.id);
+      this.changed = true;
+    },
+    addAttendeeFromList() {
+      this.form.fields.otherMembers.value.forEach((member) => {
+        this.presences.push(member);
+      });
+      this.form.fields.otherMembers.value = [];
+      this.changed = true;
+    },
+    saveAttendees() {
+      this.$store.dispatch('training/updatePresences', {
+        training: this.training,
+        presences: this.presences
+      });
+      this.changed = false;
     }
   }
 };

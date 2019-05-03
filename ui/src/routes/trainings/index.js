@@ -49,6 +49,7 @@ import TeamStore from '@/stores/teams';
 import NewsStore from '@/stores/news';
 import CategoryStore from '@/stores/categories';
 import PageStore from '@/stores/pages';
+import MemberStore from '@/stores/members';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
@@ -81,6 +82,7 @@ var routes = [
         },
         beforeEnter(to, from, next) {
           store.setModule(['team'], TeamStore);
+          store.setModule(['member'], MemberStore);
           next();
         },
         name: 'trainings.presences',
