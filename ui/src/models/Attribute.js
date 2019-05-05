@@ -56,7 +56,10 @@ class DateAttribute extends Attribute {
    * @return {string}
    */
   to(arg) {
-    return arg.format(this.format);
+    if (arg) {
+      return arg.format(this.format);
+    }
+    return null;
   }
 
   /**
@@ -65,7 +68,10 @@ class DateAttribute extends Attribute {
    * @return {moment}
    */
   from(arg) {
-    return moment(arg, this.format);
+    if (arg) {
+      return moment(arg, this.format);
+    }
+    return null;
   }
 }
 
