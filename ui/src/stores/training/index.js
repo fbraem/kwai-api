@@ -40,6 +40,13 @@ const mutations = {
     }
     state.error = null;
   },
+  presences(state, { data }) {
+    var index = state.trainings.findIndex((e) => e.id === data.id);
+    if (index !== -1) {
+      state.trainings.presences = data.presences;
+    }
+    state.error = null;
+  },
   error(state, data) {
     state.error = data;
   },
@@ -117,7 +124,7 @@ const actions = {
       const api = new JSONAPI({ source: Presence });
       api.path(training.id);
       const result = await api.save(presences);
-      commit('training', result);
+      commit('presences', result);
       return result.data;
     } catch (error) {
       commit('error', error);
