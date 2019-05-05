@@ -40,16 +40,33 @@ class PresenceCreateAction
         try {
             $table = TrainingsTable::getTableFromRegistry();
 
-            $training = $table->get($args['id'], [
-                'contain' => [
-                    'Members',
-                    'Members.Person',
+            $training = $table->get(
+                $args['id'],
+                [
+                    'contain' => [
+                        'Members',
+                        'Members.Person',
+                    ]
                 ]
-            ]);
+            );
 
             $members = [];
-            foreach ($data['data'] as $item) {
-                $members[] = $table->Members->get($item['id']);
+            $remarks = [];
+            try {
+                foreach ($data['data'] as $item) {
+                    $members[] = $table->Members->get(
+                        $item['id'],
+                        [
+                            'contain' => [
+                                'Person'
+                            ]
+                        ]
+                    );
+                    $remarks[$item['id']] = $item['attributes']['remark'];
+                }
+            } catch (RecordNotFoundException $rnfe) {
+                $response = (new NotFoundResponse(_("Member doesn't exist")))($response);
+                return;
             }
 
             // Update members
@@ -69,22 +86,37 @@ class PresenceCreateAction
                 // When a member is passed to this function and it's not in the
                 // table, it must be insert
                 $lookup = array_column($training->presences, null, 'id');
-                $toInsert = [];
+                $presences = [];
                 foreach ($members as $member) {
-                    if (!$lookup[$member->id]) {
+                    $presence = $lookup[$member->id];
+                    if ($presence) {
+                        if ($remarks[$member->id]) {
+                            $presence->_joinData['remark'] = $remarks[$member->id];
+                        }
+                        $presences[] = $presence;
+                    } else {
                         $member->_joinData = new Entity([
-                            'remark' => '',
+                            'remark' => $remarks[$member->id],
                             'user' => $request->getAttribute('clubman.user')
                         ], [
                             'markNew' => true
                         ]);
-                        $toInsert[] = $member;
+                        if ($remarks[$member->id]) {
+                            $member->_joinData['remark'] = $remarks[$member->id];
+                        }
+                        $presences[] = $member;
                     }
                 }
-                if (count($toInsert) > 0) {
-                    $table->Members->link($training, $toInsert);
+                if (count($presences) > 0) {
+                    $table->Members->link($training, $presences);
                 }
             }
+
+            $response = (new ResourceResponse(
+                TrainingTransformer::createForItem(
+                    $training
+                )
+            ))($response);
         } catch (RecordNotFoundException $rnfe) {
             $response = (new NotFoundResponse(_("Training doesn't exist")))($response);
         }
