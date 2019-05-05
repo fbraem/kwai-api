@@ -50,7 +50,7 @@
           </p>
           <table class="uk-table uk-table-small uk-table-striped">
             <tr
-              v-for="member in members"
+              v-for="member in teamMembers"
               :key="member.id"
             >
               <td>
@@ -176,7 +176,6 @@ export default {
   data() {
     return {
       presences: [],
-      members: [],
       form: makeForm({
         otherMembers: makeField({
           value: []
@@ -193,6 +192,23 @@ export default {
     },
     hasPresences() {
       return this.presences.length > 0;
+    },
+    teamMembers() {
+      // TODO: For the moment only one team!
+      if (this.training.teams.length > 0) {
+        let teamId = this.training.teams[0].id;
+        let members = this.$store.getters['team/members'](teamId) || [];
+        if (members.length > 0) {
+          this.presences.forEach((p) => {
+            let index = members.findIndex(o => o.id === p.id);
+            if (index !== -1) {
+              members.splice(index, 1);
+            }
+          });
+        }
+        return members;
+      }
+      return [];
     },
     otherMembers() {
       var others = this.$store.state.member.members || [];
@@ -227,27 +243,23 @@ export default {
         console.log(err);
       });
       if (this.training) {
-        // TODO: For the moment only one team!
-        var teamId = this.training.teams[0].id;
         this.presences = this.training.presences ?
           [ ... this.training.presences ] : [];
-        if (this.training) {
-          await this.$store.dispatch('team/members', {
-            id: teamId
-          });
-          this.members = [ ... this.$store.getters['team/members'](teamId) ];
-        }
+      }
+      if (this.training && this.training.teams.length > 0) {
+        // TODO: For the moment only one team!
+        this.$store.dispatch('team/members', {
+          id: this.training.teams[0].id
+        });
       }
       this.$store.dispatch('member/browse');
     },
     removePresence(member) {
       this.presences = this.presences.filter(p => p.id !== member.id);
-      this.members.push(member);
       this.changed = true;
     },
     addPresence(member) {
       this.presences.push(member);
-      this.members = this.members.filter(m => m.id !== member.id);
       this.changed = true;
     },
     addAttendeeFromList() {
