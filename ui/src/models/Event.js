@@ -1,7 +1,7 @@
 import Model from './Model';
 import { Attribute, DateAttribute } from './Attribute';
 
-import User from './User';
+import User from './users/User';
 import Category from './Category';
 import Content from './Content';
 

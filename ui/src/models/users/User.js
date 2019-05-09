@@ -1,5 +1,5 @@
-import Model from './Model';
-import { Attribute, DateAttribute } from './Attribute';
+import Model from '@/models/Model';
+import { Attribute, DateAttribute } from '@/models/Attribute';
 
 /**
  * User model

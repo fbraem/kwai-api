@@ -4,7 +4,7 @@ import {
 } from '../Attribute';
 
 import Season from '../Season';
-import User from '../User';
+import User from '@/models/users/User';
 import Team from '../Team';
 import Definition from './Definition';
 import TrainingCoach from './TrainingCoach';

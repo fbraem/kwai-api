@@ -5,8 +5,8 @@ Vue.use(Vuex);
 
 import JSONAPI from '@/js/JSONAPI';
 
-import User from '@/models/User';
-import UserInvitation from '@/models/UserInvitation';
+import User from '@/models/users/User';
+import UserInvitation from '@/models/users/UserInvitation';
 
 const state = () => {
   return {

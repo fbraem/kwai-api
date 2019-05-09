@@ -102,7 +102,7 @@ const makeRegisterWithInviteForm = (fields, validations) => {
 
 import messages from './lang';
 
-import User from '@/models/User';
+import User from '@/models/users/User';
 
 export default {
   i18n: messages,

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import User from '@/models/User';
+import User from '@/models/users/User';
 
 import Header from '@/components/Header';
 

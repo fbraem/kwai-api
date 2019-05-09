@@ -62,7 +62,7 @@ const makeInviteForm = (fields) => {
 
 import messages from './lang';
 
-import UserInvitation from '@/models/UserInvitation';
+import UserInvitation from '@/models/users/UserInvitation';
 
 export default {
   i18n: messages,
