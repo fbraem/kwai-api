@@ -1,5 +1,6 @@
 import Model from '@/models/Model';
 import { Attribute, DateAttribute } from '@/models/Attribute';
+import RuleGroup from './RuleGroup';
 
 /**
  * User model
@@ -19,6 +20,12 @@ export default class User extends Model {
       last_login: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
+    };
+  }
+
+  static relationships() {
+    return {
+      rule_groups: RuleGroup
     };
   }
 
