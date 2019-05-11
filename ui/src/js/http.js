@@ -4,20 +4,17 @@
  */
 import axios from 'axios';
 import config from 'config';
-import TokenStore from './TokenStore';
-
-var tokenStore = new TokenStore();
+import tokenStore from './TokenStore';
 
 /**
  * Refresh a new token
  */
 const refreshAuthLogic = async failedRequest => {
-  var token = tokenStore.getRefreshToken();
-  if (token) {
+  if (tokenStore.refresh_token) {
     var form = new FormData();
     form.append('grant_type', 'refresh_token');
     form.append('client_id', config.clientId);
-    form.append('refresh_token', tokenStore.getRefreshToken());
+    form.append('refresh_token', tokenStore.refresh_token);
     var response = await axios.request({
       method: 'POST',
       url: config.api + '/auth/access_token',
@@ -28,7 +25,7 @@ const refreshAuthLogic = async failedRequest => {
       response.data.refresh_token
     );
     failedRequest.response.config.headers['Authentication'] =
-      'Bearer ' + tokenStore.getAccessToken();
+      'Bearer ' + tokenStore.access_token;
   } else {
     throw failedRequest;
   }
@@ -74,8 +71,10 @@ function createAuthRefreshInterceptor(axios, refreshTokenCall, options = {}) {
  * Interceptor for setting headers.
  */
 axios.interceptors.request.use(request => {
-  var token = tokenStore.getAccessToken();
-  request.headers['Authorization'] = `Bearer ${token}`;
+  var token = tokenStore.access_token;
+  if (token) {
+    request.headers['Authorization'] = `Bearer ${token}`;
+  }
   request.headers['Accept'] = 'application/vnd.api+json';
   request.headers['Content-Type'] = 'application/vnd.api+json';
   return request;
