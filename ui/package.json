@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/tribbie/clubman#readme",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.8.1",
+    "@fortawesome/fontawesome-free": "^5.8.2",
     "acorn": "^6.1.1",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
@@ -44,10 +44,11 @@
     "image-webpack-loader": "^3.6.0",
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "^0.6.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "svg-url-loader": "^2.3.2",
+    "tar": "^4.4.2",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "url-loader": "^1.1.2",
     "vue-loader": "^15.7.0",
@@ -74,12 +75,12 @@
     "urijs": "^1.19.1",
     "vue": "^2.6.10",
     "vue-goodshare": "^1.3.2",
-    "vue-i18n": "^8.10.0",
-    "vue-multiselect": "^2.1.4",
+    "vue-i18n": "^8.11.2",
+    "vue-multiselect": "^2.1.6",
     "vue-notification": "^1.3.16",
     "vue-router": "^3.0.6",
     "vue-scroll-behavior": "^0.2.0",
     "vue-wait": "^1.3.3",
-    "vuex": "^3.1.0"
+    "vuex": "^3.1.1"
   }
 }
