@@ -66,6 +66,7 @@ class JSONAPI {
    */
   path(p) {
     this.uri.segment(p);
+    return this;
   }
 
   /**
