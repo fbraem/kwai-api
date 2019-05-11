@@ -24,10 +24,29 @@ class ReadAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        $parameters = $request->getAttribute('parameters');
+
+        $contain = [];
+        if (isset($parameters['include'])) {
+            foreach ($parameters['include'] as $include) {
+                if ($include == 'rule_groups') {
+                    $contain[] = 'RuleGroups';
+                    $contain[] = 'RuleGroups.Rules';
+                    $contain[] = 'RuleGroups.Rules.RuleAction';
+                    $contain[] = 'RuleGroups.Rules.RuleSubject';
+                }
+            }
+        }
+
         try {
             $response = (new ResourceResponse(
                 UserTransformer::createForItem(
-                    UsersTable::getTableFromRegistry()->get($args['id'])
+                    UsersTable::getTableFromRegistry()->get(
+                        $args['id'],
+                        [
+                            'contain' => $contain
+                        ]
+                    )
                 )
             ))($response);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {

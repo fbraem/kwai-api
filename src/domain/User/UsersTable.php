@@ -13,6 +13,24 @@ class UsersTable extends \Cake\ORM\Table
     public function initialize(array $config)
     {
         $this->initializeTable();
+
+        $this->belongsToMany('RuleGroups', [
+                'className' => RuleGroupsTable::class,
+                'targetForeignKey' => 'rule_group_id',
+                'joinTable' => 'user_rules',
+                'through' => UserRulesTable::getTableFromRegistry(),
+                'dependent' => true
+            ])
+            ->setForeignKey('user_id')
+            ->setProperty('rule_groups')
+        ;
+        $this->belongsToMany('Logs', [
+                'className' => UserLogsTable::class,
+                'dependent' => true
+            ])
+            ->setForeignKey('user_id')
+            ->setProperty('logs')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)

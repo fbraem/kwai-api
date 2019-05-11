@@ -8,7 +8,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
  */
 class User extends \Cake\ORM\Entity implements UserEntityInterface
 {
-    protected $_hidden = ['password'];
+    protected $_hidden = ['password', 'rule_groups'];
 
     use \Domain\DatetimeMetaTrait;
 
