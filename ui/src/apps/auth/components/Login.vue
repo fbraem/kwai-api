@@ -138,8 +138,7 @@ export default {
   },
   computed: {
     isLoggedIn() {
-      return this.$store.state.global.user
-        && this.$store.state.global.user.authenticated;
+      return this.$store.getters['auth/authenticated'];
     }
   },
   methods: {
@@ -156,7 +155,7 @@ export default {
     submit() {
       this.error = null;
       this.form.readForm(this.user);
-      this.$store.dispatch('login', this.user)
+      this.$store.dispatch('auth/login', this.user)
         .then(() => {
           this.clear();
           this.modal.hide();
@@ -170,7 +169,7 @@ export default {
         });
     },
     logout() {
-      this.$store.dispatch('logout')
+      this.$store.dispatch('auth/logout')
         .then(() => {
           this.$router.push('/');
         });
