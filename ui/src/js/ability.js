@@ -17,7 +17,7 @@ function subjectName(item) {
  */
 export default () => {
   return AbilityBuilder.define({ subjectName }, (can, cannot) => {
-    if (store.state.global.user && store.state.global.user.authenticated) {
+    if (store.state.auth.user) {
       can('manage', 'all');
     } else {
       can('read', 'stories');
