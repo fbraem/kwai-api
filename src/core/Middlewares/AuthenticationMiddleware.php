@@ -35,7 +35,15 @@ class AuthenticationMiddleware
                 $request = $server->validateAuthenticatedRequest($request);
                 $userId = $request->getAttribute('oauth_user_id');
                 try {
-                    $user = UsersTable::getTableFromRegistry()->get($userId);
+                    $user = UsersTable::getTableFromRegistry()
+                        ->get($userId, [
+                            'contain' => [
+                                'RuleGroups',
+                                'RuleGroups.Rules',
+                                'RuleGroups.Rules.RuleAction',
+                                'RuleGroups.Rules.RuleSubject'
+                            ]
+                        ]);
                 } catch (RecordNotFoundException $rnfe) {
                     return $response->withStatus(500, _('Unable to find user'));
                 }
