@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Add event rules
+ */
+class EventCreateRulesMigration extends \Domain\CreateRulesMigration
+{
+    const SUBJECT_NAME = 'event';
+
+    public function up()
+    {
+        $this->createRules(
+            self::SUBJECT_NAME,
+            'Events',
+            [
+                'update' => 'Update Event',
+                'read' => 'Read Event',
+                'delete' => 'Delete Event',
+                'create' => 'Create Event',
+                'manage' => 'Manage Event',
+            ]
+        );
+    }
+
+    public function down()
+    {
+        $this->removeRules(self::SUBJECT_NAME);
+    }
+}
