@@ -49,7 +49,7 @@ class TrainingBrowseAction
         }
 
         if (isset($parameters['filter']['coach'])) {
-            $query->matching('TrainingCoaches', function ($q) use ($parameters) {
+            $query->matching('Coaches', function ($q) use ($parameters) {
                 return $q->where([
                     'coach_id' => $parameters['filter']['coach']
                 ]);
