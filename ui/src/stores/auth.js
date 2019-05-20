@@ -11,9 +11,14 @@ import axios from '@/js/http';
 import JSONAPI from '@/js/JSONAPI';
 import User from '@/models/users/User';
 
+import Lockr from 'lockr';
+const USER_RULES_KEY = 'rules';
+const USER_KEY = 'user';
+
 const state = {
-  user: null,
-  tokenStore
+  user: Lockr.get(USER_KEY, null),
+  tokenStore,
+  rules: Lockr.get(USER_RULES_KEY, [])
 };
 
 const getters = {
@@ -31,10 +36,24 @@ const mutations = {
   },
   user(state, { data }) {
     state.user = data;
+    let rules = [];
+    for (let rule_group of state.user.rule_groups) {
+      for (let rule of rule_group.rules) {
+        rules.push({
+          actions: rule.action.name,
+          subject: rule.subject.name
+        });
+      }
+    }
+    state.rules = rules;
+    Lockr.set(USER_RULES_KEY, state.rules);
+    Lockr.set(USER_KEY, state.user);
   },
   logout(state) {
     state.tokenStore.clear();
     state.user = null;
+    state.rules = [];
+    Lockr.set(USER_RULES_KEY, []);
   }
 };
 
@@ -91,6 +110,25 @@ const actions = {
       console.log(error);
     }
     commit('logout');
+  },
+  async refresh({ commit, state }, failedRequest) {
+    if (state.tokenStore.refresh_token) {
+      var form = new FormData();
+      form.append('grant_type', 'refresh_token');
+      form.append('client_id', config.clientId);
+      form.append('refresh_token', state.tokenStore.refresh_token);
+      var response = await axios.request({
+        method: 'POST',
+        url: config.api + '/auth/access_token',
+        data: form
+      });
+      commit('login', {
+        access_token: response.data.access_token,
+        refresh_token: response.data.refresh_token
+      });
+    } else {
+      throw failedRequest;
+    }
   }
 };
 

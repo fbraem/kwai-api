@@ -32,8 +32,8 @@ store.setModule('category', CategoryStore);
  * Initialise casl
  */
 import { abilitiesPlugin } from '@casl/vue';
-import makeAbilities from '@/js/ability';
-Vue.use(abilitiesPlugin, makeAbilities());
+import { ability } from '@/js/ability';
+Vue.use(abilitiesPlugin, ability);
 
 import VueWait from 'vue-wait';
 Vue.use(VueWait);

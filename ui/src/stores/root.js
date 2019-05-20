@@ -52,8 +52,11 @@ const actions = {
   },
 };
 
+import { abilityPlugin } from '@/js/ability';
+
 export default new Vuex.Store({
   namespaced: true,
+  plugins: [ abilityPlugin ],
   state: state,
   getters: getters,
   mutations: mutations,

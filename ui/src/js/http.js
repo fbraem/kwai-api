@@ -3,32 +3,16 @@
  * Used https://github.com/Flyrell/axios-auth-refresh as input.
  */
 import axios from 'axios';
-import config from 'config';
 import tokenStore from './TokenStore';
 
+import store from '@/stores/root';
 /**
  * Refresh a new token
  */
 const refreshAuthLogic = async failedRequest => {
-  if (tokenStore.refresh_token) {
-    var form = new FormData();
-    form.append('grant_type', 'refresh_token');
-    form.append('client_id', config.clientId);
-    form.append('refresh_token', tokenStore.refresh_token);
-    var response = await axios.request({
-      method: 'POST',
-      url: config.api + '/auth/access_token',
-      data: form
-    });
-    tokenStore.setTokens(
-      response.data.access_token,
-      response.data.refresh_token
-    );
-    failedRequest.response.config.headers['Authentication'] =
-      'Bearer ' + tokenStore.access_token;
-  } else {
-    throw failedRequest;
-  }
+  await store.dispatch('auth/refresh', failedRequest);
+  failedRequest.response.config.headers['Authentication'] =
+    'Bearer ' + store.state.auth.tokenStore.access_token;
 };
 
 /**

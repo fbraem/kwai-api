@@ -47,8 +47,12 @@
       </a>
       <div uk-dropdown="mode: click">
         <ul class="uk-nav uk-dropdown-nav">
-          <li>
-            <a href="#">{{ $t('user') }}</a>
+          <li v-if="activeUser">
+            <router-link
+              :to="{ name: 'users.read', params: { id: activeUser.id } }"
+            >
+              {{ $t('user') }}
+            </router-link>
           </li>
           <li>
             <a href="#" @click="logout">{{ $t('logout') }}</a>
@@ -139,6 +143,9 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters['auth/authenticated'];
+    },
+    activeUser() {
+      return this.$store.state.auth.user;
     }
   },
   methods: {

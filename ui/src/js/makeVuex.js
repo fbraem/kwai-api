@@ -25,18 +25,8 @@ Vuex.Store.prototype.setModule = function(aPath, module) {
 };
 
 import store from '@/stores/root';
-
 import AuthModule from '@/stores/auth';
 store.setModule('auth', AuthModule);
-
-store.watch(
-  (state) => state.auth.tokenStore.access_token,
-  (nv, ov) => {
-    if (nv != null) {
-      store.dispatch('auth/user');
-    }
-  }
-);
 
 export default () => {
   return store;
