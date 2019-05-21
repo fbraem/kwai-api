@@ -5,7 +5,7 @@
  */
 class GameSeasonCreateRulesMigration extends \Domain\CreateRulesMigration
 {
-    const SUBJECT_NAME = 'season';
+    const SUBJECT_NAME = 'seasons';
 
     public function up()
     {

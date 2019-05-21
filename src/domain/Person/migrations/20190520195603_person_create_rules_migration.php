@@ -5,7 +5,7 @@
  */
 class PersonCreateRulesMigration extends \Domain\CreateRulesMigration
 {
-    const SUBJECT_NAME = 'person';
+    const SUBJECT_NAME = 'persons';
 
     public function up()
     {

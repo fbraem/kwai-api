@@ -5,7 +5,7 @@
  */
 class EventCreateRulesMigration extends \Domain\CreateRulesMigration
 {
-    const SUBJECT_NAME = 'event';
+    const SUBJECT_NAME = 'events';
 
     public function up()
     {

@@ -5,7 +5,7 @@
  */
 class CategoryCreateRulesMigration extends \Domain\CreateRulesMigration
 {
-    const SUBJECT_NAME = 'category';
+    const SUBJECT_NAME = 'categories';
 
     public function up()
     {

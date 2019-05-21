@@ -5,8 +5,8 @@
  */
 class TrainingCreateRulesMigration extends \Domain\CreateRulesMigration
 {
-    const TRAINING_SUBJECT_NAME = 'training';
-    const COACH_SUBJECT_NAME = 'coach';
+    const TRAINING_SUBJECT_NAME = 'trainings';
+    const COACH_SUBJECT_NAME = 'coaches';
 
     public function up()
     {
