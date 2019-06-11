@@ -8,14 +8,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\User\UsersTable;
-use Domain\User\UserTransformer;
+use Domain\User\RuleGroupTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Core\Responses\ResourceResponse;
 use Core\Responses\NotFoundResponse;
 
-class ReadAction
+class UserRuleBrowseAction
 {
     public function __construct(ContainerInterface $container)
     {
@@ -26,30 +26,27 @@ class ReadAction
     {
         $parameters = $request->getAttribute('parameters');
 
-        $contain = [];
-        if (isset($parameters['include'])) {
-            foreach ($parameters['include'] as $include) {
-                if ($include == 'rule_groups') {
-                    $contain[] = 'RuleGroups';
-                    $contain[] = 'RuleGroups.Rules';
-                    $contain[] = 'RuleGroups.Rules.RuleAction';
-                    $contain[] = 'RuleGroups.Rules.RuleSubject';
-                }
-            }
-        }
+        $contain = [
+            'RuleGroups',
+            'RuleGroups.Rules',
+            'RuleGroups.Rules.RuleAction',
+            'RuleGroups.Rules.RuleSubject'
+        ];
 
         try {
+            $user = UsersTable::getTableFromRegistry()->get(
+                $args['id'],
+                [
+                    'contain' => $contain
+                ]
+            );
+
             $response = (new ResourceResponse(
-                UserTransformer::createForItem(
-                    UsersTable::getTableFromRegistry()->get(
-                        $args['id'],
-                        [
-                            'contain' => $contain
-                        ]
-                    )
+                RuleGroupTransformer::createForCollection(
+                    $user->rule_groups
                 )
             ))($response);
-        } catch (RecordNotFoundException $rnfe) {
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {
             $response = (new NotFoundResponse(_("User doesn't exist.")))($response);
         }
 

@@ -11,6 +11,10 @@ export default class Rule extends Model {
     return 'rules';
   }
 
+  static namespace() {
+    return ['users'];
+  }
+
   static fields() {
     return {
       name: new Attribute(),

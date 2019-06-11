@@ -36,7 +36,14 @@
                 <i class="fas fa-envelope uk-margin-small-right"></i>Mail
               </a>
               <a class="uk-button uk-button-default">
-                <i class="fas fa-ban uk-margin-small-right"></i>Block</a>
+                <i class="fas fa-ban uk-margin-small-right"></i>Block
+              </a>
+              <router-link :to="{ name: 'users.rules', params: { id: user.id } }"
+                class="uk-button uk-button-default"
+              >
+                <i class="fas fa-key uk-margin-small-right"></i>
+                {{ $t('rules.title') }}
+              </router-link>
             </div>
             <div class="uk-width-1-1">
               <div

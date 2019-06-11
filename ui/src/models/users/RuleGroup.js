@@ -10,6 +10,10 @@ export default class RuleGroup extends Model {
     return 'rule_groups';
   }
 
+  static namespace() {
+    return ['users'];
+  }
+
   static fields() {
     return {
       name: new Attribute(),

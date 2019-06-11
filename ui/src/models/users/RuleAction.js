@@ -9,6 +9,10 @@ export default class RuleAction extends Model {
     return 'rule_actions';
   }
 
+  static namespace() {
+    return ['users'];
+  }
+
   static fields() {
     return {
       name: new Attribute(),

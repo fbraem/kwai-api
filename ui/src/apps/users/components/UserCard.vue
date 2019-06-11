@@ -26,16 +26,20 @@
     </div>
     <div class="uk-card-body">
     </div>
-    <div class="uk-card-footer">
-      <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
-      <span class="uk-float-right">
-        <router-link
-          class="uk-icon-button uk-link-reset"
-          :to="userLink"
-        >
-          <i class="fas fa-ellipsis-h"></i>
-        </router-link>
-      </span>
+    <div class="uk-card-footer uk-grid-small uk-flex-middle" uk-grid>
+      <div>
+        <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
+      </div>
+      <div class="uk-width-expand">
+        <span class="uk-float-right">
+          <router-link
+            class="uk-icon-button uk-link-reset"
+            :to="userLink"
+          >
+            <i class="fas fa-ellipsis-h"></i>
+          </router-link>
+        </span>
+      </div>
     </div>
   </div>
 </template>

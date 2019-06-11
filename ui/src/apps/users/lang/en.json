@@ -50,5 +50,30 @@
     "invite_intro" : "Your about to invite a user to become a member of your website. The invitation will be send to the given email address.",
     "no_data" : "There are no users defined",
     "not_found" : "This user doesn't exist",
-    "not_allowed" : "You are not allowed to view this information"
+    "not_allowed" : "You are not allowed to view this information",
+    "rules" : {
+        "title" : "Permissions",
+        "groups" : "Permission Groups",
+        "groups_info": "This user is part of the following groups.",
+        "name" : "Name",
+        "create" : "Make a new permission",
+        "update" : "Update the permission",
+        "form" : {
+            "name" : {
+                "label" : "Name",
+                "placeholder" : "Enter a name",
+                "required" : "This is a required field."
+            },
+            "remark" : {
+                "label" : "Remark",
+                "placeholder" : "Enter a remark"
+            },
+            "actions": {
+                "label": "Actions",
+                "placeholder": "Select actions that are allowed for this group",
+                "selectLabel" : "Press enter to select",
+                "deselectLabel" : "Press enter to deselect"
+            }
+        }
+    }
 }

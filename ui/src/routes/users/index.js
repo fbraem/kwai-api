@@ -1,5 +1,7 @@
 import App from '@/site/App.vue';
 
+import rulesRouter from './rules';
+
 const UserRead = () => import(
   /* webpackChunkName: "user_chunck" */
   '@/apps/users/UserRead.vue'
@@ -36,14 +38,14 @@ const UserRegisterWithInvite = () => import(
   '@/apps/users/UserRegisterWithInvite.vue'
 );
 
-import UserStore from '@/stores/users';
+import UserStore from '@/stores/user';
 import NewsStore from '@/stores/news';
 import PageStore from '@/stores/pages';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
 
-export default [
+var routes = [
   {
     path: '/users',
     beforeEnter(to, from, next) {
@@ -69,7 +71,7 @@ export default [
         name: 'users.register.invite',
       },
       {
-        path: ':id',
+        path: ':id(\\d+)',
         beforeEnter(to, from, next) {
           store.setModule(['news'], NewsStore);
           store.setModule(['page'], PageStore);
@@ -92,3 +94,15 @@ export default [
     ]
   },
 ];
+
+routes = routes.concat(rulesRouter);
+
+/*
+for (let route of routes) {
+  let meta = route.meta || {};
+  meta.app = CATEGORY_APP;
+  route.meta = meta;
+}
+*/
+
+export default routes;

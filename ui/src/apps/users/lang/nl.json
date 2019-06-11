@@ -50,5 +50,30 @@
     "invite_intro" : "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd.",
     "no_data" : "Er zijn momenteel geen gebruikers",
     "not_found" : "Deze gebruiker bestaat niet",
-    "not_allowed" : "Je hebt geen toelating om deze informatie te bekijken"
+    "not_allowed" : "Je hebt geen toelating om deze informatie te bekijken",
+    "rules" : {
+        "title" : "Toelatingen",
+        "groups" : "Groepen",
+        "groups_info" : "Deze gebruiker is lid van de volgende toelatings groepen.",
+        "name" : "Naam",
+        "create" : "Maak een nieuwe toelating",
+        "update" : "Wijzig de toelating",
+        "form" : {
+            "name" : {
+                "label" : "Naam",
+                "placeholder" : "Geef een naam in",
+                "required" : "Dit veld is verplicht in te vullen."
+            },
+            "remark" : {
+                "label" : "Opmerking",
+                "placeholder" : "Geef een opmerking in"
+            },
+            "rules": {
+                "label": "Acties",
+                "placeholder": "Selecteer acties die zijn toegelaten",
+                "selectLabel" : "Druk enter om te selecteren",
+                "deselectLabel" : "Druk enter om te verwijderen"
+            }
+        }
+    }
 }

@@ -9,6 +9,10 @@ export default class RuleSubject extends Model {
     return 'rule_subjects';
   }
 
+  static namespace() {
+    return ['users'];
+  }
+
   static fields() {
     return {
       name: new Attribute(),

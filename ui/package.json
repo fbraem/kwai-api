@@ -63,7 +63,7 @@
   "dependencies": {
     "@casl/ability": "^3.0.2",
     "@casl/vue": "^0.5.1",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "flag-icon-css": "^3.3.0",
