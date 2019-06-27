@@ -48,8 +48,8 @@ class UserMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('users')->drop();
-        $this->table('user_logs')->drop();
+        $this->table('users')->drop()->save();
+        $this->table('user_logs')->drop()->save();
     }
 
     private function randomPassword()

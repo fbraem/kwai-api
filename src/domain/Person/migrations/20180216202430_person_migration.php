@@ -72,9 +72,9 @@ class PersonMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('persons')->drop();
-        $this->table('children')->drop();
-        $this->table('countries')->drop();
-        $this->table('contacts')->drop();
+        $this->table('persons')->drop()->save();
+        $this->table('children')->drop()->save();
+        $this->table('countries')->drop()->save();
+        $this->table('contacts')->drop()->save();
     }
 }

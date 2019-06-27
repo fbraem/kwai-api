@@ -119,17 +119,17 @@ class AuthMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('oauth_auth_code_scopes')->drop();
-        $this->table('oauth_auth_codes')->drop();
-        $this->table('oauth_refresh_tokens')->drop();
-        $this->table('oauth_access_token_scopes')->drop();
-        $this->table('oauth_access_tokens')->drop();
-        $this->table('oauth_user_scopes')->drop();
-        $this->table('oauth_user_grants')->drop();
-        $this->table('oauth_client_grants')->drop();
-        $this->table('oauth_client_scopes')->drop();
-        $this->table('oauth_clients')->drop();
-        $this->table('oauth_grants')->drop();
-        $this->table('oauth_scopes')->drop();
+        $this->table('oauth_auth_code_scopes')->drop()->save();
+        $this->table('oauth_auth_codes')->drop()->save();
+        $this->table('oauth_refresh_tokens')->drop()->save();
+        $this->table('oauth_access_token_scopes')->drop()->save();
+        $this->table('oauth_access_tokens')->drop()->save();
+        $this->table('oauth_user_scopes')->drop()->save();
+        $this->table('oauth_user_grants')->drop()->save();
+        $this->table('oauth_client_grants')->drop()->save();
+        $this->table('oauth_client_scopes')->drop()->save();
+        $this->table('oauth_clients')->drop()->save();
+        $this->table('oauth_grants')->drop()->save();
+        $this->table('oauth_scopes')->drop()->save();
     }
 }

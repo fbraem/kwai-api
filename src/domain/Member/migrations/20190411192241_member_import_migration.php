@@ -20,6 +20,6 @@ class MemberImportMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('member_imports')->drop();
+        $this->table('member_imports')->drop()->save();
     }
 }

@@ -32,7 +32,7 @@ class EventMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('events')->drop();
-        $this->table('event_contents')->drop();
+        $this->table('events')->drop()->save();
+        $this->table('event_contents')->drop()->save();
     }
 }

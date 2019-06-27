@@ -34,7 +34,7 @@ class NewsMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('news_contents')->drop();
-        $this->table('news_stories')->drop();
+        $this->table('news_contents')->drop()->save();
+        $this->table('news_stories')->drop()->save();
     }
 }

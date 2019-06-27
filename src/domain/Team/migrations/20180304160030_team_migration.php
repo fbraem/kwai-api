@@ -42,8 +42,8 @@ class TeamMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('team_members')->drop();
-        $this->table('teams')->drop();
-        $this->table('team_types')->drop();
+        $this->table('team_members')->drop()->save();
+        $this->table('teams')->drop()->save();
+        $this->table('team_types')->drop()->save();
     }
 }

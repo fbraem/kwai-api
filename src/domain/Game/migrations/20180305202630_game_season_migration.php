@@ -21,6 +21,6 @@ class GameSeasonMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('seasons')->drop();
+        $this->table('seasons')->drop()->save();
     }
 }

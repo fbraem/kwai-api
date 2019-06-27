@@ -26,7 +26,7 @@ class PageMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('page_contents')->drop();
-        $this->table('pages')->drop();
+        $this->table('page_contents')->drop()->save();
+        $this->table('pages')->drop()->save();
     }
 }

@@ -29,7 +29,7 @@ class ClubMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('club_members')->drop();
-        $this->table('clubs')->drop();
+        $this->table('club_members')->drop()->save();
+        $this->table('clubs')->drop()->save();
     }
 }

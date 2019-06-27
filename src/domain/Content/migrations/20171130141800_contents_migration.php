@@ -23,6 +23,6 @@ class ContentsMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('contents')->drop();
+        $this->table('contents')->drop()->save();
     }
 }

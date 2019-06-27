@@ -21,6 +21,6 @@ class CategoryMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('categories')->drop();
+        $this->table('categories')->drop()->save();
     }
 }

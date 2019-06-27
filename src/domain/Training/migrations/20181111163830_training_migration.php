@@ -76,11 +76,11 @@ class TrainingMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('training_presences')->drop();
-        $this->table('training_coaches')->drop();
-        $this->table('training_teams')->drop();
-        $this->table('training_trainings')->drop();
-        $this->table('training_training_coaches')->drop();
-        $this->table('training_definitions')->drop();
+        $this->table('training_presences')->drop()->save();
+        $this->table('training_coaches')->drop()->save();
+        $this->table('training_teams')->drop()->save();
+        $this->table('training_trainings')->drop()->save();
+        $this->table('training_training_coaches')->drop()->save();
+        $this->table('training_definitions')->drop()->save();
     }
 }
