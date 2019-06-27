@@ -8,14 +8,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\User\UsersTable;
-use Domain\User\RuleGroupTransformer;
+use Domain\User\AbilityTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Core\Responses\ResourceResponse;
 use Core\Responses\NotFoundResponse;
 
-class UserRuleBrowseAction
+class UserAbilityBrowseAction
 {
     public function __construct(ContainerInterface $container)
     {
@@ -27,10 +27,10 @@ class UserRuleBrowseAction
         $parameters = $request->getAttribute('parameters');
 
         $contain = [
-            'RuleGroups',
-            'RuleGroups.Rules',
-            'RuleGroups.Rules.RuleAction',
-            'RuleGroups.Rules.RuleSubject'
+            'Abilities',
+            'Abilities.Rules',
+            'Abilities.Rules.RuleAction',
+            'Abilities.Rules.RuleSubject'
         ];
 
         try {
@@ -42,8 +42,8 @@ class UserRuleBrowseAction
             );
 
             $response = (new ResourceResponse(
-                RuleGroupTransformer::createForCollection(
-                    $user->rule_groups
+                AbilityTransformer::createForCollection(
+                    $user->abilities
                 )
             ))($response);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $rnfe) {

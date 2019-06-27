@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <td class="uk-width-expand">
-      {{ rule_group.name }}
+      {{ ability.name }}
       <div v-if="!hide" class="uk-panel uk-background-muted uk-padding-small">
         <h4>Rules</h4>
         <table class="uk-table uk-table-small">
@@ -10,7 +10,7 @@
             <th>subject</th>
             <th>action</th>
           </tr>
-          <tr v-for="rule in rule_group.rules" :key="rule.id">
+          <tr v-for="rule in ability.rules" :key="rule.id">
             <td>{{ rule.name }}</td>
             <td>{{ rule.subject.name }}</td>
             <td>{{ rule.action.name }}</td>
@@ -36,7 +36,7 @@
 <script>
 export default {
   props: {
-    rule_group: {
+    ability: {
       type: Object,
       required: true
     }

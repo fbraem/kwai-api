@@ -38,10 +38,10 @@ class AuthenticationMiddleware
                     $user = UsersTable::getTableFromRegistry()
                         ->get($userId, [
                             'contain' => [
-                                'RuleGroups',
-                                'RuleGroups.Rules',
-                                'RuleGroups.Rules.RuleAction',
-                                'RuleGroups.Rules.RuleSubject'
+                                'Abilities',
+                                'Abilities.Rules',
+                                'Abilities.Rules.RuleAction',
+                                'Abilities.Rules.RuleSubject'
                             ]
                         ]);
                 } catch (RecordNotFoundException $rnfe) {

@@ -7,15 +7,15 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Domain\User\RuleGroupsTable;
-use Domain\User\RuleGroupTransformer;
+use Domain\User\AbilitiesTable;
+use Domain\User\AbilityTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Core\Responses\ResourceResponse;
 use Core\Responses\NotFoundResponse;
 
-class RuleGroupBrowseAction
+class AbilityBrowseAction
 {
     public function __construct(ContainerInterface $container)
     {
@@ -24,7 +24,7 @@ class RuleGroupBrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $query = RuleGroupsTable::getTableFromRegistry()->find();
+        $query = AbilitiesTable::getTableFromRegistry()->find();
         $query->contain(
             [
                 'Rules',
@@ -33,7 +33,7 @@ class RuleGroupBrowseAction
             ]
         );
         return (new ResourceResponse(
-            RuleGroupTransformer::createForCollection(
+            AbilityTransformer::createForCollection(
                 $query->all()
             )
         ))($response);

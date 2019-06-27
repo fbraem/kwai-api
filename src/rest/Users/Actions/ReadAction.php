@@ -29,11 +29,11 @@ class ReadAction
         $contain = [];
         if (isset($parameters['include'])) {
             foreach ($parameters['include'] as $include) {
-                if ($include == 'rule_groups') {
-                    $contain[] = 'RuleGroups';
-                    $contain[] = 'RuleGroups.Rules';
-                    $contain[] = 'RuleGroups.Rules.RuleAction';
-                    $contain[] = 'RuleGroups.Rules.RuleSubject';
+                if ($include == 'abilities') {
+                    $contain[] = 'Abilities';
+                    $contain[] = 'Abilities.Rules';
+                    $contain[] = 'Abilities.Rules.RuleAction';
+                    $contain[] = 'Abilities.Rules.RuleSubject';
                 }
             }
         }

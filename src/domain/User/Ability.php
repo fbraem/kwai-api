@@ -4,7 +4,7 @@ namespace Domain\User;
 /**
  * @inheritdoc
  */
-class RuleGroup extends \Cake\ORM\Entity
+class Ability extends \Cake\ORM\Entity
 {
     use \Domain\DatetimeMetaTrait;
 

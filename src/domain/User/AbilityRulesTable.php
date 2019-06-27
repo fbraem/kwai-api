@@ -2,11 +2,11 @@
 
 namespace Domain\User;
 
-class RuleGroupItemsTable extends \Cake\ORM\Table
+class AbilityRulesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'RuleGroupItems';
-    public static $tableName = 'rule_group_items';
-    public static $entityClass = 'Domain\User\RuleGroupItems';
+    public static $registryName = 'AbilityRules';
+    public static $tableName = 'ability_rules';
+    public static $entityClass = 'Domain\User\AbilityRules';
 
     use \Domain\DomainTableTrait;
 
@@ -14,10 +14,10 @@ class RuleGroupItemsTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsTo('RuleGroup', [
-            'className' => RuleGroupssTable::class
+        $this->belongsTo('Ability', [
+            'className' => AbilitiesTable::class
             ])
-            ->setForeignKey('rule_group_id')
+            ->setForeignKey('ability_id')
         ;
         $this->belongsTo('Rule', [
             'className' => RulesTable::class
@@ -29,7 +29,7 @@ class RuleGroupItemsTable extends \Cake\ORM\Table
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
     {
         $schema
-            ->addColumn('rule_group_id', ['type' => 'integer'])
+            ->addColumn('ability_id', ['type' => 'integer'])
             ->addColumn('rule_id', ['type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
@@ -38,7 +38,7 @@ class RuleGroupItemsTable extends \Cake\ORM\Table
                 [
                     'type' => 'primary',
                     'columns' => [
-                        'rule_group_id',
+                        'ability_id',
                         'rule_id'
                     ]
                 ]

@@ -14,15 +14,15 @@ class UsersTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsToMany('RuleGroups', [
-                'className' => RuleGroupsTable::class,
-                'targetForeignKey' => 'rule_group_id',
-                'joinTable' => 'user_rules',
-                'through' => UserRulesTable::getTableFromRegistry(),
+        $this->belongsToMany('Abilities', [
+                'className' => AbilitiesTable::class,
+                'targetForeignKey' => 'ability_id',
+                'joinTable' => 'user_abilities',
+                'through' => UserAbilitiesTable::getTableFromRegistry(),
                 'dependent' => true
             ])
             ->setForeignKey('user_id')
-            ->setProperty('rule_groups')
+            ->setProperty('abilities')
         ;
         $this->belongsToMany('Logs', [
                 'className' => UserLogsTable::class,

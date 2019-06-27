@@ -2,11 +2,11 @@
 
 namespace Domain\User;
 
-class UserRulesTable extends \Cake\ORM\Table
+class UserAbilitiesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'UserRules';
-    public static $tableName = 'user_rules';
-    public static $entityClass = 'Domain\User\UserRule';
+    public static $registryName = 'UserAbilities';
+    public static $tableName = 'user_abilities';
+    public static $entityClass = 'Domain\User\UserAbility';
 
     use \Domain\DomainTableTrait;
 
@@ -19,10 +19,10 @@ class UserRulesTable extends \Cake\ORM\Table
             ])
             ->setForeignKey('user_id')
         ;
-        $this->belongsTo('RuleGroup', [
-            'className' => RuleGroupssTable::class
+        $this->belongsTo('Ability', [
+            'className' => AbilitiesTable::class
             ])
-            ->setForeignKey('rule_group_id')
+            ->setForeignKey('ability_id')
         ;
     }
 
@@ -30,7 +30,7 @@ class UserRulesTable extends \Cake\ORM\Table
     {
         $schema
         ->addColumn('user_id', ['type' => 'integer'])
-            ->addColumn('rule_group_id', ['type' => 'integer'])
+            ->addColumn('ability_id', ['type' => 'integer'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(
@@ -39,7 +39,7 @@ class UserRulesTable extends \Cake\ORM\Table
                     'type' => 'primary',
                     'columns' => [
                         'user_id',
-                        'rule_group_id'
+                        'ability_id'
                     ]
                 ]
         );

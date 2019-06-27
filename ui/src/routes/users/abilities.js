@@ -1,94 +1,94 @@
 import App from '@/site/App.vue';
 
-const UserRulesHeader = () =>
+const UserAbilitiesHeader = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
-    '@/apps/users/TheUserRulesHeader.vue');
-const UserRules = () =>
+    '@/apps/users/TheUserAbilitiesHeader.vue');
+const UserAbilities = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
-    '@/apps/users/UserRules.vue');
+    '@/apps/users/UserAbilities.vue');
 
-const RuleGroupsHeader = () =>
+const AbilitiesHeader = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
-    '@/apps/users/TheRuleGroupsHeader.vue');
-const RuleGroupBrowse = () =>
+    '@/apps/users/TheAbilitiesHeader.vue');
+const AbilityBrowse = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
-    '@/apps/users/RuleGroupBrowse.vue');
+    '@/apps/users/AbilityBrowse.vue');
 
-const RuleGroupFormHeader = () =>
+const AbilityFormHeader = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
-    '@/apps/users/TheRuleGroupFormHeader.vue');
-const RuleGroupForm = () =>
+    '@/apps/users/TheAbilityFormHeader.vue');
+const AbilityForm = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
-    '@/apps/users/RuleGroupForm.vue');
+    '@/apps/users/AbilityForm.vue');
 
 import UserStore from '@/stores/user';
-import RuleStore from '@/stores/user/rules';
+import AbilityStore from '@/stores/user/abilities';
 
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
 
 export default [
   {
-    path: '/users/:id/rules',
+    path: '/users/:id/abilities',
     component: App,
     beforeEnter(to, from, next) {
       store.setModule(['user'], UserStore);
-      store.setModule(['user', 'rule'], RuleStore);
+      store.setModule(['user', 'ability'], AbilityStore);
       next();
     },
     children: [
       {
         path: '',
         components: {
-          header: UserRulesHeader,
-          main: UserRules
+          header: UserAbilitiesHeader,
+          main: UserAbilities
         },
-        name: 'users.rules',
+        name: 'users.abilities',
       },
     ]
   },
   {
-    path: '/users/rule_groups',
+    path: '/users/abilities',
     component: App,
     beforeEnter(to, from, next) {
       store.setModule(['user'], UserStore);
-      store.setModule(['user', 'rule'], RuleStore);
+      store.setModule(['user', 'rule'], AbilityStore);
       next();
     },
     children: [
       {
         path: 'create',
         components: {
-          header: RuleGroupFormHeader,
-          main: RuleGroupForm
+          header: AbilityFormHeader,
+          main: AbilityForm
         },
         props: {
           header: {
             creating: true
           }
         },
-        name: 'users.rule_groups.create'
+        name: 'users.abilities.create'
       },
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: RuleGroupFormHeader,
-          main: RuleGroupForm
+          header: AbilityFormHeader,
+          main: AbilityForm
         },
         props: {
           header: {
             creating: false
           }
         },
-        name: 'users.rule_groups.update'
+        name: 'users.abilities.update'
       },
       {
         path: '',
         components: {
-          header: RuleGroupsHeader,
-          main: RuleGroupBrowse
+          header: AbilitiesHeader,
+          main: AbilityBrowse
         },
-        name: 'users.rule_groups.browse',
+        name: 'users.abilities.browse',
       },
     ]
   },

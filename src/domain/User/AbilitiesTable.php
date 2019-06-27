@@ -2,11 +2,11 @@
 
 namespace Domain\User;
 
-class RuleGroupsTable extends \Cake\ORM\Table
+class AbilitiesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'RuleGroups';
-    public static $tableName = 'rule_groups';
-    public static $entityClass = 'Domain\User\RuleGroup';
+    public static $registryName = 'Abilities';
+    public static $tableName = 'abilities';
+    public static $entityClass = 'Domain\User\Ability';
 
     use \Domain\DomainTableTrait;
 
@@ -17,11 +17,11 @@ class RuleGroupsTable extends \Cake\ORM\Table
         $this->belongsToMany('Rules', [
                 'className' => RulesTable::class,
                 'targetForeignKey' => 'rule_id',
-                'joinTable' => 'rule_group_items',
-                'through' => RuleGroupItemsTable::getTableFromRegistry(),
+                'joinTable' => 'ability_rules',
+                'through' => AbilityRulesTable::getTableFromRegistry(),
                 'dependent' => true
             ])
-            ->setForeignKey('rule_group_id')
+            ->setForeignKey('ability_id')
             ->setProperty('rules')
         ;
     }

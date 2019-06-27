@@ -1,6 +1,6 @@
 import Model from '@/models/Model';
 import { Attribute, DateAttribute } from '@/models/Attribute';
-import RuleGroup from './RuleGroup';
+import Ability from './Ability';
 
 /**
  * User model
@@ -25,7 +25,7 @@ export default class User extends Model {
 
   static relationships() {
     return {
-      rule_groups: RuleGroup
+      abilities: Ability
     };
   }
 

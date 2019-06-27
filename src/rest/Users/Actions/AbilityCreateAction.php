@@ -9,7 +9,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use \Cake\ORM\Entity;
 
-use Domain\User\RuleGroupsTable;
+use Domain\User\AbilitiesTable;
+use Domain\User\AbilityTransformer;
 
 use Respect\Validation\Validator as v;
 
@@ -20,7 +21,7 @@ use Core\Validators\EntityExistValidator;
 use Core\Responses\UnprocessableEntityResponse;
 use Core\Responses\ResourceResponse;
 
-class RuleGroupCreateAction
+class AbilityCreateAction
 {
     private $container;
 
@@ -30,7 +31,7 @@ class RuleGroupCreateAction
     {
         $this->container = $container;
         $this->inputValidator = new InputValidator([
-            'data.attributes.rule_group.name' => v::length(1, 255)
+            'data.attributes.name' => v::length(1, 255)
         ]);
     }
 
@@ -38,33 +39,33 @@ class RuleGroupCreateAction
     {
         $data = $request->getParsedBody();
 
-        $ruleGroupsTable = RuleGroupsTable::getTableFromRegistry();
+        $abilitiesTable = AbilitiesTable::getTableFromRegistry();
 
         try {
             $rules = (new EntityExistValidator(
                 'data.relationships.rules',
-                $ruleGroupsTable->Rules,
+                $abilitiesTable->Rules,
                 false
             ))->validate($data);
 
-            $this->eventInputValidator->validate($data);
+            $this->inputValidator->validate($data);
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
-            $ruleGroup = $ruleGroupsTable->newEntity();
-            $ruleGroup->name = $attributes['rule_group']['name'];
-            $ruleGroup->remark = $attributes['rule_group']['remark'];
-            $ruleGroup->user = $request->getAttribute('clubman.user');
-            $ruleGroup->rules = $rules;
+            $ability = $abilitiesTable->newEntity();
+            $ability->name = $attributes['name'];
+            $ability->remark = $attributes['remark'];
+            $ability->user = $request->getAttribute('clubman.user');
+            $ability->rules = $rules;
 
-            $ruleGroupsTable->save($ruleGroup);
+            $abilitiesTable->save($ability);
 
             $route = $request->getAttribute('route');
             if (! empty($route)) {
-                $route->setArgument('id', $ruleGroup->id);
+                $route->setArgument('id', $ability->id);
             }
             $response = (new ResourceResponse(
-                RuleGroupTransformer::createForItem($ruleGroup)
+                AbilityTransformer::createForItem($ability)
             ))($response)->withStatus(201);
         } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse(

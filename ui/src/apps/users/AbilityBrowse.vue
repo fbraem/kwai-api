@@ -5,28 +5,28 @@
         <th>{{ $t('rules.name') }}</th>
       </tr>
       <tr
-        v-for="rule_group in rule_groups"
-        :key="rule_group.id"
+        v-for="ability in abilities"
+        :key="ability.id"
       >
-        <RuleGroup :rule_group="rule_group" />
+        <Ability :ability="ability" />
       </tr>
     </table>
   </div>
 </template>
 
 <script>
-import RuleGroup from './TheUserRuleGroup';
+import Ability from './TheUserAbility';
 
 import messages from './lang';
 
 export default {
   components: {
-    RuleGroup
+    Ability
   },
   i18n: messages,
   computed: {
-    rule_groups() {
-      return this.$store.state.user.rule.rule_groups || [];
+    abilities() {
+      return this.$store.state.user.rule.abilities || [];
     }
   },
   beforeRouteEnter(to, from, next) {

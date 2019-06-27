@@ -9,7 +9,7 @@ class UserTransformer extends Fractal\TransformerAbstract
     private static $type = 'users';
 
     protected $defaultIncludes = [
-        'rule_groups'
+        'abilities'
     ];
 
     public static function createForItem(User $user)
@@ -22,11 +22,11 @@ class UserTransformer extends Fractal\TransformerAbstract
         return new Fractal\Resource\Collection($users, new self(), self::$type);
     }
 
-    public static function includeRuleGroups(User $user)
+    public static function includeAbilities(User $user)
     {
-        $rule_groups = $user->rule_groups;
-        if ($rule_groups) {
-            return RuleGroupTransformer::createForCollection($rule_groups);
+        $abilities = $user->abilities;
+        if ($abilities) {
+            return AbilitiesTransformer::createForCollection($abilities);
         }
     }
 

@@ -12,31 +12,31 @@ $app->group('/users', function () {
         ->setName('users.read')
         ->setArgument('auth', true)
     ;
-    $this->post('/{token:[0-9a-zA-Z]+}', \REST\Users\Actions\CreateWithTokenAction::class)
-        ->setName('users.create.token')
-    ;
-
     // Rules
-    $this->get('/{id:[0-9]+}/rules', \REST\Users\Actions\UserRuleBrowseAction::class)
-        ->setName('users.rules.browse')
+    $this->get('/{id:[0-9]+}/abilities', \REST\Users\Actions\UserAbilityBrowseAction::class)
+        ->setName('user.abilities.browse')
         ->setArgument('auth', true)
     ;
 
-    $this->get('/rule_groups', \REST\Users\Actions\RuleGroupBrowseAction::class)
-        ->setName('users.rule_groups.browse')
+    $this->get('/abilities', \REST\Users\Actions\AbilityBrowseAction::class)
+        ->setName('users.abilities.browse')
         ->setArgument('auth', true)
     ;
-    $this->post('/rule_groups', \REST\Users\Actions\RuleGroupCreateAction::class)
-        ->setName('users.rule_groups.create')
+    $this->post('/abilities', \REST\Users\Actions\AbilityCreateAction::class)
+        ->setName('users.abilities.create')
         ->setArgument('auth', true)
     ;
-    $this->get('/rule_groups/{id:[0-9]+}', \REST\Users\Actions\RuleGroupReadAction::class)
-        ->setName('users.rule_groups.read')
+    $this->get('/abilities/{id:[0-9]+}', \REST\Users\Actions\AbilityReadAction::class)
+        ->setName('users.abilities.read')
         ->setArgument('auth', true)
     ;
     $this->get('/rules', \REST\Users\Actions\RuleBrowseAction::class)
         ->setName('users.rules.browse')
         ->setArgument('auth', true)
+    ;
+
+    $this->post('/{token:[0-9a-zA-Z]+}', \REST\Users\Actions\CreateWithTokenAction::class)
+        ->setName('users.create.token')
     ;
 });
 

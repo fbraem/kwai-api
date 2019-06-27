@@ -3,11 +3,11 @@ import { Attribute, DateAttribute } from '@/models/Attribute';
 import Rule from './Rule';
 
 /**
- * RuleGroup model
+ * Ability model
  */
-export default class RuleGroup extends Model {
+export default class Ability extends Model {
   static type() {
-    return 'rule_groups';
+    return 'abilities';
   }
 
   static namespace() {

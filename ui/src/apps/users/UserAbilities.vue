@@ -16,10 +16,10 @@
           <th>{{ $t('rules.name') }}</th>
         </tr>
         <tr
-          v-for="rule_group in rule_groups"
-          :key="rule_group.id"
+          v-for="ability in abilities"
+          :key="ability.id"
         >
-          <RuleGroup :rule_group="rule_group" />
+          <UserAbility :ability="ability" />
         </tr>
       </table>
     </div>
@@ -28,14 +28,14 @@
 
 <script>
 import UserCard from './components/UserCard';
-import RuleGroup from './TheUserRuleGroup';
+import UserAbility from './TheUserAbility';
 
 import messages from './lang';
 
 export default {
   i18n: messages,
   components: {
-    UserCard, RuleGroup
+    UserCard, UserAbility
   },
   data() {
     return {
@@ -47,8 +47,8 @@ export default {
     user() {
       return this.$store.getters['user/user'](this.$route.params.id);
     },
-    rule_groups() {
-      return this.user.rule_groups || [];
+    abilities() {
+      return this.user.abilities || [];
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     fetchData(id) {
-      this.$store.dispatch('user/readWithRuleGroups', { id })
+      this.$store.dispatch('user/readWithAbilities', { id })
         .catch((error) => {
           console.log(error);
         });

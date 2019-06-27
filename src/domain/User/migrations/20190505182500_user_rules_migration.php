@@ -63,28 +63,23 @@ class UserRulesMigration extends AbstractMigration
             ->create()
         ;
 
-        $this->table('rule_groups', ['signed' => false])
+        $this->table('abilities', ['signed' => false])
             ->addColumn('name', 'string')
             ->addColumn('remark', 'text', ['null' => true])
             ->addTimestamps()
             ->create();
         ;
-        $data = [
-            'name' => 'admin',
-            'remark' => _('Administration Rules')
-        ];
-        $this->table('rule_groups')->insert($data)->save();
 
-        $this->table('rule_group_items', ['id' => false, 'primary_key' => ['rule_group_id' , 'rule_id']])
-            ->addColumn('rule_group_id', 'integer')
+        $this->table('ability_rules', ['id' => false, 'primary_key' => ['ability_id' , 'rule_id']])
+            ->addColumn('ability_id', 'integer')
             ->addColumn('rule_id', 'integer')
             ->addTimestamps()
             ->create()
         ;
 
-        $this->table('user_rules', ['id' => false, 'primary_key' => ['user_id' , 'rule_group_id']])
+        $this->table('user_abilities', ['id' => false, 'primary_key' => ['user_id' , 'ability_id']])
             ->addColumn('user_id', 'integer')
-            ->addColumn('rule_group_id', 'integer')
+            ->addColumn('ability_id', 'integer')
             ->addTimestamps()
             ->create()
         ;
@@ -92,11 +87,11 @@ class UserRulesMigration extends AbstractMigration
 
     public function down()
     {
-        $this->table('user_rules')->drop();
-        $this->table('rule_group_items')->drop();
-        $this->table('rule_groups')->drop();
-        $this->table('rules')->drop();
-        $this->table('rule_subjects')->drop();
-        $this->table('rule_actions')->drop();
+        $this->table('user_abilities')->drop()->save();
+        $this->table('ability_rules')->drop()->save();
+        $this->table('abilities')->drop()->save();
+        $this->table('rules')->drop()->save();
+        $this->table('rule_subjects')->drop()->save();
+        $this->table('rule_actions')->drop()->save();
     }
 }

@@ -4,20 +4,20 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import JSONAPI from '@/js/JSONAPI';
-import RuleGroup from '@/models/users/RuleGroup';
+import Ability from '@/models/users/Ability';
 import Rule from '@/models/users/Rule';
 
 const state = {
-  rule_groups: null,
+  abilities: null,
   rules: null,
   error: null,
   meta: null
 };
 
 const getters = {
-  rule_group: (state) => (id) => {
-    if (state.rule_groups) {
-      return state.rule_groups.find((r) => r.id === id);
+  ability: (state) => (id) => {
+    if (state.abilities) {
+      return state.abilities.find((r) => r.id === id);
     }
     return null;
   },
@@ -30,20 +30,20 @@ const getters = {
 };
 
 const mutations = {
-  rule_groups(state, { meta, data }) {
-    state.rule_groups = data;
+  abilities(state, { meta, data }) {
+    state.abilities = data;
     state.meta = meta;
     state.error = null;
   },
   rule_group(state, { data }) {
-    if (state.rule_groups == null) {
-      state.rule_groups = [];
+    if (state.abilities == null) {
+      state.abilities = [];
     }
-    var index = state.rule_groups.findIndex((r) => r.id === data.id);
+    var index = state.abilities.findIndex((r) => r.id === data.id);
     if (index !== -1) {
-      Vue.set(state.rule_groups, index, data);
+      Vue.set(state.abilities, index, data);
     } else {
-      state.rule_groups.push(data);
+      state.abilities.push(data);
     }
     state.error = null;
   },
@@ -59,22 +59,22 @@ const mutations = {
 
 const actions = {
   async browse({ dispatch, commit }, payload) {
-    dispatch('wait/start', 'rule_groups.browse', { root: true });
+    dispatch('wait/start', 'abilities.browse', { root: true });
     try {
-      const api = new JSONAPI({ source: RuleGroup });
-      commit('rule_groups', await api.get());
+      const api = new JSONAPI({ source: Ability });
+      commit('abilities', await api.get());
     } catch (error) {
       commit('error', error);
       throw error;
     } finally {
-      dispatch('wait/end', 'rule_groups.browse', { root: true });
+      dispatch('wait/end', 'abilities.browse', { root: true });
     }
   },
   async save({ dispatch, commit }, rule) {
     try {
-      const api = new JSONAPI({ source: RuleGroup });
+      const api = new JSONAPI({ source: Ability });
       const result = await api.save(rule);
-      commit('rule_group', result);
+      commit('ability', result);
       return result.data;
     } catch (error) {
       commit('error', error);
@@ -82,23 +82,23 @@ const actions = {
     }
   },
   async read({ dispatch, getters, commit }, payload) {
-    var rule = getters['rule_group'](payload.id);
+    var rule = getters['ability'](payload.id);
     if (rule) { // already read
       commit('error', null); // Reset error
       return rule;
     }
 
-    dispatch('wait/start', 'rule_groups.read', { root: true });
+    dispatch('wait/start', 'abilities.read', { root: true });
     try {
-      const api = new JSONAPI({ source: RuleGroup });
+      const api = new JSONAPI({ source: Ability });
       const result = await api.get(payload.id);
-      commit('rule_group', result);
+      commit('ability', result);
       return result.data;
     } catch (error) {
       commit('error', error);
       throw error;
     } finally {
-      dispatch('wait/end', 'rule_groups.read', { root: true });
+      dispatch('wait/end', 'abilities.read', { root: true });
     }
   },
 

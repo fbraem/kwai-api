@@ -8,7 +8,7 @@
 <script>
 import Header from '@/components/Header';
 
-import RuleGroup from '@/models/users/RuleGroup';
+import Ability from '@/models/users/Ability';
 
 import messages from './lang';
 
@@ -20,11 +20,11 @@ export default {
   computed: {
     toolbar() {
       const buttons = [];
-      if (this.$can('create', RuleGroup.type())) {
+      if (this.$can('create', Ability.type())) {
         buttons.push({
           icon: 'fas fa-plus',
           route: {
-            name: 'users.rule_groups.create'
+            name: 'users.abilities.create'
           }
         });
       }

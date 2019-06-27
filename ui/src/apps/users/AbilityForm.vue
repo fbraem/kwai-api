@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import RuleGroup from '@/models/users/RuleGroup';
+import Ability from '@/models/users/Ability';
 
 import KwaiForm from '@/components/forms/KwaiForm';
 import KwaiField from '@/components/forms/KwaiField';
@@ -54,17 +54,17 @@ import KwaiTextarea from '@/components/forms/KwaiTextarea';
 import Multiselect from '@/components/forms/MultiSelect.vue';
 
 import makeForm, { makeField, notEmpty } from '@/js/Form';
-const makeRuleGroupForm = (fields, validations) => {
-  const writeForm = (rule_group) => {
-    fields.name.value = rule_group.name;
-    fields.remark.value = rule_group.remark;
-    fields.rules.value = rule_group.rules || [];
+const makeAbilityForm = (fields, validations) => {
+  const writeForm = (ability) => {
+    fields.name.value = ability.name;
+    fields.remark.value = ability.remark;
+    fields.rules.value = ability.rules || [];
   };
 
-  const readForm = (rule_group) => {
-    rule_group.name = fields.name.value;
-    rule_group.remark = fields.remark.value;
-    rule_group.rules = fields.rules.value;
+  const readForm = (ability) => {
+    ability.name = fields.name.value;
+    ability.remark = fields.remark.value;
+    ability.rules = fields.rules.value;
   };
   return { ...makeForm(fields, validations), writeForm, readForm };
 };
@@ -77,11 +77,11 @@ export default {
   },
   i18n: messages,
   data() {
-    var rule_group = new RuleGroup();
-    rule_group.rules = [];
+    var ability = new Ability();
+    ability.rules = [];
     return {
-      rule_group,
-      form: makeRuleGroupForm({
+      ability,
+      form: makeAbilityForm({
         name: makeField({
           required: true,
           validators: [
@@ -135,20 +135,20 @@ export default {
   },
   methods: {
     async fetchData(id) {
-      this.rule_group
+      this.ability
         = await this.$store.dispatch('user/rule/read', {
           id: id
         });
-      this.form.writeForm(this.rule_group);
+      this.form.writeForm(this.ability);
     },
     submit() {
       this.form.clearErrors();
-      this.form.readForm(this.rule_group);
-      this.$store.dispatch('user/rule/save', this.rule_group)
-        .then((newRuleGroup) => {
+      this.form.readForm(this.ability);
+      this.$store.dispatch('user/rule/save', this.ability)
+        .then((newAbility) => {
           this.$router.push({
             name: 'user.rule.read',
-            params: { id: newRuleGroup.id }
+            params: { id: newAbility.id }
           });
         });
     }

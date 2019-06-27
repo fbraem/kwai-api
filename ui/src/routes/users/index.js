@@ -1,6 +1,6 @@
 import App from '@/site/App.vue';
 
-import rulesRouter from './rules';
+import abilitiesRouter from './abilities';
 
 const UserRead = () => import(
   /* webpackChunkName: "user_chunck" */
@@ -95,7 +95,7 @@ var routes = [
   },
 ];
 
-routes = routes.concat(rulesRouter);
+routes = routes.concat(abilitiesRouter);
 
 /*
 for (let route of routes) {
