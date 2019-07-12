@@ -42,7 +42,7 @@ class AbilityReadAction
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {
-            $response = (new NotFoundResponse(_("User doesn't exist.")))($response);
+            $response = (new NotFoundResponse(_("Ability doesn't exist.")))($response);
         }
 
         return $response;
