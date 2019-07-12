@@ -90,16 +90,16 @@ const actions = {
       dispatch('wait/end', 'users.read', { root: true });
     }
   },
-  async readWithRuleGroups({ dispatch, commit }, { id }) {
-    dispatch('wait/start', 'user.read.rules', { root: true });
+  async readWithAbilities({ dispatch, commit }, { id }) {
+    dispatch('wait/start', 'user.read.abilities', { root: true });
     try {
       const api = new JSONAPI({ source: User });
-      commit('user', await api.with('rule_groups').get(id));
+      commit('user', await api.with('abilities').get(id));
     } catch (error) {
       commit('error', error);
       throw error;
     } finally {
-      dispatch('wait/end', 'user.read.rules', { root: true });
+      dispatch('wait/end', 'user.read.abilities', { root: true });
     }
   },
   async invite({ state, getters, commit, context }, invitation) {
