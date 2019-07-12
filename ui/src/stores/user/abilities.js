@@ -35,7 +35,7 @@ const mutations = {
     state.meta = meta;
     state.error = null;
   },
-  rule_group(state, { data }) {
+  ability(state, { data }) {
     if (state.abilities == null) {
       state.abilities = [];
     }
