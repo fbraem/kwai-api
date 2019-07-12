@@ -26,7 +26,7 @@ class UserTransformer extends Fractal\TransformerAbstract
     {
         $abilities = $user->abilities;
         if ($abilities) {
-            return AbilitiesTransformer::createForCollection($abilities);
+            return AbilityTransformer::createForCollection($abilities);
         }
     }
 
