@@ -1,6 +1,6 @@
 <template>
   <tbody>
-    <td class="uk-width-expand">
+    <td class="uk-width-expand uk-table-middle">
       {{ ability.name }}
       <div v-if="!hide" class="uk-panel uk-background-muted uk-padding-small">
         <h4>Rules</h4>
@@ -18,7 +18,13 @@
         </table>
       </div>
     </td>
-    <td>
+    <td class="uk-text-nowrap">
+      <router-link
+        :to="{ name: 'users.abilities.update', params: { id: ability.id } }"
+        class="uk-icon-button uk-link-reset"
+      >
+        <i class="fas fa-edit"></i>
+      </router-link>
       <a v-if="hide"
         @click="show"
         class="uk-icon-button uk-link-reset">
