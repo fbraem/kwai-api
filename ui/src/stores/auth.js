@@ -18,7 +18,8 @@ const USER_KEY = 'user';
 const state = {
   user: Lockr.get(USER_KEY, null),
   tokenStore,
-  rules: Lockr.get(USER_RULES_KEY, [])
+  rules: Lockr.get(USER_RULES_KEY, []),
+  error: null,
 };
 
 const getters = {
@@ -33,6 +34,7 @@ const getters = {
 const mutations = {
   login(state, { access_token, refresh_token }) {
     state.tokenStore.setTokens(access_token, refresh_token);
+    state.error = null;
   },
   user(state, { data }) {
     state.user = data;
@@ -48,12 +50,17 @@ const mutations = {
     state.rules = rules;
     Lockr.set(USER_RULES_KEY, state.rules);
     Lockr.set(USER_KEY, state.user);
+    state.error = null;
   },
   logout(state) {
     state.tokenStore.clear();
     state.user = null;
     state.rules = [];
     Lockr.set(USER_RULES_KEY, []);
+    state.error = {};
+  },
+  error(state, error) {
+    state.error = error;
   }
 };
 
