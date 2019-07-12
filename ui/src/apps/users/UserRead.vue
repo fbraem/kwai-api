@@ -38,7 +38,7 @@
               <a class="uk-button uk-button-default">
                 <i class="fas fa-ban uk-margin-small-right"></i>Block
               </a>
-              <router-link :to="{ name: 'users.rules', params: { id: user.id } }"
+              <router-link :to="{ name: 'users.abilities', params: { id: user.id } }"
                 class="uk-button uk-button-default"
               >
                 <i class="fas fa-key uk-margin-small-right"></i>
