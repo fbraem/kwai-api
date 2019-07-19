@@ -24,8 +24,6 @@ class AbilityReadAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $parameters = $request->getAttribute('parameters');
-
         try {
             $response = (new ResourceResponse(
                 AbilityTransformer::createForItem(
