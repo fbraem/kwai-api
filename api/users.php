@@ -30,6 +30,10 @@ $app->group('/users', function () {
         ->setName('users.abilities.read')
         ->setArgument('auth', true)
     ;
+    $this->patch('/abilities/{id:[0-9]+}', \REST\Users\Actions\AbilityUpdateAction::class)
+        ->setName('users.abilities.update')
+        ->setArgument('auth', true)
+    ;
     $this->get('/rules', \REST\Users\Actions\RuleBrowseAction::class)
         ->setName('users.rules.browse')
         ->setArgument('auth', true)
