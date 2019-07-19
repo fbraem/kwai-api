@@ -14,6 +14,13 @@ const AbilityBrowse = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
     '@/apps/users/AbilityBrowse.vue');
 
+const AbilityHeader = () =>
+  import(/* webpackChunkName: "user_admin_chunck" */
+    '@/apps/users/TheAbilityHeader.vue');
+const AbilityRead = () =>
+  import(/* webpackChunkName: "user_admin_chunck" */
+    '@/apps/users/AbilityRead.vue');
+
 const AbilityFormHeader = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
     '@/apps/users/TheAbilityFormHeader.vue');
@@ -52,10 +59,18 @@ export default [
     component: App,
     beforeEnter(to, from, next) {
       store.setModule(['user'], UserStore);
-      store.setModule(['user', 'rule'], AbilityStore);
+      store.setModule(['user', 'ability'], AbilityStore);
       next();
     },
     children: [
+      {
+        path: ':id(\\d+)',
+        components: {
+          header: AbilityHeader,
+          main: AbilityRead
+        },
+        name: 'users.abilities.read'
+      },
       {
         path: 'create',
         components: {
