@@ -97,16 +97,16 @@ export default {
     };
   },
   async created() {
-    await this.$store.dispatch('user/rule/browseRules');
+    await this.$store.dispatch('user/ability/browseRules');
   },
   computed: {
     error() {
-      return this.$store.state.user.rule.error;
+      return this.$store.state.user.ability.error;
     },
     rules() {
       var options = [];
-      if (this.$store.state.user.rule.rules) {
-        for (let rule of this.$store.state.user.rule.rules) {
+      if (this.$store.state.user.ability.rules) {
+        for (let rule of this.$store.state.user.ability.rules) {
           var option = options.find((r) => {
             return r.subject === rule.subject.name;
           });
@@ -136,7 +136,7 @@ export default {
   methods: {
     async fetchData(id) {
       this.ability
-        = await this.$store.dispatch('user/rule/read', {
+        = await this.$store.dispatch('user/ability/read', {
           id: id
         });
       this.form.writeForm(this.ability);
@@ -144,10 +144,10 @@ export default {
     submit() {
       this.form.clearErrors();
       this.form.readForm(this.ability);
-      this.$store.dispatch('user/rule/save', this.ability)
+      this.$store.dispatch('user/ability/save', this.ability)
         .then((newAbility) => {
           this.$router.push({
-            name: 'user.rule.read',
+            name: 'users.abilities.read',
             params: { id: newAbility.id }
           });
         });

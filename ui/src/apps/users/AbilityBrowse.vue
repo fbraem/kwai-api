@@ -26,7 +26,7 @@ export default {
   i18n: messages,
   computed: {
     abilities() {
-      return this.$store.state.user.rule.abilities || [];
+      return this.$store.state.user.ability.abilities || [];
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     fetchData(id) {
-      this.$store.dispatch('user/rule/browse')
+      this.$store.dispatch('user/ability/browse')
         .catch((error) => {
           console.log(error);
         });
