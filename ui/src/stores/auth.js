@@ -39,12 +39,14 @@ const mutations = {
   user(state, { data }) {
     state.user = data;
     let rules = [];
-    for (let ability of state.user.abilities) {
-      for (let rule of ability.rules) {
-        rules.push({
-          actions: rule.action.name,
-          subject: rule.subject.name
-        });
+    if (state.user.abilities) {
+      for (let ability of state.user.abilities) {
+        for (let rule of ability.rules) {
+          rules.push({
+            actions: rule.action.name,
+            subject: rule.subject.name
+          });
+        }
       }
     }
     state.rules = rules;
