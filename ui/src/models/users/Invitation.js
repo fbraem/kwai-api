@@ -20,6 +20,7 @@ export default class UserInvitation extends Model {
       expired_at_timezone: new Attribute(),
       email: new Attribute(),
       remark: new Attribute(),
+      token: new Attribute(true),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };

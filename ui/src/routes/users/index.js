@@ -39,6 +39,7 @@ const UserRegisterWithInvite = () => import(
 );
 
 import UserStore from '@/stores/user';
+import InvitationStore from '@/stores/user/invitations';
 import NewsStore from '@/stores/news';
 import PageStore from '@/stores/pages';
 
@@ -56,6 +57,10 @@ var routes = [
     children: [
       {
         path: 'invite',
+        beforeEnter(to, from, next) {
+          store.setModule(['user', 'invitation'], InvitationStore);
+          next();
+        },
         components: {
           header: UserInviteHeader,
           main: UserInvite
@@ -64,6 +69,10 @@ var routes = [
       },
       {
         path: 'invite/:token',
+        beforeEnter(to, from, next) {
+          store.setModule(['user', 'invitation'], InvitationStore);
+          next();
+        },
         components: {
           header: UserRegisterWithInviteHeader,
           main: UserRegisterWithInvite
@@ -96,13 +105,5 @@ var routes = [
 ];
 
 routes = routes.concat(abilitiesRouter);
-
-/*
-for (let route of routes) {
-  let meta = route.meta || {};
-  meta.app = CATEGORY_APP;
-  route.meta = meta;
-}
-*/
 
 export default routes;

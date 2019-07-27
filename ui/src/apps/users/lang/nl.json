@@ -36,7 +36,7 @@
             "label" : "Paswoord",
             "placeholder" : "Geef een paswoord in",
             "minLength" : "Het paswoord moet minstens 8 karakters bevatten",
-            "complex" : "Het paswoord moet mininum 1 cijfer en 1 hoofdletter bevatten"
+            "complex" : "Het paswoord moet mininum 1 cijfer en 1 hoofd en kleine letter bevatten"
         },
         "retype_password" : {
             "label" : "Hertype Paswoord",

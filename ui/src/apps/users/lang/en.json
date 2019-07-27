@@ -36,7 +36,7 @@
             "label" : "Password",
             "placeholder" : "Enter a password",
             "minLength" : "The password must have at least 8 characters",
-            "complex" : "The password must contain at least 1 digit and one uppercase letter"
+            "complex" : "The password must contain at least 1 digit and one upper- and lowercase letter"
         },
         "retype_password" : {
             "label" : "Retype Password",

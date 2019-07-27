@@ -6,7 +6,7 @@ use League\Fractal;
 
 class UserInvitationTransformer extends Fractal\TransformerAbstract
 {
-    private static $type = 'user_invitations';
+    private static $type = 'invitations';
 
     public static function createForItem(UserInvitation $invitation)
     {

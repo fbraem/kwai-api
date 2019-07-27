@@ -62,7 +62,7 @@ const makeInviteForm = (fields) => {
 
 import messages from './lang';
 
-import UserInvitation from '@/models/users/UserInvitation';
+import Invitation from '@/models/users/Invitation';
 
 export default {
   i18n: messages,
@@ -117,9 +117,9 @@ export default {
   methods: {
     submit() {
       this.form.clearErrors();
-      var invitation = new UserInvitation();
+      var invitation = new Invitation();
       this.form.readForm(invitation);
-      this.$store.dispatch('user/invite', invitation)
+      this.$store.dispatch('user/invitation/invite', invitation)
         .then((invitation) => {
           this.$router.push({
             name: 'home'

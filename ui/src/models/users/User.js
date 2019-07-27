@@ -48,15 +48,4 @@ export default class User extends Model {
       },
     };
   }
-
-  async createWithToken(token) {
-    var data = this.serialize();
-    const requestConfig = {
-      method: 'POST',
-      url: `${this.resourceUrl()}/${token}`,
-      data: data,
-    };
-    let response = await this.request(requestConfig);
-    return this.respond(response);
-  }
 }
