@@ -128,15 +128,21 @@ class JSONAPI {
     };
   }
 
-  async custom({id, path}) {
+  async custom({id, path, method, data}) {
     var uri = this.uri.clone();
     uri.segment(this.source.type());
     if (id) uri.segment(id);
     if (path) uri.segment(path);
+    method = method || 'GET';
     const config = {
-      method: 'GET',
+      method,
       url: uri.href(),
     };
+    if (data) {
+      config.data = {
+        data: data
+      };
+    }
     let response = await axios.request(config);
     return {
       meta: response.data.meta,
