@@ -39,6 +39,19 @@ $app->group('/users', function () {
         ->setArgument('auth', true)
     ;
 
+    // Invitations
+    $this->post('/invitations', \REST\Users\Actions\CreateInvitationAction::class)
+        ->setName('users.invitations.create')
+        ->setArgument('auth', true)
+    ;
+    $this->get('/invitations', \REST\Users\Actions\BrowseInvitationAction::class)
+        ->setName('users.invitations.browse')
+        ->setArgument('auth', true)
+    ;
+    $this->get('/invitations/{token:[0-9a-zA-Z]+}', \REST\Users\Actions\ReadInvitationByTokenAction::class)
+        ->setName('users.invitations.token')
+    ;
+
     $this->post('/{token:[0-9a-zA-Z]+}', \REST\Users\Actions\CreateWithTokenAction::class)
         ->setName('users.create.token')
     ;
