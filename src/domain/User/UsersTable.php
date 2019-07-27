@@ -43,6 +43,7 @@ class UsersTable extends \Cake\ORM\Table
             ->addColumn('last_name', [ 'type' => 'string' ])
             ->addColumn('first_name', [ 'type' => 'string' ])
             ->addColumn('remark', [ 'type' => 'text' ])
+            ->addColumn('uuid', ['type' => 'string'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])
             ->addColumn('updated_at', [ 'type' => 'timestamp'])
             ->addConstraint(
