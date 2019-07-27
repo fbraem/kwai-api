@@ -77,7 +77,7 @@ export function notEmpty(value) {
  * Checks if a value has a mininum length
  */
 export function minLength(value, { min }) {
-  return value != null && value.length > min;
+  return value != null && value.length >= min;
 }
 
 import moment from 'moment';
