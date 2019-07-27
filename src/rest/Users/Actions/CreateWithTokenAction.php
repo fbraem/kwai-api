@@ -66,10 +66,12 @@ class CreateWithTokenAction
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
+            $usersTable = UsersTable::getTableFromRegistry();
             $user = $usersTable->newEntity();
             $user->email = $attributes['email'];
             $user->first_name = $attributes['first_name'];
             $user->last_name = $attributes['last_name'];
+            $user->uuid = bin2hex(random_bytes(16));
             $user->password = password_hash($attributes['password'], PASSWORD_DEFAULT);
 
             $usersTable->save($user);
