@@ -2,11 +2,15 @@ import Model from '@/models/Model';
 import { Attribute, DateAttribute } from '@/models/Attribute';
 
 /**
- * UserInvitation model
+ * Invitation model
  */
 export default class UserInvitation extends Model {
   static type() {
-    return 'user_invitations';
+    return 'invitations';
+  }
+
+  static namespace() {
+    return ['users'];
   }
 
   static fields() {
@@ -29,15 +33,5 @@ export default class UserInvitation extends Model {
         return utc.local().isBefore();
       },
     };
-  }
-
-  async readByToken(token) {
-    const requestConfig = {
-      method: 'GET',
-      url: `${this.resourceUrl()}/${token}`,
-    };
-    let response = await this.request(requestConfig);
-    var invitation = new UserInvitation();
-    return invitation.respond(response);
   }
 }
