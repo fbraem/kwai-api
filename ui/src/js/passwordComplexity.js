@@ -3,6 +3,10 @@ export default password => {
   if (/[A-Z]/.test(password) === false)
     return false;
 
+  // Minimum of 1 lowercase Letter
+  if (/[a-z]/.test(password) === false)
+    return false;
+
   // Minimum of 1 Number
   if (/\d/.test(password) === false)
     return false;
