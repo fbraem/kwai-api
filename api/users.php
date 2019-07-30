@@ -17,6 +17,14 @@ $app->group('/users', function () {
         ->setName('user.abilities.browse')
         ->setArgument('auth', true)
     ;
+    $this->patch('/{id:[0-9]+}/abilities/{ability:[0-9]+}', \REST\Users\Actions\UserAttachAbilityAction::class)
+        ->setName('user.abilities.attach')
+        ->setArgument('auth', true)
+    ;
+    $this->delete('/{id:[0-9]+}/abilities/{ability:[0-9]+}', \REST\Users\Actions\UserDetachAbilityAction::class)
+        ->setName('user.abilities.detach')
+        ->setArgument('auth', true)
+    ;
 
     $this->get('/abilities', \REST\Users\Actions\AbilityBrowseAction::class)
         ->setName('users.abilities.browse')

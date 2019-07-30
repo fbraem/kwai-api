@@ -52,9 +52,9 @@
     "not_found" : "This user doesn't exist",
     "not_allowed" : "You are not allowed to view this information",
     "rules" : {
-        "title" : "Permissions",
-        "groups" : "Permission Groups",
-        "groups_info": "This user is part of the following groups.",
+        "title" : "Abilities",
+        "groups" : "Ability List",
+        "groups_info": "This user has the following abilities.",
         "name" : "Name",
         "create" : "Make a new permission",
         "update" : "Update the permission",

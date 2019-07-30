@@ -54,7 +54,7 @@
     "rules" : {
         "title" : "Toelatingen",
         "groups" : "Groepen",
-        "groups_info" : "Deze gebruiker is lid van de volgende toelatings groepen.",
+        "groups_info" : "Deze gebruiker heeft volgende toelatingen.",
         "name" : "Naam",
         "create" : "Maak een nieuwe toelating",
         "update" : "Wijzig de toelating",

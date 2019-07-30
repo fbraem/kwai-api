@@ -16,10 +16,30 @@
           <th>{{ $t('rules.name') }}</th>
         </tr>
         <tr
-          v-for="ability in abilities"
+          v-for="ability in userAbilities"
           :key="ability.id"
         >
-          <UserAbility :ability="ability" />
+          <UserAbility
+            :ability="ability"
+            :remove="true"
+            @remove="removeAbility"
+          />
+        </tr>
+      </table>
+      <h1>Available groups</h1>
+      <table v-if="user" class="uk-table uk-table-divider">
+        <tr>
+          <th>{{ $t('rules.name') }}</th>
+        </tr>
+        <tr
+          v-for="ability in availableAbilities"
+          :key="ability.id"
+        >
+          <UserAbility
+            :ability="ability"
+            :add="true"
+            @add="addAbility"
+          />
         </tr>
       </table>
     </div>
@@ -47,8 +67,14 @@ export default {
     user() {
       return this.$store.getters['user/user'](this.$route.params.id);
     },
-    abilities() {
+    userAbilities() {
       return this.user.abilities || [];
+    },
+    abilities() {
+      return this.$store.state.user.ability.abilities || [];
+    },
+    availableAbilities() {
+      return this.abilities.filter(x => !this.userAbilities.includes(x));
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -62,14 +88,27 @@ export default {
     next();
   },
   methods: {
-    fetchData(id) {
-      this.$store.dispatch('user/readWithAbilities', { id })
+    async fetchData(id) {
+      await this.$store.dispatch('user/readWithAbilities', { id })
+        .catch((error) => {
+          console.log(error);
+        });
+      await this.$store.dispatch('user/ability/browse')
         .catch((error) => {
           console.log(error);
         });
     },
-    showRules() {
-      console.log('show');
+    addAbility(ability) {
+      this.$store.dispatch('user/attachAbility', {
+        user: this.user,
+        ability
+      });
+    },
+    removeAbility(ability) {
+      this.$store.dispatch('user/detachAbility', {
+        user: this.user,
+        ability
+      });
     }
   }
 };

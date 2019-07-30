@@ -25,6 +25,20 @@
       >
         <i class="fas fa-edit"></i>
       </router-link>
+      <a
+        v-if="add"
+        class="uk-icon-button uk-link-reset"
+        @click="emitAdd(ability)"
+      >
+        <i class="fas fa-plus"></i>
+      </a>
+      <a
+        v-if="remove"
+        class="uk-icon-button uk-link-reset"
+        @click="emitRemove(ability)"
+      >
+        <i class="fas fa-trash"></i>
+      </a>
       <a v-if="hide"
         @click="show"
         class="uk-icon-button uk-link-reset">
@@ -45,6 +59,14 @@ export default {
     ability: {
       type: Object,
       required: true
+    },
+    add: {
+      type: Boolean,
+      default: false
+    },
+    remove: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -55,6 +77,12 @@ export default {
   methods: {
     show() {
       this.hide = !this.hide;
+    },
+    emitAdd(ability) {
+      this.$emit('add', ability);
+    },
+    emitRemove(ability) {
+      this.$emit('remove', ability);
     }
   }
 };

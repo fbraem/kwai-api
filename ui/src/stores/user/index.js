@@ -6,6 +6,7 @@ Vue.use(Vuex);
 import JSONAPI from '@/js/JSONAPI';
 
 import User from '@/models/users/User';
+import Ability from '@/models/users/Ability';
 
 const state = () => {
   return {
@@ -38,6 +39,11 @@ const mutations = {
   error(state, data) {
     state.error = data;
   },
+  setAbilities(state, { userId, abilities }) {
+    var index = state.users.findIndex((u) => u.id === userId);
+    var user = state.users[index];
+    user.abilities = abilities;
+  }
 };
 
 const actions = {
@@ -83,6 +89,32 @@ const actions = {
       throw error;
     } finally {
       dispatch('wait/end', 'user.read.abilities', { root: true });
+    }
+  },
+  async attachAbility({ dispatch, commit }, { user, ability }) {
+    dispatch('wait/start', 'user.attach.ability', { root: true });
+    try {
+      const api = new JSONAPI({ source: User, target: Ability });
+      var result = await api.attach(user, ability);
+      commit('setAbilities', { userId: user.id, abilities: result.data });
+    } catch (error) {
+      commit('error', error);
+      throw error;
+    } finally {
+      dispatch('wait/end', 'user.attach.ability', { root: true });
+    }
+  },
+  async detachAbility({ dispatch, commit }, { user, ability }) {
+    dispatch('wait/start', 'user.detach.ability', { root: true });
+    try {
+      const api = new JSONAPI({ source: User, target: Ability });
+      var result = await api.detach(user, ability);
+      commit('setAbilities', { userId: user.id, abilities: result.data });
+    } catch (error) {
+      commit('error', error);
+      throw error;
+    } finally {
+      dispatch('wait/end', 'user.detach.ability', { root: true });
     }
   },
   async createWithToken({ state, getters, commit, context }, payload) {
