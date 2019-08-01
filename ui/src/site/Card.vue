@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div class="uk-margin-left">
     <div
       class="uk-card uk-card-hover uk-card-body"
