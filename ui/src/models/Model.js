@@ -22,10 +22,10 @@ class Cache {
    * @return {object} The cached or a new model
    */
   getModel(ctor, id) {
-    this.cache[ctor.name] = this.cache[ctor.name] || Object.create(null);
+    this.cache[ctor.type()] = this.cache[ctor.type()] || Object.create(null);
     /*eslint new-cap: ["error", { "newIsCapExceptions": ["ctor"] }]*/
-    this.cache[ctor.name][id] = this.cache[ctor.name][id] || new ctor(id);
-    return this.cache[ctor.name][id];
+    this.cache[ctor.type()][id] = this.cache[ctor.type()][id] || new ctor(id);
+    return this.cache[ctor.type()][id];
   }
 }
 
