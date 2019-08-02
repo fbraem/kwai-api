@@ -13,8 +13,8 @@ Options -Indexes
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^grades(/.*)?$ ./grades.php$1 [L]
-    RewriteRule ^members(/.*)?$ ./members.php$1 [L]
+    RewriteRule ^grades(/.*)?$ ./grades.php?$1 [QSA,L]
+    RewriteRule ^members(/.*)?$ ./members.php?$1 [QSA,L]
 
 </IfModule>
 
