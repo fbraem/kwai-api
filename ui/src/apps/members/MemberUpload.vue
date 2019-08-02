@@ -22,8 +22,7 @@
 </template>
 
 <script>
-import TokenStore from '@/js/TokenStore';
-var tokenStore = new TokenStore();
+import tokenStore from '@/js/TokenStore';
 
 import UIkit from 'uikit';
 
@@ -40,7 +39,7 @@ export default {
       multiple: false,
       name: 'csv',
       beforeSend(env) {
-        env.headers['Authorization'] = tokenStore.getAuthorizationHeader();
+        env.headers['Authorization'] = `Bearer ${tokenStore.access_token}`;
       },
       complete(e) {
         var data = JSON.parse(e.response).data;
