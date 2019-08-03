@@ -72,7 +72,6 @@ const actions = {
   async read({ dispatch, getters, commit }, payload) {
     var coach = getters['coach'](payload.id);
     if (coach) { // already read
-      commit('error', null); // Reset error
       return coach;
     }
 
