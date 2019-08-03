@@ -45,9 +45,9 @@
           :month="month"
           :trainings="trainings"
           @prevMonth="prevMonth"
-          @firstMonth="firstMonth"
+          @prevYear="prevYear"
           @nextMonth="nextMonth"
-          @lastMonth="lastMonth"
+          @nextYear="nextYear"
         />
       </div>
     </div>
@@ -130,16 +130,18 @@ export default {
       });
       this.$store.dispatch('training/coach/browse');
     },
-    firstMonth() {
+    prevYear() {
+      this.year -= 1;
       this.$store.dispatch('training/browse', {
         year: this.year,
-        month: 1
+        month: this.month
       });
     },
-    lastMonth() {
+    nextYear() {
+      this.year += 1;
       this.$store.dispatch('training/browse', {
         year: this.year,
-        month: 12
+        month: this.month
       });
     },
     prevMonth() {

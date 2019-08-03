@@ -7,7 +7,7 @@
     >
       <div>
         <a
-          @click="firstMonth"
+          @click="prevYear"
           class="uk-link-reset uk-icon-button"
         >
           <i class="fas fa-angle-double-left"></i>
@@ -32,7 +32,7 @@
           <i class="fas fa-angle-right"></i>
         </a>
         <a
-          @click="lastMonth"
+          @click="nextYear"
           class="uk-link-reset uk-icon-button"
         >
           <i class="fas fa-angle-double-right"></i>
@@ -370,11 +370,11 @@ export default {
     }
   },
   methods: {
-    firstMonth() {
-      this.$emit('firstMonth');
+    prevYear() {
+      this.$emit('prevYear');
     },
-    lastMonth() {
-      this.$emit('lastMonth');
+    nextYear() {
+      this.$emit('nextYear');
     },
     prevMonth() {
       this.$emit('prevMonth');

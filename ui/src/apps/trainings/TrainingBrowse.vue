@@ -11,9 +11,9 @@
           :month="month"
           :trainings="trainings"
           @prevMonth="prevMonth"
-          @firstMonth="firstMonth"
+          @prevYear="prevYear"
           @nextMonth="nextMonth"
-          @lastMonth="lastMonth"
+          @nextYear="nextYear"
         />
         <div v-if="noData">
           <div class="uk-alert uk-alert-warning">
@@ -72,21 +72,21 @@ export default {
         month: month
       });
     },
-    firstMonth() {
+    prevYear() {
       this.$router.push({
         name: 'trainings.browse',
         params: {
-          year: this.year,
-          month: 1
+          year: this.year - 1,
+          month: this.month
         }
       });
     },
-    lastMonth() {
+    nextYear() {
       this.$router.push({
         name: 'trainings.browse',
         params: {
-          year: this.year,
-          month: 12
+          year: this.year + 1,
+          month: this.month
         }
       });
     },
