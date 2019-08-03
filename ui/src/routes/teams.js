@@ -25,11 +25,7 @@ const TeamFormHeader = () => import(
   '@/apps/teams/TheTeamFormHeader.vue'
 );
 
-const TeamStore = () => import(
-  /* webpackChunkName: "teams_chunck" */
-  '@/stores/teams'
-);
-
+import TeamStore from '@/stores/teams';
 import TeamTypeStore from '@/stores/team_types';
 import SeasonStore from '@/stores/seasons';
 
