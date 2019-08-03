@@ -21,21 +21,21 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
 
 // card styles
 
-.card {
+.#{$prefix}card {
     background: $cardBGDefault;
     padding: $cardPadding;
     border-radius: $cardRadius;
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    .card-text {
+    .#{$prefix}text {
         line-height: $cardTextLineHeight;
     }
-    .card-title {
+    .#{$prefix}card-title {
         &:not(:last-child) {
             margin-bottom: $margin;
         }
         line-height: $cardTitleLineHeight;
-        .card-subtitle {
+        .#{$prefix}card-subtitle {
             font-size: 75%;
             opacity: 0.8;
         }
@@ -49,7 +49,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-bewteen;
-            .card-icon {
+            .#{$prefix}card-icon {
                 flex: 1;
                 text-align: center;
                 margin-right: $margin;
@@ -57,7 +57,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
                     max-width: 100%;
                 }
             }
-            .card-text {
+            .#{$prefix}card-text {
                 flex: 7;
                 margin-left: $margin;
             }
@@ -65,7 +65,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
         &.image {
             padding: 0;
             position: relative;
-            .card-image {
+            .#{$prefix}card-image {
                 position: absolute;
                 top: 0;
                 bottom: 0;
@@ -80,7 +80,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
                     object-fit: cover;
                 }
             }
-            .card-text {
+            .#{$prefix}card-text {
                 padding: $cardPadding;
                 margin-left: 30%;
                 @media (max-width: 576px) {
@@ -90,16 +90,16 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
                     margin-left: 40%;
                 }
             }
-            .card-title {
+            .#{$prefix}card-title {
                 padding-left: $cardPadding;
                 margin-left: 30%;
             }
             &.reverse {
-                .card-image {
+                .#{$prefix}card-image {
                     left: initial;
                     right: 0;
                 }
-                .card-text {
+                .#{$prefix}card-text {
                     left: 0;
                     right: initial;
                     margin-right: 30%;
@@ -113,24 +113,24 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     }
     &.title {
         &.icon {
-            .card-title {
+            .#{$prefix}card-title {
                 border-bottom: 1px solid $titleBorderColor;
                 padding-bottom: $margin;
             }
         }
         &.title-bg {
             padding: 0;
-            .card-title {
+            .#{$prefix}card-title {
                 background: $darkBG;
                 padding: $cardPadding;
                 color: white;
                 margin-bottom: 0;
             }
-            .card-text {
+            .#{$prefix}card-text {
                 padding: $cardPadding;
             }
             &.small-pad {
-                .card-title, .card-text {
+                .#{$prefix}card-title, .#{$prefix}card-text {
                     padding: $margin;
                 }
             }
@@ -138,7 +138,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     }
     &.image {
         padding: 0;
-        .card-image {
+        .#{$prefix}card-image {
             position: relative;
             height: $imgHeight;
             img {
@@ -147,7 +147,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
                 object-fit: cover;
             }
         }
-        .card-title {
+        .#{$prefix}card-title {
             font-weight: bold;
             padding: $cardPadding;
             text-align: center;
@@ -157,13 +157,13 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
             background-position: center;
             background-size: cover;
         }
-        .card-text {
+        .#{$prefix}card-text {
             padding: $cardPadding;
         }
     }
     &.profile {
         text-align: center;
-        .card-image {
+        .#{$prefix}card-image {
             margin-bottom: $margin;
             img {
                 width: 128px;
@@ -185,7 +185,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
                 display: block;
             }
 
-            .card-image {
+            .#{$prefix}card-image {
                 text-align: center;
                 flex: 1;
                 margin: 0;
