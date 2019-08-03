@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Spinner v-if="$wait.is('training.coaches.read')" />
+    <CoachCard v-if="coach" :coach="coach" />
     <div
       v-if="notAllowed"
       class="uk-alert-danger"
@@ -14,66 +16,8 @@
     >
         {{ $t('training.coaches.not_found') }}
     </div>
-    <Spinner v-if="$wait.is('training.coaches.read')" />
-    <div
-      v-if="coach"
-      uk-grid
-    >
-      <div class="uk-width-1-1">
-        <table class="uk-table uk-table-striped">
-          <tr>
-            <th>
-              {{ $t('name') }}
-            </th>
-            <td>
-              {{ coach.name }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.coaches.form.diploma.label') }}
-            </th>
-            <td>
-              {{ coach.diploma }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.coaches.form.description.label') }}
-            </th>
-            <td>
-              {{ coach.description }}
-            </td>
-          </tr>
-          <tr>
-              <th>
-                {{ $t('training.coaches.form.active.label') }}
-              </th>
-              <td>
-                  <i
-                    v-if="coach.active"
-                    class="fas fa-check">
-                  </i>
-                  <i
-                    v-else
-                    class="fas fa-times uk-text-danger"
-                  >
-                  </i>
-              </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.coaches.form.remark.label') }}
-            </th>
-            <td>
-              {{ coach.remark }}
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="uk-width-1-1">
-        <router-view name="coach_information" />
-      </div>
+    <div class="uk-width-1-1">
+      <router-view name="coach_information" />
     </div>
   </div>
 </template>
@@ -81,11 +25,13 @@
 <script>
 import messages from './lang';
 
+import CoachCard from './components/CoachCard';
+
 import Spinner from '@/components/Spinner';
 
 export default {
   components: {
-    Spinner
+    Spinner, CoachCard
   },
   i18n: messages,
   computed: {
