@@ -16,7 +16,7 @@ const i18n = new VueI18n({
 });
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-
+import './scss/index.scss';
 import moment from 'moment';
 moment.locale('nl');
 
