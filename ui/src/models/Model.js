@@ -3,35 +3,6 @@ import { Attribute } from './Attribute';
 const TYPE = Symbol('TYPE');
 
 /**
- * Class which keeps all created model objects in a cache. When the model
- * is not yet available in the cache, it will be created and stored.
- */
-class Cache {
-  /**
-   * Creates the cache
-   */
-  constructor() {
-    this.cache = Object.create(null);
-  }
-
-  /**
-   * Searches the cache for the model with the given constructor and id. When
-   * it doesn't find it, it will create it.
-   * @param {function} ctor The constructor of the Model class.
-   * @param {string} id The id of the model.
-   * @return {object} The cached or a new model
-   */
-  getModel(ctor, id) {
-    this.cache[ctor.type()] = this.cache[ctor.type()] || Object.create(null);
-    /*eslint new-cap: ["error", { "newIsCapExceptions": ["ctor"] }]*/
-    this.cache[ctor.type()][id] = this.cache[ctor.type()][id] || new ctor(id);
-    return this.cache[ctor.type()][id];
-  }
-}
-
-var cache = new Cache();
-
-/**
  * Our private function to create a model from JSONAPI data. Before calling this
  * function it must be bind against the constructor of the model.
  * @param {object} data
@@ -39,7 +10,7 @@ var cache = new Cache();
  * @return {object} An instance of the model
  * @see deserialize
  */
-function createModel(data, included) {
+function createModel(cache, data, included) {
   var me = cache.getModel(this, data.id);
 
   // Set all fields
@@ -68,7 +39,7 @@ function createModel(data, included) {
             console.log('No included data found for relation ', key);
           }
           var model =
-            relationships[key].deserialize(includedData, included);
+            relationships[key].deserialize(cache, includedData, included);
           me[key].push(model);
         });
       } else if (data.relationships[key].data !== null) {
@@ -80,7 +51,7 @@ function createModel(data, included) {
           console.log('No included data found for relation ', key);
         }
         me[key] =
-          relationships[key].deserialize(includedData, included);
+          relationships[key].deserialize(cache, includedData, included);
       } else {
         me[key] = null;
       }
@@ -144,12 +115,14 @@ class Model {
    * @param {array} included The included data of the JSONAPI response
    * @return {object|array} An instance of the model or an array with instances.
    */
-  static deserialize(data, included) {
+  static deserialize(cache, data, included) {
     included = included || [];
     if (Array.isArray(data)) {
-      return data.map(element => createModel.bind(this)(element, included));
+      return data.map(
+        element => createModel.bind(this)(cache, element, included)
+      );
     }
-    return createModel.bind(this)(data, included);
+    return createModel.bind(this)(cache, data, included);
   }
 
   /**

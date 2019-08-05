@@ -3,6 +3,33 @@ import config from 'config';
 import axios from '@/js/http';
 
 /**
+ * Class which keeps all created model objects in a cache. When the model
+ * is not yet available in the cache, it will be created and stored.
+ */
+class Cache {
+  /**
+   * Creates the cache
+   */
+  constructor() {
+    this.cache = Object.create(null);
+  }
+
+  /**
+   * Searches the cache for the model with the given constructor and id. When
+   * it doesn't find it, it will create it.
+   * @param {function} ctor The constructor of the Model class.
+   * @param {string} id The id of the model.
+   * @return {object} The cached or a new model
+   */
+  getModel(ctor, id) {
+    this.cache[ctor.type()] = this.cache[ctor.type()] || Object.create(null);
+    /*eslint new-cap: ["error", { "newIsCapExceptions": ["ctor"] }]*/
+    this.cache[ctor.type()][id] = this.cache[ctor.type()][id] || new ctor(id);
+    return this.cache[ctor.type()][id];
+  }
+}
+
+/**
  * Helper class for sending a JSONAPI request
  */
 class JSONAPI {
@@ -124,7 +151,9 @@ class JSONAPI {
     let response = await axios.request(config);
     return {
       meta: response.data.meta,
-      data: this.target.deserialize(response.data.data, response.data.included)
+      data: this.target.deserialize(
+        new Cache(), response.data.data, response.data.included
+      )
     };
   }
 
@@ -146,7 +175,9 @@ class JSONAPI {
     let response = await axios.request(config);
     return {
       meta: response.data.meta,
-      data: this.target.deserialize(response.data.data, response.data.included)
+      data: this.target.deserialize(
+        new Cache(), response.data.data, response.data.included
+      )
     };
   }
 
@@ -176,7 +207,9 @@ class JSONAPI {
     let response = await axios.request(config);
     return {
       meta: response.data.meta,
-      data: this.target.deserialize(response.data.data, response.data.included)
+      data: this.target.deserialize(
+        new Cache(), response.data.data, response.data.included
+      )
     };
   }
 
@@ -229,7 +262,9 @@ class JSONAPI {
     let response = await axios.request(config);
     return {
       meta: response.data.meta,
-      data: this.target.deserialize(response.data.data, response.data.included)
+      data: this.target.deserialize(
+        new Cache(), response.data.data, response.data.included
+      )
     };
   }
 
@@ -266,7 +301,9 @@ class JSONAPI {
     let response = await axios.request(config);
     return {
       meta: response.data.meta,
-      data: this.target.deserialize(response.data.data, response.data.included)
+      data: this.target.deserialize(
+        new Cache(), response.data.data, response.data.included
+      )
     };
   }
 }
