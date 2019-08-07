@@ -53,7 +53,7 @@ class TeamMembersAddAction
             }
         }
 
-        $team->dirty('members', true);
+        $team->setDirty('members', true);
         $teamsTable->save($team);
 
         return (new ResourceResponse(

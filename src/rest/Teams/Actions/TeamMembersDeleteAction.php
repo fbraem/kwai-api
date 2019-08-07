@@ -47,7 +47,7 @@ class TeamMembersDeleteAction
         $members = $membersTable->find()->where(['id IN' => $ids])->toList();
         if (count($members) > 0) {
             $teamsTable->Members->unlink($team, $members);
-            $team->dirty('members', true);
+            $team->setDirty('members', true);
             $teamsTable->save($team);
             $team = TeamsTable::getTableFromRegistry()->get($args['id'], [
                 'contain' => ['Members', 'Members.Person']

@@ -60,7 +60,7 @@ class UserAttachAbilityAction
                 ]
             );
             $user->abilities[] = $ability;
-            $user->dirty('abilities', true);
+            $user->setDirty('abilities', true);
             $usersTable->save($user);
         } catch (RecordNotFoundException $rnfe) {
             return (new NotFoundResponse(_("User doesn't exist.")))($response);

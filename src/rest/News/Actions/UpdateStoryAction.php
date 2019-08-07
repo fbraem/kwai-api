@@ -66,23 +66,23 @@ class UpdateStoryAction
 
             if (isset($attributes['contents'][0]['title'])) {
                 $story->contents[0]->title = $attributes['contents'][0]['title'];
-                $story->dirty('contents', true);
+                $story->setDirty('contents', true);
             }
             if (isset($attributes['contents'][0]['summary'])) {
                 $story->contents[0]->summary = $attributes['contents'][0]['summary'];
-                $story->dirty('contents', true);
+                $story->setDirty('contents', true);
             }
             if (isset($attributes['contents'][0]['content'])) {
                 $story->contents[0]->content = $attributes['contents'][0]['content'];
-                $story->dirty('contents', true);
+                $story->setDirty('contents', true);
             }
             if (isset($attributes['contents'][0]['format'])) {
                 $story->contents[0]->format = $attributes['contents'][0]['format'];
-                $story->dirty('contents', true);
+                $story->setDirty('contents', true);
             }
             if (isset($attributes['contents'][0]['locale'])) {
                 $story->contents[0]->locale = $attributes['contents'][0]['locale'];
-                $story->dirty('contents', true);
+                $story->setDirty('contents', true);
             }
             if ($story->isDirty('contents')) {
                 $story->contents[0]->user = $request->getAttribute('clubman.user');

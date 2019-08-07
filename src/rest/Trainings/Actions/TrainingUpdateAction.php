@@ -136,8 +136,8 @@ class TrainingUpdateAction
                 $training->event->remark = $attributes['event']['remark'];
             }
 
-            $training->event->dirty('contents', true);
-            $training->dirty('event', true);
+            $training->event->setDirty('contents', true);
+            $training->setDirty('event', true);
             $training->event->user = $request->getAttribute('clubman.user');
 
             (new \REST\Trainings\TrainingValidator())->validate($training);

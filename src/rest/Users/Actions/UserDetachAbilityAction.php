@@ -51,7 +51,7 @@ class UserDetachAbilityAction
                 ]
             );
             $usersTable->Abilities->unlink($user, [$ability]);
-            $user->dirty('abilities', true);
+            $user->setDirty('abilities', true);
             $usersTable->save($user);
             //TODO: check why we need to redo this ...
             $user = $usersTable->get(
