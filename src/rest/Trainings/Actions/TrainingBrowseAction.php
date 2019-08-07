@@ -55,14 +55,16 @@ class TrainingBrowseAction
                 ]);
             });
         }
+        $query->where(['Event.active' => 1]);
+        $query->order(['Event.start_date']);
 
         $count = $query->count();
 
         $limit = $parameters['page']['limit'] ?? 10;
         $offset = $parameters['page']['offset'] ?? 0;
 
-        $query->limit($limit);
-        $query->offset($offset);
+        //$query->limit($limit);
+        //$query->offset($offset);
 
         $resource = TrainingTransformer::createForCollection(
             $query->all()
