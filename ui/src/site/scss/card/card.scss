@@ -27,73 +27,92 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     border-radius: $cardRadius;
     box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
+
     .#{$prefix}text {
         line-height: $cardTextLineHeight;
     }
+
     .#{$prefix}card-title {
+        line-height: $cardTitleLineHeight;
+
         &:not(:last-child) {
             margin-bottom: $margin;
         }
-        line-height: $cardTitleLineHeight;
+
         .#{$prefix}card-subtitle {
             font-size: 75%;
             opacity: 0.8;
         }
     }
+
     &.bg {
         background: $darkBG;
         color: white;
     }
+
     &.simple {
+
         &.icon {
             display: flex;
             align-items: center;
             justify-content: space-bewteen;
+
             .#{$prefix}card-icon {
                 flex: 1;
                 text-align: center;
                 margin-right: $margin;
+
                 img {
                     max-width: 100%;
                 }
             }
+
             .#{$prefix}card-text {
                 flex: 7;
                 margin-left: $margin;
             }
         }
+
         &.image {
             padding: 0;
             position: relative;
+
             .#{$prefix}card-image {
                 position: absolute;
                 top: 0;
                 bottom: 0;
                 left: 0;
                 width: 30%;
+
                 @media (max-width: 576px) {
                     width: 40%;
                 }
+
                 img {
                     max-width: 100%;
                     height: 100%;
                     object-fit: cover;
                 }
             }
+
             .#{$prefix}card-text {
                 padding: $cardPadding;
                 margin-left: 30%;
+
                 @media (max-width: 576px) {
                     margin-left: 40%;
                 }
+
                 @media (max-width: 576px) {
                     margin-left: 40%;
                 }
             }
+
             .#{$prefix}card-title {
                 padding-left: $cardPadding;
                 margin-left: 30%;
             }
+
             &.reverse {
                 .#{$prefix}card-image {
                     left: initial;
@@ -111,42 +130,54 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
             }
         }
     }
+
     &.title {
+
         &.icon {
+
             .#{$prefix}card-title {
                 border-bottom: 1px solid $titleBorderColor;
                 padding-bottom: $margin;
             }
         }
+
         &.title-bg {
             padding: 0;
+
             .#{$prefix}card-title {
                 background: $darkBG;
                 padding: $cardPadding;
                 color: white;
                 margin-bottom: 0;
             }
+
             .#{$prefix}card-text {
                 padding: $cardPadding;
             }
+
             &.small-pad {
+
                 .#{$prefix}card-title, .#{$prefix}card-text {
                     padding: $margin;
                 }
             }
         }
     }
+
     &.image {
         padding: 0;
+
         .#{$prefix}card-image {
             position: relative;
             height: $imgHeight;
+
             img {
                 height: 100%;
                 width: 100%;
                 object-fit: cover;
             }
         }
+
         .#{$prefix}card-title {
             font-weight: bold;
             padding: $cardPadding;
@@ -157,29 +188,36 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
             background-position: center;
             background-size: cover;
         }
+
         .#{$prefix}card-text {
             padding: $cardPadding;
         }
     }
+
     &.profile {
         text-align: center;
+
         .#{$prefix}card-image {
             margin-bottom: $margin;
+
             img {
                 width: 128px;
                 height: 128px;
                 border-radius: 100%;
+
                 &.small {
                     width: 96px;
                     height: 96px;
                 }
             }
         }
+
         &.alternate {
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-align: left;
+
             @include m {
                 text-align: center;
                 display: block;
@@ -193,15 +231,18 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
                     margin-bottom: $margin;
                 }
             }
+
             .text {
                 padding-left: $cardPadding;
                 flex: 8;
+
                 @include m {
                     padding-left: 0;
                 }
             }
         }
     }
+
     &.small-pad {
         padding: $cardPadding * 0.5;
     }
