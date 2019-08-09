@@ -9,6 +9,7 @@
 
 <script>
 import Training from '@/models/trainings/Training';
+import Team from '@/models/Team';
 
 import Header from '@/components/Header';
 
@@ -38,6 +39,14 @@ export default {
           icon: 'fas fa-plus',
           route: {
             name: 'trainings.create'
+          }
+        });
+      }
+      if (this.$can('manage', Team.type())) {
+        buttons.push({
+          icon: 'fas fa-users',
+          route: {
+            name: 'teams.browse'
           }
         });
       }
