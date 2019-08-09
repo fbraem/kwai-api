@@ -29,6 +29,12 @@ export default {
       const buttons = [];
       if (this.$can('create', Training.type())) {
         buttons.push({
+          icon: 'fas fa-calendar-plus',
+          route: {
+            name: 'trainings.definitions.browse'
+          }
+        });
+        buttons.push({
           icon: 'fas fa-plus',
           route: {
             name: 'trainings.create'
