@@ -72,10 +72,14 @@ class TrainingTransformer extends Fractal\TransformerAbstract
     {
         $arr = $training->toArray();
         unset($arr['_matchingData']);
-        unset($arr['event']['id']);
-        foreach ($arr['event']['contents'] as &$content) {
-            unset($content['id']);
-            unset($content['_joinData']);
+        if ($arr['event']) {
+            unset($arr['event']['id']);
+            if (is_array($arr['event']['contents'])) {
+                foreach ($arr['event']['contents'] as &$content) {
+                    unset($content['id']);
+                    unset($content['_joinData']);
+                }
+            }
         }
         return $arr;
     }
