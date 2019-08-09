@@ -20,6 +20,8 @@ use Respect\Validation\Validator as v;
 use Core\Validators\InputValidator;
 use Core\Validators\ValidationException;
 
+
+use Core\Responses\SimpleResponse;
 use Core\Responses\ResourceResponse;
 use Core\Responses\UnprocessableEntityResponse;
 
@@ -72,8 +74,7 @@ class CreateInvitationAction
 
             $mail = $this->container->mailer;
             try {
-                $mail->addAddress($invitation->email, 'Joe User');
-                $mail->addAddress('ellen@example.com');
+                $mail->addAddress($invitation->email);
 
                 $mail->isHTML(true);
                 $mail->Subject = $this->container->settings['mail']['subject'] . ' - User Invitation';
@@ -85,9 +86,11 @@ class CreateInvitationAction
                 ]);
                 $mail->AltBody = $this->container->template->render('User/invitation_txt', ['invitation' => $invitation]);
 
-                $mail->send();
+                if (!$mail->send()) {
+                    return (new SimpleResponse(500, $mail->ErrorInfo))($response);
+                };
             } catch (Exception $e) {
-                //TODO: log it? add a column to indicate failure?
+                return (new SimpleResponse(500, $e->getMessage()))($response);
             }
 
             $response = (new ResourceResponse(
