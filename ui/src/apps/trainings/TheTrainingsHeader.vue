@@ -9,6 +9,7 @@
 
 <script>
 import Training from '@/models/trainings/Training';
+import Coach from '@/models/trainings/Coach';
 import Team from '@/models/Team';
 
 import Header from '@/components/Header';
@@ -47,6 +48,14 @@ export default {
           icon: 'fas fa-users',
           route: {
             name: 'teams.browse'
+          }
+        });
+      }
+      if (this.$can('manage', Coach.type())) {
+        buttons.push({
+          icon: 'fas fa-user-tie',
+          route: {
+            name: 'trainings.coaches'
           }
         });
       }
