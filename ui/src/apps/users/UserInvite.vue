@@ -126,7 +126,6 @@ export default {
           });
         })
         .catch((error) => {
-          console.log(this.$config);
           console.log(error);
         });
     }
