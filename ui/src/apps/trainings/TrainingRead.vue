@@ -40,7 +40,7 @@
                 </li>
               </ul>
             </div>
-            <div class="uk-width-1-1">
+            <div v-if="canManagePresences" class="uk-width-1-1">
               <strong>{{ $t('training.presences.title') }}:</strong>
               <ul class="uk-list uk-list-bullet">
                 <li
@@ -69,6 +69,7 @@
 import messages from './lang';
 
 import TrainingDayHour from './TrainingDayHour';
+import Presence from '@/models/trainings/Presence';
 
 export default {
   i18n: messages,
@@ -98,6 +99,9 @@ export default {
     },
     notFound() {
       return this.error && this.error.response.status === 404;
+    },
+    canManagePresences() {
+      return this.$can('manage', Presence.type());
     }
   },
   beforeRouteEnter(to, from, next) {
