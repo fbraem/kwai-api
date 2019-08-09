@@ -65,7 +65,7 @@
         <div uk-grid>
           <Spinner v-if="$wait.is('news.browse')"/>
           <div v-else uk-grid>
-            <div>
+            <div class="uk-width-1-1">
               <h4 class="uk-heading-line uk-text-bold" id="newsgrid">
                 <span>Belangrijk Nieuws</span>
               </h4>
