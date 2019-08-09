@@ -151,7 +151,7 @@ export default {
       var tz = moment.tz.guess();
       var start = moment(this.form.fields.start_date.value, 'L');
       var end = moment(this.form.fields.end_date.value, 'L');
-      var next = start.day(this.definition.weekday + 7);
+      var next = start.day(this.definition.weekday);
       var trainings = [];
       while (next.isBefore(end)) {
         var training = new Training();
