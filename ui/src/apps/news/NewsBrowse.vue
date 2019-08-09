@@ -83,7 +83,8 @@ export default {
   data() {
     return {
       showAreYouSure: false,
-      storyToDelete: null
+      storyToDelete: null,
+      categoryId: null
     };
   },
   computed: {
@@ -111,6 +112,7 @@ export default {
   methods: {
     async fetchData(params) {
       if (params.category) {
+        this.categoryId = params.category;
         await this.$store.dispatch('category/read', {
           id: params.category
         });
@@ -137,7 +139,7 @@ export default {
         offset: offset,
         year: this.year,
         month: this.month,
-        category: this.category ? this.category.id : null,
+        category: this.categoryId,
         featured: this.featured
       });
     }
