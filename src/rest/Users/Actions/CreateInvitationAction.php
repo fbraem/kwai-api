@@ -84,7 +84,12 @@ class CreateInvitationAction
                     'invitation' => $invitation,
                     'user' => $invitation->user
                 ]);
-                $mail->AltBody = $this->container->template->render('User/invitation_txt', ['invitation' => $invitation]);
+                $mail->AltBody = $this->container->template->render('User/invitation_txt', [
+                    'url' => $this->container->settings['website']['url'] . '/#users/invite/' . $invitation->token,
+                    'email' => $this->container->settings['website']['email'],
+                    'invitation' => $invitation,
+                    'user' => $invitation->user
+                ]);
 
                 if (!$mail->send()) {
                     return (new SimpleResponse(500, $mail->ErrorInfo))($response);
