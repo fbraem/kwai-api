@@ -1,14 +1,31 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
+  <div class="kwai-news-card">
+    <h3 style="grid-area: news-card-title; margin-bottom:0px">
+      <router-link
+        v-if="story.content"
+        class="kwai-link-reset"
+        :to="contentLink"
+      >
+        {{ story.content.title }}
+      </router-link>
+      <span v-else>
+        {{ story.content.title }}
+      </span>
+    </h3>
     <div
-      class="uk-width-1-1 uk-card uk-card-body uk-card-default uk-card-small uk-border-rounded"
-      style="box-shadow:none;border:  1px solid rgba(0,0,0,0.075);"
+      v-if="story.overview_picture"
+      style="grid-area: news-card-image;justify-self:center;"
     >
-      <div
-        v-if="showCategory"
-        class="uk-card-badge uk-label"
-        style="font-size: 0.75rem;background-color:#c61c18;"
+      <img
+        :src="story.overview_picture"
+        alt=""
+        style="height:150px;width:150px;"
+      />
+    </div>
+    <div style="grid-area: news-card-content">
+      <div v-if="showCategory"
+        class="kwai-badge kwai-badge-red"
       >
         <router-link
           :to="categoryLink"
@@ -17,85 +34,32 @@
         </router-link>
       </div>
       <div
-        :class="{ 'uk-margin-medium-top' : showCategory }"
-        uk-grid
-      >
-        <div>
-          <div
-            class="uk-grid uk-grid-medium uk-flex uk-flex-middle"
-            uk-grid
-          >
-            <div
-              v-if="story.overview_picture"
-              class="uk-width-1-3@s uk-width-2-5@m uk-width-4-6@l uk-height-1-1"
-            >
-              <img
-                :src="story.overview_picture"
-                alt=""
-              />
-            </div>
-            <div :class="widthClass">
-              <h3 class="uk-card-title uk-margin-small-top uk-margin-remove-bottom uk-text-break">
-                <router-link
-                  v-if="story.content"
-                  class="uk-link-reset"
-                  :to="contentLink"
-                >
-                  {{ story.content.title }}
-                </router-link>
-                <span v-else>
-                  {{ story.content.title }}
-                </span>
-              </h3>
-              <span
-                v-if="story.publish_date"
-                class="uk-article-meta"
-              >
-                {{ $t('published', {
-                  publishDate: story.localPublishDate,
-                  publishDateFromNow: story.publishDateFromNow
-                  })
-                }}
-              </span>
-              <div
-               v-html="story.content.html_summary"
-               class="uk-margin-small"
-               >
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-margin-remove-top">
-          <div class="uk-grid-small" uk-grid>
-            <div class="uk-width-expand"></div>
-            <div class="uk-width-auto">
-              <div>
-                <router-link
-                  v-if="story.content"
-                  class="uk-icon-button uk-link-reset"
-                  :to="contentLink"
-                >
-                  <i class="fas fa-ellipsis-h"></i>
-                </router-link>
-                <router-link
-                  v-if="$can('update', story)"
-                  :to="{ name : 'news.update', params : { id : story.id }}"
-                  class="uk-icon-button uk-link-reset"
-                >
-                  <i class="fas fa-edit"></i>
-                </router-link>
-                <a
-                  v-if="$can('delete', story)"
-                  @click="deleteStory"
-                  class="uk-icon-button uk-link-reset"
-                >
-                  <i class="fas fa-trash"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+       v-html="story.content.html_summary"
+       >
       </div>
+    </div>
+    <div style="grid-area: news-card-tools;justify-self:right">
+      <router-link
+        v-if="story.content"
+        class="kwai-icon-button kwai-light"
+        :to="contentLink"
+      >
+        <i class="fas fa-ellipsis-h"></i>
+      </router-link>
+      <router-link
+        v-if="$can('update', story)"
+        :to="{ name : 'news.update', params : { id : story.id }}"
+        class="kwai-icon-button kwai-light"
+      >
+        <i class="fas fa-edit"></i>
+      </router-link>
+      <a
+        v-if="$can('delete', story)"
+        @click="deleteStory"
+        class="kwai-icon-button kwai-light"
+      >
+        <i class="fas fa-trash"></i>
+      </a>
     </div>
   </div>
 </template>
@@ -146,18 +110,6 @@ export default {
         }
       };
     },
-    widthClass() {
-      if (this.story.overview_picture) {
-        return {
-          'uk-width-2-3@s': true,
-          'uk-width-3-5@m': true,
-          'uk-width-4-6@l': true
-        };
-      }
-      return {
-        'uk-width-1-1': true
-      };
-    }
   },
   methods: {
     deleteStory() {

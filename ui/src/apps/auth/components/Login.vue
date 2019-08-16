@@ -42,7 +42,7 @@
       v-if="isLoggedIn"
       class="uk-inline"
     >
-      <a class="uk-icon-button uk-link-reset">
+      <a class="kwai-icon-button">
         <i class="fas fa-user"></i>
       </a>
       <div uk-dropdown="mode: click">
@@ -64,7 +64,7 @@
       v-else
       class="uk-inline"
     >
-      <a class="uk-icon-button uk-link-reset" @click="login">
+      <a class="kwai-icon-button" @click="login">
         <i class="fas fa-lock"></i>
       </a>
     </div>

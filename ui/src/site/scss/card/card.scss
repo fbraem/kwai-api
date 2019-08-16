@@ -7,10 +7,8 @@ $cardTextLineHeight: 1.7em;
 $cardTitleLineHeight: 1.7em;
 $cardPadding: 20px;
 $margin: 20px;
-$darkBG: #454837;
 $titleBorderColor: rgba(0, 0, 0, 0.1);
 $imgHeight: 150px;
-$boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
 
 // media query mixins
 @mixin m {
@@ -25,9 +23,31 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     $card: &;
     background: $cardBGDefault;
     padding: $cardPadding;
-    border-radius: $cardRadius;
-    box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    position: relative;
+
+    #{$card}-link {
+        position:absolute;
+        top: 0;
+        bottom: 0;
+        left:0;
+        right:0;
+    }
+
+    &.hover:hover {
+        box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3);
+        cursor: pointer;
+        z-index: 100;
+        height: 100%;
+    }
+
+    &.round {
+        border-radius: $cardRadius;
+    }
+
+    &.shadow {
+        box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
+    }
 
     &-text {
         line-height: $cardTextLineHeight;
@@ -47,8 +67,8 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
     }
 
     &.bg {
-        background: $darkBG;
-        color: white;
+        background: kwai-color("primary", "dark");
+        color: kwai-color("primary", "over");
     }
 
     &.simple {
@@ -146,7 +166,7 @@ $boxShadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.1);
             padding: 0;
 
             #{$card}-title {
-                background: $darkBG;
+                background: kwai-color("primary", "dark");
                 padding: $cardPadding;
                 color: white;
                 margin-bottom: 0;

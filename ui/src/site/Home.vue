@@ -1,95 +1,73 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <section class="uk-section uk-section-small uk-section-muted uk-visible@m">
-      <div class="uk-container uk-container-large">
-        <div class="uk-margin uk-text-center uk-child-width-1-2@m uk-child-width-1-4@l uk-grid-medium uk-grid-match uk-flex uk-flex-center" uk-height-match=".uk-card" uk-grid>
-          <div>
-            <Card :to="{ name : 'news.browse' }" title="Nieuws">
-              <template slot="icon">
-                <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
-              </template>
-              <template slot="description">
-                Blijf op de hoogte over het reilen en zeilen van onze club.
-              </template>
-            </Card>
-          </div>
-          <div>
-            <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
-              <template slot="icon">
-                <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
-              </template>
-              <template slot="description">
-                Bekijk onze kalender voor trainingen, activiteiten en tornooien
-              </template>
-            </Card>
-          </div>
-          <div v-for="category in categories" :key="category.id">
-            <CategoryCard :category="category" />
-          </div>
+  <div style="padding:20px;">
+    <div class="icon-card-container kwai-hide-mobile">
+      <div class="icon-card-item">
+        <Card :to="{ name : 'news.browse' }" title="Nieuws">
+          <template slot="icon">
+            <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
+          </template>
+          <template slot="description">
+            Blijf op de hoogte over het reilen en zeilen van onze club.
+          </template>
+        </Card>
+      </div>
+      <div class="icon-card-item">
+        <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+          <template slot="icon">
+            <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
+          </template>
+          <template slot="description">
+            Bekijk onze kalender voor activiteiten en tornooien
+          </template>
+        </Card>
+      </div>
+      <div v-for="category in categories" :key="category.id" class="icon-card-item">
+        <CategoryCard :category="category" />
+      </div>
+    </div>
+    <div class="kwai-hide-from-tablet">
+      <div class="icon-card-container">
+        <div class="icon-card-item">
+          <Card :to="{ name : 'news.browse' }" title="Nieuws">
+            <template slot="icon">
+              <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
+            </template>
+            <template slot="description">
+              Blijf op de hoogte over het reilen en zeilen van onze club.
+            </template>
+          </Card>
+        </div>
+        <div class="icon-card-item">
+          <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+            <template slot="icon">
+              <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
+            </template>
+            <template slot="description">
+              Bekijk onze kalender voor activiteiten en tornooien
+            </template>
+          </Card>
         </div>
       </div>
-    </section>
-    <section class="uk-section uk-section-small uk-section-muted uk-hidden@m">
-      <div class="uk-container uk-container-large">
-        <div class="uk-margin uk-child-width-1-2@m uk-child-width-1-4@l uk-grid-medium uk-grid-match uk-flex uk-flex-center" uk-height-match=".uk-card" uk-grid>
-          <div class="uk-text-center">
-            <Card :to="{ name : 'news.browse' }" title="Nieuws">
-              <template slot="icon">
-                <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
-              </template>
-              <template slot="description">
-                Blijf op de hoogte over het reilen en zeilen van onze club.
-              </template>
-            </Card>
-          </div>
-          <div class="uk-text-center">
-            <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
-              <template slot="icon">
-                <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
-              </template>
-              <template slot="description">
-                Bekijk onze kalender voor trainingen, activiteiten en tornooien
-              </template>
-            </Card>
-          </div>
-          <div>
-            <Spinner v-if="$wait.is('categories.browse')" />
-            <CategoryList v-if="categories" :categories="categories" />
-          </div>
-        </div>
+      <CategoryList v-if="categories" :categories="categories" />
+    </div>
+    <h4 class="kwai-header-line">
+      Belangrijk Nieuws
+    </h4>
+    <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    <Spinner v-if="$wait.is('news.browse')"/>
+    <div class="news-card-container">
+      <div v-for="story in stories" :key="story.id" class="news-card-item">
+        <NewsCard :story="story" @deleteStory="deleteStory"></NewsCard>
       </div>
-    </section>
-    <section class="uk-section uk-section-small">
-      <div class="uk-container uk-container-large">
-        <div uk-grid>
-          <Spinner v-if="$wait.is('news.browse')"/>
-          <div v-else uk-grid>
-            <div class="uk-width-1-1">
-              <h4 class="uk-heading-line uk-text-bold" id="newsgrid">
-                <span>Belangrijk Nieuws</span>
-              </h4>
-            </div>
-            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
-            <div>
-              <div class="uk-child-width-1-1@s uk-child-width-1-2@m" uk-grid>
-                <NewsCard v-for="story in stories" :story="story" :key="story.id" @deleteStory="deleteStory"></NewsCard>
-              </div>
-            </div>
-            <div style="clear:both"></div>
-            <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
-            <div>
-              <router-link class="uk-button uk-button-default" :to="{ name : 'news.browse' }">
-                {{ $t('more_news') }}
-              </router-link>
-            </div>
-            <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
-              {{ $t('are_you_sure') }}
-            </AreYouSure>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
+    <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    <router-link class="uk-button uk-button-default" :to="{ name : 'news.browse' }">
+      {{ $t('more_news') }}
+    </router-link>
+    <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
+      {{ $t('are_you_sure') }}
+    </AreYouSure>
     <section class="uk-section uk-section-small">
       <div class="uk-container">
         <div class="uk-child-width-1-2@m uk-grid-small uk-grid-match" uk-grid>
@@ -178,7 +156,33 @@
     </div>
 </template>
 
-<style>
+<style lang=scss>
+@import "./scss/_mq.scss";
+.news-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include mq($from: wide) {
+        & .news-card-item {
+            width: 30%;
+        }
+    }
+    @include mq($from: desktop, $until: wide) {
+        & .news-card-item {
+            width: 40%;
+        }
+    }
+    @include mq($from: mobile, $until: desktop) {
+        & .news-card-item {
+            width: 100%;
+        }
+    }
+}
+.news-card-item {
+  margin: 20px;
+}
+
 .message-card {
     background-color:#607d8b;
 }

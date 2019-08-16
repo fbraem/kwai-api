@@ -1,4 +1,263 @@
 $prefix: "kwai-";
 
+$kwai-color-white: #ffffff !default;
+$kwai-color-primary: #4e91e4 !default;
+$kwai-color-dark: #222;
+
+$kwai-color-palette: (
+    "primary": (
+        "dark": darken($kwai-color-primary, 20%),
+        "base": $kwai-color-primary,
+        "light": lighten($kwai-color-primary, 20%),
+        "over": $kwai-color-white
+    ),
+    "red" : (
+        "dark": darken(rgb(198, 28, 24), 20%),
+        "base": rgb(198, 28, 24),
+        "light": lighten(rgb(198, 28, 24), 20%),
+        "over": rgba(255,255,255,.7)
+    ),
+    "dark" : (
+        "dark" : darken($kwai-color-dark, 20%),
+        "base" : $kwai-color-dark,
+        "light": lighten($kwai-color-dark, 20%),
+        "over": $kwai-color-white
+    ),
+    "light": (
+        "dark": #cbd8e6,
+        "base": #dde5ee,
+        "light": #eef2f7,
+        "over": $kwai-color-dark
+    )
+);
+$kwai-colors : ("primary", "red", "dark", "light");
+
+//Get a color from the color palette
+@function kwai-color($color, $index: "base") {
+    //Check for white color
+    @if $color == "white" {
+        @return $kwai-color-white;
+    }
+    $list: map-get($kwai-color-palette, "#{$color}");
+    $value: map-get($list, "#{$index}");
+    @return $value;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+
+body {
+    font-family: "Segoe UI", "Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+
+@import "_mq.scss";
 @import "grid/gridlex.scss";
 @import "card/card.scss";
+@import "elements/_button.scss";
+@import "elements/_badge.scss";
+
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 80px auto auto 100px;
+    grid-template-areas:
+        "main-header"
+        "main-hero"
+        "main-content"
+        "main-footer"
+    ;
+}
+
+$main-header-color: "red";
+
+.main-header {
+    grid-area: main-header;
+    background-color: kwai-color($main-header-color);
+    color: kwai-color($main-header-color, "over");
+}
+
+.toolbar-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "toolbar-left toolbar-middle toolbar-right";
+    grid-gap: 1rem;
+    & .kwai-icon-button {
+        color: kwai-color($main-header-color, "over");
+        &:hover {
+            background-color: kwai-color($main-header-color, "light");
+        }
+    }
+}
+
+a {
+    color: kwai-color('primary');
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.kwai-link-reset {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.main-hero {
+    background-color: kwai-color('dark');
+}
+
+.hero-container {
+    background-color: kwai-color('dark');
+    color: kwai-color('dark', 'over') !important;
+    display: grid;
+    grid-gap: 10px;
+    padding: 20px;
+    @include mq($from: desktop) {
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "hero-image hero-text"
+        ;
+    }
+    @include mq($from: mobile, $until: desktop) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "hero-image"
+            "hero-text"
+        ;
+    }
+
+    h1, h2 {
+        color: kwai-color('dark', 'over');
+    }
+}
+
+.icon-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    @include mq($from: desktop) {
+        & .icon-card-item {
+            width: 25%;
+        }
+    }
+    @include mq($from: tablet, $until: desktop) {
+        & .icon-card-item {
+            width: 50%;
+        }
+    }
+    @include mq($from: mobile, $until: tablet) {
+        & .icon-card-item {
+            width: 100%;
+        }
+    }
+}
+
+@include mq($until: tablet) {
+    .#{$prefix}hide-mobile {
+        display: none;
+    }
+}
+
+@include mq($from: tablet, $until: desktop) {
+    .#{$prefix}hide-tablet {
+        display: none;
+    }
+}
+
+@include mq($from: tablet) {
+    .#{$prefix}hide-from-tablet {
+        display: none;
+    }
+}
+
+.#{$prefix}header-line {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    &:after {
+        content: '';
+        border-top: 1px solid #e5e5e5;
+        margin: 0 20px 0 20px;
+        flex: 1 0 20px;
+    }
+}
+
+.#{$prefix}news-card {
+    height: 100%;
+    box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3);
+    padding:10px;
+    display: grid;
+    grid-gap: 10px;
+
+    @include mq($from: tablet) {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+            "news-card-title news-card-title"
+            "news-card-image news-card-content"
+            "news-card-image news-card-tools"
+        ;
+    }
+    @include mq($from: mobile, $until: tablet) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-areas:
+            "news-card-title"
+            "news-card-image"
+            "news-card-content"
+            "news-card-tools"
+        ;
+    }
+}
+
+.news-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include mq($from: wide) {
+        & .news-card-item {
+            width: 30%;
+        }
+    }
+    @include mq($from: desktop, $until: wide) {
+        & .news-card-item {
+            width: 40%;
+        }
+    }
+    @include mq($from: mobile, $until: desktop) {
+        & .news-card-item {
+            width: 100%;
+        }
+    }
+}
+
+.news-card-item {
+  margin: 20px;
+}
+
+.page-container {
+    display: grid;
+    grid-gap: 10px;
+    padding: 20px;
+    @include mq($from: desktop) {
+        grid-template-columns: 3fr 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "page-content page-sidebar"
+        ;
+    }
+    @include mq($from: mobile, $until: desktop) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "page-content"
+            "page-sidebar"
+        ;
+    }
+}

@@ -1,10 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
+  <div class="page-container">
+    <div style="grid-area: page-content">
       <slot></slot>
     </div>
-    <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
+    <div style="grid-area: page-sidebar">
       <CategoryList
         v-if="categories"
         :categories="categories"

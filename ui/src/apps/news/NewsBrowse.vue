@@ -1,64 +1,90 @@
 <template>
-  <div>
-    <Page>
-      <Spinner v-if="$wait.is('news.browse')" />
+  <Page>
+    <Spinner v-if="$wait.is('news.browse')" />
+    <div
+      v-else
+    >
       <div
-        v-else
-        uk-grid
+        v-if="storiesMeta"
       >
-        <div
-          v-if="storiesMeta"
-          class="uk-width-1-1"
-        >
-          <Paginator
-            :count="storiesMeta.count"
-            :limit="storiesMeta.limit"
-            :offset="storiesMeta.offset"
-            @page="readPage"
-          />
-        </div>
-        <div
-          class="uk-child-width-1-1@s uk-child-width-1-2@xl"
-          uk-grid
-        >
-          <NewsCard
+        <Paginator
+          :count="storiesMeta.count"
+          :limit="storiesMeta.limit"
+          :offset="storiesMeta.offset"
+          @page="readPage"
+        />
+      </div>
+      <div class="news-card-container">
+         <div
             v-for="story in stories"
             :key="story.id"
-            :story="story"
-            @deleteStory="deleteStory"
-          />
-        </div>
-        <div
-          v-if="storiesMeta"
-          class="uk-width-1-1"
-        >
-          <Paginator
-            :count="storiesMeta.count"
-            :limit="storiesMeta.limit"
-            :offset="storiesMeta.offset"
-            @page="readPage"
-          />
-        </div>
+            class="news-card-item"
+          >
+            <NewsCard
+              :story="story"
+              @deleteStory="deleteStory"
+            />
+          </div>
       </div>
       <div
-        v-if="! $wait.is('news.browse') && newsCount == 0"
-        class="uk-width-1-1"
+        v-if="storiesMeta"
       >
-        <div uk-alert>
-          {{ $t('no_news') }}
-        </div>
+        <Paginator
+          :count="storiesMeta.count"
+          :limit="storiesMeta.limit"
+          :offset="storiesMeta.offset"
+          @page="readPage"
+        />
       </div>
-      <AreYouSure
-        id="delete-story"
-        :yes="$t('delete')"
-        :no="$t('cancel')"
-        @sure="doDeleteStory"
-      >
-        {{ $t('are_you_sure') }}
-      </AreYouSure>
-    </Page>
-  </div>
+    </div>
+    <div
+      v-if="! $wait.is('news.browse') && newsCount == 0"
+    >
+      <div uk-alert>
+        {{ $t('no_news') }}
+      </div>
+    </div>
+    <AreYouSure
+      id="delete-story"
+      :yes="$t('delete')"
+      :no="$t('cancel')"
+      @sure="doDeleteStory"
+    >
+      {{ $t('are_you_sure') }}
+    </AreYouSure>
+  </Page>
 </template>
+
+<style lang=scss>
+@import "@/site/scss/_mq.scss";
+.news-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include mq($from: wide) {
+        & .news-card-item {
+            width: 45%;
+        }
+    }
+    @include mq($from: mobile, $until: wide) {
+        & .news-card-item {
+            width: 100%;
+        }
+    }
+}
+.news-card-item {
+  margin: 20px;
+}
+
+.message-card {
+    background-color:#607d8b;
+}
+.message-card h3 {
+    color: white!important;
+}
+</style>
+
 
 <script>
 import Page from './Page.vue';
