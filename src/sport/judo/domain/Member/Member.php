@@ -6,7 +6,7 @@ class Member extends \Cake\ORM\Entity
 {
     use \Domain\DatetimeMetaTrait;
 
-    protected $_hidden = ['person'];
+    protected $_hidden = ['person', 'trainings'];
 
     public function _getLicenseEndDate($value)
     {

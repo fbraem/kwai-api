@@ -33,11 +33,14 @@ class BrowseAction
             ' ',
             'Person.firstname' => 'identifier'
         ]);
-        $query->contain([
+
+        $contain = [
             'Person',
             'Person.Contact',
             'Person.Nationality'
-        ]);
+        ];
+
+        $query->contain($contain);
 
         if (isset($parameters['filter']['name'])) {
             $query->where(function ($exp) use ($concat, $parameters) {

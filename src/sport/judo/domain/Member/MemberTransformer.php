@@ -4,12 +4,15 @@ namespace Judo\Domain\Member;
 
 use League\Fractal;
 
+use Domain\Person\PersonTransformer;
+
 class MemberTransformer extends Fractal\TransformerAbstract
 {
     private static $type = 'members';
 
     protected $defaultIncludes = [
-        'person'
+        'person',
+        'trainings'
     ];
 
     public static function createForItem(Member $member)
@@ -33,7 +36,15 @@ class MemberTransformer extends Fractal\TransformerAbstract
     {
         $person = $member->person;
         if ($person) {
-            return \Domain\Person\PersonTransformer::createForItem($person);
+            return PersonTransformer::createForItem($person);
+        }
+    }
+
+    public function includeTrainings(Member $member)
+    {
+        $trainings = $member->trainings;
+        if ($trainings) {
+            return TrainingParticipationsTransformer::createForCollection($trainings);
         }
     }
 }

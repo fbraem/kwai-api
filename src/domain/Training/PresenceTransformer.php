@@ -6,6 +6,7 @@ use League\Fractal;
 
 //TODO; make it sport independent
 use Judo\Domain\Member\Member;
+use Domain\Training\Training;
 
 class PresenceTransformer extends Fractal\TransformerAbstract
 {
@@ -33,11 +34,11 @@ class PresenceTransformer extends Fractal\TransformerAbstract
         }
     }
 
-    public function transform(Member $member)
+    public function transform($obj)
     {
-        $result = $member->toArray();
+        $result = $obj->toArray();
         unset($result['_joinData']);
-        $result['presence_remark'] = $member['_joinData']['remark'];
+        $result['presence_remark'] = $obj['_joinData']['remark'];
         return $result;
     }
 }
