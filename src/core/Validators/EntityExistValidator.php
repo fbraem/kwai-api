@@ -7,14 +7,12 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 class EntityExistValidator implements ValidatorInterface
 {
     private $path;
-    private $data;
     private $table;
     private $required;
 
     public function __construct($path, $table, $required = false)
     {
         $this->path = $path;
-        $this->data = $data;
         $this->table = $table;
         $this->required = $required;
     }
