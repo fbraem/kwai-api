@@ -5,9 +5,9 @@
         :to="storyLink"
         class="uk-link-reset"
       >
-        <h6 class="uk-h6 uk-margin-small-bottom">
+        <h5>
           {{ story.content.title }}
-        </h6>
+        </h5>
         <div class="uk-text-meta uk-text-truncate">
           {{ story.content.summary }}
         </div>

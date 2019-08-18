@@ -2,36 +2,20 @@
   <!-- eslint-disable max-len -->
   <div>
     <Page>
-      <div v-if="$wait.is('news.read')" class="uk-flex-center" uk-grid>
-        <div class="uk-text-center">
-          <i class="fas fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-      <article v-if="story" class="uk-section uk-section-small uk-padding-remove-top">
-        <div uk-grid class="uk-margin">
-          <div class="uk-width-expand">
-            <blockquote>
-              <div v-html="story.content.html_summary"></div>
-            </blockquote>
-          </div>
-        </div>
+      <Spinner v-if="$wait.is('news.read')" />
+      <article v-if="story">
+        <blockquote>
+          <div v-html="story.content.html_summary"></div>
+        </blockquote>
         <div class="news-content" v-html="story.content.html_content">
         </div>
         <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
         {{ $t('are_you_sure') }}
         </AreYouSure>
-        <div uk-grid class="uk-margin">
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-1-1@s uk-width-auto@m">
-            <div class="uk-flex uk-flex-right">
-              <vue-goodshare-facebook style="text-decoration:none"
-                :title_social="$t('share')"
-                :page_url="facebookUrl"
-                has_icon />
-            </div>
-          </div>
-        </div>
+        <vue-goodshare-facebook style="text-decoration:none"
+          :title_social="$t('share')"
+          :page_url="facebookUrl"
+          has_icon />
       </article>
     </Page>
   </div>
@@ -94,12 +78,14 @@ import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 
 import Page from './Page.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
+import Spinner from '@/components/Spinner';
 
 export default {
   components: {
     Page,
     AreYouSure,
-    VueGoodshareFacebook
+    VueGoodshareFacebook,
+    Spinner
   },
   i18n: messages,
   computed: {

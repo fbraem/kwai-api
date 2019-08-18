@@ -1,74 +1,43 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div
-      v-if="picture"
-      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
-    >
-      <div>
-        <img :src="picture" />
-      </div>
+  <div class="hero-container">
+    <div v-if="picture">
+      <img :src="picture" />
     </div>
-    <div
-      class="uk-width-1-1"
-      :class="contentClass"
-    >
-      <div
-        v-if="story"
-        uk-grid
-      >
-        <div class="uk-width-expand">
-          <div class="uk-card uk-card-body">
-            <div
-              class="uk-card-badge uk-label"
-              style="font-size: 0.75rem;background-color:#c61c18;color:white"
-            >
-              <router-link
-                :to="categoryNewsLink"
-                class="uk-link-reset"
-              >
-                {{ story.category.name }}
-              </router-link>
-            </div>
-            <div class="uk-light">
-              <h1 class="uk-margin-remove">
-                {{ $t('news')}}
-              </h1>
-              <h2 class="uk-margin-remove">
-                {{ story.content.title }}
-              </h2>
-              <div
-                v-if="story.publish_date"
-                class="uk-article-meta"
-              >
-                {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
-              </div>
-            </div>
-          </div>
+    <div v-if="story">
+      <div class="kwai-badge kwai-theme-secondary">
+        <router-link
+          class="kwai-link-reset"
+          :to="categoryNewsLink"
+        >
+          {{ story.category.name }}
+        </router-link>
+      </div>
+      <div>
+        <h1>{{ $t('news')}}</h1>
+        <h2>{{ story.content.title }}</h2>
+        <div
+          v-if="story.publish_date"
+          class="kwai-article-meta"
+        >
+          {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
         </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <div v-if="$can('update', story)" class="uk-margin-small-left">
-              <router-link
-                :to="storyLink"
-                class="uk-icon-button uk-link-reset"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </div>
-            <div
-              v-if="$can('delete', story)"
-              class="uk-margin-small-left"
-            >
-              <a
-                uk-toggle="target: #delete-story"
-                class="uk-icon-button uk-link-reset"
-              >
-                <i class="fas fa-trash"></i>
-              </a>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end;flex-flow:row;padding:5px">
+        <router-link
+          v-if="$can('update', story)"
+          :to="storyLink"
+          class="kwai-icon-button kwai-theme-muted"
+        >
+          <i class="fas fa-edit"></i>
+        </router-link>
+        <a
+          v-if="$can('delete', story)"
+          class="kwai-icon-button kwai-theme-muted"
+          style="margin-left: 5px;"
+        >
+          <i class="fas fa-trash"></i>
+        </a>
       </div>
     </div>
   </div>
@@ -88,13 +57,6 @@ export default {
         return this.story.detail_picture;
       }
       return null;
-    },
-    contentClass() {
-      return {
-        'uk-width-1-2@m': this.picture != null,
-        'uk-width-1-3@l': this.picture != null,
-        'uk-width-2-5@xl': this.picture != null
-      };
     },
     storyLink() {
       return {

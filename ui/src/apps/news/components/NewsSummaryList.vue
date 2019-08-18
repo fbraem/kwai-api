@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="uk-grid-small uk-grid-divider"
-    uk-grid
-  >
+  <div style="display:flex; flex-direction:column;">
     <div
       v-for="story in stories"
-      class="uk-width-1-1"
       :key="story.id"
     >
       <NewsSummaryListItem :story="story" />

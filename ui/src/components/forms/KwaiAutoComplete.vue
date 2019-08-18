@@ -4,8 +4,8 @@
       v-model="search"
       :id="id"
       :name="id"
-      class="uk-input"
-      :class="{ 'uk-form-danger' : field.errors.length > 0 }"
+      class="kwai-input"
+      :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
       type="search"
       :required="field.required"
       v-bind="$attrs"
@@ -20,7 +20,7 @@
       v-show="isOpen"
     >
       <li v-if="isLoading">
-        <div class="uk-text-center">
+        <div class="kwai-text-center">
           <i class="fas fa-spinner fa-2x fa-spin"></i>
         </div>
       </li>

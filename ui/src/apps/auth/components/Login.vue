@@ -42,7 +42,7 @@
       v-if="isLoggedIn"
       class="uk-inline"
     >
-      <a class="kwai-icon-button">
+      <a class="kwai-icon-button kwai-theme-secondary">
         <i class="fas fa-user"></i>
       </a>
       <div uk-dropdown="mode: click">

@@ -1,15 +1,5 @@
-.kwai-icon-button {
+.#{$prefix}icon-button {
     border: none;
-    @each $color in $kwai-colors {
-        &.#{$prefix}#{$color} {
-            background-color: kwai-color($color, "light");
-            color: kwai-color($color, "over");
-            &:hover {
-                background-color: kwai-color($color, "dark");
-                //color: kwai-color($color, "over");
-            }
-        }
-    }
     font-size: 16px;
     width: 36px;
     height: 36px;
@@ -20,5 +10,54 @@
     display: inline-flex;
     vertical-align: middle;
     text-decoration: none !important;
-    color: inherit !important;
+    color: inherit;
+
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
+            background-color: kwai-color($color);
+            color: kwai-color($color, 'text');
+            &:hover {
+                background-color: kwai-color($color, 'dark');
+                color: kwai-color($color, 'text');
+            }
+        }
+    }
+}
+
+.#{$prefix}button {
+    margin: 0;
+    border: none;
+    overflow: visible;
+    font: inherit;
+    color: inherit;
+    text-transform: none;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 30px;
+    line-height: 38px;
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    background-color: transparent;
+    border: 1px solid kwai-color('muted');
+    &:hover {
+        cursor: pointer;
+        border: 1px solid kwai-color('muted', 'dark');
+    }
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
+            background-color: kwai-color($color);
+            color: kwai-color($color, 'text');
+            border: none;
+            &:hover {
+                background-color: kwai-color($color, 'dark');
+                border: none;
+            }
+        }
+    }
+    &:disabled {
+        background-color: kwai-color('muted');
+        color: kwai-color('muted', 'text');
+        border: none;
+    }
 }

@@ -1,0 +1,23 @@
+$kwai-alert-padding-top: 10px;
+$kwai-alert-padding-bottom: 10px;
+$kwai-alert-padding-left: 15px;
+$kwai-alert-padding-right: 30px;
+
+.#{$prefix}alert {
+    display: block;
+    padding-top: $kwai-alert-padding-top;
+    padding-bottom: $kwai-alert-padding-bottom;
+    padding-left: $kwai-alert-padding-left;
+    padding-right: $kwai-alert-padding-right;
+    line-height: 1.5;
+    position: relative;
+    background-color: kwai-color('muted', 'light');
+    color: kwai-color('muted', 'dark');
+
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
+            background-color: kwai-color($color);
+            color: kwai-color($color, 'dark');
+        }
+    }
+}

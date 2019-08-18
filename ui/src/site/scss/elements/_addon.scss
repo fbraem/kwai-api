@@ -1,0 +1,44 @@
+// https://philipwalton.github.io/solved-by-flexbox/demos/input-add-ons/
+
+//TODO: use theme color
+.#{$prefix}addon {
+  display: flex;
+  margin-bottom: 1.5em;
+
+  &-field {
+      flex: 1;
+      border: 1px solid rgba(147, 128, 108, 0.25);
+      padding: 0.5em 0.75em;
+
+      &:not(:first-child) {
+        border-left: 0;
+      }
+
+      &:not(:last-child) {
+        border-right: 0;
+      }
+
+      &:first-child {
+          border-radius: 2px 0 0 2px;
+      }
+      &:last-child {
+        border-radius: 0 2px 2px 0;
+      }
+  }
+
+  &-item {
+      background-color: rgba(147, 128, 108, 0.1);
+      color: #666666;
+      font: inherit;
+      font-weight: normal;
+      border: 1px solid rgba(147, 128, 108, 0.25);
+      padding: 0.5em 0.75em;
+
+      &:first-child {
+          border-radius: 2px 0 0 2px;
+      }
+      &:last-child {
+        border-radius: 0 2px 2px 0;
+      }
+  }
+}

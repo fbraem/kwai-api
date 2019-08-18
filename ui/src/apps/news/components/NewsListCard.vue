@@ -1,38 +1,26 @@
 <template>
-  <div class="uk-card uk-card-default uk-card-small">
-    <div class="uk-card-media-top uk-cover-container">
-      <img
-        :src="require('@/apps/news/images/exclamation-point-2620923_1920.jpg')"
-        alt=""
-        uk-cover
-      />
-      <canvas height="150"></canvas>
+  <!-- eslint-disable max-len -->
+  <div style="border: 1px solid #d3d3d3; border-radius: .25rem;">
+    <div :style="'background-size: cover; min-height:150px; background-position: center; background-color: #ccc; background-image:url(' + require('@/apps/news/images/exclamation-point-2620923_1920.jpg') + ')'">
     </div>
-    <div class="uk-card-body">
-      <h3 class="uk-card-title">{{ $t('featured_news') }}</h3>
+    <div style="padding:15px">
+      <h3>{{ $t('featured_news') }}</h3>
       <NewsSummaryList
         v-if="hasStories"
         :stories="stories"
       />
       <div
         v-else
-        class="uk-grid-small"
-        uk-grid
       >
-        <div class="uk-width-1-1 uk-text-meta">
+        <div class="kwai-text-meta">
           {{ $t('no_featured_news') }}
         </div>
-        <div class="uk-width-1-1 uk-text-small">
+        <div class="kwai-text-small">
           <router-link :to="oldNewsLink">
             {{ $t('see_old_news') }}
           </router-link>
         </div>
       </div>
-    </div>
-    <div class="uk-card-footer">
-      <router-link :to="{ name: 'news.browse' }">
-        {{ $t('more_news')}}
-      </router-link>
     </div>
   </div>
 </template>

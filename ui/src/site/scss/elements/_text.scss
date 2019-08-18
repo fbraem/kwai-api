@@ -1,0 +1,21 @@
+@each $color in map-keys($kwai-color-palette) {
+    #{$prefix}text-#{$color} {
+        color: kwai-color($color, 'base');
+    }
+}
+
+.#{$prefix}text-meta {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: #999;
+
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
+            color: kwai-color($color, 'base');
+        }
+    }
+}
+
+.#{$prefix}text-small {
+    font-size: .875rem;
+}

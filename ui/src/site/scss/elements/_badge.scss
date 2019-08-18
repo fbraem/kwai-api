@@ -14,10 +14,10 @@ $kwai-badge-height: 19px;
     &-rounded {
         border-radius: 15px;
     }
-    @each $color in $kwai-colors {
-        &#{&}-#{$color} {
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
             background-color: kwai-color($color);
-            color: kwai-color($color, "over");
+            color: kwai-color($color, 'text');
         }
     }
 }

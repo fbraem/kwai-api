@@ -11,7 +11,7 @@
         <div style="grid-area:toolbar-middle">
         </div>
         <div style="grid-area:toolbar-right;align-self:center;display:flex;margin-right:5px">
-          <a :href="facebook" class="kwai-icon-button" style="margin-right:5px;">
+          <a :href="facebook" class="kwai-icon-button kwai-theme-secondary" style="margin-right:5px;">
             <i class="fab fa-facebook-f"></i>
           </a>
           <Login />

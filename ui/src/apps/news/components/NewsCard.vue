@@ -25,11 +25,11 @@
     </div>
     <div style="grid-area: news-card-content">
       <div v-if="showCategory"
-        class="kwai-badge kwai-badge-red"
+        class="kwai-badge kwai-theme-secondary"
       >
         <router-link
           :to="categoryLink"
-          class="uk-link-reset">
+          class="kwai-link-reset">
           {{ story.category.name }}
         </router-link>
       </div>
@@ -41,7 +41,7 @@
     <div style="grid-area: news-card-tools;justify-self:right">
       <router-link
         v-if="story.content"
-        class="kwai-icon-button kwai-light"
+        class="kwai-icon-button kwai-theme-muted"
         :to="contentLink"
       >
         <i class="fas fa-ellipsis-h"></i>
@@ -49,14 +49,14 @@
       <router-link
         v-if="$can('update', story)"
         :to="{ name : 'news.update', params : { id : story.id }}"
-        class="kwai-icon-button kwai-light"
+        class="kwai-icon-button kwai-theme-muted"
       >
         <i class="fas fa-edit"></i>
       </router-link>
       <a
         v-if="$can('delete', story)"
         @click="deleteStory"
-        class="kwai-icon-button kwai-light"
+        class="kwai-icon-button kwai-theme-muted"
       >
         <i class="fas fa-trash"></i>
       </a>

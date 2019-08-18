@@ -40,7 +40,7 @@
     <div
       v-if="! $wait.is('news.browse') && newsCount == 0"
     >
-      <div uk-alert>
+      <div class="kwai-alert">
         {{ $t('no_news') }}
       </div>
     </div>
