@@ -157,32 +157,6 @@
 </template>
 
 <style lang=scss>
-@import "./scss/_mq.scss";
-.news-card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    @include mq($from: wide) {
-        & .news-card-item {
-            width: 30%;
-        }
-    }
-    @include mq($from: desktop, $until: wide) {
-        & .news-card-item {
-            width: 40%;
-        }
-    }
-    @include mq($from: mobile, $until: desktop) {
-        & .news-card-item {
-            width: 100%;
-        }
-    }
-}
-.news-card-item {
-  margin: 20px;
-}
-
 .message-card {
     background-color:#607d8b;
 }
