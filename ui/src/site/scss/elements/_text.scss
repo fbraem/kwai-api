@@ -18,4 +18,12 @@
 
 .#{$prefix}text-small {
     font-size: .875rem;
+    line-height: 1.4;
+}
+
+.#{$prefix}text-truncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 0;
 }
