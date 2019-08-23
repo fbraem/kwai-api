@@ -2,10 +2,14 @@ $prefix: "kwai-";
 
 @import "_theme.scss";
 
+:root {
+    --#{$prefix}line-height: 1.5em;
+}
+
 * {
     margin: 0;
     box-sizing: border-box;
-    line-height: 1.5;
+    line-height: var(--#{$prefix}line-height);
 }
 
 body {
