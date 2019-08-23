@@ -1,11 +1,10 @@
 <template>
   <div style="display:flex; flex-direction:column;">
-    <div
+    <NewsSummaryListItem
       v-for="story in stories"
       :key="story.id"
-    >
-      <NewsSummaryListItem :story="story" />
-    </div>
+      :story="story"
+    />
   </div>
 </template>
 
