@@ -3,25 +3,42 @@
     font-size: 16px;
     width: 36px;
     height: 36px;
-    cursor: pointer;
     border-radius: 500px;
     align-items: center;
     justify-content: center;
     display: inline-flex;
     vertical-align: middle;
     text-decoration: none !important;
-    color: inherit;
+    color: inherit !important;
+    &:focus {
+        outline:0;
+    }
+    &:hover {
+        text-decoration: none !important;
+        background-color: kwai-color('default', 'dark');
+        &:disabled {
+            opacity: 0.4;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.4;
+    }
 
     @each $color in map-keys($kwai-color-palette) {
         &.#{$prefix}theme-#{$color} {
             background-color: kwai-color($color);
-            color: kwai-color($color, 'text');
+            color: kwai-color($color, 'text') !important;
             &:hover {
                 background-color: kwai-color($color, 'dark');
                 color: kwai-color($color, 'text');
             }
         }
     }
+}
+
+.#{$prefix}icon-button:not(:disabled) {
+    cursor: pointer;
 }
 
 .#{$prefix}button {
@@ -41,7 +58,6 @@
     background-color: transparent;
     border: 1px solid kwai-color('muted');
     &:hover {
-        cursor: pointer;
         border: 1px solid kwai-color('muted', 'dark');
     }
     @each $color in map-keys($kwai-color-palette) {
@@ -60,4 +76,8 @@
         color: kwai-color('muted', 'text');
         border: none;
     }
+}
+
+.#{$prefix}button:not(:disabled) {
+    cursor: pointer;
 }
