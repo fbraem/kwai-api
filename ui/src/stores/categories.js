@@ -90,7 +90,9 @@ const actions = {
       return category;
     }
 
-    dispatch('wait/start', 'categories.read', { root: true });
+    // For some reason this doesn't work when category.read is called
+    // in a beforeEnter (route)
+    // dispatch('wait/start', 'categories.read', { root: true });
     try {
       var api = new JSONAPI({ source: Category });
       var result = await api.get(id);
@@ -100,7 +102,7 @@ const actions = {
       commit('error', error);
       throw error;
     } finally {
-      dispatch('wait/end', 'categories.read', { root: true });
+      // dispatch('wait/end', 'categories.read', { root: true });
     }
   },
   async readApp({ dispatch, getters, commit }, { app }) {
