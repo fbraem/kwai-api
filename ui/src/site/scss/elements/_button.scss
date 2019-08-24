@@ -59,6 +59,9 @@
     border: 1px solid kwai-color('muted');
     &:hover {
         border: 1px solid kwai-color('muted', 'dark');
+        &:disabled {
+            background-color: kwai-color('muted');
+        }
     }
     @each $color in map-keys($kwai-color-palette) {
         &.#{$prefix}theme-#{$color} {
@@ -68,6 +71,10 @@
             &:hover {
                 background-color: kwai-color($color, 'dark');
                 border: none;
+                &:disabled {
+                    background-color: kwai-color('muted');
+                    color: kwai-color('muted', 'text');
+                }
             }
         }
     }
@@ -80,4 +87,10 @@
 
 .#{$prefix}button:not(:disabled) {
     cursor: pointer;
+}
+
+.#{$prefix}buttons {
+    .#{$prefix}icon-button:not(:last-child) {
+        margin-right: 10px;
+    }
 }
