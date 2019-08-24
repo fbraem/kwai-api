@@ -1,14 +1,12 @@
 <template>
-  <div class="uk-margin-small-left uk-grid-small" uk-grid>
+  <div style="display: flex; flex-direction: column">
     <div>
-      <h4 class="uk-heading-line uk-text-bold">
-        <span>
-          {{ $t('overview') }}
-        </span>
+      <h4 class="kwai-header-line">
+        {{ $t('overview') }}
       </h4>
     </div>
     <div>
-      <ul class="uk-list uk-list-divider">
+      <ul>
         <CategoryListItem
           v-for="(category, index) in categories"
           :category="category"
