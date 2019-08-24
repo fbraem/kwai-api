@@ -6,10 +6,7 @@
     </div>
     <div v-if="story">
       <div class="kwai-badge kwai-theme-secondary">
-        <router-link
-          class="kwai-link-reset"
-          :to="categoryNewsLink"
-        >
+        <router-link :to="categoryNewsLink">
           {{ story.category.name }}
         </router-link>
       </div>

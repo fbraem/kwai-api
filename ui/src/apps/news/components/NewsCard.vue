@@ -4,7 +4,6 @@
     <h3 style="grid-area: news-card-title; margin-bottom:0px">
       <router-link
         v-if="story.content"
-        class="kwai-link-reset"
         :to="contentLink"
       >
         {{ story.content.title }}
@@ -27,9 +26,7 @@
       <div v-if="showCategory"
         class="kwai-badge kwai-theme-secondary"
       >
-        <router-link
-          :to="categoryLink"
-          class="kwai-link-reset">
+        <router-link :to="categoryLink">
           {{ story.category.name }}
         </router-link>
       </div>

@@ -21,3 +21,8 @@ $kwai-badge-height: 19px;
         }
     }
 }
+
+.#{$prefix}badge a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
