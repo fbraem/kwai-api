@@ -3,24 +3,24 @@
   <div style="padding:20px;">
     <div class="icon-card-container kwai-hide-mobile">
       <div class="icon-card-item">
-        <Card :to="{ name : 'news.browse' }" title="Nieuws">
+        <IconCard :to="{ name : 'news.browse' }" title="Nieuws">
           <template slot="icon">
-            <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
+            <i class="fas fa-newspaper fa-2x" style="color:#c61c18;"></i>
           </template>
-          <template slot="description">
+          <template slot="text">
             Blijf op de hoogte over het reilen en zeilen van onze club.
           </template>
-        </Card>
+        </IconCard>
       </div>
       <div class="icon-card-item">
-        <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+        <IconCard to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
           <template slot="icon">
-            <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
+            <i class="fas fa-calendar fa-2x" style="color:#c61c18;"></i>
           </template>
-          <template slot="description">
+          <template slot="text">
             Bekijk onze kalender voor activiteiten en tornooien
           </template>
-        </Card>
+        </IconCard>
       </div>
       <div v-for="category in categories" :key="category.id" class="icon-card-item">
         <CategoryCard :category="category" />
@@ -29,24 +29,24 @@
     <div class="kwai-hide-from-tablet">
       <div class="icon-card-container">
         <div class="icon-card-item">
-          <Card :to="{ name : 'news.browse' }" title="Nieuws">
+          <IconCard :to="{ name : 'news.browse' }" title="Nieuws">
             <template slot="icon">
-              <i class="fas fa-newspaper fa-3x" style="color:#c61c18;height:32px;"></i>
+              <i class="fas fa-newspaper fa-2x" style="color:#c61c18;height:32px;"></i>
             </template>
-            <template slot="description">
+            <template slot="text">
               Blijf op de hoogte over het reilen en zeilen van onze club.
             </template>
-          </Card>
+          </IconCard>
         </div>
         <div class="icon-card-item">
-          <Card to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+          <IconCard to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
             <template slot="icon">
-              <i class="fas fa-calendar fa-3x" style="color:#c61c18;height:32px;"></i>
+              <i class="fas fa-calendar fa-2x" style="color:#c61c18;height:32px;"></i>
             </template>
-            <template slot="description">
+            <template slot="text">
               Bekijk onze kalender voor activiteiten en tornooien
             </template>
-          </Card>
+          </IconCard>
         </div>
       </div>
       <CategoryList v-if="categories" :categories="categories" />
@@ -169,7 +169,7 @@
 import NewsCard from '@/apps/news/components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
 import Spinner from '@/components/Spinner.vue';
-import Card from './Card.vue';
+import IconCard from '@/components/IconCard.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 import CategoryCard from '@/apps/categories/components/CategoryCard.vue';
 import CategoryList from '@/apps/categories/components/CategoryList.vue';
@@ -184,7 +184,7 @@ export default {
     NewsCard,
     Paginator,
     Spinner,
-    Card,
+    IconCard,
     AreYouSure,
     CategoryCard,
     CategoryList

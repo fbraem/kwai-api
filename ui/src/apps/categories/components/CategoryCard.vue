@@ -1,63 +1,31 @@
 <template>
-  <div class="kwai-card profile hover">
-    <router-link
-      class="kwai-card-link"
-      :to="linkToCategory"
-    >
-    </router-link>
-    <div v-if="category.icon_picture" class="kwai-card-image">
-      <img
-        :src="category.icon_picture"
-        style="color:#c61c18;"
-        width="48"
-        height="48"
-        uk-svg
-      />
-    </div>
-    <div class="kwai-card-title">
-      <h4 style="margin:0">
-        {{ category.name }}
-      </h4>
-    </div>
-    <div class="kwai-card-text">
+  <IconCard :to="linkToCategory" :title="category.name">
+    <template v-if="category.icon_picture" slot="icon">
+        <inline-svg
+          :src="category.icon_picture"
+          width="42"
+          height="48"
+          fill="#c61c18"
+        />
+    </template>
+    <template slot="text">
       {{ category.short_description }}
-    </div>
-  </div>
-  <!-- eslint-disable max-len -->
-  <!--
-  <div class="uk-margin-left uk-margin-right">
-    <div
-      class="uk-card uk-card-hover uk-card-body"
-      uk-scrollspy="cls:uk-animation-slide-top-small"
-    >
-      <router-link
-        :to="linkToCategory"
-        class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent"
-      />
-      <img
-        v-if="category.icon_picture"
-        :src="category.icon_picture"
-        style="color:#c61c18;"
-        width="48"
-        height="48"
-        uk-svg
-      />
-      <h4 class="uk-margin">
-        {{ category.name }}
-      </h4>
-      <div class="uk-margin">
-        {{ category.short_description }}
-      </div>
-    </div>
-  </div>
-  -->
+    </template>
+  </IconCard>
 </template>
 
 <script>
+import InlineSvg from 'vue-inline-svg';
+import IconCard from '@/components/IconCard';
+
 /**
  * Component that show a category Card
  */
 export default {
+  components: {
+    InlineSvg,
+    IconCard
+  },
   props: {
     /**
      * The category to show in the card.
