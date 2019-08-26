@@ -1,48 +1,56 @@
 <template>
-  <div
-    :id="id"
-    uk-modal
-    ref="dialog"
-  >
-    <div class="uk-modal-dialog uk-modal-body">
-      <h2 class="uk-modal-title">
+  <div class="kwai-modal" @click.prevent.stop="click">
+    <div class="kwai-modal-container" role="dialog">
+      <header>
         <slot name="title"></slot>
-      </h2>
-      <p>
+      </header>
+      <span
+        class="kwai-modal-close"
+        @click.prevent.stop="close"
+      >
+        &times;
+      </span>
+      <div class="kwai-modal-content">
         <slot></slot>
-      </p>
-      <p class="uk-text-right">
-        <button
-          class="uk-button uk-button-default uk-modal-close"
-          type="button"
+      </div>
+      <footer>
+        <div
+          style="display: flex;justify-content: flex-end; margin-right: 20px;"
+          class="kwai-buttons"
         >
-          <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
-        </button>
-        <button
-          class="uk-button uk-button-danger"
-          type="button"
-          @click="ok"
-        >
-          <i class="fas fa-trash"></i>&nbsp;&nbsp;{{ yes }}
-        </button>
-      </p>
+          <button
+            class="kwai-button"
+            type="button"
+          >
+            <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
+          </button>
+          <button
+            class="kwai-button kwai-theme-danger"
+            type="button"
+            @click="ok"
+          >
+            <i class="fas fa-trash"></i>&nbsp;&nbsp;{{ yes }}
+          </button>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
 
 <script>
-import UIkit from 'uikit';
-
 export default {
   props: [
-    'id',
-    'no',
-    'yes',
+    'no', 'yes',
   ],
   methods: {
     ok() {
-      UIkit.modal(this.$refs.dialog).hide();
       this.$emit('sure');
+    },
+    close() {
+      this.$emit('close');
+    },
+    click() {
+      this.$emit('close');
     }
   }
 };
