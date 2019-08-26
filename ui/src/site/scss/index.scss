@@ -25,6 +25,7 @@ body {
 @import "elements/_button.scss";
 @import "elements/_form.scss";
 @import "elements/_list.scss";
+@import "elements/_modal.scss";
 @import "elements/_text.scss";
 @import "elements/_switch.scss";
 
@@ -69,7 +70,7 @@ a.kwai-link-reset {
     grid-gap: 10px;
     padding: 20px;
     @include mq($from: desktop) {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: fit-content(800px) 1fr;
         grid-template-rows: auto;
         grid-template-areas:
             "hero-image hero-text"
