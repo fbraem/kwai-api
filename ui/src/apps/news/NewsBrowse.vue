@@ -45,7 +45,8 @@
       </div>
     </div>
     <AreYouSure
-      id="delete-story"
+      v-show="showAreYouSure"
+      @close="showAreYouSure = false;"
       :yes="$t('delete')"
       :no="$t('cancel')"
       @sure="doDeleteStory"
@@ -92,8 +93,6 @@ import NewsCard from './components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 import Spinner from '@/components/Spinner';
-
-import UIkit from 'uikit';
 
 import messages from './lang';
 
@@ -152,8 +151,7 @@ export default {
     },
     deleteStory(story) {
       this.storyToDelete = story;
-      var modal = UIkit.modal(document.getElementById('delete-story'));
-      modal.show();
+      this.showAreYouSure = true;
     },
     doDeleteStory() {
       this.$store.dispatch('news/delete', {

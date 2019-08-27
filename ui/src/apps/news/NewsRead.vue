@@ -9,9 +9,6 @@
         </blockquote>
         <div class="news-content" v-html="story.content.html_content">
         </div>
-        <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="deleteStory">
-        {{ $t('are_you_sure') }}
-        </AreYouSure>
         <vue-goodshare-facebook style="text-decoration:none"
           :title_social="$t('share')"
           :page_url="facebookUrl"
@@ -77,13 +74,11 @@ import messages from './lang';
 import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 
 import Page from './Page.vue';
-import AreYouSure from '@/components/AreYouSure.vue';
 import Spinner from '@/components/Spinner';
 
 export default {
   components: {
     Page,
-    AreYouSure,
     VueGoodshareFacebook,
     Spinner
   },
@@ -119,13 +114,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-    deleteStory() {
-      this.$store.dispatch('news/delete', {
-        story: this.story
-      }).then(() => {
-        this.$router.push({ name: 'news.browse' });
-      });
     }
   }
 };

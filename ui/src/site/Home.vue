@@ -65,7 +65,13 @@
     <router-link class="uk-button uk-button-default" :to="{ name : 'news.browse' }">
       {{ $t('more_news') }}
     </router-link>
-    <AreYouSure id="delete-story" :yes="$t('delete')" :no="$t('cancel')" @sure="doDeleteStory">
+    <AreYouSure
+      v-show="showAreYouSure"
+      @close="close"
+      :yes="$t('delete')"
+      :no="$t('cancel')"
+      @sure="doDeleteStory"
+    >
       {{ $t('are_you_sure') }}
     </AreYouSure>
     <section class="uk-section uk-section-small">
@@ -191,7 +197,8 @@ export default {
   },
   data() {
     return {
-      storyToDelete: null
+      storyToDelete: null,
+      showAreYouSure: false
     };
   },
   computed: {
@@ -234,14 +241,17 @@ export default {
     },
     deleteStory(story) {
       this.storyToDelete = story;
-      var modal = UIkit.modal(document.getElementById('delete-story'));
-      modal.show();
+      this.showAreYouSure = true;
     },
     doDeleteStory() {
+      this.showAreYouSure = false;
       this.$store.dispatch('news/delete', {
         story: this.storyToDelete
       });
     },
+    close() {
+      this.showAreYouSure = false;
+    }
   }
 };
 </script>

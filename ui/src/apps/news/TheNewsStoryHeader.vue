@@ -32,19 +32,39 @@
           v-if="$can('delete', story)"
           class="kwai-icon-button kwai-theme-muted"
           style="margin-left: 5px;"
+          @click.prevent.stop="showAreYouSure = true;"
         >
           <i class="fas fa-trash"></i>
         </a>
       </div>
     </div>
+    <AreYouSure
+      v-show="showAreYouSure"
+      @close="showAreYouSure = false;"
+      :yes="$t('delete')"
+      :no="$t('cancel')"
+      @sure="deleteStory"
+    >
+    {{ $t('are_you_sure') }}
+    </AreYouSure>
   </div>
 </template>
 
 <script>
 import messages from './lang';
 
+import AreYouSure from '@/components/AreYouSure.vue';
+
 export default {
+  components: {
+    AreYouSure
+  },
   i18n: messages,
+  data() {
+    return {
+      showAreYouSure: false
+    };
+  },
   computed: {
     story() {
       return this.$store.getters['news/story'](this.$route.params.id);
@@ -70,6 +90,16 @@ export default {
           category: this.story.category.id
         }
       };
+    }
+  },
+  methods: {
+    deleteStory() {
+      this.showAreYouSure = false;
+      this.$store.dispatch('news/delete', {
+        story: this.story
+      }).then(() => {
+        this.$router.push({ name: 'news.browse' });
+      });
     }
   }
 };
