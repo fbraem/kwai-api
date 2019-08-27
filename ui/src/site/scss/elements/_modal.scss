@@ -13,6 +13,7 @@
   &-container {
     margin: 15% auto; /* 15% from the top and centered */
     border: 1px solid #888;
+    width: 70%; // Fallback for fit-content
     width: fit-content;
     display: grid;
     grid-template-columns: auto 30px;
