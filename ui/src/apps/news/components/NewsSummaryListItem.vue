@@ -5,7 +5,7 @@
         {{ story.content.title }}
       </h4>
     </div>
-    <div style="display: flex">
+    <div style="display: flex; align-items: center;">
       <div class="kwai-text-meta kwai-text-truncate">
         {{ story.content.summary }}
       </div>
