@@ -199,6 +199,40 @@ a.kwai-link-reset {
   margin: 20px;
 }
 
+.page-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include mq($from: wide) {
+        & .page-card-item {
+            width: 20%;
+        }
+    }
+    @include mq($from: desktop, $until: wide) {
+        & .page-card-item {
+            width: 30%;
+        }
+    }
+    @include mq($from: mobile, $until: desktop) {
+        & .page-card-item {
+            width: 100%;
+        }
+    }
+}
+
+.page-card-item {
+  margin: 20px;
+}
+
+.#{$prefix}page-card {
+    height: 100%;
+    box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3);
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+}
+
 .page-container {
     display: grid;
     grid-gap: 10px;

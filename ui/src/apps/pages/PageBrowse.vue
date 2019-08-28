@@ -3,36 +3,30 @@
   <div>
     <Page>
       <Spinner v-if="$wait.is('pages.browse')" />
-      <div
-        v-else
-        uk-grid
-      >
-        <div v-if="pagesMeta">
-          <Paginator
-            :count="pagesMeta.count"
-            :limit="pagesMeta.limit"
-            :offset="pagesMeta.offset"
-            @page="readPage"
-          />
-        </div>
+      <div v-if="pagesMeta">
+        <Paginator
+          :count="pagesMeta.count"
+          :limit="pagesMeta.limit"
+          :offset="pagesMeta.offset"
+          @page="readPage"
+        />
+      </div>
+      <div class="page-card-container">
         <div
-          class="uk-grid-medium uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l uk-grid-match"
-          uk-grid
-          >
-          <PageSummary
-            v-for="page in pages"
-            :page="page"
-            :key="page.id"
-          />
+          class="page-card-item"
+          v-for="page in pages"
+          :key="page.id"
+        >
+          <PageSummary :page="page" />
         </div>
-        <div v-if="pagesMeta">
-          <Paginator
-            :count="pagesMeta.count"
-            :limit="pagesMeta.limit"
-            :offset="pagesMeta.offset"
-            @page="readPage"
-          />
-        </div>
+      </div>
+      <div v-if="pagesMeta">
+        <Paginator
+          :count="pagesMeta.count"
+          :limit="pagesMeta.limit"
+          :offset="pagesMeta.offset"
+          @page="readPage"
+        />
       </div>
     </Page>
   </div>

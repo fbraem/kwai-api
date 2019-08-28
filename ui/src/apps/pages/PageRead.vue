@@ -22,14 +22,6 @@
             v-html="page.content.html_content"
           >
           </article>
-          <AreYouSure
-            id="delete-page"
-            :yes="$t('delete')"
-            :no="$t('cancel')"
-            @sure="deletePage"
-          >
-            {{ $t('are_you_sure') }}
-          </AreYouSure>
         </div>
       </section>
     </Page>
@@ -124,7 +116,6 @@
 import messages from './lang';
 
 import Page from './Page.vue';
-import AreYouSure from '@/components/AreYouSure.vue';
 import Spinner from '@/components/Spinner.vue';
 
 /**
@@ -133,7 +124,6 @@ import Spinner from '@/components/Spinner.vue';
 export default {
   components: {
     Page,
-    AreYouSure,
     Spinner
   },
   i18n: messages,

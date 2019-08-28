@@ -1,33 +1,28 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <div class="uk-card uk-card-small uk-card-default">
-      <div
-        v-if="page.header_overview_crop"
-        class="uk-card-media"
+  <div class="kwai-page-card">
+    <div
+      v-if="page.header_overview_crop"
+    >
+      <img :src="page.header_overview_crop" />
+    </div>
+    <div>
+      <h5>
+        {{ page.content.title }}
+      </h5>
+    </div>
+    <div
+      v-html="page.content.html_summary"
+      style="flex-grow: 1;"
+    >
+    </div>
+    <div style="align-self:flex-end;">
+      <router-link
+        class="kwai-icon-button"
+        :to="contentLink"
       >
-        <div class="uk-inline-clip">
-          <img :src="page.header_overview_crop" />
-        </div>
-      </div>
-      <div class="uk-card-body">
-        <h5 class="uk-margin-small-bottom uk-margin-remove-adjacent uk-text-bold">
-          {{ page.content.title }}
-        </h5>
-        <p
-          class="uk-text-small uk-text-muted"
-          v-html="page.content.html_summary"
-        >
-        </p>
-        <span class="uk-float-right">
-          <router-link
-            class="uk-icon-button uk-link-reset"
-            :to="contentLink"
-          >
-            <i class="fas fa-ellipsis-h"></i>
-          </router-link>
-        </span>
-      </div>
+        <i class="fas fa-ellipsis-h"></i>
+      </router-link>
     </div>
   </div>
 </template>
