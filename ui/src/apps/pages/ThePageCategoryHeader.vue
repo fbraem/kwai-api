@@ -1,46 +1,33 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div
-      v-if="picture"
-      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
-    >
-      <div>
-        <img :src="picture" />
-      </div>
+  <div class="hero-container">
+    <div v-if="picture">
+      <img :src="picture" />
     </div>
     <div
-      class="uk-width-1-1"
-      :class="{ 'uk-width-1-2@m' : picture != null, 'uk-width-1-3@l' : picture != null, 'uk-width-2-5@xl' : picture != null }"
+      v-if="category"
+      :style="{ 'grid-column': grid }"
     >
+      <h1>
+        {{ category.name }}
+      </h1>
+      <h3>
+        {{ $t('page') }}
+      </h3>
+      <p>
+        {{ category.description }}
+      </p>
       <div
-        class="uk-light"
-        uk-grid
+        style="display: flex; justify-content: flex-end; flex-flow: row"
+        class="kwai-buttons"
       >
-        <div class="uk-width-1-1 uk-width-5-6@m">
-          <div v-if="category">
-            <h1 class="uk-margin-remove">
-              {{ category.name }}
-            </h1>
-            <h3 class="uk-margin-remove">
-              {{ $t('page') }}
-            </h3>
-            <p>
-              {{ category.description }}
-            </p>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <router-link
-              v-if="canCreate"
-              class="uk-icon-button uk-link-reset"
-              :to="{ name : 'pages.create' }"
-            >
-              <i class="fas fa-plus"></i>
-            </router-link>
-          </div>
-        </div>
+        <router-link
+          v-if="canCreate"
+          class="kwai-icon-button kwai-theme-muted"
+          :to="{ name : 'pages.create' }"
+        >
+          <i class="fas fa-plus"></i>
+        </router-link>
       </div>
     </div>
   </div>
@@ -68,6 +55,9 @@ export default {
         return this.category.images.normal;
       }
       return null;
+    },
+    grid() {
+      return this.picture ? '2' : '1 / 3';
     }
   }
 };
