@@ -1,9 +1,9 @@
 <template>
-  <div uk-grid>
-    <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
+  <div class="page-container">
+    <div>
       <slot></slot>
     </div>
-    <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
+    <div>
       <CategoryList
         v-if="categories"
         :categories="categories"

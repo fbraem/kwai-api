@@ -1,26 +1,24 @@
 <template>
   <!-- eslint-disable max-len -->
   <li>
-    <div class="uk-flex uk-flex-middle uk-inline" uk-grid>
-      <div
-        v-if="category.icon_picture"
-        class="uk-width-auto"
-      >
-        <img
+    <div style="display: flex;">
+      <div v-if="category.icon_picture">
+        <inline-svg
           :src="category.icon_picture"
-          style="color:#c61c18;height:32px;"
-          width="40" height="32" uk-svg
+          width="40"
+          height="40"
+          fill="#c61c18"
         />
       </div>
-      <div class="uk-width-expand">
+      <div style="position:relative">
         <router-link
           :to="linkToCategory"
-          class="uk-link-reset uk-position-cover uk-position-z-index uk-margin-remove-adjacent"
+          class="kwai-cover-link"
         />
-        <h4 class="uk-h4 uk-margin-remove">
+        <h4>
           {{ category.name }}
         </h4>
-        <div class="uk-text-meta">
+        <div class="kwai-text-meta">
           {{ category.short_description }}
         </div>
       </div>
@@ -29,12 +27,17 @@
 </template>
 
 <script>
+import InlineSvg from 'vue-inline-svg';
+
 import Category from '@/models/Category';
 
 /**
  * Component for showing a category in the list of categories
  */
 export default {
+  components: {
+    InlineSvg
+  },
   props: {
     /**
      * The category

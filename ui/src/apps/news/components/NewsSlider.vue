@@ -1,78 +1,44 @@
 <template>
   <div>
-    <div
-      v-if="count > 2"
-      uk-slider="velocity: 5; autoplay-interval: 5000;autoplay: true;"
-    >
-      <div class="uk-position-relative">
-        <div class="uk-slider-container">
-          <ul
-            class="uk-slider-items uk-child-width-1-2@m uk-grid-medium uk-grid"
-            uk-height-match="target: > li > div > .uk-card"
-          >
-            <li
-              v-for="story in stories"
-              :key="story.id"
-            >
-              <NewsCard
-                :story="story"
-                :showCategory="false"
-              />
-            </li>
-          </ul>
-        </div>
-        <div class="uk-hidden@m uk-light">
-          <a
-            class="uk-position-bottom-left uk-position-small"
-            href="#"
-            uk-slidenav-previous
-            uk-slider-item="previous"
-          >
-          </a>
-          <a
-            class="uk-position-bottom-right uk-position-small"
-            href="#"
-            uk-slidenav-next
-            uk-slider-item="next"
-          >
-          </a>
-        </div>
-        <div class="uk-visible@m">
-          <a
-            class="uk-position-center-left-out uk-position-small"
-            href="#"
-            uk-slidenav-previous
-            uk-slider-item="previous"
-          >
-          </a>
-          <a
-            class="uk-position-center-right-out uk-position-small"
-            href="#"
-            uk-slidenav-next
-            uk-slider-item="next"
-          >
-          </a>
-        </div>
-        <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin">
-        </ul>
+    <div style="display: flex;justify-content: center">
+      <div
+        style="margin:20px;"
+        :style="{ 'width': width + '%'}"
+        v-for="story in activeStories"
+        :key="story.id"
+      >
+        <NewsCard
+          :story="story"
+          :showCategory="false"
+        />
       </div>
     </div>
-    <div
-      v-else
-      class="uk-child-width-1-1@s uk-child-width-1-2@m uk-flex uk-flex-center"
-      uk-grid
-    >
-      <NewsCard
-        v-for="story in stories"
-        :story="story"
-        :key="story.id"
-        :showCategory="false"
-      />
+    <div style="display: flex; justify-content: space-evenly">
+      <div>
+        <button
+          class="kwai-icon-button"
+          @click.prevent.stop="prev"
+          :disabled="!hasPrev"
+        >
+          <i class="fas fa-chevron-circle-left"></i>
+        </button>
+      </div>
+      <div>
+        <button
+          class="kwai-icon-button"
+          @click.prevent.stop="next"
+          :disabled="!hasNext"
+        >
+          <i class="fas fa-chevron-circle-right"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import VueScreenSize from 'vue-screen-size';
+
 import NewsCard from './NewsCard';
 
 export default {
@@ -82,13 +48,63 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      start: 1
+    };
+  },
   computed: {
     count() {
       return this.stories.length;
+    },
+    columns() {
+      if (this.$vssWidth >= 1300) return 3;
+      if (this.$vssWidth >= 980) return 2;
+      return 1;
+    },
+    width() {
+      if (this.$vssWidth >= 1300) return 100 / 3;
+      if (this.$vssWidth >= 980) return 50;
+      return 100;
+    },
+    activeStories() {
+      let actives = [];
+      let end = this.start + this.columns - 1;
+      if (end >= this.count) {
+        end = this.count;
+      }
+      for (let s = this.start - 1; s < end; s++) {
+        actives.push(this.stories[s]);
+      }
+      return actives;
+    },
+    hasNext() {
+      return this.start < this.stories.length;
+    },
+    hasPrev() {
+      return this.start > 1;
+    }
+  },
+  mixins: [
+    VueScreenSize.VueScreenSizeMixin,
+  ],
+  watch: {
+    'columns'(nv, ov) {
+      if (this.start + this.columns > this.count) {
+        this.start = this.count - this.columns + 1;
+      }
     }
   },
   components: {
     NewsCard
+  },
+  methods: {
+    next() {
+      if (this.start <= this.count - this.columns) this.start += 1;
+    },
+    prev() {
+      if (this.start > 1) this.start -= 1;
+    }
   }
 };
 </script>

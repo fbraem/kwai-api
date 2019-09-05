@@ -1,38 +1,29 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div uk-grid class="uk-light">
-    <div
-      v-if="picture"
-      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
-    >
+  <div class="hero-container">
+    <div v-if="picture">
       <div>
         <img :src="picture" />
       </div>
     </div>
-    <div
-      v-if="category"
-      class="uk-width-1-1 uk-width-5-6@m"
-    >
-      <h1 class="uk-margin-remove">
+    <div v-if="category">
+      <h1>
         {{ $t('news') }}
       </h1>
-      <h3 class="uk-margin-remove">
+      <h3>
         {{ category.name }}
       </h3>
       <p>
         {{ category.description }}
       </p>
     </div>
-    <div class="uk-width-1-1 uk-width-1-6@m">
-      <div class="uk-flex uk-flex-right">
-        <router-link
-          v-if="canCreate"
-          class="uk-icon-button uk-link-reset"
-          :to="{ name : 'news.create' }"
-        >
-          <i class="fas fa-plus"></i>
-        </router-link>
-      </div>
+    <div style="display:flex; align-items:flex-end;flex-flow:column">
+      <router-link
+        v-if="canCreate"
+        class="kwai-icon-button kwai-theme-muted"
+        :to="{ name : 'news.create' }"
+      >
+        <i class="fas fa-plus"></i>
+      </router-link>
     </div>
   </div>
 </template>

@@ -1,12 +1,22 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="uk-margin">
-    <label v-if="hasLabel" class="uk-form-label uk-text-bold" :class="{ 'uk-text-danger' : hasErrors }" :for="name">
+  <div style="display: flex; flex-direction: column; margin-bottom:20px;">
+    <label
+      v-if="hasLabel"
+      class="kwai-form-label"
+      :class="{ 'kwai-text-danger' : hasErrors }"
+      :for="name"
+    >
       {{ label }}
     </label>
     <slot></slot>
-    <div v-if="hasErrors" class="uk-text-danger uk-margin-small">
-      <div v-for="(error, index) in fieldErrors" :key="index">
+    <div
+      v-if="hasErrors"
+      class="kwai-text-danger"
+    >
+      <div
+        v-for="(error, index) in fieldErrors"
+        :key="index"
+      >
         {{ error }}
       </div>
     </div>

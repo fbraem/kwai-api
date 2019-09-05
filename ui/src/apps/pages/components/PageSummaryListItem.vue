@@ -1,25 +1,22 @@
 <template>
-  <div class="uk-grid-small uk-flex uk-flex-middle" uk-grid>
-    <div class="uk-width-expand">
-      <router-link
-        :to="pageLink"
-        class="uk-link-reset"
-      >
-        <h6 class="uk-h6 uk-margin-small-bottom">
-          {{ page.content.title }}
-        </h6>
-        <div class="uk-text-meta uk-text-truncate">
-          {{ page.content.summary }}
-        </div>
-      </router-link>
+  <div style="display: flex; flex-direction:column;">
+    <div>
+      <h4>
+        {{ page.content.title }}
+      </h4>
     </div>
-    <div class="uk-width-auto">
-      <router-link
-        :to="pageLink"
-        class="uk-icon-button uk-link-reset"
-      >
-        <i class="fas fa-ellipsis-h"></i>
-      </router-link>
+    <div style="display: flex;align-items: center;">
+      <div class="kwai-text-meta kwai-text-truncate">
+        {{ page.content.summary }}
+      </div>
+      <div>
+        <router-link
+          :to="pageLink"
+          class="kwai-icon-button"
+        >
+          <i class="fas fa-ellipsis-h"></i>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>

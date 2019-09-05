@@ -1,9 +1,9 @@
 <template>
     <input v-model="field.value"
         :id="id"
-        class="uk-checkbox"
+        class="kwai-checkbox"
         type="checkbox"
-        :class="{ 'uk-form-danger' : field.errors.length > 0 }"
+        :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
         v-bind="$attrs"
     />
 </template>

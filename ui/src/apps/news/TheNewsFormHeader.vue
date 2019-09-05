@@ -1,22 +1,13 @@
 <template>
-  <div
-    uk-grid
-    class="uk-light"
-  >
-    <div class="uk-width-1-1">
-      <h1 class="uk-margin-remove">
+  <div class="hero-container">
+    <div>
+      <h1>
         {{ $t('news') }}
       </h1>
-      <h3
-        v-if="creating"
-        class="uk-margin-remove"
-      >
+      <h3 v-if="creating">
         {{ $t('create') }}
       </h3>
-      <h3
-        v-else
-        class="uk-margin-remove"
-      >
+      <h3 v-else>
         {{ $t('update') }}
       </h3>
     </div>

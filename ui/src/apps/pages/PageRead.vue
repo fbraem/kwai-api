@@ -5,33 +5,13 @@
         {{ error.response.statusText }}
       </div>
       <Spinner v-if="$wait.is('pages.read')" />
-      <section
+      <article
         v-if="page"
-        class="uk-section uk-section-small uk-padding-remove-top"
+        class="page-content"
+        style="overflow-x: auto;"
+        v-html="page.content.html_content"
       >
-        <div
-          class="uk-flex-center"
-          uk-grid
-        >
-          <figure v-if="page.header_detail_crop">
-            <img :src="page.header_detail_crop" />
-          </figure>
-          <article
-            class="page-content uk-article"
-            style="overflow-x: auto;"
-            v-html="page.content.html_content"
-          >
-          </article>
-          <AreYouSure
-            id="delete-page"
-            :yes="$t('delete')"
-            :no="$t('cancel')"
-            @sure="deletePage"
-          >
-            {{ $t('are_you_sure') }}
-          </AreYouSure>
-        </div>
-      </section>
+      </article>
     </Page>
   </div>
 </template>
@@ -124,7 +104,6 @@
 import messages from './lang';
 
 import Page from './Page.vue';
-import AreYouSure from '@/components/AreYouSure.vue';
 import Spinner from '@/components/Spinner.vue';
 
 /**
@@ -133,7 +112,6 @@ import Spinner from '@/components/Spinner.vue';
 export default {
   components: {
     Page,
-    AreYouSure,
     Spinner
   },
   i18n: messages,

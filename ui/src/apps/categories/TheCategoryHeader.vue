@@ -1,73 +1,61 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
+  <div class="hero-container">
     <div
       v-if="picture"
-      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
+      style="grid-column: 1; max-width: 800px;"
     >
-      <div>
-        <img :src="picture" />
-      </div>
+      <img :src="picture" />
     </div>
     <div
-      class="uk-width-1-1"
-      :class="pictureWidthClass"
+      v-if="category"
+      :style="grid"
     >
+      <div style="display: flex; flex-direction:row; align-items: center; padding-left: 20px;">
+        <div
+          v-if="category.icon_picture"
+          style="margin-right: 20px;"
+          >
+          <inline-svg
+            :src="category.icon_picture"
+            width="42"
+            height="48"
+            fill="white"
+          />
+        </div>
+        <h1>
+          {{ category.name }}
+        </h1>
+      </div>
+      <div>
+        <p style="padding-left:20px;padding-right: 20px">
+          {{ category.description }}
+        </p>
+      </div>
       <div
-        v-if="category"
-        uk-grid
+        class="kwai-buttons"
+        style="grid-column: 2; display: flex; align-items: flex-end;justify-content: flex-end;"
       >
-        <div class="uk-width-expand uk-light">
-          <div>
-            <h1>
-              <span v-if="category.icon_picture">
-                <img
-                  :src="category.icon_picture"
-                  width="40"
-                  height="40"
-                  uk-svg
-                />
-                &nbsp;
-              </span>
-              {{ category.name }}
-            </h1>
-            <p>
-              {{ category.description }}
-            </p>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <div v-if="canCreate">
-              <router-link
-                class="uk-icon-button uk-link-reset"
-                :to="{ name : 'categories.create' }"
-              >
-                <i class="fas fa-plus"></i>
-              </router-link>
-            </div>
-            <div v-if="$can('update', category)">
-              <router-link
-                class="uk-icon-button uk-link-reset uk-margin-small-left"
-                :to="updateLink"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </div>
-          </div>
-        </div>
+        <router-link v-if="canCreate"
+          class="kwai-icon-button kwai-theme-muted"
+          :to="{ name : 'categories.create' }"
+        >
+          <i class="fas fa-plus"></i>
+        </router-link>
+        <router-link v-if="$can('update', category)"
+          class="kwai-icon-button kwai-theme-muted"
+          :to="updateLink"
+        >
+          <i class="fas fa-edit"></i>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
-  <style>
-  #icon.svg {
-    fill:red;
-  }
-  </style>
-
 <script>
+import InlineSvg from 'vue-inline-svg';
+
 import Category from '@/models/Category';
 
 import messages from './lang';
@@ -76,6 +64,9 @@ import messages from './lang';
  * Component for header of category page
  */
 export default {
+  components: {
+    InlineSvg
+  },
   i18n: messages,
   computed: {
     canCreate() {
@@ -85,17 +76,14 @@ export default {
       return this.$store.getters['category/category'](this.$route.params.id);
     },
     picture() {
-      if (this.category && this.category.images) {
-        return this.category.images.normal;
-      }
+      if (this.category) return this.category.header_picture;
       return null;
     },
-    pictureWidthClass() {
-      return {
-        'uk-width-1-2@m': this.picture != null,
-        'uk-width-1-3@l': this.picture != null,
-        'uk-width-2-5@xl': this.picture != null
-      };
+    grid() {
+      if (this.picture) {
+        return '2';
+      }
+      return '1';
     },
     updateLink() {
       return {

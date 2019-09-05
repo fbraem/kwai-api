@@ -1,33 +1,28 @@
 <template>
-  <section class="uk-section uk-section-small uk-section-secondary uk-container uk-container-expand">
-    <div uk-grid>
-      <div class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle">
-        <div>
-          <img :src="require('./images/judokwaikemzeke.jpg')" />
-        </div>
+  <!-- eslint-disable max-len -->
+  <div class="hero-container">
+    <div style="grid-area: hero-image;align-self:center;justify-self:center">
+      <img :src="require('./images/judokwaikemzeke.jpg')" />
+    </div>
+    <div style="grid-area: hero-text; display: flex; flex-direction: column; justify-content: center;align-items: center">
+      <div>
+        <img
+          :src="require('./images/logo2.png')"
+          style="width:121px;height:121px;" />
       </div>
-      <div class="uk-width-1-1 uk-width-1-2@m uk-width-1-3@l uk-width-2-5@xl">
-        <div uk-grid class="uk-flex uk-flex-center">
-          <div class="uk-width-1-1">
-            <img class="uk-align-center"
-              :src="require('./images/logo2.png')"
-              style="width:121px;height:121px;" />
-          </div>
-          <div class="uk-width-1-1">
-            <h4 class="uk-margin-remove-top uk-text-center">Judokwai Kemzeke</h4>
-            {{ $t("message.hello") }}
-            <br />
-            {{ $t("message.info") }}
-          </div>
-          <div class="uk-width-1-1">
-            <img class="uk-align-center"
-              :src="require('./images/40jaar.png')"
-              style="width:200px;height:200px;" />
-          </div>
-        </div>
+      <div style="text-align:center">
+        <h2>Judokwai Kemzeke</h2>
+        {{ $t("message.hello") }}
+        <br />
+        {{ $t("message.info") }}
+      </div>
+      <div>
+        <img
+          :src="require('./images/40jaar.png')"
+          style="width:200px;height:200px;" />
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

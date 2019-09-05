@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <h1 class="uk-margin-remove">
-      {{ $t('page') }}
-    </h1>
-    <h3
-      v-if="creating"
-      class="uk-margin-remove">
-      {{ $t('create') }}
-    </h3>
-    <h3
-      v-else
-      class="uk-margin-remove">
-      {{ $t('update') }}
-    </h3>
+  <div class="hero-container">
+    <div>
+      <h1>
+        {{ $t('page') }}
+      </h1>
+      <h3 v-if="creating">
+        {{ $t('create') }}
+      </h3>
+      <h3 v-else>
+        {{ $t('update') }}
+      </h3>
+    </div>
   </div>
 </template>
 

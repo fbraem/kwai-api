@@ -1,0 +1,19 @@
+.#{$prefix}list {
+    padding: 0;
+    list-style: none;
+
+    > li:nth-child(n+2),
+    > li > ul {
+        margin-top: 10px;
+    }
+
+    > li > :last-child {
+        margin-bottom: 0;
+    }
+
+    ul {
+        margin: 0;
+        padding-left: 30px;
+        list-style: none;
+    }
+}
