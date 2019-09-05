@@ -1,60 +1,62 @@
 <template>
-  <KwaiForm
-    :form="form"
-    :error="error"
-    :save="$t('save')"
-    @submit="submit"
-  >
-    <div class="uk-margin" uk-grid>
-      <div class="uk-width-expand">
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :error="error"
+      :save="$t('save')"
+      @submit="submit"
+    >
+      <div style="display: flex;">
+        <div style="flex-grow: 1;">
+          <KwaiField
+            name="category"
+            :label="$t('form.page.category.label')"
+          >
+            <KwaiSelect :items="categories" />
+          </KwaiField>
+        </div>
+        <div style="align-self:flex-end;margin-left: 20px;">
+          <KwaiField name="enabled">
+            <KwaiSwitch />
+          </KwaiField>
+        </div>
+      </div>
+      <div>
         <KwaiField
-          name="category"
-          :label="$t('form.page.category.label')"
+          name="remark"
+          :label="$t('form.page.remark.label')"
         >
-          <KwaiSelect :items="categories" />
+          <KwaiTextarea
+            :rows="5"
+            :placeholder="$t('form.page.remark.placeholder')"
+          />
         </KwaiField>
       </div>
-      <div class="uk-flex uk-flex-bottom">
-        <KwaiField name="enabled">
-          <KwaiSwitch />
+      <div>
+        <KwaiField
+          name="title"
+          :label="$t('form.content.title.label')"
+        >
+          <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
+        </KwaiField>
+        <KwaiField
+          name="summary"
+          :label="$t('form.content.summary.label')"
+        >
+          <KwaiTextarea
+            :placeholder="$t('form.content.summary.placeholder')"
+            :rows="5"
+          />
+        </KwaiField>
+        <KwaiField name="content" :label="$t('form.content.content.label')">
+          <KwaiTextarea
+            :placeholder="$t('form.content.content.placeholder')"
+            :rows="15"
+          />
         </KwaiField>
       </div>
-    </div>
-    <div>
-      <KwaiField
-        name="remark"
-        :label="$t('form.page.remark.label')"
-      >
-        <KwaiTextarea
-          :rows="5"
-          :placeholder="$t('form.page.remark.placeholder')"
-        />
-      </KwaiField>
-    </div>
-    <div>
-      <KwaiField
-        name="title"
-        :label="$t('form.content.title.label')"
-      >
-        <KwaiInputText :placeholder="$t('form.content.title.placeholder')" />
-      </KwaiField>
-      <KwaiField
-        name="summary"
-        :label="$t('form.content.summary.label')"
-      >
-        <KwaiTextarea
-          :placeholder="$t('form.content.summary.placeholder')"
-          :rows="5"
-        />
-      </KwaiField>
-      <KwaiField name="content" :label="$t('form.content.content.label')">
-        <KwaiTextarea
-          :placeholder="$t('form.content.content.placeholder')"
-          :rows="15"
-        />
-      </KwaiField>
-    </div>
-  </KwaiForm>
+    </KwaiForm>
+  </div>
 </template>
 
 <script>
