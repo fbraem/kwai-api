@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div>
     <Page>
       <Spinner v-if="$wait.is('pages.browse')" />
