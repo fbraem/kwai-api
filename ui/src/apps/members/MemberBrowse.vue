@@ -31,24 +31,22 @@
         </div>
       </div>
       <div style="column-count: 3; column-gap: 30px;margin-top: 30px;">
-        <div style="display: flex; flex-flow: column wrap;">
-          <div
-            v-for="(group, letter) in sortedMembers"
-            :key="letter"
+        <div
+          v-for="(group, letter) in sortedMembers"
+          :key="letter"
+        >
+          <h3 style="border-left: 8px solid var(--kwai-color-muted);padding-left: 8px;"
+            :id="'letter-' + letter"
           >
-            <h3 style="border-left: 8px solid var(--kwai-color-muted);padding-left: 8px;"
-              :id="'letter-' + letter"
-            >
-              {{ letter }}
-            </h3>
-            <ul class="kwai-list">
-              <MemberListItem
-                v-for="member in group"
-                :member="member"
-                :key="member.id"
-              />
-            </ul>
-          </div>
+            {{ letter }}
+          </h3>
+          <ul class="kwai-list">
+            <MemberListItem
+              v-for="member in group"
+              :member="member"
+              :key="member.id"
+            />
+          </ul>
         </div>
       </div>
     </div>
