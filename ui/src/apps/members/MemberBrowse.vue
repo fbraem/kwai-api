@@ -1,55 +1,47 @@
 <template>
-  <div>
+  <!-- eslint-disable max-len -->
+  <div class="page-container">
+    <Spinner style="grid-column: span 2;" v-if="$wait.is('members.browse')" />
     <div
-      v-if="$wait.is('members.browse')"
-      class="uk-flex-center"
-      uk-grid
-    >
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-spin fa-2x"></i>
-      </div>
-    </div>
-    <div
+      style="grid-column: span 2;"
       v-else-if="members"
-      uk-grid
     >
       <div
         v-if="members.length == 0"
-        class="uk-alert uk-alert-warning"
+        class="kwai-alert kwai-theme-warning"
       >
         {{ $t('no_members') }}
       </div>
       <div
+        style="display: flex; align-items: center;justify-content: center; flex-wrap: wrap;"
         v-else
-        class="uk-flex uk-flex-center uk-grid-small"
-        uk-grid
       >
         <div
           v-for="(group, letter) in sortedMembers"
+          style="margin-right: 10px;"
           :key="letter"
         >
-          <span class="uk-label">
+          <span class="kwai-badge kwai-theme-primary">
             <a
-              class="uk-link-reset"
+              class="kwai-link-reset"
               @click="jumpIt('#letter-' + letter)">
               {{letter}}
             </a>
           </span>
         </div>
       </div>
-      <div>
-        <div class="uk-column-1-2@s uk-column-1-3@m uk-column-1-4@xl">
+      <div style="column-count: 3; column-gap: 30px;margin-top: 30px;">
+        <div style="display: flex; flex-flow: column wrap;">
           <div
             v-for="(group, letter) in sortedMembers"
             :key="letter"
           >
-            <h3
-              class="uk-heading-bullet"
+            <h3 style="border-left: 8px solid var(--kwai-color-muted);padding-left: 8px;"
               :id="'letter-' + letter"
             >
               {{ letter }}
             </h3>
-            <ul class="uk-list">
+            <ul class="kwai-list">
               <MemberListItem
                 v-for="member in group"
                 :member="member"
@@ -69,13 +61,15 @@ import 'flag-icon-css/css/flag-icon.css';
 import messages from './lang';
 import jump from 'jump.js';
 
-import MemberListItem from './MemberListItem.vue';
+import Spinner from '@/components/Spinner';
+import MemberListItem from './MemberListItem';
 
 /**
  * Page for browsing a member
  */
 export default {
   components: {
+    Spinner,
     MemberListItem
   },
   i18n: messages,
