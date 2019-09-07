@@ -6,7 +6,7 @@
         {{ $t('all_pages') }}
       </p>
     </div>
-    <div  style="display:flex; align-items:flex-end;flex-flow:column">
+    <div style="display:flex; align-items:flex-end;flex-flow:column">
       <router-link
         v-if="canCreate"
         class="kwai-icon-button kwai-theme-muted"
