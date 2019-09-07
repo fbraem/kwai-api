@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div class="hero-container">
     <div
       v-if="picture"
