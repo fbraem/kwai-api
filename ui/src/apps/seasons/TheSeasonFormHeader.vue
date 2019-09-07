@@ -1,14 +1,16 @@
 <template>
   <div class="hero-container">
-    <h1>
-      {{ $t('seasons') }}
-    </h1>
-    <h3 v-if="creating">
-      {{ $t('create') }}
-    </h3>
-    <h3 v-else>
-      {{ $t('update') }}
-    </h3>
+    <div>
+      <h1>
+        {{ $t('seasons') }}
+      </h1>
+      <h3 v-if="creating">
+        {{ $t('create') }}
+      </h3>
+      <h3 v-else>
+        {{ $t('update') }}
+      </h3>
+    </div>
   </div>
 </template>
 
