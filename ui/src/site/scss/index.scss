@@ -28,6 +28,7 @@ body {
 @import "elements/_modal.scss";
 @import "elements/_text.scss";
 @import "elements/_switch.scss";
+@import "elements/_table.scss";
 
 .main-container {
     display: grid;
@@ -235,7 +236,7 @@ a.kwai-link-reset {
 
 .page-container {
     display: grid;
-    grid-gap: 10px;
+    grid-gap: 20px;
     padding: 20px;
     @include mq($from: desktop) {
         grid-template-columns: 3fr 1fr;

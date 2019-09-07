@@ -1,0 +1,108 @@
+// Based on uikit
+
+$table-cell-padding-vertical: 16px;
+$table-cell-padding-horizontal: 12px;
+
+.#{$prefix}table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+
+    th {
+        padding: $table-cell-padding-vertical $table-cell-padding-horizontal;
+        text-align: left;
+        vertical-align: bottom;
+        font-weight: bold;
+    }
+
+    td {
+        padding: $table-cell-padding-vertical $table-cell-padding-horizontal;
+        vertical-align: top;
+
+        > :last-child {
+            margin-bottom: 0;
+        }
+
+        .#{$prefix}middle {
+            vertical-align: middle !important;
+        }
+    }
+
+    tr.#{$prefix}active,
+    tbody tr.#{$prefix}active {
+        background: gray;
+    }
+}
+
+.#{$prefix}table-divider > tr:not(:first-child),
+.#{$prefix}divider > :not(:first-child) > tr,
+.#{$prefix}divider > :first-child > tr:not(:first-child) {
+    border-top: 1px solid var(--kwai-color-muted);
+}
+
+.#{$prefix}table-striped > tr:nth-of-type(odd),
+.#{$prefix}table-striped tbody tr:nth-of-type(odd) {
+    background: var(--kwai-color-default-light);
+}
+
+.#{$prefix}table-hover > tr:hover,
+.#{$prefix}table-hover tbody tr:hover {
+    background: var(--kwai-color-default-dark);
+}
+
+.#{$prefix}table-justify th:first-child,
+.#{$prefix}table-justify td:first-child { padding-left: 0; }
+
+.#{$prefix}table-justify th:last-child,
+.#{$prefix}table-justify td:last-child { padding-right: 0; }
+
+
+.#{$prefix}table-shrink { width: 1px; }
+.#{$prefix}table-expand { min-width: 150px; }
+
+.#{$prefix}link {
+    padding: 0 !important;
+    a {
+        display: block;
+        padding: $table-cell-padding-vertical $table-cell-padding-horizontal;
+    }
+}
+
+/* Responsive table */
+@include mq($until: tablet) {
+    .#{$prefix}table-responsive,
+    .#{$prefix}table-responsive tbody,
+    .#{$prefix}table-responsive th,
+    .#{$prefix}table-responsive td,
+    .#{$prefix}table-responsive tr { display: block; }
+
+    .#{$prefix}table-responsive thead { display: none; }
+
+    .#{$prefix}table-responsive th,
+    .#{$prefix}table-responsive td {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        overflow: visible !important;
+        white-space: normal !important;
+    }
+
+    .#{$prefix}table-responsive th:not(:first-child):not(.#{$prefix}table-link),
+    .#{$prefix}table-responsive td:not(:first-child):not(.#{$prefix}table-link),
+    .#{$prefix}table-responsive .#{$prefix}table-link:not(:first-child) > a {
+        padding-top: round($table-cell-padding-vertical / 3) !important;
+    }
+
+    .#{$prefix}table-responsive th:not(:last-child):not(.#{$prefix}table-link),
+    .#{$prefix}table-responsive td:not(:last-child):not(.#{$prefix}table-link),
+    .#{$prefix}table-responsive .#{$prefix}table-link:not(:last-child) > a {
+        padding-bottom: round($table-cell-padding-vertical / 3) !important;
+    }
+
+    .#{$prefix}table-justify.#{$prefix}table-responsive th,
+    .#{$prefix}table-justify.#{$prefix}table-responsive td {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+}
