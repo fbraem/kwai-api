@@ -22,7 +22,7 @@
 export default {
   props: {
     /**
-     * Is this form stacked? The uk-form-stacked class will be applied
+     * Is this form stacked?
      */
     stacked: {
       type: Boolean,
