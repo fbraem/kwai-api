@@ -1,36 +1,30 @@
 <template>
-  <div class="uk-grid">
-    <div class="uk-width-5-6">
+  <div class="hero-container">
+    <div>
       <h1>
         {{ $t('types') }}
       </h1>
-      <h3
-        v-if="teamtype"
-        class="uk-h3 uk-margin-remove"
-      >
+      <h3 v-if="teamtype">
         {{ teamtype.name }}
       </h3>
     </div>
-    <div class="uk-width-1-6">
-      <div class="uk-flex uk-flex-right">
-        <div>
-          <router-link
-            class="uk-icon-button uk-link-reset"
-            :to="{ 'name' : 'team_types.browse' }"
-          >
-            <i class="fas fa-list"></i>
-          </router-link>
-        </div>
-        <div class="uk-margin-small-left">
-          <router-link
-            v-if="$can('update', teamtype)"
-            class="uk-icon-button uk-link-reset"
-            :to="{ name : 'team_types.update' }"
-          >
-            <i class="fas fa-edit"></i>
-          </router-link>
-        </div>
-      </div>
+    <div
+      class="kwai-buttons"
+      style="display: flex; justify-content: flex-end; flex-flow: row;"
+    >
+      <router-link
+        class="kwai-icon-button kwai-theme-muted"
+        :to="{ 'name' : 'team_types.browse' }"
+      >
+        <i class="fas fa-list"></i>
+      </router-link>
+      <router-link
+        v-if="$can('update', teamtype)"
+        class="kwai-icon-button kwai-theme-muted"
+        :to="{ name : 'team_types.update' }"
+      >
+        <i class="fas fa-edit"></i>
+      </router-link>
     </div>
   </div>
 </template>

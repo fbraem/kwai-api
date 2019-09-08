@@ -1,56 +1,58 @@
 <template>
   <!-- eslint-disable max-len -->
-  <KwaiForm
-    :form="form"
-    :save="$t('save')"
-    @submit="submit"
-  >
-    <KwaiField
-      name="name"
-      :label="$t('form.team_type.name.label')"
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :save="$t('save')"
+      @submit="submit"
     >
-      <KwaiInputText :placeholder="$t('form.team_type.name.placeholder')" />
-    </KwaiField>
-    <KwaiField
-      name="start_age"
-      :label="$t('form.team_type.start_age.label')"
-    >
-      <KwaiInputText :placeholder="$t('form.team_type.start_age.placeholder')" />
-    </KwaiField>
-    <KwaiField
-      name="end_age"
-      :label="$t('form.team_type.end_age.label')"
-    >
-      <KwaiInputText :placeholder="$t('form.team_type.end_age.placeholder')" />
-    </KwaiField>
-    <KwaiField
-      name="gender"
-      :label="$t('form.team_type.gender.label')"
-    >
-      <KwaiSelect :items="genders" />
-    </KwaiField>
-    <KwaiField
-      name="active"
-      :label="$t('form.team_type.active.label')"
-    >
-      <KwaiCheckbox />
-    </KwaiField>
-    <KwaiField
-      name="competition"
-      :label="$t('form.team_type.competition.label')"
-    >
-      <KwaiCheckbox />
-    </KwaiField>
-    <KwaiField
-      name="remark"
-      :label="$t('form.team_type.remark.label')"
-    >
-      <KwaiTextarea
-        :placeholder="$t('form.team_type.remark.placeholder')"
-        :rows="5"
-      />
-    </KwaiField>
-  </KwaiForm>
+      <KwaiField
+        name="name"
+        :label="$t('form.team_type.name.label')"
+      >
+        <KwaiInputText :placeholder="$t('form.team_type.name.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="start_age"
+        :label="$t('form.team_type.start_age.label')"
+      >
+        <KwaiInputText :placeholder="$t('form.team_type.start_age.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="end_age"
+        :label="$t('form.team_type.end_age.label')"
+      >
+        <KwaiInputText :placeholder="$t('form.team_type.end_age.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="gender"
+        :label="$t('form.team_type.gender.label')"
+      >
+        <KwaiSelect :items="genders" />
+      </KwaiField>
+      <KwaiField
+        name="active"
+        :label="$t('form.team_type.active.label')"
+      >
+        <KwaiCheckbox />
+      </KwaiField>
+      <KwaiField
+        name="competition"
+        :label="$t('form.team_type.competition.label')"
+      >
+        <KwaiCheckbox />
+      </KwaiField>
+      <KwaiField
+        name="remark"
+        :label="$t('form.team_type.remark.label')"
+      >
+        <KwaiTextarea
+          :placeholder="$t('form.team_type.remark.placeholder')"
+          :rows="5"
+        />
+      </KwaiField>
+    </KwaiForm>
+  </div>
 </template>
 
 <script>
