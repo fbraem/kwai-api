@@ -49,8 +49,8 @@ export default {
     close() {
       this.$emit('close');
     },
-    click() {
-      this.$emit('close');
+    click(e) {
+      if (e.target.className === 'kwai-modal') this.$emit('close');
     }
   }
 };
