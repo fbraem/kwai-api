@@ -49,6 +49,7 @@
     "no_available_members" : "Er zijn geen leden meer die toegevoegd kunnen worden",
     "delete" : "Verwijder",
     "sure_to_delete" : "Bent u zeker om deze leden te verwijderen uit dit team?",
+    "sure_to_delete_team" : "Bent u zeker om dit team te verwijderen?",
     "cancel" : "Annuleer",
     "name" : "Naam",
     "required" : "Dit veld is verplicht in te vullen.",
