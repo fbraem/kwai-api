@@ -1,56 +1,54 @@
 <template>
-  <div class="kwai-modal" @click.prevent.stop="click">
-    <div class="kwai-modal-container" role="dialog">
-      <header>
-        <slot name="title"></slot>
-      </header>
-      <span
-        class="kwai-modal-close"
-        @click.prevent.stop="close"
+  <Modal
+    v-show="show"
+    @close="close"
+  >
+    <template slot="header">
+      <slot name="title"></slot>
+    </template>
+    <template slot="default">
+      <slot></slot>
+    </template>
+    <template slot="footer">
+      <div
+        style="display: flex; justify-content:center;"
+        class="kwai-buttons"
       >
-        &times;
-      </span>
-      <div class="kwai-modal-content">
-        <slot></slot>
-      </div>
-      <footer>
-        <div
-          style="display: flex;justify-content: flex-end; margin-right: 20px;"
-          class="kwai-buttons"
+        <button
+          class="kwai-button"
+          type="button"
+          @click.prevent.stop="close"
         >
-          <button
-            class="kwai-button"
-            type="button"
-          >
-            <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
-          </button>
-          <button
-            class="kwai-button kwai-theme-danger"
-            type="button"
-            @click="ok"
-          >
-            <i class="fas fa-trash"></i>&nbsp;&nbsp;{{ yes }}
-          </button>
-        </div>
-      </footer>
-    </div>
-  </div>
+          <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
+        </button>
+        <button
+          class="kwai-button kwai-theme-danger"
+          type="button"
+          @click="ok"
+        >
+          <i class="fas fa-trash"></i>&nbsp;&nbsp;{{ yes }}
+        </button>
+      </div>
+    </template>
+  </Modal>
 </template>
 
 <script>
+import Modal from './Modal';
+
 export default {
   props: [
-    'no', 'yes',
+    'no', 'yes', 'show',
   ],
+  components: {
+    Modal
+  },
   methods: {
     ok() {
       this.$emit('sure');
     },
     close() {
       this.$emit('close');
-    },
-    click(e) {
-      if (e.target.className === 'kwai-modal') this.$emit('close');
     }
   }
 };
