@@ -1,59 +1,57 @@
 <template>
-  <div>
-    <Spinner v-if="$wait.is('teamtypes.browse')" />
-    <div
-      v-else
-      uk-grid
-    >
+  <!-- eslint-disable max-len -->
+  <div class="page-container">
+    <div style="grid-column: 1 / span 2;">
+      <Spinner v-if="$wait.is('teamtypes.browse')" />
       <div
         v-if="noTypes"
-        class="uk-alert uk-alert-warning"
+        class="kwai-alert kwai-theme-warning"
       >
         {{ $t('no_types') }}
       </div>
       <div v-else>
-        <table class="uk-table uk-table-striped">
-          <tr>
-            <th>{{ $t('name') }}</th>
-            <th class="uk-table-shrink"></th>
-          </tr>
-          <tr
+        <ul class="kwai-list" style="display: flex; flex-wrap: wrap;">
+          <li
+            class="teamtype-item"
             v-for="type in types"
             :key="type.id"
           >
-            <td>
-              <router-link
-                :to="{ name: 'team_types.read', params: { id : type.id} }"
-              >
-                {{ type.name }}
-              </router-link>
-            </td>
-            <td>
-              <router-link
-                v-if="$can('update', type)"
-                class="uk-icon-button"
-                style="margin-top:-10px"
-                :to="{ name : 'team_types.update', params : { id : type.id } }"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </td>
-          </tr>
-        </table>
+            <TeamTypeCard :type="type" />
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
 
+<style lang=scss>
+  @import "@/site/scss/_mq.scss";
+
+  .teamtype-item {
+    margin-top: 0px !important;
+    padding-bottom: 20px;
+    padding-left: 20px;
+
+    @include mq($until: tablet) {
+      width: 100%;
+    }
+    @include mq($from: tablet) {
+      width: 50%;
+    }
+  }
+</style>
+
 <script>
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import TeamTypeCard from './TeamTypeCard';
 
 export default {
   i18n: messages,
   components: {
-    Spinner
+    Spinner,
+    TeamTypeCard
   },
   computed: {
     types() {
