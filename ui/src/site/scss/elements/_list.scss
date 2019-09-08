@@ -17,3 +17,29 @@
         list-style: none;
     }
 }
+
+.#{$prefix}attributes {
+  display: grid;
+  grid-gap: 1em;
+
+  @include mq($until: tablet) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  @include mq($from: tablet) {
+    grid-template-columns: auto minmax(10ch, 1fr);
+    grid-template-rows: 1fr;
+  }
+
+  dt {
+    grid-column-start: 1;
+  }
+
+  dd {
+    grid-column-start: 1;
+
+    @include mq($from: tablet) {
+      grid-column-start: 2;
+    }
+  }
+}
