@@ -28,6 +28,7 @@
     color: kwai-color('default', 'text');
     filter: drop-shadow(0 2px 0 rgba(0,0,0,.15) );
     border-radius: 15px;
+    padding: 10px;
   }
 
   &-content {
@@ -53,6 +54,7 @@
     font-size: 28px;
     font-weight: bold;
     grid-area: modal-close;
+    text-align: center;
 
     &:hover,
     &:focus {
@@ -62,3 +64,14 @@
     }
   }
 }
+
+.#{$prefix}modal-fade-enter,
+.#{$prefix}modal-fade-leave-active {
+   opacity: 0;
+ }
+
+.#{$prefix}modal-fade-enter-active,
+.#{$prefix}modal-fade-leave-active {
+   transition: opacity .5s ease
+ }
+ 
