@@ -23,7 +23,7 @@ $table-cell-padding-horizontal: 12px;
             margin-bottom: 0;
         }
 
-        .#{$prefix}middle {
+        &.#{$prefix}middle {
             vertical-align: middle !important;
         }
     }
