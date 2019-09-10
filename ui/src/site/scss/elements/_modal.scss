@@ -11,7 +11,7 @@
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 
   &-container {
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 10% auto; /* 15% from the top and centered */
     border: 1px solid #888;
     width: 70%; // Fallback for fit-content
     width: fit-content;
@@ -74,4 +74,3 @@
 .#{$prefix}modal-fade-leave-active {
    transition: opacity .5s ease
  }
- 
