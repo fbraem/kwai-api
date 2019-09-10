@@ -2,7 +2,7 @@
   <transition name="kwai-modal-fade">
     <div
       class="kwai-modal"
-      @click.prevent.stop="click"
+      @click="click"
     >
       <div class="kwai-modal-container" role="dialog">
         <header>
