@@ -1,44 +1,46 @@
 <template>
-  <KwaiForm
-    :form="form"
-    :error="error"
-    :save="$t('save')"
-    @submit="submit"
-  >
-    <KwaiField
-      name="name"
-      :label="$t('form.team.name.label')"
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :error="error"
+      :save="$t('save')"
+      @submit="submit"
     >
-      <KwaiInputText :placeholder="$t('form.team.name.placeholder')" />
-    </KwaiField>
-    <KwaiField
-      name="season"
-      :label="$t('form.team.season.label')"
-    >
-      <KwaiSelect :items="seasons" />
-    </KwaiField>
-    <p class="uk-text-meta">
-      {{ $t('form.team.season.hint')}}
-    </p>
-    <KwaiField
-      name="team_type"
-      :label="$t('form.team.team_type.label')"
-    >
-      <KwaiSelect :items="team_types" />
-    </KwaiField>
-    <p class="uk-text-meta">
-      {{ $t('form.team.team_type.hint')}}
-    </p>
-    <KwaiField
-      name="remark"
-      :label="$t('form.team.remark.label')"
-    >
-      <KwaiTextarea
-        :rows="5"
-        :placeholder="$t('form.team.remark.placeholder')"
-      />
-    </KwaiField>
-  </KwaiForm>
+      <KwaiField
+        name="name"
+        :label="$t('form.team.name.label')"
+      >
+        <KwaiInputText :placeholder="$t('form.team.name.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="season"
+        :label="$t('form.team.season.label')"
+      >
+        <KwaiSelect :items="seasons" />
+      </KwaiField>
+      <p class="uk-text-meta">
+        {{ $t('form.team.season.hint')}}
+      </p>
+      <KwaiField
+        name="team_type"
+        :label="$t('form.team.team_type.label')"
+      >
+        <KwaiSelect :items="team_types" />
+      </KwaiField>
+      <p class="uk-text-meta">
+        {{ $t('form.team.team_type.hint')}}
+      </p>
+      <KwaiField
+        name="remark"
+        :label="$t('form.team.remark.label')"
+      >
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('form.team.remark.placeholder')"
+        />
+      </KwaiField>
+    </KwaiForm>
+  </div>
 </template>
 
 <script>
