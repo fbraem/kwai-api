@@ -49,11 +49,18 @@ class CoachUpdateAction
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
-            $coach->name = $attributes['name'];
-            $coach->diploma = $attributes['diploma'];
-            $coach->description = $attributes['description'];
-            $coach->active = $attributes['active'] ?? true;
-            $coach->remark = $attributes['remark'];
+            if (isset($attributes['diploma'])) {
+                $coach->diploma = $attributes['diploma'];
+            }
+            if (isset($attributes['description'])) {
+                $coach->description = $attributes['description'];
+            }
+            if (isset($attributes['active'])) {
+                $coach->active = $attributes['active'] ?? true;
+            }
+            if (isset($attributes['remark'])) {
+                $coach->remark = $attributes['remark'];
+            }
 
             $coach->user = $request->getAttribute('clubman.user');
 
@@ -61,7 +68,7 @@ class CoachUpdateAction
 
             $response = (new ResourceResponse(
                 CoachTransformer::createForItem($coach)
-            ))($response)->withStatus(201);
+            ))($response);
         } catch (RecordNotFoundException $rnfe) {
             $response = (new NotFoundResponse(_("Coach doesn't exist")))($response);
         } catch (ValidationException $ve) {
