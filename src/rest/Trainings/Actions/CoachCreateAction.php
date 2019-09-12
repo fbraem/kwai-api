@@ -58,7 +58,6 @@ class CoachCreateAction
             $attributes = \JmesPath\search('data.attributes', $data);
 
             $coach = $coachesTable->newEntity();
-            $coach->name = $attributes['name'];
             $coach->diploma = $attributes['diploma'];
             $coach->description = $attributes['description'];
             $coach->member = $member;
