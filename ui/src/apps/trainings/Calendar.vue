@@ -1,39 +1,34 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="calendar">
-    <div
-      class="uk-margin-bottom"
-      uk-grid
-    >
+    <div style="display: flex; align-items: baseline;">
       <div>
         <a
           @click="prevYear"
-          class="uk-link-reset uk-icon-button"
+          class="kwai-icon-button"
         >
           <i class="fas fa-angle-double-left"></i>
         </a>
         <a
           @click="prevMonth"
-          class="uk-link-reset uk-icon-button"
+          class="kwai-icon-button"
         >
           <i class="fas fa-angle-left "></i>
         </a>
       </div>
-      <div class="uk-width-expand uk-text-center">
-        <span class="uk-h2 uk-text-capitalize">
-          {{ monthName }} {{ year }}
-        </span>
-      </div>
+      <h2 style="flex-grow: 1; text-align: center;">
+        {{ monthName }} {{ year }}
+      </h2>
       <div>
         <a
           @click="nextMonth"
-          class="uk-link-reset uk-icon-button"
+          class="kwai-icon-button"
         >
           <i class="fas fa-angle-right"></i>
         </a>
         <a
           @click="nextYear"
-          class="uk-link-reset uk-icon-button"
+          class="kwai-icon-button"
         >
           <i class="fas fa-angle-double-right"></i>
         </a>
@@ -68,7 +63,7 @@
             <router-link :to="{ name: 'trainings.read', params: { id: event.id }}">
               <del
                 v-if="event.event.cancelled"
-                :uk-tooltip="'title:' + $t('cancelled')"
+                v-tooltip="$t('cancelled')"
               >
                 {{ event.content.title }}
               </del>
@@ -78,16 +73,16 @@
             </router-link>
             <i
               v-if="event.event.cancelled"
-              :uk-tooltip="'title:' + $t('cancelled')"
               class="fas fa-times"
               style="color: rgb(192,28,24)"
+              v-tooltip="$t('cancelled')"
             >
             </i>
             <i
               v-if="event.coaches == null || event.coaches.length == 0"
-              :uk-tooltip="'title:' + $t('no_coach')"
               class="fas fa-user-times"
               style="color: rgb(192,28,24)"
+              v-tooltip="$t('no_coach')"
             >
             </i>
           </div>
@@ -288,6 +283,12 @@
 </style>
 
 <script>
+import Vue from 'vue';
+import { VTooltip } from 'v-tooltip';
+
+Vue.directive('tooltip', VTooltip);
+VTooltip.options.defaultClass = 'kwai-tooltip';
+
 import moment from 'moment';
 
 import messages from './lang';

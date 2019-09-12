@@ -1,72 +1,68 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
+  <div class="page-container">
     <Spinner v-if="$wait.is('training.coaches.browse')" />
     <div
       v-else
-      uk-grid
+      style="grid-column: span 2;"
     >
       <div
         v-if="noData"
-        class="uk-width-1-1"
+        class="kwai-alert kwai-theme-warning"
       >
-        <div class="uk-alert-warning" uk-alert>
-          {{ $t('training.coaches.no_data') }}
-        </div>
+        {{ $t('training.coaches.no_data') }}
       </div>
-      <div
+      <table
         v-else
-        class="uk-width-1-1"
-       >
-        <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
-          <tr>
-            <th>
-              {{ $t('name') }}
-            </th>
-            <th>
-              {{ $t('training.coaches.form.diploma.label') }}
-            </th>
-            <th>
-              {{ $t('training.coaches.form.active.label') }}
-            </th>
-            <th></th>
-          </tr>
-          <tr
-            v-for="coach in coaches"
-            :key="coach.id"
-          >
-            <td>
-              <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">
-                {{ coach.member.person.name }}
-              </router-link>
-            </td>
-            <td>
-              {{ coach.diploma }}
-            </td>
-            <td>
-              <i
-                v-if="coach.active"
-                class="fas fa-check"
-              >
-              </i>
-              <i
-                v-else
-                class="fas fa-times uk-text-danger"
-              >
-              </i>
-            </td>
-            <td>
-              <router-link
-                v-if="$can('update', coach)"
-                class="uk-icon-button uk-link-reset"
-                :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }"
-              >
-                <i class="fas fa-edit uk-text-muted"></i>
-              </router-link>
-            </td>
-          </tr>
-        </table>
-      </div>
+        class="kwai-table kwai-table-small kwai-table-divider kwai-table-middle"
+      >
+        <tr>
+          <th>
+            {{ $t('name') }}
+          </th>
+          <th>
+            {{ $t('training.coaches.form.diploma.label') }}
+          </th>
+          <th>
+            {{ $t('training.coaches.form.active.label') }}
+          </th>
+          <th></th>
+        </tr>
+        <tr
+          v-for="coach in coaches"
+          :key="coach.id"
+        >
+          <td>
+            <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">
+              {{ coach.member.person.name }}
+            </router-link>
+          </td>
+          <td>
+            {{ coach.diploma }}
+          </td>
+          <td>
+            <i
+              v-if="coach.active"
+              class="fas fa-check"
+            >
+            </i>
+            <i
+              v-else
+              class="fas fa-times kwai-theme-danger"
+            >
+            </i>
+          </td>
+          <td>
+            <router-link
+              v-if="$can('update', coach)"
+              class="kwai-icon-button"
+              :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }"
+            >
+              <i class="fas fa-edit"></i>
+            </router-link>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>

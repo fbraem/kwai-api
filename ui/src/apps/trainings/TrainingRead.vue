@@ -2,79 +2,78 @@
   <!-- eslint-disable max-len -->
   <div
     v-if="training"
-    class="uk-flex-center"
-    uk-grid
+    class="page-container"
+    style="display: flex; justify-content: center"
   >
-    <div class="uk-width-1-2@s">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-header uk-padding-remove">
-          <TrainingDayHour :training="training" />
+    <TrainingCard :training="training">
+      <div class="training-area">
+        <h3>
+          {{ $t('title') }} &bull; {{ training.content.title }}
+        </h3>
+        <p>
+          {{ training.content.summary }}
+        </p>
+        <p
+          v-if="training.event.cancelled"
+          class="kwai-alert kwai-theme-danger"
+        >
+          {{ $t('cancelled' )}}
+        </p>
+      </div>
+      <div class="training-area">
+        <div v-if="training.coaches">
+          <strong>{{ $t('coaches') }}:</strong>
+          <ul class="kwai-list kwai-list-bullet">
+            <li
+              v-for="(coach, index) in training.coaches"
+              :key="index">
+              {{ coach.name }}
+            </li>
+          </ul>
         </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">
-            {{ $t('title') }} &bull; {{ training.content.title }}
-          </h3>
-          <p>
-            {{ training.content.summary }}
-          </p>
-          <p
-            v-if="training.event.cancelled"
-            class="uk-alert-danger"
-            uk-alert
-          >
-            {{ $t('cancelled' )}}
-          </p>
-        </div>
-        <div class="uk-card-footer">
-          <div uk-grid>
-            <div
-              v-if="training.coaches"
-              class="uk-width-1-1"
-            >
-              <strong>{{ $t('coaches') }}:</strong>
-              <ul class="uk-list uk-list-bullet">
-                <li
-                  v-for="(coach, index) in training.coaches"
-                  :key="index">
-                  {{ coach.name }}
-                </li>
-              </ul>
-            </div>
-            <div v-if="canManagePresences" class="uk-width-1-1">
-              <strong>{{ $t('training.presences.title') }}:</strong>
-              <ul class="uk-list uk-list-bullet">
-                <li
-                  v-for="(member, index) in training.presences"
-                  :key="index">
-                  {{ member.person.name }}
-                </li>
-              </ul>
-              <div>
-                <router-link
-                  :to="{ name: 'trainings.presences', params: {id: training.id} }"
-                  class="uk-icon-button uk-link-reset"
-                >
-                  <i class="fas fa-address-book"></i>
-                </router-link>
-              </div>
-            </div>
-          </div>
+        <div v-if="canManagePresences">
+          <strong>{{ $t('training.presences.title') }}:</strong>
+          <ul class="kwai-list kwai-list-bullet">
+            <li
+              v-for="(member, index) in training.presences"
+              :key="index">
+              {{ member.person.name }}
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+      <div
+        style="display: flex; justify-content: flex-end;"
+        class="training-area"
+      >
+        <router-link
+          :to="{ name: 'trainings.presences', params: {id: training.id} }"
+          class="kwai-icon-button"
+        >
+          <i class="fas fa-address-book"></i>
+        </router-link>
+      </div>
+    </TrainingCard>
   </div>
 </template>
+
+<style scoped>
+.training-area {
+  border-top: 1px solid var(--kwai-color-default-light);
+  padding: 40px;
+}
+</style>
 
 <script>
 import messages from './lang';
 
-import TrainingDayHour from './TrainingDayHour';
 import Presence from '@/models/trainings/Presence';
+import TrainingCard from './TrainingCard';
 
 export default {
   i18n: messages,
   components: {
-    TrainingDayHour
+    TrainingCard
   },
   computed: {
     training() {

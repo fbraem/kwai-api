@@ -1,22 +1,25 @@
 <template>
-  <div>
+  <div
+    class="page-container"
+    style="grid-columns: span 2; display: flex; flex-direction: column;"
+  >
     <Spinner v-if="$wait.is('training.coaches.read')" />
-    <CoachCard v-if="coach" :coach="coach" />
+    <div style="align-self: center;">
+      <CoachCard v-if="coach" :coach="coach" />
+    </div>
     <div
       v-if="notAllowed"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-danger"
     >
         {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-danger"
     >
         {{ $t('training.coaches.not_found') }}
     </div>
-    <div class="uk-width-1-1">
+    <div style="margin-top: 20px;">
       <router-view name="coach_information" />
     </div>
   </div>

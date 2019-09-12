@@ -1,69 +1,67 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <KwaiForm
-        :form="form"
-        :error="error"
-        :save="$t('save')"
-        @submit="submit"
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :error="error"
+      :save="$t('save')"
+      @submit="submit"
+    >
+      <KwaiField
+        v-if="creating"
+        name="member"
+        :label="$t('training.coaches.form.member.label')"
       >
+        <KwaiAutoComplete :placeholder="$t('training.coaches.form.member.placeholder')"
+          :items="members"
+          :stringResult="(value) => { return value.person.name }">
+          <template slot-scope="row">
+            {{ row.result.license }} - {{ row.result.person.name }}
+          </template>
+          <span slot="empty">
+            {{ $t('training.coaches.form.member.not_found') }}
+          </span>
+        </KwaiAutoComplete>
+      </KwaiField>
+      <div v-else>
         <KwaiField
-          v-if="creating"
           name="member"
           :label="$t('training.coaches.form.member.label')"
         >
-          <KwaiAutoComplete :placeholder="$t('training.coaches.form.member.placeholder')"
-            :items="members"
-            :stringResult="(value) => { return value.person.name }">
-            <template slot-scope="row">
-              {{ row.result.license }} - {{ row.result.person.name }}
-            </template>
-            <span slot="empty">
-              {{ $t('training.coaches.form.member.not_found') }}
-            </span>
-          </KwaiAutoComplete>
+          <input class="kwai-input" type="text" readonly="readonly" v-model="coach.name" />
         </KwaiField>
-        <div v-else>
+      </div>
+      <div>
+        <div>
           <KwaiField
-            name="member"
-            :label="$t('training.coaches.form.member.label')"
+            name="diploma"
+            :label="$t('training.coaches.form.diploma.label')"
           >
-            <input class="uk-input" type="text" readonly="readonly" v-model="coach.name" />
+            <KwaiInputText :placeholder="$t('training.coaches.form.diploma.placeholder')" />
           </KwaiField>
         </div>
-        <div uk-grid>
-          <div class="uk-width-expand">
-            <KwaiField
-              name="diploma"
-              :label="$t('training.coaches.form.diploma.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.coaches.form.diploma.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="active"
-              :label="$t('training.coaches.form.active.label')"
-            >
-              <KwaiSwitch />
-            </KwaiField>
-          </div>
+        <div>
+          <KwaiField
+            name="active"
+            :label="$t('training.coaches.form.active.label')"
+          >
+            <KwaiSwitch />
+          </KwaiField>
         </div>
-        <KwaiField
-          name="description"
-          :label="$t('training.coaches.form.description.label')"
-        >
-          <KwaiTextarea :rows="5" :placeholder="$t('training.coaches.form.description.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="remark"
-          :label="$t('training.coaches.form.remark.label')"
-        >
-          <KwaiTextarea :rows="5" :placeholder="$t('training.coaches.form.remark.placeholder')" />
-        </KwaiField>
-      </KwaiForm>
-    </div>
+      </div>
+      <KwaiField
+        name="description"
+        :label="$t('training.coaches.form.description.label')"
+      >
+        <KwaiTextarea :rows="5" :placeholder="$t('training.coaches.form.description.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="remark"
+        :label="$t('training.coaches.form.remark.label')"
+      >
+        <KwaiTextarea :rows="5" :placeholder="$t('training.coaches.form.remark.placeholder')" />
+      </KwaiField>
+    </KwaiForm>
   </div>
 </template>
 

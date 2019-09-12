@@ -1,12 +1,6 @@
 <template>
-  <div
-    class="uk-grid-collapse"
-    uk-grid
-  >
-    <div
-      class="uk-width-1-2@m uk-light uk-text-center uk-padding"
-      style="background-color:rgb(198, 28, 24)"
-    >
+  <div class="training-container">
+    <div class="training-day">
       <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
         {{ dayName }}
       </div>
@@ -17,7 +11,7 @@
         {{ month }}
       </div>
     </div>
-    <div class="uk-width-1-2@m uk-text-center uk-padding">
+    <div class="training-hour">
       <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
         {{ training.formattedStartTime}}
       </div>
@@ -27,10 +21,33 @@
       <div style="font-size:4em; text-transform:lowercase;">
         {{ training.formattedEndTime}}
       </div>
-      <br />
     </div>
   </div>
 </template>
+
+<style lang="scss">
+@import '@/site/scss/_mq.scss';
+
+.training-container {
+  display: flex;
+  flex-direction: row;
+  @include mq($until: tablet) {
+    flex-direction: column;
+  }
+}
+
+.training-day {
+  text-align: center;
+  background-color: var(--kwai-color-secondary);
+  color: var(--kwai-color-secondary-text);
+  padding: 40px;
+}
+
+.training-hour {
+  text-align: center;
+  padding: 40px;
+}
+</style>
 
 <script>
 import Training from '@/models/trainings/Training';
