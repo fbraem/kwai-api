@@ -18,7 +18,6 @@ body {
 
 @import "_mq.scss";
 @import "grid/gridlex.scss";
-@import "card/card.scss";
 @import "elements/_addon.scss";
 @import "elements/_alert.scss";
 @import "elements/_badge.scss";
@@ -29,6 +28,7 @@ body {
 @import "elements/_text.scss";
 @import "elements/_switch.scss";
 @import "elements/_table.scss";
+@import "elements/_tooltip.scss";
 
 .main-container {
     display: grid;
