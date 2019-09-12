@@ -58,7 +58,17 @@ export default {
   },
   watch: {
     title(nv) {
-      document.title = nv;
+      // document.title = nv;
+    },
+    '$route.meta.title': {
+      handler(nv, ov) {
+        if (nv) {
+          document.title = this.title + ' - ' + nv;
+        } else {
+          document.title = this.title;
+        }
+      },
+      immediate: true
     }
   },
   methods: {
