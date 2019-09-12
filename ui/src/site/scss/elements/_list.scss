@@ -16,6 +16,11 @@
         padding-left: 30px;
         list-style: none;
     }
+
+    &-bullet {
+      list-style: disc;
+      padding-inline-start: 1rem;
+    }
 }
 
 .#{$prefix}attributes {
