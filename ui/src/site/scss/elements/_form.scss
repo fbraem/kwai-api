@@ -494,6 +494,10 @@ select.#{$prefix}form-width-xsmall { width: ($form-width-xsmall + 25px); }
     background-position: 50% 50%;
 }
 
+.#{$prefix}checkbox {
+    border: 1px solid black;
+}
+
 .#{$prefix}radio { border-radius: 50%; }
 
 /* Focus */
