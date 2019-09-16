@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <table class="uk-table uk-table-divider">
+  <div class="page-container">
+    <table class="kwai-table kwai-table-divider">
       <tr>
         <th>{{ $t('rules.name') }}</th>
       </tr>

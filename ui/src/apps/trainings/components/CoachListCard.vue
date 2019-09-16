@@ -1,24 +1,30 @@
 <template>
-  <div class="uk-card uk-card-default uk-card-small">
-    <div class="uk-card-header">
-      <h3 class="uk-card-title">Onze trainers</h3>
-    </div>
-    <div class="uk-card-body">
-      <div
-        class="uk-grid-small uk-grid-divider"
-        uk-grid
-      >
-        <div
-          v-for="coach in coaches"
-          :key="coach.id"
-          class="uk-width-1-1"
-        >
-          <CoachComponent :coach="coach" />
-        </div>
-      </div>
+  <div class="coach-list-card">
+    <h3>Onze trainers</h3>
+    <div
+      class="coach-list"
+      v-for="coach in coaches"
+      :key="coach.id"
+    >
+      <CoachComponent :coach="coach" />
     </div>
   </div>
 </template>
+
+<style>
+.coach-list-card {
+  display: flex;
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+  flex-direction: column;
+  padding: 15px;
+}
+.coach-list {
+  padding: 10px;
+}
+.coach-list:not(:last-child) {
+  border-bottom: 1px solid var(--kwai-color-muted);
+}
+</style>
 
 <script>
 
@@ -47,8 +53,8 @@ const CoachComponent = {
   render(h) {
     return h('div', {}, [
       h('img', {
-        class: {
-          'uk-border-circle': true
+        style: {
+          'border-radius': '100%'
         },
         attrs: {
           width: 32,
@@ -57,10 +63,10 @@ const CoachComponent = {
         }
       }),
       h('span', {
-        class: {
-          'uk-text-middle': true,
-          'uk-margin-left': true
-        },
+        style: {
+          'text-align': 'center',
+          'margin-left': '20px'
+        }
       }, [
         h('router-link', {
           attrs: {

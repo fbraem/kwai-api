@@ -1,30 +1,23 @@
 <template>
   <!-- eslint-disable max-len -->
-  <section class="uk-section uk-section-small uk-container uk-container-expand">
-    <div uk-grid>
+  <div class="page-container">
+    <div style="grid-column: span 2;">
       <div
         v-if="count === 0"
-        class="uk-width-1-1"
+        class="kwai-alert kwai-theme-warning"
       >
-        <div class="uk-alert uk-alert-warning">
-          {{ $t('training.events.no_generated_data') }}
-        </div>
+        {{ $t('training.events.no_generated_data') }}
       </div>
-      <div
-        v-else
-        uk-grid
-      >
-        <div class="uk-width-1-1">
-          <div uk-alert>
-            {{ $t('training.generator.help') }}
-          </div>
+      <div v-else>
+        <div class="kwai-alert">
+          {{ $t('training.generator.help') }}
         </div>
-        <div class="uk-width-1-1">
-          <table class="uk-table uk-table-divider uk-table-striped uk-table-middle uk-table-small">
+        <div>
+          <table class="kwai-table kwai-table-divider kwai-table-striped kwai-table-middle kwai-table-small">
             <tr>
               <th>
                 <input
-                  class="uk-checkbox"
+                  class="kwai-checkbox"
                   type="checkbox"
                   v-model="selectAll"
                 />
@@ -38,18 +31,16 @@
               <th>
                 {{ $t('training.events.time') }}
               </th>
-              <th class="uk-table-expand">
+              <th class="kwai-table-expand">
                 {{ $t('training.events.coaches') }}
               </th>
             </tr>
             <tr
               v-for="(training, index) in trainings"
-              :key="index"
-              :class="{ 'uk-text-muted': training.disabled }"
-              :style="{'text-decoration': training.disabled ? 'line-through' : 'none'}">
+              :key="index">
               <td>
                 <input
-                  class="uk-checkbox"
+                  class="kwai-checkbox"
                   type="checkbox"
                   v-model="selectedTrainings"
                   :value="index"
@@ -75,21 +66,17 @@
             </tr>
           </table>
         </div>
-        <div uk-grid>
-          <div class="uk-width-expand">
-          </div>
-          <div class="uk-width-auto">
-            <button
-              class="uk-button uk-button-primary"
-              :disabled="!hasSelections"
-              @click="submit">
-              <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-            </button>
-          </div>
+        <div style="display:flex; justify-content: flex-end;">
+          <button
+            class="kwai-button kwai-theme-primary"
+            :disabled="!hasSelections"
+            @click="submit">
+            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+          </button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

@@ -1,22 +1,19 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <div class="uk-width-auto">
+  <div>
+    <div style="grid-columns: span 2;">
+      <div>
         <button
-          class="uk-button"
-          uk-toggle="target: #events"
+          class="kwai-button"
+          @click.prevent.stop="showForm = !showForm"
         >
           <i class="far fa-calendar-alt"></i>&nbsp; {{ $t('trainings') }}
         </button>
       </div>
-      <div class="uk-width-expand">
-      </div>
     </div>
     <div
-      class="uk-width-1-1"
-      id="events"
-      hidden
+      v-show="showForm"
+      style="margin-top: 20px;"
     >
       <p>
         {{ $t('training.generator.create') }}
@@ -26,17 +23,13 @@
         @submit="generate"
         :save="$t('training.generator.form.generate')"
       >
-        <div class="uk-child-width-1-2" uk-grid>
-          <div>
-            <KwaiField name="start_date">
-              <KwaiInputText :placeholder="$t('training.generator.form.start_date.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField name="end_date">
-              <KwaiInputText :placeholder="$t('training.generator.form.end_date.placeholder')" />
-            </KwaiField>
-          </div>
+        <div class="date-grid">
+          <KwaiField name="start_date">
+            <KwaiInputText :placeholder="$t('training.generator.form.start_date.placeholder')" />
+          </KwaiField>
+          <KwaiField name="end_date">
+            <KwaiInputText :placeholder="$t('training.generator.form.end_date.placeholder')" />
+          </KwaiField>
         </div>
         <KwaiField name="coaches">
           <multiselect
@@ -59,6 +52,22 @@
     <notifications position="bottom right" />
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/site/scss/_mq.scss';
+
+.date-grid {
+  display: grid;
+  grid-gap: 20px;
+
+  @include mq($from: tablet) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @include mq($until: tablet) {
+    grid-template-rows: 1fr 1fr;
+  }
+}
+</style>
 
 <script>
 import moment from 'moment';
@@ -87,6 +96,7 @@ export default {
   data() {
     return {
       trainings: null,
+      showForm: false,
       form: makeForm({
         start_date: makeField({
           value: moment().format('L'),

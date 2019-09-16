@@ -1,24 +1,22 @@
 <template>
-  <div>
+  <div class="page-container">
     <Spinner v-if="$wait.is('training.browse')" />
     <div
       v-else
-      uk-grid
+      style="grid-column: span 2;"
     >
-      <div class="uk-width-1-1">
-        <Calendar
-          :year="year"
-          :month="month"
-          :trainings="trainings"
-          @prevMonth="prevMonth"
-          @prevYear="prevYear"
-          @nextMonth="nextMonth"
-          @nextYear="nextYear"
-        />
-        <div v-if="noData">
-          <div class="uk-alert uk-alert-warning">
-            {{ $t('training.events.no_data') }}
-          </div>
+      <Calendar
+        :year="year"
+        :month="month"
+        :trainings="trainings"
+        @prevMonth="prevMonth"
+        @prevYear="prevYear"
+        @nextMonth="nextMonth"
+        @nextYear="nextYear"
+      />
+      <div v-if="noData">
+        <div class="kwai-alert kwai-theme-warning">
+          {{ $t('training.events.no_data') }}
         </div>
       </div>
     </div>

@@ -1,129 +1,118 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <Spinner v-if="$wait.is('users.read')" />
-    <div
-      v-if="notAllowed"
-      class="uk-alert-danger"
-      uk-alert
-    >
-      {{ $t('not_allowed') }}
-    </div>
-    <div
-      v-if="notFound"
-      class="uk-alert-danger"
-      uk-alert
-    >
-      {{ $t('user.not_found') }}
-    </div>
-    <div v-if="user"
-      class="uk-container"
-    >
+  <div class="page-container">
+    <div style="grid-column: span 2;">
+      <Spinner v-if="$wait.is('users.read')" />
       <div
-        class="uk-flex uk-flex-middle"
-        uk-grid
+        v-if="notAllowed"
+        class="kwai-alert kwai-theme-danger"
       >
-        <div class="uk-width-1-1@s uk-width-1-3@m">
+        {{ $t('not_allowed') }}
+      </div>
+      <div
+        v-if="notFound"
+        class="kwai-alert kwai-theme-danger"
+      >
+        {{ $t('user.not_found') }}
+      </div>
+      <div
+        v-if="user"
+        class="user-grid"
+      >
+        <div style="grid-area: user-avatar">
           <img :src="noAvatarImage" />
         </div>
-        <div class="uk-width-1-1@s uk-width-2-3@m">
-          <div uk-grid>
-            <div class="uk-width-1-1">
-              <h1>{{ user.name }}</h1>
+        <div style="grid-area: user-info; display: flex; flex-direction: column;">
+          <h1>{{ user.name }}</h1>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+            <a class="kwai-button">
+              <i class="fas fa-envelope"></i>Mail
+            </a>
+            <a class="kwai-button">
+              <i class="fas fa-ban"></i>Block
+            </a>
+            <router-link :to="{ name: 'users.abilities', params: { id: user.id } }"
+              class="kwai-button"
+            >
+              <i class="fas fa-key"></i>
+              {{ $t('rules.title') }}
+            </router-link>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-around; margin-top: 20px;">
+            <div>
+              <span>
+                <i class="fas fa-calendar"></i>
+                {{ $t('member_since') }}
+              </span>
+              <div>
+                {{ user.createdAtFormatted }}
+              </div>
             </div>
-            <div class="uk-width-1-1">
-              <a class="uk-button uk-button-default">
-                <i class="fas fa-envelope uk-margin-small-right"></i>Mail
-              </a>
-              <a class="uk-button uk-button-default">
-                <i class="fas fa-ban uk-margin-small-right"></i>Block
-              </a>
-              <router-link :to="{ name: 'users.abilities', params: { id: user.id } }"
-                class="uk-button uk-button-default"
-              >
-                <i class="fas fa-key uk-margin-small-right"></i>
-                {{ $t('rules.title') }}
-              </router-link>
-            </div>
-            <div class="uk-width-1-1">
-              <div
-                class="uk-grid uk-grid-divider uk-grid-medium uk-child-width-1-2"
-                uk-grid
-              >
-                <div>
-                  <span class="uk-text-small">
-                    <i class="fas fa-calendar uk-margin-small-right uk-text-primary"></i>
-                    {{ $t('member_since') }}
-                  </span>
-                  <div class="uk-text-large uk-margin-remove uk-text-primary">
-                    {{ user.createdAtFormatted }}
-                  </div>
-                </div>
-                <div>
-                  <span class="uk-text-small">
-                    <i class="fas fa-user uk-margin-small-right uk-text-success"></i>
-                    {{ $t('last_login') }}
-                  </span>
-                  <div class="uk-text-large uk-margin-remove uk-text-success">
-                    {{ user.lastLoginFormatted }}
-                  </div>
-                </div>
+            <div>
+              <span>
+                <i class="fas fa-user"></i>
+                {{ $t('last_login') }}
+              </span>
+              <div>
+                {{ user.lastLoginFormatted }}
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <section class="uk-section uk-section-default">
-        <div class="uk-container uk-container-expand">
-          <h4 class="uk-heading-line uk-text-bold">
-            <span>
-              {{ $t('news') }}
-            </span>
-          </h4>
-          <p class="uk-text-meta">
-            {{ $t('news_info') }}
-          </p>
-          <Spinner v-if="$wait.is('news.browse')" />
-          <div v-if="hasStories">
-            <table class="uk-table uk-table-striped">
-              <thead>
-                <tr>
-                  <th>
-                    {{ $t('title') }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="story in stories" :key="story.id">
-                  <td>
-                    <router-link
-                      :to="{ name: 'news.story', params: { id : story.id } }"
-                    >
-                      {{ story.content.title }}
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <Paginator
-              v-if="storiesMeta"
-              :count="storiesMeta.count"
-              :limit="storiesMeta.limit"
-              :offset="storiesMeta.offset"
-              @page="loadStories"
-            />
+        <div style="grid-area: user-news">
+          <div>
+            <h4 class="kwai-header-line">
+              <span>
+                {{ $t('news') }}
+              </span>
+            </h4>
+            <p class="kwai-text-meta">
+              {{ $t('news_info') }}
+            </p>
+            <Spinner v-if="$wait.is('news.browse')" />
+            <div v-if="hasStories">
+              <table class="kwai-table kwai-table-striped">
+                <thead>
+                  <tr>
+                    <th>
+                      {{ $t('title') }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="story in stories" :key="story.id">
+                    <td>
+                      <router-link
+                        :to="{ name: 'news.story', params: { id : story.id } }"
+                      >
+                        {{ story.content.title }}
+                      </router-link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <Paginator
+                v-if="storiesMeta"
+                :count="storiesMeta.count"
+                :limit="storiesMeta.limit"
+                :offset="storiesMeta.offset"
+                @page="loadStories"
+              />
+            </div>
           </div>
-          <h4 class="uk-heading-line uk-text-bold">
+        </div>
+        <div style="grid-area: user-pages">
+          <h4 class="kwai-header-line">
             <span>
               {{ $t('information') }}
             </span>
           </h4>
-          <p class="uk-text-meta">
+          <p class="kwai-text-meta">
             {{ $t('information_info') }}
           </p>
           <Spinner v-if="$wait.is('pages.browse')" />
           <div v-if="hasPages">
-            <table class="uk-table uk-table-striped">
+            <table class="kwai-table kwai-table-striped">
               <thead>
                 <tr>
                   <th>
@@ -155,10 +144,39 @@
             />
           </div>
         </div>
-      </section>
+      </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import "@/site/scss/_mq.scss";
+
+.user-grid {
+  display: grid;
+  grid-gap: 20px;
+
+  @include mq($until: tablet) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "user-avatar"
+      "user-info"
+      "user-news"
+      "user-pages"
+    ;
+  }
+  @include mq($from: tablet) {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "user-avatar user-info"
+      "user-news user-news"
+      "user-pages user-pages"
+    ;
+  }
+}
+</style>
 
 <script>
 import messages from './lang';
