@@ -1,11 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <div v-if="invitation">
+  <div class="page-container">
+    <div
+      v-if="invitation"
+      style="grid-column: span 2;"
+    >
       <div
         v-if="invitation.isExpired"
-        class="uk-alert-danger"
-        uk-alert
+        class="kwai-alert kwai-theme-danger"
       >
         <p>
           {{ $t('invitation.expired') }}
@@ -13,8 +15,7 @@
       </div>
       <div v-else>
         <div
-          class="uk-alert-primary"
-          uk-alert
+          class="kwai-alert kwai-theme-primary"
         >
           {{ $t('invitation.intro') }}
         </div>
@@ -57,11 +58,13 @@
         </KwaiForm>
       </div>
     </div>
-    <div v-else>
+    <div
+      v-else
+      style="grid-column: span 2;"
+    >
       <div
         v-if="invitationError && invitationError.response.status == 404"
-        class="uk-alert-danger"
-        uk-alert
+        class="kwai-alert kwai-theme-danger"
       >
         {{ $t('invitation.not_found') }}
       </div>

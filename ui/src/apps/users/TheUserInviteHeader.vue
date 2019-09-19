@@ -1,15 +1,18 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div>
-    <h1>{{ $t('user_mgmt') }}</h1>
-    <h3 class="uk-h3 uk-margin-remove">{{ $t('invite') }}</h3>
-  </div>
+  <Header
+    :title="$t('user_mgmt')"
+    :subtitle="$t('invite')"
+  />
 </template>
 
 <script>
+import Header from '@/components/Header';
 import messages from './lang';
 
 export default {
+  components: {
+    Header
+  },
   i18n: messages
 };
 </script>

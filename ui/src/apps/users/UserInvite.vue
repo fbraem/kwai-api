@@ -1,14 +1,9 @@
 <template>
-  <div uk-grid>
-    <div>
-      <div
-        class="uk-width-1-1 uk-alert-primary"
-        uk-alert
-      >
+  <div class="page-container">
+    <div style="grid-column: span 2;">
+      <div class="kwai-alert kwai-theme-warning">
         {{ $t('invite_intro') }}
       </div>
-    </div>
-    <div class="uk-width-1-1">
       <KwaiForm
         :form="form"
         :error="error"

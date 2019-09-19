@@ -32,7 +32,6 @@
         <div>
           <div
             v-for="page in pages"
-            :page="page"
             :key="page.id"
           >
             <PageSummary :page="page" />

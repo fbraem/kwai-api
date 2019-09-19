@@ -1,6 +1,9 @@
 <template>
   <div class="page-container">
-    <table class="kwai-table kwai-table-divider">
+    <table
+      class="kwai-table kwai-table-divider"
+      style="grid-column: span 2;"
+    >
       <tr>
         <th>{{ $t('rules.name') }}</th>
       </tr>
