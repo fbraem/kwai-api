@@ -9,6 +9,7 @@
       flex: 1;
       border: 1px solid rgba(147, 128, 108, 0.25);
       padding: 0.5em 0.75em;
+      height: auto;
 
       &:not(:first-child) {
         border-left: 0;
