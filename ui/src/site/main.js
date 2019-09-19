@@ -3,10 +3,12 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
+/*
 import UIkit from 'uikit';
 import UIkitIcons from 'uikit/dist/js/uikit-icons';
 UIkit.use(UIkitIcons);
 import 'uikit/dist/css/uikit.min.css';
+*/
 
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
