@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: var(--#{$prefix}line-height);
+}
+ul {
+    list-style: none;
+}
+embed,
+iframe,
+img,
+object,
+video {
+  display: block;
+  max-width: 100%;
+}
+[hidden] {
+  display: none !important;
+}
+/* noscript styles */
+noscript {
+  display: block;
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+
+body {
+    font-family: "Segoe UI", "Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}

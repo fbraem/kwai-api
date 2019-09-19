@@ -6,27 +6,19 @@ $prefix: "kwai-";
     --#{$prefix}line-height: 1.5em;
 }
 
-* {
-    margin: 0;
-    box-sizing: border-box;
-    line-height: var(--#{$prefix}line-height);
-}
-
-body {
-    font-family: "Segoe UI", "Helvetica Neue",Arial,"Noto Sans",sans-serif;
-}
+@import "_reset.scss";
 
 @import "_mq.scss";
-@import "elements/_addon.scss";
 @import "elements/_alert.scss";
 @import "elements/_badge.scss";
 @import "elements/_button.scss";
 @import "elements/_form.scss";
+@import "elements/_addon.scss"; // Put here, to override input height
 @import "elements/_list.scss";
 @import "elements/_modal.scss";
-@import "elements/_text.scss";
 @import "elements/_switch.scss";
 @import "elements/_table.scss";
+@import "elements/_text.scss";
 @import "elements/_tooltip.scss";
 
 .main-container {
