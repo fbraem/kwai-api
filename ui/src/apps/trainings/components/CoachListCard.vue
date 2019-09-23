@@ -51,7 +51,12 @@ const CoachComponent = {
     }
   },
   render(h) {
-    return h('div', {}, [
+    return h('div', {
+      style: {
+        display: 'flex',
+        'align-items': 'center'
+      }
+    }, [
       h('img', {
         style: {
           'border-radius': '100%'
@@ -62,9 +67,9 @@ const CoachComponent = {
           src: this.image
         }
       }),
-      h('span', {
+      h('div', {
         style: {
-          'text-align': 'center',
+          'vertical-align': 'middle',
           'margin-left': '20px'
         }
       }, [
