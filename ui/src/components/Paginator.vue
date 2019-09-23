@@ -2,24 +2,24 @@
   <!-- eslint-disable max-len -->
   <ul
     v-if="pageCount > 1"
-    class="uk-pagination uk-flex-center"
+    class="kwai-pagination"
   >
     <li v-if="currentPage > 1">
       <a @click="currentPage -= 1">
-        <span uk-pagination-previous></span>
+        <i class="fas fa-chevron-left"></i>
       </a>
     </li>
     <template v-for="page in pages">
       <li
         :key="page"
-        :class="{ 'uk-disabled' : page == '...', 'uk-active' : page == currentPage }"
+        :class="{ 'kwai-disabled' : page == '...', 'kwai-active' : page == currentPage }"
       >
         <a @click="currentPage = page">{{ page }}</a>
       </li>
     </template>
     <li v-if="currentPage < pageCount">
       <a @click="currentPage += 1">
-        <span uk-pagination-next></span>
+        <i class="fas fa-chevron-right"></i>
       </a>
     </li>
   </ul>
