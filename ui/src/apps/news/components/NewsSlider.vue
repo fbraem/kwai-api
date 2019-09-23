@@ -79,7 +79,7 @@ export default {
       return actives;
     },
     hasNext() {
-      return this.start < this.stories.length;
+      return this.start + this.columns - 1 < this.stories.length;
     },
     hasPrev() {
       return this.start > 1;
