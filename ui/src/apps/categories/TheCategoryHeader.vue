@@ -34,7 +34,7 @@
       </div>
       <div
         class="kwai-buttons"
-        style="grid-column: 2; display: flex; align-items: flex-end;justify-content: flex-end;"
+        style="display: flex; align-items: flex-end;justify-content: flex-end;"
       >
         <router-link v-if="canCreate"
           class="kwai-icon-button kwai-theme-muted"
@@ -80,10 +80,14 @@ export default {
       return null;
     },
     grid() {
-      if (this.picture) {
-        return '2';
+      if (this.picture !== null) {
+        return {
+          'grid-column': '2'
+        };
       }
-      return '1';
+      return {
+        'grid-column': '1'
+      };
     },
     updateLink() {
       return {
