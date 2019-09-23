@@ -1,18 +1,30 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="kwai-news-card">
-    <h3 style="grid-area: news-card-title; margin-bottom:0px">
-      <router-link
-        v-if="story.content"
-        :to="contentLink"
-        class="kwai-link-reset"
+    <div style="grid-area: news-card-title">
+      <h3 style="margin-bottom:0px">
+        <router-link
+          v-if="story.content"
+          :to="contentLink"
+          class="kwai-link-reset"
+        >
+          {{ story.content.title }}
+        </router-link>
+        <span v-else>
+          {{ story.content.title }}
+        </span>
+      </h3>
+      <div
+        v-if="story.publish_date"
+        class="kwai-text-meta"
       >
-        {{ story.content.title }}
-      </router-link>
-      <span v-else>
-        {{ story.content.title }}
-      </span>
-    </h3>
+        {{ $t('published', {
+          publishDate: story.localPublishDate,
+          publishDateFromNow: story.publishDateFromNow
+          })
+        }}
+      </div>
+    </div>
     <div
       v-if="story.overview_picture"
       style="grid-area: news-card-image;justify-self:center;"
