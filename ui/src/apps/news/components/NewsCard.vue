@@ -5,6 +5,7 @@
       <router-link
         v-if="story.content"
         :to="contentLink"
+        class="kwai-link-reset"
       >
         {{ story.content.title }}
       </router-link>
