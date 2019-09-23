@@ -91,13 +91,15 @@
                   </tr>
                 </tbody>
               </table>
-              <Paginator
-                v-if="storiesMeta"
-                :count="storiesMeta.count"
-                :limit="storiesMeta.limit"
-                :offset="storiesMeta.offset"
-                @page="loadStories"
-              />
+              <div style="display: flex; justify-content: center;">
+                <Paginator
+                  v-if="storiesMeta"
+                  :count="storiesMeta.count"
+                  :limit="storiesMeta.limit"
+                  :offset="storiesMeta.offset"
+                  @page="loadStories"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -135,13 +137,15 @@
                 </tr>
               </tbody>
             </table>
-            <Paginator
-              v-if="pagesMeta"
-              :count="pagesMeta.count"
-              :limit="pagesMeta.limit"
-              :offset="pagesMeta.offset"
-              @page="loadPages"
-            />
+            <div style="display: flex; justify-content: center;">
+              <Paginator
+                v-if="pagesMeta"
+                :count="pagesMeta.count"
+                :limit="pagesMeta.limit"
+                :offset="pagesMeta.offset"
+                @page="loadPages"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -54,14 +54,18 @@
     <h4 class="kwai-header-line">
       Belangrijk Nieuws
     </h4>
-    <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    <div style="display: flex; justify-content: center;">
+      <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    </div>
     <Spinner v-if="$wait.is('news.browse')"/>
     <div class="news-card-container">
       <div v-for="story in stories" :key="story.id" class="news-card-item">
         <NewsCard :story="story" @deleteStory="deleteStory"></NewsCard>
       </div>
     </div>
-    <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    <div style="display: flex; justify-content: center;">
+      <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    </div>
     <router-link class="kwai-button" :to="{ name : 'news.browse' }">
       {{ $t('more_news') }}
     </router-link>

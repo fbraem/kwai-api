@@ -9,7 +9,7 @@
         <div v-if="storyCount == 0">
           {{ $t('no_featured_news') }}
         </div>
-        <div v-if="stories">
+        <div v-if="stories && stories.length > 0">
           <NewsSlider :stories="stories" />
         </div>
       </div>
@@ -29,10 +29,11 @@
         <h4 class="kwai-header-line">
           Informatie
         </h4>
-        <div>
+        <div style="display: flex;">
           <div
             v-for="page in pages"
             :key="page.id"
+            style="margin: 20px;"
           >
             <PageSummary :page="page" />
           </div>

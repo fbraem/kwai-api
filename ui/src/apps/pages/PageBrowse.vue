@@ -2,7 +2,10 @@
   <div>
     <Page>
       <Spinner v-if="$wait.is('pages.browse')" />
-      <div v-if="pagesMeta">
+      <div
+        v-if="pagesMeta"
+        style="display: flex; justify-content: center;"
+      >
         <Paginator
           :count="pagesMeta.count"
           :limit="pagesMeta.limit"
@@ -19,7 +22,10 @@
           <PageSummary :page="page" />
         </div>
       </div>
-      <div v-if="pagesMeta">
+      <div
+        v-if="pagesMeta"
+        style="display: flex; justify-content: center;"
+      >
         <Paginator
           :count="pagesMeta.count"
           :limit="pagesMeta.limit"
