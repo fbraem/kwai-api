@@ -83,10 +83,10 @@
         <h3>Jeugdvriendelijke Judoclub</h3>
         <div style="display: flex; flex-direction: column;">
           <div>
-            <p>Voor het vierde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
+            <p>Voor het vijfde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
           </div>
-          <div style="align-self: center;">
-            <img :src="require('./images/goud_jeugdsport_2018.png')" style="height:125px" alt="">
+          <div style="align-self: center; padding: 15px; margin-top: 20px; background-color: white;">
+            <img :src="require('./images/goud_jeugdsport_2019.jpg')" style="height:125px" alt="">
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@
             <p>Wij trainen in de gevechtssportzaal van sportcentrum
             <strong>"De Sportstek"</strong> in Stekene, Nieuwstraat 60D.</p>
           </div>
-          <div style="align-self: center;">
+          <div style="align-self: center; margin-top: 20px;">
             <img :src="require('./images/sporthal.jpg')" style="height:125px" alt="">
           </div>
         </div>
@@ -108,7 +108,7 @@
           <div>
             <p>De <a href="https://www.vjf.be">Vlaamse Judo Federatie</a> en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
           </div>
-          <div style="align-self: center;">
+          <div style="align-self: center; margin-top: 20px;">
             <img :src="require('./images/kim_ono.png')" style="height:125px;" alt="">
           </div>
         </div>
@@ -119,7 +119,7 @@
           <div>
             <p>Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.</p>
           </div>
-          <div style="align-self: center;">
+          <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
             <img :src="require('./images/hartveilig.jpg')" alt="">
           </div>
         </div>
@@ -130,7 +130,7 @@
           <div>
             <p>Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a> hoog in het het vaandel.</p>
           </div>
-          <div style="align-self: center;">
+          <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
             <img :src="require('./images/gezond.jpg')" style="height:125px" alt="">
           </div>
         </div>
@@ -141,7 +141,7 @@
           <div>
             <p>Onze club onderschrijft de <a href="http://panathlonvlaanderen.be">Panathlon</a> verklaring.</p>
           </div>
-          <div style="align-self: center;">
+          <div style="align-self: center; margin-top: 20px;padding: 15px; background-color: white;">
             <img :src="require('./images/panathlon.jpg')" style="height:125px" alt="">
           </div>
         </div>
