@@ -1,52 +1,51 @@
 <template>
-  <!-- eslint-disable max-len -->
-    <div class="page-container">
-      <div style="grid-column: 1 / 3;">
-        <h4 class="kwai-header-line">
-          {{ $t('featured_news') }}
-        </h4>
-        <Spinner v-if="$wait.is('news.browse')" />
-        <div v-if="storyCount == 0">
-          {{ $t('no_featured_news') }}
-        </div>
-        <div v-if="stories && stories.length > 0">
-          <NewsSlider :stories="stories" />
-        </div>
+  <div class="page-container">
+    <div style="grid-column: 1 / 3;">
+      <h4 class="kwai-header-line">
+        {{ $t('featured_news') }}
+      </h4>
+      <Spinner v-if="$wait.is('news.browse')" />
+      <div v-if="storyCount == 0">
+        {{ $t('no_featured_news') }}
       </div>
-      <div style="grid-column: 1 / 3;justify-self:center;">
-        <router-link
-          :to="moreNewsLink"
-          class="kwai-button"
-        >
-          {{ $t('more_news') }}
-        </router-link>
+      <div v-if="stories && stories.length > 0">
+        <NewsSlider :stories="stories" />
       </div>
-      <Spinner v-if="$wait.is('pages.browse')" />
-      <div
-        style="grid-column: 1 / 3;"
-        v-if="pageCount > 0"
+    </div>
+    <div style="grid-column: 1 / 3;justify-self:center;">
+      <router-link
+        :to="moreNewsLink"
+        class="kwai-button"
       >
-        <h4 class="kwai-header-line">
-          Informatie
-        </h4>
-        <div style="display: flex;">
-          <div
-            v-for="page in pages"
-            :key="page.id"
-            style="margin: 20px;"
-          >
-            <PageSummary :page="page" />
-          </div>
+        {{ $t('more_news') }}
+      </router-link>
+    </div>
+    <Spinner v-if="$wait.is('pages.browse')" />
+    <div
+      style="grid-column: 1 / 3;"
+      v-if="pageCount > 0"
+    >
+      <h4 class="kwai-header-line">
+        Informatie
+      </h4>
+      <div style="display: flex; flex-wrap: wrap;">
+        <div
+          v-for="page in pages"
+          :key="page.id"
+          style="margin: 20px; width: 30%;"
+        >
+          <PageSummary :page="page" />
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
-  <style>
-  #icon.svg {
-    fill:red;
-  }
-  </style>
+<style>
+#icon.svg {
+  fill:red;
+}
+</style>
 
 <script>
 import messages from './lang';
