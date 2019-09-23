@@ -1,11 +1,12 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div style="display: flex; flex-direction:column;">
     <div>
       <h4>
         {{ page.content.title }}
       </h4>
     </div>
-    <div style="display: flex;align-items: center;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
       <div class="kwai-text-meta kwai-text-truncate">
         {{ page.content.summary }}
       </div>
