@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div style="display: flex; flex-direction:column;">
     <div>
-      <h4>
+      <h4 style="margin-bottom: 0px;">
         {{ story.content.title }}
       </h4>
     </div>
