@@ -15,7 +15,9 @@
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+@import '@/site/scss/_mq.scss';
+
 .coach-list-card {
   box-shadow: 0 5px 15px rgba(0,0,0,.08);
   padding: 15px;
@@ -25,9 +27,18 @@
   flex-wrap: wrap;
 }
 .coach-item {
-  flex: 0 1 30%;
   padding: 10px;
   border-bottom: 1px solid var(--kwai-color-muted);
+
+  @include mq($from: wide) {
+    flex: 0 1 25%;
+  }
+  @include mq($from: tablet, $until: wide) {
+    flex: 0 1 30%;
+  }
+  @include mq($from: mobile, $until: tablet) {
+    flex: 0 1 100%;
+  }
 }
 </style>
 
