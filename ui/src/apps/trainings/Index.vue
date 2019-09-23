@@ -1,19 +1,24 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="page-container">
-    <div style="grid-column: span 2; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around;">
+    <div
+      class="training-grid-container"
+      style="grid-column: span 2; justify-items: center;"
+    >
       <NewsListCard
         :stories="stories"
         :category="category"
         class="training-card"
+        style="grid-area: news-area; justify-self: right; width: 100%;"
       />
       <PageListCard
         :pages="pages"
         class="training-card"
+        style="grid-area: info-area; justify-self: left; width: 100%;"
       />
       <CoachListCard
         :coaches="coaches"
-        class="training-card"
+        style="grid-area: trainers-area;"
       />
     </div>
     <div style="grid-column: span 2; display: flex; flex-direction: row;">
@@ -47,17 +52,36 @@
 @import '@/site/scss/_mq.scss';
 
 .training-card {
-  margin: 20px;
 
-  @include mq($from: wide) {
-    width: 30%;
+  @include mq($from: desktop) {
     max-width: 450px;
   }
-  @include mq($from: desktop, $until: wide) {
-    width: 300px;
-  }
   @include mq($until: desktop) {
-    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.training-grid-container {
+  display: grid;
+  grid-gap: 20px;
+
+  @include mq($from: desktop) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "news-area info-area"
+      "trainers-area trainers-area"
+    ;
+  }
+
+  @include mq($until: desktop) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas:
+      "news-area"
+      "info-area"
+      "trainers-area"
+    ;
   }
 }
 </style>

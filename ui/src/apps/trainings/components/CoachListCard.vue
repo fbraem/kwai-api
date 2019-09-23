@@ -1,27 +1,32 @@
 <template>
-  <div class="coach-list-card">
-    <h3>Onze trainers</h3>
-    <div
-      class="coach-list"
-      v-for="coach in coaches"
-      :key="coach.id"
-    >
-      <CoachComponent :coach="coach" />
+  <div>
+    <div class="coach-list-card">
+      <h3>Onze trainers</h3>
+      <div class="coach-list">
+        <div
+          class="coach-item"
+          v-for="coach in coaches"
+          :key="coach.id"
+        >
+          <CoachComponent :coach="coach" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style>
 .coach-list-card {
-  display: flex;
   box-shadow: 0 5px 15px rgba(0,0,0,.08);
-  flex-direction: column;
   padding: 15px;
 }
 .coach-list {
-  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
-.coach-list:not(:last-child) {
+.coach-item {
+  flex: 0 1 30%;
+  padding: 10px;
   border-bottom: 1px solid var(--kwai-color-muted);
 }
 </style>
