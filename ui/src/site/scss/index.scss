@@ -1,12 +1,15 @@
 $prefix: "kwai-";
 
 @import "_theme.scss";
+@import "_reset.scss";
 
 :root {
     --#{$prefix}line-height: 1.5em;
 }
 
-@import "_reset.scss";
+body {
+    font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 
 @import "_mq.scss";
 @import "elements/_alert.scss";
@@ -207,7 +210,12 @@ a.kwai-link-reset {
             width: 30%;
         }
     }
-    @include mq($from: mobile, $until: desktop) {
+    @include mq($from: tablet, $until: desktop) {
+        & .page-card-item {
+            width: 45%;
+        }
+    }
+    @include mq($from: mobile, $until: tablet) {
         & .page-card-item {
             width: 100%;
         }
