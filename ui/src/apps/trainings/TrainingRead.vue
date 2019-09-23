@@ -22,8 +22,8 @@
       </div>
       <div class="training-area">
         <div v-if="training.coaches">
-          <strong>{{ $t('coaches') }}:</strong>
-          <ul class="kwai-list kwai-list-bullet">
+          <h4>{{ $t('coaches') }}</h4>
+          <ul>
             <li
               v-for="(coach, index) in training.coaches"
               :key="index">
@@ -32,8 +32,8 @@
           </ul>
         </div>
         <div v-if="canManagePresences">
-          <strong>{{ $t('training.presences.title') }}:</strong>
-          <ul class="kwai-list kwai-list-bullet">
+          <h4>{{ $t('training.presences.title') }}</h4>
+          <ul>
             <li
               v-for="(member, index) in training.presences"
               :key="index">
