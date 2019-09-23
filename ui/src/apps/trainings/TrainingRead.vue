@@ -43,6 +43,7 @@
         </div>
       </div>
       <div
+        v-if="canManagePresences"
         style="display: flex; justify-content: flex-end;"
         class="training-area"
       >
