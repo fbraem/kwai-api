@@ -71,8 +71,6 @@
     "lockr": "^0.8.5",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.25",
-    "npm-check-updates": "^3.1.21",
-    "uikit": "^3.1.4",
     "urijs": "^1.19.1",
     "v-tooltip": "^2.0.2",
     "vue": "^2.6.10",
