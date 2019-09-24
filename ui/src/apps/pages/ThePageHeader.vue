@@ -1,81 +1,72 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
+  <div class="hero-container">
     <div
       v-if="picture"
-      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
+      style="grid-column: 1"
     >
-      <div>
-        <img :src="picture" />
+      <img :src="picture" />
+    </div>
+    <div v-if="page">
+      <div class="kwai-badge kwai-theme-secondary">
+        <router-link :to="categoryLink">
+          {{ page.category.name }}
+        </router-link>
+      </div>
+      <h1>
+        {{ page.content.title }}
+      </h1>
+      <p v-html="page.content.html_summary">
+      </p>
+      <div
+        style="display: flex; justify-content: flex-end; flex-flow: row"
+        class="kwai-buttons"
+      >
+        <router-link
+          v-if="$can('update', page)"
+          :to="{ name : 'pages.update', params : { id : page.id }}"
+          class="kwai-icon-button kwai-theme-muted"
+        >
+          <i class="fas fa-edit"></i>
+        </router-link>
+        <a v-if="$can('delete', page)"
+          @click.prevent.stop="showModal"
+          class="kwai-icon-button kwai-theme-muted"
+        >
+          <i class="fas fa-trash"></i>
+        </a>
       </div>
     </div>
-    <div
-      v-if="page"
-      class="uk-width-1-1"
-      :class="{ 'uk-width-1-2@m' : picture != null, 'uk-width-1-3@l' : picture != null, 'uk-width-2-5@xl' : picture != null }"
+    <AreYouSure
+      v-show="isModalVisible"
+      :yes="$t('delete')"
+      :no="$t('cancel')"
+      @sure="deletePage"
+      @close="close"
     >
-      <div uk-grid>
-        <div class="uk-width-expand">
-          <div class="uk-card uk-card-body">
-            <div
-              class="uk-card-badge uk-label"
-              style="font-size: 0.75rem;background-color:#c61c18;color:white"
-            >
-              <router-link
-                :to="categoryLink"
-                class="uk-link-reset"
-              >
-                {{ page.category.name }}
-              </router-link>
-            </div>
-            <div class="uk-light">
-              <h1>
-                {{ page.content.title }}
-              </h1>
-            </div>
-            <p v-html="page.content.html_summary">
-            </p>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <div
-              v-if="$can('update', page)"
-              class="uk-margin-small-left"
-            >
-              <router-link
-                :to="{ name : 'pages.update', params : { id : page.id }}"
-                class="uk-icon-button uk-link-reset"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </div>
-            <div
-              v-if="$can('delete', page)"
-              class="uk-margin-small-left"
-            >
-              <a
-                uk-toggle="target: #delete-page"
-                class="uk-icon-button uk-link-reset"
-              >
-                <i class="fas fa-trash"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      {{ $t('are_you_sure') }}
+    </AreYouSure>
   </div>
 </template>
 
 <script>
 import messages from './lang';
 
+import AreYouSure from '@/components/AreYouSure.vue';
+
 /**
  * Component for a page header
  */
 export default {
   i18n: messages,
+  components: {
+    AreYouSure
+  },
+  data() {
+    return {
+      isModalVisible: false
+    };
+  },
   computed: {
     page() {
       return this.$store.getters['page/page'](this.$route.params.id);
@@ -92,6 +83,18 @@ export default {
         }
       };
     },
+  },
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    close() {
+      this.isModalVisible = false;
+    },
+    deletePage() {
+      this.isModalVisible = false;
+      console.log('delete');
+    }
   }
 };
 </script>

@@ -1,84 +1,70 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div
-      v-if="picture"
-      class="uk-width-1-1 uk-width-1-2@m uk-width-2-3@l uk-width-3-5@xl uk-flex uk-flex-middle"
-    >
+  <div class="hero-container">
+    <div v-if="picture">
+      <img :src="picture" />
+    </div>
+    <div v-if="story">
+      <div class="kwai-badge kwai-theme-secondary">
+        <router-link :to="categoryNewsLink">
+          {{ story.category.name }}
+        </router-link>
+      </div>
       <div>
-        <img :src="picture" />
+        <h1>{{ $t('news')}}</h1>
+        <h2>{{ story.content.title }}</h2>
+        <div
+          v-if="story.publish_date"
+          class="kwai-article-meta"
+        >
+          {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end;flex-flow:row;padding:5px">
+        <router-link
+          v-if="$can('update', story)"
+          :to="storyLink"
+          class="kwai-icon-button kwai-theme-muted"
+        >
+          <i class="fas fa-edit"></i>
+        </router-link>
+        <a
+          v-if="$can('delete', story)"
+          class="kwai-icon-button kwai-theme-muted"
+          style="margin-left: 5px;"
+          @click.prevent.stop="showAreYouSure = true;"
+        >
+          <i class="fas fa-trash"></i>
+        </a>
       </div>
     </div>
-    <div
-      class="uk-width-1-1"
-      :class="contentClass"
+    <AreYouSure
+      v-show="showAreYouSure"
+      @close="showAreYouSure = false;"
+      :yes="$t('delete')"
+      :no="$t('cancel')"
+      @sure="deleteStory"
     >
-      <div
-        v-if="story"
-        uk-grid
-      >
-        <div class="uk-width-expand">
-          <div class="uk-card uk-card-body">
-            <div
-              class="uk-card-badge uk-label"
-              style="font-size: 0.75rem;background-color:#c61c18;color:white"
-            >
-              <router-link
-                :to="categoryNewsLink"
-                class="uk-link-reset"
-              >
-                {{ story.category.name }}
-              </router-link>
-            </div>
-            <div class="uk-light">
-              <h1 class="uk-margin-remove">
-                {{ $t('news')}}
-              </h1>
-              <h2 class="uk-margin-remove">
-                {{ story.content.title }}
-              </h2>
-              <div
-                v-if="story.publish_date"
-                class="uk-article-meta"
-              >
-                {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="uk-width-1-1 uk-width-1-6@m">
-          <div class="uk-flex uk-flex-right">
-            <div v-if="$can('update', story)" class="uk-margin-small-left">
-              <router-link
-                :to="storyLink"
-                class="uk-icon-button uk-link-reset"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </div>
-            <div
-              v-if="$can('delete', story)"
-              class="uk-margin-small-left"
-            >
-              <a
-                uk-toggle="target: #delete-story"
-                class="uk-icon-button uk-link-reset"
-              >
-                <i class="fas fa-trash"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    {{ $t('are_you_sure') }}
+    </AreYouSure>
   </div>
 </template>
 
 <script>
 import messages from './lang';
 
+import AreYouSure from '@/components/AreYouSure.vue';
+
 export default {
+  components: {
+    AreYouSure
+  },
   i18n: messages,
+  data() {
+    return {
+      showAreYouSure: false
+    };
+  },
   computed: {
     story() {
       return this.$store.getters['news/story'](this.$route.params.id);
@@ -88,13 +74,6 @@ export default {
         return this.story.detail_picture;
       }
       return null;
-    },
-    contentClass() {
-      return {
-        'uk-width-1-2@m': this.picture != null,
-        'uk-width-1-3@l': this.picture != null,
-        'uk-width-2-5@xl': this.picture != null
-      };
     },
     storyLink() {
       return {
@@ -111,6 +90,16 @@ export default {
           category: this.story.category.id
         }
       };
+    }
+  },
+  methods: {
+    deleteStory() {
+      this.showAreYouSure = false;
+      this.$store.dispatch('news/delete', {
+        story: this.story
+      }).then(() => {
+        this.$router.push({ name: 'news.browse' });
+      });
     }
   }
 };

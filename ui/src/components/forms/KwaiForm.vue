@@ -1,26 +1,19 @@
 <template>
-  <div class="uk-grid-small" uk-grid>
-    <div class="uk-width-1-1">
-      <form :class="{ 'uk-form-stacked': stacked }">
-        <slot></slot>
-      </form>
-    </div>
-    <div v-if="hasSubmitListener"
-      class="uk-width-1-1"
+  <div style="display:flex;flex-direction:column">
+    <form :class="{ 'kwai-form-stacked': stacked }">
+      <slot></slot>
+    </form>
+    <div
+      v-if="hasSubmitListener"
+      style="display: flex; justify-content: flex-end;"
     >
-      <div uk-grid>
-        <div class="uk-width-expand">
-        </div>
-        <div class="uk-width-auto">
-          <button
-            class="uk-button uk-button-primary"
-            :disabled="!valid"
-            @click.prevent.stop="submit"
-          >
-            <i :class="icon"></i>&nbsp; {{ save }}
-          </button>
-        </div>
-      </div>
+      <button
+        class="kwai-button kwai-theme-primary"
+        :disabled="!valid"
+        @click.prevent.stop="submit"
+      >
+        <i :class="icon"></i>&nbsp; {{ save }}
+      </button>
     </div>
   </div>
 </template>

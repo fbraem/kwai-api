@@ -1,27 +1,30 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1 uk-width-2-3@m uk-width-4-5@xl">
+  <div class="page-container">
+    <div style="grid-area: page-content">
       <slot></slot>
     </div>
-    <div class="uk-width-1-1 uk-width-1-3@m uk-width-1-5@xl">
+    <div style="grid-area: page-sidebar">
       <CategoryList
         v-if="categories"
         :categories="categories"
       />
-      <h4 class="uk-heading-line uk-text-bold">
+      <h4>
         <span>{{ $t('archive') }}</span>
       </h4>
       <template v-for="(year) in archiveYears">
         <div :key="year">
           <h5>{{ year }}</h5>
-          <ul class="uk-list">
+          <ul class="kwai-list">
             <li v-for="(month) in archive[year]" :key="month.month">
               <router-link
                 :to="{ name : 'news.archive', params : { year : year, month : month.month }}"
               >
                 {{ month.monthName }} {{ year }}
-                <span class="uk-badge uk-float-right">
+                <span
+                  class="kwai-badge kwai-badge-primary kwai-badge-rounded"
+                  style="float:right"
+                >
                   {{ month.count }}
                 </span>
               </router-link>

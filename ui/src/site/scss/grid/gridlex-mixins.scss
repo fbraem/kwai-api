@@ -1,10 +1,14 @@
 // Make the breakpoints
-@mixin bp($breakpoint) {
+@mixin bp($breakpoint, $width_attr: $gl-mq-width) {
   $query: map-get($gl-mq-list, $breakpoint);
   @if $query != null {
-    @media ($gl-mq-width: #{nth($query, 1)}) {
-      @content;
-    }
+      $width: nth($query, 1);
+      @if $width_attr == "min-width" {
+          $width: $width + 1;
+      }
+      @media (#{$width_attr}: #{$width}) {
+          @content;
+      }
   }
 }
 
@@ -29,7 +33,7 @@
   [#{$gl-attributeName}~="#{$gl-gridName}"],
   [#{$gl-attributeName}*="#{$gl-gridName}-"],
   [#{$gl-attributeName}*="#{$gl-gridName}_"] {
-    
+
     @for $i from 1 through $gl-colCount {
       > [#{$gl-attributeName}*="#{$col}-#{$i}"]{ flex-basis: map-get($gl-colPortions, $i); max-width: map-get($gl-colPortions, $i); }
     }

@@ -1,15 +1,15 @@
 <template>
-  <div uk-grid>
-    <div class="uk-width-expand">
+  <div class="hero-container">
+    <div>
       <h1>
         {{ $t('categories') }}
       </h1>
     </div>
-    <div class="uk-width-1-1 uk-width-1-6@m">
+    <div>
       <div class="uk-flex uk-flex-right">
         <div v-if="canCreate">
           <router-link
-            class="uk-icon-button uk-link-reset"
+            class="kwai-icon-button kwai-theme-muted"
             :to="{ name : 'categories.create' }"
           >
             <i class="fas fa-plus"></i>

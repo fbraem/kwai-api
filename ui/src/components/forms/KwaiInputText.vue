@@ -1,14 +1,12 @@
 <template>
-  <div class="uk-form-controls">
-    <input v-model="field.value"
-      :id="id"
-      class="uk-input"
-      :class="{ 'uk-form-danger' : field.errors.length > 0 }"
-      type="text"
-      :required="field.required"
-      v-bind="$attrs"
-      />
-  </div>
+  <input v-model="field.value"
+    :id="id"
+    class="kwai-input"
+    :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
+    type="text"
+    :required="field.required"
+    v-bind="$attrs"
+    />
 </template>
 
 <style scoped>

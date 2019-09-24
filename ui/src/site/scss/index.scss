@@ -1,4 +1,270 @@
 $prefix: "kwai-";
 
+@import "_theme.scss";
+
+:root {
+    --#{$prefix}line-height: 1.5em;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+    line-height: var(--#{$prefix}line-height);
+}
+
+body {
+    font-family: "Segoe UI", "Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+
+@import "_mq.scss";
 @import "grid/gridlex.scss";
 @import "card/card.scss";
+@import "elements/_addon.scss";
+@import "elements/_alert.scss";
+@import "elements/_badge.scss";
+@import "elements/_button.scss";
+@import "elements/_form.scss";
+@import "elements/_list.scss";
+@import "elements/_modal.scss";
+@import "elements/_text.scss";
+@import "elements/_switch.scss";
+
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 80px auto auto 100px;
+    grid-template-areas:
+        "main-header"
+        "main-hero"
+        "main-content"
+        "main-footer"
+    ;
+}
+
+.main-header {
+    grid-area: main-header;
+    background-color: kwai-color('secondary');
+    color: kwai-color('secondary', 'text');
+}
+
+.toolbar-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "toolbar-left toolbar-middle toolbar-right";
+    grid-gap: 1rem;
+}
+
+a.kwai-link-reset {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.main-hero {
+    background-color: kwai-color('hero');
+}
+
+.hero-container {
+    background-color: kwai-color('hero');
+    color: kwai-color('hero', 'text') !important;
+    display: grid;
+    grid-gap: 10px;
+    padding: 20px;
+    @include mq($from: desktop) {
+        grid-template-columns: fit-content(800px) 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "hero-image hero-text"
+        ;
+    }
+    @include mq($from: mobile, $until: desktop) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "hero-image"
+            "hero-text"
+        ;
+    }
+
+    h1, h2, h3 {
+        color: $kwai-color-white;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+.icon-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    @include mq($from: desktop) {
+        & .icon-card-item {
+            width: 25%;
+        }
+    }
+    @include mq($from: tablet, $until: desktop) {
+        & .icon-card-item {
+            width: 50%;
+        }
+    }
+    @include mq($from: mobile, $until: tablet) {
+        & .icon-card-item {
+            width: 100%;
+        }
+    }
+}
+
+@include mq($until: tablet) {
+    .#{$prefix}hide-mobile {
+        display: none;
+    }
+}
+
+@include mq($from: tablet, $until: desktop) {
+    .#{$prefix}hide-tablet {
+        display: none;
+    }
+}
+
+@include mq($from: tablet) {
+    .#{$prefix}hide-from-tablet {
+        display: none;
+    }
+}
+
+.#{$prefix}header-line {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    &:after {
+        content: '';
+        border-top: 1px solid #e5e5e5;
+        margin: 0 20px 0 20px;
+        flex: 1 0 20px;
+    }
+}
+
+.#{$prefix}news-card {
+    height: 100%;
+    box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3);
+    padding:10px;
+    display: grid;
+    grid-gap: 10px;
+
+    @include mq($from: tablet) {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+            "news-card-title news-card-title"
+            "news-card-image news-card-content"
+            "news-card-image news-card-tools"
+        ;
+    }
+    @include mq($from: mobile, $until: tablet) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-areas:
+            "news-card-title"
+            "news-card-image"
+            "news-card-content"
+            "news-card-tools"
+        ;
+    }
+}
+
+.news-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include mq($from: wide) {
+        & .news-card-item {
+            width: 30%;
+        }
+    }
+    @include mq($from: desktop, $until: wide) {
+        & .news-card-item {
+            width: 40%;
+        }
+    }
+    @include mq($from: mobile, $until: desktop) {
+        & .news-card-item {
+            width: 100%;
+        }
+    }
+}
+
+.news-card-item {
+  margin: 20px;
+}
+
+.page-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include mq($from: wide) {
+        & .page-card-item {
+            width: 20%;
+        }
+    }
+    @include mq($from: desktop, $until: wide) {
+        & .page-card-item {
+            width: 30%;
+        }
+    }
+    @include mq($from: mobile, $until: desktop) {
+        & .page-card-item {
+            width: 100%;
+        }
+    }
+}
+
+.page-card-item {
+  margin: 20px;
+}
+
+.#{$prefix}page-card {
+    height: 100%;
+    box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3);
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-container {
+    display: grid;
+    grid-gap: 10px;
+    padding: 20px;
+    @include mq($from: desktop) {
+        grid-template-columns: 3fr 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+            "page-content page-sidebar"
+        ;
+    }
+    @include mq($from: mobile, $until: desktop) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "page-content"
+            "page-sidebar"
+        ;
+    }
+}
+
+.#{$prefix}cover-link {
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left:0;
+    right:0;
+}
+
+.#{$prefix}hover-border:hover {
+    box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3);
+    cursor: pointer;
+    z-index: 100;
+    height: 100%;
+}

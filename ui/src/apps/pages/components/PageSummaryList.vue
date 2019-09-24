@@ -1,15 +1,10 @@
 <template>
-  <div
-    class="uk-grid-small uk-grid-divider"
-    uk-grid
-  >
-    <div
+  <div style="display:flex; flex-direction:column;">
+    <PageSummaryListItem
       v-for="page in pages"
-      class="uk-width-1-1"
       :key="page.id"
-    >
-      <PageSummaryListItem :page="page" />
-    </div>
+      :page="page"
+    />
   </div>
 </template>
 

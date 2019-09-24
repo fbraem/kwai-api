@@ -1,0 +1,99 @@
+.#{$prefix}icon-button {
+    border: none;
+    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 500px;
+    align-items: center;
+    justify-content: center;
+    display: inline-flex;
+    vertical-align: middle;
+    text-decoration: none !important;
+    color: inherit !important;
+    &:focus {
+        outline:0;
+    }
+    &:hover {
+        text-decoration: none !important;
+        background-color: kwai-color('default', 'dark');
+        &:disabled {
+            opacity: 0.4;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.4;
+    }
+
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
+            background-color: kwai-color($color);
+            color: kwai-color($color, 'text') !important;
+            &:hover {
+                background-color: kwai-color($color, 'dark');
+                color: kwai-color($color, 'text');
+            }
+        }
+    }
+}
+
+.#{$prefix}icon-button:not(:disabled) {
+    cursor: pointer;
+}
+
+.#{$prefix}button {
+    margin: 0;
+    border: none;
+    overflow: visible;
+    font: inherit;
+    color: inherit;
+    text-transform: none;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 30px;
+    line-height: 38px;
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    background-color: transparent;
+    border: 1px solid kwai-color('muted');
+    &:hover {
+        border: 1px solid kwai-color('muted', 'dark');
+        &:disabled {
+            background-color: kwai-color('muted');
+        }
+    }
+    @each $color in map-keys($kwai-color-palette) {
+        &.#{$prefix}theme-#{$color} {
+            background-color: kwai-color($color);
+            color: kwai-color($color, 'text');
+            border: none;
+            &:hover {
+                background-color: kwai-color($color, 'dark');
+                border: none;
+                &:disabled {
+                    background-color: kwai-color('muted');
+                    color: kwai-color('muted', 'text');
+                }
+            }
+        }
+    }
+    &:disabled {
+        background-color: kwai-color('muted');
+        color: kwai-color('muted', 'text');
+        border: none;
+    }
+}
+
+.#{$prefix}button:not(:disabled) {
+    cursor: pointer;
+}
+
+.#{$prefix}buttons {
+    .#{$prefix}icon-button:not(:last-child) {
+        margin-right: 10px;
+    }
+    .#{$prefix}button:not(:last-child) {
+        margin-right: 10px;
+    }
+}
