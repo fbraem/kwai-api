@@ -1,121 +1,130 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <KwaiForm
-        :form="form"
-        :error="error"
-        :save="$t('save')"
-        @submit="submit"
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :error="error"
+      :save="$t('save')"
+      @submit="submit"
+      style="grid-column: span 2;"
+    >
+      <div style="display: flex;">
+        <div style="flex-grow: 1;">
+          <KwaiField
+            name="title"
+            :label="$t('training.events.form.title.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.events.form.title.placeholder')" />
+          </KwaiField>
+        </div>
+        <div style="align-self:flex-end;margin-left: 20px;">
+          <KwaiField
+            name="active"
+            :label="$t('training.events.form.active.label')"
+          >
+            <KwaiSwitch />
+          </KwaiField>
+        </div>
+        <div style="align-self:flex-end;margin-left: 20px;">
+          <KwaiField
+            name="cancelled"
+            :label="$t('training.events.form.cancelled.label')"
+          >
+            <KwaiSwitch />
+          </KwaiField>
+        </div>
+      </div>
+      <KwaiField
+        name="summary"
+        :label="$t('training.events.form.summary.label')"
       >
-        <div uk-grid>
-          <div class="uk-width-expand">
-            <KwaiField
-              name="title"
-              :label="$t('training.events.form.title.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.events.form.title.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="active"
-              :label="$t('training.events.form.active.label')"
-            >
-              <KwaiSwitch />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="cancelled"
-              :label="$t('training.events.form.cancelled.label')"
-            >
-              <KwaiSwitch />
-            </KwaiField>
-          </div>
-        </div>
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('training.events.form.summary.placeholder')"
+        />
+      </KwaiField>
+      <div class="date-grid">
         <KwaiField
-          name="summary"
-          :label="$t('training.events.form.summary.label')"
+          name="start_date"
+          :label="$t('training.events.form.start_date.label')"
         >
-          <KwaiTextarea
-            :rows="5"
-            :placeholder="$t('training.events.form.summary.placeholder')"
-          />
-        </KwaiField>
-        <div class="uk-child-width-1-3" uk-grid>
-          <div>
-            <KwaiField
-              name="start_date"
-              :label="$t('training.events.form.start_date.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.events.form.start_date.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="start_time"
-              :label="$t('training.events.form.start_time.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.events.form.start_time.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="end_time"
-              :label="$t('training.events.form.end_time.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.events.form.end_time.placeholder')" />
-            </KwaiField>
-          </div>
-        </div>
-        <KwaiField
-          name="season"
-          :label="$t('training.events.form.season.label')"
-        >
-          <KwaiSelect :items="seasons" />
+          <KwaiInputText :placeholder="$t('training.events.form.start_date.placeholder')" />
         </KwaiField>
         <KwaiField
-          name="teams"
-          :label="$t('training.events.form.teams.label')"
+          name="start_time"
+          :label="$t('training.events.form.start_time.label')"
         >
-          <Multiselect
-            :options="teams"
-            label="name"
-            track-by="id"
-            :multiple="true"
-            :close-on-select="false"
-            :selectLabel="$t('training.events.form.teams.selectLabel')"
-            :deselectLabel="$t('training.events.form.teams.deselectLabel')"
-          />
+          <KwaiInputText :placeholder="$t('training.events.form.start_time.placeholder')" />
         </KwaiField>
         <KwaiField
-          name="coaches"
-          :label="$t('training.events.form.coaches.label')"
+          name="end_time"
+          :label="$t('training.events.form.end_time.label')"
         >
-          <Multiselect
-            :options="coaches"
-            label="name"
-            track-by="id"
-            :multiple="true"
-            :close-on-select="false"
-            :selectLabel="$t('training.events.form.coaches.selectLabel')"
-            :deselectLabel="$t('training.events.form.coaches.deselectLabel')"
-          />
+          <KwaiInputText :placeholder="$t('training.events.form.end_time.placeholder')" />
         </KwaiField>
-        <KwaiField
-          name="remark"
-          :label="$t('training.events.form.remark.label')"
-        >
-          <KwaiTextarea
-            :rows="5"
-            :placeholder="$t('training.events.form.remark.placeholder')"
-          />
-        </KwaiField>
-      </KwaiForm>
-    </div>
+      </div>
+      <KwaiField
+        name="season"
+        :label="$t('training.events.form.season.label')"
+      >
+        <KwaiSelect :items="seasons" />
+      </KwaiField>
+      <KwaiField
+        name="teams"
+        :label="$t('training.events.form.teams.label')"
+      >
+        <Multiselect
+          :options="teams"
+          label="name"
+          track-by="id"
+          :multiple="true"
+          :close-on-select="false"
+          :selectLabel="$t('training.events.form.teams.selectLabel')"
+          :deselectLabel="$t('training.events.form.teams.deselectLabel')"
+        />
+      </KwaiField>
+      <KwaiField
+        name="coaches"
+        :label="$t('training.events.form.coaches.label')"
+      >
+        <Multiselect
+          :options="coaches"
+          label="name"
+          track-by="id"
+          :multiple="true"
+          :close-on-select="false"
+          :selectLabel="$t('training.events.form.coaches.selectLabel')"
+          :deselectLabel="$t('training.events.form.coaches.deselectLabel')"
+        />
+      </KwaiField>
+      <KwaiField
+        name="remark"
+        :label="$t('training.events.form.remark.label')"
+      >
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('training.events.form.remark.placeholder')"
+        />
+      </KwaiField>
+    </KwaiForm>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/site/scss/_mq.scss';
+
+.date-grid {
+  display: grid;
+  grid-gap: 10px;
+
+  @include mq($from: tablet) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @include mq($until: tablet) {
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+}
+</style>
 
 <script>
 import moment from 'moment';

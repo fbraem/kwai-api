@@ -1,33 +1,29 @@
 $prefix: "kwai-";
 
 @import "_theme.scss";
+@import "_reset.scss";
 
 :root {
     --#{$prefix}line-height: 1.5em;
 }
 
-* {
-    margin: 0;
-    box-sizing: border-box;
-    line-height: var(--#{$prefix}line-height);
-}
-
 body {
-    font-family: "Segoe UI", "Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 @import "_mq.scss";
-@import "grid/gridlex.scss";
-@import "card/card.scss";
-@import "elements/_addon.scss";
 @import "elements/_alert.scss";
 @import "elements/_badge.scss";
 @import "elements/_button.scss";
 @import "elements/_form.scss";
+@import "elements/_addon.scss"; // Put here, to override input height
 @import "elements/_list.scss";
 @import "elements/_modal.scss";
-@import "elements/_text.scss";
+@import "elements/_pagination.scss";
 @import "elements/_switch.scss";
+@import "elements/_table.scss";
+@import "elements/_text.scss";
+@import "elements/_tooltip.scss";
 
 .main-container {
     display: grid;
@@ -214,7 +210,12 @@ a.kwai-link-reset {
             width: 30%;
         }
     }
-    @include mq($from: mobile, $until: desktop) {
+    @include mq($from: tablet, $until: desktop) {
+        & .page-card-item {
+            width: 45%;
+        }
+    }
+    @include mq($from: mobile, $until: tablet) {
         & .page-card-item {
             width: 100%;
         }
@@ -235,7 +236,7 @@ a.kwai-link-reset {
 
 .page-container {
     display: grid;
-    grid-gap: 10px;
+    grid-gap: 20px;
     padding: 20px;
     @include mq($from: desktop) {
         grid-template-columns: 3fr 1fr;

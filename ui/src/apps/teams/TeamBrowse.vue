@@ -1,33 +1,33 @@
 <template>
-  <div>
+  <div class="page-container">
     <Spinner v-if="$wait.is('teams.browse')" />
     <div
       v-else
-      uk-grid
+      style="grid-column: span 2;"
     >
       <div v-if="teams && teams.length == 0">
         {{ $t('no_teams') }}
       </div>
-      <div class="uk-width-expand" v-else>
-        <table class="uk-table uk-table-small uk-table-divider uk-table-middle">
+      <div v-else>
+        <table class="kwai-table kwai-table-small kwai-table-divider kwai-table-middle">
           <tr>
             <th>{{ $t('name') }}</th>
             <th>{{ $t('season') }}</th>
-            <th class="uk-table-shrink">{{ $t('members') }}</th>
-            <th class="uk-table-shrink"></th>
+            <th class="kwai-table-shrink">{{ $t('members') }}</th>
+            <th class="kwai-table-shrink"></th>
           </tr>
           <tr
             v-for="team in teams"
             :key="team.id"
           >
-            <td>
+            <td class="kwai-middle">
               <router-link
                 :to="{ name: 'teams.read', params: { id : team.id} }"
               >
                 {{ team.name }}
               </router-link>
             </td>
-            <td>
+            <td class="kwai-middle">
               <router-link
                 v-if="team.season"
                 :to="{ name: 'seasons.read', params: { id : team.season.id} }"
@@ -35,16 +35,16 @@
                 {{ team.season.name }}
               </router-link>
             </td>
-            <td>
+            <td class="kwai-middle">
               {{ team.members_count }}
             </td>
             <td>
               <router-link
                 v-if="$can('update', team)"
-                class="uk-icon-button uk-link-reset"
+                class="kwai-icon-button"
                 :to="{ name : 'teams.update', params : { id : team.id } }"
               >
-                <i class="fas fa-edit uk-text-muted"></i>
+                <i class="fas fa-edit"></i>
               </router-link>
             </td>
           </tr>

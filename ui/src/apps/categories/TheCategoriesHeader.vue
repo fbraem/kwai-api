@@ -5,17 +5,14 @@
         {{ $t('categories') }}
       </h1>
     </div>
-    <div>
-      <div class="uk-flex uk-flex-right">
-        <div v-if="canCreate">
-          <router-link
-            class="kwai-icon-button kwai-theme-muted"
-            :to="{ name : 'categories.create' }"
-          >
-            <i class="fas fa-plus"></i>
-          </router-link>
-        </div>
-      </div>
+    <div style="display:flex; align-items:flex-end;flex-flow:column;">
+      <router-link
+        v-if="canCreate"
+        class="kwai-icon-button kwai-theme-muted"
+        :to="{ name : 'categories.create' }"
+      >
+        <i class="fas fa-plus"></i>
+      </router-link>
     </div>
   </div>
 </template>

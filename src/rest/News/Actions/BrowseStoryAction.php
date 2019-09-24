@@ -27,7 +27,6 @@ class BrowseStoryAction
 
         $query = NewsStoriesTable::getTableFromRegistry()->find();
         $query->contain(['Contents', 'Category', 'Contents.User']);
-        $query->order(['NewsStories.publish_date' => 'DESC']);
 
         if (isset($parameters['filter']['category'])) {
             $query->where(['Category.id' => $parameters['filter']['category']]);
@@ -62,6 +61,12 @@ class BrowseStoryAction
 
         if (isset($parameters['filter']['featured'])) {
             $query->where(['NewsStories.featured >' => 0]);
+            $query->order([
+                'NewsStories.featured' => 'DESC',
+                'NewsStories.publish_date' => 'DESC'
+            ]);
+        } else {
+            $query->order(['NewsStories.publish_date' => 'DESC']);
         }
 
         // Don't show stories which end date is passed

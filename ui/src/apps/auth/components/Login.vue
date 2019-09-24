@@ -1,19 +1,19 @@
 <template>
   <!-- eslint-disable max-len -->
   <div>
-    <div
-      id="login-form"
-      uk-modal
-      ref="dialog"
+    <Modal
+      v-show="showLogin"
+      @close="showLogin = false;"
     >
-      <div class="uk-modal-dialog uk-modal-body">
+      <template slot="header">
         <h2 class="uk-modal-title">
           {{ $t('login') }}
         </h2>
+      </template>
+      <template slot="default">
         <div
           v-if="error"
-          class="uk-alert-danger"
-          uk-alert
+          class="kwai-alert-danger"
         >
           {{error}}
         </div>
@@ -36,35 +36,21 @@
             <KwaiPassword :placeholder="$t('password.placeholder')" />
           </KwaiField>
         </KwaiForm>
-      </div>
-    </div>
-    <div
-      v-if="isLoggedIn"
-      class="uk-inline"
-    >
-      <a class="kwai-icon-button kwai-theme-secondary">
+      </template>
+    </Modal>
+    <div v-if="isLoggedIn">
+      <router-link
+        class="kwai-icon-button kwai-theme-secondary"
+        :to="{ name: 'users.read', params: { id: activeUser.id } }"
+        >
         <i class="fas fa-user"></i>
+      </router-link>
+      <a class="kwai-icon-button kwai-theme-secondary" @click="logout">
+        <i class="fas fa-sign-out-alt"></i>
       </a>
-      <div uk-dropdown="mode: click">
-        <ul class="uk-nav uk-dropdown-nav">
-          <li v-if="activeUser">
-            <router-link
-              :to="{ name: 'users.read', params: { id: activeUser.id } }"
-            >
-              {{ $t('user') }}
-            </router-link>
-          </li>
-          <li>
-            <a href="#" @click="logout">{{ $t('logout') }}</a>
-          </li>
-        </ul>
-      </div>
     </div>
-    <div
-      v-else
-      class="uk-inline"
-    >
-      <a class="kwai-icon-button" @click="login">
+    <div v-else>
+      <a class="kwai-icon-button kwai-theme-secondary" @click="showLogin = true">
         <i class="fas fa-lock"></i>
       </a>
     </div>
@@ -74,14 +60,13 @@
 <script>
 import User from '@/models/users/User';
 
-import UIkit from 'uikit';
-
 import makeForm, { makeField, notEmpty, isEmail } from '@/js/Form.js';
 
 import KwaiForm from '@/components/forms/KwaiForm.vue';
 import KwaiField from '@/components/forms/KwaiField.vue';
 import KwaiEmail from '@/components/forms/KwaiEmail.vue';
 import KwaiPassword from '@/components/forms/KwaiPassword.vue';
+import Modal from '@/components/Modal';
 
 const makeLoginForm = (fields) => {
   const writeForm = (user) => {
@@ -107,12 +92,13 @@ export default {
     KwaiForm,
     KwaiField,
     KwaiEmail,
-    KwaiPassword
+    KwaiPassword,
+    Modal
   },
   data() {
     return {
       user: new User(),
-      modal: null,
+      showLogin: false,
       error: null,
       form: makeLoginForm({
         login_email: makeField({
@@ -153,19 +139,13 @@ export default {
       this.form.clear();
       this.form.clearErrors();
     },
-    login() {
-      if (!this.modal) {
-        this.modal = UIkit.modal(document.getElementById('login-form'));
-      }
-      this.modal.show();
-    },
     submit() {
       this.error = null;
       this.form.readForm(this.user);
       this.$store.dispatch('auth/login', this.user)
         .then(() => {
           this.clear();
-          this.modal.hide();
+          this.showLogin = false;
         }).catch((e) => {
           this.clear();
           if (e.response && e.response.data.error === 'invalid_credentials') {
@@ -181,9 +161,6 @@ export default {
           this.$router.push('/');
         });
     },
-    closeLogin() {
-      this.clear();
-    }
   }
 };
 </script>

@@ -1,22 +1,18 @@
 <template>
-  <div class="uk-grid">
-    <div class="uk-width-5-6">
+  <div class="hero-container">
+    <div>
       <h1>
         {{ $t('types') }}
       </h1>
     </div>
-    <div class="uk-width-1-6">
-      <div class="uk-flex uk-flex-right">
-        <div>
-          <router-link
-            v-if="canCreate"
-            class="uk-icon-button uk-link-reset"
-            :to="{ name : 'team_types.create' }"
-          >
-            <i class="fas fa-plus"></i>
-          </router-link>
-        </div>
-      </div>
+    <div style="display:flex; align-items:flex-end;flex-flow:column;">
+      <router-link
+        v-if="canCreate"
+        class="kwai-icon-button kwai-theme-muted"
+        :to="{ name : 'team_types.create' }"
+      >
+        <i class="fas fa-plus"></i>
+      </router-link>
     </div>
   </div>
 </template>

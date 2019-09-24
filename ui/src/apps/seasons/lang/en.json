@@ -37,5 +37,6 @@
     "cancel" : "Annuleer",
     "delete" : "Verwijder",
     "teams" : "Teams",
-    "no_teams" : "There are no teams defined for this season"
+    "no_teams" : "There are no teams defined for this season",
+    "period" : "Period"
 }

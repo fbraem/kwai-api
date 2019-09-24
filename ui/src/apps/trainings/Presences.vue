@@ -1,119 +1,121 @@
 <template>
   <div
     v-if="training"
-    class="uk-flex-center"
-    uk-grid
+    class="page-container"
+    style="display: flex; justify-content: center;"
   >
-    <div class="uk-width-1-1@s uk-width-2-3@m">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-header uk-padding-remove">
-          <TrainingDayHour :training="training" />
-          <h1 class="uk-margin-small-top uk-margin-bottom uk-text-center">
-            {{ training.content.title }}
-          </h1>
-        </div>
-        <div class="uk-card-body">
-          <h1 class="uk-margin-small">
-            {{ $t('training.presences.attendees') }}
-          </h1>
-          <table
-            v-if="hasPresences"
-            class="uk-table uk-table-small uk-table-striped"
+    <TrainingCard :training="training">
+      <div class="training-area">
+        <h1>
+          {{ $t('training.presences.attendees') }}
+        </h1>
+        <table
+          v-if="hasPresences"
+          class="kwai-table kwai-table-small kwai-table-striped"
+        >
+          <tr
+            v-for="member in presences"
+            :key="member.id"
           >
-            <tr
-              v-for="member in presences"
-              :key="member.id"
-            >
-              <td>
-                <MemberSummary :member="member" />
-              </td>
-              <td class="uk-table-shrink">
-                <a class="uk-icon-button uk-link-reset">
-                  <i
-                    class="fas fa-times"
-                    @click="removePresence(member)"
-                  >
-                  </i>
-                </a>
-              </td>
-            </tr>
-          </table>
-          <p v-else>
-            {{ $t('training.presences.nobody') }}
-          </p>
-          <WarningComponent v-if="changed" @save="saveAttendees" />
-          <h1>
-            {{ $t('training.presences.possible') }}
-          </h1>
-          <p class="uk-text-meta">
-            {{ $t('training.presences.team') }}
-          </p>
-          <table class="uk-table uk-table-small uk-table-striped">
-            <tr
-              v-for="member in teamMembers"
-              :key="member.id"
-            >
-              <td>
-                <MemberSummary :member="member" />
-              </td>
-              <td class="uk-table-shrink">
-                <a class="uk-icon-button uk-link-reset">
-                  <i
-                    class="fas fa-plus"
-                    @click="addPresence(member)"
-                  >
-                  </i>
-                </a>
-              </td>
-            </tr>
-          </table>
-          <div class="uk-width-1-1">
-            <KwaiForm
-              :form="form"
-            >
-              <div
-                class="uk-flex uk-flex-bottom"
-                uk-grid
+            <td>
+              <MemberSummary :member="member" />
+            </td>
+            <td class="kwai-table-shrink">
+              <a class="kwai-icon-button">
+                <i
+                  class="fas fa-times"
+                  @click="removePresence(member)"
+                >
+                </i>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p v-else>
+          {{ $t('training.presences.nobody') }}
+        </p>
+        <WarningComponent v-if="changed" @save="saveAttendees" />
+        <h1>
+          {{ $t('training.presences.possible') }}
+        </h1>
+        <p class="kwai-text-meta">
+          {{ $t('training.presences.team') }}
+        </p>
+        <table class="kwai-table kwai-table-small kwai-table-striped">
+          <tr
+            v-for="member in teamMembers"
+            :key="member.id"
+          >
+            <td>
+              <MemberSummary :member="member" />
+            </td>
+            <td class="kwai-table-shrink">
+              <a class="kwai-icon-button">
+                <i
+                  class="fas fa-plus"
+                  @click="addPresence(member)"
+                >
+                </i>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <KwaiForm
+          :form="form"
+          style="margin-top: 20px;"
+        >
+          <!-- TODO: find a better way to calc max-width -->
+          <KwaiField
+            name="otherMembers"
+            :label="$t('training.presences.form.other_members.label')"
+            style="max-width: 500px;"
+          >
+            <div style="position:relative;">
+              <multiselect
+                :options="otherMembers"
+                label="name"
+                track-by="id"
+                :multiple="true"
+                :close-on-select="false"
+                :selectLabel="$t('training.presences.form.select_label')"
+                :deselectLabel="$t('training.presences.form.deselect_label')"
               >
-                <div class="uk-width-expand">
-                  <KwaiField
-                    name="otherMembers"
-                    :label="$t('training.presences.form.other_members.label')"
-                  >
-                    <multiselect
-                      :options="otherMembers"
-                      label="name"
-                      track-by="id"
-                      :multiple="true"
-                      :close-on-select="false"
-                      :selectLabel="$t('training.presences.form.select_label')"
-                      :deselectLabel="$t('training.presences.form.deselect_label')"
-                    />
-                  </KwaiField>
-                </div>
-                <div>
-                  <button
-                    class="uk-button uk-button-default"
-                    :disabled="disableAddOthers"
-                    @click.prevent.stop="addAttendeeFromList"
-                  >
-                    {{ $t('training.presences.form.add_others') }}
-                  </button>
-                </div>
-              </div>
-            </KwaiForm>
-          </div>
-          <WarningComponent v-if="changed" @save="saveAttendees" />
-        </div>
+              <template slot="tag" slot-scope="{ option, remove }">
+                <span>
+                  <span>{{ option.name }} - </span>
+                  <span @click="remove(option)">❌</span>
+                  <br />
+                </span>
+              </template>
+              </multiselect>
+            </div>
+          </KwaiField>
+          <button
+            class="kwai-button"
+            :disabled="disableAddOthers"
+            @click.prevent.stop="addAttendeeFromList"
+            style="align-self: center;"
+          >
+            {{ $t('training.presences.form.add_others') }}
+          </button>
+        </KwaiForm>
+        <WarningComponent v-if="changed" @save="saveAttendees" />
       </div>
-    </div>
-</div>
+    </TrainingCard>
+  </div>
 </template>
+
+<style scoped>
+.training-area {
+  border-top: 1px solid var(--kwai-color-default-light);
+  padding: 40px;
+}
+</style>
 
 <script>
 import messages from './lang';
 
-import TrainingDayHour from './TrainingDayHour';
+import TrainingCard from './TrainingCard';
 import MemberSummary from '@/apps/members/components/MemberSummary';
 
 import makeForm, { makeField } from '@/js/Form';
@@ -126,26 +128,13 @@ const WarningComponent = {
   render(h) {
     return h('div', {
       class: {
-        'uk-alert-warning': true
+        'kwai-alert': true,
+        'kwai-theme-warning': true
       },
-      attrs: {
-        'uk-alert': true
-      }
     }, [
       h('div', {
-        class: {
-          'uk-grid-small': true,
-          'uk-flex': true,
-          'uk-flex-middle': true
-        },
-        attrs: {
-          'uk-grid': true
-        }
       }, [
         h('div', {
-          class: {
-            'uk-width-expand': true
-          }
         },
         this.$t('training.presences.save_warning')
         ),
@@ -153,8 +142,8 @@ const WarningComponent = {
           [
             h('button', {
               class: {
-                'uk-button': true,
-                'uk-button-primary': true
+                'kwai-button': true,
+                'kwai-theme-primary': true
               },
               on: {
                 click: () => { this.$emit('save'); }
@@ -170,7 +159,7 @@ const WarningComponent = {
 export default {
   i18n: messages,
   components: {
-    TrainingDayHour, MemberSummary, KwaiForm, KwaiField, Multiselect,
+    TrainingCard, MemberSummary, KwaiForm, KwaiField, Multiselect,
     WarningComponent
   },
   data() {

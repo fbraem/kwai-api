@@ -1,76 +1,69 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <div
-      v-if="$wait.is('events.browse')"
-      class="uk-flex-center"
-      uk-grid
-    >
-      <div class="uk-text-center">
-        <i class="fas fa-spinner fa-2x fa-spin"></i>
-      </div>
-    </div>
-    <div
-      v-else
-      uk-grid
-    >
-      <div class="calendar">
-        <div class="title">
-          <router-link
-            :to="prevMonth"
-            class="fas fa-caret-left uk-link-reset"
-          />
-          <div
-            class="month"
-            style="text-transform:capitalize"
-          >
-            {{ monthName }}
-          </div>
-          <div class="year">
-            {{ year }}
-          </div>
-          <router-link
-            :to="nextMonth"
-            class="fas fa-caret-right uk-link-reset"
-          />
-        </div>
-        <ol class="days">
-          <li
-            v-for="(day, index) in days"
-            :key="index"
-            class="day"
-            :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }"
-          >
-            <div class="date">
-              <span class="weekday">
-                {{ day.weekday }}
-              </span>
-              <span class="day">
-                {{ day.number }}
-              </span>
-              <span class="month">
-                {{ day.month }}
-              </span>
-              <span class="year">
-                {{ day.year }}
-              </span>
+  <div class="page-container">
+    <div style="grid-column: span 2">
+      <Spinner v-if="$wait.is('events.browse')" />
+      <div v-else>
+        <div class="calendar">
+          <div class="title">
+            <router-link
+              :to="prevMonth"
+              class="fas fa-caret-left kwai-link-reset"
+            />
+            <div
+              class="month"
+              style="text-transform:capitalize"
+            >
+              {{ monthName }}
             </div>
-            <div class="events">
-              <div
-                v-for="(event, index) in day.events"
-                :key="index"
-              >
-                {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
-                <router-link :to="{ name: 'events.read', params: { id: event.id }}">
-                  {{ event.name }}
-                </router-link>
+            <div class="year">
+              {{ year }}
+            </div>
+            <router-link
+              :to="nextMonth"
+              class="fas fa-caret-right kwai-link-reset"
+            />
+          </div>
+          <ol class="days">
+            <li
+              v-for="(day, index) in days"
+              :key="index"
+              class="day"
+              :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }"
+            >
+              <div class="date">
+                <span class="weekday">
+                  {{ day.weekday }}
+                </span>
+                <span class="day">
+                  {{ day.number }}
+                </span>
+                <span class="month">
+                  {{ day.month }}
+                </span>
+                <span class="year">
+                  {{ day.year }}
+                </span>
               </div>
-            </div>
-          </li>
-        </ol>
-      </div>
-      <div v-if="noData">
-        <div class="uk-alert uk-alert-warning">
+              <div class="events">
+                <div
+                  v-for="(event, index) in day.events"
+                  :key="index"
+                >
+                  {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
+                  <router-link :to="{ name: 'events.read', params: { id: event.id }}">
+                    {{ event.name }}
+                  </router-link>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+        <div
+          v-if="noData"
+          class="kwai-alert kwai-theme-warning"
+          style="margin-top: 20px;"
+        >
           {{ $t('no_data') }}
         </div>
       </div>
@@ -270,6 +263,7 @@
 
 <script>
 import moment from 'moment';
+import Spinner from '@/components/Spinner';
 
 import messages from './lang';
 
@@ -285,6 +279,9 @@ export default {
     }
   },
   i18n: messages,
+  components: {
+    Spinner
+  },
   data() {
     return {
       dayNames: moment.weekdays(true),

@@ -48,6 +48,7 @@ export default {
       return this.$can('create', Page.type());
     },
     category() {
+      /* eslint-disable max-len */
       return this.$store.getters['category/category'](this.$route.params.category);
     },
     picture() {

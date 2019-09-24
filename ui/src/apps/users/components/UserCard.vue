@@ -1,44 +1,30 @@
 <template>
-  <div class="uk-card uk-card-default">
-    <div class="uk-card-header">
-      <div
-        class="uk-grid-small uk-flex-middle"
-        uk-grid
-      >
-        <div class="uk-width-auto">
-          <img
-            class="uk-border-circle"
-            width="40"
-            height="40"
-            :src="noAvatarImage"
-          />
-        </div>
-        <div class="uk-width-expand">
-          <h3 class="uk-card-title uk-margin-remove-bottom">
-            {{ user.name }}
-          </h3>
-          <p class="uk-text-meta uk-margin-remove-top">
-            <i class="fas fa-envelope"></i>&nbsp;
-            <a :href="'mailto:' + user.email">{{ user.email }}</a>
-          </p>
-        </div>
+  <!-- eslint-disable max-len -->
+  <div style="box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3); display: flex; flex-direction: column;">
+    <div style="display: flex;padding: 20px;">
+      <img
+        style="border-radius: 50%; width: 40px; height: 40px; margin: 20px;"
+        :src="noAvatarImage"
+      />
+      <div>
+        <h3>{{ user.name }}</h3>
+        <p class="kwai-text-meta">
+          <i class="fas fa-envelope"></i>&nbsp;
+          <a :href="'mailto:' + user.email">{{ user.email }}</a>
+        </p>
       </div>
     </div>
-    <div class="uk-card-body">
-    </div>
-    <div class="uk-card-footer uk-grid-small uk-flex-middle" uk-grid>
+    <div style="padding: 20px;border-top: 1px solid var(--kwai-color-muted); display: flex; flex-direction: row; align-items: center;">
       <div>
         <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
       </div>
-      <div class="uk-width-expand">
-        <span class="uk-float-right">
-          <router-link
-            class="uk-icon-button uk-link-reset"
-            :to="userLink"
-          >
-            <i class="fas fa-ellipsis-h"></i>
-          </router-link>
-        </span>
+      <div style="margin-left: auto;">
+        <router-link
+          class="kwai-icon-button"
+          :to="userLink"
+        >
+          <i class="fas fa-ellipsis-h"></i>
+        </router-link>
       </div>
     </div>
   </div>

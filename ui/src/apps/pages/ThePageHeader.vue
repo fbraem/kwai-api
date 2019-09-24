@@ -1,11 +1,10 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div class="hero-container">
     <div
       v-if="picture"
       style="grid-column: 1"
     >
-      <img :src="picture" />
+      <img :src="picture" style="margin: auto; "/>
     </div>
     <div v-if="page">
       <div class="kwai-badge kwai-theme-secondary">

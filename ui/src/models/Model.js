@@ -96,10 +96,18 @@ class Model {
   }
 
   /**
-   * Default implementation. Returns an empty object.
+   * Default implementation. Returns an object with formatted create/update
+   * dates.
    */
   static computed() {
-    return Object.create(null);
+    return {
+      localCreatedAt(model) {
+        return model.created_at ? model.created_at.format('L HH:mm') : '';
+      },
+      localUpdatedAt(model) {
+        return model.updated_at ? model.updated_at.format('L HH:mm') : '';
+      }
+    };
   }
 
   /**

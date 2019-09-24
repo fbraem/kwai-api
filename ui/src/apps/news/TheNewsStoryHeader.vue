@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div class="hero-container">
     <div v-if="picture">
-      <img :src="picture" />
+      <img :src="picture" style="margin: auto;"/>
     </div>
     <div v-if="story">
       <div class="kwai-badge kwai-theme-secondary">

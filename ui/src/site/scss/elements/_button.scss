@@ -1,3 +1,25 @@
+// TODO: use this new way ...
+//  $icon-button: #{$prefix}new-icon-button;
+//
+// %button {
+//     box-sizing: border-box;
+//     border-radius: 500px;
+//     align-items: center;
+//     display: inline-flex;
+//     vertical-align: middle;
+//     text-decoration: none !important;
+// }
+//
+// #{$icon-button}, .default\:#{$icon-button} {
+//     @extend %button;
+//     color: var(--#{$prefix}color-default-text) !important;
+// }
+//
+// .secondary\:#{$icon-button} {
+//     @extend %button;
+//     color: var(--#{$prefix}color-secondary-text) !important;
+// }
+
 .#{$prefix}icon-button {
     border: none;
     font-size: 16px;

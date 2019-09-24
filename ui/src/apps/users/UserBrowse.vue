@@ -1,20 +1,36 @@
 <template>
-  <div>
+  <div class="page-container">
     <Spinner v-if="$wait.is('users.browse')" />
-    <div
+    <div style="grid-column: span 2; display: flex; flex-wrap: wrap;"
       v-else
-      uk-grid
     >
       <div
         v-for="user in users"
         :key="user.id"
-        class="uk-width-1-2@m"
+        class="user-item"
       >
           <UserCard :user="user" />
       </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import "@/site/scss/_mq.scss";
+
+.user-item {
+  margin-top: 0px !important;
+  padding-bottom: 20px;
+  padding-left: 20px;
+
+  @include mq($until: tablet) {
+    width: 100%;
+  }
+  @include mq($from: tablet) {
+    width: 50%;
+  }
+}
+</style>
 
 <script>
 import Spinner from '@/components/Spinner';

@@ -1,17 +1,17 @@
 <template>
-  <div uk-grid>
-    <div class="uk-width-1-1@s uk-width-1-3@m">
+  <div class="page-container">
+    <div style="grid-area: page-sidebar">
       <UserCard
         v-if="user"
         :user="user"
       />
     </div>
-    <div class="uk-width-1-1@s uk-width-2-3@m">
-      <h1 class="uk-heading-small">{{ $t('rules.groups') }}</h1>
-      <p class="uk-text-meta">
+    <div style="grid-area: page-content">
+      <h1>{{ $t('rules.groups') }}</h1>
+      <p class="kwai-text-meta">
         {{ $t('rules.groups_info') }}
       </p>
-      <table v-if="user" class="uk-table uk-table-divider">
+      <table v-if="user" class="kwai-table kwai-table-divider">
         <tr>
           <th>{{ $t('rules.name') }}</th>
         </tr>
@@ -27,7 +27,7 @@
         </tr>
       </table>
       <h1>Available groups</h1>
-      <table v-if="user" class="uk-table uk-table-divider">
+      <table v-if="user" class="kwai-table kwai-table-divider">
         <tr>
           <th>{{ $t('rules.name') }}</th>
         </tr>

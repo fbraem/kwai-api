@@ -1,9 +1,6 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div class="kwai-page-card">
-    <div
-      v-if="page.header_overview_crop"
-    >
+    <div v-if="page.header_overview_crop">
       <img :src="page.header_overview_crop" />
     </div>
     <div>
@@ -12,9 +9,7 @@
       </h5>
     </div>
     <div
-      v-html="page.content.html_summary"
-      style="flex-grow: 1;"
-    >
+      v-html="page.content.html_summary">
     </div>
     <div style="align-self:flex-end;">
       <router-link

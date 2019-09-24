@@ -1,46 +1,44 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <KwaiForm
-        :form="form"
-        :error="error"
-        :save="$t('save')"
-        @submit="submit"
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :error="error"
+      :save="$t('save')"
+      @submit="submit"
+      style="grid-column: span 2;"
+    >
+      <KwaiField
+        name="name"
+        :label="$t('rules.form.name.label')"
       >
-        <KwaiField
-          name="name"
-          :label="$t('rules.form.name.label')"
-        >
-          <KwaiInputText :placeholder="$t('rules.form.name.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="remark"
-          :label="$t('rules.form.remark.label')"
-        >
-          <KwaiTextarea
-            :rows="5"
-            :placeholder="$t('rules.form.remark.placeholder')"
-          />
-        </KwaiField>
-        <KwaiField
-          name="rules"
-          :label="$t('rules.form.rules.label')"
-        >
-          <multiselect
-            :options="rules"
-            group-values="actions"
-            group-label="subject"
-            label="name"
-            track-by="id"
-            :multiple="true"
-            :close-on-select="false"
-            :selectLabel="$t('rules.form.rules.selectLabel')"
-            :deselectLabel="$t('rules.form.rules.deselectLabel')"
-          />
-        </KwaiField>
-      </KwaiForm>
-    </div>
+        <KwaiInputText :placeholder="$t('rules.form.name.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="remark"
+        :label="$t('rules.form.remark.label')"
+      >
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('rules.form.remark.placeholder')"
+        />
+      </KwaiField>
+      <KwaiField
+        name="rules"
+        :label="$t('rules.form.rules.label')"
+      >
+        <multiselect
+          :options="rules"
+          group-values="actions"
+          group-label="subject"
+          label="name"
+          track-by="id"
+          :multiple="true"
+          :close-on-select="false"
+          :selectLabel="$t('rules.form.rules.selectLabel')"
+          :deselectLabel="$t('rules.form.rules.deselectLabel')"
+        />
+      </KwaiField>
+    </KwaiForm>
   </div>
 </template>
 

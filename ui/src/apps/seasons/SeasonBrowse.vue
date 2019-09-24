@@ -1,33 +1,30 @@
 <template>
-  <div>
+  <div class="page-container">
     <Spinner v-if="$wait.is('seasons.browse')" />
-    <div
-      v-else
-      uk-grid
-    >
+    <div style="grid-column: span 2;">
       <div
         v-if="noSeasons"
-        class="uk-alert uk-alert-warning"
+        class="kwai-alert kwai-theme-warning"
       >
         {{ $t('no_seasons') }}
       </div>
-      <div
-        class="uk-width-1-1"
-        v-else
-      >
-        <table class="uk-table uk-table-striped">
-          <tr>
-            <th></th>
-            <th>{{ $t('form.season.name.label') }}</th>
-            <th>{{ $t('form.season.start_date.label') }}</th>
-            <th>{{ $t('form.season.end_date.label') }}</th>
-            <th></th>
-          </tr>
-          <SeasonRow
-            v-for="season in seasons"
-            :key="season.id"
-            :season="season"
-          />
+      <div v-else>
+        <table class="kwai-table kwai-table-striped kwai-table-responsive">
+          <thead>
+            <tr>
+              <th></th>
+              <th>{{ $t('form.season.name.label') }}</th>
+              <th>{{ $t('period') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <SeasonRow
+              v-for="season in seasons"
+              :key="season.id"
+              :season="season"
+            />
+          </tbody>
         </table>
       </div>
     </div>

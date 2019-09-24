@@ -1,58 +1,90 @@
 <template>
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <section class="uk-section uk-section-xsmall">
-        <div class="uk-container">
-          <div
-            uk-height-match="target: > div > .uk-card"
-            uk-grid
-          >
-            <div class="uk-width-1-1 uk-width-1-3@m">
-              <NewsListCard
-                :stories="stories"
-                :category="category"
-              />
-            </div>
-            <div class="uk-width-1-1 uk-width-1-3@m">
-              <PageListCard :pages="pages" />
-            </div>
-            <div class="uk-width-1-1 uk-width-1-3@m">
-              <CoachListCard :coaches="coaches" />
-            </div>
-          </div>
-        </div>
-      </section>
+  <!-- eslint-disable max-len -->
+  <div class="page-container">
+    <div
+      class="training-grid-container"
+      style="grid-column: span 2; justify-items: center;"
+    >
+      <NewsListCard
+        :stories="stories"
+        :category="category"
+        class="training-card"
+        style="grid-area: news-area; justify-self: right; width: 100%;"
+      />
+      <PageListCard
+        :pages="pages"
+        class="training-card"
+        style="grid-area: info-area; justify-self: left; width: 100%;"
+      />
+      <CoachListCard
+        :coaches="coaches"
+        style="grid-area: trainers-area;"
+      />
     </div>
-    <div class="uk-width-1-1" uk-grid>
-      <div class="uk-width-1-1">
-        <div class="uk-margin" uk-grid>
-          <div class="uk-width-expand">
-            <h3>Kalender</h3>
-          </div>
-          <div class="uk-width-auto">
-            <router-link
-              class="uk-icon-button uk-link-reset"
-              :to="calendarLink"
-            >
-              <i class="fas fa-angle-up"></i>
-            </router-link>
-          </div>
-        </div>
+    <div style="grid-column: span 2; display: flex; flex-direction: row;">
+      <div style="flex-grow: 1;">
+        <h3>Kalender</h3>
       </div>
-      <div class="uk-width-1-1">
-        <Calendar
-          :year="year"
-          :month="month"
-          :trainings="trainings"
-          @prevMonth="prevMonth"
-          @prevYear="prevYear"
-          @nextMonth="nextMonth"
-          @nextYear="nextYear"
-        />
+      <div>
+        <router-link
+          class="kwai-icon-button"
+          :to="calendarLink"
+        >
+          <i class="fas fa-angle-up"></i>
+        </router-link>
       </div>
+    </div>
+    <div style="grid-column: span 2;">
+      <Calendar
+        :year="year"
+        :month="month"
+        :trainings="trainings"
+        @prevMonth="prevMonth"
+        @prevYear="prevYear"
+        @nextMonth="nextMonth"
+        @nextYear="nextYear"
+      />
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/site/scss/_mq.scss';
+
+.training-card {
+
+  @include mq($from: desktop) {
+    max-width: 450px;
+  }
+  @include mq($until: desktop) {
+    max-width: 100%;
+  }
+}
+
+.training-grid-container {
+  display: grid;
+  grid-gap: 20px;
+
+  @include mq($from: desktop) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "news-area info-area"
+      "trainers-area trainers-area"
+    ;
+  }
+
+  @include mq($until: desktop) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas:
+      "news-area"
+      "info-area"
+      "trainers-area"
+    ;
+  }
+}
+</style>
 
 <script>
 

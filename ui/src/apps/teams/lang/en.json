@@ -49,6 +49,7 @@
     "no_available_members" : "There are no more members to add to this team",
     "delete" : "Delete",
     "sure_to_delete" : "Are you sure to remove these members from this team?",
+    "sure_to_delete_team" : "Are you sure to delete this team?",
     "cancel" : "Cancel",
     "name" : "Name",
     "required" : "This field is required.",

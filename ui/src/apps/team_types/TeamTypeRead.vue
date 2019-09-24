@@ -1,65 +1,32 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
+  <div class="page-container">
     <Spinner v-if="$wait.is('teamtypes.read')" />
     <div
       v-if="notAllowed"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-danger"
     >
       {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-danger"
     >
       {{ $t('not_found') }}
     </div>
-    <Spinner v-if="$wait.is('teams.read')" />
-    <div
-      v-if="teamtype"
-      uk-grid
-    >
+    <div v-if="teamtype">
       <div>
-        <table class="uk-table uk-table-striped">
-          <tr>
-            <th>
-              {{ $t('name') }}
-            </th>
-            <td>
-              {{ teamtype.name }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('form.team_type.start_age.label') }}
-            </th>
-            <td>
-              {{ teamtype.start_age }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('form.team_type.end_age.label') }}
-            </th>
-            <td>
-              {{ teamtype.end_age }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('form.team_type.gender.label') }}
-            </th>
-            <td>
-              {{ gender }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('active') }}
-            </th>
-            <td>
+        <dl class="kwai-attributes">
+          <dt>{{ $t('name') }}</dt>
+          <dd>{{ teamtype.name }}</dd>
+          <dt>{{ $t('form.team_type.start_age.label') }}</dt>
+          <dd>{{ teamtype.start_age }}</dd>
+          <dt>{{ $t('form.team_type.end_age.label') }}</dt>
+          <dd>{{ teamtype.end_age }}</dd>
+          <dt>{{ $t('form.team_type.gender.label') }}</dt>
+          <dd>{{ gender }}</dd>
+          <dt>{{ $t('active') }}</dt>
+          <dd>
               <i
                 v-if="teamtype.active"
                 class="fas fa-check"
@@ -67,17 +34,13 @@
               </i>
               <i
                 v-else
-                class="fas fa-times uk-text-danger"
+                class="fas fa-times kwai-theme-danger"
                 name="times"
               >
               </i>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('competition_label') }}<br />
-            </th>
-            <td>
+          </dd>
+          <dt>{{ $t('competition_label') }}</dt>
+          <dd>
               <i
                 v-if="teamtype.competition"
                 class="fas fa-check"
@@ -85,21 +48,15 @@
               </i>
               <i
                 v-else
-                class="fas fa-times uk-text-danger"
+                class="fas fa-times kwai-theme-danger"
               >
               </i>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('form.team_type.remark.label') }}
-            </th>
-            <td>
-              {{ teamtype.remark }}
-            </td>
-          </tr>
-        </table>
+          </dd>
+          <dt>{{ $t('form.team_type.remark.label') }}</dt>
+          <dd>{{ teamtype.remark }}</dd>
+        </dl>
       </div>
+      <Spinner v-if="$wait.is('teams.read')" />
     </div>
   </div>
 </template>

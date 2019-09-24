@@ -1,6 +1,8 @@
 <template>
   <div class="kwai-addon">
-    <i class="kwai-addon-item far fa-envelope"></i>
+    <div class="kwai-addon-item">
+      <i class="far fa-envelope"></i>
+    </div>
     <input v-model="field.value"
       :id="id"
       class="kwai-input kwai-addon-field"

@@ -1,5 +1,5 @@
 @each $color in map-keys($kwai-color-palette) {
-    #{$prefix}text-#{$color} {
+    .#{$prefix}text-#{$color} {
         color: kwai-color($color, 'base');
     }
 }

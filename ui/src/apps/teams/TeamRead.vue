@@ -1,189 +1,178 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <AreYouSure
-      id="delete-member"
-      :yes="$t('delete')"
-      :no="$t('cancel')"
-      @sure="deleteMembers"
-    >
-      <template slot="title">
-        {{ $t('delete') }}
-      </template>
-      {{ $t('sure_to_delete') }}
-    </AreYouSure>
-    <AddMembersDialog
-      v-if="team"
-      id="add-member-dialog"
-      :team="team"
-    />
+  <div class="page-container">
     <div
       v-if="notAllowed"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-alert"
     >
       {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-danger"
     >
       {{ $t('not_found') }}
     </div>
     <Spinner v-if="$wait.is('teams.read')" />
     <div
       v-if="team"
-      uk-grid
+      style="grid-column: span 2; display: flex; flex-direction: column;"
     >
-      <div class="uk-width-1-1@s uk-width-1-2@m">
-        <table class="uk-table uk-table-striped">
-          <tr>
-            <th>
-              {{ $t('name') }}
-            </th>
-            <td>
-              {{ team.name }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('form.team.season.label') }}
-            </th>
-            <td v-if="team.season">
-              <router-link
-                :to="seasonLink"
-              >
-                {{ team.season.name }}
-              </router-link>
-            </td>
-            <td v-else>
-              {{ $t('no_season') }}
-            </td>
-          </tr>
-          <tr>
-            <th>{{ $t('form.team.team_type.label') }}</th>
-            <td v-if="team.team_type">
-              <router-link
-                :to="teamTypeLink"
-              >
-                {{ team.team_type.name }}
-              </router-link>
-            </td>
-            <td v-else>
-              {{ $t('no_type') }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('form.team.remark.label') }}
-            </th>
-            <td>
-              {{ team.remark }}
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="uk-width-1-1@s uk-width-1-2@m">
-        <h3 class="uk-heading-line">
+      <table class="kwai-table kwai-table-striped">
+        <tr>
+          <th>
+            {{ $t('name') }}
+          </th>
+          <td>
+            {{ team.name }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('form.team.season.label') }}
+          </th>
+          <td v-if="team.season">
+            <router-link
+              :to="seasonLink"
+            >
+              {{ team.season.name }}
+            </router-link>
+          </td>
+          <td v-else>
+            {{ $t('no_season') }}
+          </td>
+        </tr>
+        <tr>
+          <th>{{ $t('form.team.team_type.label') }}</th>
+          <td v-if="team.team_type">
+            <router-link
+              :to="teamTypeLink"
+            >
+              {{ team.team_type.name }}
+            </router-link>
+          </td>
+          <td v-else>
+            {{ $t('no_type') }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('form.team.remark.label') }}
+          </th>
+          <td>
+            {{ team.remark }}
+          </td>
+        </tr>
+      </table>
+      <div style="display: flex; flex-direction: column;">
+        <h3 class="kwai-header-line">
           <span>{{ $t('members') }}</span>
         </h3>
-        <div uk-grid>
-          <div
-            v-if="team.season"
-            class="uk-width-1-1"
+        <div
+          v-if="team.season"
+        >
+          <p
+            class="kwai-text-meta"
+            v-html="seasonAgeRemark"
           >
-            <p
-              class="uk-text-meta"
-              v-html="seasonAgeRemark"
-            >
-            </p>
-          </div>
-          <div
-            v-if="hasMembers"
-            class="uk-width-1-1"
+          </p>
+        </div>
+        <div
+          v-if="hasMembers"
+        >
+          {{ $t('count') }} : {{members.length}}
+        </div>
+        <div
+          v-else
+        >
+          {{ $t('no_members') }}
+        </div>
+        <div
+          v-if="members && members.length > 10"
+        >
+          <a
+            v-if="team && $can('attachMember', team)"
+            class="kwai-icon-button"
+            @click.prevent.stop="showIt"
           >
-            {{ $t('count') }} : {{members.length}}
-          </div>
-          <div
-            v-else
-            class="uk-width-1-1"
+            <i class="fas fa-plus"></i>
+          </a>
+          <a
+            v-if="selectedMembers.length > 0"
+            class="kwai-icon-button kwai-theme-danger"
+            @click="showDeleteMemberDialog = true;"
           >
-            {{ $t('no_members') }}
-          </div>
-          <div
-            v-if="members && members.length > 10"
-            class="uk-width-1-1"
+            <i class="fas fa-trash"></i>
+          </a>
+        </div>
+        <div
+          v-if="members && members.length > 0"
+        >
+          <table class="kwai-table kwai-table-small kwai-table-middle kwai-table-divider">
+            <tr
+              v-for="member in members"
+              :key="member.id"
+            >
+              <td>
+                <input
+                  class="kwai-checkbox"
+                  type="checkbox"
+                  v-model="selectedMembers"
+                  :value="member.id"
+                />
+              </td>
+              <td>
+                <strong>
+                  {{ member.person.name }}
+                </strong>
+                <br />
+                {{ member.person.formatted_birthdate }}
+                &nbsp;({{ memberAge(member) }})
+              </td>
+              <td>
+                {{ member.license }}
+                <br />
+                <i v-if="member.person.gender == 1" class="fas fa-male"></i>
+                <i v-if="member.person.gender == 2" class="fas fa-female"></i>
+                <i v-if="member.person.gender == 0" class="fas fa-question"></i>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <a
+            v-if="team && $can('attachMember', team)"
+            class="kwai-icon-button"
+            @click.prevent.stop="showIt"
           >
-            <a
-              v-if="team && $can('attachMember', team)"
-              uk-toggle="target: #add-member-dialog"
-              class="uk-icon-button uk-link-reset"
-            >
-              <i class="fas fa-plus"></i>
-            </a>
-            <a
-              v-if="selectedMembers.length > 0"
-              uk-toggle="target: #delete-member"
-              class="uk-icon-button uk-link-reset uk-button-danger"
-            >
-              <i class="fas fa-trash" style="color:#fff"></i>
-            </a>
-          </div>
-          <div
-            v-if="members && members.length > 0"
-            class="uk-width-1-1"
+            <i class="fas fa-plus"></i>
+          </a>
+          <a
+            v-if="selectedMembers.length > 0"
+            class="kwai-icon-button kwai-theme-danger"
           >
-            <table class="uk-table uk-table-small uk-table-middle uk-table-divider">
-              <tr
-                v-for="member in members"
-                :key="member.id"
-              >
-                <td>
-                  <input
-                    class="uk-checkbox"
-                    type="checkbox"
-                    v-model="selectedMembers"
-                    :value="member.id"
-                  />
-                </td>
-                <td>
-                  <strong>
-                    {{ member.person.name }}
-                  </strong>
-                  <br />
-                  {{ member.person.formatted_birthdate }}
-                  &nbsp;({{ memberAge(member) }})
-                </td>
-                <td>
-                  {{ member.license }}
-                  <br />
-                  <i v-if="member.person.gender == 1" class="fas fa-male"></i>
-                  <i v-if="member.person.gender == 2" class="fas fa-female"></i>
-                  <i v-if="member.person.gender == 0" class="fas fa-question"></i>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div class="uk-width-1-1">
-            <a
-              v-if="team && $can('attachMember', team)"
-              uk-toggle="target: #add-member-dialog"
-              class="uk-icon-button uk-link-reset"
-            >
-              <i class="fas fa-plus"></i>
-            </a>
-            <a
-              v-if="selectedMembers.length > 0"
-              uk-toggle="target: #delete-member"
-              class="uk-icon-button uk-button-danger uk-link-reset"
-            >
-              <i class="fas fa-trash uk-light"></i>
-            </a>
-          </div>
+            <i class="fas fa-trash"></i>
+          </a>
         </div>
       </div>
     </div>
+    <AddMembersDialog
+      :show="showAddMemberDialog"
+      :team="team"
+      @close="showAddMemberDialog = false;"
+    />
+    <AreYouSure
+      :show="showDeleteMemberDialog"
+      :yes="$t('delete')"
+      :no="$t('cancel')"
+      @sure="deleteMembers"
+      @close="showDeleteMemberDialog = false;"
+    >
+      <template slot="title">
+        {{ $t('delete') }}
+      </template>
+      {{ $t('sure_to_delete') }}
+    </AreYouSure>
   </div>
 </template>
 
@@ -191,21 +180,23 @@
 import messages from './lang';
 
 import AddMembersDialog from './AddMembersDialog.vue';
-import AreYouSure from '@/components/AreYouSure.vue';
 import Spinner from '@/components/Spinner.vue';
+import AreYouSure from '@/components/AreYouSure.vue';
 
 import Member from '@/models/Member';
 
 export default {
   components: {
-    AreYouSure,
     AddMembersDialog,
-    Spinner
+    Spinner,
+    AreYouSure
   },
   i18n: messages,
   data() {
     return {
-      selectedMembers: []
+      selectedMembers: [],
+      showAddMemberDialog: false,
+      showDeleteMemberDialog: false
     };
   },
   computed: {
@@ -270,15 +261,6 @@ export default {
         id: params.id
       });
     },
-    showAddMemberDialog() {
-      if (this.team.team_type) {
-        this.$store.dispatch('team/availableMembers', {
-          id: this.$route.params.id
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
-    },
     deleteMembers() {
       var members = [];
       this.selectedMembers.forEach((id) => {
@@ -297,6 +279,10 @@ export default {
         return this.team.season.end_date.diff(member.person.birthdate, 'years');
       }
       return member.person.age;
+    },
+    showIt() {
+      this.showAddMemberDialog = true;
+      console.log('hey');
     }
   }
 };

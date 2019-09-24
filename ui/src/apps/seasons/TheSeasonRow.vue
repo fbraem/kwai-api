@@ -12,14 +12,13 @@
     </td>
     <td>
       {{ season.formatted_start_date }}
-    </td>
-    <td>
+      <i class="fas fa-arrows-alt-h"></i>
       {{ season.formatted_end_date }}
     </td>
     <td>
       <router-link
         v-if="$can('update', season)"
-        class="uk-icon-button"
+        class="kwai-icon-button"
         style="margin-top:-10px"
         :to="{ name: 'seasons.update', params: { id: season.id } }"
       >

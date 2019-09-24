@@ -1,68 +1,68 @@
 <template>
-  <div uk-grid>
-    <div
-      class="uk-width-1-1@s"
-      :class="{ 'uk-width-5-6@m' : hasToolbar }"
-    >
+  <div class="hero-container">
+    <div :style="gridStyle">
       <router-link
         v-if="route"
         :to="route"
-        class="uk-link-reset"
+        class="kwai-link-reset"
       >
-        <h1 class="uk-h1">
-          <img
+        <h1>
+          <inline-svg
             v-if="logo"
             :src="logo"
             width="42"
             height="42"
-            uk-svg
-            style="margin-top:-10px"
+            fill="white"
           />
           {{ title }}
         </h1>
       </router-link>
-      <h1 v-else class="uk-h1">
-        <img
+      <h1 v-else>
+        <inline-svg
           v-if="logo"
           :src="logo"
           width="42"
           height="42"
-          uk-svg
-          style="margin-top:-10px"
+          fill="white"
         />
         {{ title }}
       </h1>
-      <h3
-        v-if="subtitle"
-        class="uk-h3 uk-margin-remove"
-      >
+      <h3 v-if="subtitle">
         {{ subtitle }}
       </h3>
     </div>
     <div
       v-if="hasToolbar"
-      class="uk-width-1-1@s uk-width-1-6@m"
+      class="kwai-buttons"
+      style="display: flex; justify-content: flex-end; flex-flow: row;"
     >
-      <div class="uk-flex uk-flex-right">
-        <template v-for="(button, index) in toolbar">
-          <div
-            :class="{ 'uk-margin-small-left': index > 0 }"
+      <template v-for="(button, index) in toolbar">
+        <template v-if="button.route">
+          <router-link
+            class="kwai-icon-button kwai-theme-muted"
+            :to="button.route"
             :key="index"
           >
-            <router-link
-              class="uk-icon-button uk-link-reset"
-              :to="button.route"
-            >
-              <i :class="button.icon"></i>
-            </router-link>
-          </div>
+            <i :class="button.icon"></i>
+          </router-link>
         </template>
-      </div>
+        <template v-if="button.method">
+          <a
+            :key="index"
+            class="kwai-icon-button kwai-theme-muted"
+            @click.prevent.stop="button.method"
+          >
+            <i :class="button.icon"></i>
+          </a>
+        </template>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import InlineSvg from 'vue-inline-svg';
+
 /**
  * Component for a header of a page
  */
@@ -104,9 +104,22 @@ export default {
       required: false
     }
   },
+  components: {
+    InlineSvg
+  },
   computed: {
     hasToolbar() {
       return this.toolbar && this.toolbar.length > 0;
+    },
+    gridStyle() {
+      if (this.hasToolbar) {
+        return {
+          'grid-column': '1'
+        };
+      }
+      return {
+        'grid-column': 'span 2'
+      };
     }
   }
 };

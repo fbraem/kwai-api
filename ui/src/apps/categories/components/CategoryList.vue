@@ -6,7 +6,7 @@
       </h4>
     </div>
     <div>
-      <ul>
+      <ul class="kwai-list">
         <CategoryListItem
           v-for="(category, index) in categories"
           :category="category"

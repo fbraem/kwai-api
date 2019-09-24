@@ -1,99 +1,95 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
+  <div class="page-container">
     <div
       v-if="notAllowed"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-theme-danger"
     >
         {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="uk-alert-danger"
-      uk-alert
+      class="kwai-alert kwai-alert-danger"
     >
         {{ $t('training.definitions.not_found') }}
     </div>
     <Spinner v-if="$wait.is('training.definitions.read')" />
     <div
       v-if="definition"
-      uk-grid
+      style="grid-column: span 2"
     >
-      <div class="uk-width-1-1">
-        <table class="uk-table uk-table-striped">
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.name.label') }}
-            </th>
-            <td>
-              {{ definition.name }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.location.label') }}
-            </th>
-            <td>
-              {{ definition.location }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.description.label') }}
-            </th>
-            <td>
-              {{ definition.description }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.weekday.label') }}
-            </th>
-            <td>
-              {{ definition.weekdayText }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.time') }}
-            </th>
-            <td>
-              {{ definition.start_time.format('HH:mm') }} - {{ definition.end_time.format('HH:mm') }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.team.label') }}
-            </th>
-            <td v-if="definition.team">
-              {{ definition.team.name }}
-            </td>
-            <td v-else>
-              <i class="fas fa-minus"></i>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.season.label') }}
-            </th>
-            <td v-if="definition.season">
-              {{ definition.season.name }}
-            </td>
-            <td v-else>
-              <i class="fas fa-minus"></i>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              {{ $t('training.definitions.form.remark.label') }}
-            </th>
-            <td>
-              {{ definition.remark }}
-            </td>
-          </tr>
-        </table>
-      </div>
+      <table class="kwai-table kwai-table-striped">
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.name.label') }}
+          </th>
+          <td>
+            {{ definition.name }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.location.label') }}
+          </th>
+          <td>
+            {{ definition.location }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.description.label') }}
+          </th>
+          <td>
+            {{ definition.description }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.weekday.label') }}
+          </th>
+          <td>
+            {{ definition.weekdayText }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.time') }}
+          </th>
+          <td>
+            {{ definition.start_time.format('HH:mm') }} - {{ definition.end_time.format('HH:mm') }}
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.team.label') }}
+          </th>
+          <td v-if="definition.team">
+            {{ definition.team.name }}
+          </td>
+          <td v-else>
+            <i class="fas fa-minus"></i>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.season.label') }}
+          </th>
+          <td v-if="definition.season">
+            {{ definition.season.name }}
+          </td>
+          <td v-else>
+            <i class="fas fa-minus"></i>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            {{ $t('training.definitions.form.remark.label') }}
+          </th>
+          <td>
+            {{ definition.remark }}
+          </td>
+        </tr>
+      </table>
       <TrainingGeneratorForm :definition="definition" />
     </div>
   </div>

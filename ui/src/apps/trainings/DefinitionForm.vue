@@ -1,96 +1,95 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div uk-grid>
-    <div class="uk-width-1-1">
-      <KwaiForm
-        :form="form"
-        :save="$t('save')"
-        :error="error"
-        @submit="submit"
+  <div class="page-container">
+    <KwaiForm
+      :form="form"
+      :save="$t('save')"
+      :error="error"
+      @submit="submit"
+      style="grid-column: span 2;"
+    >
+      <div style="display:flex;">
+        <div style="flex-grow:1;">
+          <KwaiField
+            name="name"
+            :label="$t('training.definitions.form.name.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.definitions.form.name.placeholder')" />
+          </KwaiField>
+        </div>
+        <div style="align-self:flex-end;margin-left: 20px;">
+          <KwaiField
+            name="active"
+            :label="$t('training.definitions.form.active.label')"
+          >
+            <KwaiSwitch />
+          </KwaiField>
+        </div>
+      </div>
+      <KwaiField
+        name="description"
+        :label="$t('training.definitions.form.description.label')"
       >
-        <div uk-grid>
-          <div class="uk-width-expand">
-            <KwaiField
-              name="name"
-              :label="$t('training.definitions.form.name.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.definitions.form.name.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="active"
-              :label="$t('training.definitions.form.active.label')"
-            >
-              <KwaiSwitch />
-            </KwaiField>
-          </div>
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('training.definitions.form.description.placeholder')"
+        />
+      </KwaiField>
+      <KwaiField
+        name="weekday"
+        :label="$t('training.definitions.form.weekday.label')"
+      >
+        <KwaiSelect :items="weekdays" />
+      </KwaiField>
+      <div
+        class="uk-child-width-1-2"
+        uk-grid
+      >
+        <div>
+          <KwaiField
+            name="start_time"
+            :label="$t('training.definitions.form.start_time.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.definitions.form.start_time.placeholder')" />
+          </KwaiField>
         </div>
-        <KwaiField
-          name="description"
-          :label="$t('training.definitions.form.description.label')"
-        >
-          <KwaiTextarea
-            :rows="5"
-            :placeholder="$t('training.definitions.form.description.placeholder')"
-          />
-        </KwaiField>
-        <KwaiField
-          name="weekday"
-          :label="$t('training.definitions.form.weekday.label')"
-        >
-          <KwaiSelect :items="weekdays" />
-        </KwaiField>
-        <div
-          class="uk-child-width-1-2"
-          uk-grid
-        >
-          <div>
-            <KwaiField
-              name="start_time"
-              :label="$t('training.definitions.form.start_time.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.definitions.form.start_time.placeholder')" />
-            </KwaiField>
-          </div>
-          <div>
-            <KwaiField
-              name="end_time"
-              :label="$t('training.definitions.form.end_time.label')"
-            >
-              <KwaiInputText :placeholder="$t('training.definitions.form.end_time.placeholder')" />
-            </KwaiField>
-          </div>
+        <div>
+          <KwaiField
+            name="end_time"
+            :label="$t('training.definitions.form.end_time.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.definitions.form.end_time.placeholder')" />
+          </KwaiField>
         </div>
-        <KwaiField
-          name="season"
-          :label="$t('training.definitions.form.season.label')"
-        >
-          <KwaiSelect :items="seasons" />
-        </KwaiField>
-        <KwaiField
-          name="team"
-          :label="$t('training.definitions.form.team.label')"
-        >
-          <KwaiSelect :items="teams" />
-        </KwaiField>
-        <KwaiField
-          name="location"
-          :label="$t('training.definitions.form.location.label')"
-        >
-          <KwaiInputText :placeholder="$t('training.definitions.form.location.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="remark"
-          :label="$t('training.definitions.form.remark.label')"
-        >
-          <KwaiTextarea
-            :rows="5"
-            :placeholder="$t('training.definitions.form.remark.placeholder')"
-          />
-        </KwaiField>
-      </KwaiForm>
-    </div>
+      </div>
+      <KwaiField
+        name="season"
+        :label="$t('training.definitions.form.season.label')"
+      >
+        <KwaiSelect :items="seasons" />
+      </KwaiField>
+      <KwaiField
+        name="team"
+        :label="$t('training.definitions.form.team.label')"
+      >
+        <KwaiSelect :items="teams" />
+      </KwaiField>
+      <KwaiField
+        name="location"
+        :label="$t('training.definitions.form.location.label')"
+      >
+        <KwaiInputText :placeholder="$t('training.definitions.form.location.placeholder')" />
+      </KwaiField>
+      <KwaiField
+        name="remark"
+        :label="$t('training.definitions.form.remark.label')"
+      >
+        <KwaiTextarea
+          :rows="5"
+          :placeholder="$t('training.definitions.form.remark.placeholder')"
+        />
+      </KwaiField>
+    </KwaiForm>
   </div>
 </template>
 

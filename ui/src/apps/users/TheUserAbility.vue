@@ -1,10 +1,13 @@
 <template>
   <tbody>
-    <td class="uk-width-expand uk-table-middle">
+    <td
+      class="kwai-table-expand kwai-table-middle"
+      style="vertical-align: middle;"
+    >
       {{ ability.name }}
-      <div v-if="!hide" class="uk-panel uk-background-muted uk-padding-small">
+      <div v-if="!hide">
         <h4>Rules</h4>
-        <table class="uk-table uk-table-small">
+        <table class="kwai-table kwai-table-small">
           <tr>
             <th>name</th>
             <th>subject</th>
@@ -18,35 +21,35 @@
         </table>
       </div>
     </td>
-    <td class="uk-text-nowrap">
+    <td>
       <router-link
         :to="{ name: 'users.abilities.update', params: { id: ability.id } }"
-        class="uk-icon-button uk-link-reset"
+        class="kwai-icon-button"
       >
         <i class="fas fa-edit"></i>
       </router-link>
       <a
         v-if="add"
-        class="uk-icon-button uk-link-reset"
+        class="kwai-icon-button"
         @click="emitAdd(ability)"
       >
         <i class="fas fa-plus"></i>
       </a>
       <a
         v-if="remove"
-        class="uk-icon-button uk-link-reset"
+        class="kwai-icon-button"
         @click="emitRemove(ability)"
       >
         <i class="fas fa-trash"></i>
       </a>
       <a v-if="hide"
         @click="show"
-        class="uk-icon-button uk-link-reset">
+        class="kwai-icon-button">
         <i class="fas fa-caret-right"></i>
       </a>
       <a v-else
         @click="show"
-        class="uk-icon-button uk-link-reset">
+        class="kwai-icon-button">
         <i class="fas fa-caret-down"></i>
       </a>
     </td>

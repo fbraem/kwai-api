@@ -1,17 +1,12 @@
 <template>
-  <div class="uk-card uk-card-default uk-card-small">
-    <div class="uk-card-header">
-      <h3 class="uk-card-title">Onze trainers</h3>
-    </div>
-    <div class="uk-card-body">
-      <div
-        class="uk-grid-small uk-grid-divider"
-        uk-grid
-      >
+  <div>
+    <div class="coach-list-card">
+      <h3>Onze trainers</h3>
+      <div class="coach-list">
         <div
+          class="coach-item"
           v-for="coach in coaches"
           :key="coach.id"
-          class="uk-width-1-1"
         >
           <CoachComponent :coach="coach" />
         </div>
@@ -19,6 +14,33 @@
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/site/scss/_mq.scss';
+
+.coach-list-card {
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+  padding: 15px;
+}
+.coach-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.coach-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--kwai-color-muted);
+
+  @include mq($from: wide) {
+    flex: 0 1 25%;
+  }
+  @include mq($from: tablet, $until: wide) {
+    flex: 0 1 30%;
+  }
+  @include mq($from: mobile, $until: tablet) {
+    flex: 0 1 100%;
+  }
+}
+</style>
 
 <script>
 
@@ -45,10 +67,15 @@ const CoachComponent = {
     }
   },
   render(h) {
-    return h('div', {}, [
+    return h('div', {
+      style: {
+        display: 'flex',
+        'align-items': 'center'
+      }
+    }, [
       h('img', {
-        class: {
-          'uk-border-circle': true
+        style: {
+          'border-radius': '100%'
         },
         attrs: {
           width: 32,
@@ -56,11 +83,11 @@ const CoachComponent = {
           src: this.image
         }
       }),
-      h('span', {
-        class: {
-          'uk-text-middle': true,
-          'uk-margin-left': true
-        },
+      h('div', {
+        style: {
+          'vertical-align': 'middle',
+          'margin-left': '20px'
+        }
       }, [
         h('router-link', {
           attrs: {
