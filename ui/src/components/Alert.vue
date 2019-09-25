@@ -24,7 +24,6 @@
 </style>
 
 <script>
-
 const icons = {
   danger: 'fas fa-exclamation-circle',
   info: 'fas fa-info-circle',
