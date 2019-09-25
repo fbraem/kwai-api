@@ -48,8 +48,8 @@
 
 .training-day {
   text-align: center;
-  background-color: var(--kwai-color-secondary);
-  color: var(--kwai-color-secondary-text);
+  background-color: var(--kwai-color-primary-bg);
+  color: var(--kwai-color-primary-fg);
   padding: 40px;
   flex-grow: 1;
   flex-basis: 0;

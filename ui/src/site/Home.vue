@@ -66,7 +66,7 @@
     <div style="display: flex; justify-content: center;">
       <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
     </div>
-    <router-link class="kwai-button" :to="{ name : 'news.browse' }">
+    <router-link class="primary:kwai-button" :to="{ name : 'news.browse' }">
       {{ $t('more_news') }}
     </router-link>
     <AreYouSure
@@ -154,7 +154,7 @@
 @import '@/site/scss/_mq.scss';
 
 .message-card {
-  background-color:#607d8b;
+  background-color: var(--kwai-color-info-fg);
   padding: 20px;
 }
 
@@ -171,6 +171,7 @@
 }
 
 .message-card-container {
+  padding: 30px;
   margin-top: 20px;
   margin-left: 20%;
   margin-right: 20%;

@@ -3,13 +3,13 @@
   <div class="page-container">
     <div
       v-if="notAllowed"
-      class="kwai-alert kwai-theme-alert"
+      class="danger:kwai-alert"
     >
       {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
       {{ $t('not_found') }}
     </div>
@@ -99,7 +99,7 @@
           </a>
           <a
             v-if="selectedMembers.length > 0"
-            class="kwai-icon-button kwai-theme-danger"
+            class="danger:kwai-icon-button"
             @click="showDeleteMemberDialog = true;"
           >
             <i class="fas fa-trash"></i>
@@ -149,7 +149,7 @@
           </a>
           <a
             v-if="selectedMembers.length > 0"
-            class="kwai-icon-button kwai-theme-danger"
+            class="danger:kwai-icon-button"
           >
             <i class="fas fa-trash"></i>
           </a>

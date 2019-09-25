@@ -4,13 +4,13 @@
     <Spinner v-if="$wait.is('teamtypes.read')" />
     <div
       v-if="notAllowed"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
       {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
       {{ $t('not_found') }}
     </div>
@@ -34,8 +34,9 @@
               </i>
               <i
                 v-else
-                class="fas fa-times kwai-theme-danger"
+                class="fas fa-times"
                 name="times"
+                style="color: var(--kwai-color-danger-fg)"
               >
               </i>
           </dd>
@@ -48,7 +49,8 @@
               </i>
               <i
                 v-else
-                class="fas fa-times kwai-theme-danger"
+                class="fas fa-times"
+                style="color: var(--kwai-color-danger-fg)"
               >
               </i>
           </dd>

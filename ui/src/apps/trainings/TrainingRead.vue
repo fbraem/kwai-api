@@ -15,7 +15,7 @@
         </p>
         <p
           v-if="training.event.cancelled"
-          class="kwai-alert kwai-theme-danger"
+          class="danger:kwai-alert"
         >
           {{ $t('cancelled' )}}
         </p>

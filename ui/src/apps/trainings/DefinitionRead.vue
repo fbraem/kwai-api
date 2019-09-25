@@ -3,7 +3,7 @@
   <div class="page-container">
     <div
       v-if="notAllowed"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
         {{ $t('not_allowed') }}
     </div>

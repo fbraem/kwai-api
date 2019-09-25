@@ -5,7 +5,7 @@
       <img :src="picture" style="margin: auto;"/>
     </div>
     <div v-if="story">
-      <div class="kwai-badge kwai-theme-secondary">
+      <div class="primary:kwai-badge">
         <router-link :to="categoryNewsLink">
           {{ story.category.name }}
         </router-link>
@@ -24,13 +24,13 @@
         <router-link
           v-if="$can('update', story)"
           :to="storyLink"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
         >
           <i class="fas fa-edit"></i>
         </router-link>
         <a
           v-if="$can('delete', story)"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
           style="margin-left: 5px;"
           @click.prevent.stop="showAreYouSure = true;"
         >

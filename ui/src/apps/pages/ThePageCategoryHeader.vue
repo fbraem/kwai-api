@@ -23,7 +23,7 @@
       >
         <router-link
           v-if="canCreate"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
           :to="{ name : 'pages.create' }"
         >
           <i class="fas fa-plus"></i>

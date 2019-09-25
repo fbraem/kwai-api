@@ -1,43 +1,20 @@
-// TODO: use this new way ...
-//  $icon-button: #{$prefix}new-icon-button;
-//
-// %button {
-//     box-sizing: border-box;
-//     border-radius: 500px;
-//     align-items: center;
-//     display: inline-flex;
-//     vertical-align: middle;
-//     text-decoration: none !important;
-// }
-//
-// #{$icon-button}, .default\:#{$icon-button} {
-//     @extend %button;
-//     color: var(--#{$prefix}color-default-text) !important;
-// }
-//
-// .secondary\:#{$icon-button} {
-//     @extend %button;
-//     color: var(--#{$prefix}color-secondary-text) !important;
-// }
-
-.#{$prefix}icon-button {
+%icon-button {
     border: none;
     font-size: 16px;
     width: 36px;
     height: 36px;
-    border-radius: 500px;
+    border-radius: 100px;
     align-items: center;
     justify-content: center;
     display: inline-flex;
     vertical-align: middle;
     text-decoration: none !important;
-    color: inherit !important;
+
     &:focus {
         outline:0;
     }
     &:hover {
         text-decoration: none !important;
-        background-color: kwai-color('default', 'dark');
         &:disabled {
             opacity: 0.4;
         }
@@ -46,29 +23,39 @@
     &:disabled {
         opacity: 0.4;
     }
+    :not(:disabled) {
+        cursor: pointer;
+    }
+}
 
-    @each $color in map-keys($kwai-color-palette) {
-        &.#{$prefix}theme-#{$color} {
-            background-color: kwai-color($color);
-            color: kwai-color($color, 'text') !important;
-            &:hover {
-                background-color: kwai-color($color, 'dark');
-                color: kwai-color($color, 'text');
-            }
+$kwai-icon-button-class-name: #{$prefix}icon-button;
+@mixin kwai-theme-icon-button($theme-name: 'default') {
+    $class: '.' + $theme-name + "\\:" + $kwai-icon-button-class-name;
+    @if $theme-name == 'default' {
+        $class: '.' + $kwai-icon-button-class-name + ', ' + $class;
+    }
+
+    #{$class} {
+        @extend %icon-button;
+        background-color: var(--#{$prefix}color-#{$theme-name}-bg);
+        color: var(--#{$prefix}color-#{$theme-name}-fg);
+        &:hover {
+            background-color: var(--#{$prefix}color-#{$theme-name}-light);
+            color: var(--#{$prefix}color-#{$theme-name}-dark);
         }
     }
 }
 
-.#{$prefix}icon-button:not(:disabled) {
-    cursor: pointer;
-}
+@include kwai-theme-icon-button('default');
+@include kwai-theme-icon-button('primary');
+@include kwai-theme-icon-button('secondary');
+@include kwai-theme-icon-button('muted');
 
-.#{$prefix}button {
+%button {
     margin: 0;
     border: none;
     overflow: visible;
     font: inherit;
-    color: inherit;
     text-transform: none;
     display: inline-block;
     box-sizing: border-box;
@@ -77,39 +64,36 @@
     vertical-align: middle;
     text-align: center;
     text-decoration: none;
-    background-color: transparent;
-    border: 1px solid kwai-color('muted');
-    &:hover {
-        border: 1px solid kwai-color('muted', 'dark');
+    cursor: pointer;
+}
+
+$kwai-button-class-name: #{$prefix}button;
+@mixin kwai-theme-button($theme-name: 'default') {
+    $class: '.' + $theme-name + "\\:" + $kwai-button-class-name;
+    @if $theme-name == 'default' {
+        $class: '.' + $kwai-button-class-name + ', ' + $class;
+    }
+
+    #{$class} {
+        @extend %button;
+        background-color: var(--#{$prefix}color-#{$theme-name}-bg);
+        color: var(--#{$prefix}color-#{$theme-name}-fg);
+        border: 1px solid var(--#{$prefix}color-#{$theme-name}-light);
+        &:hover {
+            border: 1px solid var(--#{$prefix}color-#{$theme-name}-dark);
+        }
         &:disabled {
-            background-color: kwai-color('muted');
+            background-color: var(--#{$prefix}color-#{$theme-name}-light);
+            cursor: default;
         }
-    }
-    @each $color in map-keys($kwai-color-palette) {
-        &.#{$prefix}theme-#{$color} {
-            background-color: kwai-color($color);
-            color: kwai-color($color, 'text');
-            border: none;
-            &:hover {
-                background-color: kwai-color($color, 'dark');
-                border: none;
-                &:disabled {
-                    background-color: kwai-color('muted');
-                    color: kwai-color('muted', 'text');
-                }
-            }
-        }
-    }
-    &:disabled {
-        background-color: kwai-color('muted');
-        color: kwai-color('muted', 'text');
-        border: none;
     }
 }
 
-.#{$prefix}button:not(:disabled) {
-    cursor: pointer;
-}
+@include kwai-theme-button('default');
+@include kwai-theme-button('primary');
+@include kwai-theme-button('secondary');
+@include kwai-theme-button('muted');
+
 
 .#{$prefix}buttons {
     .#{$prefix}icon-button:not(:last-child) {

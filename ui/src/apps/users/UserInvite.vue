@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div style="grid-column: span 2;">
-      <div class="kwai-alert kwai-theme-warning">
+      <div class="warning:kwai-alert">
         {{ $t('invite_intro') }}
       </div>
       <KwaiForm

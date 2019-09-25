@@ -4,6 +4,7 @@
     box-sizing: border-box;
     line-height: var(--#{$prefix}line-height);
 }
+
 ul {
     // list-style: none;
     list-style-position: inside;
@@ -33,4 +34,8 @@ h1, h2, h3, h4, h5, h6 {
 
 ul, p {
     margin-bottom: 20px;
+}
+
+a {
+    color: #39f
 }

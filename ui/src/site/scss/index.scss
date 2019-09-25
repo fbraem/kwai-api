@@ -4,11 +4,21 @@ $prefix: "kwai-";
 @import "_reset.scss";
 
 :root {
-    --#{$prefix}line-height: 1.5em;
+    --#{$prefix}font-size: #{$global-font-size};
+    --#{$prefix}line-height: #{$global-line-height};
+    @each $theme-name, $colors in $kwai-theme {
+        @each $type, $color in $colors {
+            --#{$prefix}color-#{$theme-name}-#{$type}: #{$color};
+        }
+    }
+}
+
+html {
+    font-size: var(--#{$prefix}font-size);
 }
 
 body {
-    font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 
 @import "_mq.scss";
@@ -25,43 +35,18 @@ body {
 @import "elements/_text.scss";
 @import "elements/_tooltip.scss";
 
-.main-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 80px auto auto 100px;
-    grid-template-areas:
-        "main-header"
-        "main-hero"
-        "main-content"
-        "main-footer"
-    ;
-}
-
-.main-header {
-    grid-area: main-header;
-    background-color: kwai-color('secondary');
-    color: kwai-color('secondary', 'text');
-}
-
-.toolbar-container {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-areas: "toolbar-left toolbar-middle toolbar-right";
-    grid-gap: 1rem;
-}
-
 a.kwai-link-reset {
     text-decoration: none !important;
     color: inherit !important;
 }
 
 .main-hero {
-    background-color: kwai-color('hero');
+    background-color: var(--#{$prefix}color-secondary-bg);
 }
 
 .hero-container {
-    background-color: kwai-color('hero');
-    color: kwai-color('hero', 'text') !important;
+    background-color: var(--#{$prefix}color-secondary-bg);
+    color: var(--#{$prefix}color-secondary-fg) !important;
     display: grid;
     grid-gap: 10px;
     padding: 20px;
@@ -82,7 +67,7 @@ a.kwai-link-reset {
     }
 
     h1, h2, h3 {
-        color: $kwai-color-white;
+        color: var(--#{$prefix}color-secondary-fg);
         margin-top: 5px;
         margin-bottom: 5px;
     }

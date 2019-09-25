@@ -39,7 +39,7 @@
       <template v-for="(button, index) in toolbar">
         <template v-if="button.route">
           <router-link
-            class="kwai-icon-button kwai-theme-muted"
+            class="secondary:kwai-icon-button"
             :to="button.route"
             :key="index"
           >
@@ -49,7 +49,7 @@
         <template v-if="button.method">
           <a
             :key="index"
-            class="kwai-icon-button kwai-theme-muted"
+            class="secondary:kwai-icon-button"
             @click.prevent.stop="button.method"
           >
             <i :class="button.icon"></i>

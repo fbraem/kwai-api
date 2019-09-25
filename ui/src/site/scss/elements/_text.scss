@@ -1,25 +1,83 @@
-@each $color in map-keys($kwai-color-palette) {
-    .#{$prefix}text-#{$color} {
-        color: kwai-color($color, 'base');
+%text-meta {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+$kwai-text-meta-class-name: #{$prefix}text-meta;
+@mixin kwai-theme-text-meta($theme-name: 'default') {
+    $class: '.' + $theme-name + "\\:" + $kwai-text-meta-class-name;
+    @if $theme-name == 'default' {
+        $class: '.' + $kwai-text-meta-class-name + ', ' + $class;
+    }
+
+    #{$class} {
+        @extend %text-meta;
+        color: var(--#{$prefix}color-#{$theme-name}-light);
     }
 }
 
-.#{$prefix}text-meta {
+@include kwai-theme-text-meta('default');
+@include kwai-theme-text-meta('primary');
+@include kwai-theme-text-meta('secondary');
+@include kwai-theme-text-meta('muted');
+@include kwai-theme-text-meta('danger');
+@include kwai-theme-text-meta('success');
+@include kwai-theme-text-meta('warning');
+@include kwai-theme-text-meta('info');
+
+%text {
+    line-height: var(--#{$prefix}line-height);
+}
+$kwai-text-class-name: #{$prefix}text;
+@mixin kwai-theme-text($theme-name: 'default') {
+    $class: '.' + $theme-name + "\\:" + $kwai-text-class-name;
+    @if $theme-name == 'default' {
+        $class: '.' + $kwai-text-class-name + ', ' + $class;
+    }
+
+    #{$class} {
+        @extend %text;
+        color: var(--#{$prefix}color-#{$theme-name}-light);
+    }
+}
+@include kwai-theme-text('default');
+@include kwai-theme-text('primary');
+@include kwai-theme-text('secondary');
+@include kwai-theme-text('muted');
+@include kwai-theme-text('danger');
+@include kwai-theme-text('success');
+@include kwai-theme-text('warning');
+@include kwai-theme-text('info');
+
+%text-small {
     font-size: 0.875rem;
     line-height: 1.4;
-    color: #999;
-
-    @each $color in map-keys($kwai-color-palette) {
-        &.#{$prefix}theme-#{$color} {
-            color: kwai-color($color, 'base');
-        }
-    }
 }
 
 .#{$prefix}text-small {
     font-size: .875rem;
     line-height: 1.4;
 }
+$kwai-text-small-class-name: #{$prefix}text-small;
+@mixin kwai-theme-text-small($theme-name: 'default') {
+    $class: '.' + $theme-name + "\\:" + $kwai-text-small-class-name;
+    @if $theme-name == 'default' {
+        $class: '.' + $kwai-text-small-class-name + ', ' + $class;
+    }
+
+    #{$class} {
+        @extend %text;
+        color: var(--#{$prefix}color-#{$theme-name}-fg);
+    }
+}
+@include kwai-theme-text-small('default');
+@include kwai-theme-text-small('primary');
+@include kwai-theme-text-small('secondary');
+@include kwai-theme-text-small('muted');
+@include kwai-theme-text-small('danger');
+@include kwai-theme-text-small('success');
+@include kwai-theme-text-small('warning');
+@include kwai-theme-text-small('info');
 
 .#{$prefix}text-truncate {
     text-overflow: ellipsis;

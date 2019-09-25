@@ -9,13 +9,13 @@
     </div>
     <div
       v-if="notAllowed"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
         {{ $t('not_allowed') }}
     </div>
     <div
       v-if="notFound"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
         {{ $t('training.coaches.not_found') }}
     </div>

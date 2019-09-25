@@ -3,7 +3,7 @@
     <label
       v-if="hasLabel"
       class="kwai-form-label"
-      :class="{ 'kwai-text-danger' : hasErrors }"
+      :class="{ 'danger:kwai-text' : hasErrors }"
       :for="name"
     >
       {{ label }}
@@ -11,7 +11,7 @@
     <slot></slot>
     <div
       v-if="hasErrors"
-      class="kwai-text-danger"
+      class="danger:kwai-text"
     >
       <div
         v-for="(error, index) in fieldErrors"

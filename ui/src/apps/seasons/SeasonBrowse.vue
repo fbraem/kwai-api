@@ -4,7 +4,7 @@
     <div style="grid-column: span 2;">
       <div
         v-if="noSeasons"
-        class="kwai-alert kwai-theme-warning"
+        class="warning:kwai-alert"
       >
         {{ $t('no_seasons') }}
       </div>

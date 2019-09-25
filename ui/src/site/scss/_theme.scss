@@ -1,93 +1,58 @@
-$kwai-color-white: #fff;
-$kwai-color-muted: lightgrey;
-
-$kwai-color-palette: (
-    "default": (
-        "base": $kwai-color-white,
-        "light": #e5e5e5,
-        "text": #666
+$kwai-theme: (
+    default: (
+        fg: #666,
+        bg: white,
+        dark: darken(#666, 20%),
+        light: lighten(#666, 20%)
     ),
-    "primary": (
-        "base": #39F
+    primary: (
+        fg: #edb8b6,
+        bg: rgb(198, 28, 24),
+        dark: darken(rgb(198, 28, 24), 20%),
+        light: lighten(mix(white, rgb(198, 28, 24), 40%), 20%)
     ),
-    "secondary" : (
-        "base": rgb(198, 28, 24),
-        "text": #edb8b6
+    secondary: (
+        fg: white,
+        bg: #1C1F33,
+        dark: darken(#1C1F33, 20%),
+        light: lighten(#1C1F33, 50%),
     ),
-    "hero" : (
-        "base": #222,
-        "text": grey
+    danger: (
+        'fg': #BB2124,
+        'bg': #BB2124,
+        'dark': darken(#BB2124, 20%),
+        'light': lighten(#BB2124, 20%)
     ),
-    "muted" : (
-        "base": $kwai-color-muted,
-        "dark": darken($kwai-color-muted, 40%),
-        "light": lighten($kwai-color-muted, 20%),
-        "text": black
+    success: (
+        fg: #22BB33,
+        bg: #22BB33,
+        dark: darken(#22BB33, 20%),
+        light: lighten(#22BB33, 20%)
     ),
-    "danger" : (
-        "base" : #ED4F32,
+    warning: (
+        fg: #F0AD4E,
+        bg: #F0AD4E,
+        dark: darken(#F0AD4E, 20%),
+        light: lighten(#F0AD4E, 20%)
     ),
-    "warning" : (
-        "base" : #ff7200
+    info: (
+        fg: #969A86,
+        bg: #A5A7BF,
+        dark: darken(#A5A7BF, 20%),
+        light: lighten(#A5A7BF, 20%)
     ),
-    "success" : (
-        "base" : #15CD72
+    muted: (
+        fg: #666666,
+        bg: #AAAAAA,
+        dark: darken(#AAAAAA, 20%),
+        light: lighten(#AAAAAA, 20%)
     )
 );
 
-@function kwai-color($palette, $type: 'base') {
-    $colors: map-get($kwai-color-palette, $palette);
-    @if not $colors {
-        @error "Undefined palette #{$palette} used";
-    }
-    $color: map-get($colors, $type);
-    @if $color {
-        @return $color;
-    }
-    @else if $type == 'base' {
-        @error "Palette #{$palette} must contain a base color";
-    }
-    @if $type == 'text' {
-        @return white;
-    }
-    $base: map-get($colors, 'base');
-    @if not $base {
-        @error "Palette #{$palette} must contain a base color";
-    }
-    @if $type == 'dark' {
-        @return darken($base, 20%);
-    }
-    @if $type == 'light' {
-        @return lighten($base, 20%);
-    }
-    @error "Undefined type #{$type} used for palette #{$palette}";
-}
+$global-font-size: 16px;
+$global-line-height: 1.5rem;
 
-/* node-sass doesn't support this yet ...
-@mixin kwai-colorize() {
-    @each $color in map-keys($kwai-color-palette) {
-        @content($color);
-    }
-}
-*/
-
-:root {
-    @mixin color($palette, $colors, $type, $default) {
-        $color: map-get($colors, $type);
-        @if not $color {
-            $color: $default;
-        }
-        --#{$prefix}color-#{$palette}-#{$type}: #{$color};
-    }
-
-    @each $palette, $colors in $kwai-color-palette {
-        $base: map-get($colors, "base");
-        @if not $base {
-            @error "Color #{$palette} must have a base property!";
-        }
-        --#{$prefix}color-#{$palette}: #{$base};
-        @include color($palette, $colors, "dark", darken($base, 20%));
-        @include color($palette, $colors, "light", lighten($base, 20%));
-        @include color($palette, $colors, "text", #fff);
-    }
+@function kwai-color($theme: 'default', $type: 'fg') {
+  $map: map-get($kwai-theme, $theme);
+  @return map-get($map, $type);
 }

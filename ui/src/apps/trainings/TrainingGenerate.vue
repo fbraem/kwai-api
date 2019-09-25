@@ -4,7 +4,7 @@
     <div style="grid-column: span 2;">
       <div
         v-if="count === 0"
-        class="kwai-alert kwai-theme-warning"
+        class="warning:kwai-alert"
       >
         {{ $t('training.events.no_generated_data') }}
       </div>
@@ -68,7 +68,7 @@
         </div>
         <div style="display:flex; justify-content: flex-end;">
           <button
-            class="kwai-button kwai-theme-primary"
+            class="primary:kwai-button"
             :disabled="!hasSelections"
             @click="submit">
             <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}

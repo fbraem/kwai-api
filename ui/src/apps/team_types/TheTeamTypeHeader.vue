@@ -13,14 +13,14 @@
       style="display: flex; justify-content: flex-end; flex-flow: row;"
     >
       <router-link
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
         :to="{ 'name' : 'team_types.browse' }"
       >
         <i class="fas fa-list"></i>
       </router-link>
       <router-link
         v-if="$can('update', teamtype)"
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
         :to="{ name : 'team_types.update' }"
       >
         <i class="fas fa-edit"></i>

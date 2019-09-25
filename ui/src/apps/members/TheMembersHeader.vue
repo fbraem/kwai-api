@@ -8,7 +8,7 @@
     <div style="display:flex; align-items:flex-end;flex-flow:column">
       <router-link
         v-if="canUpload"
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
         :to="{ name : 'members.upload' }"
       >
         <i class="fas fa-file-import"></i>

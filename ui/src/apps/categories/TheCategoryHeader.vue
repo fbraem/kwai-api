@@ -37,13 +37,13 @@
         style="display: flex; align-items: flex-end;justify-content: flex-end;"
       >
         <router-link v-if="canCreate"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
           :to="{ name : 'categories.create' }"
         >
           <i class="fas fa-plus"></i>
         </router-link>
         <router-link v-if="$can('update', category)"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
           :to="updateLink"
         >
           <i class="fas fa-edit"></i>

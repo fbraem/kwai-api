@@ -40,17 +40,17 @@
     </Modal>
     <div v-if="isLoggedIn">
       <router-link
-        class="kwai-icon-button kwai-theme-secondary"
+        class="primary:kwai-icon-button"
         :to="{ name: 'users.read', params: { id: activeUser.id } }"
         >
         <i class="fas fa-user"></i>
       </router-link>
-      <a class="kwai-icon-button kwai-theme-secondary" @click="logout">
+      <a class="primary:kwai-icon-button" @click="logout">
         <i class="fas fa-sign-out-alt"></i>
       </a>
     </div>
     <div v-else>
-      <a class="kwai-icon-button kwai-theme-secondary" @click="showLogin = true">
+      <a class="primary:kwai-icon-button" @click="showLogin = true">
         <i class="fas fa-lock"></i>
       </a>
     </div>

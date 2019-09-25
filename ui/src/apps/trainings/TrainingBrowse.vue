@@ -15,7 +15,7 @@
         @nextYear="nextYear"
       />
       <div v-if="noData">
-        <div class="kwai-alert kwai-theme-warning">
+        <div class="warning:kwai-alert">
           {{ $t('training.events.no_data') }}
         </div>
       </div>

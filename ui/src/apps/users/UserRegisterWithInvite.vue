@@ -7,7 +7,7 @@
     >
       <div
         v-if="invitation.isExpired"
-        class="kwai-alert kwai-theme-danger"
+        class="danger:kwai-alert"
       >
         <p>
           {{ $t('invitation.expired') }}
@@ -15,7 +15,7 @@
       </div>
       <div v-else>
         <div
-          class="kwai-alert kwai-theme-primary"
+          class="info:kwai-alert"
         >
           {{ $t('invitation.intro') }}
         </div>
@@ -64,7 +64,7 @@
     >
       <div
         v-if="invitationError && invitationError.response.status == 404"
-        class="kwai-alert kwai-theme-danger"
+        class="danger:kwai-alert"
       >
         {{ $t('invitation.not_found') }}
       </div>

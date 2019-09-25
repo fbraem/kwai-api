@@ -37,7 +37,7 @@
     </div>
     <div style="grid-area: news-card-content">
       <div v-if="showCategory"
-        class="kwai-badge kwai-theme-secondary"
+        class="primary:kwai-badge"
       >
         <router-link :to="categoryLink">
           {{ story.category.name }}

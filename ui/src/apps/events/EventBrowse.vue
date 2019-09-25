@@ -61,7 +61,7 @@
         </div>
         <div
           v-if="noData"
-          class="kwai-alert kwai-theme-warning"
+          class="warning:kwai-alert"
           style="margin-top: 20px;"
         >
           {{ $t('no_data') }}

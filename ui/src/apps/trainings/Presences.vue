@@ -128,8 +128,7 @@ const WarningComponent = {
   render(h) {
     return h('div', {
       class: {
-        'kwai-alert': true,
-        'kwai-theme-warning': true
+        'warning:kwai-alert': true
       },
     }, [
       h('div', {
@@ -142,8 +141,7 @@ const WarningComponent = {
           [
             h('button', {
               class: {
-                'kwai-button': true,
-                'kwai-theme-primary': true
+                'primary:kwai-button': true,
               },
               on: {
                 click: () => { this.$emit('save'); }

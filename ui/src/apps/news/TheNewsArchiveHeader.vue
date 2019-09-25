@@ -12,7 +12,7 @@
     <div style="display:flex; justify-content:flex-end;flex-flow:row;padding:5px">
       <router-link
         v-if="canCreate"
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
         :to="{ name : 'news.create' }"
       >
         <i class="fas fa-plus"></i>

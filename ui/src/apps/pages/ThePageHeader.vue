@@ -7,7 +7,7 @@
       <img :src="picture" style="margin: auto; "/>
     </div>
     <div v-if="page">
-      <div class="kwai-badge kwai-theme-secondary">
+      <div class="secondary:kwai-badge">
         <router-link :to="categoryLink">
           {{ page.category.name }}
         </router-link>
@@ -24,13 +24,13 @@
         <router-link
           v-if="$can('update', page)"
           :to="{ name : 'pages.update', params : { id : page.id }}"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
         >
           <i class="fas fa-edit"></i>
         </router-link>
         <a v-if="$can('delete', page)"
           @click.prevent.stop="showModal"
-          class="kwai-icon-button kwai-theme-muted"
+          class="secondary:kwai-icon-button"
         >
           <i class="fas fa-trash"></i>
         </a>

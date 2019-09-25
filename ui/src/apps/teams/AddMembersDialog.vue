@@ -50,7 +50,7 @@
               &nbsp;
             </label>
             <button
-              class="kwai-button kwai-theme-primary"
+              class="primary:kwai-button"
               @click.prevent.stop="filterAvailableMembers"
             >
               {{ $t('filter') }}
@@ -136,7 +136,7 @@
           <i class="fas fa-ban"></i>&nbsp; {{ $t('cancel') }}
         </button>
         <button
-          class="kwai-button kwai-theme-primary"
+          class="primary:kwai-button"
           :disabled="selectedAvailableMembers.length == 0"
           @click="addMembers">
           <i class="fas fa-plus"></i>&nbsp; {{ $t('add') }}

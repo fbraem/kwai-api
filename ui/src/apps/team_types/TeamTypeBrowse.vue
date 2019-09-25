@@ -5,7 +5,7 @@
       <Spinner v-if="$wait.is('teamtypes.browse')" />
       <div
         v-if="noTypes"
-        class="kwai-alert kwai-theme-warning"
+        class="warning:kwai-alert"
       >
         {{ $t('no_types') }}
       </div>

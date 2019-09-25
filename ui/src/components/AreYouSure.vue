@@ -22,7 +22,7 @@
           <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
         </button>
         <button
-          class="kwai-button kwai-theme-danger"
+          class="danger:kwai-button"
           type="button"
           @click="ok"
         >

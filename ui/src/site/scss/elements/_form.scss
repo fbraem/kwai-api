@@ -8,16 +8,16 @@ $form-line-height:                               40px;
 $form-padding-horizontal:                        10px !default;
 $form-padding-vertical:                          4px !default;
 
-$form-background:                                kwai-color('default') !default;
-$form-color:                                     kwai-color('default', 'text') !default;
+$form-background:                                var(--#{prefix}color-default-bg) !default;
+$form-color:                                     var(--#{prefix}color-default-fg) !default;
 
-$form-focus-background:                          kwai-color('default') !default;
-$form-focus-color:                               kwai-color('default', 'text') !default;
+$form-focus-background:                          var(--#{prefix}color-default-bg) !default;
+$form-focus-color:                               var(--#{prefix}color-default-fg) !default;
 
-$form-disabled-background:                       kwai-color('muted') !default;
-$form-disabled-color:                            kwai-color('muted', 'text') !default;
+$form-disabled-background:                       var(--#{prefix}color-default-muted-bg) !default;
+$form-disabled-color:                            var(--#{prefix}color-default-muted-fg) !default;
 
-$form-placeholder-color:                         kwai-color('muted', 'text') !default;
+$form-placeholder-color:                         var(--#{prefix}color-default-muted-fg) !default;
 
 $form-small-height:                              30px !default;
 $form-small-padding-horizontal:                  8px !default;
@@ -29,8 +29,8 @@ $form-large-padding-horizontal:                  12px !default;
 $form-large-line-height:                         $form-large-height !default;
 $form-large-font-size:                           1.25rem !default;
 
-$form-danger-color:                              kwai-color('danger') !default;
-$form-success-color:                             kwai-color('success') !default;
+$form-danger-color:                              var(--#{prefix}color-danger-fg) !default;
+$form-success-color:                             var(--#{prefix}color-success-fg) !default;
 
 $form-width-xsmall:                              50px !default;
 $form-width-small:                               130px !default;
@@ -38,24 +38,24 @@ $form-width-medium:                              200px !default;
 $form-width-large:                               500px !default;
 
 $form-select-padding-right:                      20px !default;
-$form-select-icon-color:                         kwai-color('default', 'text') !default;
+$form-select-icon-color:                         var(--#{prefix}color-default-fg) !default;
 $form-select-option-color:                       #444 !default;
-$form-select-disabled-icon-color:                kwai-color('muted', 'text') !default;
+$form-select-disabled-icon-color:                var(--#{prefix}color-muted-fg) !default;
 
 $form-datalist-padding-right:                    20px !default;
-$form-datalist-icon-color:                       kwai-color('default', 'text') !default;
+$form-datalist-icon-color:                       var(--#{prefix}color-default-fg) !default;
 
 $form-radio-size:                                16px !default;
 $form-radio-margin-top:                          -4px !default;
-$form-radio-background:                          darken(kwai-color('muted'), 5%) !default;
+$form-radio-background:                          var(--#{prefix}color-muted-dark) !default;
 
-$form-radio-checked-background:                  kwai-color('primary') !default;
-$form-radio-checked-icon-color:                  kwai-color('primary', 'text') !default;
+$form-radio-checked-background:                  var(--#{prefix}color-primary-bg) !default;
+$form-radio-checked-icon-color:                  var(--#{prefix}color-primary-fg) !default;
 
-$form-radio-checked-focus-background:            darken(kwai-color('primary'), 10%) !default;
+$form-radio-checked-focus-background:            var(--#{prefix}color-primary-dark) !default;
 
-$form-radio-disabled-background:                 kwai-color('muted') !default;
-$form-radio-disabled-icon-color:                 kwai-color('muted', 'text') !default;
+$form-radio-disabled-background:                 var(--#{prefix}color-mutedt-bg) !default;
+$form-radio-disabled-icon-color:                 var(--#{prefix}color-muted-fg) !default;
 
 $form-legend-font-size:                          2.625rem !default;
 $form-legend-line-height:                        1.4 !default;
@@ -68,8 +68,8 @@ $form-horizontal-controls-margin-left:           215px !default;
 $form-horizontal-controls-text-padding-top:      7px !default;
 
 $form-icon-width:                                $form-height !default;
-$form-icon-color:                                kwai-color('muted', 'text') !default;
-$form-icon-hover-color:                          kwai-color('default', 'text') !default;
+$form-icon-color:                                var(--#{prefix}color-muted-fg) !default;
+$form-icon-hover-color:                          var(--#{prefix}color-default-fg) !default;
 
 $internal-form-select-image: "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22#000%22%20points%3D%2212%201%209%206%2015%206%22%20%2F%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22#000%22%20points%3D%2212%2013%209%208%2015%208%22%20%2F%3E%0A%3C%2Fsvg%3E%0A" !default;
 $internal-form-datalist-image: "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22#000%22%20points%3D%2212%2012%208%206%2016%206%22%20%2F%3E%0A%3C%2Fsvg%3E%0A" !default;

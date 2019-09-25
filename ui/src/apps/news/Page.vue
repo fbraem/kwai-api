@@ -22,7 +22,7 @@
               >
                 {{ month.monthName }} {{ year }}
                 <span
-                  class="kwai-badge kwai-theme-primary kwai-badge-rounded"
+                  class="primary:kwai-badge kwai-badge-rounded"
                   style="float:right"
                 >
                   {{ month.count }}

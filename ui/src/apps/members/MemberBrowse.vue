@@ -8,7 +8,7 @@
     >
       <div
         v-if="members.length == 0"
-        class="kwai-alert kwai-theme-warning"
+        class="warning:kwai-alert"
       >
         {{ $t('no_members') }}
       </div>
@@ -21,7 +21,7 @@
           style="margin-right: 10px;"
           :key="letter"
         >
-          <span class="kwai-badge kwai-theme-primary">
+          <span class="primary:kwai-badge">
             <a
               class="kwai-link-reset"
               @click="jumpIt('#letter-' + letter)">

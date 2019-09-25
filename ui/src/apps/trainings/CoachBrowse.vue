@@ -8,7 +8,7 @@
     >
       <div
         v-if="noData"
-        class="kwai-alert kwai-theme-warning"
+        class="warning:kwai-alert"
       >
         {{ $t('training.coaches.no_data') }}
       </div>
@@ -48,7 +48,8 @@
             </i>
             <i
               v-else
-              class="fas fa-times kwai-theme-danger"
+              class="fas fa-times"
+              style="color: var(--kwa-color-danger-fg)"
             >
             </i>
           </td>

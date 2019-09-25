@@ -76,7 +76,7 @@
       </table>
       <div
         v-else
-        class="kwai-alert kwai-theme-warning">
+        class="warning:kwai-alert">
         {{ $t('no_teams') }}
       </div>
       <div
@@ -84,14 +84,14 @@
         style="align-self: flex-end; margin-top: 20px;"
       >
         <router-link
-          class="kwai-icon-button kwai-theme-muted"
+          class="kwai-icon-button"
           :to="{ 'name' : 'teams.browse' }"
         >
           <i class="fas fa-list"></i>
         </router-link>
         <router-link
           v-if="canCreateTeam"
-          class="kwai-icon-button kwai-theme-muted"
+          class="kwai-icon-button"
           :to="{ 'name' : 'teams.create', params : { season : season.id } }"
         >
           <i class="fas fa-plus"></i>
@@ -101,7 +101,7 @@
     <div
       style="grid-column: span 2;"
       v-if="! $wait.is('seasons.read') && !season"
-      class="kwai-alert kwai-theme-danger"
+      class="danger:kwai-alert"
     >
       {{ $t('season_not_found') }}
     </div>

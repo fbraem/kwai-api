@@ -8,7 +8,7 @@
       style="display: flex; justify-content: flex-end;"
     >
       <button
-        class="kwai-button kwai-theme-primary"
+        class="primary:kwai-button"
         :disabled="!valid"
         @click.prevent.stop="submit"
       >

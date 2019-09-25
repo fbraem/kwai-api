@@ -13,21 +13,21 @@
       class="kwai-buttons"
     >
       <router-link
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
         :to="{ name: 'seasons.browse' }"
       >
         <i class="fas fa-list"></i>
       </router-link>
       <router-link
         v-if="season && $can('update', season)"
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
         :to="{ name: 'seasons.update', params: { id:  season.id } }"
       >
         <i class="fas fa-edit"></i>
       </router-link>
       <a v-if="$can('delete', season)"
         @click.prevent.stop="showModal"
-        class="kwai-icon-button kwai-theme-muted"
+        class="secondary:kwai-icon-button"
       >
         <i class="fas fa-trash"></i>
       </a>
