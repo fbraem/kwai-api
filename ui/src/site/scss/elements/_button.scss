@@ -77,7 +77,7 @@ $kwai-button-class-name: #{$prefix}button;
     #{$class} {
         @extend %button;
         background-color: var(--#{$prefix}color-#{$theme-name}-bg);
-        color: var(--#{$prefix}color-#{$theme-name}-fg);
+        color: var(--#{$prefix}color-#{$theme-name}-light);
         border: 1px solid var(--#{$prefix}color-#{$theme-name}-light);
         &:hover {
             border: 1px solid var(--#{$prefix}color-#{$theme-name}-dark);
@@ -93,6 +93,7 @@ $kwai-button-class-name: #{$prefix}button;
 @include kwai-theme-button('primary');
 @include kwai-theme-button('secondary');
 @include kwai-theme-button('muted');
+@include kwai-theme-button('danger');
 
 
 .#{$prefix}buttons {
