@@ -6,13 +6,14 @@
         :to="route"
         class="kwai-link-reset"
       >
-        <h1>
+        <h1 style="display: flex; align-items: center;">
           <inline-svg
             v-if="logo"
             :src="logo"
             width="42"
             height="42"
             fill="white"
+            style="margin-right: 1rem;"
           />
           {{ title }}
         </h1>
