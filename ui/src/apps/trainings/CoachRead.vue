@@ -7,18 +7,18 @@
     <div style="align-self: center;">
       <CoachCard v-if="coach" :coach="coach" />
     </div>
-    <div
+    <Alert
       v-if="notAllowed"
-      class="danger:kwai-alert"
+      type="danger"
     >
         {{ $t('not_allowed') }}
-    </div>
-    <div
+    </Alert>
+    <Alert
       v-if="notFound"
-      class="danger:kwai-alert"
+      type="danger"
     >
         {{ $t('training.coaches.not_found') }}
-    </div>
+    </Alert>
     <div style="margin-top: 20px;">
       <router-view name="coach_information" />
     </div>
@@ -31,10 +31,11 @@ import messages from './lang';
 import CoachCard from './components/CoachCard';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 export default {
   components: {
-    Spinner, CoachCard
+    Spinner, CoachCard, Alert
   },
   i18n: messages,
   computed: {

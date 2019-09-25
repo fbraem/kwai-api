@@ -1,9 +1,9 @@
 <template>
   <div class="page-container">
     <div style="grid-column: span 2;">
-      <div class="warning:kwai-alert">
+      <Alert type="warning">
         {{ $t('invite_intro') }}
-      </div>
+      </Alert>
       <KwaiForm
         :form="form"
         :error="error"

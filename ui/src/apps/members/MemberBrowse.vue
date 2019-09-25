@@ -6,12 +6,12 @@
       style="grid-column: span 2;"
       v-else-if="members"
     >
-      <div
+      <Alert
         v-if="members.length == 0"
-        class="warning:kwai-alert"
+        type="warning"
       >
         {{ $t('no_members') }}
-      </div>
+      </Alert>
       <div
         style="display: flex; align-items: center;justify-content: center; flex-wrap: wrap;"
         v-else
@@ -60,6 +60,7 @@ import messages from './lang';
 import jump from 'jump.js';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 import MemberListItem from './MemberListItem';
 
 /**
@@ -68,7 +69,8 @@ import MemberListItem from './MemberListItem';
 export default {
   components: {
     Spinner,
-    MemberListItem
+    MemberListItem,
+    Alert
   },
   i18n: messages,
   computed: {

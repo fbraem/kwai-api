@@ -3,12 +3,12 @@
   <div class="page-container">
     <div style="grid-column: 1 / span 2;">
       <Spinner v-if="$wait.is('teamtypes.browse')" />
-      <div
+      <Alert
         v-if="noTypes"
-        class="warning:kwai-alert"
+        type="warning"
       >
         {{ $t('no_types') }}
-      </div>
+      </Alert>
       <div v-else>
         <ul class="kwai-list" style="display: flex; flex-wrap: wrap;">
           <li
@@ -45,13 +45,15 @@
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 import TeamTypeCard from './TeamTypeCard';
 
 export default {
   i18n: messages,
   components: {
     Spinner,
-    TeamTypeCard
+    TeamTypeCard,
+    Alert
   },
   computed: {
     types() {

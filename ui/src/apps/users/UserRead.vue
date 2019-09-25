@@ -3,18 +3,18 @@
   <div class="page-container">
     <div style="grid-column: span 2;">
       <Spinner v-if="$wait.is('users.read')" />
-      <div
+      <Alert
         v-if="notAllowed"
-        class="danger:kwai-alert"
+        type="danger"
       >
         {{ $t('not_allowed') }}
-      </div>
-      <div
+      </Alert>
+      <Alert
         v-if="notFound"
-        class="danger:kwai-alert"
+        type="danger"
       >
-        {{ $t('user.not_found') }}
-      </div>
+        {{ $t('not_found') }}
+      </Alert>
       <div
         v-if="user"
         class="user-grid"
@@ -187,11 +187,13 @@ import messages from './lang';
 
 import Paginator from '@/components/Paginator';
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 export default {
   components: {
     Paginator,
-    Spinner
+    Spinner,
+    Alert
   },
   i18n: messages,
   computed: {

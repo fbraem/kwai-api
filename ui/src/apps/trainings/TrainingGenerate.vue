@@ -2,16 +2,16 @@
   <!-- eslint-disable max-len -->
   <div class="page-container">
     <div style="grid-column: span 2;">
-      <div
+      <Alert
         v-if="count === 0"
-        class="warning:kwai-alert"
+        type="warning"
       >
         {{ $t('training.events.no_generated_data') }}
-      </div>
+      </Alert>
       <div v-else>
-        <div class="kwai-alert">
+        <Alert type="info">
           {{ $t('training.generator.help') }}
-        </div>
+        </Alert>
         <div>
           <table class="kwai-table kwai-table-divider kwai-table-striped kwai-table-middle kwai-table-small">
             <tr>
@@ -82,7 +82,12 @@
 <script>
 import messages from './lang';
 
+import Alert from '@/components/Alert';
+
 export default {
+  components: {
+    Alert
+  },
   props: {
     trainings: {
       type: Array,

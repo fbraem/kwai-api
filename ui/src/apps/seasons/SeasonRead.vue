@@ -74,11 +74,11 @@
           </td>
         </tr>
       </table>
-      <div
+      <Alert
         v-else
-        class="warning:kwai-alert">
+        type="warning">
         {{ $t('no_teams') }}
-      </div>
+      </Alert>
       <div
         class="kwai-buttons"
         style="align-self: flex-end; margin-top: 20px;"
@@ -101,9 +101,10 @@
     <div
       style="grid-column: span 2;"
       v-if="! $wait.is('seasons.read') && !season"
-      class="danger:kwai-alert"
     >
-      {{ $t('season_not_found') }}
+      <Alert type="danger">
+        {{ $t('season_not_found') }}
+      </Alert>
     </div>
   </div>
 </template>
@@ -114,10 +115,11 @@ import Team from '@/models/Team';
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 export default {
   components: {
-    Spinner
+    Spinner, Alert
   },
   i18n: messages,
   computed: {

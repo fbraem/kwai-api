@@ -49,7 +49,7 @@
     "invite" : "Nodig een gebruiker uit",
     "invite_intro" : "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd.",
     "no_data" : "Er zijn momenteel geen gebruikers",
-    "not_found" : "Deze gebruiker bestaat niet",
+    "not_found" : "Deze gebruiker bestaat niet!",
     "not_allowed" : "Je hebt geen toelating om deze informatie te bekijken",
     "rules" : {
         "title" : "Toelatingen",

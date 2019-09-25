@@ -8,11 +8,11 @@
       v-else
       style="grid-column: span 2;"
     >
-      <div
+      <Alert
         v-if="noData"
-        class="warning:kwai-alert">
+        type="warning">
           {{ $t('training.definitions.no_data') }}
-      </div>
+      </Alert>
       <table
         v-else
         class="kwai-table kwai-table-small kwai-table-divider kwai-table-middle"
@@ -112,10 +112,12 @@
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 export default {
   components: {
-    Spinner
+    Spinner,
+    Alert
   },
   i18n: messages,
   computed: {

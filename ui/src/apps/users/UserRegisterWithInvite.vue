@@ -5,20 +5,16 @@
       v-if="invitation"
       style="grid-column: span 2;"
     >
-      <div
+      <Alert
         v-if="invitation.isExpired"
-        class="danger:kwai-alert"
+        type="danger"
       >
-        <p>
-          {{ $t('invitation.expired') }}
-        </p>
-      </div>
+        {{ $t('invitation.expired') }}
+      </Alert>
       <div v-else>
-        <div
-          class="info:kwai-alert"
-        >
+        <Alert type="info">
           {{ $t('invitation.intro') }}
-        </div>
+        </Alert>
         <KwaiForm
           :form="form"
           :error="error"
@@ -62,12 +58,12 @@
       v-else
       style="grid-column: span 2;"
     >
-      <div
+      <Alert
         v-if="invitationError && invitationError.response.status == 404"
-        class="danger:kwai-alert"
+        type="danger"
       >
         {{ $t('invitation.not_found') }}
-      </div>
+      </Alert>
     </div>
   </div>
 </template>
@@ -78,6 +74,7 @@ import KwaiField from '@/components/forms/KwaiField';
 import KwaiInputText from '@/components/forms/KwaiInputText.vue';
 import KwaiPassword from '@/components/forms/KwaiPassword.vue';
 import KwaiEmail from '@/components/forms/KwaiEmail.vue';
+import Alert from '@/components/Alert';
 
 import passwordComplexity from '@/js/passwordComplexity';
 
@@ -106,7 +103,8 @@ export default {
     KwaiField,
     KwaiInputText,
     KwaiPassword,
-    KwaiEmail
+    KwaiEmail,
+    Alert
   },
   data() {
     return {

@@ -1,18 +1,18 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="page-container">
-    <div
+    <Alert
       v-if="notAllowed"
-      class="danger:kwai-alert"
+      type="danger"
     >
         {{ $t('not_allowed') }}
-    </div>
-    <div
+    </Alert>
+    <Alert
       v-if="notFound"
-      class="kwai-alert kwai-alert-danger"
+      type="danger"
     >
         {{ $t('training.definitions.not_found') }}
-    </div>
+    </Alert>
     <Spinner v-if="$wait.is('training.definitions.read')" />
     <div
       v-if="definition"
@@ -100,11 +100,13 @@ import messages from './lang';
 
 import TrainingGeneratorForm from './TrainingGeneratorForm.vue';
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 export default {
   components: {
     Spinner,
-    TrainingGeneratorForm
+    TrainingGeneratorForm,
+    Alert
   },
   i18n: messages,
   computed: {

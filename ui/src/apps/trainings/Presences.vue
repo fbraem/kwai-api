@@ -127,9 +127,6 @@ const WarningComponent = {
   i18n: messages,
   render(h) {
     return h('div', {
-      class: {
-        'warning:kwai-alert': true
-      },
     }, [
       h('div', {
       }, [

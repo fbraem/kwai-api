@@ -2,18 +2,18 @@
   <!-- eslint-disable max-len -->
   <div class="page-container">
     <Spinner v-if="$wait.is('teamtypes.read')" />
-    <div
+    <Alert
       v-if="notAllowed"
-      class="danger:kwai-alert"
+      type="danger"
     >
       {{ $t('not_allowed') }}
-    </div>
-    <div
+    </Alert>
+    <Alert
       v-if="notFound"
-      class="danger:kwai-alert"
+      type="danger"
     >
       {{ $t('not_found') }}
-    </div>
+    </Alert>
     <div v-if="teamtype">
       <div>
         <dl class="kwai-attributes">
@@ -67,11 +67,12 @@
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 export default {
   i18n: messages,
   components: {
-    Spinner
+    Spinner, Alert
   },
   computed: {
     teamtype() {

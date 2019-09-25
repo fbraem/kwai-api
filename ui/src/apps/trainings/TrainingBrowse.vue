@@ -14,11 +14,12 @@
         @nextMonth="nextMonth"
         @nextYear="nextYear"
       />
-      <div v-if="noData">
-        <div class="warning:kwai-alert">
-          {{ $t('training.events.no_data') }}
-        </div>
-      </div>
+      <Alert
+        v-if="noData"
+        type="warning"
+      >
+        {{ $t('training.events.no_data') }}
+      </Alert>
     </div>
   </div>
 </template>
@@ -26,12 +27,13 @@
 <script>
 import Calendar from './Calendar';
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 import messages from './lang';
 
 export default {
   components: {
-    Calendar, Spinner
+    Calendar, Spinner, Alert
   },
   props: {
     year: {

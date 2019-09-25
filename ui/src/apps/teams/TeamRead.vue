@@ -1,18 +1,18 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="page-container">
-    <div
+    <Alert
       v-if="notAllowed"
-      class="danger:kwai-alert"
+      type="danger"
     >
       {{ $t('not_allowed') }}
-    </div>
-    <div
+    </Alert>
+    <Alert
       v-if="notFound"
-      class="danger:kwai-alert"
+      type="danger"
     >
       {{ $t('not_found') }}
-    </div>
+    </Alert>
     <Spinner v-if="$wait.is('teams.read')" />
     <div
       v-if="team"
@@ -182,6 +182,7 @@ import messages from './lang';
 import AddMembersDialog from './AddMembersDialog.vue';
 import Spinner from '@/components/Spinner.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
+import Alert from '@/components/Alert';
 
 import Member from '@/models/Member';
 
@@ -189,7 +190,8 @@ export default {
   components: {
     AddMembersDialog,
     Spinner,
-    AreYouSure
+    AreYouSure,
+    Alert
   },
   i18n: messages,
   data() {

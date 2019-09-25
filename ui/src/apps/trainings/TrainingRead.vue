@@ -13,12 +13,12 @@
         <p>
           {{ training.content.summary }}
         </p>
-        <p
+        <Alert
           v-if="training.event.cancelled"
-          class="danger:kwai-alert"
+          type="danger"
         >
           {{ $t('cancelled' )}}
-        </p>
+        </Alert>
       </div>
       <div class="training-area">
         <div v-if="training.coaches">
@@ -69,12 +69,15 @@
 import messages from './lang';
 
 import Presence from '@/models/trainings/Presence';
+
 import TrainingCard from './TrainingCard';
+import Alert from '@/components/Alert';
 
 export default {
   i18n: messages,
   components: {
-    TrainingCard
+    TrainingCard,
+    Alert
   },
   computed: {
     training() {

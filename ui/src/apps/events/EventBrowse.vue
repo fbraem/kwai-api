@@ -59,13 +59,12 @@
             </li>
           </ol>
         </div>
-        <div
+        <Alert
           v-if="noData"
-          class="warning:kwai-alert"
-          style="margin-top: 20px;"
+          type="danger"
         >
           {{ $t('no_data') }}
-        </div>
+        </Alert>
       </div>
     </div>
   </div>
@@ -264,6 +263,7 @@
 <script>
 import moment from 'moment';
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 import messages from './lang';
 
@@ -280,7 +280,8 @@ export default {
   },
   i18n: messages,
   components: {
-    Spinner
+    Spinner,
+    Alert
   },
   data() {
     return {

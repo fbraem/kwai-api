@@ -42,9 +42,9 @@
     <div
       v-if="! $wait.is('news.browse') && newsCount == 0"
     >
-      <div class="kwai-alert">
+      <Alert type="danger">
         {{ $t('no_news') }}
-      </div>
+      </Alert>
     </div>
     <AreYouSure
       v-show="showAreYouSure"
@@ -95,6 +95,7 @@ import NewsCard from './components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 
 import messages from './lang';
 
@@ -105,7 +106,8 @@ export default {
     NewsCard,
     Paginator,
     AreYouSure,
-    Spinner
+    Spinner,
+    Alert
   },
   data() {
     return {

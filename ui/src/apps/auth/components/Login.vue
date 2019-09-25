@@ -11,12 +11,12 @@
         </h2>
       </template>
       <template slot="default">
-        <div
+        <Alert
           v-if="error"
-          class="kwai-alert-danger"
+          type="danger"
         >
           {{error}}
-        </div>
+        </Alert>
         <KwaiForm
           :form="form"
           @submit="submit"
@@ -67,6 +67,7 @@ import KwaiField from '@/components/forms/KwaiField.vue';
 import KwaiEmail from '@/components/forms/KwaiEmail.vue';
 import KwaiPassword from '@/components/forms/KwaiPassword.vue';
 import Modal from '@/components/Modal';
+import Alert from '@/components/Alert';
 
 const makeLoginForm = (fields) => {
   const writeForm = (user) => {
@@ -93,7 +94,8 @@ export default {
     KwaiField,
     KwaiEmail,
     KwaiPassword,
-    Modal
+    Modal,
+    Alert
   },
   data() {
     return {

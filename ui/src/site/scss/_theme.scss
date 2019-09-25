@@ -9,7 +9,7 @@ $kwai-theme: (
         fg: #edb8b6,
         bg: rgb(198, 28, 24),
         dark: darken(rgb(198, 28, 24), 20%),
-        light: lighten(mix(white, rgb(198, 28, 24), 40%), 20%)
+        light: lighten(rgb(198, 28, 24), 20%)
     ),
     secondary: (
         fg: white,
@@ -18,10 +18,10 @@ $kwai-theme: (
         light: lighten(#1C1F33, 50%),
     ),
     danger: (
-        'fg': #BB2124,
-        'bg': #BB2124,
-        'dark': darken(#BB2124, 20%),
-        'light': lighten(#BB2124, 20%)
+        fg: #BB2124,
+        bg: #BB2124,
+        dark: darken(#BB2124, 10%),
+        light: lighten(#BB2124, 40%)
     ),
     success: (
         fg: #22BB33,

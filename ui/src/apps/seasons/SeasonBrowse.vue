@@ -2,12 +2,12 @@
   <div class="page-container">
     <Spinner v-if="$wait.is('seasons.browse')" />
     <div style="grid-column: span 2;">
-      <div
+      <Alert
         v-if="noSeasons"
-        class="warning:kwai-alert"
+        type="warning"
       >
         {{ $t('no_seasons') }}
-      </div>
+      </Alert>
       <div v-else>
         <table class="kwai-table kwai-table-striped kwai-table-responsive">
           <thead>
@@ -35,13 +35,15 @@
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import Alert from '@/components/Alert';
 import SeasonRow from './TheSeasonRow';
 
 export default {
   i18n: messages,
   components: {
     Spinner,
-    SeasonRow
+    SeasonRow,
+    Alert
   },
   computed: {
     seasons() {
