@@ -83,7 +83,7 @@ export default [
         },
         props: {
           header: {
-            creating: true
+            creating: false
           }
         },
         name: 'categories.update',
