@@ -37,5 +37,10 @@ ul, p {
 }
 
 a {
-    color: #39f
+    color: #39f;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
