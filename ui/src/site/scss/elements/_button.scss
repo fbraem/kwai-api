@@ -86,8 +86,10 @@ $kwai-button-class-name: #{$prefix}button;
         background-color: $bg;
         color:$fg;
         border: 1px solid lighten($fg, 20%);
+
         &:hover {
             border: 1px solid darken($fg, 20%);
+            text-decoration: none;
         }
         &:disabled {
             background-color: darken($fg, 20%);
