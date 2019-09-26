@@ -1,12 +1,28 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div class="hero-container">
-    <div :style="gridStyle">
+    <div
+      v-if="picture"
+      style="grid-area: hero-image"
+    >
+      <img :src="picture" style="margin: auto; "/>
+    </div>
+    <div style="grid-area: hero-text;">
+      <div
+        v-if="badge"
+        class="primary:kwai-badge"
+        style="margin-bottom: 20px;"
+      >
+        <router-link :to="badge.route">
+          {{ badge.title }}
+        </router-link>
+      </div>
       <router-link
         v-if="route"
         :to="route"
         class="kwai-link-reset"
       >
-        <h1 style="display: flex; align-items: center;">
+        <h1 style="display: flex; align-items: center; margin-bottom: 20px;">
           <inline-svg
             v-if="logo"
             :src="logo"
@@ -18,7 +34,10 @@
           {{ title }}
         </h1>
       </router-link>
-      <h1 v-else>
+      <h1
+        v-else
+        style="display: flex; align-items: center; margin-bottom: 20px;"
+      >
         <inline-svg
           v-if="logo"
           :src="logo"
@@ -31,11 +50,12 @@
       <h3 v-if="subtitle">
         {{ subtitle }}
       </h3>
+      <slot></slot>
     </div>
     <div
       v-if="hasToolbar"
       class="kwai-buttons"
-      style="display: flex; justify-content: flex-end; flex-flow: row;"
+      style="grid-area: hero-toolbar; display: flex; justify-content: flex-end; flex-flow: row;"
     >
       <template v-for="(button, index) in toolbar">
         <template v-if="button.route">
@@ -77,6 +97,18 @@ export default {
       required: true
     },
     /**
+     * A badge to show
+     */
+    badge: {
+      type: Object
+    },
+    /**
+     * Picture to show in the header
+     */
+    picture: {
+      type: String
+    },
+    /**
      * Sub title
      */
     subtitle: {
@@ -111,16 +143,6 @@ export default {
   computed: {
     hasToolbar() {
       return this.toolbar && this.toolbar.length > 0;
-    },
-    gridStyle() {
-      if (this.hasToolbar) {
-        return {
-          'grid-column': '1'
-        };
-      }
-      return {
-        'grid-column': 'span 2'
-      };
     }
   }
 };
