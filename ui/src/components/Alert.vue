@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="alert"
-    :style="style"
-  >
+  <div :class="cssClass">
     <i
       v-if="icon"
       :class="icon_class"
@@ -14,14 +11,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-.alert {
-  display: flex;
-  padding: 1rem;
-  align-items: center;
-}
-</style>
 
 <script>
 const icons = {
@@ -43,12 +32,10 @@ export default {
     }
   },
   computed: {
-    style() {
-      return {
-        'background-color': 'var(--kwai-color-' + this.type + '-light)',
-        color: 'var(--kwai-color-' + this.type + '-dark)',
-        border: '2px solid var(--kwai-color-' + this.type + '-dark)',
-      };
+    cssClass() {
+      const cls = {};
+      cls[this.type + ':kwai-alert'] = true;
+      return cls;
     },
     icon_class() {
       return icons[this.type] || 'fas fa-exclamation-circle';

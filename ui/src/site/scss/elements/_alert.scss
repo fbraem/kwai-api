@@ -1,0 +1,30 @@
+%alert {
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+}
+
+$kwai-alert-class-name: #{$prefix}alert;
+@mixin kwai-theme-alert(
+    $palette: 'default',
+    $fg: kwai-color($palette),
+    $bg: kwai-color($palette, 'bg'))
+{
+    $class: '.' + $palette + "\\:" + $kwai-alert-class-name;
+    @if $palette == 'default' {
+        $class: '.' + $kwai-alert-class-name + ', ' + $class;
+    }
+
+    #{$class} {
+        @extend %alert;
+        background-color: lighten($bg, 20%);
+        color: darken($fg, 20%);
+        border: 2px solid darken($fg, 20%);
+    }
+}
+
+@include kwai-theme-alert('default');
+@include kwai-theme-alert('danger');
+@include kwai-theme-alert('warning');
+@include kwai-theme-alert('success');
+@include kwai-theme-alert('info');
