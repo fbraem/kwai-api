@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div class="page-container">
     <div style="grid-column: 1 / span 2;">
       <Spinner v-if="$wait.is('teamtypes.browse')" />
