@@ -58,9 +58,9 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .training-area {
-  border-top: 1px solid var(--kwai-color-default-light);
+  border-top: 1px solid lightgray;
   padding: 40px;
 }
 </style>
