@@ -1,40 +1,11 @@
 <template>
-  <div class="hero-container">
-    <div
-      v-if="picture"
-      style="grid-column: 1"
-    >
-      <img :src="picture" style="margin: auto; "/>
-    </div>
-    <div v-if="page">
-      <div class="secondary:kwai-badge">
-        <router-link :to="categoryLink">
-          {{ page.category.name }}
-        </router-link>
-      </div>
-      <h1>
-        {{ page.content.title }}
-      </h1>
-      <p v-html="page.content.html_summary">
-      </p>
-      <div
-        style="display: flex; justify-content: flex-end; flex-flow: row"
-        class="kwai-buttons"
-      >
-        <router-link
-          v-if="$can('update', page)"
-          :to="{ name : 'pages.update', params : { id : page.id }}"
-          class="secondary:kwai-icon-button"
-        >
-          <i class="fas fa-edit"></i>
-        </router-link>
-        <a v-if="$can('delete', page)"
-          @click.prevent.stop="showModal"
-          class="secondary:kwai-icon-button"
-        >
-          <i class="fas fa-trash"></i>
-        </a>
-      </div>
+  <Header v-if="page"
+    :picture="picture"
+    :title="page.content.title"
+    :toolbar="toolbar"
+    :badge="badge"
+  >
+    <div v-html="page.content.html_summary">
     </div>
     <AreYouSure
       v-show="isModalVisible"
@@ -45,13 +16,14 @@
     >
       {{ $t('are_you_sure') }}
     </AreYouSure>
-  </div>
+  </Header>
 </template>
 
 <script>
 import messages from './lang';
 
 import AreYouSure from '@/components/AreYouSure.vue';
+import Header from '@/components/Header.vue';
 
 /**
  * Component for a page header
@@ -59,7 +31,8 @@ import AreYouSure from '@/components/AreYouSure.vue';
 export default {
   i18n: messages,
   components: {
-    AreYouSure
+    AreYouSure,
+    Header
   },
   data() {
     return {
@@ -74,7 +47,7 @@ export default {
       if (this.page) return this.page.picture;
       return null;
     },
-    categoryLink() {
+    categoryRoute() {
       return {
         name: 'pages.category',
         params: {
@@ -82,6 +55,35 @@ export default {
         }
       };
     },
+    badge() {
+      return {
+        title: this.page.category.name,
+        route: this.categoryRoute
+      };
+    },
+    toolbar() {
+      const buttons = [];
+      if (this.page) {
+        if (this.$can('update', this.page)) {
+          buttons.push({
+            icon: 'fas fa-edit',
+            route: {
+              name: 'pages.update',
+              params: {
+                id: this.page.id
+              }
+            }
+          });
+          if (this.$can('delete', this.page)) {
+            buttons.push({
+              icon: 'fas fa-trash',
+              method: this.showModal
+            });
+          }
+        }
+      }
+      return buttons;
+    }
   },
   methods: {
     showModal() {
