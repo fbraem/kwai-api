@@ -44,6 +44,7 @@
           width="42"
           height="42"
           fill="white"
+          style="margin-right: 1rem;"
         />
         {{ title }}
       </h1>
