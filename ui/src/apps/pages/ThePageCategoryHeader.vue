@@ -1,36 +1,14 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="hero-container">
-    <div v-if="picture">
-      <img :src="picture" />
-    </div>
-    <div
-      v-if="category"
-      :style="{ 'grid-column': grid }"
-    >
-      <h1>
-        {{ category.name }}
-      </h1>
-      <h3>
-        {{ $t('page') }}
-      </h3>
-      <p>
-        {{ category.description }}
-      </p>
-      <div
-        style="display: flex; justify-content: flex-end; flex-flow: row"
-        class="kwai-buttons"
-      >
-        <router-link
-          v-if="canCreate"
-          class="secondary:kwai-icon-button"
-          :to="{ name : 'pages.create' }"
-        >
-          <i class="fas fa-plus"></i>
-        </router-link>
-      </div>
-    </div>
-  </div>
+  <Header
+    v-if="category"
+    :title="category.name"
+    :subtitle="$t('page')"
+    :toolbar="toolbar"
+  >
+    <p>
+      {{ category.description }}
+    </p>
+  </Header>
 </template>
 
 <script>
@@ -38,14 +16,27 @@ import Page from '@/models/Page';
 
 import messages from './lang';
 
+import Header from '@/components/Header';
 /**
  * Component for category header
  */
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', Page.type());
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Page.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'pages.create'
+          }
+        });
+      }
+      return buttons;
     },
     category() {
       /* eslint-disable max-len */

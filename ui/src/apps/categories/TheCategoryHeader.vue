@@ -1,60 +1,18 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="hero-container">
-    <div
-      v-if="picture"
-      style="grid-column: 1; max-width: 800px;"
-    >
-      <img :src="picture" />
+  <Header
+    v-if="category"
+    :title="category.name"
+    :toolbar="toolbar"
+    :picture="picture"
+    :logo="category.icon_picture"
+  >
+    <div v-html="category.description">
     </div>
-    <div
-      v-if="category"
-      :style="grid"
-    >
-      <div style="display: flex; flex-direction:row; align-items: center; padding-left: 20px;">
-        <div
-          v-if="category.icon_picture"
-          style="margin-right: 20px;"
-          >
-          <inline-svg
-            :src="category.icon_picture"
-            width="42"
-            height="48"
-            fill="white"
-          />
-        </div>
-        <h1>
-          {{ category.name }}
-        </h1>
-      </div>
-      <div>
-        <p style="padding-left:20px;padding-right: 20px">
-          {{ category.description }}
-        </p>
-      </div>
-      <div
-        class="kwai-buttons"
-        style="display: flex; align-items: flex-end;justify-content: flex-end;"
-      >
-        <router-link v-if="canCreate"
-          class="secondary:kwai-icon-button"
-          :to="{ name : 'categories.create' }"
-        >
-          <i class="fas fa-plus"></i>
-        </router-link>
-        <router-link v-if="$can('update', category)"
-          class="secondary:kwai-icon-button"
-          :to="updateLink"
-        >
-          <i class="fas fa-edit"></i>
-        </router-link>
-      </div>
-    </div>
-  </div>
+  </Header>
 </template>
 
 <script>
-import InlineSvg from 'vue-inline-svg';
+import Header from '@/components/Header';
 
 import Category from '@/models/Category';
 
@@ -65,13 +23,10 @@ import messages from './lang';
  */
 export default {
   components: {
-    InlineSvg
+    Header
   },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', Category.type());
-    },
     category() {
       return this.$store.getters['category/category'](this.$route.params.id);
     },
@@ -79,23 +34,28 @@ export default {
       if (this.category) return this.category.header_picture;
       return null;
     },
-    grid() {
-      if (this.picture !== null) {
-        return {
-          'grid-column': '2'
-        };
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Category.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'categories.create'
+          }
+        });
       }
-      return {
-        'grid-column': '1'
-      };
-    },
-    updateLink() {
-      return {
-        name: 'categories.update',
-        params: {
-          id: this.category.id
-        }
-      };
+      if (this.$can('update', this.category)) {
+        buttons.push({
+          icon: 'fas fa-edit',
+          route: {
+            name: 'categories.update',
+            params: {
+              id: this.category.id
+            }
+          }
+        });
+      }
+      return buttons;
     }
   }
 };

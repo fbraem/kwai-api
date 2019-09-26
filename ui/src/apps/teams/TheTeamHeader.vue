@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <Header
-      :title="$t('teams')"
-      :subtitle="subtitle"
-      :toolbar="toolbar"
-    />
+  <Header
+    :title="$t('teams')"
+    :subtitle="subtitle"
+    :toolbar="toolbar"
+  >
     <AreYouSure
       v-show="showAreYouSure"
       @close="showAreYouSure = false;"
@@ -17,7 +16,7 @@
       </template>
       {{ $t('sure_to_delete_team') }}
     </AreYouSure>
-  </div>
+  </Header>
 </template>
 
 <script>

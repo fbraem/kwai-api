@@ -1,22 +1,18 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('members') }}
-      </h1>
-      <h3>
-        {{ $t('upload') }}
-      </h3>
-    </div>
-    <div>
-    </div>
-  </div>
+  <Header
+    :title="$t('members')"
+    :subtitle="$t('upload')"
+  />
 </template>
 
 <script>
 import messages from './lang';
+import Header from '@/components/Header';
 
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
 };
 </script>

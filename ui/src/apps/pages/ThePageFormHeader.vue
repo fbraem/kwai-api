@@ -1,26 +1,21 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('page') }}
-      </h1>
-      <h3 v-if="creating">
-        {{ $t('create') }}
-      </h3>
-      <h3 v-else>
-        {{ $t('update') }}
-      </h3>
-    </div>
-  </div>
+  <Header
+    :title="$t('page')"
+    :subtitle="subtitle"
+  />
 </template>
 
 <script>
 import messages from './lang';
+import Header from '@/components/Header';
 
 /**
  * Component for form header
  */
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   props: {
     /**
@@ -29,6 +24,12 @@ export default {
     creating: {
       type: Boolean,
       required: true
+    }
+  },
+  computed: {
+    subtitle() {
+      if (this.creating) return this.$t('create');
+      return this.$t('update');
     }
   }
 };

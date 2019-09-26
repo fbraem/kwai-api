@@ -1,35 +1,38 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>{{ $t('pages') }}</h1>
-      <p>
-        {{ $t('all_pages') }}
-      </p>
-    </div>
-    <div style="display:flex; align-items:flex-end;flex-flow:column">
-      <router-link
-        v-if="canCreate"
-        class="secondary:kwai-icon-button"
-        :to="{ name : 'pages.create' }"
-      >
-        <i class="fas fa-plus"></i>
-      </router-link>
-    </div>
-  </div>
+  <Header
+    :title="$t('pages')"
+    :toolbar="toolbar"
+  >
+    <p>
+      {{ $t('all_pages') }}
+    </p>
+  </Header>
 </template>
 
 <script>
 import Page from '@/models/Page';
 import messages from './lang';
-
+import Header from '@/components/Header';
 /**
  * Component for header of pages
  */
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', Page.type());
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Page.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'pages.create'
+          }
+        });
+      }
+      return buttons;
     }
   }
 };

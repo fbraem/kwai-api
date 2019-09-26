@@ -1,20 +1,8 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('types') }}
-      </h1>
-    </div>
-    <div style="display:flex; align-items:flex-end;flex-flow:column;">
-      <router-link
-        v-if="canCreate"
-        class="secondary:kwai-icon-button"
-        :to="{ name : 'team_types.create' }"
-      >
-        <i class="fas fa-plus"></i>
-      </router-link>
-    </div>
-  </div>
+  <Header
+    :title="$t('types')"
+    :toolbar="toolbar"
+  />
 </template>
 
 <script>
@@ -22,11 +10,25 @@ import TeamType from '@/models/TeamType';
 
 import messages from './lang';
 
+import Header from '@/components/Header';
+
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', TeamType.type());
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', TeamType.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'team_types.create'
+          }
+        });
+      }
+      return buttons;
     }
   }
 };

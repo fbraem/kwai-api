@@ -1,42 +1,18 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="hero-container">
-    <div v-if="picture">
-      <img :src="picture" style="margin: auto;"/>
-    </div>
-    <div v-if="story">
-      <div class="primary:kwai-badge" style="margin-bottom: 20px;">
-        <router-link :to="categoryNewsLink">
-          {{ story.category.name }}
-        </router-link>
-      </div>
-      <div>
-        <h1 style="margin-bottom: 20px;">{{ $t('news')}}</h1>
-        <h2 style="margin-bottom: 20px;">{{ story.content.title }}</h2>
-        <div
-          v-if="story.publish_date"
-          class="kwai-text-meta"
-        >
-          {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
-        </div>
-      </div>
-      <div style="display:flex; justify-content:flex-end;flex-flow:row;padding:5px">
-        <router-link
-          v-if="$can('update', story)"
-          :to="storyLink"
-          class="secondary:kwai-icon-button"
-        >
-          <i class="fas fa-edit"></i>
-        </router-link>
-        <a
-          v-if="$can('delete', story)"
-          class="secondary:kwai-icon-button"
-          style="margin-left: 5px;"
-          @click.prevent.stop="showAreYouSure = true;"
-        >
-          <i class="fas fa-trash"></i>
-        </a>
-      </div>
+  <Header
+    v-if="story"
+    :title="$t('news')"
+    :subtitle="story.content.title"
+    :picture="picture"
+    :badge="badge"
+    :toolbar="toolbar"
+  >
+    <div
+      v-if="story.publish_date"
+      class="kwai-text-meta"
+    >
+      {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
     </div>
     <AreYouSure
       v-show="showAreYouSure"
@@ -47,17 +23,19 @@
     >
     {{ $t('are_you_sure') }}
     </AreYouSure>
-  </div>
+  </Header>
 </template>
 
 <script>
 import messages from './lang';
 
-import AreYouSure from '@/components/AreYouSure.vue';
+import AreYouSure from '@/components/AreYouSure';
+import Header from '@/components/Header';
 
 export default {
   components: {
-    AreYouSure
+    AreYouSure,
+    Header
   },
   i18n: messages,
   data() {
@@ -75,21 +53,37 @@ export default {
       }
       return null;
     },
-    storyLink() {
+    badge() {
       return {
-        name: 'news.update',
-        params: {
-          id: this.story.id
+        name: this.story.category.name,
+        route: {
+          name: 'news.category',
+          params: {
+            category: this.story.category.id
+          }
         }
       };
     },
-    categoryNewsLink() {
-      return {
-        name: 'news.category',
-        params: {
-          category: this.story.category.id
-        }
-      };
+    toolbar() {
+      const buttons = [];
+      if (this.$can('update', this.story)) {
+        buttons.push({
+          icon: 'fas fa-edit',
+          route: {
+            name: 'news.update',
+            params: {
+              id: this.story.id
+            }
+          }
+        });
+      }
+      if (this.$can('delete', this.story)) {
+        buttons.push({
+          icon: 'fas fa-trash',
+          method: this.showModal
+        });
+      }
+      return buttons;
     }
   },
   methods: {
@@ -100,6 +94,9 @@ export default {
       }).then(() => {
         this.$router.push({ name: 'news.browse' });
       });
+    },
+    showModal() {
+      this.showAreYouSure = true;
     }
   }
 };

@@ -1,37 +1,10 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('seasons') }}
-      </h1>
-      <h3 v-if="season">
-        {{ season.name }}
-      </h3>
-    </div>
-    <div
-      style="display: flex; justify-content: flex-end; flex-flow: row"
-      class="kwai-buttons"
-    >
-      <router-link
-        class="secondary:kwai-icon-button"
-        :to="{ name: 'seasons.browse' }"
-      >
-        <i class="fas fa-list"></i>
-      </router-link>
-      <router-link
-        v-if="season && $can('update', season)"
-        class="secondary:kwai-icon-button"
-        :to="{ name: 'seasons.update', params: { id:  season.id } }"
-      >
-        <i class="fas fa-edit"></i>
-      </router-link>
-      <a v-if="$can('delete', season)"
-        @click.prevent.stop="showModal"
-        class="secondary:kwai-icon-button"
-      >
-        <i class="fas fa-trash"></i>
-      </a>
-    </div>
+  <Header
+    v-if="season"
+    :title="$t('seasons')"
+    :subtitle="season.name"
+    :toolbar="toolbar"
+  >
     <AreYouSure
       v-show="isModalVisible"
       :yes="$t('delete')"
@@ -41,18 +14,19 @@
     >
       {{ $t('are_you_sure') }}
     </AreYouSure>
-  </div>
+  </Header>
 </template>
 
 <script>
 import messages from './lang';
 
-import AreYouSure from '@/components/AreYouSure.vue';
+import AreYouSure from '@/components/AreYouSure';
+import Header from '@/components/Header';
 
 export default {
   i18n: messages,
   components: {
-    AreYouSure
+    AreYouSure, Header
   },
   data() {
     return {
@@ -62,6 +36,27 @@ export default {
   computed: {
     season() {
       return this.$store.getters['season/season'](this.$route.params.id);
+    },
+    toolbar() {
+      const buttons = [];
+      if (this.$can('update', this.season)) {
+        buttons.push({
+          icon: 'fas fa-edit',
+          route: {
+            name: 'seasons.update',
+            params: {
+              id: this.season.id
+            }
+          }
+        });
+      }
+      if (this.$can('delete', this.season)) {
+        buttons.push({
+          icon: 'fas fa-trash',
+          method: this.showModal
+        });
+      }
+      return buttons;
     }
   },
   methods: {
@@ -72,6 +67,7 @@ export default {
       this.isModalVisible = false;
     },
     deleteSeason() {
+      this.close();
       console.log('delete');
     }
   }

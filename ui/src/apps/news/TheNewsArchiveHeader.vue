@@ -1,24 +1,9 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('news') }}
-      </h1>
-      <h3>
-        {{ $t('archive_title', { monthName : monthName, year : year }) }}
-      </h3>
-    </div>
-    <div style="display:flex; justify-content:flex-end;flex-flow:row;padding:5px">
-      <router-link
-        v-if="canCreate"
-        class="secondary:kwai-icon-button"
-        :to="{ name : 'news.create' }"
-      >
-        <i class="fas fa-plus"></i>
-      </router-link>
-    </div>
-  </div>
+  <Header
+    :title="$t('news')"
+    :subtitle="$t('archive_title', { monthName : monthName, year : year })"
+    :toolbar="toolbar"
+  />
 </template>
 
 <script>
@@ -28,15 +13,17 @@ import moment from 'moment';
 
 import messages from './lang';
 
+import Header from '@/components/Header';
+
 /**
  * Component for header of archive page
  */
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', Story.type());
-    },
     year() {
       return this.$route.params.year;
     },
@@ -45,6 +32,18 @@ export default {
     },
     monthName() {
       return moment.months()[this.month - 1];
+    },
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Story.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'news.create'
+          }
+        });
+      }
+      return buttons;
     }
   }
 };

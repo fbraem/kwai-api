@@ -1,29 +1,31 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('news') }}
-      </h1>
-      <h3 v-if="creating">
-        {{ $t('create') }}
-      </h3>
-      <h3 v-else>
-        {{ $t('update') }}
-      </h3>
-    </div>
-  </div>
+  <Header
+    :title="$t('news')"
+    :subtitle="subtitle"
+  />
 </template>
 
 <script>
+import Header from '@/components/Header';
+
 import messages from './lang';
 
 export default {
+  components: {
+    Header
+  },
   props: {
     creating: {
       type: Boolean,
       required: true
     }
   },
-  i18n: messages
+  i18n: messages,
+  computed: {
+    subtitle() {
+      if (this.creating) return this.$t('create');
+      return this.$t('update');
+    }
+  }
 };
 </script>

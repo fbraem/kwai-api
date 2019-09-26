@@ -1,46 +1,28 @@
 <template>
-  <div class="hero-container">
-    <div v-if="picture">
-      <div>
-        <img :src="picture" />
-      </div>
-    </div>
-    <div v-if="category">
-      <h1>
-        {{ $t('news') }}
-      </h1>
-      <h3>
-        {{ category.name }}
-      </h3>
-      <p>
-        {{ category.description }}
-      </p>
-    </div>
-    <div style="display:flex; align-items:flex-end;flex-flow:column">
-      <router-link
-        v-if="canCreate"
-        class="secondary:kwai-icon-button"
-        :to="{ name : 'news.create' }"
-      >
-        <i class="fas fa-plus"></i>
-      </router-link>
-    </div>
-  </div>
+  <Header
+    v-if="category"
+    :title="$t('news')"
+    :subtitle="category.name"
+    :picture="picture"
+    :toolbar="toolbar"
+  >
+    <div v-html="category.description"></div>
+  </Header>
 </template>
 
 <script>
 import Story from '@/models/Story';
 import messages from './lang';
-
+import Header from '@/components/Header';
 /**
  * Component for header of category page
  */
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', Story.type());
-    },
     category() {
       /* eslint-disable max-len */
       if (this.$route.params.category) {
@@ -55,6 +37,18 @@ export default {
       }
       return null;
     },
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Story.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'news.create'
+          }
+        });
+      }
+      return buttons;
+    }
   }
 };
 </script>

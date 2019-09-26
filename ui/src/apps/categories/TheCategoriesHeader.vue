@@ -1,34 +1,36 @@
 <template>
-  <div class="hero-container">
-    <div>
-      <h1>
-        {{ $t('categories') }}
-      </h1>
-    </div>
-    <div style="display:flex; align-items:flex-end;flex-flow:column;">
-      <router-link
-        v-if="canCreate"
-        class="secondary:kwai-icon-button"
-        :to="{ name : 'categories.create' }"
-      >
-        <i class="fas fa-plus"></i>
-      </router-link>
-    </div>
-  </div>
+  <Header
+    :title="$t('categories')"
+    :toolbar="toolbar"
+  />
 </template>
 
 <script>
 import Category from '@/models/Category';
 import messages from './lang';
 
+import Header from '@/components/Header';
+
 /**
  * Component for header of the browse page
  */
 export default {
+  components: {
+    Header
+  },
   i18n: messages,
   computed: {
-    canCreate() {
-      return this.$can('create', Category.type());
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Category.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'categories.create'
+          }
+        });
+      }
+      return buttons;
     }
   }
 };
