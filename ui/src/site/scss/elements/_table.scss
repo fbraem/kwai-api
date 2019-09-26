@@ -42,7 +42,7 @@ $table-cell-padding-horizontal: 12px;
 
 .#{$prefix}table-striped > tr:nth-of-type(odd),
 .#{$prefix}table-striped tbody tr:nth-of-type(odd) {
-    background: var(--kwai-color-default-light);
+    background: darken(kwai-color('default', 'bg'), 10%);
 }
 
 .#{$prefix}table-hover > tr:hover,

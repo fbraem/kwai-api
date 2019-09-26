@@ -1,51 +1,35 @@
 $kwai-theme: (
     default: (
         fg: #666,
-        bg: white,
-        dark: darken(#666, 20%),
-        light: lighten(#666, 20%)
+        bg: white
     ),
     primary: (
         fg: #edb8b6,
-        bg: rgb(198, 28, 24),
-        dark: darken(rgb(198, 28, 24), 20%),
-        light: lighten(rgb(198, 28, 24), 40%)
+        bg: rgb(198, 28, 24)
     ),
     secondary: (
         fg: white,
-        bg: #1C1F33,
-        dark: darken(#1C1F33, 20%),
-        light: lighten(#1C1F33, 50%),
+        bg: #1C1F33
     ),
     danger: (
         fg: #BB2124,
-        bg: #BB2124,
-        dark: darken(#BB2124, 10%),
-        light: lighten(#BB2124, 40%)
+        bg: #BB2124
     ),
     success: (
         fg: #22BB33,
-        bg: #22BB33,
-        dark: darken(#22BB33, 20%),
-        light: lighten(#22BB33, 20%)
+        bg: #22BB33
     ),
     warning: (
         fg: #F0AD4E,
-        bg: #F0AD4E,
-        dark: darken(#F0AD4E, 20%),
-        light: lighten(#F0AD4E, 20%)
+        bg: #F0AD4E
     ),
     info: (
         fg: #969A86,
-        bg: #A5A7BF,
-        dark: darken(#A5A7BF, 20%),
-        light: lighten(#A5A7BF, 20%)
+        bg: #A5A7BF
     ),
     muted: (
         fg: #666666,
-        bg: #AAAAAA,
-        dark: darken(#AAAAAA, 20%),
-        light: lighten(#AAAAAA, 20%)
+        bg: #AAAAAA
     )
 );
 

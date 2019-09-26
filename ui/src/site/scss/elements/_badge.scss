@@ -22,16 +22,20 @@ $kwai-badge-height: 19px;
 }
 
 $kwai-badge-class-name: #{$prefix}badge;
-@mixin kwai-theme-badge($theme-name: 'default') {
-    $class: '.' + $theme-name + "\\:" + $kwai-badge-class-name;
-    @if $theme-name == 'default' {
+@mixin kwai-theme-badge(
+    $palette: 'default',
+    $fg: kwai-color($palette),
+    $bg: kwai-color($palette, 'bg'))
+{
+    $class: '.' + $palette + "\\:" + $kwai-badge-class-name;
+    @if $palette == 'default' {
         $class: '.' + $kwai-badge-class-name + ', ' + $class;
     }
 
     #{$class} {
         @extend %badge;
-        background-color: var(--#{$prefix}color-#{$theme-name}-bg);
-        color: var(--#{$prefix}color-#{$theme-name}-fg);
+        background-color: $bg;
+        color: $fg;
     }
 }
 

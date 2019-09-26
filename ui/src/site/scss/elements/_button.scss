@@ -29,19 +29,22 @@
 }
 
 $kwai-icon-button-class-name: #{$prefix}icon-button;
-@mixin kwai-theme-icon-button($theme-name: 'default') {
-    $class: '.' + $theme-name + "\\:" + $kwai-icon-button-class-name;
-    @if $theme-name == 'default' {
+@mixin kwai-theme-icon-button(
+    $palette,
+    $fg: kwai-color($palette),
+    $bg: kwai-color($palette, 'bg'))
+{
+    $class: '.' + $palette + "\\:" + $kwai-icon-button-class-name;
+    @if $palette == 'default' {
         $class: '.' + $kwai-icon-button-class-name + ', ' + $class;
     }
 
     #{$class} {
         @extend %icon-button;
-        background-color: var(--#{$prefix}color-#{$theme-name}-bg);
-        color: var(--#{$prefix}color-#{$theme-name}-fg);
+        background-color: $bg;
+        color: $fg;
         &:hover {
-            background-color: var(--#{$prefix}color-#{$theme-name}-light);
-            color: var(--#{$prefix}color-#{$theme-name}-dark);
+            background-color: darken($bg, 20%);
         }
     }
 }
@@ -68,22 +71,26 @@ $kwai-icon-button-class-name: #{$prefix}icon-button;
 }
 
 $kwai-button-class-name: #{$prefix}button;
-@mixin kwai-theme-button($theme-name: 'default') {
-    $class: '.' + $theme-name + "\\:" + $kwai-button-class-name;
-    @if $theme-name == 'default' {
+@mixin kwai-theme-button(
+    $palette,
+    $fg: kwai-color($palette),
+    $bg: kwai-color($palette, 'bg'))
+{
+    $class: '.' + $palette + "\\:" + $kwai-button-class-name;
+    @if $palette == 'default' {
         $class: '.' + $kwai-button-class-name + ', ' + $class;
     }
 
     #{$class} {
         @extend %button;
-        background-color: var(--#{$prefix}color-#{$theme-name}-bg);
-        color: var(--#{$prefix}color-#{$theme-name}-light);
-        border: 1px solid var(--#{$prefix}color-#{$theme-name}-light);
+        background-color: $bg;
+        color:$fg;
+        border: 1px solid lighten($fg, 20%);
         &:hover {
-            border: 1px solid var(--#{$prefix}color-#{$theme-name}-dark);
+            border: 1px solid darken($fg, 20%);
         }
         &:disabled {
-            background-color: var(--#{$prefix}color-#{$theme-name}-light);
+            background-color: darken($fg, 20%);
             cursor: default;
         }
     }
@@ -93,7 +100,7 @@ $kwai-button-class-name: #{$prefix}button;
 @include kwai-theme-button('primary');
 @include kwai-theme-button('secondary');
 @include kwai-theme-button('muted');
-@include kwai-theme-button('danger');
+@include kwai-theme-button('danger', $fg: lighten(kwai-color('danger'), 40%));
 
 
 .#{$prefix}buttons {

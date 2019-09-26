@@ -6,9 +6,9 @@ $prefix: "kwai-";
 :root {
     --#{$prefix}font-size: #{$global-font-size};
     --#{$prefix}line-height: #{$global-line-height};
-    @each $theme-name, $colors in $kwai-theme {
+    @each $palette, $colors in $kwai-theme {
         @each $type, $color in $colors {
-            --#{$prefix}color-#{$theme-name}-#{$type}: #{$color};
+            --#{$prefix}color-#{$palette}-#{$type}: #{$color};
         }
     }
 }
@@ -19,9 +19,11 @@ html {
 
 body {
     font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color: var(--kwai-color-default-fg);
 }
 
 @import "_mq.scss";
+@import "elements/_alert.scss";
 @import "elements/_badge.scss";
 @import "elements/_button.scss";
 @import "elements/_form.scss";
@@ -49,18 +51,19 @@ a.kwai-link-reset {
     grid-gap: 10px;
     padding: 20px;
     @include mq($from: desktop) {
-        grid-template-columns: fit-content(800px) 1fr;
-        grid-template-rows: auto;
+        grid-template-columns: fit-content(800px) 1fr auto;
+        grid-template-rows: auto auto;
         grid-template-areas:
-            "hero-image hero-text"
+            "hero-image hero-text hero-toolbar"
         ;
     }
-    @include mq($from: mobile, $until: desktop) {
+    @include mq($until: desktop) {
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto 1fr auto;
         grid-template-areas:
             "hero-image"
             "hero-text"
+            "hero-toolbar"
         ;
     }
 

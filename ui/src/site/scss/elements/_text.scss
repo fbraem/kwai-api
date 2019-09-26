@@ -12,7 +12,7 @@ $kwai-text-meta-class-name: #{$prefix}text-meta;
 
     #{$class} {
         @extend %text-meta;
-        color: var(--#{$prefix}color-#{$theme-name}-light);
+        color: lighten(kwai-color($theme-name), 20%);
     }
 }
 
@@ -37,7 +37,7 @@ $kwai-text-class-name: #{$prefix}text;
 
     #{$class} {
         @extend %text;
-        color: var(--#{$prefix}color-#{$theme-name}-light);
+        color: var(--#{$prefix}color-#{$theme-name}-fg);
     }
 }
 @include kwai-theme-text('default');
