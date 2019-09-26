@@ -5,17 +5,17 @@
       <img :src="picture" style="margin: auto;"/>
     </div>
     <div v-if="story">
-      <div class="primary:kwai-badge">
+      <div class="primary:kwai-badge" style="margin-bottom: 20px;">
         <router-link :to="categoryNewsLink">
           {{ story.category.name }}
         </router-link>
       </div>
       <div>
-        <h1>{{ $t('news')}}</h1>
-        <h2>{{ story.content.title }}</h2>
+        <h1 style="margin-bottom: 20px;">{{ $t('news')}}</h1>
+        <h2 style="margin-bottom: 20px;">{{ story.content.title }}</h2>
         <div
           v-if="story.publish_date"
-          class="kwai-article-meta"
+          class="kwai-text-meta"
         >
           {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
         </div>
