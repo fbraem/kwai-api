@@ -6,9 +6,9 @@
       @close="showLogin = false;"
     >
       <template slot="header">
-        <h2 class="uk-modal-title">
+        <h3>
           {{ $t('login') }}
-        </h2>
+        </h3>
       </template>
       <template slot="default">
         <Alert
