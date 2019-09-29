@@ -1,9 +1,7 @@
 {
     "extends" : [
-        "strongloop"
-    ],
-    "plugins" : [
-        "vue"
+        "strongloop",
+        "plugin:vue/essential"
     ],
     "parserOptions" : {
         "parser" : "babel-eslint",
