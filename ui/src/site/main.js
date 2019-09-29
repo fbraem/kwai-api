@@ -1,6 +1,8 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+import './css/index.css';
+
 import Vue from 'vue';
 
 import VueRouter from 'vue-router';

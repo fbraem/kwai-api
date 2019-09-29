@@ -66,7 +66,7 @@
     <div style="display: flex; justify-content: center;">
       <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
     </div>
-    <router-link class="primary:kwai-button" :to="{ name : 'news.browse' }">
+    <router-link class="bg-red-700 hover:bg-red-800 focus:outline-none focus:shadow-outline text-red-300 py-2 px-4 rounded hover:no-underline" :to="{ name : 'news.browse' }">
       {{ $t('more_news') }}
     </router-link>
     <AreYouSure
