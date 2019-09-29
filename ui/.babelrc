@@ -1,19 +1,22 @@
 {
     "plugins" : [
-        "transform-runtime",
-        "transform-es2015-shorthand-properties",
-        "transform-object-rest-spread",
-        "transform-es2015-classes",
-        "transform-es2015-template-literals",
-        "transform-es2015-arrow-functions",
-        "transform-es2015-spread",
-        "syntax-dynamic-import",
-        "transform-async-to-generator"
+        "@babel/plugin-transform-runtime",
+        "@babel/plugin-transform-shorthand-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-transform-classes",
+        "@babel/plugin-transform-template-literals",
+        "@babel/plugin-transform-arrow-functions",
+        "@babel/plugin-transform-spread",
+        "@babel/plugin-syntax-dynamic-import",
+        "@babel/plugin-transform-async-to-generator"
     ],
     "presets" : [
         [
-            "es2015",
-            { "modules" : false }
+            "@babel/preset-env", {
+                modules: false,
+                useBuiltIns : "usage",
+                corejs: 3
+            }
         ]
     ]
 }

@@ -1,23 +1,27 @@
 const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-// const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 function resolve(dir) {
-  return path.join(__dirname, '..', dir);
+  return path.join(__dirname, dir);
 }
 
 module.exports = (env, argv) => {
 
+  function isDev() {
+    return argv.mode === 'development';
+  }
+
   var config = {
-    watch: argv.mode === 'development',
+    watch: isDev(),
     mode: argv.mode,
     entry: {
-      site: './src/site/main.js',
+      site: resolve('src/site/main.js'),
     },
     output: {
       path: path.join(__dirname, 'build'),
@@ -27,19 +31,34 @@ module.exports = (env, argv) => {
     },
     optimization: {
       runtimeChunk: 'single',
+      minimizer: [
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorPluginOptions: {
+            preset: [ 'default', { discardComments: { removeAll: true } } ]
+          }
+        }),
+        new UglifyJSPlugin({
+          cache: true,
+          parallel: true,
+          sourceMap: isDev()
+        }),
+      ],
       splitChunks: {
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 0,
         cacheGroups: {
-          default: false,
-          vendors: false,
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            chunks: 'all',
-            name: 'vendor'
+            name(module) {
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+              return `npm.${packageName.replace('@', '')}`;
+            },
           },
           styles: {
-            test: '\.css$/',
-            chunks: 'all',
+            test: /\.css$/,
             name: 'styles',
+            chunks: 'all',
             enforce: true
           },
           common: {
@@ -101,6 +120,10 @@ module.exports = (env, argv) => {
                 },
                 optipng: {
                   optimizationLevel: 7
+                },
+                mozjpeg: {
+                  progressive: true,
+                  quality: 65
                 }
               }
             },
@@ -111,8 +134,8 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: [ '*', '.js', '.vue', '.json' ],
       alias: {
-        vue$: 'vue/dist/vue.common.js',
-        '@': resolve('ui/src'),
+        vue$: isDev() ? 'vue/dist/vue.common.js' : 'vue/dist/vue.common.min.js',
+        '@': resolve('src'),
         config: path.join(__dirname, 'src', 'site', 'config', argv.mode),
       },
       mainFiles: [ 'index' ],
@@ -125,23 +148,14 @@ module.exports = (env, argv) => {
         /* chunkFilename: '[name].[hash].css', */
         publicPath: './build',
       }),
-      //  new BundleAnalyzerPlugin(),
-      /*
-      new webpack.optimize.CommonsChunkPlugin({
-        names: ['vendor', 'vue'],
-        minChunks: Infinity
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'manifest'
-      }),
-      */
       new webpack.ContextReplacementPlugin(
         /moment[\/\\]locale$/,
         /nl|en/
       ),
-      new HtmlWebpackPlugin({
+      new HtmlPlugin({
         filename: '../../index.html',
-        template: 'src/index.template.html'
+        template: 'src/index.template.html',
+        chunksSortMode: 'dependency'
       }),
     ]
   };
