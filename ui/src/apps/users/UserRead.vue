@@ -61,7 +61,7 @@
         </div>
         <div style="grid-area: user-news">
           <div>
-            <h4 class="kwai-header-line">
+            <h4 class="header-line">
               <span>
                 {{ $t('news') }}
               </span>
@@ -104,7 +104,7 @@
           </div>
         </div>
         <div style="grid-area: user-pages">
-          <h4 class="kwai-header-line">
+          <h4 class="header-line">
             <span>
               {{ $t('information') }}
             </span>

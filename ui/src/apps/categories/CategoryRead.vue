@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div style="grid-column: 1 / 3;">
-      <h4 class="kwai-header-line">
+      <h4 class="header-line">
         {{ $t('featured_news') }}
       </h4>
       <Spinner v-if="$wait.is('news.browse')" />
@@ -25,7 +25,7 @@
       style="grid-column: 1 / 3;"
       v-if="pageCount > 0"
     >
-      <h4 class="kwai-header-line">
+      <h4 class="header-line">
         Informatie
       </h4>
       <div style="display: flex; flex-wrap: wrap;">

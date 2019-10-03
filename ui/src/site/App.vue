@@ -1,26 +1,40 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="main-container">
-    <div class="main-header" style="display: flex; justify-content: space-between; align-items: center;">
-      <div style="font-size:1.5rem;margin-left:1rem">
-        <a class="kwai-link-reset" href="/">
+    <div
+      class="main-header flex justify-between items-center bg-red-700"
+      style="grid-area: main-header"
+    >
+      <div class="text-xl ml-2">
+        <a class="no-underline text-red-300 hover:no-underline fond-bold"
+          href="/"
+        >
           {{ title }}
         </a>
       </div>
-      <div style="display:flex;margin-right:5px">
-        <a :href="facebook" class="primary:kwai-icon-button" style="margin-right:5px;">
+      <div class="flex mr-1">
+        <a
+          class="icon-button text-red-300 hover:bg-red-800 mr-1"
+          :href="facebook"
+        >
           <i class="fab fa-facebook-f"></i>
         </a>
         <Login />
       </div>
     </div>
-    <div class="main-hero" style="grid-area: main-hero">
+    <div
+      class="bg-gray-800"
+      style="grid-area: main-hero"
+    >
       <router-view name="header"></router-view>
     </div>
     <div style="grid-area: main-content">
       <router-view name="main"></router-view>
     </div>
-    <div class="main-footer" style="grid-column: main-footer">
+    <div
+      class="main-footer"
+      style="grid-column: main-footer"
+    >
       <router-view name="footer"></router-view>
     </div>
   </div>
@@ -43,12 +57,6 @@
           "main-content"
           "main-footer"
       ;
-  }
-
-  .main-header {
-      grid-area: main-header;
-      background-color: var(--kwai-color-primary-bg);
-      color: var(--kwai-color-primary-fg);
   }
 </style>
 

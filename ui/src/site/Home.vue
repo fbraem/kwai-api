@@ -1,74 +1,211 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div style="padding:20px;">
-    <div class="icon-card-container kwai-hide-mobile">
-      <div class="icon-card-item">
-        <IconCard :to="{ name : 'news.browse' }" title="Nieuws">
-          <template slot="icon">
-            <i class="fas fa-newspaper fa-2x" style="color:#c61c18;"></i>
-          </template>
-          <template slot="text">
-            Blijf op de hoogte over het reilen en zeilen van onze club.
-          </template>
-        </IconCard>
-      </div>
-      <div class="icon-card-item">
-        <IconCard to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
-          <template slot="icon">
-            <i class="fas fa-calendar fa-2x" style="color:#c61c18;"></i>
-          </template>
-          <template slot="text">
-            Bekijk onze kalender voor activiteiten en tornooien
-          </template>
-        </IconCard>
-      </div>
-      <div v-for="category in categories" :key="category.id" class="icon-card-item">
-        <CategoryCard :category="category" />
-      </div>
-    </div>
-    <div class="kwai-hide-from-tablet">
-      <div class="icon-card-container">
-        <div class="icon-card-item">
+  <div class="p-4">
+    <div class="hidden sm:block container mx-auto bg-gray-100">
+      <div class="flex flex-row flex-wrap justify-center p-4">
+        <div class="w-full sm:w-1/2 md:w-1/4">
           <IconCard :to="{ name : 'news.browse' }" title="Nieuws">
             <template slot="icon">
-              <i class="fas fa-newspaper fa-2x" style="color:#c61c18;height:32px;"></i>
+              <span class="text-red-700">
+                <i class="fas fa-newspaper fa-2x"></i>
+              </span>
             </template>
             <template slot="text">
               Blijf op de hoogte over het reilen en zeilen van onze club.
             </template>
           </IconCard>
         </div>
-        <div class="icon-card-item">
-          <IconCard to="https://www.judokwaikemzeke.be/oud/kalender.htm" title="Kalender">
+        <div class="w-full sm:w-1/2 md:w-1/4">
+          <IconCard
+            to="https://www.judokwaikemzeke.be/oud/kalender.htm"
+            title="Kalender"
+          >
             <template slot="icon">
-              <i class="fas fa-calendar fa-2x" style="color:#c61c18;height:32px;"></i>
+              <span class="text-red-700">
+                <i class="fas fa-calendar fa-2x"></i>
+              </span>
             </template>
             <template slot="text">
               Bekijk onze kalender voor activiteiten en tornooien
             </template>
           </IconCard>
         </div>
+        <div
+          v-for="category in categories"
+          :key="category.id"
+          class="w-full sm:w-1/2 md:w-1/4"
+        >
+          <CategoryCard :category="category" />
+        </div>
       </div>
-      <CategoryList v-if="categories" :categories="categories" />
     </div>
-    <h4 class="kwai-header-line">
+    <div class="block sm:hidden">
+      <div class="flex flex-wrap justify-center">
+        <IconCard
+          :to="{ name : 'news.browse' }"
+          title="Nieuws"
+        >
+          <template slot="icon">
+            <span class="text-red-700">
+              <i
+                class="fas fa-newspaper fa-2x"
+                style="height:32px;"
+              >
+              </i>
+            </span>
+          </template>
+          <template slot="text">
+            Blijf op de hoogte over het reilen en zeilen van onze club.
+          </template>
+        </IconCard>
+        <IconCard
+          to="https://www.judokwaikemzeke.be/oud/kalender.htm"
+          title="Kalender"
+        >
+          <template slot="icon">
+            <span class="text-red-700">
+              <i
+                class="fas fa-calendar fa-2x"
+                style="height:32px;"
+              >
+              </i>
+            </span>
+          </template>
+          <template slot="text">
+            Bekijk onze kalender voor activiteiten en tornooien
+          </template>
+        </IconCard>
+      </div>
+      <CategoryList
+        v-if="categories"
+        :categories="categories"
+      />
+    </div>
+    <h4 class="header-line">
       Belangrijk Nieuws
     </h4>
-    <div style="display: flex; justify-content: center;">
-      <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    <div class="flex justify-center">
+      <Paginator
+        v-if="storiesMeta"
+        :count="storiesMeta.count"
+        :limit="storiesMeta.limit"
+        :offset="storiesMeta.offset"
+        @page="loadStories"
+      />
     </div>
     <Spinner v-if="$wait.is('news.browse')"/>
-    <div class="news-card-container">
-      <div v-for="story in stories" :key="story.id" class="news-card-item">
-        <NewsCard :story="story" @deleteStory="deleteStory"></NewsCard>
+    <div class="flex flex-wrap justify-center mb-4">
+      <div
+        v-for="story in stories"
+        :key="story.id"
+        class="p-2 w-full lg:w-1/3 xl:w-1/4"
+      >
+        <NewsCard
+          :story="story"
+          @deleteStory="deleteStory"
+        />
       </div>
     </div>
-    <div style="display: flex; justify-content: center;">
-      <Paginator v-if="storiesMeta" :count="storiesMeta.count" :limit="storiesMeta.limit" :offset="storiesMeta.offset" @page="loadStories" />
+    <div class="flex justify-center">
+      <Paginator
+        v-if="storiesMeta"
+        :count="storiesMeta.count"
+        :limit="storiesMeta.limit"
+        :offset="storiesMeta.offset"
+        @page="loadStories"
+      />
     </div>
-    <router-link class="bg-red-700 hover:bg-red-800 focus:outline-none focus:shadow-outline text-red-300 py-2 px-4 rounded hover:no-underline" :to="{ name : 'news.browse' }">
-      {{ $t('more_news') }}
-    </router-link>
+    <div class="block mb-4">
+      <router-link
+        class="red-button"
+        :to="{ name : 'news.browse' }"
+      >
+        {{ $t('more_news') }}
+      </router-link>
+    </div>
+    <div class="container mx-auto message-card-container">
+      <div class="message-card">
+        <div class="message-card-content">
+          <h3>Jeugdvriendelijke Judoclub</h3>
+          <div style="display: flex; flex-direction: column;">
+            <div>
+              <p>Voor het vijfde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
+            </div>
+            <div style="align-self: center; padding: 15px; margin-top: 20px; background-color: white;">
+              <img :src="require('./images/goud_jeugdsport_2019.jpg')" style="height:125px" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="message-card">
+        <div class="message-card-content">
+          <h3>Locatie</h3>
+          <div style="display: flex; flex-direction: column;">
+            <div>
+              <p>Wij trainen in de gevechtssportzaal van sportcentrum
+              <strong>"De Sportstek"</strong> in Stekene, Nieuwstraat 60D.</p>
+            </div>
+            <div style="align-self: center; margin-top: 20px;">
+              <img :src="require('./images/sporthal.jpg')" style="height:125px" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="message-card">
+        <div class="message-card-content">
+          <h3>Eens proberen?</h3>
+          <div style="display: flex; flex-direction: column;">
+            <div>
+              <p>De <a href="https://www.vjf.be">Vlaamse Judo Federatie</a> en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
+            </div>
+            <div style="align-self: center; margin-top: 20px;">
+              <img :src="require('./images/kim_ono.png')" style="height:125px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="message-card">
+        <div class="message-card-content">
+          <h3>Hartveilig</h3>
+          <div style="display: flex; flex-direction: column;">
+            <div>
+              <p>Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.</p>
+            </div>
+            <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
+              <img :src="require('./images/hartveilig.jpg')" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="message-card">
+        <div class="message-card-content">
+          <h3>Gezond sporten</h3>
+          <div style="display: flex; flex-direction: column;">
+            <div>
+              <p>Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a> hoog in het het vaandel.</p>
+            </div>
+            <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
+              <img :src="require('./images/gezond.jpg')" style="height:125px" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="message-card">
+        <div class="message-card-content">
+          <h3>Panathlon Verklaring</h3>
+          <div style="display: flex; flex-direction: column;">
+            <div>
+              <p>
+                Onze club onderschrijft de
+                <a class="text-white font-bold" href="http://panathlonvlaanderen.be">Panathlon</a> verklaring.</p>
+            </div>
+            <div style="align-self: center; margin-top: 20px;padding: 15px; background-color: white;">
+              <img :src="require('./images/panathlon.jpg')" style="height:125px" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <AreYouSure
       v-show="showAreYouSure"
       @close="close"
@@ -78,114 +215,27 @@
     >
       {{ $t('are_you_sure') }}
     </AreYouSure>
-    <div class="message-card-container">
-      <div class="message-card">
-        <h3>Jeugdvriendelijke Judoclub</h3>
-        <div style="display: flex; flex-direction: column;">
-          <div>
-            <p>Voor het vijfde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
-          </div>
-          <div style="align-self: center; padding: 15px; margin-top: 20px; background-color: white;">
-            <img :src="require('./images/goud_jeugdsport_2019.jpg')" style="height:125px" alt="">
-          </div>
-        </div>
-      </div>
-      <div class="message-card">
-        <h3>Locatie</h3>
-        <div style="display: flex; flex-direction: column;">
-          <div>
-            <p>Wij trainen in de gevechtssportzaal van sportcentrum
-            <strong>"De Sportstek"</strong> in Stekene, Nieuwstraat 60D.</p>
-          </div>
-          <div style="align-self: center; margin-top: 20px;">
-            <img :src="require('./images/sporthal.jpg')" style="height:125px" alt="">
-          </div>
-        </div>
-      </div>
-      <div class="message-card">
-        <h3>Eens proberen?</h3>
-        <div style="display: flex; flex-direction: column;">
-          <div>
-            <p>De <a href="https://www.vjf.be">Vlaamse Judo Federatie</a> en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
-          </div>
-          <div style="align-self: center; margin-top: 20px;">
-            <img :src="require('./images/kim_ono.png')" style="height:125px;" alt="">
-          </div>
-        </div>
-      </div>
-      <div class="message-card">
-        <h3>Hartveilig</h3>
-        <div style="display: flex; flex-direction: column;">
-          <div>
-            <p>Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.</p>
-          </div>
-          <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
-            <img :src="require('./images/hartveilig.jpg')" alt="">
-          </div>
-        </div>
-      </div>
-      <div class="message-card">
-        <h3>Gezond sporten</h3>
-        <div style="display: flex; flex-direction: column;">
-          <div>
-            <p>Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a> hoog in het het vaandel.</p>
-          </div>
-          <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
-            <img :src="require('./images/gezond.jpg')" style="height:125px" alt="">
-          </div>
-        </div>
-      </div>
-      <div class="message-card">
-        <h3>Panathlon Verklaring</h3>
-        <div style="display: flex; flex-direction: column;">
-          <div>
-            <p>Onze club onderschrijft de <a href="http://panathlonvlaanderen.be">Panathlon</a> verklaring.</p>
-          </div>
-          <div style="align-self: center; margin-top: 20px;padding: 15px; background-color: white;">
-            <img :src="require('./images/panathlon.jpg')" style="height:125px" alt="">
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import '@/site/scss/_mq.scss';
-
-.message-card {
-  background-color: var(--kwai-color-info-fg);
-  padding: 20px;
-}
-
-.message-card h3 {
-    color: white;
-}
-
-.message-card p {
-  color: rgba(255, 255, 255, .7);
-}
-
-.message-card p a {
-  color: white;
-}
-
+<style scoped>
 .message-card-container {
-  padding: 30px;
-  margin-top: 20px;
-  margin-left: 20%;
-  margin-right: 20%;
   display: grid;
   grid-gap: 30px;
 
-  @include mq($until: tablet) {
-    grid-template-columns: auto;
-    grid-template-rows: auto;
-  }
-  @include mq($from: wide) {
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
+}
+@screen md {
+  .message-card-container {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
   }
+}
+.message-card {
+  @apply w-full text-white;
+}
+.message-card-content {
+  @apply bg-tatami p-5 h-full;
 }
 </style>
 

@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    @apply leading-normal m-0 p-0;
+    box-sizing: border-box;
+}
+
+html {
+    @apply text-base font-sans text-gray-700;
+}
+
+.cover {
+    @apply absolute inset-0;
+}
+
+.header-line {
+    @apply flex w-full justify-center items-center text-center;
+}
+
+.header-line:after {
+    content: '';
+    @apply border-t border-solid mx-4 flex-grow flex-shrink-0;
+}
+
+.red-button {
+    @apply bg-red-700 text-red-300 py-2 px-4 rounded;
+}
+
+.red-button:hover {
+    @apply bg-red-800 no-underline;
+}
+
+.red-button:focus {
+    @apply outline-none shadow-outline;
+}
+
+.icon-button {
+    @apply border-none text-base inline-flex justify-center items-center align-middle no-underline rounded-full cursor-pointer;
+    width: 36px;
+    height: 36px;
+}
+
+.icon-button:focus {
+    @apply outline-none;
+}
+
+.icon-button:hover {
+    @apply no-underline;
+}
+
+.icon-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+}

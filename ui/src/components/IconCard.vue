@@ -1,29 +1,24 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <!-- TODO: move style to scss file -->
-  <div
-    style="display: grid; grid-template-rows: 48px 1fr 1fr; padding: 10px; position: relative; height: 100%;"
-    class="kwai-hover-border"
-  >
+  <div class="m-2 p-3 relative h-full hover:shadow text-center">
     <a
       v-if="isLink"
       :href="to"
-      class="kwai-cover-link"
+      class="cover"
     >
     </a>
     <router-link v-else
-      class="kwai-cover-link"
+      class="cover"
       :to="to"
     />
-    <div style="grid-row: 1; text-align: center">
+    <div>
       <slot name="icon"></slot>
     </div>
-    <div style="grid-row: 2; text-align:center">
-      <h4 style="margin-top:20px">
+    <div>
+      <h4 class="mt-2">
         {{ title }}
       </h4>
     </div>
-    <div style="grid-row: 3; text-align:center">
+    <div>
       <slot name="text"></slot>
     </div>
   </div>

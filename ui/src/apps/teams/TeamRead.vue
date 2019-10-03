@@ -65,7 +65,7 @@
         </tr>
       </table>
       <div style="display: flex; flex-direction: column;">
-        <h3 class="kwai-header-line">
+        <h3 class="header-line">
           <span>{{ $t('members') }}</span>
         </h3>
         <div

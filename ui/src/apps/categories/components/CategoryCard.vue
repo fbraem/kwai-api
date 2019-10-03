@@ -4,8 +4,9 @@
         <inline-svg
           :src="category.icon_picture"
           width="42"
-          height="48"
+          height="32"
           fill="#c61c18"
+          class="inline-block"
         />
     </template>
     <template slot="text">

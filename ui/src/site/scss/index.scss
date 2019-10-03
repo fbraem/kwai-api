@@ -13,15 +13,6 @@ $prefix: "kwai-";
     }
 }
 
-html {
-    font-size: var(--#{$prefix}font-size);
-}
-
-body {
-    font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    color: var(--kwai-color-default-fg);
-}
-
 @import "_mq.scss";
 @import "elements/_alert.scss";
 @import "elements/_badge.scss";
@@ -40,13 +31,7 @@ a.kwai-link-reset {
     color: inherit !important;
 }
 
-.main-hero {
-    background-color: var(--#{$prefix}color-secondary-bg);
-}
-
 .hero-container {
-    background-color: var(--#{$prefix}color-secondary-bg);
-    color: var(--#{$prefix}color-secondary-fg) !important;
     display: grid;
     grid-gap: 10px;
     padding: 20px;
@@ -74,27 +59,6 @@ a.kwai-link-reset {
     }
 }
 
-.icon-card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    @include mq($from: desktop) {
-        & .icon-card-item {
-            width: 25%;
-        }
-    }
-    @include mq($from: tablet, $until: desktop) {
-        & .icon-card-item {
-            width: 50%;
-        }
-    }
-    @include mq($from: mobile, $until: tablet) {
-        & .icon-card-item {
-            width: 100%;
-        }
-    }
-}
-
 @include mq($until: tablet) {
     .#{$prefix}hide-mobile {
         display: none;
@@ -110,20 +74,6 @@ a.kwai-link-reset {
 @include mq($from: tablet) {
     .#{$prefix}hide-from-tablet {
         display: none;
-    }
-}
-
-.#{$prefix}header-line {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    &:after {
-        content: '';
-        border-top: 1px solid #e5e5e5;
-        margin: 0 20px 0 20px;
-        flex: 1 0 20px;
     }
 }
 

@@ -4,7 +4,7 @@
     <div style="display: flex; position: relative; flex-wrap: no-wrap; align-items: center;">
       <router-link
         :to="linkToCategory"
-        class="kwai-cover-link"
+        class="cover"
       />
       <div
         v-if="category.icon_picture"

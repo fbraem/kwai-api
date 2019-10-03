@@ -6,7 +6,7 @@
       style="grid-column: span 2;"
     />
     <div v-if="season" style="grid-area: page-content">
-      <h3 class="kwai-header-line">
+      <h3 class="header-line">
         <span>{{ $t('season') }}</span>
       </h3>
       <table class="kwai-table kwai-table-divider">
@@ -54,7 +54,7 @@
       v-if="season"
       style="grid-area:page-sidebar; display: flex; flex-direction: column;"
     >
-      <h3 class="kwai-header-line">
+      <h3 class="header-line">
         <span>{{ $t('teams') }}</span>
       </h3>
       <table

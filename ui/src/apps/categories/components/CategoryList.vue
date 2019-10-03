@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; flex-direction: column">
     <div>
-      <h4 class="kwai-header-line">
+      <h4 class="header-line">
         {{ $t('overview') }}
       </h4>
     </div>
