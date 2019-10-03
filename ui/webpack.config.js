@@ -13,12 +13,10 @@ function resolve(dir) {
 
 module.exports = (env, argv) => {
 
-  function isDev() {
-    return argv.mode === 'development';
-  }
+  const isDev = (argv.mode === 'development');
 
   var config = {
-    watch: isDev(),
+    watch: isDev,
     mode: argv.mode,
     entry: {
       site: resolve('src/site/main.js'),
@@ -40,7 +38,7 @@ module.exports = (env, argv) => {
         new UglifyJSPlugin({
           cache: true,
           parallel: true,
-          sourceMap: isDev()
+          sourceMap: isDev
         }),
       ],
       splitChunks: {
@@ -135,7 +133,7 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: [ '*', '.js', '.vue', '.json' ],
       alias: {
-        vue$: isDev() ? 'vue/dist/vue.common.js' : 'vue/dist/vue.common.min.js',
+        vue$: isDev ? 'vue/dist/vue.common.js' : 'vue/dist/vue.common.min.js',
         '@': resolve('src'),
         config: path.join(__dirname, 'src', 'site', 'config', argv.mode),
       },
