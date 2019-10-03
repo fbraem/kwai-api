@@ -1,12 +1,13 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="kwai-news-card">
+  <div class="news-card">
     <div style="grid-area: news-card-title">
-      <h3 style="margin-bottom:0px">
+      <h3 class="mb-0">
         <router-link
           v-if="story.content"
           :to="contentLink"
-          class="kwai-link-reset"
+          class="no-underline hover:no-underline"
+          style="color: inherit;"
         >
           {{ story.content.title }}
         </router-link>
@@ -16,7 +17,7 @@
       </h3>
       <div
         v-if="story.publish_date"
-        class="kwai-text-meta"
+        class="text-xs text-gray-600"
       >
         {{ $t('published', {
           publishDate: story.localPublishDate,
@@ -27,22 +28,23 @@
     </div>
     <div
       v-if="story.overview_picture"
-      style="grid-area: news-card-image;justify-self:center;"
+      style="grid-area: news-card-image;"
     >
       <img
         :src="story.overview_picture"
         alt=""
+        class="rounded"
         style="height:150px;width:150px;"
       />
     </div>
     <div style="grid-area: news-card-content">
-      <div v-if="showCategory"
-        class="primary:kwai-badge"
-      >
-        <router-link :to="categoryLink">
-          {{ story.category.name }}
-        </router-link>
-      </div>
+      <router-link
+        v-if="showCategory"
+        class="badge red-badge no-underline hover:no-underline mb-1"
+        :to="categoryLink"
+        >
+        {{ story.category.name }}
+      </router-link>
       <div
        v-html="story.content.html_summary"
        >
@@ -73,6 +75,37 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.news-card {
+  @apply h-full shadow p-1;
+  display: grid;
+  grid-gap: 10px;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+      "news-card-title"
+      "news-card-image"
+      "news-card-content"
+      "news-card-tools"
+  ;
+}
+@screen sm {
+  .news-card {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "news-card-title news-card-title"
+        "news-card-image news-card-content"
+        "news-card-image news-card-tools"
+    ;
+  }
+}
+.red-badge {
+  @apply bg-red-700 text-red-300;
+}
+</style>
 
 <script>
 import Story from '@/models/Story';

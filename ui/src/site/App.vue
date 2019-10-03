@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div class="main-container">
     <div
-      class="main-header flex justify-between items-center bg-red-700"
+      class="main-header flex justify-between items-center bg-red-700 sm:p-4"
       style="grid-area: main-header"
     >
       <div class="text-xl ml-2">
@@ -14,7 +14,7 @@
       </div>
       <div class="flex mr-1">
         <a
-          class="icon-button text-red-300 hover:bg-red-800 mr-1"
+          class="icon-button text-red-300 hover:bg-red-900 mr-1"
           :href="facebook"
         >
           <i class="fab fa-facebook-f"></i>
@@ -22,10 +22,7 @@
         <Login />
       </div>
     </div>
-    <div
-      class="bg-gray-800"
-      style="grid-area: main-hero"
-    >
+    <div style="grid-area: main-hero">
       <router-view name="header"></router-view>
     </div>
     <div style="grid-area: main-content">
@@ -41,12 +38,6 @@
 </template>
 
 <style scoped>
-  .toolbar-container {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      grid-template-areas: "toolbar-left toolbar-middle toolbar-right";
-      grid-gap: 1rem;
-  }
   .main-container {
       display: grid;
       grid-template-columns: 1fr;

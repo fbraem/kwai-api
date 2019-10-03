@@ -53,3 +53,7 @@ html {
 .icon-button:disabled {
     @apply opacity-50 cursor-not-allowed;
 }
+
+.badge {
+    @apply p-1 rounded-lg leading-none inline-flex items-center text-xs;
+}

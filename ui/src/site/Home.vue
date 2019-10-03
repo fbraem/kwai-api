@@ -48,8 +48,7 @@
           <template slot="icon">
             <span class="text-red-700">
               <i
-                class="fas fa-newspaper fa-2x"
-                style="height:32px;"
+                class="fas fa-newspaper fa-2x h-8"
               >
               </i>
             </span>
@@ -65,8 +64,7 @@
           <template slot="icon">
             <span class="text-red-700">
               <i
-                class="fas fa-calendar fa-2x"
-                style="height:32px;"
+                class="fas fa-calendar fa-2x h-8"
               >
               </i>
             </span>
@@ -127,12 +125,19 @@
       <div class="message-card">
         <div class="message-card-content">
           <h3>Jeugdvriendelijke Judoclub</h3>
-          <div style="display: flex; flex-direction: column;">
+          <div class="flex flex-col">
             <div>
-              <p>Voor het vijfde jaar op rij verdient onze club goud bij de proclomatie van het jeugdjudofonds!</p>
+              <p>
+                Voor het vijfde jaar op rij verdient onze club goud
+                bij de proclomatie van het jeugdjudofonds!
+              </p>
             </div>
-            <div style="align-self: center; padding: 15px; margin-top: 20px; background-color: white;">
-              <img :src="require('./images/goud_jeugdsport_2019.jpg')" style="height:125px" alt="">
+            <div class="self-center p-3 mt-2 bg-white">
+              <img
+                :src="require('./images/goud_jeugdsport_2019.jpg')"
+                style="height:125px"
+                alt=""
+              />
             </div>
           </div>
         </div>
@@ -140,13 +145,19 @@
       <div class="message-card">
         <div class="message-card-content">
           <h3>Locatie</h3>
-          <div style="display: flex; flex-direction: column;">
+          <div class="flex flex-col">
             <div>
-              <p>Wij trainen in de gevechtssportzaal van sportcentrum
-              <strong>"De Sportstek"</strong> in Stekene, Nieuwstraat 60D.</p>
+              <p>
+                Wij trainen in de gevechtssportzaal van sportcentrum
+                <strong>"De Sportstek"</strong> in Stekene, Nieuwstraat 60D.
+              </p>
             </div>
-            <div style="align-self: center; margin-top: 20px;">
-              <img :src="require('./images/sporthal.jpg')" style="height:125px" alt="">
+            <div class="self-center mt-2">
+              <img
+                :src="require('./images/sporthal.jpg')"
+                style="height:125px"
+                alt=""
+              />
             </div>
           </div>
         </div>
@@ -154,12 +165,19 @@
       <div class="message-card">
         <div class="message-card-content">
           <h3>Eens proberen?</h3>
-          <div style="display: flex; flex-direction: column;">
+          <div class="flex flex-col">
             <div>
-              <p>De <a href="https://www.vjf.be">Vlaamse Judo Federatie</a> en Judokwai Kemzeke bieden u 4 gratis proeflessen aan.</p>
+              <p>
+                De <a href="https://www.vjf.be">Vlaamse Judo Federatie</a> en
+                Judokwai Kemzeke bieden u 4 gratis proeflessen aan.
+              </p>
             </div>
-            <div style="align-self: center; margin-top: 20px;">
-              <img :src="require('./images/kim_ono.png')" style="height:125px;" alt="">
+            <div class="self-center mt-2">
+              <img
+                :src="require('./images/kim_ono.png')"
+                style="height:125px;"
+                alt=""
+              />
             </div>
           </div>
         </div>
@@ -167,12 +185,18 @@
       <div class="message-card">
         <div class="message-card-content">
           <h3>Hartveilig</h3>
-          <div style="display: flex; flex-direction: column;">
+          <div class="flex flex-col">
             <div>
-              <p>Onze club is hartveilig. 10% van onze medewerkers zijn getraind in reanimatie.</p>
+              <p>
+                Onze club is hartveilig. 10% van onze medewerkers zijn getraind
+                in reanimatie.
+              </p>
             </div>
-            <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
-              <img :src="require('./images/hartveilig.jpg')" alt="">
+            <div class="self-center mt-2 p-2 bg-white">
+              <img
+                :src="require('./images/hartveilig.jpg')"
+                alt=""
+              />
             </div>
           </div>
         </div>
@@ -180,12 +204,19 @@
       <div class="message-card">
         <div class="message-card-content">
           <h3>Gezond sporten</h3>
-          <div style="display: flex; flex-direction: column;">
+          <div class="flex flex-col">
             <div>
-              <p>Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a> hoog in het het vaandel.</p>
+              <p>
+                Onze club draagt <a href="https://www.vjf.be/nl/aanvulling-en-aanpassing-vjf-website-gezond-en-ethisch-sporten">Gezond Sporten</a>
+                hoog in het het vaandel.
+              </p>
             </div>
-            <div style="align-self: center; margin-top: 20px; padding: 15px; background-color: white;">
-              <img :src="require('./images/gezond.jpg')" style="height:125px" alt="">
+            <div class="self-center mt-2 p-2 bg-white">
+              <img
+                :src="require('./images/gezond.jpg')"
+                style="height:125px"
+                alt=""
+              />
             </div>
           </div>
         </div>
@@ -193,14 +224,20 @@
       <div class="message-card">
         <div class="message-card-content">
           <h3>Panathlon Verklaring</h3>
-          <div style="display: flex; flex-direction: column;">
+          <div class="flex flex-col">
             <div>
               <p>
                 Onze club onderschrijft de
-                <a class="text-white font-bold" href="http://panathlonvlaanderen.be">Panathlon</a> verklaring.</p>
+                <a href="http://panathlonvlaanderen.be">Panathlon</a>
+                verklaring.
+              </p>
             </div>
-            <div style="align-self: center; margin-top: 20px;padding: 15px; background-color: white;">
-              <img :src="require('./images/panathlon.jpg')" style="height:125px" alt="">
+            <div class="self-center mt-2 p-2 bg-white">
+              <img
+                :src="require('./images/panathlon.jpg')"
+                style="height:125px"
+                alt=""
+              />
             </div>
           </div>
         </div>
@@ -222,7 +259,6 @@
 .message-card-container {
   display: grid;
   grid-gap: 30px;
-
   grid-template-columns: 1fr;
   grid-auto-rows: 1fr;
 }
@@ -236,6 +272,10 @@
 }
 .message-card-content {
   @apply bg-tatami p-5 h-full;
+}
+
+.message-card-content a {
+  @apply text-white font-bold;
 }
 </style>
 

@@ -1,42 +1,41 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="hero-container">
+  <div class="hero-container mx-auto">
     <div
       v-if="picture"
+      class="self-center"
       style="grid-area: hero-image"
     >
-      <img :src="picture" style="margin: auto; "/>
+      <img :src="picture" class="m-auto" />
     </div>
     <div style="grid-area: hero-text;">
-      <div
-        v-if="badge"
-        class="primary:kwai-badge"
-        style="margin-bottom: 20px;"
-      >
-        <router-link :to="badge.route">
-          {{ badge.title }}
+      <div v-if="badge">
+        <router-link
+          :to="badge.route"
+          class="badge red-badge mb-4 no-underline hover:no-underline"
+        >
+          {{ badge.name }}
         </router-link>
       </div>
       <router-link
-        v-if="route"
+        v-if="route && title"
         :to="route"
-        class="kwai-link-reset"
+        class="hover:no-underline"
       >
-        <h1 style="display: flex; align-items: center; margin-bottom: 20px;">
+        <h1 class="flex items-center mb-2">
           <inline-svg
             v-if="logo"
             :src="logo"
             width="42"
             height="42"
             fill="white"
-            style="margin-right: 1rem;"
+            class="mr-1"
           />
           {{ title }}
         </h1>
       </router-link>
       <h1
-        v-else
-        style="display: flex; align-items: center; margin-bottom: 20px;"
+        v-else-if="title"
+        class="flex items-center mb-2"
       >
         <inline-svg
           v-if="logo"
@@ -44,24 +43,24 @@
           width="42"
           height="42"
           fill="white"
-          style="margin-right: 1rem;"
+          class="mr-1"
         />
         {{ title }}
       </h1>
-      <h3 v-if="subtitle">
+      <h2 v-if="subtitle">
         {{ subtitle }}
-      </h3>
+      </h2>
       <slot></slot>
     </div>
     <div
       v-if="hasToolbar"
-      class="kwai-buttons"
-      style="grid-area: hero-toolbar; display: flex; justify-content: flex-end; flex-flow: row;"
+      class="flex flex-row"
+      style="grid-area: hero-toolbar;"
     >
       <template v-for="(button, index) in toolbar">
         <template v-if="button.route">
           <router-link
-            class="secondary:kwai-icon-button"
+            class="mr-1 last:mr-0 icon-button header-icon-button"
             :to="button.route"
             :key="index"
           >
@@ -71,7 +70,7 @@
         <template v-if="button.method">
           <a
             :key="index"
-            class="secondary:kwai-icon-button"
+            class="mr-1 last:mr-0 icon-button header-icon-button"
             @click.prevent.stop="button.method"
           >
             <i :class="button.icon"></i>
@@ -81,6 +80,49 @@
     </div>
   </div>
 </template>
+
+<style scoded>
+.hero-container {
+    display: grid;
+    @apply p-4;
+    grid-gap: 10px;
+    grid-template-columns: auto;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "hero-image"
+        "hero-text"
+        "hero-toolbar"
+    ;
+    @apply bg-gray-800;
+}
+
+@screen md {
+  .hero-container {
+      grid-template-columns: fit-content(800px) 1fr auto;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+          "hero-image hero-text hero-toolbar"
+      ;
+  }
+}
+
+h1, h2 {
+  @apply text-white;
+}
+
+.red-badge {
+  @apply bg-red-700 text-red-300;
+}
+
+.header-icon-button {
+  @apply text-gray-300;
+}
+
+.header-icon-button:hover {
+  @apply bg-gray-900;
+}
+
+</style>
 
 <script>
 import InlineSvg from 'vue-inline-svg';
@@ -94,8 +136,7 @@ export default {
      * Title of the header
      */
     title: {
-      type: String,
-      required: true
+      type: String
     },
     /**
      * A badge to show

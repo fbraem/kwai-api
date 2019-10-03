@@ -1,9 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="hero-container">
-    <div style="grid-area: hero-image;align-self:center;justify-self:center">
-      <img :src="require('./images/judokwaikemzeke.jpg')" />
-    </div>
+  <Header
+    :picture="require('./images/judokwaikemzeke.jpg')"
+  >
     <div style="grid-area: hero-text; display: flex; flex-direction: column; justify-content: center;align-items: center">
       <div>
         <img
@@ -22,13 +21,18 @@
           style="width:200px;height:200px;" />
       </div>
     </div>
-  </div>
+  </Header>
 </template>
 
 <script>
 import messages from './lang';
 
+import Header from '@/components/Header';
+
 export default {
+  components: {
+    Header
+  },
   i18n: messages
 };
 </script>
