@@ -1,7 +1,11 @@
 module.exports = {
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        tatami: '#969A86'
+      }
+    },
   },
   variants: {},
   plugins: []
-}
+};
