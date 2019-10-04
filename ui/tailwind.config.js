@@ -6,6 +6,16 @@ module.exports = {
       }
     },
   },
-  variants: {},
+  variants: [
+    'responsive',
+    'first',
+    'last',
+    'odd',
+    'even',
+    'hover',
+    'focus',
+    'active',
+    'disabled',
+  ],
   plugins: []
 };
