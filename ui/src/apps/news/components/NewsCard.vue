@@ -33,8 +33,7 @@
       <img
         :src="story.overview_picture"
         alt=""
-        class="rounded"
-        style="height:150px;width:150px;"
+        class="rounded w-32 h-32"
       />
     </div>
     <div style="grid-area: news-card-content">
@@ -53,7 +52,7 @@
     <div style="grid-area: news-card-tools;justify-self:right">
       <router-link
         v-if="story.content"
-        class="kwai-icon-button"
+        class="icon-button text-gray-700 hover:bg-gray-300"
         :to="contentLink"
       >
         <i class="fas fa-ellipsis-h"></i>
@@ -61,14 +60,14 @@
       <router-link
         v-if="$can('update', story)"
         :to="{ name : 'news.update', params : { id : story.id }}"
-        class="kwai-icon-button"
+        class="icon-button text-gray-700 hover:bg-gray-300"
       >
         <i class="fas fa-edit"></i>
       </router-link>
       <a
         v-if="$can('delete', story)"
         @click="deleteStory"
-        class="kwai-icon-button"
+        class="icon-button text-gray-700 hover:bg-gray-300"
       >
         <i class="fas fa-trash"></i>
       </a>
