@@ -1,5 +1,5 @@
 <template>
-  <div class="hero-container mx-auto">
+  <div class="hero-container mx-auto text-gray-500">
     <div
       v-if="picture"
       class="self-center"
@@ -28,7 +28,7 @@
             width="42"
             height="42"
             fill="white"
-            class="mr-1"
+            class="mr-3"
           />
           {{ title }}
         </h1>
@@ -43,7 +43,7 @@
           width="42"
           height="42"
           fill="white"
-          class="mr-1"
+          class="mr-3"
         />
         {{ title }}
       </h1>
@@ -106,7 +106,7 @@
   }
 }
 
-h1, h2 {
+.hero-container h1, h2 {
   @apply text-white;
 }
 
