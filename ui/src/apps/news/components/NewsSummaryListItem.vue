@@ -1,19 +1,18 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div style="display: flex; flex-direction:column;">
+  <div class="flex flex-col">
     <div>
-      <h4 style="margin-bottom: 0px;">
+      <h4 class="mb-0">
         {{ story.content.title }}
       </h4>
     </div>
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-      <div class="kwai-text-meta kwai-text-truncate">
+    <div class="flex items-center justify-between">
+      <div class="text-meta truncate">
         {{ story.content.summary }}
       </div>
       <div>
         <router-link
           :to="storyLink"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-ellipsis-h"></i>
         </router-link>

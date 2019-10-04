@@ -1,14 +1,14 @@
 <template>
-  <div style="display:flex;flex-direction:column">
-    <form :class="{ 'kwai-form-stacked': stacked }">
+  <div class="flex flex-col">
+    <form>
       <slot></slot>
     </form>
     <div
       v-if="hasSubmitListener"
-      style="display: flex; justify-content: flex-end;"
+      class="flex justify-end"
     >
       <button
-        class="primary:kwai-button"
+        class="red-button disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="!valid"
         @click.prevent.stop="submit"
       >

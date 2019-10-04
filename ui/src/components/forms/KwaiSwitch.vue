@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <label class="kwai-switch">
-      <input v-model="field.value"
-        :id="id"
-        type="checkbox"
-        :checked="isChecked"
-        v-bind="$attrs"
-      />
-      <div class="kwai-switch-slider kwai-switch-on-off round"></div>
-    </label>
+  <!-- eslint-disable max-len -->
+  <div class="switch inline-block align-middle">
+    <input v-model="field.value"
+      :id="id"
+      class="switch-checkbox"
+      type="checkbox"
+      :checked="isChecked"
+      v-bind="$attrs"
+    />
+    <label class="switch-label" for="id"></label>
   </div>
 </template>
 

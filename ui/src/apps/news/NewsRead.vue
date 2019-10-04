@@ -1,71 +1,66 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div>
-    <Page>
-      <Spinner v-if="$wait.is('news.read')" />
-      <article v-if="story">
-        <blockquote>
-          <div v-html="story.content.html_summary"></div>
-        </blockquote>
-        <div class="news-content" v-html="story.content.html_content">
-        </div>
-        <vue-goodshare-facebook style="text-decoration:none"
-          :title_social="$t('share')"
-          :page_url="facebookUrl"
-          has_icon />
-      </article>
-    </Page>
-  </div>
+  <Page>
+    <Spinner v-if="$wait.is('news.read')" />
+    <article v-if="story">
+      <h1>{{ story.content.title }}</h1>
+      <blockquote>
+        <div v-html="story.content.html_summary"></div>
+      </blockquote>
+      <div class="news-content" v-html="story.content.html_content">
+      </div>
+      <vue-goodshare-facebook class="no-underline hover:no-underline"
+        :title_social="$t('share')"
+        :page_url="facebookUrl"
+        has_icon />
+    </article>
+    <template slot="sidebar">
+      <Sidebar />
+    </template>
+  </Page>
 </template>
 
 <style>
-    .news-content ul {
-        list-style-position: inside;
-        margin-bottom: 20px;
-    }
+blockquote {
+  @apply bg-gray-200 border-l-8 border-solid border-gray-600 ml-2 mb-4 p-2;
+}
 
-    blockquote {
-      background: #f9f9f9;
-      border-left: 10px solid #ccc;
-      margin: 1.5em 10px;
-      padding: 0.5em 10px;
-      quotes: "\201C""\201D""\2018""\2019";
-    }
-    .gallery {
-        background: #eee;
-        column-count: 4;
-        column-gap: 1em;
-        padding-left: 1em;
-        padding-top: 1em;
-        padding-right: 1em;
-    }
-    .gallery .item {
-        background: white;
-        display: inline-block;
-        margin: 0 0 1em;
-        width: 100%;
-        padding: 1em;
-    }
-    @media (max-width: 1200px) {
-      .gallery {
+.news-content ul {
+    list-style-position: inside;
+    margin-bottom: 20px;
+}
+
+.news-content blockquote {
+  @apply bg-gray-200 border-l-8 border-solid border-gray-600 ml-2 mb-4 p-2;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+.news-content .gallery {
+    background: #eee;
+    column-count: 1;
+    column-gap: 1em;
+    padding-left: 1em;
+    padding-top: 1em;
+    padding-right: 1em;
+}
+
+@screen lg {
+  .news-content .gallery {
+    column-count: 2;
+  }
+}
+@screen xl {
+  .news-content .gallery {
       column-count: 4;
-      }
-    }
-    @media (max-width: 1000px) {
-      .gallery {
-          column-count: 3;
-      }
-    }
-    @media (max-width: 800px) {
-      .gallery {
-          column-count: 2;
-      }
-    }
-    @media (max-width: 400px) {
-      .gallery {
-          column-count: 1;
-      }
-    }
+  }
+}
+
+.news-content .gallery .item {
+    background: white;
+    display: inline-block;
+    margin: 0 0 1em;
+    width: 100%;
+    padding: 1em;
+}
 </style>
 
 <script>
@@ -73,12 +68,14 @@ import messages from './lang';
 
 import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
 
-import Page from './Page.vue';
+import Page from '@/components/Page';
+import Sidebar from './Sidebar';
 import Spinner from '@/components/Spinner';
 
 export default {
   components: {
     Page,
+    Sidebar,
     VueGoodshareFacebook,
     Spinner
   },

@@ -1,17 +1,18 @@
 <template>
+  <!-- eslint-disable max-len -->
   <textarea v-model="field.value"
-      :id="id"
-      class="kwai-textarea"
-      :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
-      :required="field.required"
-      v-bind="$attrs">
+    :id="id"
+    class="appearance-once block w-full bg-gray-200 border rounded py-3 px-4 mb-3 leading-thight focus:outline-none focus:bg-white"
+    :class="{ 'border-red-600' : field.errors.length > 0 }"
+    :required="field.required"
+    v-bind="$attrs">
   </textarea>
 </template>
 
 <style scoped>
-  textarea:required {
-    border-left: 3px solid;
-  }
+textarea:required {
+  @apply border-l-4 border-solid;
+}
 </style>
 
 <script>

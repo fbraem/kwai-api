@@ -1,50 +1,24 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
-    <div style="grid-area: page-content">
-      <slot></slot>
-    </div>
-    <div style="grid-area: page-sidebar">
-      <CategoryList
-        v-if="categories"
-        :categories="categories"
-      />
-      <h4>
-        <span>{{ $t('archive') }}</span>
-      </h4>
-      <template v-for="(year) in archiveYears">
-        <div :key="year">
-          <h5>{{ year }}</h5>
-          <ul class="kwai-list">
-            <li v-for="(month) in archive[year]" :key="month.month">
-              <router-link
-                :to="{ name : 'news.archive', params : { year : year, month : month.month }}"
-              >
-                {{ month.monthName }} {{ year }}
-                <span
-                  class="primary:kwai-badge kwai-badge-rounded"
-                  style="float:right"
-                >
-                  {{ month.count }}
-                </span>
-              </router-link>
-            </li>
-          </ul>
-        </div>
-      </template>
-    </div>
-  </div>
+  <Page>
+    <slot></slot>
+    <template slot="sidebar">
+      <Sidebar />
+    </template>
+  </Page>
 </template>
 
 <script>
 import messages from './lang';
 
-import CategoryList from '@/apps/categories/components/CategoryList.vue';
+import Page from '@/components/Page';
+import Sidebar from './Sidebar';
 
 export default {
   i18n: messages,
   components: {
-    CategoryList
+    Page,
+    Sidebar
   },
   computed: {
     categories() {

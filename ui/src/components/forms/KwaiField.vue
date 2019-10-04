@@ -1,24 +1,20 @@
 <template>
-  <div style="display: flex; flex-direction: column; margin-bottom:20px;">
+  <div class="flex flex-col mb-5">
     <label
       v-if="hasLabel"
-      class="kwai-form-label"
-      :class="{ 'danger:kwai-text' : hasErrors }"
+      class="block font-bold mb-2"
+      :class="{ 'text-red-600' : hasErrors }"
       :for="name"
     >
       {{ label }}
     </label>
     <slot></slot>
     <div
-      v-if="hasErrors"
-      class="danger:kwai-text"
+      v-for="(error, index) in fieldErrors"
+      class="text-red-600 text-sm italic"
+      :key="index"
     >
-      <div
-        v-for="(error, index) in fieldErrors"
-        :key="index"
-      >
-        {{ error }}
-      </div>
+      {{ error }}
     </div>
   </div>
 </template>
@@ -37,10 +33,10 @@ export default {
       return this.label && this.label.length > 0;
     },
     fieldErrors() {
-      return this.field.errors;
+      return this.field.errors || [];
     },
     hasErrors() {
-      return this.fieldErrors && this.fieldErrors.length > 0;
+      return this.fieldErrors.length > 0;
     }
   },
   provide() {

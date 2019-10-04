@@ -1,5 +1,5 @@
 <template>
-  <div style="display:flex; flex-direction:column;">
+  <div class="flex flex-col">
     <NewsSummaryListItem
       v-for="story in stories"
       :key="story.id"

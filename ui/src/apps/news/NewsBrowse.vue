@@ -6,7 +6,7 @@
     >
       <div
         v-if="storiesMeta"
-        style="display: flex; justify-content: center;"
+        class="flex justify-center"
       >
         <Paginator
           :count="storiesMeta.count"
@@ -15,11 +15,11 @@
           @page="readPage"
         />
       </div>
-      <div class="news-card-container">
+      <div class="flex flex-wrap justify-center">
          <div
             v-for="story in stories"
             :key="story.id"
-            class="news-card-item"
+            class="p-2 w-full lg:w-1/2"
           >
             <NewsCard
               :story="story"
@@ -29,7 +29,7 @@
       </div>
       <div
         v-if="storiesMeta"
-        style="display: flex; justify-content: center;"
+        style="flex justify-center"
       >
         <Paginator
           :count="storiesMeta.count"
@@ -55,42 +55,15 @@
     >
       {{ $t('are_you_sure') }}
     </AreYouSure>
+    <template slot="sidebar">
+      <Sidebar />
+    </template>
   </Page>
 </template>
 
-<style lang=scss>
-@import "@/site/scss/_mq.scss";
-.news-card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    @include mq($from: wide) {
-        & .news-card-item {
-            width: 45%;
-        }
-    }
-    @include mq($from: mobile, $until: wide) {
-        & .news-card-item {
-            width: 100%;
-        }
-    }
-}
-.news-card-item {
-  margin: 20px;
-}
-
-.message-card {
-    background-color:#607d8b;
-}
-.message-card h3 {
-    color: white!important;
-}
-</style>
-
-
 <script>
-import Page from './Page.vue';
+import Page from '@/components/Page';
+import Sidebar from './Sidebar';
 import NewsCard from './components/NewsCard.vue';
 import Paginator from '@/components/Paginator.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
@@ -107,7 +80,8 @@ export default {
     Paginator,
     AreYouSure,
     Spinner,
-    Alert
+    Alert,
+    Sidebar
   },
   data() {
     return {

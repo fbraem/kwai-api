@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <div style="display: flex;justify-content: center">
+  <div class="container mx-auto">
+    <div class="flex justify-center">
       <div
-        style="margin:20px;"
-        :style="{ 'width': width + '%'}"
+        class="m-2 w-full md:w-1/2 lg:w-1/3"
         v-for="story in activeStories"
         :key="story.id"
       >
@@ -13,10 +12,13 @@
         />
       </div>
     </div>
-    <div style="display: flex; justify-content: space-evenly">
+    <div
+      class="flex"
+      style="justify-content: space-evenly;"
+    >
       <div>
         <button
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
           @click.prevent.stop="prev"
           :disabled="!hasPrev"
         >
@@ -25,7 +27,7 @@
       </div>
       <div>
         <button
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
           @click.prevent.stop="next"
           :disabled="!hasNext"
         >
@@ -58,14 +60,9 @@ export default {
       return this.stories.length;
     },
     columns() {
-      if (this.$vssWidth >= 1300) return 3;
-      if (this.$vssWidth >= 980) return 2;
+      if (this.$vssWidth >= 1280) return 3;
+      if (this.$vssWidth >= 768) return 2;
       return 1;
-    },
-    width() {
-      if (this.$vssWidth >= 1300) return 100 / 3;
-      if (this.$vssWidth >= 980) return 50;
-      return 100;
     },
     activeStories() {
       let actives = [];

@@ -1,9 +1,10 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div style="border: 1px solid #d3d3d3; border-radius: .25rem;">
-    <div :style="'background-size: cover; min-height:150px; background-position: center; background-color: #ccc; background-image:url(' + require('@/apps/news/images/exclamation-point-2620923_1920.jpg') + ')'">
+  <div class="border rounded border-solid border-gray-400">
+    <div
+      class="bg-center bg-gray-400 bg-cover"
+      :style="backgroundStyle">
     </div>
-    <div style="padding:15px">
+    <div class="p-2">
       <h3>{{ $t('featured_news') }}</h3>
       <NewsSummaryList
         v-if="hasStories"
@@ -12,10 +13,10 @@
       <div
         v-else
       >
-        <div class="kwai-text-meta">
+        <div class="text-sm text-gray-600">
           {{ $t('no_featured_news') }}
         </div>
-        <div class="kwai-text-small">
+        <div class="text-sm text-gray-600">
           <router-link :to="oldNewsLink">
             {{ $t('see_old_news') }}
           </router-link>
@@ -42,6 +43,15 @@ export default {
     }
   },
   computed: {
+    backgroundStyle() {
+      return {
+        'min-height': '150px',
+        'background-image':
+          'url('
+            + require('@/apps/news/images/exclamation-point-2620923_1920.jpg')
+            + ')'
+      };
+    },
     hasStories() {
       return this.stories.length > 0;
     },

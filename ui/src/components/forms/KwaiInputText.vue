@@ -1,8 +1,9 @@
 <template>
+  <!-- eslint-disable max-len -->
   <input v-model="field.value"
     :id="id"
-    class="kwai-input"
-    :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
+    class="appearance-once block w-full bg-gray-200 border rounded py-3 px-4 mb-3 leading-thight focus:outline-none focus:bg-white"
+    :class="{ 'border-red-600' : field.errors.length > 0 }"
     type="text"
     :required="field.required"
     v-bind="$attrs"
@@ -11,7 +12,7 @@
 
 <style scoped>
   input:required {
-    border-left: 3px solid;
+    @apply border-l-4 border-solid;
   }
 </style>
 

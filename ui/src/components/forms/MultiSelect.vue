@@ -16,9 +16,9 @@
 </template>
 
 <style scoped>
-  input:required {
-    border-left: 3px solid;
-  }
+input:required {
+  @apply border-l-4 border-solid;
+}
 </style>
 
 <script>
