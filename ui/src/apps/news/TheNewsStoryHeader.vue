@@ -10,7 +10,7 @@
   >
     <div
       v-if="story.publish_date"
-      class="kwai-text-meta"
+      class="text-sm text-gray-600"
     >
       {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
     </div>
