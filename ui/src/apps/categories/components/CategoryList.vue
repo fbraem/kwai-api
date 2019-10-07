@@ -1,12 +1,12 @@
 <template>
-  <div style="display: flex; flex-direction: column">
+  <div class="flex flex-col">
     <div>
       <h4 class="header-line">
         {{ $t('overview') }}
       </h4>
     </div>
     <div>
-      <ul class="kwai-list">
+      <ul class="pl-0">
         <CategoryListItem
           v-for="(category, index) in categories"
           :category="category"

@@ -1,6 +1,6 @@
 <template>
-  <div class="page-container">
-    <div style="grid-column: 1 / 3;">
+  <div class="flex flex-col p-3">
+    <div class="block">
       <h4 class="header-line">
         {{ $t('featured_news') }}
       </h4>
@@ -12,7 +12,7 @@
         <NewsSlider :stories="stories" />
       </div>
     </div>
-    <div style="grid-column: 1 / 3;justify-self:center;">
+    <div class="block mx-auto my-2">
       <router-link
         :to="moreNewsLink"
         class="kwai-button"
@@ -22,17 +22,17 @@
     </div>
     <Spinner v-if="$wait.is('pages.browse')" />
     <div
-      style="grid-column: 1 / 3;"
+      class="block"
       v-if="pageCount > 0"
     >
       <h4 class="header-line">
         Informatie
       </h4>
-      <div style="display: flex; flex-wrap: wrap;">
+      <div class="flex flex-wrap">
         <div
           v-for="page in pages"
           :key="page.id"
-          style="margin: 20px; width: 30%;"
+          class="p-3 w-full sm:w-1/2 lg:w-1/3"
         >
           <PageSummary :page="page" />
         </div>

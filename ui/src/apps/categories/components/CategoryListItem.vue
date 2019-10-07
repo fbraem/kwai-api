@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
-  <li>
-    <div style="display: flex; position: relative; flex-wrap: no-wrap; align-items: center;">
+  <li class="mb-4">
+    <div class="flex flex-no-wrap relative items-center">
       <router-link
         :to="linkToCategory"
         class="cover"
@@ -17,14 +17,11 @@
           fill="#c61c18"
         />
       </div>
-      <div style="margin-left: 20px; width: 80%;">
-        <h4 style="margin-bottom: 10px;">
+      <div style="width: 80%;">
+        <h4 class="mb-0">
           {{ category.name }}
         </h4>
-        <div
-          style="grid-area: category-description"
-          class="kwai-text-meta"
-        >
+        <div class="text-sm">
           {{ category.short_description }}
         </div>
       </div>

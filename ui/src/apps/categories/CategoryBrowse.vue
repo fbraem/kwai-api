@@ -1,10 +1,8 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="icon-card-container" style="padding:20px">
+  <div class="container mx-auto">
     <div
       v-for="category in categories"
       :key="category.id"
-      class="icon-card-item"
     >
       <CategoryCard :category="category" />
     </div>
