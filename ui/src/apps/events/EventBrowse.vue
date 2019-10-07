@@ -1,71 +1,70 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
-    <div style="grid-column: span 2">
-      <Spinner v-if="$wait.is('events.browse')" />
-      <div v-else>
-        <div class="calendar">
-          <div class="title">
-            <router-link
-              :to="prevMonth"
-              class="fas fa-caret-left kwai-link-reset"
-            />
-            <div
-              class="month"
-              style="text-transform:capitalize"
-            >
-              {{ monthName }}
-            </div>
-            <div class="year">
-              {{ year }}
-            </div>
-            <router-link
-              :to="nextMonth"
-              class="fas fa-caret-right kwai-link-reset"
-            />
+  <div class="m-4">
+    <Spinner v-if="$wait.is('events.browse')" />
+    <div v-else>
+      <div class="calendar">
+        <div class="title">
+          <router-link
+            :to="prevMonth"
+            class="icon-button text-gray-700 hover:bg-gray-300"
+          >
+            <i class="fas fa-caret-left"></i>
+          </router-link>
+          <div class="month capitalize">
+            {{ monthName }}
           </div>
-          <ol class="days">
-            <li
-              v-for="(day, index) in days"
-              :key="index"
-              class="day"
-              :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }"
-            >
-              <div class="date">
-                <span class="weekday">
-                  {{ day.weekday }}
-                </span>
-                <span class="day">
-                  {{ day.number }}
-                </span>
-                <span class="month">
-                  {{ day.month }}
-                </span>
-                <span class="year">
-                  {{ day.year }}
-                </span>
-              </div>
-              <div class="events">
-                <div
-                  v-for="(event, index) in day.events"
-                  :key="index"
-                >
-                  {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
-                  <router-link :to="{ name: 'events.read', params: { id: event.id }}">
-                    {{ event.name }}
-                  </router-link>
-                </div>
-              </div>
-            </li>
-          </ol>
+          <div class="year">
+            {{ year }}
+          </div>
+          <router-link
+            :to="nextMonth"
+            class="icon-button text-gray-700 hover:bg-gray-300"
+          >
+            <i class="fas fa-caret-right"></i>
+          </router-link>
         </div>
-        <Alert
-          v-if="noData"
-          type="danger"
-        >
-          {{ $t('no_data') }}
-        </Alert>
+        <ol class="days">
+          <li
+            v-for="(day, index) in days"
+            :key="index"
+            class="day"
+            :class="{ 'outside': day.outsideOfCurrentMonth, 'empty': day.events.length === 0 }"
+          >
+            <div class="date">
+              <span class="weekday">
+                {{ day.weekday }}
+              </span>
+              <span class="day">
+                {{ day.number }}
+              </span>
+              <span class="month">
+                {{ day.month }}
+              </span>
+              <span class="year">
+                {{ day.year }}
+              </span>
+            </div>
+            <div class="events">
+              <div
+                v-for="(event, index) in day.events"
+                :key="index"
+              >
+                {{ event.formattedStartTime }} - {{ event.formattedEndTime }}&nbsp;
+                <router-link :to="{ name: 'events.read', params: { id: event.id }}">
+                  {{ event.name }}
+                </router-link>
+              </div>
+            </div>
+          </li>
+        </ol>
       </div>
+      <Alert
+        v-if="noData"
+        type="danger"
+      >
+        {{ $t('no_data') }}
+      </Alert>
     </div>
   </div>
 </template>
