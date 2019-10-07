@@ -1,16 +1,93 @@
 <template>
-  <!-- eslint-disable max-len -->
-  <div class="switch inline-block align-middle">
-    <input v-model="field.value"
-      :id="id"
-      class="switch-checkbox"
-      type="checkbox"
-      :checked="isChecked"
-      v-bind="$attrs"
-    />
-    <label class="switch-label" for="id"></label>
+  <div>
+    <label class="switch">
+      <input v-model="field.value"
+        :id="id"
+        type="checkbox"
+        :checked="isChecked"
+        v-bind="$attrs"
+      />
+      <div class="switch-slider switch-on-off round"></div>
+    </label>
   </div>
 </template>
+
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  width: 56px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  display:none;
+}
+
+/* Slider */
+.switch-slider {
+  background-color: rgba(0,0,0,0.22);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-radius: 30px;
+  bottom: 0;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: .2s;
+}
+
+.switch-slider:before {
+  content: '';
+  background-color: #fff;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  transition-property: transform, box-shadow;
+	transition-duration: .2s;
+}
+
+/* Switch pointer */
+/* Slider active color */
+input:checked + .switch-slider {
+  background-color: #39f !important;
+}
+/* Pointer active animation */
+input:checked + .switch-slider:before {
+  transform: translateX(26px);
+}
+/* Square Modifier */
+.switch-slider.switch-square, .switch-slider.switch-square:before {
+  border-radius: 0;
+}
+
+/* Modifiers */
+.switch-slider.switch-on-off {
+  background-color: #f0506e;
+}
+input:checked + .switch-slider.switch-on-off {
+  background-color: #32d296 !important;
+}
+
+/* Style Modifier */
+.switch-slider.switch-big:before {
+  transform: scale(1.2);
+  box-shadow: 0 0 6px rgba(0,0,0,0.22);
+}
+input:checked + .switch-slider.switch-big:before {
+  transform: translateX(26px) scale(1.2);
+}
+
+/* Inverse Modifier - affects only default */
+.light .switch-slider:not(.switch-on-off) {
+  background-color: rgba(255,255,255,0.22);
+}
+</style>
 
 <script>
 export default {

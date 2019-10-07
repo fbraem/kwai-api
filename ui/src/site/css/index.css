@@ -61,33 +61,3 @@ html {
 .text-meta {
     @apply text-gray-600 text-sm;
 }
-
-/* CHECKBOX TOGGLE SWITCH */
-/* https://github.com/TowelSoftware/tailwindcss-toggle */
-.switch {
-    @apply relative select-none w-12 mr-2 leading-normal;
-}
-.switch-checkbox {
-    @apply hidden;
-}
-.switch-label {
-    @apply block overflow-hidden cursor-pointer bg-white border rounded-full h-6  shadow-inner;
-
-    transition: background-color 0.2s ease-in;
-}
-.switch-label:before {
-    @apply absolute block bg-white inset-y-0 w-6 border rounded-full -ml-1;
-
-    right: 50%;
-    content: "";
-    transition: all 0.2s ease-in;
-}
-.switch-checkbox:checked + .switch-label,
-.switch-checkbox:checked + .switch-label:before {
-}
-.switch-checkbox:checked + .switch-label {
-    @apply bg-green-500 shadow-none;
-}
-.switch-checkbox:checked + .switch-label:before {
-    @apply right-0;
-}
