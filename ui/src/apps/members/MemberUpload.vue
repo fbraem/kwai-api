@@ -1,8 +1,6 @@
 <template>
-  <div uk-grid>
-    <div>
-      <upload url="/api/sport/judo/members/upload" field="csv" />
-    </div>
+  <div class="container mx-auto">
+    <upload url="/api/sport/judo/members/upload" field="csv" />
   </div>
 </template>
 

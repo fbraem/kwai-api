@@ -1,11 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
-    <Spinner style="grid-column: span 2;" v-if="$wait.is('members.browse')" />
-    <div
-      style="grid-column: span 2;"
-      v-else-if="members"
-    >
+  <div class="m-4">
+    <Spinner v-if="$wait.is('members.browse')" />
+    <div v-else-if="members">
       <Alert
         v-if="members.length == 0"
         type="warning"
@@ -13,17 +10,17 @@
         {{ $t('no_members') }}
       </Alert>
       <div
-        style="display: flex; align-items: center;justify-content: center; flex-wrap: wrap;"
+        class="flex flex-wrap items-center justify-center"
         v-else
       >
         <div
           v-for="(group, letter) in sortedMembers"
-          style="margin-right: 10px;"
+          class="mr-2"
           :key="letter"
         >
-          <span class="primary:kwai-badge">
+          <span class="badge bg-red-700 cursor-pointer">
             <a
-              class="kwai-link-reset"
+              class="no-underline hover:no-underline text-red-300"
               @click="jumpIt('#letter-' + letter)">
               {{letter}}
             </a>
@@ -35,12 +32,12 @@
           v-for="(group, letter) in sortedMembers"
           :key="letter"
         >
-          <h3 style="border-left: 8px solid var(--kwai-color-muted);padding-left: 8px;"
+          <h3 class="border-l-4 border-solid pl-2"
             :id="'letter-' + letter"
           >
             {{ letter }}
           </h3>
-          <ul class="kwai-list">
+          <ul>
             <MemberListItem
               v-for="member in group"
               :member="member"

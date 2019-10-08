@@ -1,7 +1,7 @@
 <template>
-  <li style="display:flex; justify-content: space-between;">
+  <li class="flex justify-between">
     <div>
-      <span class="kwai-text-meta">
+      <span class="text-sm">
         {{ member.license }}
       </span>
       <span>&nbsp;-&nbsp;</span>
