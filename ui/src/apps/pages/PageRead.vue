@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <Page>
-      <div v-if="error">
-        {{ error.response.statusText }}
+  <Page>
+    <div v-if="error">
+      {{ error.response.statusText }}
+    </div>
+    <Spinner v-if="$wait.is('pages.read')" />
+    <article
+      v-if="page"
+      class="page-content overflow-x-auto"
+    >
+      <h1>{{ page.content.title }}</h1>
+      <div v-html="page.content.html_content">
       </div>
-      <Spinner v-if="$wait.is('pages.read')" />
-      <article
-        v-if="page"
-        class="page-content"
-        style="overflow-x: auto;"
-        v-html="page.content.html_content"
-      >
-      </article>
-    </Page>
-  </div>
+    </article>
+    <template slot="sidebar">
+      <Sidebar />
+    </template>
+  </Page>
 </template>
 
 <style>
@@ -103,8 +105,9 @@
 <script>
 import messages from './lang';
 
-import Page from './Page.vue';
-import Spinner from '@/components/Spinner.vue';
+import Page from '@/components//Page';
+import Sidebar from './Sidebar';
+import Spinner from '@/components/Spinner';
 
 /**
  * Page for an information page
@@ -112,6 +115,7 @@ import Spinner from '@/components/Spinner.vue';
 export default {
   components: {
     Page,
+    Sidebar,
     Spinner
   },
   i18n: messages,

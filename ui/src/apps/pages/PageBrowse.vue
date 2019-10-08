@@ -1,47 +1,49 @@
 <template>
-  <div>
-    <Page>
-      <Spinner v-if="$wait.is('pages.browse')" />
+  <Page>
+    <Spinner v-if="$wait.is('pages.browse')" />
+    <div
+      v-if="pagesMeta"
+      class="flex justify-center"
+    >
+      <Paginator
+        :count="pagesMeta.count"
+        :limit="pagesMeta.limit"
+        :offset="pagesMeta.offset"
+        @page="readPage"
+      />
+    </div>
+    <div class="flex flex-wrap justify-center">
       <div
-        v-if="pagesMeta"
-        style="display: flex; justify-content: center;"
+        class="w-full md:w-1/2 lg:w-1/3 p-4"
+        v-for="page in pages"
+        :key="page.id"
       >
-        <Paginator
-          :count="pagesMeta.count"
-          :limit="pagesMeta.limit"
-          :offset="pagesMeta.offset"
-          @page="readPage"
-        />
+        <PageSummary :page="page" />
       </div>
-      <div class="page-card-container">
-        <div
-          class="page-card-item"
-          v-for="page in pages"
-          :key="page.id"
-        >
-          <PageSummary :page="page" />
-        </div>
-      </div>
-      <div
-        v-if="pagesMeta"
-        style="display: flex; justify-content: center;"
-      >
-        <Paginator
-          :count="pagesMeta.count"
-          :limit="pagesMeta.limit"
-          :offset="pagesMeta.offset"
-          @page="readPage"
-        />
-      </div>
-    </Page>
-  </div>
+    </div>
+    <div
+      v-if="pagesMeta"
+      class="flex justify-center"
+    >
+      <Paginator
+        :count="pagesMeta.count"
+        :limit="pagesMeta.limit"
+        :offset="pagesMeta.offset"
+        @page="readPage"
+      />
+    </div>
+    <template slot="sidebar">
+      <Sidebar />
+    </template>
+  </Page>
 </template>
 
 <script>
-import Page from './Page.vue';
-import PageSummary from './components/PageSummary.vue';
-import Paginator from '@/components/Paginator.vue';
-import Spinner from '@/components/Spinner.vue';
+import Page from '@/components/Page';
+import PageSummary from './components/PageSummary';
+import Paginator from '@/components/Paginator';
+import Spinner from '@/components/Spinner';
+import Sidebar from './Sidebar';
 
 import messages from './lang';
 
@@ -52,6 +54,7 @@ export default {
   i18n: messages,
   components: {
     Page,
+    Sidebar,
     PageSummary,
     Paginator,
     Spinner

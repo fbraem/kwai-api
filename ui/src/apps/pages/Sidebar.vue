@@ -1,15 +1,8 @@
 <template>
-  <div class="page-container">
-    <div>
-      <slot></slot>
-    </div>
-    <div>
-      <CategoryList
-        v-if="categories"
-        :categories="categories"
-      />
-    </div>
-  </div>
+  <CategoryList
+    v-if="categories"
+    :categories="categories"
+  />
 </template>
 
 <script>
