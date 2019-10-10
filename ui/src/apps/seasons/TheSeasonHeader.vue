@@ -38,7 +38,12 @@ export default {
       return this.$store.getters['season/season'](this.$route.params.id);
     },
     toolbar() {
-      const buttons = [];
+      const buttons = [{
+        icon: 'fas fa-list',
+        route: {
+          name: 'seasons.browse'
+        },
+      }];
       if (this.$can('update', this.season)) {
         buttons.push({
           icon: 'fas fa-edit',

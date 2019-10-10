@@ -1,32 +1,34 @@
 <template>
-  <div class="page-container">
+  <div class="container mx-auto mt-3">
     <Spinner v-if="$wait.is('seasons.browse')" />
-    <div style="grid-column: span 2;">
-      <Alert
-        v-if="noSeasons"
-        type="warning"
-      >
-        {{ $t('no_seasons') }}
-      </Alert>
-      <div v-else>
-        <table class="kwai-table kwai-table-striped kwai-table-responsive">
-          <thead>
-            <tr>
-              <th></th>
-              <th>{{ $t('form.season.name.label') }}</th>
-              <th>{{ $t('period') }}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <SeasonRow
-              v-for="season in seasons"
-              :key="season.id"
-              :season="season"
-            />
-          </tbody>
-        </table>
-      </div>
+    <Alert
+      v-if="noSeasons"
+      type="warning"
+    >
+      {{ $t('no_seasons') }}
+    </Alert>
+    <div v-else>
+      <table class="border-collapse w-full">
+        <thead>
+          <tr>
+            <th class="py-4 px-4 font-bold border-b bg-gray-200"></th>
+            <th class="py-4 px-4 font-bold border-b bg-gray-200 text-left">
+              {{ $t('form.season.name.label') }}
+            </th>
+            <th class="py-4 px-4 font-bold border-b bg-gray-200 text-left">
+              {{ $t('period') }}
+            </th>
+            <th class="py-4 px-4 font-bold border-b bg-gray-200"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <SeasonRow
+            v-for="season in seasons"
+            :key="season.id"
+            :season="season"
+          />
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

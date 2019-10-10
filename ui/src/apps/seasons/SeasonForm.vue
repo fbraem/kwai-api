@@ -1,12 +1,11 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="m-4">
     <KwaiForm
       :form="form"
       :error="error"
       :save="$t('save')"
       @submit="submit"
-      style="grid-column: span 2;"
     >
       <KwaiField
         name="name"
