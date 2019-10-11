@@ -9,7 +9,8 @@
         "@babel/plugin-transform-spread",
         "@babel/plugin-syntax-dynamic-import",
         "@babel/plugin-transform-async-to-generator",
-        "@babel/plugin-transform-computed-properties"
+        "@babel/plugin-transform-computed-properties",
+        "@babel/plugin-transform-destructuring"
     ],
     "presets" : [
         [
