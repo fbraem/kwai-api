@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="container mt-4 mx-auto">
     <Spinner v-if="$wait.is('teamtypes.read')" />
     <Alert
       v-if="notAllowed"
@@ -14,51 +14,10 @@
     >
       {{ $t('not_found') }}
     </Alert>
-    <div v-if="teamtype">
-      <div>
-        <dl class="kwai-attributes">
-          <dt>{{ $t('name') }}</dt>
-          <dd>{{ teamtype.name }}</dd>
-          <dt>{{ $t('form.team_type.start_age.label') }}</dt>
-          <dd>{{ teamtype.start_age }}</dd>
-          <dt>{{ $t('form.team_type.end_age.label') }}</dt>
-          <dd>{{ teamtype.end_age }}</dd>
-          <dt>{{ $t('form.team_type.gender.label') }}</dt>
-          <dd>{{ gender }}</dd>
-          <dt>{{ $t('active') }}</dt>
-          <dd>
-              <i
-                v-if="teamtype.active"
-                class="fas fa-check"
-              >
-              </i>
-              <i
-                v-else
-                class="fas fa-times"
-                name="times"
-                style="color: var(--kwai-color-danger-fg)"
-              >
-              </i>
-          </dd>
-          <dt>{{ $t('competition_label') }}</dt>
-          <dd>
-              <i
-                v-if="teamtype.competition"
-                class="fas fa-check"
-              >
-              </i>
-              <i
-                v-else
-                class="fas fa-times"
-                style="color: var(--kwai-color-danger-fg)"
-              >
-              </i>
-          </dd>
-          <dt>{{ $t('form.team_type.remark.label') }}</dt>
-          <dd>{{ teamtype.remark }}</dd>
-        </dl>
-      </div>
-      <Spinner v-if="$wait.is('teams.read')" />
+    <div
+      v-if="teamtype"
+    >
+      <TeamTypeCard :type="teamtype" />
     </div>
   </div>
 </template>
@@ -68,11 +27,12 @@ import messages from './lang';
 
 import Spinner from '@/components/Spinner';
 import Alert from '@/components/Alert';
+import TeamTypeCard from './TeamTypeCard';
 
 export default {
   i18n: messages,
   components: {
-    Spinner, Alert
+    Spinner, Alert, TeamTypeCard
   },
   computed: {
     teamtype() {

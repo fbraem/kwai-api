@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="m-6">
     <KwaiForm
       :form="form"
       :save="$t('save')"

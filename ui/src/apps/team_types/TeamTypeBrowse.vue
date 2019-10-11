@@ -1,44 +1,26 @@
 <template>
-  <div class="page-container">
-    <div style="grid-column: 1 / span 2;">
-      <Spinner v-if="$wait.is('teamtypes.browse')" />
-      <Alert
-        v-if="noTypes"
-        type="warning"
+  <div class="flex flex-wrap justify-center">
+    <Spinner v-if="$wait.is('teamtypes.browse')" />
+    <Alert
+      v-if="noTypes"
+      type="warning"
+    >
+      {{ $t('no_types') }}
+    </Alert>
+    <div
+      v-else
+      class="flex flex-wrap"
+    >
+      <div
+        v-for="type in types"
+        :key="type.id"
+        class="p-4 w-full md:w-1/2"
       >
-        {{ $t('no_types') }}
-      </Alert>
-      <div v-else>
-        <ul class="kwai-list" style="display: flex; flex-wrap: wrap;">
-          <li
-            class="teamtype-item"
-            v-for="type in types"
-            :key="type.id"
-          >
-            <TeamTypeCard :type="type" />
-          </li>
-        </ul>
+        <TeamTypeCard :type="type" />
       </div>
     </div>
   </div>
 </template>
-
-<style lang=scss>
-  @import "@/site/scss/_mq.scss";
-
-  .teamtype-item {
-    margin-top: 0px !important;
-    padding-bottom: 20px;
-    padding-left: 20px;
-
-    @include mq($until: tablet) {
-      width: 100%;
-    }
-    @include mq($from: tablet) {
-      width: 50%;
-    }
-  }
-</style>
 
 <script>
 import messages from './lang';
