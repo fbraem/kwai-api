@@ -1,6 +1,5 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 * {
     @apply leading-normal m-0 p-0;
@@ -22,6 +21,14 @@ html {
 .header-line:after {
     content: '';
     @apply border-t border-solid mx-4 flex-grow flex-shrink-0;
+}
+
+.default-button {
+    @apply bg-white text-gray-700 py-2 px-4 border border-gray-400 rounded;
+}
+
+.default-button:hover {
+    @apply bg-gray-100;
 }
 
 .red-button {
@@ -61,3 +68,5 @@ html {
 .text-meta {
     @apply text-gray-600 text-sm;
 }
+
+@tailwind utilities;
