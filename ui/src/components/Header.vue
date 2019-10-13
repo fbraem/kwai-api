@@ -106,7 +106,8 @@
   }
 }
 
-.hero-container h1, h2 {
+.hero-container > h1,
+.hero-container > h2 {
   @apply text-white;
 }
 
