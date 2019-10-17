@@ -19,7 +19,7 @@
       <router-link
         v-if="route && title"
         :to="route"
-        class="hover:no-underline"
+        class="text-gray-500 hover:no-underline"
       >
         <h1 class="flex items-center mb-2">
           <inline-svg
