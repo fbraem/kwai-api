@@ -12,7 +12,7 @@
         <h4>{{ title }}</h4>
         <p
           v-if="note"
-          class="text-xs truncate m-0 p-0"
+          class="text-xs m-0 p-0"
         >
           {{ note }}
         </p>
@@ -25,7 +25,7 @@
       class="flex flex-wrap justify-between px-3 py-2"
       :class="textColor"
     >
-      <div class="text-xs flex flex-wrap items-center">
+      <div class="text-xs flex flex-wrap flex-col items-baseline">
         <slot name="footer"></slot>
       </div>
       <div
