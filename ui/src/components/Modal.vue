@@ -1,97 +1,43 @@
 <template>
+  <!-- eslint-disable max-len -->
   <transition name="modal-fade">
     <div
-      class="modal"
+      v-if="show"
+      class="fixed w-full h-full top-0 left-0 flex items-center justify-center"
       @click="click"
     >
-      <div class="modal-container" role="dialog">
-        <header>
-          <slot name="header"></slot>
-        </header>
-        <span
-          class="modal-close"
-          @click.prevent.stop="close"
+      <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50">
+      </div>
+      <div
+        class="modal-container bg-white w-11/12 md:w-auto mx-auto rounded shadow-lg z-50 overflow-y-auto"
+        role="dialog"
+      >
+        <div
+          class="absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50"
+          @click="close"
         >
-          &times;
-        </span>
-        <div class="modal-content">
-          <slot></slot>
+          <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+            <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+          </svg>
+          <span class="text-sm">(Esc)</span>
         </div>
-        <footer>
-          <slot name="footer"></slot>
-        </footer>
+        <div class="p-6 flex flex-col">
+          <div>
+            <slot name="header"></slot>
+          </div>
+          <div>
+            <slot></slot>
+          </div>
+          <div>
+            <slot name="footer"></slot>
+          </div>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 
 <style scoped>
-.modal {
-    //display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-.modal-container {
-    margin: 10% auto; /* 15% from the top and centered */
-    border: 1px solid #888;
-    width: 70%; /* Fallback for fit-content */
-    width: fit-content;
-    display: grid;
-    grid-template-columns: auto 30px;
-    grid-template-rows: 30px auto 1fr;
-    grid-gap: 10px;
-    grid-template-areas:
-        "modal-header modal-close"
-        "modal-content modal-content"
-        "modal-footer modal-footer"
-    ;
-    background-color: var(--kwai-color-default-bg);
-    color: var(--kwai-color-default-fg);
-    filter: drop-shadow(0 2px 0 rgba(0,0,0,.15) );
-    border-radius: 15px;
-    padding: 10px;
-}
-
-.modal-content {
-    grid-area: modal-content;
-    background-color: var(--kwai-color-default-bg);
-    margin: 1em;
-}
-
-.modal-container header {
-    font-size: 28px;
-    padding-left: 20px;
-    grid-area: modal-header;
-}
-
-.modal-container footer {
-    grid-area: modal-footer;
-    margin-bottom: 20px;
-}
-
-.modal-close {
-  color: var(--kwai-color-default-fg);
-  font-size: 28px;
-  font-weight: bold;
-  grid-area: modal-close;
-  text-align: center;
-}
-
-.modal-close:hover,
-.modal.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 .modal-fade-enter,
 .modal-fade-leave-active {
     opacity: 0;
@@ -105,12 +51,32 @@
 
 <script>
 export default {
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
+  watch: {
+    show(nv) {
+      if (nv === false) {
+        window.removeEventListener('keyup', this.onEscapeKeyUp);
+      } else {
+        window.addEventListener('keyup', this.onEscapeKeyUp);
+      }
+    }
+  },
   methods: {
+    onEscapeKeyUp(event) {
+      if (event.which === 27) {
+        this.close();
+      }
+    },
     close() {
       this.$emit('close');
     },
     click(e) {
-      if (e.target.className === 'modal') this.$emit('close');
+      if (e.target.classList.contains('modal-overlay')) this.close();
     }
   }
 };
