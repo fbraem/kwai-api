@@ -30,7 +30,7 @@
     </Attributes>
     <template slot="footer">
       <div>
-        <strong>Aangemaakt:</strong> {{ team.localCreatedAt }}&nbsp;&nbsp;
+        <strong>Aangemaakt:</strong> {{ team.localCreatedAt }}
       </div>
       <div>
         <strong>Laatst gewijzigd:</strong> {{ team.localUpdatedAt }}
