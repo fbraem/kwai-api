@@ -19,6 +19,8 @@
     "create" : "Maak nieuw team",
     "update" : "Wijzig Team",
     "details" : "Team Details",
+    "last_modified" : "Gewijzigd op",
+    "created" : "Aangemaakt op",
     "form" : {
         "team" : {
             "name" : {

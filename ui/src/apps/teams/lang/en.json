@@ -19,6 +19,8 @@
     "create" : "Create new team",
     "update" : "Edit Team",
     "details" : "Team Details",
+    "last_modified" : "Last modified on",
+    "created" : "Created on",
     "form" : {
         "team" : {
             "name" : {
