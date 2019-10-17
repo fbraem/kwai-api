@@ -45,6 +45,7 @@ export default class TrainingDefinition extends Model {
 
   static computed() {
     return {
+      ... Model.computed(),
       weekdayText(definition) {
         return moment.weekdays(true)[definition.weekday - 1];
       },
