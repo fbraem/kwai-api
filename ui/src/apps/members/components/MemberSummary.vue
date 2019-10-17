@@ -1,13 +1,10 @@
 <template>
-  <div
-    class="uk-grid-small"
-    uk-grid
-  >
-    <div class="uk-width-1-1">
+  <div>
+    <div class="font-bold">
       <i :class="genderIconClass"></i>&nbsp;
       {{ member.person.name }}
     </div>
-    <div class="uk-width-1-1 uk-margin-remove uk-text-meta">
+    <div class="text-sm">
       {{ member.license }} &bull; {{ member.person.formatted_birthdate }}
       ({{ memberAge }})
     </div>
