@@ -1,17 +1,13 @@
 <template>
-  <div style="display: flex; flex-direction: column; align-items: center;">
-    <div>
-      <img
-        style="border-radius: 100%;"
-        :src="image"
-      />
-    </div>
-    <div>
+  <div class="sm:flex items-center rounded-lg p-6 shadow-md">
+    <img
+      class="h-16 w-16 sm:h-48 sm:w-48 mx-auto sm:mx-0 sm:mr-6 rounded-full"
+      :src="image"
+    />
+    <div class="sm:flex-none text-center sm:text-left">
       <h2>{{ coach.name }}</h2>
-    </div>
-    <div>
-      <h4 style="text-align: center;">{{ coach.diploma }}</h4>
-      <p class="kwai-text-meta">{{ coach.description }}</p>
+      <h4>{{ coach.diploma }}</h4>
+      <p class="text-sm">{{ coach.description }}</p>
     </div>
   </div>
 </template>

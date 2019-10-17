@@ -1,54 +1,19 @@
 <template>
-  <div class="page-container">
+  <div class="flex flex-wrap justify-center">
     <Spinner v-if="$wait.is('teams.browse')" />
+    <div v-else-if="teams && teams.length == 0">
+      {{ $t('no_teams') }}
+    </div>
     <div
       v-else
-      style="grid-column: span 2;"
+      class="flex flex-wrap"
     >
-      <div v-if="teams && teams.length == 0">
-        {{ $t('no_teams') }}
-      </div>
-      <div v-else>
-        <table class="kwai-table kwai-table-small kwai-table-divider kwai-table-middle">
-          <tr>
-            <th>{{ $t('name') }}</th>
-            <th>{{ $t('season') }}</th>
-            <th class="kwai-table-shrink">{{ $t('members') }}</th>
-            <th class="kwai-table-shrink"></th>
-          </tr>
-          <tr
-            v-for="team in teams"
-            :key="team.id"
-          >
-            <td class="kwai-middle">
-              <router-link
-                :to="{ name: 'teams.read', params: { id : team.id} }"
-              >
-                {{ team.name }}
-              </router-link>
-            </td>
-            <td class="kwai-middle">
-              <router-link
-                v-if="team.season"
-                :to="{ name: 'seasons.read', params: { id : team.season.id} }"
-              >
-                {{ team.season.name }}
-              </router-link>
-            </td>
-            <td class="kwai-middle">
-              {{ team.members_count }}
-            </td>
-            <td>
-              <router-link
-                v-if="$can('update', team)"
-                class="kwai-icon-button"
-                :to="{ name : 'teams.update', params : { id : team.id } }"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </td>
-          </tr>
-        </table>
+      <div
+        v-for="team in teams"
+        :key="team.id"
+        class="p-4 w-full md:w-1/2"
+      >
+        <TeamCard :team="team" />
       </div>
     </div>
   </div>
@@ -58,11 +23,13 @@
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import TeamCard from './TeamCard';
 
 export default {
   i18n: messages,
   components: {
-    Spinner
+    Spinner,
+    TeamCard
   },
   computed: {
     teams() {

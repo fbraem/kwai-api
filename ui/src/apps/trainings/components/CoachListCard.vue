@@ -1,10 +1,11 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div>
-    <div class="coach-list-card">
+    <div class="shadow-md p-4">
       <h3>Onze trainers</h3>
-      <div class="coach-list">
+      <div class="flex flex-wrap">
         <div
-          class="coach-item"
+          class="p-3 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
           v-for="coach in coaches"
           :key="coach.id"
         >
@@ -14,33 +15,6 @@
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-@import '@/site/scss/_mq.scss';
-
-.coach-list-card {
-  box-shadow: 0 5px 15px rgba(0,0,0,.08);
-  padding: 15px;
-}
-.coach-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-.coach-item {
-  padding: 10px;
-  border-bottom: 1px solid var(--kwai-color-muted);
-
-  @include mq($from: wide) {
-    flex: 0 1 25%;
-  }
-  @include mq($from: tablet, $until: wide) {
-    flex: 0 1 30%;
-  }
-  @include mq($from: mobile, $until: tablet) {
-    flex: 0 1 100%;
-  }
-}
-</style>
 
 <script>
 

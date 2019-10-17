@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="m-6">
     <KwaiForm
       :form="form"
       :error="error"

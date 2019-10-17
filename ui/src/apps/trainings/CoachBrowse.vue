@@ -1,11 +1,8 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="container mt-4 mx-auto">
     <Spinner v-if="$wait.is('training.coaches.browse')" />
-    <div
-      v-else
-      style="grid-column: span 2;"
-    >
+    <div v-else>
       <Alert
         v-if="noData"
         type="warning"
@@ -14,33 +11,35 @@
       </Alert>
       <table
         v-else
-        class="kwai-table kwai-table-small kwai-table-divider kwai-table-middle"
+        class="w-full border-collapse text-left"
       >
-        <tr>
-          <th>
+        <tr class="bg-gray-500 border-b border-gray-200">
+          <th class="py-2 px-3 font-bold uppercase text-white">
             {{ $t('name') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-white">
             {{ $t('training.coaches.form.diploma.label') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-white text-center">
             {{ $t('training.coaches.form.active.label') }}
           </th>
-          <th></th>
+          <th class="py-2 px-3 font-bold uppercase text-white">
+          </th>
         </tr>
         <tr
           v-for="coach in coaches"
           :key="coach.id"
+          class="odd:bg-gray-200 border-b border-gray-400"
         >
-          <td>
+          <td class="py-2 px-3 text-gray-700">
             <router-link :to="{ name: 'trainings.coaches.read', params: { id : coach.id} }">
               {{ coach.member.person.name }}
             </router-link>
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700">
             {{ coach.diploma }}
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700 text-center">
             <i
               v-if="coach.active"
               class="fas fa-check"
@@ -48,15 +47,14 @@
             </i>
             <i
               v-else
-              class="fas fa-times"
-              style="color: var(--kwa-color-danger-fg)"
+              class="fas fa-times text-red-500"
             >
             </i>
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700 text-right">
             <router-link
               v-if="$can('update', coach)"
-              class="kwai-icon-button"
+              class="icon-button text-gray-700 hover:bg-gray-300"
               :to="{ name : 'trainings.coaches.update', params : { id : coach.id } }"
             >
               <i class="fas fa-edit"></i>

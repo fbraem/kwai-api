@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="m-6">
     <KwaiForm
       :form="form"
       :error="error"
@@ -24,12 +24,14 @@
         </KwaiAutoComplete>
       </KwaiField>
       <div v-else>
-        <KwaiField
-          name="member"
-          :label="$t('training.coaches.form.member.label')"
-        >
-          <input class="kwai-input" type="text" readonly="readonly" v-model="coach.name" />
-        </KwaiField>
+        <div class="flex flex-col mb-5">
+          <div class="font-bold mb-2">
+            {{ $t('training.coaches.form.member.label') }}
+          </div>
+          <div>
+            {{ coach.name }}
+          </div>
+        </div>
       </div>
       <div>
         <div>

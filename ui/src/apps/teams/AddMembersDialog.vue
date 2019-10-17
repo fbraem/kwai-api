@@ -1,15 +1,14 @@
 <template>
   <!-- eslint-disable max-len -->
   <Modal
-    v-if="team"
-    v-show="show"
-    @close="$emit('close');"
+    :show="show"
+    @close="$emit('close')"
   >
     <template slot="header">
       <h2>{{ $t('add_members') }}</h2>
       <p
         v-if="team.team_type"
-        class="kwai-text-meta"
+        class="text-sm"
       >
         {{ $t('add_members_info') }}
       </p>
@@ -18,10 +17,9 @@
       <KwaiForm
          v-if="!team.team_type"
          :form="form"
-         :stacked="false"
       >
-        <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-around">
-          <div>
+        <div class="flex items-center justify-around">
+          <div class="px-3 flex-initial self-start">
             <KwaiField
               name="start_age"
               :label="$t('min_age')"
@@ -29,7 +27,7 @@
               <KwaiInputText />
             </KwaiField>
           </div>
-          <div>
+          <div class="px-3 flex-initial self-start">
             <KwaiField
               name="end_age"
               :label="$t('max_age')"
@@ -37,7 +35,7 @@
               <KwaiInputText />
             </KwaiField>
           </div>
-          <div>
+          <div class="px-3 flex-initial self-start">
             <KwaiField
               name="gender"
               :label="$t('gender')"
@@ -45,12 +43,9 @@
               <KwaiSelect :items="genders" />
             </KwaiField>
           </div>
-          <div>
-            <label class="uk-form-label">
-              &nbsp;
-            </label>
+          <div class="px-3">
             <button
-              class="primary:kwai-button"
+              class="red-button"
               @click.prevent.stop="filterAvailableMembers"
             >
               {{ $t('filter') }}
@@ -60,38 +55,36 @@
       </KwaiForm>
       <p
         v-if="! team.team_type"
-        class="kwai-text-meta"
+        class="text-sm"
       >
         {{ $t('use_filter') }}
       </p>
       <p
         v-if="team.season && availableMembers.length > 0"
-        class="kwai-text-meta" v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"
+        class="text-sm"
+        v-html="$t('age_remark', { season : team.season.name, start : team.season.formatted_start_date, end : team.season.formatted_end_date})"
       >
       </p>
-      <hr />
-      <div
-        v-if="$wait.is('teams.availableMembers')">
+      <div class="text-center" v-if="$wait.is('teams.availableMembers')">
         <Spinner />
       </div>
-      <div style="margin-bottom:20px;max-height: 300px; overflow: auto;">
+      <div class="mb-4 h-64 overflow-auto">
         <table
           v-if="availableMembers.length > 0"
-          class="kwai-table kwai-table-small kwai-table-middle kwai-table-divider"
+          class="w-full border-collapse text-left"
         >
-          <tr>
-            <th>
+          <tr class="bg-gray-500 border-b border-gray-200">
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
               <input
-                class="kwai-checkbox"
                 type="checkbox"
                 v-model="selectAll"
               />
             </th>
-            <th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
               {{ $t('member.name')}}<br />
               {{ $t('member.birthdate')}} ({{ $t('member.age')}})
             </th>
-            <th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
               {{ $t('member.license')}}<br />
               {{ $t('member.gender')}}
             </th>
@@ -99,23 +92,23 @@
           <tr
             v-for="member in availableMembers"
             :key="member.id"
+            class="odd:bg-gray-200 border-b border-gray-400"
           >
-            <td>
+            <td class="py-2 px-3 text-sm text-gray-700">
               <input
-                class="kwai-checkbox"
                 type="checkbox"
                 v-model="selectedAvailableMembers"
                 :value="member.id"
               />
             </td>
-            <td>
+            <td class="py-2 px-3 text-sm text-gray-700">
               <strong>
                 {{ member.person.name }}
               </strong>
               <br />
               {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
             </td>
-            <td>
+            <td class="py-2 px-3 text-sm text-gray-700">
               {{ member.license }}<br />
               <i class="fas fa-male" v-if="member.person.gender == 1"></i>
               <i class="fas fa-female" v-if="member.person.gender == 2"></i>
@@ -128,15 +121,14 @@
         </p>
       </div>
       <div>
-        <hr />
         <button
-          class="kwai-button"
+          class="default-button"
           @click.prevent.stop="$emit('close');"
         >
           <i class="fas fa-ban"></i>&nbsp; {{ $t('cancel') }}
         </button>
         <button
-          class="primary:kwai-button"
+          class="red-button"
           :disabled="selectedAvailableMembers.length == 0"
           @click="addMembers">
           <i class="fas fa-plus"></i>&nbsp; {{ $t('add') }}

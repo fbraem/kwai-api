@@ -41,14 +41,19 @@ class TeamReadAction
         }
 
         try {
+            $team = TeamsTable::getTableFromRegistry()->get(
+                $args['id'],
+                [
+                    'contain' => $contain
+                ]
+            );
+            if (in_array('Members', $contain)) {
+                $team['members_count'] = count($team->members);
+            }
+
             $response = (new ResourceResponse(
                 TeamTransformer::createForItem(
-                    TeamsTable::getTableFromRegistry()->get(
-                        $args['id'],
-                        [
-                            'contain' => $contain
-                        ]
-                    )
+                    $team
                 )
             ))($response);
         } catch (RecordNotFoundException $rnfe) {

@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="container mt-4 mx-auto">
     <Alert
       v-if="notAllowed"
       type="danger"
@@ -14,149 +14,122 @@
       {{ $t('not_found') }}
     </Alert>
     <Spinner v-if="$wait.is('teams.read')" />
+    <TeamCard
+      v-if="team"
+      :team="team"
+      :complete="true"
+    />
     <div
       v-if="team"
-      style="grid-column: span 2; display: flex; flex-direction: column;"
+      class="flex flex-col w-full my-4 mx-auto md:w-2/3"
     >
-      <table class="kwai-table kwai-table-striped">
-        <tr>
-          <th>
-            {{ $t('name') }}
-          </th>
-          <td>
-            {{ team.name }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('form.team.season.label') }}
-          </th>
-          <td v-if="team.season">
-            <router-link
-              :to="seasonLink"
-            >
-              {{ team.season.name }}
-            </router-link>
-          </td>
-          <td v-else>
-            {{ $t('no_season') }}
-          </td>
-        </tr>
-        <tr>
-          <th>{{ $t('form.team.team_type.label') }}</th>
-          <td v-if="team.team_type">
-            <router-link
-              :to="teamTypeLink"
-            >
-              {{ team.team_type.name }}
-            </router-link>
-          </td>
-          <td v-else>
-            {{ $t('no_type') }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('form.team.remark.label') }}
-          </th>
-          <td>
-            {{ team.remark }}
-          </td>
-        </tr>
-      </table>
-      <div style="display: flex; flex-direction: column;">
-        <h3 class="header-line">
-          <span>{{ $t('members') }}</span>
-        </h3>
-        <div
-          v-if="team.season"
+      <h3 class="header-line">
+        <span>{{ $t('members') }}</span>
+      </h3>
+      <Alert
+        v-if="team.season"
+        type="warning"
+        class="mb-4"
+      >
+        <div v-html="seasonAgeRemark"></div>
+      </Alert>
+      <div
+        v-if="hasMembers"
+        class="mb-4"
+      >
+        {{ $t('count') }} : {{members.length}}
+      </div>
+      <Alert
+        v-else
+        type="info"
+        class="mb-4"
+      >
+        {{ $t('no_members') }}
+      </Alert>
+      <div
+        v-if="members && members.length > 10"
+        class="mb-4"
+      >
+        <a
+          v-if="team && $can('attachMember', team)"
+          class="icon-button text-gray-700 hover:bg-gray-300"
+          @click.prevent.stop="showIt"
         >
-          <p
-            class="kwai-text-meta"
-            v-html="seasonAgeRemark"
-          >
-          </p>
-        </div>
-        <div
-          v-if="hasMembers"
+          <i class="fas fa-plus"></i>
+        </a>
+        <a
+          v-if="selectedMembers.length > 0"
+          class="icon-button text-red-700 hover:bg-red-300"
+          @click="showDeleteMemberDialog = true;"
         >
-          {{ $t('count') }} : {{members.length}}
-        </div>
-        <div
-          v-else
+          <i class="fas fa-trash"></i>
+        </a>
+      </div>
+      <div
+        v-if="members && members.length > 0"
+        class="mb-4"
+      >
+        <table class="w-full border-collapse text-left">
+          <tr class="bg-gray-500 border-b border-gray-200">
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+            </th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              {{ $t('member.name')}}<br />
+              {{ $t('member.birthdate')}} ({{ $t('member.age')}})
+            </th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              {{ $t('member.license')}}<br />
+              {{ $t('member.gender')}}
+            </th>
+          </tr>
+          <tr
+            v-for="member in members"
+            :key="member.id"
+            class="odd:bg-gray-200 border-b border-gray-400"
+          >
+            <td class="py-2 px-3 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                v-model="selectedMembers"
+                :value="member.id"
+              />
+            </td>
+            <td class="py-2 px-3 text-sm text-gray-700">
+              <strong>
+                {{ member.person.name }}
+              </strong>
+              <br />
+              {{ member.person.formatted_birthdate }}
+              &nbsp;({{ memberAge(member) }})
+            </td>
+            <td class="py-2 px-3 text-sm text-gray-700">
+              {{ member.license }}
+              <br />
+              <i v-if="member.person.gender == 1" class="fas fa-male"></i>
+              <i v-if="member.person.gender == 2" class="fas fa-female"></i>
+              <i v-if="member.person.gender == 0" class="fas fa-question"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <a
+          v-if="team && $can('attachMember', team)"
+          class="icon-button text-gray-700 hover:bg-gray-300"
+          @click.prevent.stop="showIt"
         >
-          {{ $t('no_members') }}
-        </div>
-        <div
-          v-if="members && members.length > 10"
+          <i class="fas fa-plus"></i>
+        </a>
+        <a
+          v-if="selectedMembers.length > 0"
+          class="icon-button text-red-700 hover:bg-red-300"
         >
-          <a
-            v-if="team && $can('attachMember', team)"
-            class="kwai-icon-button"
-            @click.prevent.stop="showIt"
-          >
-            <i class="fas fa-plus"></i>
-          </a>
-          <a
-            v-if="selectedMembers.length > 0"
-            class="danger:kwai-icon-button"
-            @click="showDeleteMemberDialog = true;"
-          >
-            <i class="fas fa-trash"></i>
-          </a>
-        </div>
-        <div
-          v-if="members && members.length > 0"
-        >
-          <table class="kwai-table kwai-table-small kwai-table-middle kwai-table-divider">
-            <tr
-              v-for="member in members"
-              :key="member.id"
-            >
-              <td>
-                <input
-                  class="kwai-checkbox"
-                  type="checkbox"
-                  v-model="selectedMembers"
-                  :value="member.id"
-                />
-              </td>
-              <td>
-                <strong>
-                  {{ member.person.name }}
-                </strong>
-                <br />
-                {{ member.person.formatted_birthdate }}
-                &nbsp;({{ memberAge(member) }})
-              </td>
-              <td>
-                {{ member.license }}
-                <br />
-                <i v-if="member.person.gender == 1" class="fas fa-male"></i>
-                <i v-if="member.person.gender == 2" class="fas fa-female"></i>
-                <i v-if="member.person.gender == 0" class="fas fa-question"></i>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div>
-          <a
-            v-if="team && $can('attachMember', team)"
-            class="kwai-icon-button"
-            @click.prevent.stop="showIt"
-          >
-            <i class="fas fa-plus"></i>
-          </a>
-          <a
-            v-if="selectedMembers.length > 0"
-            class="danger:kwai-icon-button"
-          >
-            <i class="fas fa-trash"></i>
-          </a>
-        </div>
+          <i class="fas fa-trash"></i>
+        </a>
       </div>
     </div>
     <AddMembersDialog
+      v-if="team"
       :show="showAddMemberDialog"
       :team="team"
       @close="showAddMemberDialog = false;"
@@ -183,6 +156,7 @@ import AddMembersDialog from './AddMembersDialog.vue';
 import Spinner from '@/components/Spinner.vue';
 import AreYouSure from '@/components/AreYouSure.vue';
 import Alert from '@/components/Alert';
+import TeamCard from './TeamCard';
 
 import Member from '@/models/Member';
 
@@ -191,7 +165,8 @@ export default {
     AddMembersDialog,
     Spinner,
     AreYouSure,
-    Alert
+    Alert,
+    TeamCard
   },
   i18n: messages,
   data() {
@@ -227,22 +202,6 @@ export default {
         end: this.team.season.formatted_end_date
       });
     },
-    teamTypeLink() {
-      return {
-        name: 'team_types.read',
-        params: {
-          id: this.team.team_type.id
-        }
-      };
-    },
-    seasonLink() {
-      return {
-        name: 'seasons.read',
-        params: {
-          id: this.team.season.id
-        }
-      };
-    }
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
@@ -256,9 +215,6 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      await this.$store.dispatch('team/read', {
-        id: params.id
-      });
       await this.$store.dispatch('team/members', {
         id: params.id
       });
@@ -284,7 +240,6 @@ export default {
     },
     showIt() {
       this.showAddMemberDialog = true;
-      console.log('hey');
     }
   }
 };

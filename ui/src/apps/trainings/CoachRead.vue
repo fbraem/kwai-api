@@ -1,11 +1,14 @@
 <template>
-  <div
-    class="page-container"
-    style="grid-columns: span 2; display: flex; flex-direction: column;"
-  >
-    <Spinner v-if="$wait.is('training.coaches.read')" />
-    <div style="align-self: center;">
-      <CoachCard v-if="coach" :coach="coach" />
+  <div class="container mt-4 mx-auto">
+    <Spinner
+      class="align-middle"
+      v-if="$wait.is('training.coaches.read')"
+    />
+    <div class="w-full md:w-1/2 lg:1/3 mx-auto p-4">
+      <CoachCard
+        v-if="coach"
+        :coach="coach"
+      />
     </div>
     <Alert
       v-if="notAllowed"
@@ -19,7 +22,7 @@
     >
         {{ $t('training.coaches.not_found') }}
     </Alert>
-    <div style="margin-top: 20px;">
+    <div class="mt-4">
       <router-view name="coach_information" />
     </div>
   </div>
