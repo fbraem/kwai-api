@@ -1,12 +1,17 @@
 <template>
-  <div :class="cssClass">
+  <div
+    class="flex items-center border-l-4 p-4"
+    :class="cssClass"
+    role="alert"
+  >
+    <h3 v-if="title">{{ title }}</h3>
     <i
       v-if="icon"
+      class="mr-4"
       :class="icon_class"
-      style="margin-right: 1rem;"
     >
     </i>
-    <div style="vertical-align: middle">
+    <div>
       <slot></slot>
     </div>
   </div>
@@ -20,6 +25,29 @@ const icons = {
   success: 'fas fa-thumbs-up'
 };
 
+const css = {
+  danger: {
+    'bg-red-100': true,
+    'border-red-500': true,
+    'text-red-700': true
+  },
+  warning: {
+    'bg-orange-100': true,
+    'border-orange-500': true,
+    'text-orange-700': true
+  },
+  info: {
+    'bg-blue-100': true,
+    'border-blue-500': true,
+    'text-blue-700': true
+  },
+  success: {
+    'bg-green-100': true,
+    'border-green-500': true,
+    'text-green-700': true
+  }
+};
+
 export default {
   props: {
     type: {
@@ -29,13 +57,14 @@ export default {
     icon: {
       type: Boolean,
       default: true
+    },
+    title: {
+      required: false
     }
   },
   computed: {
     cssClass() {
-      const cls = {};
-      cls[this.type + ':kwai-alert'] = true;
-      return cls;
+      return css[this.type] || css['info'];
     },
     icon_class() {
       return icons[this.type] || 'fas fa-exclamation-circle';
