@@ -1,13 +1,12 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div
-    class="page-container"
+  <div class="container mx-auto mt-4"
   >
-    <Spinner v-if="$wait.is('training.definitions.browse')" />
-    <div
-      v-else
-      style="grid-column: span 2;"
-    >
+    <Spinner
+      v-if="$wait.is('training.definitions.browse')"
+      class="text-center"
+    />
+    <div v-else>
       <Alert
         v-if="noData"
         type="warning">
@@ -15,46 +14,46 @@
       </Alert>
       <table
         v-else
-        class="kwai-table kwai-table-small kwai-table-divider kwai-table-middle"
-        style="width: 100%;"
+        class="w-full border-collapse text-left"
       >
-        <tr>
-          <th>
+        <tr class="bg-gray-500 border-b border-gray-200">
+          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
             {{ $t('name') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
             {{ $t('training.definitions.weekday') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
             {{ $t('description') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
             {{ $t('team') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
             {{ $t('season') }}
           </th>
-          <th>
+          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
             {{ $t('training.definitions.form.active.label') }}
           </th>
-          <th class="kwai-table-shrink"></th>
+          <th></th>
         </tr>
         <tr
           v-for="definition in definitions"
           :key="definition.id"
+          class="odd:bg-gray-200 border-b border-gray-400"
         >
-          <td>
+          <td class="py-2 px-3 text-gray-700">
             <router-link :to="{ name: 'trainings.definitions.read', params: { id : definition.id} }">
               {{ definition.name }}
             </router-link>
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700">
             {{ definition.weekdayText }}
           </td>
-          <td class="kwai-text-meta">
+          <td class="py-2 px-3 text-gray-700 text-sm">
             {{ definition.description }}
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700">
             <router-link
               v-if="definition.team"
               :to="{ name: 'teams.read', params: { id : definition.team.id} }"
@@ -63,11 +62,12 @@
             </router-link>
             <div
               v-else
+              class="text-center"
             >
               <i class="fas fa-minus"></i>
             </div>
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700">
             <router-link
               v-if="definition.season"
               :to="{ name: 'seasons.read', params: { id : definition.season.id} }"
@@ -76,11 +76,12 @@
             </router-link>
             <div
               v-else
+              class="text-center"
             >
               <i class="fas fa-minus"></i>
             </div>
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700 text-center">
             <i
               v-if="definition.active"
               class="fas fa-check"
@@ -88,15 +89,14 @@
             </i>
             <i
               v-else
-              class="fas fa-times"
-              style="color: var(--kwai-color-danger-fg)"
+              class="fas fa-times text-red-500"
             >
             </i>
           </td>
-          <td>
+          <td class="py-2 px-3 text-gray-700 text-right">
             <router-link
               v-if="$can('update', definition)"
-              class="kwai-icon-button"
+              class="icon-button text-gray-700 hover:bg-gray-300"
               :to="{ name : 'trainings.definitions.update', params : { id : definition.id } }"
             >
               <i class="fas fa-edit"></i>

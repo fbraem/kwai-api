@@ -1,67 +1,33 @@
 <template>
-  <div class="training-card">
-    <div class="training-container">
-      <div class="training-day">
-        <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
+  <!-- eslint-disable max-len -->
+  <div class="flex flex-col shadow-lg">
+    <div class="flex flex-col md:flex-row">
+      <div class="text-center bg-red-700 text-red-300 p-6 w-full md:w-1/2 self-center">
+        <div class="text-4xl leading-none lowercase">
           {{ dayName }}
         </div>
-        <div style="font-size:8em; font-weight:900; line-height:1em;">
+        <div class="text-6xl font-black leading-none">
           {{ day }}
         </div>
-        <div style="font-size:2em; line-height:1em; text-transform:lowercase;">
+        <div class="text-4xl leading-none lowercase">
           {{ month }}
         </div>
       </div>
-      <div class="training-hour">
-        <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
+      <div class="text-center p-6 w-full md:w-1/2 self-center">
+        <div class="text-4xl leading-none lowercase">
           {{ training.formattedStartTime }}
         </div>
-        <div style="font-size:4em; line-height:1em; text-transform:lowercase;">
+        <div class="text-4xl leading-none">
           -
         </div>
-        <div style="font-size:4em; text-transform:lowercase;">
+        <div class="text-4xl leading-none lowercase">
           {{ training.formattedEndTime }}
         </div>
-        <br />
       </div>
     </div>
     <slot></slot>
   </div>
 </template>
-
-<style lang="scss">
-@import '@/site/scss/_mq.scss';
-
-.training-card {
-  display: flex;
-  box-shadow: 0 5px 15px rgba(0,0,0,.08);
-  flex-direction: column;
-}
-
-.training-container {
-  display: flex;
-  flex-direction: row;
-  @include mq($until: tablet) {
-    flex-direction: column;
-  }
-}
-
-.training-day {
-  text-align: center;
-  background-color: var(--kwai-color-primary-bg);
-  color: var(--kwai-color-primary-fg);
-  padding: 40px;
-  flex-grow: 1;
-  flex-basis: 0;
-}
-
-.training-hour {
-  text-align: center;
-  padding: 40px;
-  flex-grow: 1;
-  flex-basis: 0;
-}
-</style>
 
 <script>
 import messages from './lang';

@@ -2,11 +2,10 @@
   <!-- eslint-disable max-len -->
   <div
     v-if="training"
-    class="page-container"
-    style="display: flex; justify-content: center"
+    class="container mx-auto mt-6 w-full sm:w-1/2 lg:w-1/3"
   >
     <TrainingCard :training="training">
-      <div class="training-area">
+      <div class="border-t border-gray-300 p-6">
         <h3>
           {{ $t('title') }} &bull; {{ training.content.title }}
         </h3>
@@ -20,10 +19,10 @@
           {{ $t('cancelled' )}}
         </Alert>
       </div>
-      <div class="training-area">
+      <div class="border-t border-gray-300 p-6">
         <div v-if="training.coaches">
           <h4>{{ $t('coaches') }}</h4>
-          <ul>
+          <ul class="list-disc">
             <li
               v-for="(coach, index) in training.coaches"
               :key="index">
@@ -33,7 +32,7 @@
         </div>
         <div v-if="canManagePresences">
           <h4>{{ $t('training.presences.title') }}</h4>
-          <ul>
+          <ul class="list-disc">
             <li
               v-for="(member, index) in training.presences"
               :key="index">
@@ -44,12 +43,11 @@
       </div>
       <div
         v-if="canManagePresences"
-        style="display: flex; justify-content: flex-end;"
-        class="training-area"
+        class="flex justify-end border-t border-gray-300 p-6"
       >
         <router-link
           :to="{ name: 'trainings.presences', params: {id: training.id} }"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-address-book"></i>
         </router-link>
@@ -57,13 +55,6 @@
     </TrainingCard>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.training-area {
-  border-top: 1px solid lightgray;
-  padding: 40px;
-}
-</style>
 
 <script>
 import messages from './lang';

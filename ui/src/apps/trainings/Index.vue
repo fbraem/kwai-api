@@ -1,40 +1,52 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="container mx-auto py-3 px-3 sm:px-0">
     <div
       class="training-grid-container"
-      style="grid-column: span 2; justify-items: center;"
+      style="justify-items: center;"
     >
-      <NewsListCard
-        :stories="stories"
-        :category="category"
-        class="training-card"
-        style="grid-area: news-area; justify-self: right; width: 100%;"
-      />
-      <PageListCard
-        :pages="pages"
-        class="training-card"
-        style="grid-area: info-area; justify-self: left; width: 100%;"
-      />
-      <CoachListCard
-        :coaches="coaches"
+      <div
+        class="max-w-full md:max-w-xl p-4"
+        style="grid-area: news-area;"
+      >
+        <NewsListCard
+          :stories="stories"
+          :category="category"
+          class="h-full"
+        />
+      </div>
+      <div
+        class="max-w-full md:max-w-xl p-4"
+        style="grid-area: info-area;"
+      >
+        <PageListCard
+          :pages="pages"
+          class="h-full"
+        />
+      </div>
+      <div
+        class="w-full mb-4"
         style="grid-area: trainers-area;"
-      />
-    </div>
-    <div style="grid-column: span 2; display: flex; flex-direction: row;">
-      <div style="flex-grow: 1;">
-        <h3>Kalender</h3>
-      </div>
-      <div>
-        <router-link
-          class="kwai-icon-button"
-          :to="calendarLink"
-        >
-          <i class="fas fa-angle-up"></i>
-        </router-link>
+      >
+        <CoachListCard
+          :coaches="coaches"
+        />
       </div>
     </div>
-    <div style="grid-column: span 2;">
+    <div style="grid-area: calendar-area">
+      <div class="flex flex-row">
+        <div class="flex-grow">
+          <h3>Kalender</h3>
+        </div>
+        <div>
+          <router-link
+            class="icon-button text-gray-700 hover:bg-gray-300"
+            :to="calendarLink"
+          >
+            <i class="fas fa-angle-up"></i>
+          </router-link>
+        </div>
+      </div>
       <Calendar
         :year="year"
         :month="month"
@@ -48,39 +60,29 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import '@/site/scss/_mq.scss';
-
-.training-card {
-
-  @include mq($from: desktop) {
-    max-width: 450px;
-  }
-  @include mq($until: desktop) {
-    max-width: 100%;
-  }
-}
+<style scoped>
 
 .training-grid-container {
   display: grid;
   grid-gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  grid-template-areas:
+    "news-area"
+    "info-area"
+    "trainers-area"
+    "calendar-area"
+  ;
+}
 
-  @include mq($from: desktop) {
+@screen md {
+  .training-grid-container {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr auto auto;
     grid-template-areas:
       "news-area info-area"
       "trainers-area trainers-area"
-    ;
-  }
-
-  @include mq($until: desktop) {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 1fr;
-    grid-template-areas:
-      "news-area"
-      "info-area"
-      "trainers-area"
+      "calendar-area calendar-area"
     ;
   }
 }

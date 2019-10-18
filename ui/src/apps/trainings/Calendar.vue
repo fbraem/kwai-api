@@ -1,34 +1,34 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="calendar">
-    <div style="display: flex; align-items: baseline;">
+    <div class="flex items-baseline">
       <div>
         <a
           @click="prevYear"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-angle-double-left"></i>
         </a>
         <a
           @click="prevMonth"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-angle-left "></i>
         </a>
       </div>
-      <h2 style="flex-grow: 1; text-align: center;">
+      <h2 class="flex-grow text-center">
         {{ monthName }} {{ year }}
       </h2>
       <div>
         <a
           @click="nextMonth"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-angle-right"></i>
         </a>
         <a
           @click="nextYear"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-angle-double-right"></i>
         </a>
@@ -73,15 +73,13 @@
             </router-link>
             <i
               v-if="event.event.cancelled"
-              class="fas fa-times"
-              style="color: rgb(192,28,24)"
+              class="fas fa-times text-red-500"
               v-tooltip="$t('cancelled')"
             >
             </i>
             <i
               v-if="event.coaches == null || event.coaches.length == 0"
-              class="fas fa-user-times"
-              style="color: rgb(192,28,24)"
+              class="fas fa-user-times text-red-500"
               v-tooltip="$t('no_coach')"
             >
             </i>
@@ -93,25 +91,14 @@
 </template>
 
 <style scoped>
-.calendar > .title {
-  font-size: 2.5rem;
-  font-weight: 100;
-  margin-bottom: 2rem;
-  color: #222;
-}
-.calendar > .title > * {
-  display: inline;
-}
 .calendar .days {
-  list-style: none;
-  margin: 0 0 0 0;
-  padding: 0;
+  @apply m-0 p-0;
 }
 .calendar .days > .day.outside {
-  display: none;
+  @apply hidden;
 }
 .calendar .days > .day.empty {
-  display: none;
+  @apply hidden;
 }
 .calendar .days .events {
   margin-bottom: 1rem;

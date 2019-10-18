@@ -1,15 +1,14 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="m-6">
     <KwaiForm
       :form="form"
       :save="$t('save')"
       :error="error"
       @submit="submit"
-      style="grid-column: span 2;"
     >
-      <div style="display:flex;">
-        <div style="flex-grow:1;">
+      <div class="flex">
+        <div class="flex-grow">
           <KwaiField
             name="name"
             :label="$t('training.definitions.form.name.label')"
@@ -17,7 +16,7 @@
             <KwaiInputText :placeholder="$t('training.definitions.form.name.placeholder')" />
           </KwaiField>
         </div>
-        <div style="align-self:flex-end;margin-left: 20px;">
+        <div class="ml-4 self-begin flex-none">
           <KwaiField
             name="active"
             :label="$t('training.definitions.form.active.label')"

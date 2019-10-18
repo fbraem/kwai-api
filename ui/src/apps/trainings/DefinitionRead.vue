@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="container mx-auto py-3 px-3 sm:px-0">
     <Alert
       v-if="notAllowed"
       type="danger"
@@ -14,99 +14,65 @@
         {{ $t('training.definitions.not_found') }}
     </Alert>
     <Spinner v-if="$wait.is('training.definitions.read')" />
-    <div
+    <SimpleCard
       v-if="definition"
-      style="grid-column: span 2"
+      :title="definition.name"
+      :note="definition.description"
+      :toolbar="toolbar"
+      class="mb-6"
     >
-      <table class="kwai-table kwai-table-striped">
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.name.label') }}
-          </th>
-          <td>
-            {{ definition.name }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.location.label') }}
-          </th>
-          <td>
-            {{ definition.location }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.description.label') }}
-          </th>
-          <td>
-            {{ definition.description }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.weekday.label') }}
-          </th>
-          <td>
-            {{ definition.weekdayText }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.time') }}
-          </th>
-          <td>
-            {{ definition.start_time.format('HH:mm') }} - {{ definition.end_time.format('HH:mm') }}
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.team.label') }}
-          </th>
-          <td v-if="definition.team">
-            {{ definition.team.name }}
-          </td>
-          <td v-else>
-            <i class="fas fa-minus"></i>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.season.label') }}
-          </th>
-          <td v-if="definition.season">
-            {{ definition.season.name }}
-          </td>
-          <td v-else>
-            <i class="fas fa-minus"></i>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            {{ $t('training.definitions.form.remark.label') }}
-          </th>
-          <td>
-            {{ definition.remark }}
-          </td>
-        </tr>
-      </table>
-      <TrainingGeneratorForm :definition="definition" />
-    </div>
+      <Attributes :attributes="attributes">
+        <template v-slot:value="{prop, attribute}">
+          <template v-if="prop === 'season'">
+            <router-link
+              v-if="attribute.value"
+              :to="{ name: 'seasons.read', params: { id : attribute.value.id} }"
+            >
+              {{ attribute.value.name }}
+            </router-link>
+          </template>
+          <template v-else-if="prop === 'team'">
+            <router-link
+              v-if="attribute.value"
+              :to="{ name: 'teams.read', params: { id : attribute.value.id} }"
+            >
+              {{ attribute.value.name }}
+            </router-link>
+          </template>
+          <span v-else>
+            {{ attribute.value }}
+          </span>
+        </template>
+      </Attributes>
+      <template slot="footer">
+        <div class="mr-4">
+          <strong>Aangemaakt:</strong> {{ definition.localCreatedAt }}
+        </div>
+        <div>
+          <strong>Laatst gewijzigd:</strong> {{ definition.localUpdatedAt }}
+        </div>
+      </template>
+    </SimpleCard>
+    <TrainingGeneratorForm :definition="definition" />
   </div>
 </template>
 
 <script>
 import messages from './lang';
 
-import TrainingGeneratorForm from './TrainingGeneratorForm.vue';
+import TrainingGeneratorForm from './TrainingGeneratorForm';
 import Spinner from '@/components/Spinner';
 import Alert from '@/components/Alert';
+import SimpleCard from '@/components/SimpleCard';
+import Attributes from '@/components/Attributes';
 
 export default {
   components: {
     Spinner,
     TrainingGeneratorForm,
-    Alert
+    Alert,
+    SimpleCard,
+    Attributes
   },
   i18n: messages,
   computed: {
@@ -123,6 +89,52 @@ export default {
     },
     notFound() {
       return this.error && this.error.response.status === 404;
+    },
+    attributes() {
+      return {
+        location: {
+          label: this.$t('training.definitions.form.location.label'),
+          value: this.definition.name
+        },
+        weekday: {
+          label: this.$t('training.definitions.form.weekday.label'),
+          value: this.definition.weekdayText
+        },
+        time: {
+          label: this.$t('training.definitions.time'),
+          value:
+            this.definition.formattedStartTime
+            + ' - '
+            + this.definition.formattedEndTime
+        },
+        team: {
+          label: this.$t('training.definitions.form.team.label'),
+          value: this.definition.team
+        },
+        season: {
+          label: this.$t('training.definitions.form.season.label'),
+          value: this.definition.season
+        },
+        remark: {
+          label: this.$t('training.definitions.form.remark.label'),
+          value: this.definition.remark
+        }
+      };
+    },
+    toolbar() {
+      const buttons = [];
+      if (this.$can('update', this.definition)) {
+        buttons.push({
+          icon: 'fas fa-edit',
+          route: {
+            name: 'trainings.definitions.update',
+            params: {
+              id: this.definition.id
+            }
+          }
+        });
+      }
+      return buttons;
     }
   },
   beforeRouteEnter(to, from, next) {

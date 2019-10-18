@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
+  <div class="m-6">
     <KwaiForm
       :form="form"
       :error="error"
@@ -8,8 +8,8 @@
       @submit="submit"
       style="grid-column: span 2;"
     >
-      <div style="display: flex;">
-        <div style="flex-grow: 1;">
+      <div class="flex">
+        <div class="flex-grow">
           <KwaiField
             name="title"
             :label="$t('training.events.form.title.label')"
@@ -17,7 +17,7 @@
             <KwaiInputText :placeholder="$t('training.events.form.title.placeholder')" />
           </KwaiField>
         </div>
-        <div style="align-self:flex-end;margin-left: 20px;">
+        <div class="ml-4 self-begin flex-none">
           <KwaiField
             name="active"
             :label="$t('training.events.form.active.label')"
@@ -25,7 +25,7 @@
             <KwaiSwitch />
           </KwaiField>
         </div>
-        <div style="align-self:flex-end;margin-left: 20px;">
+        <div class="ml-4 self-begin flex-none">
           <KwaiField
             name="cancelled"
             :label="$t('training.events.form.cancelled.label')"
@@ -43,25 +43,31 @@
           :placeholder="$t('training.events.form.summary.placeholder')"
         />
       </KwaiField>
-      <div class="date-grid">
-        <KwaiField
-          name="start_date"
-          :label="$t('training.events.form.start_date.label')"
-        >
-          <KwaiInputText :placeholder="$t('training.events.form.start_date.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="start_time"
-          :label="$t('training.events.form.start_time.label')"
-        >
-          <KwaiInputText :placeholder="$t('training.events.form.start_time.placeholder')" />
-        </KwaiField>
-        <KwaiField
-          name="end_time"
-          :label="$t('training.events.form.end_time.label')"
-        >
-          <KwaiInputText :placeholder="$t('training.events.form.end_time.placeholder')" />
-        </KwaiField>
+      <div class="flex flex-wrap">
+        <div class="md:pr-6 w-full md:w-1/3">
+          <KwaiField
+            name="start_date"
+            :label="$t('training.events.form.start_date.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.events.form.start_date.placeholder')" />
+          </KwaiField>
+        </div>
+        <div class="md:pr-6 w-full md:w-1/3">
+          <KwaiField
+            name="start_time"
+            :label="$t('training.events.form.start_time.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.events.form.start_time.placeholder')" />
+          </KwaiField>
+        </div>
+        <div class="w-full md:w-1/3">
+          <KwaiField
+            name="end_time"
+            :label="$t('training.events.form.end_time.label')"
+          >
+            <KwaiInputText :placeholder="$t('training.events.form.end_time.placeholder')" />
+          </KwaiField>
+        </div>
       </div>
       <KwaiField
         name="season"
@@ -109,22 +115,6 @@
     </KwaiForm>
   </div>
 </template>
-
-<style lang="scss" scoped>
-@import '@/site/scss/_mq.scss';
-
-.date-grid {
-  display: grid;
-  grid-gap: 10px;
-
-  @include mq($from: tablet) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  @include mq($until: tablet) {
-    grid-template-rows: 1fr 1fr 1fr;
-  }
-}
-</style>
 
 <script>
 import moment from 'moment';

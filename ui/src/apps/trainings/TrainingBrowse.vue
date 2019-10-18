@@ -1,10 +1,7 @@
 <template>
-  <div class="page-container">
+  <div class="container mx-auto mt-6">
     <Spinner v-if="$wait.is('training.browse')" />
-    <div
-      v-else
-      style="grid-column: span 2;"
-    >
+    <div v-else>
       <Calendar
         :year="year"
         :month="month"
@@ -13,6 +10,7 @@
         @prevYear="prevYear"
         @nextMonth="nextMonth"
         @nextYear="nextYear"
+        class="mb-6"
       />
       <Alert
         v-if="noData"

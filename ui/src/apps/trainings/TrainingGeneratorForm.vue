@@ -1,10 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div>
-    <div style="grid-columns: span 2;">
+  <div class="mt-2">
+    <div>
       <div>
         <button
-          class="kwai-button"
+          class="red-button disabled:opacity-50 disabled:cursor-not-allowed"
           @click.prevent.stop="showForm = !showForm"
         >
           <i class="far fa-calendar-alt"></i>&nbsp; {{ $t('trainings') }}
@@ -13,7 +13,7 @@
     </div>
     <div
       v-show="showForm"
-      style="margin-top: 20px;"
+      class="mt-6"
     >
       <p>
         {{ $t('training.generator.create') }}
@@ -23,13 +23,17 @@
         @submit="generate"
         :save="$t('training.generator.form.generate')"
       >
-        <div class="date-grid">
-          <KwaiField name="start_date">
-            <KwaiInputText :placeholder="$t('training.generator.form.start_date.placeholder')" />
-          </KwaiField>
-          <KwaiField name="end_date">
-            <KwaiInputText :placeholder="$t('training.generator.form.end_date.placeholder')" />
-          </KwaiField>
+        <div class="flex flex-row">
+          <div class="pr-6 w-full sm:w-1/2">
+            <KwaiField name="start_date">
+              <KwaiInputText :placeholder="$t('training.generator.form.start_date.placeholder')" />
+            </KwaiField>
+          </div>
+          <div class="pr-6 w-full sm:w-1/2">
+            <KwaiField name="end_date">
+              <KwaiInputText :placeholder="$t('training.generator.form.end_date.placeholder')" />
+            </KwaiField>
+          </div>
         </div>
         <KwaiField name="coaches">
           <multiselect
@@ -52,22 +56,6 @@
     <notifications position="bottom right" />
   </div>
 </template>
-
-<style lang="scss" scoped>
-@import '@/site/scss/_mq.scss';
-
-.date-grid {
-  display: grid;
-  grid-gap: 20px;
-
-  @include mq($from: tablet) {
-    grid-template-columns: 1fr 1fr;
-  }
-  @include mq($until: tablet) {
-    grid-template-rows: 1fr 1fr;
-  }
-}
-</style>
 
 <script>
 import moment from 'moment';

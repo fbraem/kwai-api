@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <Header
     :title="$t('training.events.title')"
     :subtitle="subtitle"

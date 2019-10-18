@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="px-4">
     <h2 v-if="coach">
       {{ $t('training.coaches.trainings', { coach: coach.name }) }}
     </h2>

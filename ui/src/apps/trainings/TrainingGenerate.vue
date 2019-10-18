@@ -1,79 +1,78 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
-    <div style="grid-column: span 2;">
-      <Alert
-        v-if="count === 0"
-        type="warning"
-      >
-        {{ $t('training.events.no_generated_data') }}
+  <div class="mt-6">
+    <Alert
+      v-if="count === 0"
+      type="warning"
+    >
+      {{ $t('training.events.no_generated_data') }}
+    </Alert>
+    <div v-else>
+      <Alert type="info">
+        {{ $t('training.generator.help') }}
       </Alert>
-      <div v-else>
-        <Alert type="info">
-          {{ $t('training.generator.help') }}
-        </Alert>
-        <div>
-          <table class="kwai-table kwai-table-divider kwai-table-striped kwai-table-middle kwai-table-small">
-            <tr>
-              <th>
-                <input
-                  class="kwai-checkbox"
-                  type="checkbox"
-                  v-model="selectAll"
-                />
-              </th>
-              <th>
-                {{ $t('training.events.day') }}
-              </th>
-              <th>
-                {{ $t('training.events.date') }}
-              </th>
-              <th>
-                {{ $t('training.events.time') }}
-              </th>
-              <th class="kwai-table-expand">
-                {{ $t('training.events.coaches') }}
-              </th>
-            </tr>
-            <tr
-              v-for="(training, index) in trainings"
-              :key="index">
-              <td>
-                <input
-                  class="kwai-checkbox"
-                  type="checkbox"
-                  v-model="selectedTrainings"
-                  :value="index"
-                />
-              </td>
-              <td>
-                {{ training.event.start_date.format('dddd') }}
-              </td>
-              <td>
-                {{ training.event.start_date.format('L HH:mm') }}
-              </td>
-              <td>
-                {{ training.event.end_date.format('L HH:mm') }}
-              </td>
-              <td>
-                <template v-for="(coach, index) in training.coaches">
-                  <div :key="coach.id">
-                    <span>{{ coach.name }}</span>
-                    <span v-if="index != Object.keys(training.coaches).length - 1">,&nbsp;</span>
-                  </div>
-                </template>
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div style="display:flex; justify-content: flex-end;">
-          <button
-            class="primary:kwai-button"
-            :disabled="!hasSelections"
-            @click="submit">
-            <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
-          </button>
-        </div>
+      <div class="mt-6">
+        <table class="w-full border-collapse text-left">
+          <tr class="bg-gray-500 border-b border-gray-200">
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              <input
+                type="checkbox"
+                v-model="selectAll"
+              />
+            </th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              {{ $t('training.events.day') }}
+            </th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              {{ $t('training.events.date') }}
+            </th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              {{ $t('training.events.time') }}
+            </th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+              {{ $t('training.events.coaches') }}
+            </th>
+          </tr>
+          <tr
+            v-for="(training, index) in trainings"
+            :key="index"
+            class="odd:bg-gray-200 border-b border-gray-400"
+          >
+            <td class="py-2 px-3 text-gray-700">
+              <input
+                type="checkbox"
+                v-model="selectedTrainings"
+                :value="index"
+              />
+            </td>
+            <td class="py-2 px-3 text-gray-700">
+              {{ training.event.start_date.format('dddd') }}
+            </td>
+            <td class="py-2 px-3 text-gray-700">
+              {{ training.event.start_date.format('L') }}
+            </td>
+            <td class="py-2 px-3 text-gray-700">
+              {{ training.event.start_date.format('HH:mm') }} -
+              {{ training.event.end_date.format('HH:mm') }}
+            </td>
+            <td class="py-2 px-3 text-gray-700">
+              <template v-for="(coach, index) in training.coaches">
+                <div :key="coach.id">
+                  <span>{{ coach.name }}</span>
+                  <span v-if="index != Object.keys(training.coaches).length - 1">,&nbsp;</span>
+                </div>
+              </template>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="flex justify-end mt-6">
+        <button
+          class="red-button disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="!hasSelections"
+          @click="submit">
+          <i class="fas fa-save"></i>&nbsp; {{ $t('save') }}
+        </button>
       </div>
     </div>
   </div>

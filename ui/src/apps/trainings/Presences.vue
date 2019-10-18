@@ -1,76 +1,82 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div
     v-if="training"
-    class="page-container"
-    style="display: flex; justify-content: center;"
+    class="mt-6 flex justify-center"
   >
     <TrainingCard :training="training">
-      <div class="training-area">
+      <div class="border-t border-gray-300 p-6">
         <h1>
           {{ $t('training.presences.attendees') }}
         </h1>
-        <table
+        <div
           v-if="hasPresences"
-          class="kwai-table kwai-table-small kwai-table-striped"
+          class="flex flex-col mb-6"
         >
-          <tr
+          <div
             v-for="member in presences"
             :key="member.id"
-          >
-            <td>
+            class="flex flex-row px-2 py-2 first:border-t odd:bg-gray-200 border-b border-gray-400">
+            <div class="flex-grow">
               <MemberSummary :member="member" />
-            </td>
-            <td class="kwai-table-shrink">
-              <a class="kwai-icon-button">
+            </div>
+            <div class="flex-none">
+              <a class="icon-button text-red-700 hover:bg-gray-300">
                 <i
                   class="fas fa-times"
                   @click="removePresence(member)"
                 >
                 </i>
               </a>
-            </td>
-          </tr>
-        </table>
-        <p v-else>
+            </div>
+          </div>
+        </div>
+        <p
+          v-else
+          class="mb-6"
+        >
           {{ $t('training.presences.nobody') }}
         </p>
-        <WarningComponent v-if="changed" @save="saveAttendees" />
-        <h1>
+        <WarningComponent
+          v-if="changed"
+          @save="saveAttendees"
+          class="mb-6"
+        />
+        <h1 class="mb-6">
           {{ $t('training.presences.possible') }}
         </h1>
-        <p class="kwai-text-meta">
+        <p class="mb-6 text-sm">
           {{ $t('training.presences.team') }}
         </p>
-        <table class="kwai-table kwai-table-small kwai-table-striped">
-          <tr
+        <div class="flex flex-col mb-6">
+          <div class="flex flex-row px-2 py-2 first:border-t odd:bg-gray-200 border-b border-gray-400"
             v-for="member in teamMembers"
             :key="member.id"
           >
-            <td>
+            <div class="flex-grow">
               <MemberSummary :member="member" />
-            </td>
-            <td class="kwai-table-shrink">
-              <a class="kwai-icon-button">
+            </div>
+            <div class="flex-none">
+              <a class="icon-button text-gray-700 hover:bg-gray-300">
                 <i
                   class="fas fa-plus"
                   @click="addPresence(member)"
                 >
                 </i>
               </a>
-            </td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
         <KwaiForm
           :form="form"
-          style="margin-top: 20px;"
+          class="mb-6 bg-gray-200 p-4"
         >
-          <!-- TODO: find a better way to calc max-width -->
           <KwaiField
             name="otherMembers"
             :label="$t('training.presences.form.other_members.label')"
-            style="max-width: 500px;"
+            class="max-w-lg md:max-w-2xl"
           >
-            <div style="position:relative;">
+            <div class="relative">
               <multiselect
                 :options="otherMembers"
                 label="name"
@@ -90,27 +96,21 @@
               </multiselect>
             </div>
           </KwaiField>
-          <button
-            class="kwai-button"
-            :disabled="disableAddOthers"
-            @click.prevent.stop="addAttendeeFromList"
-            style="align-self: center;"
-          >
-            {{ $t('training.presences.form.add_others') }}
-          </button>
+          <div class="flex justify-end mt-6">
+            <button
+              class="red-button disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="disableAddOthers"
+              @click.prevent.stop="addAttendeeFromList"
+            >
+              {{ $t('training.presences.form.add_others') }}
+            </button>
+          </div>
         </KwaiForm>
         <WarningComponent v-if="changed" @save="saveAttendees" />
       </div>
     </TrainingCard>
   </div>
 </template>
-
-<style scoped>
-.training-area {
-  border-top: 1px solid var(--kwai-color-default-light);
-  padding: 40px;
-}
-</style>
 
 <script>
 import messages from './lang';
@@ -138,7 +138,7 @@ const WarningComponent = {
           [
             h('button', {
               class: {
-                'primary:kwai-button': true,
+                'red-button': true,
               },
               on: {
                 click: () => { this.$emit('save'); }
@@ -181,7 +181,8 @@ export default {
       // TODO: For the moment only one team!
       if (this.training.teams.length > 0) {
         let teamId = this.training.teams[0].id;
-        let members = this.$store.getters['team/members'](teamId) || [];
+        // Create a copy of the members array
+        let members = [ ... this.$store.getters['team/members'](teamId) || []];
         if (members.length > 0) {
           this.presences.forEach((p) => {
             let index = members.findIndex(o => o.id === p.id);
