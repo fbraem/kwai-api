@@ -1,5 +1,4 @@
 @tailwind base;
-@tailwind components;
 
 * {
     @apply leading-normal m-0 p-0;
@@ -11,24 +10,30 @@ html {
 }
 
 h1 {
-    @apply text-2xl;
+    @apply text-2xl mb-3;
 }
 
 h2 {
-    @apply text-xl;
+    @apply text-xl mb-3;
 }
 
 h3 {
-    @apply text-lg;
+    @apply text-lg mb-3;
 }
 
 h4 {
-    @apply font-bold;
+    @apply font-bold mb-3;
+}
+
+p {
+    @apply mb-3;
 }
 
 a {
   @apply text-blue-600;
 }
+
+@tailwind components;
 
 .cover {
     @apply absolute inset-0;
