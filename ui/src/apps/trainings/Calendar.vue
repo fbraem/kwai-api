@@ -274,7 +274,9 @@ import Vue from 'vue';
 import { VTooltip } from 'v-tooltip';
 
 Vue.directive('tooltip', VTooltip);
-VTooltip.options.defaultClass = 'kwai-tooltip';
+
+import '@/site/css/tooltip.css';
+VTooltip.options.defaultClass = 'tooltip';
 
 import moment from 'moment';
 
