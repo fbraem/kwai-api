@@ -8,7 +8,8 @@
       />
       <div
         v-if="category.icon_picture"
-        style="width: 20%;"
+        class="mr-3"
+        style="width: 40px"
       >
         <inline-svg
           :src="category.icon_picture"
@@ -17,7 +18,7 @@
           fill="#c61c18"
         />
       </div>
-      <div style="width: 80%;">
+      <div>
         <h4 class="mb-0">
           {{ category.name }}
         </h4>
