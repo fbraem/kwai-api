@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col">
     <div>
-      <h4 class="header-line">
+      <h3 class="header-line">
         {{ $t('overview') }}
-      </h4>
+      </h3>
     </div>
     <div>
       <ul class="pl-0">
