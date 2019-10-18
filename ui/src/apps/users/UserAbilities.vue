@@ -1,61 +1,61 @@
 <template>
-  <div class="page-container">
-    <div style="grid-area: page-sidebar">
+  <!-- eslint-disable max-len -->
+  <Page>
+    <template slot="sidebar">
       <UserCard
         v-if="user"
         :user="user"
       />
-    </div>
-    <div style="grid-area: page-content">
+    </template>
+    <div>
       <h1>{{ $t('rules.groups') }}</h1>
-      <p class="kwai-text-meta">
+      <p class="text-sm">
         {{ $t('rules.groups_info') }}
       </p>
-      <table v-if="user" class="kwai-table kwai-table-divider">
-        <tr>
-          <th>{{ $t('rules.name') }}</th>
-        </tr>
-        <tr
+      <ul v-if="user">
+        <li
           v-for="ability in userAbilities"
           :key="ability.id"
+          class="px-2 py-2 first:border-t border-b border-gray-400 odd:bg-gray-200"
         >
           <UserAbility
             :ability="ability"
             :remove="true"
             @remove="removeAbility"
+            class="ml-4"
           />
-        </tr>
-      </table>
+        </li>
+      </ul>
       <h1>Available groups</h1>
-      <table v-if="user" class="kwai-table kwai-table-divider">
-        <tr>
-          <th>{{ $t('rules.name') }}</th>
-        </tr>
-        <tr
+      <ul v-if="user">
+        <li
           v-for="ability in availableAbilities"
           :key="ability.id"
+          class="px-2 py-2 first:border-t border-b border-gray-400 odd:bg-gray-200"
         >
           <UserAbility
             :ability="ability"
             :add="true"
             @add="addAbility"
+            class="ml-4"
           />
-        </tr>
-      </table>
+        </li>
+      </ul>
     </div>
-  </div>
+  </Page>
 </template>
 
 <script>
 import UserCard from './components/UserCard';
 import UserAbility from './TheUserAbility';
+import Page from '@/components/Page';
 
 import messages from './lang';
 
 export default {
   i18n: messages,
   components: {
-    UserCard, UserAbility
+    UserCard, UserAbility, Page
   },
   data() {
     return {
@@ -73,8 +73,12 @@ export default {
     abilities() {
       return this.$store.state.user.ability.abilities || [];
     },
+    /**
+      Return all abilities which are not yet attached to this user
+    */
     availableAbilities() {
-      return this.abilities.filter(x => !this.userAbilities.includes(x));
+      const userAbilities = this.userAbilities.map(x => x.name);
+      return this.abilities.filter(x => !userAbilities.includes(x.name));
     }
   },
   beforeRouteEnter(to, from, next) {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mt-6 mx-auto">
     <Ability v-if="ability" :ability="ability" />
   </div>
 </template>

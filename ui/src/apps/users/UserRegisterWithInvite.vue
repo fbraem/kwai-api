@@ -1,10 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="page-container">
-    <div
-      v-if="invitation"
-      style="grid-column: span 2;"
-    >
+  <div class="container mx-auto mt-6">
+    <div v-if="invitation">
       <Alert
         v-if="invitation.isExpired"
         type="danger"
@@ -54,10 +51,7 @@
         </KwaiForm>
       </div>
     </div>
-    <div
-      v-else
-      style="grid-column: span 2;"
-    >
+    <div v-else>
       <Alert
         v-if="invitationError && invitationError.response.status == 404"
         type="danger"

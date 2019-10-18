@@ -1,11 +1,10 @@
 <template>
-  <div class="page-container">
+  <div class="mt-6 container mx-auto">
     <KwaiForm
       :form="form"
       :error="error"
       :save="$t('save')"
       @submit="submit"
-      style="grid-column: span 2;"
     >
       <KwaiField
         name="name"

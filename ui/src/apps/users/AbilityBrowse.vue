@@ -1,19 +1,18 @@
 <template>
-  <div class="page-container">
-    <table
-      class="kwai-table kwai-table-divider"
-      style="grid-column: span 2;"
-    >
-      <tr>
-        <th>{{ $t('rules.name') }}</th>
-      </tr>
-      <tr
+  <!-- eslint-disable max-len -->
+  <div class="container mt-6 mx-auto">
+    <ul>
+      <li
         v-for="ability in abilities"
         :key="ability.id"
+        class="px-2 py-2 first:border-t border-b border-gray-400 odd:bg-gray-200"
       >
-        <Ability :ability="ability" />
-      </tr>
-    </table>
+        <Ability
+          :ability="ability"
+          class="ml-4"
+        />
+      </li>
+    </ul>
   </div>
 </template>
 

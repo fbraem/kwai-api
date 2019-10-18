@@ -1,26 +1,26 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div style="box-shadow: 0px 0px 20px 0 rgba(100, 100, 100, 0.3); display: flex; flex-direction: column;">
-    <div style="display: flex;padding: 20px;">
+  <div class="shadow-lg flex flex-col">
+    <div class="flex p-3">
       <img
-        style="border-radius: 50%; width: 40px; height: 40px; margin: 20px;"
+        class="rounded-full h-16 w-16 m-3"
         :src="noAvatarImage"
       />
       <div>
         <h3>{{ user.name }}</h3>
-        <p class="kwai-text-meta">
+        <p class="text-sm">
           <i class="fas fa-envelope"></i>&nbsp;
           <a :href="'mailto:' + user.email">{{ user.email }}</a>
         </p>
       </div>
     </div>
-    <div style="padding: 20px;border-top: 1px solid var(--kwai-color-muted); display: flex; flex-direction: row; align-items: center;">
+    <div class="p-3 border-t border-gray-300 flex align-center">
       <div>
         <strong>{{ $t('last_login') }} :</strong> {{ user.lastLoginFormatted }}
       </div>
-      <div style="margin-left: auto;">
+      <div class="ml-auto">
         <router-link
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
           :to="userLink"
         >
           <i class="fas fa-ellipsis-h"></i>

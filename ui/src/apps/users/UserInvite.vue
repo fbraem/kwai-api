@@ -1,6 +1,6 @@
 <template>
-  <div class="page-container">
-    <div style="grid-column: span 2;">
+  <div class="container mx-auto mt-6">
+    <div>
       <Alert type="warning">
         {{ $t('invite_intro') }}
       </Alert>
