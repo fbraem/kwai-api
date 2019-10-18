@@ -6,7 +6,7 @@
     >
       <div
         v-if="storiesMeta"
-        class="flex justify-center"
+        class="flex justify-center mb-4"
       >
         <Paginator
           :count="storiesMeta.count"
@@ -15,7 +15,7 @@
           @page="readPage"
         />
       </div>
-      <div class="flex flex-wrap justify-center">
+      <div class="flex flex-wrap justify-center mb-4">
          <div
             v-for="story in stories"
             :key="story.id"
