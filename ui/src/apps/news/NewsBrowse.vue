@@ -29,7 +29,7 @@
       </div>
       <div
         v-if="storiesMeta"
-        style="flex justify-center"
+        class="flex justify-center"
       >
         <Paginator
           :count="storiesMeta.count"
