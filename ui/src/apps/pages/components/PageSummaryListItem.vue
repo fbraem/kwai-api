@@ -7,13 +7,13 @@
       </h4>
     </div>
     <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div class="kwai-text-meta kwai-text-truncate">
+      <div class="text-sm truncate">
         {{ page.content.summary }}
       </div>
       <div>
         <router-link
           :to="pageLink"
-          class="kwai-icon-button"
+          class="icon-button text-gray-700 hover:bg-gray-300"
         >
           <i class="fas fa-ellipsis-h"></i>
         </router-link>
