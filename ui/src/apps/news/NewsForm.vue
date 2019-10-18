@@ -67,7 +67,7 @@
       <div style="display: flex; flex-direction: column">
         <div>
           <h3>{{ $t('featured') }}</h3>
-          <blockquote class="kwai-text-meta">
+          <blockquote class="text-sm">
             {{ $t('featured_hint') }}
           </blockquote>
         </div>
