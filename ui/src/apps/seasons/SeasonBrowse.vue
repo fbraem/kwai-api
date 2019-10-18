@@ -8,17 +8,17 @@
       {{ $t('no_seasons') }}
     </Alert>
     <div v-else>
-      <table class="border-collapse w-full">
+      <table class="w-full border-collapse text-left">
         <thead>
-          <tr>
-            <th class="py-4 px-4 font-bold border-b bg-gray-200"></th>
-            <th class="py-4 px-4 font-bold border-b bg-gray-200 text-left">
+          <tr class="bg-gray-500 border-b border-gray-200">
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white"></th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
               {{ $t('form.season.name.label') }}
             </th>
-            <th class="py-4 px-4 font-bold border-b bg-gray-200 text-left">
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
               {{ $t('period') }}
             </th>
-            <th class="py-4 px-4 font-bold border-b bg-gray-200"></th>
+            <th class="py-2 px-3 font-bold uppercase text-sm text-white"></th>
           </tr>
         </thead>
         <tbody>
