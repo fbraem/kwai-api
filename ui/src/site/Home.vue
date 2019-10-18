@@ -124,7 +124,7 @@
     <div class="container mx-auto message-card-container">
       <div class="message-card">
         <div class="message-card-content">
-          <h3>Jeugdvriendelijke Judoclub</h3>
+          <h2>Jeugdvriendelijke Judoclub</h2>
           <div class="flex flex-col">
             <div>
               <p>
@@ -144,7 +144,7 @@
       </div>
       <div class="message-card">
         <div class="message-card-content">
-          <h3>Locatie</h3>
+          <h2>Locatie</h2>
           <div class="flex flex-col">
             <div>
               <p>
@@ -164,7 +164,7 @@
       </div>
       <div class="message-card">
         <div class="message-card-content">
-          <h3>Eens proberen?</h3>
+          <h2>Eens proberen?</h2>
           <div class="flex flex-col">
             <div>
               <p>
@@ -184,7 +184,7 @@
       </div>
       <div class="message-card">
         <div class="message-card-content">
-          <h3>Hartveilig</h3>
+          <h2>Hartveilig</h2>
           <div class="flex flex-col">
             <div>
               <p>
@@ -203,7 +203,7 @@
       </div>
       <div class="message-card">
         <div class="message-card-content">
-          <h3>Gezond sporten</h3>
+          <h2>Gezond sporten</h2>
           <div class="flex flex-col">
             <div>
               <p>
@@ -223,7 +223,7 @@
       </div>
       <div class="message-card">
         <div class="message-card-content">
-          <h3>Panathlon Verklaring</h3>
+          <h2>Panathlon Verklaring</h2>
           <div class="flex flex-col">
             <div>
               <p>
