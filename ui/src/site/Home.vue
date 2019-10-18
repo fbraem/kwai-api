@@ -79,9 +79,9 @@
         :categories="categories"
       />
     </div>
-    <h4 class="header-line">
+    <h2 class="header-line">
       Belangrijk Nieuws
-    </h4>
+    </h2>
     <div class="flex justify-center">
       <Paginator
         v-if="storiesMeta"
