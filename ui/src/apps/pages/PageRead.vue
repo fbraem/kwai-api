@@ -6,7 +6,7 @@
     <Spinner v-if="$wait.is('pages.read')" />
     <article
       v-if="page"
-      class="page-content overflow-x-auto"
+      class="page-content overflow-x-auto container mx-auto"
     >
       <h1>{{ page.content.title }}</h1>
       <div v-html="page.content.html_content">
