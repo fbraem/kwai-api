@@ -57,7 +57,7 @@ export default {
     },
     badge() {
       return {
-        title: this.page.category.name,
+        name: this.page.category.name,
         route: this.categoryRoute
       };
     },
