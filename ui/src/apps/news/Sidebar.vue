@@ -5,25 +5,33 @@
       v-if="categories"
       :categories="categories"
     />
-    <h4>
-      <span>{{ $t('archive') }}</span>
-    </h4>
+    <h3 class="header-line">
+      {{ $t('archive') }}
+    </h3>
     <template v-for="(year) in archiveYears">
       <div :key="year">
-        <h5>{{ year }}</h5>
+        <h4>{{ year }}</h4>
         <ul>
-          <li v-for="(month) in archive[year]" :key="month.month">
-            <router-link
-              :to="{ name : 'news.archive', params : { year : year, month : month.month }}"
-            >
-              {{ month.monthName }} {{ year }}
+          <li
+            v-for="(month) in archive[year]"
+            :key="month.month"
+            class="pt-2 last:pb-2"
+          >
+            <div class="relative">
+              <router-link
+                :to="{ name : 'news.archive', params : { year : year, month : month.month }}"
+                class="cover"
+              />
+              <span class="text-blue-600">
+                {{ month.monthName }} {{ year }}
+              </span>
               <span
                 class="badge bg-red-700 text-red-300"
                 style="float:right"
               >
                 {{ month.count }}
               </span>
-            </router-link>
+            </div>
           </li>
         </ul>
       </div>
