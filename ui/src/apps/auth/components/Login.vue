@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div>
     <Modal
-      v-show="showLogin"
+      :show="showLogin"
       @close="showLogin = false;"
     >
       <template slot="header">
