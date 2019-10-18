@@ -8,7 +8,7 @@
     <div v-html="page.content.html_summary">
     </div>
     <AreYouSure
-      v-show="isModalVisible"
+      :show="isModalVisible"
       :yes="$t('delete')"
       :no="$t('cancel')"
       @sure="deletePage"
