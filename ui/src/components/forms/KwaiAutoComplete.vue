@@ -1,11 +1,12 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div class="autocomplete">
     <input
       v-model="search"
       :id="id"
       :name="id"
-      class="kwai-input"
-      :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
+      class="appearance-once block w-full bg-gray-200 border rounded py-3 px-4 mb-3 leading-thight focus:outline-none focus:bg-white"
+      :class="{ 'text-red-600' : field.errors.length > 0 }"
       type="search"
       :required="field.required"
       v-bind="$attrs"
@@ -20,7 +21,7 @@
       v-show="isOpen"
     >
       <li v-if="isLoading">
-        <div class="kwai-text-center">
+        <div class="text-center">
           <i class="fas fa-spinner fa-2x fa-spin"></i>
         </div>
       </li>
@@ -44,21 +45,17 @@
 
 <style>
 input:required {
-  border-left: 3px solid;
+  @apply border-l-4 border-solid;
 }
 .autocomplete-results {
-  padding: 0;
-  margin: 0;
+  @apply p-0 m-0 overflow-auto;
   border: 1px solid #eeeeee;
   height: 120px;
-  overflow: auto;
 }
 
 .autocomplete-result {
-  list-style: none;
-  text-align: left;
+  @apply text-left cursor-pointer;
   padding: 4px 2px;
-  cursor: pointer;
 }
 
 .autocomplete-result.is-active,

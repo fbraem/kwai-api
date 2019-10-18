@@ -2,7 +2,7 @@
     <input v-model="field.value"
         :id="id"
         type="checkbox"
-        :class="{ 'kwai-form-danger' : field.errors.length > 0 }"
+        :class="{ 'text-red-600' : field.errors.length > 0 }"
         v-bind="$attrs"
     />
 </template>

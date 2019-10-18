@@ -11,14 +11,14 @@
     <template v-for="(year) in archiveYears">
       <div :key="year">
         <h5>{{ year }}</h5>
-        <ul class="kwai-list">
+        <ul>
           <li v-for="(month) in archive[year]" :key="month.month">
             <router-link
               :to="{ name : 'news.archive', params : { year : year, month : month.month }}"
             >
               {{ month.monthName }} {{ year }}
               <span
-                class="primary:kwai-badge kwai-badge-rounded"
+                class="badge bg-red-700 text-red-300"
                 style="float:right"
               >
                 {{ month.count }}
