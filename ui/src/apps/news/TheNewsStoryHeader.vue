@@ -15,7 +15,7 @@
       {{ $t('published', { publishDate : story.localPublishDate, publishDateFromNow : story.publishDateFromNow }) }}
     </div>
     <AreYouSure
-      v-show="showAreYouSure"
+      :show="showAreYouSure"
       @close="showAreYouSure = false;"
       :yes="$t('delete')"
       :no="$t('cancel')"
