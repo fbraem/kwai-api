@@ -28,7 +28,11 @@ html {
 }
 
 .default-button:hover {
-    @apply bg-gray-100;
+    @apply bg-gray-100 no-underline cursor-pointer;
+}
+
+.default-button:disabled {
+    @apply cursor-not-allowed;
 }
 
 .red-button {
@@ -41,6 +45,10 @@ html {
 
 .red-button:focus {
     @apply outline-none shadow-outline;
+}
+
+.red-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
 }
 
 .icon-button {
