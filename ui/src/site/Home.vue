@@ -96,7 +96,7 @@
       <div
         v-for="story in stories"
         :key="story.id"
-        class="p-3 w-full lg:w-1/3"
+        class="p-3 w-full md:w-1/2 xl:w-1/3"
       >
         <NewsCard
           :story="story"
