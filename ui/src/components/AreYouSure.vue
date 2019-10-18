@@ -1,6 +1,6 @@
 <template>
   <Modal
-    v-show="show"
+    :show="show"
     @close="close"
   >
     <template slot="header">
@@ -10,19 +10,16 @@
       <slot></slot>
     </template>
     <template slot="footer">
-      <div
-        style="display: flex; justify-content:center;"
-        class="kwai-buttons"
-      >
+      <div class="flex justify-between mt-6">
         <button
-          class="kwai-button"
+          class="default-button"
           type="button"
           @click.prevent.stop="close"
         >
           <i class="fas fa-ban"></i>&nbsp;&nbsp;{{ no }}
         </button>
         <button
-          class="danger:kwai-button"
+          class="red-button"
           type="button"
           @click="ok"
         >

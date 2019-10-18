@@ -244,7 +244,7 @@
       </div>
     </div>
     <AreYouSure
-      v-show="showAreYouSure"
+      :show="showAreYouSure"
       @close="close"
       :yes="$t('delete')"
       :no="$t('cancel')"
