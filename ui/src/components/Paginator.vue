@@ -2,22 +2,36 @@
   <!-- eslint-disable max-len -->
   <ul
     v-if="pageCount > 1"
-    class="kwai-pagination"
+    class="flex border border-gray-300 rounded w-auto"
   >
-    <li v-if="currentPage > 1">
+    <li
+      class="hover:text-red-300 hover:bg-red-700 hover:cursor-pointer text-gray-700 border-r border-gray-300 px-3 py-2"
+      v-if="currentPage > 1">
       <a @click="currentPage -= 1">
         <i class="fas fa-chevron-left"></i>
       </a>
     </li>
     <template v-for="page in pages">
       <li
+        v-if="page === '...'"
+        :key="page + '_dot'"
+        class="text-gray-700 border-r border-gray-300 px-3 py-2"
+      >
+        ...
+      </li>
+      <li
+        v-else
         :key="page"
-        :class="{ 'kwai-disabled' : page == '...', 'kwai-active' : page == currentPage }"
+        :class="{ 'bg-red-700' : page == currentPage, 'text-red-300' : page == currentPage }"
+        class="hover:text-red-300 hover:bg-red-700 hover:cursor-pointer text-gray-700 border-r border-gray-300 px-3 py-2"
       >
         <a @click="currentPage = page">{{ page }}</a>
       </li>
     </template>
-    <li v-if="currentPage < pageCount">
+    <li
+      v-if="currentPage < pageCount"
+      class="hover:text-red-300 hover:bg-red-700 hover:cursor-pointer text-gray-700 border-r border-gray-300 px-3 py-2"
+    >
       <a @click="currentPage += 1">
         <i class="fas fa-chevron-right"></i>
       </a>
