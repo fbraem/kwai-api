@@ -1,5 +1,5 @@
 <template>
-  <div class="kwai-page-card">
+  <div class="h-full shadow-lg p-2 flex flex-col">
     <div v-if="page.header_overview_crop">
       <img :src="page.header_overview_crop" />
     </div>
@@ -9,11 +9,13 @@
       </h5>
     </div>
     <div
-      v-html="page.content.html_summary">
+      class="text-sm"
+      v-html="page.content.html_summary"
+    >
     </div>
-    <div style="align-self:flex-end;">
+    <div class="self-end">
       <router-link
-        class="kwai-icon-button"
+        class="icon-button text-gray-700 hover:bg-gray-300"
         :to="contentLink"
       >
         <i class="fas fa-ellipsis-h"></i>
