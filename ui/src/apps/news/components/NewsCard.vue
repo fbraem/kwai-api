@@ -77,7 +77,7 @@
 
 <style scoped>
 .news-card {
-  @apply h-full shadow p-1;
+  @apply h-full shadow p-3;
   display: grid;
   grid-gap: 10px;
 
