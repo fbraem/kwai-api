@@ -15,7 +15,7 @@
     <div class="block mx-auto my-2">
       <router-link
         :to="moreNewsLink"
-        class="kwai-button"
+        class="red-button"
       >
         {{ $t('more_news') }}
       </router-link>
