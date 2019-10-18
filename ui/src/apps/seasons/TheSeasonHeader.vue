@@ -6,7 +6,7 @@
     :toolbar="toolbar"
   >
     <AreYouSure
-      v-show="isModalVisible"
+      :show="isModalVisible"
       :yes="$t('delete')"
       :no="$t('cancel')"
       @sure="deleteSeason"

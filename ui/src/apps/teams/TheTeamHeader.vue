@@ -5,7 +5,7 @@
     :toolbar="toolbar"
   >
     <AreYouSure
-      v-show="showAreYouSure"
+      :show="showAreYouSure"
       @close="showAreYouSure = false;"
       :yes="$t('delete')"
       :no="$t('cancel')"
