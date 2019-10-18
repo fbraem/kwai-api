@@ -1,7 +1,10 @@
 <template>
   <Page>
     <Spinner v-if="$wait.is('news.read')" />
-    <article v-if="story">
+    <article
+      v-if="story"
+      class="container mx-auto"
+    >
       <h1>{{ story.content.title }}</h1>
       <blockquote>
         <div v-html="story.content.html_summary"></div>
