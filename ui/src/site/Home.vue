@@ -273,7 +273,7 @@
   @apply w-full text-white;
 }
 .message-card-content {
-  @apply bg-tatami p-5 h-full;
+  @apply bg-tatami p-5 h-full rounded-lg;
 }
 
 .message-card-content a {
