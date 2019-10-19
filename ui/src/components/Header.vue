@@ -96,7 +96,7 @@
     @apply bg-gray-800;
 }
 
-@screen md {
+@screen lg {
   .hero-container {
       grid-template-columns: fit-content(800px) 1fr auto;
       grid-template-rows: auto auto;
