@@ -4,7 +4,7 @@
       class="align-middle"
       v-if="$wait.is('training.coaches.read')"
     />
-    <div class="w-full md:w-1/2 lg:1/3 mx-auto p-4">
+    <div class="w-full lg:1/3 mx-auto p-4">
       <CoachCard
         v-if="coach"
         :coach="coach"

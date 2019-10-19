@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="container mt-4 mx-auto">
+  <div class="container mt-4 mx-auto p-3">
     <Spinner v-if="$wait.is('training.coaches.browse')" />
     <div v-else>
       <Alert
