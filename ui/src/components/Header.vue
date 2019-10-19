@@ -21,7 +21,7 @@
         :to="route"
         class="text-gray-500 hover:no-underline"
       >
-        <h1 class="flex items-center mb-2">
+        <h1 class="flex items-center mb-2 text-white">
           <inline-svg
             v-if="logo"
             :src="logo"
@@ -35,7 +35,7 @@
       </router-link>
       <h1
         v-else-if="title"
-        class="flex items-center mb-2"
+        class="flex items-center mb-2 text-white"
       >
         <inline-svg
           v-if="logo"
