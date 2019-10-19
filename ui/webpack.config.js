@@ -3,7 +3,7 @@ const path = require('path');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const MinifyPlugin = require('babel-minify-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -14,6 +14,7 @@ function resolve(dir) {
 module.exports = (env, argv) => {
 
   const isDev = (argv.mode === 'development');
+  process.env.NODE_ENV = isDev ? 'development' : 'production';
 
   var config = {
     watch: isDev,
@@ -34,11 +35,6 @@ module.exports = (env, argv) => {
           cssProcessorPluginOptions: {
             preset: [ 'default', { discardComments: { removeAll: true } } ]
           }
-        }),
-        new UglifyJSPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: isDev
         }),
       ],
       splitChunks: {
@@ -133,7 +129,7 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: [ '*', '.js', '.vue', '.json' ],
       alias: {
-        vue$: isDev ? 'vue/dist/vue.common.js' : 'vue/dist/vue.common.min.js',
+        vue$: isDev ? 'vue/dist/vue.common.js' : 'vue/dist/vue.common.prod.js',
         '@': resolve('src'),
         config: path.join(__dirname, 'src', 'site', 'config', argv.mode),
       },
@@ -156,6 +152,7 @@ module.exports = (env, argv) => {
         template: 'src/index.template.html',
         chunksSortMode: 'dependency'
       }),
+      new MinifyPlugin(),
     ]
   };
 
