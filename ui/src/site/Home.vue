@@ -79,47 +79,49 @@
         :categories="categories"
       />
     </div>
-    <h2 class="header-line">
-      Belangrijk Nieuws
-    </h2>
-    <div class="flex justify-center">
-      <Paginator
-        v-if="storiesMeta"
-        :count="storiesMeta.count"
-        :limit="storiesMeta.limit"
-        :offset="storiesMeta.offset"
-        @page="loadStories"
-      />
-    </div>
-    <Spinner v-if="$wait.is('news.browse')"/>
-    <div class="flex flex-wrap justify-center mb-4">
-      <div
-        v-for="story in stories"
-        :key="story.id"
-        class="p-2 w-full md:w-1/2 xl:w-1/3"
-      >
-        <NewsCard
-          :story="story"
-          @deleteStory="deleteStory"
+    <div class="container mx-auto">
+      <h2 class="header-line">
+        Belangrijk Nieuws
+      </h2>
+      <div class="flex justify-center">
+        <Paginator
+          v-if="storiesMeta"
+          :count="storiesMeta.count"
+          :limit="storiesMeta.limit"
+          :offset="storiesMeta.offset"
+          @page="loadStories"
         />
       </div>
-    </div>
-    <div class="flex justify-center">
-      <Paginator
-        v-if="storiesMeta"
-        :count="storiesMeta.count"
-        :limit="storiesMeta.limit"
-        :offset="storiesMeta.offset"
-        @page="loadStories"
-      />
-    </div>
-    <div class="block mb-4">
-      <router-link
-        class="red-button"
-        :to="{ name : 'news.browse' }"
-      >
-        {{ $t('more_news') }}
-      </router-link>
+      <Spinner v-if="$wait.is('news.browse')"/>
+      <div class="flex flex-wrap justify-center mb-4">
+        <div
+          v-for="story in stories"
+          :key="story.id"
+          class="p-2 w-full md:w-1/2"
+        >
+          <NewsCard
+            :story="story"
+            @deleteStory="deleteStory"
+          />
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <Paginator
+          v-if="storiesMeta"
+          :count="storiesMeta.count"
+          :limit="storiesMeta.limit"
+          :offset="storiesMeta.offset"
+          @page="loadStories"
+        />
+      </div>
+      <div class="block mb-6">
+        <router-link
+          class="red-button"
+          :to="{ name : 'news.browse' }"
+        >
+          {{ $t('more_news') }}
+        </router-link>
+      </div>
     </div>
     <div class="container mx-auto message-card-container">
       <div class="message-card">
