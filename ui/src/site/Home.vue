@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="p-4">
-    <div class="hidden sm:block container mx-auto bg-gray-100">
+    <div class="hidden sm:block container mx-auto bg-gray-100 mb-4">
       <div class="flex flex-row flex-wrap justify-center p-4">
         <div class="w-full sm:w-1/2 md:w-1/4">
           <IconCard :to="{ name : 'news.browse' }" title="Nieuws">
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="block sm:hidden">
+    <div class="block sm:hidden mb-4">
       <div class="flex flex-wrap justify-center">
         <IconCard
           :to="{ name : 'news.browse' }"
