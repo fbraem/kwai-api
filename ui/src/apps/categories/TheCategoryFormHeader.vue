@@ -28,7 +28,6 @@ export default {
   i18n: messages,
   computed: {
     subtitle() {
-      console.log(this.creating);
       if (this.creating) {
         return this.$t('create');
       }
