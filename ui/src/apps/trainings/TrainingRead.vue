@@ -20,9 +20,12 @@
         </Alert>
       </div>
       <div class="border-t border-gray-300 p-6">
-        <div v-if="training.coaches">
+        <div
+          v-if="training.coaches"
+          class="mb-6"
+        >
           <h4>{{ $t('coaches') }}</h4>
-          <ul class="list-disc">
+          <ul class="list-disc list-inside">
             <li
               v-for="(coach, index) in training.coaches"
               :key="index">
@@ -32,7 +35,7 @@
         </div>
         <div v-if="canManagePresences">
           <h4>{{ $t('training.presences.title') }}</h4>
-          <ul class="list-disc">
+          <ul class="list-disc list-inside">
             <li
               v-for="(member, index) in training.presences"
               :key="index">
