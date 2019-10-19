@@ -28,6 +28,7 @@
     </div>
     <div
       v-if="story.overview_picture"
+      class="self-center"
       style="grid-area: news-card-image;"
     >
       <img
