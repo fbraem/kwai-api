@@ -1,42 +1,32 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="container mx-auto py-3 px-3 sm:px-0">
-    <div
-      class="training-grid-container"
-      style="justify-items: center;"
-    >
-      <div
-        class="max-w-full md:max-w-xl p-4"
-        style="grid-area: news-area;"
-      >
+  <div class="container mx-auto flex flex-col">
+    <div class="flex">
+      <div class="w-full md:w-1/2 p-4">
         <NewsListCard
           :stories="stories"
           :category="category"
           class="h-full"
         />
       </div>
-      <div
-        class="max-w-full md:max-w-xl p-4"
-        style="grid-area: info-area;"
-      >
+      <div class="w-full md:w-1/2 p-4">
         <PageListCard
           :pages="pages"
           class="h-full"
         />
       </div>
-      <div
-        class="w-full mb-4"
-        style="grid-area: trainers-area;"
-      >
-        <CoachListCard
-          :coaches="coaches"
-        />
-      </div>
     </div>
-    <div style="grid-area: calendar-area">
+    <div class="w-full mb-4 p-3">
+      <CoachListCard
+        :coaches="coaches"
+      />
+    </div>
+    <div class="w-full p-3">
       <div class="flex flex-row">
         <div class="flex-grow">
-          <h3>Kalender</h3>
+          <h3 class="header-line mb-4">
+            Kalender
+          </h3>
         </div>
         <div>
           <router-link
@@ -60,36 +50,7 @@
   </div>
 </template>
 
-<style scoped>
-
-.training-grid-container {
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 1fr;
-  grid-template-areas:
-    "news-area"
-    "info-area"
-    "trainers-area"
-    "calendar-area"
-  ;
-}
-
-@screen md {
-  .training-grid-container {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr auto auto;
-    grid-template-areas:
-      "news-area info-area"
-      "trainers-area trainers-area"
-      "calendar-area calendar-area"
-    ;
-  }
-}
-</style>
-
 <script>
-
 import moment from 'moment';
 
 import NewsListCard from '@/apps/news/components/NewsListCard';
