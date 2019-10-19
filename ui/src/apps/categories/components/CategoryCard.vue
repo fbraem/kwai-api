@@ -1,13 +1,14 @@
 <template>
   <IconCard :to="linkToCategory" :title="category.name">
     <template v-if="category.icon_picture" slot="icon">
-        <inline-svg
-          :src="category.icon_picture"
-          width="42"
-          height="32"
-          fill="#c61c18"
-          class="inline-block"
-        />
+        <div class="text-red-700 inline-block">
+          <inline-svg
+            :src="category.icon_picture"
+            width="42"
+            height="32"
+            fill="#c61c18"
+          />
+        </div>
     </template>
     <template slot="text">
       {{ category.short_description }}

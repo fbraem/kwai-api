@@ -8,7 +8,7 @@
       />
       <div
         v-if="category.icon_picture"
-        class="mr-3"
+        class="mr-3 text-red-700"
         style="width: 40px"
       >
         <inline-svg
