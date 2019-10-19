@@ -10,7 +10,7 @@
           style="width:121px;height:121px;" />
       </div>
       <div style="text-align:center">
-        <h2>Judokwai Kemzeke</h2>
+        <h2 class="text-white">Judokwai Kemzeke</h2>
         {{ $t("message.hello") }}
         <br />
         {{ $t("message.info") }}
