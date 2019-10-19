@@ -9,7 +9,7 @@
           :src="require('./images/logo2.png')"
           style="width:121px;height:121px;" />
       </div>
-      <div style="text-align:center">
+      <div class="text-center">
         <h2 class="text-white">Judokwai Kemzeke</h2>
         {{ $t("message.hello") }}
         <br />
