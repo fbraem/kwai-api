@@ -40,6 +40,7 @@
     </Modal>
     <div v-if="isLoggedIn">
       <router-link
+        v-if="activeUser"
         class="icon-button text-red-300 hover:bg-red-900"
         :to="{ name: 'users.read', params: { id: activeUser.id } }"
         >
