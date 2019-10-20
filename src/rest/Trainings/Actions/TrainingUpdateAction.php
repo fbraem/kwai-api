@@ -182,7 +182,7 @@ class TrainingUpdateAction
                 $lookup = array_column($coaches, null, 'id');
                 $toDelete = [];
                 foreach ($training->coaches as $coach) {
-                    if (!$lookup[$coach->id]) {
+                    if (!isset($lookup[$coach->id])) {
                         $toDelete[] = $coach;
                     }
                 }
@@ -195,7 +195,7 @@ class TrainingUpdateAction
                 $lookup = array_column($training->coaches, null, 'id');
                 $toInsert = [];
                 foreach ($coaches as $coach) {
-                    if (!$lookup[$coach->id]) {
+                    if (!isset($lookup[$coach->id])) {
                         $coach->_joinData = new Entity([
                             'coach_type' => 0,
                             'present' => false,
