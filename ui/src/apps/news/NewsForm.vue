@@ -76,9 +76,6 @@
             <KwaiRange />
           </KwaiField>
         </div>
-        <div>
-          {{ form.fields.featured.value }}
-        </div>
         <div style="display:flex; justify-content: space-between;">
           <div style="flex: 0 0 calc(50% - 10px);">
             <KwaiField
