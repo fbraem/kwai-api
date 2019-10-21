@@ -67,10 +67,10 @@
           :placeholder="$t('form.story.remark.placeholder')"
         />
       </KwaiField>
-      <div style="display: flex; flex-direction: column">
+      <div class="flex flex-col">
         <div>
           <h3>{{ $t('featured') }}</h3>
-          <blockquote class="text-sm">
+          <blockquote class="text-sm mb-2">
             {{ $t('featured_hint') }}
           </blockquote>
         </div>
