@@ -7,8 +7,8 @@
       :save="$t('save')"
       @submit="submit"
     >
-      <div style="display:flex;">
-        <div style="flex-grow:1;">
+      <div class="flex">
+        <div class="flex-grow">
           <KwaiField
             name="category"
             :label="$t('form.story.category.label')"
@@ -16,14 +16,17 @@
             <KwaiSelect :items="categories" />
           </KwaiField>
         </div>
-        <div style="align-self:flex-end;margin-left: 20px;">
-          <KwaiField name="enabled">
+        <div class="self-begin ml-4">
+          <KwaiField
+            name="enabled"
+            :label="$t('form.story.enabled.label')"
+          >
             <KwaiSwitch />
           </KwaiField>
         </div>
       </div>
-      <div style="display:flex;flex-wrap:wrap; justify-content:space-between;">
-        <div style="flex:0 0 calc(50% - 10px);">
+      <div class="flex flex-wrap justify-between">
+        <div class="md:pr-6 w-full md:w-1/2">
           <KwaiField
             name="publish_date"
             :label="$t('form.story.publish_date.label')"
@@ -31,7 +34,7 @@
             <KwaiInputText :placeholder="$t('form.story.publish_date.placeholder', { format : dateFormat })" />
           </KwaiField>
         </div>
-        <div style="flex: 0 0 calc(50% - 10px);">
+        <div class="md:pr-6 w-full md:w-1/2">
           <KwaiField
             name="publish_time"
             :label="$t('form.story.publish_time.label')"
@@ -40,8 +43,8 @@
           </KwaiField>
         </div>
       </div>
-      <div style="display:flex; justify-content: space-between;">
-        <div style="flex: 0 0 calc(50% - 10px);">
+      <div class="flex flex-wrap justify-between">
+        <div class="md:pr-6 w-full md:w-1/2">
           <KwaiField
             name="end_date"
             :label="$t('form.story.end_date.label')"
@@ -49,7 +52,7 @@
             <KwaiInputText :placeholder="$t('form.story.end_date.placeholder', { format : dateFormat })" />
           </KwaiField>
         </div>
-        <div style="flex: 0 0 calc(50% - 10px);">
+        <div class="md:pr-6 w-full md:w-1/2">
           <KwaiField
             name="end_time"
             :label="$t('form.story.end_time.label')"
@@ -76,8 +79,8 @@
             <KwaiRange />
           </KwaiField>
         </div>
-        <div style="display:flex; justify-content: space-between;">
-          <div style="flex: 0 0 calc(50% - 10px);">
+        <div class="flex flex-wrap justify-between">
+          <div class="md:pr-6 w-full md:w-1/2">
             <KwaiField
               name="featured_end_date"
               :label="$t('form.story.featured_end_date.label')"
@@ -85,7 +88,7 @@
               <KwaiInputText :placeholder="$t('form.story.featured_end_date.placeholder', { format : dateFormat })" />
             </KwaiField>
           </div>
-          <div style="flex: 0 0 calc(50% - 10px);">
+          <div class="md:pr-6 w-full md:w-1/2">
             <KwaiField
               name="featured_end_time"
               :label="$t('form.story.featured_end_time.label')"
@@ -94,7 +97,7 @@
             </KwaiField>
           </div>
         </div>
-        <div style="display: flex; flex-direction: column;">
+        <div class="flex flex-col">
           <h3><span>{{ $t('content') }}</span></h3>
           <KwaiField
             name="title"
@@ -122,13 +125,6 @@
     </KwaiForm>
   </div>
 </template>
-
-<style scoped>
-    input[type=file] {
-        position: absolute;
-        left: -99999px;
-    }
-</style>
 
 <script>
 import moment from 'moment';
