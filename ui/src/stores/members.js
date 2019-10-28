@@ -19,10 +19,8 @@ const getters = {
    * Gets a member from the store
    */
   member: (state) => (id) => {
-    if (state.members) {
-      return find(state.members, ['id', id]);
-    }
-    return null;
+    if (state.members == null) return null;
+    return state.members.find((member) => member.id === id);
   }
 };
 
@@ -81,6 +79,27 @@ const actions = {
       throw error;
     } finally {
       dispatch('wait/end', 'members.browse', { root: true });
+    }
+  },
+  /**
+   * Read a member.
+   */
+  async read({ getters, dispatch, commit }, payload) {
+    var member = getters['member'](payload.id);
+    if (member) { // already read
+      return member;
+    }
+
+    dispatch('wait/start', 'members.read', { root: true });
+    var api = new JSONAPI({ source: Member });
+    try {
+      var result = await api.get(payload.id);
+      commit('member', result);
+      return result.data;
+    } catch (error) {
+      commit('error', error);
+    } finally {
+      dispatch('wait/end', 'members.read', { root: true });
     }
   },
 };
