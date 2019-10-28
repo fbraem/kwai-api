@@ -5,7 +5,7 @@
       v-if="story"
       class="container mx-auto"
     >
-      <h1>{{ story.content.title }}</h1>
+      <h1 class="hidden lg:block">{{ story.content.title }}</h1>
       <blockquote>
         <div v-html="story.content.html_summary"></div>
       </blockquote>
