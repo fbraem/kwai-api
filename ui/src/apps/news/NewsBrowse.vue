@@ -19,7 +19,7 @@
          <div
             v-for="story in stories"
             :key="story.id"
-            class="p-2 w-full md:w-1/2"
+            class="p-2 w-full xl:w-1/2"
           >
             <NewsCard
               :story="story"
