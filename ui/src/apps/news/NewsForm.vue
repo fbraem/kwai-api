@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="container mx-auto mt-3">
+  <div class="container mx-auto mt-3 p-2">
     <KwaiForm
       :form="form"
       :error="error"
