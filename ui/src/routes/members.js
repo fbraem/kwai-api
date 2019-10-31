@@ -4,6 +4,11 @@ const MembersHeader = () => import(
   /* webpackChunkName: "member_admin" */
   '@/apps/members/TheMembersHeader.vue'
 );
+
+const MemberHeader = () => import(
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/TheMemberHeader.vue'
+);
 const MemberRead = () => import(
   /* webpackChunkName: "member_admin" */
   '@/apps/members/MemberRead.vue'
@@ -38,6 +43,7 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
+          header: MemberHeader,
           main: MemberRead
         },
         name: 'members.read',
