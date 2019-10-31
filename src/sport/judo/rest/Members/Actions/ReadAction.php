@@ -27,10 +27,14 @@ class ReadAction
     public function __invoke(Request $request, Response $response, $args)
     {
         $parameters = $request->getAttribute('parameters');
-        
+
         $table = MembersTable::getTableFromRegistry();
 
-        $contain = [ 'Person' ];
+        $contain = [
+            'Person',
+            'Person.Contact',
+            'Person.Nationality'
+        ];
         if (isset($parameters['include'])) {
             foreach ($parameters['include'] as $include) {
                 if ($include == 'trainings') {
