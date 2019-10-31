@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable max-len -->
   <div class="m-4">
     <Spinner v-if="$wait.is('members.browse')" />
     <div v-else-if="members">
