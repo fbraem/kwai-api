@@ -47,7 +47,7 @@ export default class Member extends Model {
       formatted_license_end_date(member) {
         return member.license_end_date.format('L');
       },
-      licensed_ended(member) {
+      license_ended(member) {
         return member.license_end_date.isBefore(moment());
       }
     };
