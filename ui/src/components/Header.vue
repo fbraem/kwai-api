@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-800 text-gray-500">
-    <div class="hero-container container mx-auto">
+    <div class="hero-container">
       <div
         v-if="picture"
         class="self-center"
