@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -6,6 +5,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 function resolve(dir) {
   return path.join(__dirname, dir);
@@ -140,13 +140,14 @@ module.exports = (env, argv) => {
       new VueLoaderPlugin(),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css',
-        /* chunkFilename: '[name].[hash].css', */
         publicPath: './build',
       }),
-      new webpack.ContextReplacementPlugin(
-        /moment[\/\\]locale$/,
-        /nl|en/
-      ),
+      new MomentLocalesPlugin({
+        localesToKeep: [
+          'nl',
+          'en',
+        ]
+      }),
       new HtmlPlugin({
         filename: '../../index.html',
         template: 'src/index.template.html',
