@@ -1,6 +1,8 @@
 import Model from './Model';
 import { Attribute, DateAttribute } from './Attribute';
 
+import moment from 'moment';
+
 import Person from './Person';
 
 /**
@@ -22,7 +24,7 @@ export default class Member extends Model {
       remark: new Attribute(),
       license: new Attribute(),
       active: new Attribute(),
-      license_date: new DateAttribute('YYYY-MM-DD'),
+      license_end_date: new DateAttribute('YYYY-MM-DD'),
       created_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true),
       updated_at: new DateAttribute('YYYY-MM-DD HH:mm:ss', true)
     };
@@ -41,6 +43,12 @@ export default class Member extends Model {
           return member.person.name;
         }
         return '';
+      },
+      formatted_license_end_date(member) {
+        return member.license_end_date.format('L');
+      },
+      licensed_ended(member) {
+        return member.license_end_date.isBefore(moment());
       }
     };
   }
