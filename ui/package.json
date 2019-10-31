@@ -20,7 +20,9 @@
   "homepage": "https://github.com/tribbie/clubman#readme",
   "devDependencies": {
     "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-arrow-functions": "^7.2.0",
     "@babel/plugin-transform-async-to-generator": "^7.5.0",
