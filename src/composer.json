@@ -25,7 +25,8 @@
         "league/commonmark-ext-table": "^2.1",
         "cakephp/orm": "^3.8",
         "cakephp/chronos": "1.2.8",
-        "lcobucci/jwt": "3.3.1"
+        "lcobucci/jwt": "3.3.1",
+        "guzzlehttp/psr7": "1.6.1"
     },
     "require-dev": {
     },
