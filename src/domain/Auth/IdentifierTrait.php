@@ -3,7 +3,7 @@ namespace Domain\Auth;
 
 trait IdentifierTrait
 {
-    // The following two functions are required for OAuth2 League
+    // The following functions are required for OAuth2 League
     public function getIdentifier()
     {
         return $this->identifier;
@@ -12,5 +12,10 @@ trait IdentifierTrait
     public function setIdentifier($identifier)
     {
         $this->identifier = $identifier;
+    }
+
+    public function isConfidential()
+    {
+        return true;
     }
 }

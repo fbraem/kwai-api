@@ -27,7 +27,7 @@ class RefreshToken extends \Cake\ORM\Entity implements RefreshTokenEntityInterfa
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $this->expiration);
     }
 
-    public function setExpiryDateTime(\DateTime $datetime)
+    public function setExpiryDateTime(\DateTimeImmutable $datetime)
     {
         $this->expiration = \Carbon\Carbon::instance($datetime)->toDateTimeString();
     }

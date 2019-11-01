@@ -21,7 +21,7 @@ trait TokenTrait
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $this->expiration);
     }
 
-    public function setExpiryDatetime(\DateTime $datetime)
+    public function setExpiryDatetime(\DateTimeImmutable $datetime)
     {
         $this->expiration = \Carbon\Carbon::instance($datetime)->toDateTimeString();
     }

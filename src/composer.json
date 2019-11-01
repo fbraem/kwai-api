@@ -14,7 +14,7 @@
         "robmorgan/phinx": "0.11.1",
         "league/flysystem": "1.0.57",
         "intervention/image": "2.5.0",
-        "league/oauth2-server": "7.4.*",
+        "league/oauth2-server": "8.0.0",
         "league/commonmark": "1.1.0",
         "league/csv": "9.4.1",
         "cakephp/i18n": "3.8.5",
