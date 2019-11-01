@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "10cf21ee57fe4ea3361c37835aa65fcd",
+    "content-hash": "e7e4e15b2082d63dc570bb59e4e75ac4",
     "packages": [
         {
             "name": "aura/intl",
@@ -1072,19 +1072,21 @@
         },
         {
             "name": "league/csv",
-            "version": "9.2.0",
+            "version": "9.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "f3a3c69b6e152417e1b62d995bcad2237b053cc6"
+                "reference": "bf83acc23a7d60978fce36a384f97bf9d7d2ea0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/f3a3c69b6e152417e1b62d995bcad2237b053cc6",
-                "reference": "f3a3c69b6e152417e1b62d995bcad2237b053cc6",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/bf83acc23a7d60978fce36a384f97bf9d7d2ea0c",
+                "reference": "bf83acc23a7d60978fce36a384f97bf9d7d2ea0c",
                 "shasum": ""
             },
             "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
                 "ext-mbstring": "*",
                 "php": ">=7.0.10"
             },
@@ -1135,7 +1137,7 @@
                 "read",
                 "write"
             ],
-            "time": "2019-03-08T06:56:16+00:00"
+            "time": "2019-10-17T06:05:32+00:00"
         },
         {
             "name": "league/event",
