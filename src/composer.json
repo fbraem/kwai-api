@@ -21,7 +21,7 @@
         "slim/slim": "^3.0",
         "league/plates": "^3.3",
         "phpmailer/phpmailer": "^6.0",
-        "respect/validation": "^1.1",
+        "respect/validation": "1.1.31",
         "league/commonmark-ext-table": "^2.1",
         "cakephp/orm": "^3.8",
         "cakephp/chronos": "1.2.8",
