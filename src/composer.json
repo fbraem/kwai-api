@@ -9,7 +9,7 @@
     "require": {
       "php" : ">=7.0",
         "league/fractal": "0.18.*",
-        "nesbot/carbon": "2.18.*",
+        "nesbot/carbon": "2.25.3",
         "mtdowling/jmespath.php": "^2.4",
         "robmorgan/phinx": "0.11.1",
         "league/flysystem": "1.0.57",
