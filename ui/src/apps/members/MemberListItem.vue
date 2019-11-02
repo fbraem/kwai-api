@@ -19,10 +19,14 @@
       </i>
       &nbsp;-&nbsp;
       <span v-if="member.active">
-        {{ member.person.name }}
+        <router-link :to="{ name: 'members.read', params: { id: member.id }}">
+          {{ member.person.name }}
+        </router-link>
       </span>
       <del v-else>
-        {{ member.person.name }}
+        <router-link :to="{ name: 'members.read', params: { id: member.id }}">
+          {{ member.person.name }}
+        </router-link>
       </del>
       &nbsp;({{ member.person.age }})
     </div>
