@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="w-full rounded-lg shadow-lg flex flex-col">
+  <div class="w-full rounded-lg shadow-lg flex flex-col relative">
     <div class="flex flex-wrap">
       <div class="flex-shrink-0 mx-auto sm:ml-8">
         <img
