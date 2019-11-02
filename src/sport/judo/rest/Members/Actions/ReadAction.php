@@ -33,7 +33,8 @@ class ReadAction
         $contain = [
             'Person',
             'Person.Contact',
-            'Person.Nationality'
+            'Person.Nationality',
+            'Person.Contact.Country',
         ];
         if (isset($parameters['include'])) {
             foreach ($parameters['include'] as $include) {
