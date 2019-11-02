@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto w-full flex flex-wrap justify-between mx-2">
-    <div class="w-full text-white mb-8">
-      <h1
-        v-if="title"
-        class="font-bold text-2xl"
-      >
+    <div
+      v-if="title"
+      class="w-full text-white mb-8"
+    >
+      <h1 class="font-bold text-2xl">
         {{ title }}
       </h1>
       <slot name="subtitle">
