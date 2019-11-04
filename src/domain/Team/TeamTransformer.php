@@ -51,6 +51,8 @@ class TeamTransformer extends Fractal\TransformerAbstract
 
     public function transform(Team $team)
     {
-        return $team->toArray();
+        $result = $team->toArray();
+        unset($result['_joinData']);
+        return $result;
     }
 }
