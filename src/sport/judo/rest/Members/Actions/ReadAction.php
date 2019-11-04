@@ -42,6 +42,9 @@ class ReadAction
                     $contain[] = 'Trainings';
                     $contain[] = 'Trainings.Event';
                 }
+                if ($include == 'teams') {
+                    $contain[] = 'Teams';
+                }
             }
         }
 
