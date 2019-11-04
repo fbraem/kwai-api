@@ -29,6 +29,15 @@ class MembersTable extends \Cake\ORM\Table
             ->setForeignKey('member_id')
             ->setProperty('trainings')
         ;
+        $this->belongsToMany('Teams', [
+                'className' =>  \Domain\Team\TeamsTable::class,
+                'targetForeignKey' => 'team_id',
+                'joinTable' => 'team_members',
+                'through' => \Domain\Team\TeamMembersTable::getTableFromRegistry()
+            ])
+            ->setForeignKey('member_id')
+            ->setProperty('teams')
+        ;
     }
 
     protected function initializeSchema(\Cake\Database\Schema\TableSchema $schema)
