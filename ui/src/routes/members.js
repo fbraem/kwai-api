@@ -13,6 +13,14 @@ const MemberRead = () => import(
   /* webpackChunkName: "member_admin" */
   '@/apps/members/MemberRead.vue'
 );
+const MemberDetail = () => import(
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/MemberDetail.vue'
+);
+const MemberTeams = () => import(
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/MemberTeams.vue'
+);
 const MemberUploadHeader = () => import(
   /* webpackChunkName: "member_admin" */
   '@/apps/members/TheMemberUploadHeader.vue'
@@ -46,7 +54,22 @@ export default [
           header: MemberHeader,
           main: MemberRead
         },
-        name: 'members.read',
+        children: [
+          {
+            path: 'teams',
+            components: {
+              member_information: MemberTeams
+            },
+            name: 'members.teams'
+          },
+          {
+            path: '',
+            components: {
+              member_information: MemberDetail,
+            },
+            name: 'members.read',
+          },
+        ]
       },
       {
         path: 'upload',

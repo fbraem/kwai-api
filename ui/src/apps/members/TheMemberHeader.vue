@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable max-len -->
   <div class="bg-gray-800 text-white border-b-2 border-gray-300">
     <div
       v-if="member"
@@ -29,18 +30,6 @@
           class="mega-menu"
           role="toggle"
         >
-  <!--
-          <template slot="subtitle">
-            <h2>
-              {{ member.person.name }}
-              <sup
-                :class="flagClass"
-                class="flag-icon text-sm"
-              >
-              </sup>
-            </h2>
-          </template>
-  -->
           <MegaMenuBlock
             class="w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-r lg:border-b-0"
             :to="{ name: 'members.read', params: { id: member.id }}"
@@ -57,7 +46,7 @@
             class="w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-r-0 lg:border-r lg:border-b-0"
             title="Teams"
             logo="fas fa-users"
-            :to="{ name: 'members.read', params: { id: member.id }}"
+            :to="{ name: 'members.teams', params: { id: member.id }}"
           >
             <p class="text-gray-100 text-sm">
               Bekijk tot welke teams <strong>{{ member.person.name }}</strong> behoort.
