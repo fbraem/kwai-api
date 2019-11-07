@@ -4,6 +4,7 @@ import { Attribute, DateAttribute } from './Attribute';
 import moment from 'moment';
 
 import Person from './Person';
+import Team from './Team';
 
 /**
  * Member model
@@ -33,6 +34,7 @@ export default class Member extends Model {
   static relationships() {
     return {
       person: Person,
+      teams: Team
     };
   }
 

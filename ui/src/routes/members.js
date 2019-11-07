@@ -17,6 +17,10 @@ const MemberDetail = () => import(
   /* webpackChunkName: "member_admin" */
   '@/apps/members/MemberDetail.vue'
 );
+const NotImplemented = () => import(
+  /* webpackChunkName: "member_admin" */
+  '@/apps/members/NotImplemented.vue'
+);
 const MemberTeams = () => import(
   /* webpackChunkName: "member_admin" */
   '@/apps/members/MemberTeams.vue'
@@ -61,6 +65,20 @@ export default [
               member_information: MemberTeams
             },
             name: 'members.teams'
+          },
+          {
+            path: 'trainings',
+            components: {
+              member_information: NotImplemented,
+            },
+            name: 'members.trainings',
+          },
+          {
+            path: 'tournaments',
+            components: {
+              member_information: NotImplemented,
+            },
+            name: 'members.tournaments',
           },
           {
             path: '',

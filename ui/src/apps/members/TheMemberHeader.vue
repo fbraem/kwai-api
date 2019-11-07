@@ -56,7 +56,7 @@
             class="w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-b-0 sm:border-r md:border-b-0"
             title="Trainingen"
             logo="fas fa-university"
-            :to="{ name: 'members.read', params: { id: member.id }}"
+            :to="{ name: 'members.trainings', params: { id: member.id }}"
           >
             <p class="text-gray-100 text-sm">
               Aan welke trainingen heeft <strong>{{ member.person.name }}</strong> deel genomen?
@@ -66,7 +66,7 @@
             class="w-full sm:w-1/2 lg:w-1/4"
             title="Tornooien"
             logo="fas fa-trophy"
-            :to="{ name: 'members.read', params: { id: member.id }}"
+            :to="{ name: 'members.tournaments', params: { id: member.id }}"
           >
             <p class="text-gray-100 text-sm">
               Voor welke tornooien is <strong>{{ member.person.name }}</strong> ingeschreven?
@@ -80,15 +80,6 @@
 </template>
 
 <style>
-/*
-.toggleable > label:after {
-    content: "\25BC";
-    font-size: 10px;
-    padding-left: 6px;
-    position: relative;
-    top: -1px;
-  }
-*/
   .toggle-input {
     display: none;
   }
@@ -99,20 +90,6 @@
   .toggle-input:checked ~ .mega-menu {
     display: block;
   }
-
-/*
-  .toggle-input:checked + label {
-    color: white;
-  }
-  .toggle-input:checked ~ label:after {
-    content: "\25B2";
-    font-size: 10px;
-    padding-left: 6px;
-    position: relative;
-    top: -1px;
-  }
-  */
-
 </style>
 
 <script>

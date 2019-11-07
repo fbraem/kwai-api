@@ -102,6 +102,25 @@ const actions = {
       dispatch('wait/end', 'members.read', { root: true });
     }
   },
+
+  async readTeams({ getters, dispatch, commit }, payload) {
+    var member = getters['member'](payload.id);
+    if (member && member.teams) { // already read
+      return;
+    }
+
+    dispatch('wait/start', 'members.read', { root: true });
+    var api = new JSONAPI({ source: Member });
+    try {
+      var result = await api.with('teams').get(payload.id);
+      commit('member', result);
+      return result.data;
+    } catch (error) {
+      commit('error', error);
+    } finally {
+      dispatch('wait/end', 'members.read', { root: true });
+    }
+  }
 };
 
 export default {
