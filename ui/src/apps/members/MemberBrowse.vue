@@ -1,6 +1,9 @@
 <template>
-  <div class="m-4">
-    <Spinner v-if="$wait.is('members.browse')" />
+  <div class="container mx-auto p-4">
+    <Spinner
+       v-if="$wait.is('members.browse')"
+       class="text-center"
+    />
     <div v-else-if="members">
       <Alert
         v-if="members.length == 0"
