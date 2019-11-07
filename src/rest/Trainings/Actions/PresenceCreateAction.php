@@ -88,7 +88,7 @@ class PresenceCreateAction
                 $lookup = array_column($training->presences, null, 'id');
                 $presences = [];
                 foreach ($members as $member) {
-                    $presence = $lookup[$member->id];
+                    $presence = $lookup[$member->id] ?? null;
                     if ($presence) {
                         if ($remarks[$member->id]) {
                             $presence->_joinData['remark'] = $remarks[$member->id];
