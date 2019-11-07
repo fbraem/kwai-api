@@ -75,7 +75,7 @@ class PresenceCreateAction
                 $lookup = array_column($members, null, 'id');
                 $toDelete = [];
                 foreach ($training->presences as $member) {
-                    if (!$lookup[$member->id]) {
+                    if (!isset($lookup[$member->id])) {
                         $toDelete[] = $member;
                     }
                 }
