@@ -37,11 +37,6 @@
         >
           {{ $t('training.presences.nobody') }}
         </p>
-        <WarningComponent
-          v-if="changed"
-          @save="saveAttendees"
-          class="mb-6"
-        />
         <h1 class="mb-6">
           {{ $t('training.presences.possible') }}
         </h1>
@@ -106,7 +101,6 @@
             </button>
           </div>
         </KwaiForm>
-        <WarningComponent v-if="changed" @save="saveAttendees" />
       </div>
     </TrainingCard>
   </div>
@@ -123,39 +117,10 @@ import KwaiForm from '@/components/forms/KwaiForm';
 import KwaiField from '@/components/forms/KwaiField';
 import Multiselect from '@/components/forms/MultiSelect';
 
-const WarningComponent = {
-  i18n: messages,
-  render(h) {
-    return h('div', {
-    }, [
-      h('div', {
-      }, [
-        h('div', {
-        },
-        this.$t('training.presences.save_warning')
-        ),
-        h('div', {},
-          [
-            h('button', {
-              class: {
-                'red-button': true,
-              },
-              on: {
-                click: () => { this.$emit('save'); }
-              }
-            }, this.$t('training.presences.save')),
-          ]
-        ),
-      ]),
-    ]);
-  }
-};
-
 export default {
   i18n: messages,
   components: {
-    TrainingCard, MemberSummary, KwaiForm, KwaiField, Multiselect,
-    WarningComponent
+    TrainingCard, MemberSummary, KwaiForm, KwaiField, Multiselect
   },
   data() {
     return {
@@ -164,8 +129,7 @@ export default {
         otherMembers: makeField({
           value: []
         })
-      }),
-      changed: false
+      })
     };
   },
   computed: {
@@ -241,25 +205,24 @@ export default {
     },
     removePresence(member) {
       this.presences = this.presences.filter(p => p.id !== member.id);
-      this.changed = true;
+      this.saveAttendees();
     },
     addPresence(member) {
       this.presences.push(member);
-      this.changed = true;
+      this.saveAttendees();
     },
     addAttendeeFromList() {
       this.form.fields.otherMembers.value.forEach((member) => {
         this.presences.push(member);
       });
+      this.saveAttendees();
       this.form.fields.otherMembers.value = [];
-      this.changed = true;
     },
     saveAttendees() {
       this.$store.dispatch('training/updatePresences', {
         training: this.training,
         presences: this.presences
       });
-      this.changed = false;
     }
   }
 };
