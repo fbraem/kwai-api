@@ -36,25 +36,22 @@ class MemberTransformer extends Fractal\TransformerAbstract
 
     public function includePerson(Member $member)
     {
-        $person = $member->person;
-        if ($person) {
-            return PersonTransformer::createForItem($person);
+        if (isset($member->person)) {
+            return PersonTransformer::createForItem($member->person);
         }
     }
 
     public function includeTeams(Member $member)
     {
-        $teams = $member->teams;
-        if ($teams) {
-            return TeamTransformer::createForCollection($teams);
+        if (isset($member->teams)) {
+            return TeamTransformer::createForCollection($member->teams);
         }
     }
 
     public function includeTrainings(Member $member)
     {
-        $trainings = $member->trainings;
-        if ($trainings) {
-            return TrainingParticipationsTransformer::createForCollection($trainings);
+        if (isset($member->trainings)) {
+            return TrainingParticipationsTransformer::createForCollection($member->trainings);
         }
     }
 }
