@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     member() {
-      return this.$store.getters['member/member'](this.$route.params.id);
+      return this.$store.state.member.selected;
     },
   },
   beforeRouteEnter(to, from, next) {

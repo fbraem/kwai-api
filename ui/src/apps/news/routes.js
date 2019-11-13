@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const NewsHeader = () => import(
   /* webpackChunkName: "news_chunck" */
@@ -50,35 +50,35 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: NewsStoryHeader,
-          main: NewsRead
+          hero: NewsStoryHeader,
+          default: NewsRead
         },
         name: 'news.story',
       },
       {
         path: 'category/:category(\\d+)',
         components: {
-          header: NewsCategoryHeader,
-          main: NewsBrowse
+          hero: NewsCategoryHeader,
+          default: NewsBrowse
         },
         name: 'news.category',
       },
       {
         path: 'archive/:year(\\d+)/:month(\\d+)',
         components: {
-          header: NewsArchiveHeader,
-          main: NewsBrowse
+          hero: NewsArchiveHeader,
+          default: NewsBrowse
         },
         name: 'news.archive',
       },
       {
         path: 'create',
         components: {
-          header: NewsFormHeader,
-          main: NewsForm
+          hero: NewsFormHeader,
+          default: NewsForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -87,11 +87,11 @@ export default [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: NewsFormHeader,
-          main: NewsForm
+          hero: NewsFormHeader,
+          default: NewsForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -100,8 +100,8 @@ export default [
       {
         path: '',
         components: {
-          header: NewsHeader,
-          main: NewsBrowse
+          hero: NewsHeader,
+          default: NewsBrowse
         },
         name: 'news.browse',
       },

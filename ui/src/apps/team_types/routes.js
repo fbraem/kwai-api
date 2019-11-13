@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const TeamTypeRead = () => import(
   /* webpackChunkName: "team_types_chunck" */
@@ -42,19 +42,19 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: TeamTypeHeader,
-          main: TeamTypeRead
+          hero: TeamTypeHeader,
+          default: TeamTypeRead
         },
         name: 'team_types.read',
       },
       {
         path: 'create',
         components: {
-          header: TeamTypeFormHeader,
-          main: TeamTypeForm
+          hero: TeamTypeFormHeader,
+          default: TeamTypeForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -63,11 +63,11 @@ export default [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: TeamTypeFormHeader,
-          main: TeamTypeForm
+          hero: TeamTypeFormHeader,
+          default: TeamTypeForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -76,8 +76,8 @@ export default [
       {
         path: '',
         components: {
-          header: TeamTypesHeader,
-          main: TeamTypeBrowse
+          hero: TeamTypesHeader,
+          default: TeamTypeBrowse
         },
         name: 'team_types.browse',
       },

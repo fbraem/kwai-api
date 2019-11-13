@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const DefinitionsHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
@@ -47,8 +47,8 @@ export default [
           next();
         },
         components: {
-          header: DefinitionHeader,
-          main: DefinitionRead
+          hero: DefinitionHeader,
+          default: DefinitionRead
         },
         name: 'trainings.definitions.read',
       },
@@ -60,11 +60,11 @@ export default [
           next();
         },
         components: {
-          header: DefinitionFormHeader,
-          main: DefinitionForm
+          hero: DefinitionFormHeader,
+          default: DefinitionForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -78,11 +78,11 @@ export default [
           next();
         },
         components: {
-          header: DefinitionFormHeader,
-          main: DefinitionForm
+          hero: DefinitionFormHeader,
+          default: DefinitionForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -91,8 +91,8 @@ export default [
       {
         path: '',
         components: {
-          header: DefinitionsHeader,
-          main: DefinitionBrowse
+          hero: DefinitionsHeader,
+          default: DefinitionBrowse
         },
         name: 'trainings.definitions.browse',
       },

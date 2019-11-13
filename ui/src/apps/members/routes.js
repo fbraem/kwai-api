@@ -1,4 +1,4 @@
-import App from '@/site/App';
+import App from './App';
 
 const MembersHeader = () => import(
   /* webpackChunkName: "member_admin" */
@@ -38,25 +38,16 @@ const MemberBrowse = () => import(
   '@/apps/members/MemberBrowse.vue'
 );
 
-import MemberStore from '@/stores/members';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/members',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['member'], MemberStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',
         components: {
-          header: MemberHeader,
-          main: MemberRead
+          hero: MemberHeader,
+          default: MemberRead
         },
         children: [
           {
@@ -92,16 +83,16 @@ export default [
       {
         path: 'upload',
         components: {
-          header: MemberUploadHeader,
-          main: MemberUpload
+          hero: MemberUploadHeader,
+          default: MemberUpload
         },
         name: 'members.upload',
       },
       {
         path: '',
         components: {
-          header: MembersHeader,
-          main: MemberBrowse
+          hero: MembersHeader,
+          default: MemberBrowse
         },
         name: 'members.browse',
       },

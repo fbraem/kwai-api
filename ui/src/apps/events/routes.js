@@ -1,10 +1,10 @@
-import App from '@/site/App.vue';
+import App from './App';
 
 const EventBrowse = () => import(/* webpackChunkName: "trainings_chunck" */
-  '@/apps/events/EventBrowse.vue'
+  '@/apps/events/EventBrowse'
 );
 const EventRead = () => import(/* webpackChunkName: "trainings_chunck" */
-  '@/apps/events/EventRead.vue'
+  '@/apps/events/EventRead'
 );
 
 import EventStore from '@/stores/events';
@@ -24,11 +24,11 @@ export default [
       {
         path: '/events/:year(\\d+)/:month(\\d+)',
         components: {
-          main: EventBrowse
+          default: EventBrowse
         },
         name: 'events.browse',
         props: {
-          main: (route) => {
+          default: (route) => {
             var result = {};
             if (route.params.year) result.year = Number(route.params.year);
             if (route.params.month) result.month = Number(route.params.month);
@@ -39,14 +39,14 @@ export default [
       {
         path: '/events/:id(\\d+)',
         components: {
-          main: EventRead
+          default: EventRead
         },
         name: 'events.read'
       },
       {
         path: '',
         components: {
-          main: EventBrowse
+          default: EventBrowse
         },
         name: 'events.home'
       },

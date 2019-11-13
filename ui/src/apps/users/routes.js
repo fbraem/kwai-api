@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 import abilitiesRouter from './abilities';
 
@@ -62,8 +62,8 @@ var routes = [
           next();
         },
         components: {
-          header: UserInviteHeader,
-          main: UserInvite
+          hero: UserInviteHeader,
+          default: UserInvite
         },
         name: 'users.invite',
       },
@@ -74,8 +74,8 @@ var routes = [
           next();
         },
         components: {
-          header: UserRegisterWithInviteHeader,
-          main: UserRegisterWithInvite
+          hero: UserRegisterWithInviteHeader,
+          default: UserRegisterWithInvite
         },
         name: 'users.register.invite',
       },
@@ -87,16 +87,16 @@ var routes = [
           next();
         },
         components: {
-          header: UserHeader,
-          main: UserRead
+          hero: UserHeader,
+          default: UserRead
         },
         name: 'users.read',
       },
       {
         path: '',
         components: {
-          header: UsersHeader,
-          main: UserBrowse
+          hero: UsersHeader,
+          default: UserBrowse
         },
         name: 'users.browse',
       },

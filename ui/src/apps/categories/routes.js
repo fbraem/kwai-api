@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const CategoryHeader = () => import(
   /* webpackChunkName: "category_chunck" */
@@ -57,19 +57,19 @@ export default [
           next();
         },
         components: {
-          header: CategoryHeader,
-          main: CategoryRead
+          hero: CategoryHeader,
+          default: CategoryRead
         },
         name: 'categories.read',
       },
       {
         path: 'create',
         components: {
-          header: CategoryFormHeader,
-          main: CategoryForm
+          hero: CategoryFormHeader,
+          default: CategoryForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -78,11 +78,11 @@ export default [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: CategoryFormHeader,
-          main: CategoryForm
+          hero: CategoryFormHeader,
+          default: CategoryForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -91,8 +91,8 @@ export default [
       {
         path: '',
         components: {
-          header: CategoriesHeader,
-          main: CategoryBrowse
+          hero: CategoriesHeader,
+          default: CategoryBrowse
         },
         name: 'categories.browse',
       },

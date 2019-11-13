@@ -8,11 +8,13 @@ Vue.use(Vuex);
 import JSONAPI from '@/js/JSONAPI';
 import Member from '@/models/Member';
 
-const state = {
-  members: null,
-  error: null,
-  meta: null
-};
+function initialize() {
+  return {
+    members: null,
+    selected: null,
+    meta: null
+  };
+}
 
 const getters = {
   /**
@@ -37,16 +39,20 @@ const mutations = {
    * Mutate a member
    */
   member(state, { data }) {
+    state.error = null;
     if (state.members == null) {
-      state.members = [];
+      return;
     }
     var index = state.members.findIndex((m) => m.id === data.id);
     if (index !== -1) {
       Vue.set(state.members, index, data);
-    } else {
-      state.members.push(data);
     }
-    state.error = null;
+  },
+  select(state, data) {
+    state.selected = data;
+  },
+  reset(state) {
+    Object.assign(state, initialize());
   },
   /**
    * Mutate the error
@@ -84,10 +90,17 @@ const actions = {
   /**
    * Read a member.
    */
-  async read({ getters, dispatch, commit }, payload) {
+  async read({ getters, dispatch, commit, state }, payload) {
+    // Don't read the same member again
+    if (state.selected?.id === payload.id) {
+      return;
+    }
+
+    // Check if the member was already present in the list
     var member = getters['member'](payload.id);
     if (member) { // already read
-      return member;
+      commit('select', member);
+      return;
     }
 
     dispatch('wait/start', 'members.read', { root: true });
@@ -95,7 +108,7 @@ const actions = {
     try {
       var result = await api.get(payload.id);
       commit('member', result);
-      return result.data;
+      commit('select', result.data);
     } catch (error) {
       commit('error', error);
     } finally {
@@ -103,9 +116,16 @@ const actions = {
     }
   },
 
-  async readTeams({ getters, dispatch, commit }, payload) {
+  async readTeams({ getters, state, dispatch, commit }, payload) {
+    // Don't read the same member again ...
+    if (state.selected?.id === payload.id && state.selected.teams) {
+      return;
+    }
+
+    // Check if the member is already available in the list
     var member = getters['member'](payload.id);
     if (member && member.teams) { // already read
+      commit('select', member);
       return;
     }
 
@@ -114,18 +134,21 @@ const actions = {
     try {
       var result = await api.with('teams').get(payload.id);
       commit('member', result);
-      return result.data;
+      commit('select', result.data);
     } catch (error) {
       commit('error', error);
     } finally {
       dispatch('wait/end', 'members.read', { root: true });
     }
+  },
+  reset({ commit }) {
+    commit('reset');
   }
 };
 
 export default {
   namespaced: true,
-  state: state,
+  state: initialize(),
   getters: getters,
   mutations: mutations,
   actions: actions,

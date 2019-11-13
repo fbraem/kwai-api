@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 import moment from 'moment';
 
@@ -69,16 +69,16 @@ var routes = [
       {
         path: ':id(\\d+)',
         components: {
-          header: TrainingHeader,
-          main: TrainingRead
+          hero: TrainingHeader,
+          default: TrainingRead
         },
         name: 'trainings.read',
       },
       {
         path: ':id(\\d+)/presences',
         components: {
-          header: ThePresencesHeader,
-          main: Presences
+          hero: ThePresencesHeader,
+          default: Presences
         },
         beforeEnter(to, from, next) {
           store.setModule(['team'], TeamStore);
@@ -90,15 +90,15 @@ var routes = [
       {
         path: ':year(\\d+)/:month(\\d+)',
         components: {
-          header: TrainingsHeader,
-          main: TrainingBrowse
+          hero: TrainingsHeader,
+          default: TrainingBrowse
         },
         name: 'trainings.browse',
         meta: {
           app: CATEGORY_APP
         },
         props: {
-          main: (route) => {
+          default: (route) => {
             const year = route.params.year
               ? Number(route.params.year) : moment().year();
             const month = route.params.month
@@ -110,11 +110,11 @@ var routes = [
       {
         path: 'create',
         components: {
-          header: TrainingFormHeader,
-          main: TrainingForm
+          hero: TrainingFormHeader,
+          default: TrainingForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -129,11 +129,11 @@ var routes = [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: TrainingFormHeader,
-          main: TrainingForm
+          hero: TrainingFormHeader,
+          default: TrainingForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -160,8 +160,8 @@ var routes = [
           image: require('@/apps/trainings/images/sport-3468115_1920.jpg')
         },
         components: {
-          header: TrainingsHeader,
-          main: TrainingIndex
+          hero: TrainingsHeader,
+          default: TrainingIndex
         },
         name: 'trainings.index'
       },

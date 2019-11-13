@@ -41,10 +41,10 @@ Vue.use(VueWait);
 import Notifications from 'vue-notification';
 Vue.use(Notifications);
 
-import routes from '@/routes';
+import routes from './routes';
 
 const router = new VueRouter({
-  routes: routes(),
+  routes
 });
 router.beforeEach(async(to, from, next) => {
   if (to.meta.app) {

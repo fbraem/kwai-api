@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const PagesHeader = () => import(
   /* webpackChunkName: "pages_chunck" */
@@ -46,27 +46,27 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: PageHeader,
-          main: PageRead
+          hero: PageHeader,
+          default: PageRead
         },
         name: 'pages.read',
       },
       {
         path: 'category/:category(\\d+)',
         components: {
-          header: PageCategoryHeader,
-          main: PageBrowse
+          hero: PageCategoryHeader,
+          default: PageBrowse
         },
         name: 'pages.category',
       },
       {
         path: 'create',
         components: {
-          header: PageFormHeader,
-          main: PageForm
+          hero: PageFormHeader,
+          default: PageForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -76,11 +76,11 @@ export default [
         path: 'update/:id(\\d+)',
         name: 'pages.update',
         components: {
-          header: PageFormHeader,
-          main: PageForm
+          hero: PageFormHeader,
+          default: PageForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -88,8 +88,8 @@ export default [
       {
         path: '',
         components: {
-          header: PagesHeader,
-          main: PageBrowse
+          hero: PagesHeader,
+          default: PageBrowse
         },
         name: 'pages.browse',
       },

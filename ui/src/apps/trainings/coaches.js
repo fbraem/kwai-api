@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 import moment from 'moment';
 
@@ -56,8 +56,8 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: CoachHeader,
-          main: CoachRead
+          hero: CoachHeader,
+          default: CoachRead
         },
         children: [
           {
@@ -106,11 +106,11 @@ export default [
           next();
         },
         components: {
-          header: CoachFormHeader,
-          main: CoachForm
+          hero: CoachFormHeader,
+          default: CoachForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -123,11 +123,11 @@ export default [
           next();
         },
         components: {
-          header: CoachFormHeader,
-          main: CoachForm
+          hero: CoachFormHeader,
+          default: CoachForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -137,8 +137,8 @@ export default [
         path: '',
         name: 'trainings.coaches',
         components: {
-          header: CoachesHeader,
-          main: CoachBrowse
+          hero: CoachesHeader,
+          default: CoachBrowse
         }
       },
     ]

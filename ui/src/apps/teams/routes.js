@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const TeamRead = () => import(
   /* webpackChunkName: "teams_chunck" */
@@ -44,8 +44,8 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: TeamHeader,
-          main: TeamRead
+          hero: TeamHeader,
+          default: TeamRead
         },
         name: 'teams.read',
       },
@@ -57,11 +57,11 @@ export default [
           next();
         },
         components: {
-          header: TeamFormHeader,
-          main: TeamForm
+          hero: TeamFormHeader,
+          default: TeamForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -75,11 +75,11 @@ export default [
           next();
         },
         components: {
-          header: TeamFormHeader,
-          main: TeamForm
+          hero: TeamFormHeader,
+          default: TeamForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -88,8 +88,8 @@ export default [
       {
         path: '',
         components: {
-          header: TeamsHeader,
-          main: TeamBrowse
+          hero: TeamsHeader,
+          default: TeamBrowse
         },
         name: 'teams.browse',
       },

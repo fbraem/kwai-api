@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const SeasonHeader = () => import(
   /* webpackChunkName: "seasons_chunck" */
@@ -42,19 +42,19 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: SeasonHeader,
-          main: SeasonRead
+          hero: SeasonHeader,
+          default: SeasonRead
         },
         name: 'seasons.read',
       },
       {
         path: 'create',
         components: {
-          header: SeasonFormHeader,
-          main: SeasonForm
+          hero: SeasonFormHeader,
+          default: SeasonForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -63,11 +63,11 @@ export default [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: SeasonFormHeader,
-          main: SeasonForm
+          hero: SeasonFormHeader,
+          default: SeasonForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -76,8 +76,8 @@ export default [
       {
         path: '',
         components: {
-          header: SeasonsHeader,
-          main: SeasonBrowse
+          hero: SeasonsHeader,
+          default: SeasonBrowse
         },
         name: 'seasons.browse',
       },

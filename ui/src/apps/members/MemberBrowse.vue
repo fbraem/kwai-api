@@ -66,6 +66,11 @@ import MemberListItem from './MemberListItem';
  * Page for browsing a member
  */
 export default {
+  props: {
+    state: {
+      type: Object
+    }
+  },
   components: {
     Spinner,
     MemberListItem,
@@ -106,9 +111,11 @@ export default {
   },
   methods: {
     fetchData() {
-      this.$store.dispatch('member/browse', {
-        // active: true
-      });
+      if (this.members === null) {
+        this.$store.dispatch('member/browse', {
+          // active: true
+        });
+      }
     },
     jumpIt(target) {
       jump(target);

@@ -123,7 +123,7 @@ export default {
   i18n: messages,
   computed: {
     member() {
-      return this.$store.getters['member/member'](this.$route.params.id);
+      return this.$store.state.member.selected;
     },
     licenseDateClass() {
       return {

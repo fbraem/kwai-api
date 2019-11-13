@@ -1,4 +1,4 @@
-import App from '@/site/App.vue';
+import App from './App.vue';
 
 const UserAbilitiesHeader = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
@@ -47,8 +47,8 @@ export default [
       {
         path: '',
         components: {
-          header: UserAbilitiesHeader,
-          main: UserAbilities
+          hero: UserAbilitiesHeader,
+          default: UserAbilities
         },
         name: 'users.abilities',
       },
@@ -66,19 +66,19 @@ export default [
       {
         path: ':id(\\d+)',
         components: {
-          header: AbilityHeader,
-          main: AbilityRead
+          hero: AbilityHeader,
+          default: AbilityRead
         },
         name: 'users.abilities.read'
       },
       {
         path: 'create',
         components: {
-          header: AbilityFormHeader,
-          main: AbilityForm
+          hero: AbilityFormHeader,
+          default: AbilityForm
         },
         props: {
-          header: {
+          hero: {
             creating: true
           }
         },
@@ -87,11 +87,11 @@ export default [
       {
         path: 'update/:id(\\d+)',
         components: {
-          header: AbilityFormHeader,
-          main: AbilityForm
+          hero: AbilityFormHeader,
+          default: AbilityForm
         },
         props: {
-          header: {
+          hero: {
             creating: false
           }
         },
@@ -100,8 +100,8 @@ export default [
       {
         path: '',
         components: {
-          header: AbilitiesHeader,
-          main: AbilityBrowse
+          hero: AbilitiesHeader,
+          default: AbilityBrowse
         },
         name: 'users.abilities.browse',
       },
