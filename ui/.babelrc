@@ -22,5 +22,17 @@
                 corejs: 3
             }
         ]
-    ]
+    ],
+    "env" : {
+        "production" : {
+            "plugins" : [
+                [
+                    "transform-remove-console",
+                    {
+                        "exclude": [ "error", "warn" ]
+                    }
+                ]
+            ]
+        }
+    }
 }
