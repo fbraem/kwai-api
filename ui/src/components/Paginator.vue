@@ -12,17 +12,17 @@
         <i class="fas fa-chevron-left"></i>
       </a>
     </li>
-    <template v-for="page in pages">
+    <template v-for="(page, index) in pages">
       <li
         v-if="page === '...'"
-        :key="page + '_dot'"
+        :key="index"
         class="text-gray-700 border-r border-gray-300 px-3 py-2"
       >
         ...
       </li>
       <li
         v-else
-        :key="page"
+        :key="index"
       >
         <a
           :class="{ 'text-gray-700': page !== currentPage, 'text-red-300' : page === currentPage, 'bg-red-700' : page === currentPage }"
