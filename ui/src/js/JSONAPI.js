@@ -1,5 +1,4 @@
 import URI from 'urijs';
-import config from 'config';
 import axios from '@/js/http';
 
 /**
@@ -46,7 +45,7 @@ class JSONAPI {
     this.source = source;
     this.target = target;
     this.base_uri = new URI('');
-    var segments = [config.api];
+    var segments = [];
     segments = segments.concat(source.namespace());
     this.base_uri.segment(segments);
     this.reset();

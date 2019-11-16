@@ -3,6 +3,10 @@
  * Used https://github.com/Flyrell/axios-auth-refresh as input.
  */
 import axios from 'axios';
+
+import config from 'config';
+axios.defaults.baseURL = config.api;
+
 import tokenStore from './TokenStore';
 
 import store from '@/stores/root';
