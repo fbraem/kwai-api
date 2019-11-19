@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.state.category.categories;
+      return this.$store.state.news.category.all;
     },
     archiveYears() {
       var archive = this.$store.state.news.archive;
@@ -63,7 +63,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('category/browse');
+    this.$store.dispatch('news/category/browse');
     this.$store.dispatch('news/loadArchive');
   }
 };

@@ -25,37 +25,13 @@ const CategoryBrowse = () => import(
   '@/apps/categories/CategoryBrowse.vue'
 );
 
-import CategoryStore from '@/stores/categories';
-import NewsStore from '@/stores/news';
-import PageStore from '@/stores/pages';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/categories',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['category'], CategoryStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',
-        async beforeEnter(to, from, next) {
-          await store.dispatch('category/read', { id: to.params.id });
-          const category = store.getters['category/category'](to.params.id);
-          if (category.app) {
-            next({
-              path: '/' + category.app
-            });
-            return;
-          }
-          store.setModule(['news'], NewsStore);
-          store.setModule(['page'], PageStore);
-          next();
-        },
         components: {
           hero: CategoryHeader,
           default: CategoryRead

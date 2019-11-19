@@ -311,17 +311,14 @@ export default {
   },
   computed: {
     stories() {
-      return this.$store.state.news.stories;
+      return this.$store.state.site.news.all;
     },
     storiesMeta() {
-      return this.$store.state.news.meta;
+      return this.$store.state.site.news.meta;
     },
     categories() {
-      return this.$store.state.category.categories;
+      return this.$store.state.category.all;
     }
-  },
-  created() {
-    this.$store.dispatch('setSubTitle', '');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
@@ -340,7 +337,7 @@ export default {
     },
     async loadStories(offset) {
       try {
-        await this.$store.dispatch('news/browse', {
+        await this.$store.dispatch('site/news/browse', {
           offset: offset, featured: true
         });
       } catch (error) {
@@ -353,7 +350,7 @@ export default {
     },
     doDeleteStory() {
       this.showAreYouSure = false;
-      this.$store.dispatch('news/delete', {
+      this.$store.dispatch('site/news/delete', {
         story: this.storyToDelete
       });
     },

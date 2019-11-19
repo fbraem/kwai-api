@@ -28,13 +28,13 @@ export default {
   },
   computed: {
     title() {
-      return this.$store.getters['title'];
+      return this.$store.state.site?.page.title;
     },
     subTitle() {
-      return this.$store.getters['subTitle'];
+      return this.$store.state.site?.page.subTitle;
     },
     facebook() {
-      return this.$store.getters['facebook'];
+      return this.$store.state.site?.facebook;
     }
   },
 };

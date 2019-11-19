@@ -1,5 +1,6 @@
 import Site from './Site';
 import Toolbar from './Toolbar';
+import App from './App';
 import HomeApp from './Home';
 import Header from './Header';
 
@@ -11,25 +12,22 @@ let routes = {
   },
 };
 
-import NewsStore from '@/stores/news';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 import makeRoutes from '@/apps/routes';
 routes.children = makeRoutes();
 routes.children.push(
   {
     path: '',
-    name: 'home',
-    beforeEnter(to, from, next) {
-      store.setModule(['news'], NewsStore);
-      next();
-    },
-    components: {
-      hero: Header,
-      default: HomeApp
-    }
+    component: App,
+    children: [
+      {
+        path: '',
+        name: 'home',
+        components: {
+          hero: Header,
+          default: HomeApp
+        }
+      },
+    ]
   }
 );
 

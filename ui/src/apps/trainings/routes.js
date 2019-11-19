@@ -46,8 +46,8 @@ import TrainingStore from '@/stores/training';
 import CoachStore from '@/stores/training/coaches';
 import SeasonStore from '@/stores/seasons';
 import TeamStore from '@/stores/teams';
-import NewsStore from '@/stores/news';
-import CategoryStore from '@/stores/categories';
+// import NewsStore from '@/stores/news';
+import CategoryStore from '@/apps/categories/store';
 import PageStore from '@/stores/pages';
 import MemberStore from '@/stores/members';
 
@@ -149,7 +149,7 @@ var routes = [
         path: '',
         beforeEnter(to, from, next) {
           store.setModule(['category'], CategoryStore);
-          store.setModule(['news'], NewsStore);
+//          store.setModule(['news'], NewsStore);
           store.setModule(['page'], PageStore);
           store.setModule(['training'], TrainingStore);
           store.setModule(['training', 'coach'], CoachStore);

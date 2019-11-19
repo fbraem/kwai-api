@@ -9,7 +9,8 @@ axios.defaults.baseURL = config.api;
 
 import tokenStore from './TokenStore';
 
-import store from '@/stores/root';
+import store from '@/stores/auth';
+
 /**
  * Refresh a new token
  */

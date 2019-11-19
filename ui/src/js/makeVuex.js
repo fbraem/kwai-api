@@ -2,31 +2,16 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-/**
- * Check registered module
- * @param {Array} aPath - path to module - ex: ['my', 'nested', 'module']
- * @return {Boolean}
- */
-Vuex.Store.prototype.hasModule = function(aPath) {
-  let m = this._modules.root;
-  for (const p of aPath) {
-    m = m._children[p];
-    if (!m) return false;
-  }
-  return true;
-};
-/**
- * Register a module if it is not yet registered
- */
-Vuex.Store.prototype.setModule = function(aPath, module) {
-  if (!this.hasModule(aPath)) {
-    this.registerModule(aPath, module);
-  }
-};
+import { abilityPlugin } from '@/js/ability';
+const store = new Vuex.Store({
+  namespaced: true,
+  plugins: [ abilityPlugin ],
+});
 
-import store from '@/stores/root';
-import AuthModule from '@/stores/auth';
-store.setModule('auth', AuthModule);
+import authModule from '@/stores/auth';
+store.registerModule('auth', authModule);
+import categoryModule from '@/apps/categories/store';
+store.registerModule('category', categoryModule);
 
 export default () => {
   return store;

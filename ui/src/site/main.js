@@ -25,8 +25,6 @@ moment.locale('nl');
  */
 import makeStore from '@/js/makeVuex';
 var store = makeStore();
-import CategoryStore from '@/stores/categories';
-store.setModule('category', CategoryStore);
 
 /**
  * Initialise casl

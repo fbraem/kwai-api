@@ -1,9 +1,6 @@
 <template>
   <Page>
-    <Spinner v-if="$wait.is('news.browse')" />
-    <div
-      v-else
-    >
+    <div>
       <div
         v-if="storiesMeta"
         class="flex justify-center mb-4"
@@ -16,16 +13,17 @@
         />
       </div>
       <div class="flex flex-wrap justify-center mb-4">
-         <div
-            v-for="story in stories"
-            :key="story.id"
-            class="p-2 w-full xl:w-1/2"
-          >
-            <NewsCard
-              :story="story"
-              @deleteStory="deleteStory"
-            />
-          </div>
+        <Spinner v-if="$wait.is('news.browse')" />
+        <div
+          v-for="story in stories"
+          :key="story.id"
+          class="p-2 w-full xl:w-1/2"
+        >
+          <NewsCard
+            :story="story"
+            @deleteStory="deleteStory"
+          />
+        </div>
       </div>
       <div
         v-if="storiesMeta"
@@ -92,10 +90,10 @@ export default {
   },
   computed: {
     stories() {
-      return this.$store.state.news.stories;
+      return this.$store.state.news.news.all;
     },
     storiesMeta() {
-      return this.$store.state.news.meta;
+      return this.$store.state.news.news.meta;
     },
     newsCount() {
       if (this.stories) return this.stories.length;

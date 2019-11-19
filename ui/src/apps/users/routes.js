@@ -40,7 +40,7 @@ const UserRegisterWithInvite = () => import(
 
 import UserStore from '@/stores/user';
 import InvitationStore from '@/stores/user/invitations';
-import NewsStore from '@/stores/news';
+// import NewsStore from '@/stores/news';
 import PageStore from '@/stores/pages';
 
 import makeStore from '@/js/makeVuex';
@@ -82,7 +82,7 @@ var routes = [
       {
         path: ':id(\\d+)',
         beforeEnter(to, from, next) {
-          store.setModule(['news'], NewsStore);
+//          store.setModule(['news'], NewsStore);
           store.setModule(['page'], PageStore);
           next();
         },

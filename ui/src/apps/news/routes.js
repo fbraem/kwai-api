@@ -33,18 +33,9 @@ const NewsForm = () => import(
   '@/apps/news/NewsForm.vue'
 );
 
-import NewsStore from '@/stores/news';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/news',
-    beforeEnter(to, from, next) {
-      store.setModule(['news'], NewsStore);
-      next();
-    },
     component: App,
     children: [
       {
