@@ -90,10 +90,10 @@ export default {
   },
   computed: {
     stories() {
-      return this.$store.state.news.news.all;
+      return this.$store.state.news.all;
     },
     storiesMeta() {
-      return this.$store.state.news.news.meta;
+      return this.$store.state.news.meta;
     },
     newsCount() {
       if (this.stories) return this.stories.length;
