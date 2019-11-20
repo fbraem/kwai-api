@@ -2,8 +2,8 @@
  * Gets a category from the list
  */
 const category = (state) => (id) => {
-  if (state.categories) {
-    return state.categories.find((category) => category.id === id);
+  if (state.all) {
+    return state.all.find((category) => category.id === id);
   }
   return null;
 };
@@ -12,8 +12,8 @@ const category = (state) => (id) => {
  * Gets the category for the given app
  */
 export const categoryApp = (state) => (app) => {
-  if (state.categories) {
-    return state.categories.find((category) => category.app === app);
+  if (state.all) {
+    return state.all.find((category) => category.app === app);
   }
   return null;
 };
@@ -22,7 +22,7 @@ export const categoryApp = (state) => (app) => {
  * Returns categories for use in a select
  */
 export const categoriesAsOptions = (state) => {
-  var categories = state.categories;
+  var categories = state.all;
   if (categories) {
     categories = categories.map((category) => ({
       value: category.id,
