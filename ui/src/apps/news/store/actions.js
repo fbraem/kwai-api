@@ -37,13 +37,13 @@ async function browse({ dispatch, commit }, payload) {
  * Read a new story.
  */
 async function read({ getters, dispatch, commit, state }, payload) {
-  // Already selected
-  if (state.selected?.id === payload.id) {
+  // Already active?
+  if (state.active?.id === payload.id) {
     return;
   }
   var story = getters['story'](payload.id);
   if (story) { // already read
-    commit('select', story);
+    commit('active', story);
     return;
   }
 
@@ -115,7 +115,7 @@ async function loadArchive({ dispatch, commit }, payload) {
 }
 
 /**
- * Set the story as selected
+ * Set the story as active
  */
 function active({ commit }, story) {
   commit('active', story);
