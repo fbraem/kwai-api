@@ -10,11 +10,10 @@ import store from './store';
 
 export default {
   beforeCreate() {
-    console.log('bc - site');
     this.$store.registerModule('site', store);
+    this.$store.dispatch('category/browse');
   },
   beforeDestroy() {
-    console.log('bd - site');
     this.$store.unregisterModule('site');
   }
 };
