@@ -183,9 +183,6 @@ export default {
       return this.$store.getters['category/categoriesAsOptions'];
     }
   },
-  async created() {
-    await this.$store.dispatch('category/browse');
-  },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
       await vm.fetchData(to.params);

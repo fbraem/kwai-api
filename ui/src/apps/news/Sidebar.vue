@@ -63,7 +63,6 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('news/category/browse');
     this.$store.dispatch('news/loadArchive');
   }
 };

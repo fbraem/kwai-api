@@ -19,9 +19,6 @@ export default {
     categories() {
       return this.$store.state.category.categories;
     }
-  },
-  created() {
-    this.$store.dispatch('category/browse');
   }
 };
 </script>
