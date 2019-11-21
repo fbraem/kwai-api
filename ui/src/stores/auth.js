@@ -78,7 +78,7 @@ const actions = {
       form.append('scope', 'basic');
       var response = await axios.request({
         method: 'POST',
-        url: config.api + '/auth/access_token',
+        url: '/auth/access_token',
         data: form
       });
       commit('login', {
@@ -112,7 +112,7 @@ const actions = {
     try {
       await axios.request({
         method: 'POST',
-        url: config.api + '/auth/logout',
+        url: '/auth/logout',
         data: form
       });
     } catch (error) {
@@ -128,7 +128,7 @@ const actions = {
       form.append('refresh_token', state.tokenStore.refresh_token);
       var response = await axios.request({
         method: 'POST',
-        url: config.api + '/auth/access_token',
+        url: '/auth/access_token',
         data: form
       });
       commit('login', {
