@@ -38,29 +38,13 @@ const UserRegisterWithInvite = () => import(
   '@/apps/users/UserRegisterWithInvite.vue'
 );
 
-import UserStore from '@/stores/user';
-import InvitationStore from '@/stores/user/invitations';
-// import NewsStore from '@/stores/news';
-import PageStore from '@/stores/pages';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 var routes = [
   {
     path: '/users',
-    beforeEnter(to, from, next) {
-      store.setModule(['user'], UserStore);
-      next();
-    },
     component: App,
     children: [
       {
         path: 'invite',
-        beforeEnter(to, from, next) {
-          store.setModule(['user', 'invitation'], InvitationStore);
-          next();
-        },
         components: {
           hero: UserInviteHeader,
           default: UserInvite
@@ -69,10 +53,6 @@ var routes = [
       },
       {
         path: 'invite/:token',
-        beforeEnter(to, from, next) {
-          store.setModule(['user', 'invitation'], InvitationStore);
-          next();
-        },
         components: {
           hero: UserRegisterWithInviteHeader,
           default: UserRegisterWithInvite
@@ -81,11 +61,6 @@ var routes = [
       },
       {
         path: ':id(\\d+)',
-        beforeEnter(to, from, next) {
-//          store.setModule(['news'], NewsStore);
-          store.setModule(['page'], PageStore);
-          next();
-        },
         components: {
           hero: UserHeader,
           default: UserRead

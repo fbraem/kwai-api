@@ -25,21 +25,10 @@ const TeamFormHeader = () => import(
   '@/apps/teams/TheTeamFormHeader.vue'
 );
 
-import TeamStore from '@/stores/teams';
-import TeamTypeStore from '@/stores/team_types';
-import SeasonStore from '@/stores/seasons';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/teams',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['team'], TeamStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',
@@ -51,11 +40,6 @@ export default [
       },
       {
         path: 'create',
-        beforeEnter(to, from, next) {
-          store.setModule(['teamType'], TeamTypeStore);
-          store.setModule(['season'], SeasonStore);
-          next();
-        },
         components: {
           hero: TeamFormHeader,
           default: TeamForm
@@ -69,11 +53,6 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        beforeEnter(to, from, next) {
-          store.setModule(['teamType'], TeamTypeStore);
-          store.setModule(['season'], SeasonStore);
-          next();
-        },
         components: {
           hero: TeamFormHeader,
           default: TeamForm

@@ -25,19 +25,10 @@ const TeamTypeFormHeader = () => import(
   '@/apps/team_types/TheTeamTypeFormHeader.vue'
 );
 
-import TeamTypeStore from '@/stores/team_types';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/team_types',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['teamType'], TeamTypeStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',

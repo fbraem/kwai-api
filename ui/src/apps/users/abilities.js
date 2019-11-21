@@ -28,21 +28,10 @@ const AbilityForm = () =>
   import(/* webpackChunkName: "user_admin_chunck" */
     '@/apps/users/AbilityForm.vue');
 
-import UserStore from '@/stores/user';
-import AbilityStore from '@/stores/user/abilities';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/users/:id/abilities',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['user'], UserStore);
-      store.setModule(['user', 'ability'], AbilityStore);
-      next();
-    },
     children: [
       {
         path: '',
@@ -57,11 +46,6 @@ export default [
   {
     path: '/users/abilities',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['user'], UserStore);
-      store.setModule(['user', 'ability'], AbilityStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',

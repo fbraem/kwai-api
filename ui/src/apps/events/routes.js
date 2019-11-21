@@ -7,19 +7,10 @@ const EventRead = () => import(/* webpackChunkName: "trainings_chunck" */
   '@/apps/events/EventRead'
 );
 
-import EventStore from '@/stores/events';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/events',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['event'], EventStore);
-      next();
-    },
     children: [
       {
         path: '/events/:year(\\d+)/:month(\\d+)',

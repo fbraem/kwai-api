@@ -29,18 +29,9 @@ const PageForm = () => import(
   '@/apps/pages/PageForm.vue'
 );
 
-import PageStore from '@/stores/pages';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/pages',
-    beforeEnter(to, from, next) {
-      store.setModule(['page'], PageStore);
-      next();
-    },
     component: App,
     children: [
       {

@@ -36,22 +36,10 @@ const CoachFormHeader = () =>
     '@/apps/trainings/TheCoachFormHeader.vue'
   );
 
-import TrainingStore from '@/stores/training';
-import CoachStore from '@/stores/training/coaches';
-import MemberStore from '@/stores/members';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/trainings/coaches',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['training'], TrainingStore);
-      store.setModule(['training', 'coach'], CoachStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',
@@ -101,10 +89,6 @@ export default [
       },
       {
         path: 'create',
-        beforeEnter(to, from, next) {
-          store.setModule(['member'], MemberStore);
-          next();
-        },
         components: {
           hero: CoachFormHeader,
           default: CoachForm
@@ -118,10 +102,6 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        beforeEnter(to, from, next) {
-          store.setModule(['member'], MemberStore);
-          next();
-        },
         components: {
           hero: CoachFormHeader,
           default: CoachForm

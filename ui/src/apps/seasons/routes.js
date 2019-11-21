@@ -25,18 +25,9 @@ const SeasonBrowse = () => import(
   '@/apps/seasons/SeasonBrowse.vue'
 );
 
-import SeasonStore from '@/stores/seasons';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/seasons',
-    beforeEnter(to, from, next) {
-      store.setModule(['season'], SeasonStore);
-      next();
-    },
     component: App,
     children: [
       {

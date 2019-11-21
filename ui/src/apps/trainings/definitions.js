@@ -21,31 +21,13 @@ const DefinitionRead = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */
     '@/apps/trainings/DefinitionRead.vue');
 
-import TrainingStore from '@/stores/training';
-import DefinitionStore from '@/stores/training/definitions';
-import CoachStore from '@/stores/training/coaches';
-import SeasonStore from '@/stores/seasons';
-import TeamStore from '@/stores/teams';
-
-import makeStore from '@/js/makeVuex';
-var store = makeStore();
-
 export default [
   {
     path: '/trainings/definitions',
     component: App,
-    beforeEnter(to, from, next) {
-      store.setModule(['training'], TrainingStore);
-      store.setModule(['training', 'definition'], DefinitionStore);
-      next();
-    },
     children: [
       {
         path: ':id(\\d+)',
-        beforeEnter(to, from, next) {
-          store.setModule(['training', 'coach'], CoachStore);
-          next();
-        },
         components: {
           hero: DefinitionHeader,
           default: DefinitionRead
@@ -54,11 +36,6 @@ export default [
       },
       {
         path: 'create',
-        beforeEnter(to, from, next) {
-          store.setModule(['season'], SeasonStore);
-          store.setModule(['team'], TeamStore);
-          next();
-        },
         components: {
           hero: DefinitionFormHeader,
           default: DefinitionForm
@@ -72,11 +49,6 @@ export default [
       },
       {
         path: 'update/:id(\\d+)',
-        beforeEnter(to, from, next) {
-          store.setModule(['season'], SeasonStore);
-          store.setModule(['team'], TeamStore);
-          next();
-        },
         components: {
           hero: DefinitionFormHeader,
           default: DefinitionForm
