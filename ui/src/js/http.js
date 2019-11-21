@@ -8,8 +8,7 @@ import config from 'config';
 axios.defaults.baseURL = config.api;
 
 import tokenStore from './TokenStore';
-
-import store from '@/stores/auth';
+import store from './store';
 
 /**
  * Refresh a new token
@@ -34,6 +33,7 @@ function createAuthRefreshInterceptor(axios, refreshTokenCall, options = {}) {
     // Remove the interceptor to prevent a loop
     // in case token refresh also causes the 401
     axios.interceptors.response.eject(id);
+    axios.baseURL = null;
 
     const refreshCall = refreshTokenCall(error);
 

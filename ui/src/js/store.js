@@ -13,6 +13,4 @@ store.registerModule('auth', authModule);
 import categoryModule from '@/apps/categories/store';
 store.registerModule('category', categoryModule);
 
-export default () => {
-  return store;
-};
+export default store;
