@@ -244,7 +244,6 @@ export default {
   },
   data() {
     return {
-      story: new Story(),
       content: new Content(),
       storyValid: false,
       contentValid: false,
@@ -365,6 +364,9 @@ export default {
     };
   },
   computed: {
+    story() {
+      return this.$store.state.news.active;
+    },
     dateFormat() {
       return '(' + moment.localeData().longDateFormat('L') + ')';
     },
@@ -374,9 +376,6 @@ export default {
     error() {
       return this.$store.state.news.error;
     }
-  },
-  async created() {
-    await this.$store.dispatch('category/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
@@ -391,11 +390,13 @@ export default {
   methods: {
     async fetchData(params) {
       if (params.id) {
-        this.story = await this.$store.dispatch('news/read', {
+        await this.$store.dispatch('news/read', {
           id: params.id
         });
-        this.form.writeForm(this.story);
+      } else {
+        this.$store.dispatch('news/active', new Story());
       }
+      this.form.writeForm(this.story);
     },
     async submit() {
       this.form.clearErrors();
