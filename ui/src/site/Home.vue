@@ -333,7 +333,6 @@ export default {
   methods: {
     async fetchData() {
       await this.loadStories(0);
-      this.$store.dispatch('category/browse');
     },
     async loadStories(offset) {
       try {
