@@ -45,9 +45,11 @@ class JSONAPI {
     this.source = source;
     this.target = target;
     this.base_uri = new URI('');
-    var segments = [];
-    segments = segments.concat(source.namespace());
-    this.base_uri.segment(segments);
+    if (source.namespace().length > 0) {
+      var segments = [];
+      segments = segments.concat(source.namespace());
+      this.base_uri.segment(segments);
+    }
     this.reset();
   }
 
