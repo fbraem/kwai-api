@@ -1,5 +1,5 @@
 import URI from 'urijs';
-import axios from '@/js/http';
+import { http } from '@/js/http';
 
 /**
  * Class which keeps all created model objects in a cache. When the model
@@ -138,22 +138,16 @@ class JSONAPI {
    * @param {string} [id] An id of a model.
    * @return {Data}
    *         The data returned from the JSONAPI request.
-   * @throws An exception will be throwed when the request fails. The exception
-   *         is a rethrow of the Axios exception.
    */
   async get(id) {
     var uri = this.uri.clone();
     uri.segment(this.source.type());
     if (id) uri.segment(id);
-    const config = {
-      method: 'GET',
-      url: uri.href(),
-    };
-    let response = await axios.request(config);
+    const json = await http.get(uri.href()).json();
     return {
-      meta: response.data.meta,
+      meta: json.meta,
       data: this.target.deserialize(
-        new Cache(), response.data.data, response.data.included
+        new Cache(), json.data, json.included
       )
     };
   }
@@ -163,21 +157,17 @@ class JSONAPI {
     uri.segment(this.source.type());
     if (id) uri.segment(id);
     if (path) uri.segment(path);
-    method = method || 'GET';
-    const config = {
-      method,
-      url: uri.href(),
+    const options = {
+      method: method || 'GET'
     };
     if (data) {
-      config.data = {
-        data: data
-      };
+      options.json = data;
     }
-    let response = await axios.request(config);
+    const json = await http(uri.href(), options).json();
     return {
-      meta: response.data.meta,
+      meta: json.meta,
       data: this.target.deserialize(
-        new Cache(), response.data.data, response.data.included
+        new Cache(), json.data, json.included
       )
     };
   }
@@ -187,8 +177,6 @@ class JSONAPI {
    * used when the model doesn't have an id. Otherwise PATCH is used.
    * @param {Model} model The model to save.
    * @return {Data} The data returned from the JSONAPI request
-   * @throws An exception will be throwed when the request fails. The exception
-   *         is a rethrow of the axios exception.
    */
   async save(model) {
     var uri = this.uri.clone();
@@ -198,18 +186,15 @@ class JSONAPI {
     var data = Array.isArray(model) ?
       model.map(element => element.serialize()) : model.serialize();
 
-    const config = {
+    const options = {
       method: model.id ? 'PATCH' : 'POST',
-      url: uri.href(),
-      data: {
-        data: data
-      }
+      json: data
     };
-    let response = await axios.request(config);
+    const json = await http(uri.href(), options).json();
     return {
-      meta: response.data.meta,
+      meta: json.meta,
       data: this.target.deserialize(
-        new Cache(), response.data.data, response.data.included
+        new Cache(), json.data, json.included
       )
     };
   }
@@ -223,11 +208,7 @@ class JSONAPI {
     uri.segment(this.source.type());
     if (model.id) uri.segment(model.id);
 
-    const config = {
-      method: 'DELETE',
-      url: uri.href()
-    };
-    await axios(config);
+    await http.delete(uri.href());
   }
 
   /**
@@ -253,18 +234,17 @@ class JSONAPI {
     var data = Array.isArray(relation) ?
       relation.map(element => element.serialize()) : relation.serialize();
 
-    const config = {
+    const options = {
       method: relation.id ? 'PATCH' : 'POST',
-      url: uri.href(),
-      data: {
-        data: data
-      }
+      json: data
     };
-    let response = await axios.request(config);
+
+    const json = await http(uri.href(), options).json();
+
     return {
-      meta: response.data.meta,
+      meta: json.meta,
       data: this.target.deserialize(
-        new Cache(), response.data.data, response.data.included
+        new Cache(), json.data, json.included
       )
     };
   }
@@ -292,18 +272,11 @@ class JSONAPI {
     var data = Array.isArray(relation) ?
       relation.map(element => element.serialize()) : relation.serialize();
 
-    const config = {
-      method: 'DELETE',
-      url: uri.href(),
-      data: {
-        data: data
-      }
-    };
-    let response = await axios.request(config);
+    const json = await http.delete(uri.href(), { json: data }).json();
     return {
-      meta: response.data.meta,
+      meta: json.meta,
       data: this.target.deserialize(
-        new Cache(), response.data.data, response.data.included
+        new Cache(), json.data, json.included
       )
     };
   }

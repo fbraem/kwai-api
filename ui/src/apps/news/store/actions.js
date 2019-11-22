@@ -1,4 +1,4 @@
-import axios from '@/js/http';
+import { http } from '@/js/http';
 import JSONAPI from '@/js/JSONAPI';
 
 import Story from '@/models/Story';
@@ -109,8 +109,8 @@ async function remove({ commit }, payload) {
  */
 async function loadArchive({ dispatch, commit }, payload) {
   dispatch('wait/start', 'news.browse', { root: true });
-  var response = await axios.get('/news/archive');
-  commit('archive', response.data);
+  const json = await http.get('news/archive').json();
+  commit('archive', json);
   dispatch('wait/end', 'news.browse', { root: true });
 }
 

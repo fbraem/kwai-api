@@ -6,7 +6,7 @@ Vue.use(Vuex);
 import config from 'config';
 
 import tokenStore from '@/js/TokenStore';
-import axios from '@/js/http';
+import { http } from '@/js/http';
 
 import JSONAPI from '@/js/JSONAPI';
 import User from '@/models/users/User';
@@ -76,14 +76,12 @@ const actions = {
       form.append('username', payload.email);
       form.append('password', payload.password);
       form.append('scope', 'basic');
-      var response = await axios.request({
-        method: 'POST',
-        url: '/auth/access_token',
-        data: form
-      });
+      const json = await http.post('auth/access_token', {
+        body: form
+      }).json();
       commit('login', {
-        access_token: response.data.access_token,
-        refresh_token: response.data.refresh_token
+        access_token: json.access_token,
+        refresh_token: json.refresh_token
       });
     } catch (error) {
       commit('error', error);
@@ -110,10 +108,8 @@ const actions = {
     var form = new FormData();
     form.append('refresh_token', state.tokenStore.refresh_token);
     try {
-      await axios.request({
-        method: 'POST',
-        url: '/auth/logout',
-        data: form
+      await http.post('auth/logout', {
+        body: form
       });
     } catch (error) {
       console.log(error);
@@ -126,14 +122,12 @@ const actions = {
       form.append('grant_type', 'refresh_token');
       form.append('client_id', config.clientId);
       form.append('refresh_token', state.tokenStore.refresh_token);
-      var response = await axios.request({
-        method: 'POST',
-        url: '/auth/access_token',
-        data: form
-      });
+      const json = await http.post('auth/access_token', {
+        body: form
+      }).json();
       commit('login', {
-        access_token: response.data.access_token,
-        refresh_token: response.data.refresh_token
+        access_token: json.access_token,
+        refresh_token: json.refresh_token
       });
     } else {
       throw failedRequest;

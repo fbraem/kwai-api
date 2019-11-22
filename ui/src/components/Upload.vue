@@ -40,7 +40,7 @@ const STATUS_SAVING = 1;
 const STATUS_SUCCESS = 2;
 const STATUS_FAILED = 3;
 
-import axios from '@/js/http';
+import { http } from '@/js/http';
 
 export default {
   props: {
@@ -113,7 +113,7 @@ export default {
     async upload(formData) {
       let data = null;
       try {
-        data = await axios.post(this.url, formData);
+        data = await http.post(this.url, { body: formData }).json();
         this.currentStatus = STATUS_SUCCESS;
       } catch (error) {
         this.uploadError = error;
