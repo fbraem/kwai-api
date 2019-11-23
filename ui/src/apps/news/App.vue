@@ -7,12 +7,10 @@
 
 <script>
 import store from './store';
-import categoryStore from '@/apps/categories/store';
 
 export default {
   beforeCreate() {
     this.$store.registerModule('news', store);
-    this.$store.registerModule(['news', 'category'], categoryStore);
   },
   beforeDestroy() {
     this.$store.dispatch('news/reset');
