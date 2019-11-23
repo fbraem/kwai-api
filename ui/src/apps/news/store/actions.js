@@ -128,11 +128,8 @@ function reset({ commit }) {
   commit('reset');
 }
 
-import { browse as browseCategories } from '@/apps/categories/store/actions';
-
 export const actions = {
   browse,
-  browseCategories,
   read,
   save,
   saveContent,
