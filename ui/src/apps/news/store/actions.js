@@ -76,21 +76,6 @@ async function save({ commit }, story) {
 }
 
 /**
- * Save the (new) content
- */
-async function saveContent({ commit }, payload) {
-  try {
-    var api = new JSONAPI({ source: Story });
-    var result = await api.attach(payload.story, payload.content);
-    commit('story', result);
-    return result.data;
-  } catch (error) {
-    commit('error', error);
-    throw (error);
-  }
-}
-
-/**
  * Delete the story
  */
 async function remove({ commit }, payload) {
@@ -132,7 +117,6 @@ export const actions = {
   browse,
   read,
   save,
-  saveContent,
   remove,
   loadArchive,
   active,
