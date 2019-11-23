@@ -114,9 +114,6 @@ export default {
     async fetchData(params) {
       if (params.category) {
         this.categoryId = params.category;
-        await this.$store.dispatch('category/read', {
-          id: params.category
-        });
       }
       await this.$store.dispatch('news/browse', {
         year: params.year,
