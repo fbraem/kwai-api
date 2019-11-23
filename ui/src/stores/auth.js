@@ -6,7 +6,7 @@ Vue.use(Vuex);
 import config from 'config';
 
 import tokenStore from '@/js/TokenStore';
-import { http } from '@/js/http';
+import { http, http_auth } from '@/js/http';
 
 import JSONAPI from '@/js/JSONAPI';
 import User from '@/models/users/User';
@@ -70,15 +70,19 @@ const actions = {
   async login({ commit, dispatch }, payload) {
     dispatch('wait/start', 'auth.login', { root: true });
     try {
-      var form = new FormData();
-      form.append('grant_type', 'password');
-      form.append('client_id', config.clientId);
-      form.append('username', payload.email);
-      form.append('password', payload.password);
-      form.append('scope', 'basic');
-      const json = await http.post('auth/access_token', {
-        body: form
-      }).json();
+      const form = {
+        grant_type: 'password',
+        client_id: config.clientId,
+        username: payload.email,
+        password: payload.password,
+        scope: 'basic'
+      };
+      const json = await http
+        .url('/auth/access_token')
+        .formData(form)
+        .post()
+        .json()
+      ;
       commit('login', {
         access_token: json.access_token,
         refresh_token: json.refresh_token
@@ -105,12 +109,11 @@ const actions = {
     }
   },
   async logout({ commit, state }) {
-    var form = new FormData();
-    form.append('refresh_token', state.tokenStore.refresh_token);
+    const form = {
+      refresh_token: state.tokenStore.refresh_token
+    };
     try {
-      await http.post('auth/logout', {
-        body: form
-      });
+      await http_auth.url('auth/logout').formData(form).post();
     } catch (error) {
       console.log(error);
     }
@@ -118,13 +121,17 @@ const actions = {
   },
   async refresh({ commit, state }, failedRequest) {
     if (state.tokenStore.refresh_token) {
-      var form = new FormData();
-      form.append('grant_type', 'refresh_token');
-      form.append('client_id', config.clientId);
-      form.append('refresh_token', state.tokenStore.refresh_token);
-      const json = await http.post('auth/access_token', {
-        body: form
-      }).json();
+      const form = {
+        grant_type: 'refresh_token',
+        client_id: config.clientId,
+        refresh_token: state.tokenStore.refresh_token
+      };
+      const json = await http
+        .url('auth/access_token')
+        .formData(form)
+        .post()
+        .json()
+      ;
       commit('login', {
         access_token: json.access_token,
         refresh_token: json.refresh_token

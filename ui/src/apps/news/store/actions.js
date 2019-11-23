@@ -1,4 +1,4 @@
-import { http } from '@/js/http';
+import { http_api } from '@/js/http';
 import JSONAPI from '@/js/JSONAPI';
 
 import Story from '@/models/Story';
@@ -109,7 +109,7 @@ async function remove({ commit }, payload) {
  */
 async function loadArchive({ dispatch, commit }, payload) {
   dispatch('wait/start', 'news.browse', { root: true });
-  const json = await http.get('news/archive').json();
+  const json = await http_api.url('news/archive').get().json();
   commit('archive', json);
   dispatch('wait/end', 'news.browse', { root: true });
 }

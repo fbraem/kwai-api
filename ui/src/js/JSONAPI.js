@@ -1,5 +1,5 @@
 import URI from 'urijs';
-import { http } from '@/js/http';
+import { http_api } from '@/js/http';
 
 /**
  * Class which keeps all created model objects in a cache. When the model
@@ -143,7 +143,7 @@ class JSONAPI {
     var uri = this.uri.clone();
     uri.segment(this.source.type());
     if (id) uri.segment(id);
-    const json = await http.get(uri.href()).json();
+    const json = await http_api.url(uri.href()).get().json();
     return {
       meta: json.meta,
       data: this.target.deserialize(
@@ -157,13 +157,9 @@ class JSONAPI {
     uri.segment(this.source.type());
     if (id) uri.segment(id);
     if (path) uri.segment(path);
-    const options = {
-      method: method || 'GET'
-    };
-    if (data) {
-      options.json = data;
-    }
-    const json = await http(uri.href(), options).json();
+    const json = method === 'GET' ?
+      await http_api.url(uri.href()).get().json() :
+      await http_api.url(uri.href()).json(data).post();
     return {
       meta: json.meta,
       data: this.target.deserialize(
@@ -186,11 +182,9 @@ class JSONAPI {
     var data = Array.isArray(model) ?
       model.map(element => element.serialize()) : model.serialize();
 
-    const options = {
-      method: model.id ? 'PATCH' : 'POST',
-      json: data
-    };
-    const json = await http(uri.href(), options).json();
+    const json = model.id ?
+      await http_api.url(uri.href()).json(data).patch().json() :
+      await http_api.url(uri.href()).json(data).post().json();
     return {
       meta: json.meta,
       data: this.target.deserialize(
@@ -208,7 +202,7 @@ class JSONAPI {
     uri.segment(this.source.type());
     if (model.id) uri.segment(model.id);
 
-    await http.delete(uri.href());
+    await http_api.url(uri.href()).delete();
   }
 
   /**
@@ -234,12 +228,9 @@ class JSONAPI {
     var data = Array.isArray(relation) ?
       relation.map(element => element.serialize()) : relation.serialize();
 
-    const options = {
-      method: relation.id ? 'PATCH' : 'POST',
-      json: data
-    };
-
-    const json = await http(uri.href(), options).json();
+    const json = relation.id ?
+      await http_api.url(uri.href()).json(data).patch().json() :
+      await http_api.url(uri.href()).json(data).post().json();
 
     return {
       meta: json.meta,
@@ -272,7 +263,7 @@ class JSONAPI {
     var data = Array.isArray(relation) ?
       relation.map(element => element.serialize()) : relation.serialize();
 
-    const json = await http.delete(uri.href(), { json: data }).json();
+    const json = await http_api.url(uri.href()).json(data).delete().json();
     return {
       meta: json.meta,
       data: this.target.deserialize(

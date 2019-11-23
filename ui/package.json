@@ -80,7 +80,6 @@
     "core-js": "^3.2.1",
     "flag-icon-css": "^3.4.0",
     "jump.js": "^1.0.2",
-    "ky": "^0.16.0",
     "lockr": "^0.8.5",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
@@ -97,6 +96,7 @@
     "vue-screen-size": "^1.0.0",
     "vue-scroll-behavior": "^0.2.0",
     "vue-wait": "^1.4.6",
-    "vuex": "^3.1.1"
+    "vuex": "^3.1.1",
+    "wretch": "^1.5.5"
   }
 }
