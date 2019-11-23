@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.state.news.category.all;
+      return this.$store.state.category.all;
     },
     archiveYears() {
       var archive = this.$store.state.news.archive;
