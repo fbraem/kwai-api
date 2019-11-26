@@ -24,6 +24,6 @@ export const http_api = http_auth
   .catcher(401, async(_, request) => {
     await store.dispatch('auth/refresh');
     const token = tokenStore.access_token;
-    return request.auth(token).replay();
+    return request.auth(token).replay().json();
   })
 ;
