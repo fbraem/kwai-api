@@ -19,12 +19,12 @@ function stories(state, { meta, data }) {
 };
 
 /**
- * Change a story when it was already present in the list
+ * Change/Add a story in the list
  */
 function story(state, { data }) {
   state.error = null;
   if (state.all == null) {
-    return;
+    state.all = [];
   }
   var index = state.all.findIndex((s) => s.id === data.id);
   if (index !== -1) {
@@ -70,13 +70,6 @@ function error(state, error) {
 };
 
 /**
- * Set the selected story
- */
-function active(state, story) {
-  state.active = story;
-};
-
-/**
  * Mutations
  */
 export const mutations = {
@@ -85,6 +78,5 @@ export const mutations = {
   story,
   deleteStory,
   archive,
-  error,
-  active
+  error
 };

@@ -132,7 +132,6 @@ import 'moment-timezone';
 
 import messages from './lang';
 
-import Content from '@/models/Content';
 import Category from '@/models/Category';
 import Story from '@/models/Story';
 
@@ -244,9 +243,6 @@ export default {
   },
   data() {
     return {
-      content: new Content(),
-      storyValid: false,
-      contentValid: false,
       form: makeStoryForm({
         enabled: makeField({
           value: false
@@ -365,7 +361,8 @@ export default {
   },
   computed: {
     story() {
-      return this.$store.state.news.active;
+      return this.$store.getters['news/story'](this.$route.params.id)
+        || new Story();
     },
     dateFormat() {
       return '(' + moment.localeData().longDateFormat('L') + ')';
@@ -393,8 +390,6 @@ export default {
         await this.$store.dispatch('news/read', {
           id: params.id
         });
-      } else {
-        this.$store.dispatch('news/active', new Story());
       }
       this.form.writeForm(this.story);
     },

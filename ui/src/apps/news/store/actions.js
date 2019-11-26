@@ -37,22 +37,17 @@ async function browse({ dispatch, commit }, payload) {
  * Read a new story.
  */
 async function read({ getters, dispatch, commit, state }, payload) {
-  // Already active?
-  if (state.active?.id === payload.id) {
-    return;
-  }
   var story = getters['story'](payload.id);
   if (story) { // already read
-    commit('active', story);
-    return;
+    return story;
   }
 
   dispatch('wait/start', 'news.read', { root: true });
   var api = new JSONAPI({ source: Story });
   try {
     var result = await api.get(payload.id);
-    commit('story', result.data);
-    commit('active', result.data);
+    commit('story', result);
+    return result.data;
   } catch (error) {
     commit('error', error);
   } finally {
@@ -68,6 +63,7 @@ async function save({ commit }, story) {
     var api = new JSONAPI({ source: Story });
     var result = await api.save(story);
     commit('story', result);
+    console.log(result);
     return result.data;
   } catch (error) {
     commit('error', error);
@@ -100,10 +96,11 @@ async function loadArchive({ dispatch, commit }, payload) {
 }
 
 /**
- * Set the story as active
+ * When a story was read in another instance of this module, set can be
+ * used to make it available in the current instance.
  */
-function active({ commit }, story) {
-  commit('active', story);
+function set({ commit }, story) {
+  commit('story', { data: story });
 }
 
 /**
@@ -119,6 +116,6 @@ export const actions = {
   save,
   remove,
   loadArchive,
-  active,
+  set,
   reset
 };

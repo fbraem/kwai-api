@@ -19,7 +19,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.meta.active) {
-        vm.$store.dispatch('news/active', to.meta.active);
+        vm.$store.dispatch('news/set', to.meta.active);
       }
     });
   }
