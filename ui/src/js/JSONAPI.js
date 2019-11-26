@@ -225,8 +225,10 @@ class JSONAPI {
       }
     }
 
-    var data = Array.isArray(relation) ?
-      relation.map(element => element.serialize()) : relation.serialize();
+    var data = {
+      data: Array.isArray(relation) ?
+        relation.map(element => element.serialize()) : relation.serialize()
+    };
 
     const json = relation.id ?
       await http_api.url(uri.href()).json(data).patch().json() :
@@ -260,8 +262,10 @@ class JSONAPI {
       }
     }
 
-    var data = Array.isArray(relation) ?
-      relation.map(element => element.serialize()) : relation.serialize();
+    var data = {
+      data: Array.isArray(relation) ?
+        relation.map(element => element.serialize()) : relation.serialize()
+    };
 
     const json = await http_api.url(uri.href()).json(data).delete().json();
     return {
