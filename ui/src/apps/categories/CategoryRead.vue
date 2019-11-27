@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col p-3">
+  <div class="container mx-auto flex flex-col p-3">
     <div class="block">
       <h4 class="header-line">
         {{ $t('featured_news') }}
@@ -12,7 +12,10 @@
         <NewsSlider :stories="stories" />
       </div>
     </div>
-    <div class="block mx-auto my-2">
+    <div
+      v-if="category"
+      class="block mx-auto my-2"
+    >
       <router-link
         :to="moreNewsLink"
         class="red-button"
@@ -77,14 +80,14 @@ export default {
       };
     },
     stories() {
-      return this.$store.state.news.stories;
+      return this.$store.state.category.news.all;
     },
     storyCount() {
       if (this.stories) return this.stories.length;
       return 0;
     },
     pages() {
-      return this.$store.state.page.pages;
+      return this.$store.state.category.page.pages;
     },
     pageCount() {
       if (this.pages) return this.pages.length;
@@ -100,13 +103,13 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    next(async(vm) => {
-      await vm.fetchData(to.params);
+    next((vm) => {
+      vm.fetchData(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params);
+    this.fetchData(to.params);
     next();
   },
   methods: {
@@ -114,11 +117,11 @@ export default {
       this.$store.dispatch('category/read', {
         id: params.id
       });
-      this.$store.dispatch('news/browse', {
+      this.$store.dispatch('category/news/browse', {
         category: params.id,
         featured: true
       });
-      this.$store.dispatch('page/browse', {
+      this.$store.dispatch('category/page/browse', {
         category: params.id
       });
     }
