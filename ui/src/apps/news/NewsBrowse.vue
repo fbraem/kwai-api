@@ -127,7 +127,7 @@ export default {
       this.showAreYouSure = true;
     },
     doDeleteStory() {
-      this.$store.dispatch('news/delete', {
+      this.$store.dispatch('news/remove', {
         story: this.storyToDelete
       });
     },

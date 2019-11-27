@@ -349,7 +349,7 @@ export default {
     },
     doDeleteStory() {
       this.showAreYouSure = false;
-      this.$store.dispatch('site/news/delete', {
+      this.$store.dispatch('site/news/remove', {
         story: this.storyToDelete
       });
     },

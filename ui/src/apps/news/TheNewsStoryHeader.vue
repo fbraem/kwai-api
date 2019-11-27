@@ -89,7 +89,7 @@ export default {
   methods: {
     deleteStory() {
       this.showAreYouSure = false;
-      this.$store.dispatch('news/delete', {
+      this.$store.dispatch('news/remove', {
         story: this.story
       }).then(() => {
         this.$router.push({ name: 'news.browse' });
