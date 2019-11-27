@@ -26,9 +26,7 @@ async function read({ dispatch, getters, commit }, { id }) {
     return category;
   }
 
-  // For some reason this doesn't work when category.read is called
-  // in a beforeEnter (route)
-  // dispatch('wait/start', 'categories.read', { root: true });
+  dispatch('wait/start', 'categories.read', { root: true });
   try {
     var api = new JSONAPI({ source: Category });
     var result = await api.get(id);
@@ -38,7 +36,7 @@ async function read({ dispatch, getters, commit }, { id }) {
     commit('error', error);
     throw error;
   } finally {
-    // dispatch('wait/end', 'categories.read', { root: true });
+    dispatch('wait/end', 'categories.read', { root: true });
   }
 }
 
