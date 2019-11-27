@@ -8,7 +8,7 @@ const store = new Vuex.Store({
   plugins: [ abilityPlugin ],
 });
 
-import authModule from '@/stores/auth';
+import authModule from '@/apps/auth/store';
 store.registerModule('auth', authModule);
 import categoryModule from '@/apps/categories/store';
 store.registerModule('category', categoryModule);
