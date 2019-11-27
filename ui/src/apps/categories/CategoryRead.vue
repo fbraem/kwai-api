@@ -103,9 +103,11 @@ export default {
     }
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      vm.fetchData(to.params);
-      next();
+    next(async(vm) => {
+      await vm.fetchData(to.params);
+      if (vm.category.app) {
+        vm.$router.replace({ path: '/' + vm.category.app });
+      }
     });
   },
   async beforeRouteUpdate(to, from, next) {
@@ -113,8 +115,8 @@ export default {
     next();
   },
   methods: {
-    fetchData(params) {
-      this.$store.dispatch('category/read', {
+    async fetchData(params) {
+      await this.$store.dispatch('category/read', {
         id: params.id
       });
       this.$store.dispatch('category/news/browse', {
