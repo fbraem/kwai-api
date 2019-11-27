@@ -24,7 +24,6 @@ export default {
   i18n: messages,
   computed: {
     categories() {
-      console.log(this.$store.state.category.all);
       return this.$store.state.category.all;
     },
     noData() {
