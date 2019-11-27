@@ -179,8 +179,10 @@ class JSONAPI {
     uri.segment(this.source.type());
     if (model.id) uri.segment(model.id);
 
-    var data = Array.isArray(model) ?
-      model.map(element => element.serialize()) : model.serialize();
+    var data = {
+      data: Array.isArray(model) ?
+        model.map(element => element.serialize()) : model.serialize()
+    };
 
     const json = model.id ?
       await http_api.url(uri.href()).json(data).patch().json() :
