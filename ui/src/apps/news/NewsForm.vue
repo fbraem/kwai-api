@@ -390,8 +390,8 @@ export default {
         await this.$store.dispatch('news/read', {
           id: params.id
         });
+        this.form.writeForm(this.story);
       }
-      this.form.writeForm(this.story);
     },
     async submit() {
       this.form.clearErrors();
