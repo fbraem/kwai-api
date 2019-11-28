@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-3">
+  <div class="container mx-auto my-3">
     <KwaiForm
       :form="form"
       :error="error"
@@ -58,14 +58,14 @@ import KwaiTextarea from '@/components/forms/KwaiTextarea.vue';
 const makeCategoryForm = (fields) => {
   const writeForm = (category) => {
     fields.name.value = category.name;
-    fields.slug.value = category.slug;
+    fields.slug.value = category.app;
     fields.description.value = category.description;
     fields.remark.value = category.remark;
     fields.short_description.value = category.short_description;
   };
   const readForm = (category) => {
     category.name = fields.name.value;
-    category.slug = fields.slug.value;
+    category.app = fields.slug.value;
     category.description = fields.description.value;
     category.remark = fields.remark.value;
     category.short_description = fields.short_description.value;
@@ -88,7 +88,6 @@ export default {
   i18n: messages,
   data() {
     return {
-      category: new Category(),
       form: makeCategoryForm({
         name: makeField({
           required: true,
@@ -123,8 +122,9 @@ export default {
     };
   },
   computed: {
-    creating() {
-      return this.category != null && this.category.id == null;
+    category() {
+      return this.$store.getters['category/category'](this.$route.params.id)
+        || new Category();
     },
     error() {
       return this.$store.state.category.error;
@@ -143,7 +143,7 @@ export default {
   methods: {
     async fetchData(params) {
       if (params.id) {
-        this.category = await this.$store.dispatch('category/read', {
+        await this.$store.dispatch('category/read', {
           id: params.id
         });
         this.form.writeForm(this.category);
