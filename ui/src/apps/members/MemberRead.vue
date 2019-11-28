@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     member() {
-      return this.$store.state.member.selected;
+      return this.$store.state.member.active;
     },
   },
   beforeRouteEnter(to, from, next) {

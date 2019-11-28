@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import store from '@/stores/members';
+import store from './store';
 
 export default {
   beforeCreate() {

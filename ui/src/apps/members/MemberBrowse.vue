@@ -79,7 +79,7 @@ export default {
   i18n: messages,
   computed: {
     members() {
-      return this.$store.state.member.members;
+      return this.$store.state.member.all;
     },
     count() {
       if (this.members) {

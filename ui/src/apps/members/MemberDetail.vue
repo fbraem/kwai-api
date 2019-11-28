@@ -123,7 +123,7 @@ export default {
   i18n: messages,
   computed: {
     member() {
-      return this.$store.state.member.selected;
+      return this.$store.state.member.active;
     },
     licenseDateClass() {
       return {
