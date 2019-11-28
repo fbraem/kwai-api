@@ -3,7 +3,7 @@ import Vue from 'vue';
 /**
  * Set categories
  */
-export function categories(state, { meta, data }) {
+function categories(state, { meta, data }) {
   state.all = data;
   state.meta = meta;
   state.error = null;
