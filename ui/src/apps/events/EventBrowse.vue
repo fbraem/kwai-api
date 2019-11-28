@@ -295,7 +295,7 @@ export default {
       return this.currentDate.format('MMMM');
     },
     events() {
-      var events = this.$store.state.event.events;
+      var events = this.$store.state.event.all;
       return events || [];
     },
     days() {
