@@ -54,8 +54,18 @@ async function read({ dispatch, getters, commit }, payload) {
   }
 }
 
+/**
+ * When a story was read in another instance of this module, set can be
+ * used to make it available in the current instance.
+ */
+function set({ commit }, event) {
+  commit('event', { data: event });
+}
+
+
 export const actions = {
   browse,
   save,
-  read
+  read,
+  set
 };
