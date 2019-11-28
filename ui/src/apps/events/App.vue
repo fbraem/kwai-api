@@ -10,16 +10,16 @@ import store from './store';
 
 export default {
   beforeCreate() {
-    this.$store.registerModule('events', store);
+    this.$store.registerModule('event', store);
   },
   beforeDestroy() {
-    this.$store.dispatch('events/reset');
-    this.$store.unregisterModule('events');
+    this.$store.dispatch('event/reset');
+    this.$store.unregisterModule('event');
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.meta.active) {
-        vm.$store.dispatch('events/set', to.meta.active);
+        vm.$store.dispatch('event/set', to.meta.active);
       }
     });
   }
