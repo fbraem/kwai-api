@@ -1,5 +1,7 @@
 import Vue from 'vue';
 
+import { state as initialize } from './state';
+
 /**
  * Set categories
  */
@@ -35,7 +37,7 @@ function error(state, error) {
 }
 
 function reset(state) {
-  Object.assign(state, state());
+  Object.assign(state, initialize());
 }
 
 /**
