@@ -1,28 +1,44 @@
 <template>
   <div class="bg-gray-800 text-gray-500">
-    <div class="hero-container">
-      <div
-        v-if="picture"
-        class="self-center"
-        style="grid-area: hero-image;"
-      >
-        <img :src="picture" class="m-auto sm:m-0" />
-      </div>
-      <div style="grid-area: hero-text;">
-        <div v-if="badge">
-          <router-link
-            :to="badge.route"
-            class="badge red-badge mb-4 no-underline hover:no-underline"
-          >
-            {{ badge.name }}
-          </router-link>
-        </div>
-        <router-link
-          v-if="route && title"
-          :to="route"
-          class="text-gray-500 hover:no-underline"
+    <div class="container mx-auto">
+      <div class="hero-container">
+        <div
+          v-if="picture"
+          class="self-center"
+          style="grid-area: hero-image;"
         >
-          <h1 class="flex items-center mb-2 text-white">
+          <img :src="picture" class="m-auto sm:m-0" />
+        </div>
+        <div style="grid-area: hero-text;">
+          <div v-if="badge">
+            <router-link
+              :to="badge.route"
+              class="badge red-badge mb-4 no-underline hover:no-underline"
+            >
+              {{ badge.name }}
+            </router-link>
+          </div>
+          <router-link
+            v-if="route && title"
+            :to="route"
+            class="text-gray-500 hover:no-underline"
+          >
+            <h1 class="flex items-center mb-2 text-white">
+              <inline-svg
+                v-if="logo"
+                :src="logo"
+                width="42"
+                height="42"
+                fill="white"
+                class="mr-3"
+              />
+              {{ title }}
+            </h1>
+          </router-link>
+          <h1
+            v-else-if="title"
+            class="flex items-center mb-2 text-white"
+          >
             <inline-svg
               v-if="logo"
               :src="logo"
@@ -33,51 +49,37 @@
             />
             {{ title }}
           </h1>
-        </router-link>
-        <h1
-          v-else-if="title"
-          class="flex items-center mb-2 text-white"
+          <h2 v-if="subtitle">
+            {{ subtitle }}
+          </h2>
+          <slot></slot>
+        </div>
+        <div
+          v-if="hasToolbar"
+          class="flex flex-row"
+          style="grid-area: hero-toolbar;"
         >
-          <inline-svg
-            v-if="logo"
-            :src="logo"
-            width="42"
-            height="42"
-            fill="white"
-            class="mr-3"
-          />
-          {{ title }}
-        </h1>
-        <h2 v-if="subtitle">
-          {{ subtitle }}
-        </h2>
-        <slot></slot>
-      </div>
-      <div
-        v-if="hasToolbar"
-        class="flex flex-row"
-        style="grid-area: hero-toolbar;"
-      >
-        <template v-for="(button, index) in toolbar">
-          <template v-if="button.route">
-            <router-link
-              class="mr-1 last:mr-0 icon-button header-icon-button"
-              :to="button.route"
-              :key="index"
-            >
-              <i :class="button.icon"></i>
-            </router-link>
+          <template v-for="(button, index) in toolbar">
+            <template v-if="button.route">
+              <router-link
+                class="mr-1 last:mr-0 icon-button header-icon-button"
+                :to="button.route"
+                :key="index"
+              >
+                <i :class="button.icon"></i>
+              </router-link>
+            </template>
+            <template v-if="button.method">
+              <a
+                :key="index"
+                class="mr-1 last:mr-0 icon-button header-icon-button"
+                @click.prevent.stop="button.method"
+              >
+                <i :class="button.icon"></i>
+              </a>
+            </template>
           </template>
-          <template v-if="button.method">
-            <a
-              :key="index"
-              class="mr-1 last:mr-0 icon-button header-icon-button"
-              @click.prevent.stop="button.method"
-            >
-              <i :class="button.icon"></i>
-            </a>
-          </template>
-        </template>
+        </div>
       </div>
     </div>
   </div>
@@ -97,7 +99,7 @@
     ;
 }
 
-@screen lg {
+@screen xl {
   .hero-container {
       grid-template-columns: fit-content(800px) 1fr auto;
       grid-template-rows: auto auto;
