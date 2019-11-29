@@ -87,7 +87,7 @@ export default {
       return 0;
     },
     pages() {
-      return this.$store.state.category.page.pages;
+      return this.$store.state.category.page.all;
     },
     pageCount() {
       if (this.pages) return this.pages.length;

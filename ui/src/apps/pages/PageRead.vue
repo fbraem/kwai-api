@@ -1,21 +1,17 @@
 <template>
-  <Page>
+  <div>
     <div v-if="error">
       {{ error.response.statusText }}
     </div>
     <Spinner v-if="$wait.is('pages.read')" />
     <article
       v-if="page"
-      class="page-content overflow-x-auto container mx-auto"
+      class="page-content overflow-x-auto container mx-auto p-4"
     >
-      <h1>{{ page.content.title }}</h1>
       <div v-html="page.content.html_content">
       </div>
     </article>
-    <template slot="sidebar">
-      <Sidebar />
-    </template>
-  </Page>
+  </div>
 </template>
 
 <style>
@@ -105,7 +101,7 @@
 <script>
 import messages from './lang';
 
-import Page from '@/components//Page';
+import Page from '@/components/Page';
 import Sidebar from './Sidebar';
 import Spinner from '@/components/Spinner';
 
@@ -121,7 +117,7 @@ export default {
   i18n: messages,
   computed: {
     page() {
-      return this.$store.getters['page/page'](this.$route.params.id);
+      return this.$store.state.page.active;
     },
     categoryLink() {
       return {

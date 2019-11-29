@@ -41,5 +41,6 @@
     "content" : "Inhoud",
     "save" : "Bewaar",
     "enabled" : "Actief",
-    "all_pages" : "Alle informatie op één plaats ..."
+    "all_pages" : "Alle informatie op één plaats ...",
+    "published" : "Geschreven op {publishDate}"
 }

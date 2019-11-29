@@ -7,7 +7,7 @@
 
 <script>
 import newsStore from '@/apps/news/store';
-import pageStore from '@/stores/pages';
+import pageStore from '@/apps/pages/store';
 
 export default {
   beforeCreate() {
@@ -17,7 +17,7 @@ export default {
   beforeDestroy() {
     this.$store.dispatch('category/news/reset');
     this.$store.unregisterModule(['category', 'news']);
-    // this.$store.dispatch('category/page/reset');
+    this.$store.dispatch('category/page/reset');
     this.$store.unregisterModule(['category', 'page']);
   }
 };

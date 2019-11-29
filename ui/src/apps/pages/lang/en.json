@@ -41,5 +41,6 @@
     "content" : "Content",
     "save" : "Save",
     "enabled" : "Active",
-    "all_pages" : "All information on one place ..."
+    "all_pages" : "All information on one place ...",
+    "published" : "Written on {publishDate}"
 }

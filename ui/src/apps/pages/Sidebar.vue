@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.state.category.categories;
+      return this.$store.state.category.all;
     }
   }
 };

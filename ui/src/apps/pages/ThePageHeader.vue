@@ -1,9 +1,9 @@
 <template>
   <Header v-if="page"
-    :picture="picture"
     :title="page.content.title"
     :toolbar="toolbar"
     :badge="badge"
+    :picture="page.picture"
   >
     <div v-html="page.content.html_summary">
     </div>
@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     page() {
-      return this.$store.getters['page/page'](this.$route.params.id);
+      return this.$store.state.page.active;
     },
     picture() {
       if (this.page) return this.page.picture;

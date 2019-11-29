@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     pages() {
-      return this.$store.state.page.pages;
+      return this.$store.state.page.all;
     },
     pageCount() {
       if (this.pages) return this.pages.length;

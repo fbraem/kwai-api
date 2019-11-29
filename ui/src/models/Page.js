@@ -65,6 +65,11 @@ export default class Page extends Model {
         }
         return '';
       },
+      localPublishDate(page) {
+        var utc = page.updated_at.clone();
+        utc.utcOffset('+00:00', true);
+        return utc.local().format('L');
+      },
       picture(page) {
         if (page.images) {
           return page.images.crop;
