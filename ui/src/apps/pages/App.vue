@@ -1,5 +1,5 @@
 <template>
-  <div class="news">
+  <div>
     <router-view name="hero"></router-view>
     <router-view></router-view>
   </div>
