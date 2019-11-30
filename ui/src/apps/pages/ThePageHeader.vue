@@ -1,9 +1,12 @@
 <template>
-  <Header v-if="page"
+  <component
+    :is="header"
+    v-if="page"
     :title="page.content.title"
     :toolbar="toolbar"
     :badge="badge"
-    :picture="page.picture"
+    :picture="picture"
+    :pictures="pictures"
   >
     <div v-html="page.content.html_summary">
     </div>
@@ -16,7 +19,7 @@
     >
       {{ $t('are_you_sure') }}
     </AreYouSure>
-  </Header>
+  </component>
 </template>
 
 <script>
@@ -24,6 +27,7 @@ import messages from './lang';
 
 import AreYouSure from '@/components/AreYouSure.vue';
 import Header from '@/components/Header.vue';
+import ImageHeader from '@/components/ImageHeader.vue';
 
 /**
  * Component for a page header
@@ -32,7 +36,8 @@ export default {
   i18n: messages,
   components: {
     AreYouSure,
-    Header
+    Header,
+    ImageHeader
   },
   data() {
     return {
@@ -44,8 +49,24 @@ export default {
       return this.$store.state.page.active;
     },
     picture() {
-      if (this.page) return this.page.picture;
-      return null;
+      return this.page.picture;
+    },
+    pictures() {
+      const pictures = {};
+      if (this.page.images.crop_lg) {
+        pictures[this.page.images.crop_lg] = '1024w';
+      }
+      if (this.page.images.crop_md) {
+        pictures[this.page.images.crop_md] = '768w';
+      }
+      if (this.page.images.crop_sm) {
+        pictures[this.page.images.crop_sm] = '640w';
+      }
+      return pictures;
+    },
+    header() {
+      if (this.picture) return 'ImageHeader';
+      return 'Header';
     },
     categoryRoute() {
       return {

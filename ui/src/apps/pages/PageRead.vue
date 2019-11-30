@@ -6,96 +6,111 @@
     <Spinner v-if="$wait.is('pages.read')" />
     <article
       v-if="page"
-      class="page-content overflow-x-auto container mx-auto p-4"
+      class="page-content container overflow-x-auto mx-auto p-4"
     >
-      <div v-html="page.content.html_content">
+      <div style="grid-column: 2; justify-self:center">
+        <div
+          class="mt-4 mx-auto"
+          v-html="page.content.html_content">
+        </div>
       </div>
     </article>
+    <div class="bg-gray-300">
+      <div class="container mx-auto flex flex-row flex-wrap justify-center p-4">
+        <div
+          v-for="category in categories"
+          :key="category.id"
+          class="w-full sm:w-1/2 md:w-1/3"
+        >
+          <CategoryCard :category="category" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style>
-    blockquote {
-      background: #f9f9f9;
-      border-left: 10px solid #ccc;
-      margin: 1.5em 10px;
-      padding: 0.5em 10px;
-      quotes: "\201C""\201D""\2018""\2019";
-    }
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
 
-    .page-mini-meta {
-        font-size: 12px;
-        color: #999;
-    }
+.page-mini-meta {
+    font-size: 12px;
+    color: #999;
+}
 
-    .page-content table {
-        border-collapse: collapse;
-        margin-bottom:20px;
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
+.page-content table {
+    border-collapse: collapse;
+    margin-bottom:20px;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
 
-    .page-content table tbody tr:nth-child(odd) {
-        background: #eee;
-    }
-    .page-content table th,
-    .page-content table td {
-        border: 1px solid black;
-        padding: .5em 1em;
-    }
+.page-content table tbody tr:nth-child(odd) {
+    background: #eee;
+}
+.page-content table th,
+.page-content table td {
+    border: 1px solid black;
+    padding: .5em 1em;
+}
 
-    .page-content blockquote {
-      background: #f9f9f9;
-      border-left: 10px solid #ccc;
-      margin: 1.5em 10px;
-      padding: 0.5em 10px;
-      quotes: "\201C""\201D""\2018""\2019";
-    }
-    .page-content blockquote p {
-      display: inline;
-    }
-    .page-content h3 {
-        font-size: 24px;
-        font-weight: 400;
-        line-height: 32px;
-        letter-spacing: normal;
-    }
-    .page-content ul {
-        list-style-position: inside;
-        margin-bottom: 20px;
-    }
+.page-content blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+.page-content blockquote p {
+  display: inline;
+}
+.page-content h3 {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: normal;
+}
+.page-content ul {
+    list-style-position: inside;
+    margin-bottom: 20px;
+}
 
-    .page-content .gallery {
-        background: #eee;
-        column-count: 4;
-        column-gap: 1em;
-        padding-left: 1em;
-        padding-top: 1em;
-        padding-right: 1em;
-    }
+.page-content .gallery {
+    background: #eee;
+    column-count: 4;
+    column-gap: 1em;
+    padding-left: 1em;
+    padding-top: 1em;
+    padding-right: 1em;
+}
 
-    .page-content .gallery .item {
-        background: white;
-        display: inline-block;
-        margin: 0 0 1em;
-        /*width: 100%;*/
-        padding: 1em;
-    }
+.page-content .gallery .item {
+    background: white;
+    display: inline-block;
+    margin: 0 0 1em;
+    /*width: 100%;*/
+    padding: 1em;
+}
 
-    .page-content .avatar {
-        border-radius:50%;
-        width:150px;
-        height:150px;
-    }
+.page-content .avatar {
+    border-radius:50%;
+    width:150px;
+    height:150px;
+}
 
-    @media print
+@media print
+{
+    .no-print, .no-print *
     {
-        .no-print, .no-print *
-        {
-            display: none !important;
-        }
+        display: none !important;
     }
+}
 </style>
 
 <script>
@@ -104,6 +119,7 @@ import messages from './lang';
 import Page from '@/components/Page';
 import Sidebar from './Sidebar';
 import Spinner from '@/components/Spinner';
+import CategoryCard from '@/apps/categories/components/CategoryCard';
 
 /**
  * Page for an information page
@@ -112,7 +128,8 @@ export default {
   components: {
     Page,
     Sidebar,
-    Spinner
+    Spinner,
+    CategoryCard
   },
   i18n: messages,
   computed: {
@@ -127,6 +144,9 @@ export default {
           this.page.category.id
         }
       };
+    },
+    categories() {
+      return this.$store.state.category.all;
     },
     error() {
       return this.$store.state.page.error;
