@@ -85,7 +85,7 @@
   </div>
 </template>
 
-<style scoded>
+<style scoped>
 .hero-container {
     display: grid;
     @apply p-4;
