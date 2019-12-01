@@ -15,7 +15,6 @@ function pages(state, { meta, data }) {
  * It will also set the page as the active page.
  */
 function page(state, page, insert = false) {
-  console.log(page);
   state.error = null;
   if (state.all) {
     const index = state.all.findIndex((p) => p.id === page.id);

@@ -206,7 +206,6 @@ export default {
       this.form.readForm(this.page);
       try {
         await this.$store.dispatch('page/save', this.page);
-        console.log(this.page);
         this.$router.push({
           name: 'pages.read',
           params: {
