@@ -48,21 +48,25 @@ class BrowseAction
 
         $count = $query->count();
 
-        $limit = $parameters['page']['limit'] ?? 10;
-        $offset = $parameters['page']['offset'] ?? 0;
-
-        $query->limit($limit);
-        $query->offset($offset);
+        if (isset($parameters['page']['limit'])) {
+            $limit = $parameters['page']['limit'];
+            $query->limit($limit);
+            $offset = $parameters['page']['offset'] ?? 0;
+            $query->offset($offset);
+        }
 
         $pages = $query->all();
 
         $filesystem = $this->container->get('filesystem');
         $resource = PageTransformer::createForCollection($pages, $filesystem);
-        $resource->setMeta([
-            'limit' => intval($limit),
-            'offset' => intval($offset),
-            'count' => $count
-        ]);
+        $meta = [
+            'count' => $count,
+        ];
+        if (isset($limit)) {
+            $meta['limit'] = $limit;
+            $meta['offset'] = $offset;
+        }
+        $resource->setMeta($meta);
 
         return (new ResourceResponse($resource))($response);
     }
