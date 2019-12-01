@@ -15,17 +15,6 @@
         </div>
       </div>
     </article>
-    <div class="bg-gray-300">
-      <div class="container mx-auto flex flex-row flex-wrap justify-center p-4">
-        <div
-          v-for="category in categories"
-          :key="category.id"
-          class="w-full sm:w-1/2 md:w-1/3"
-        >
-          <CategoryCard :category="category" />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -117,7 +106,6 @@ blockquote {
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
-import CategoryCard from '@/apps/categories/components/CategoryCard';
 
 /**
  * Page for an information page
@@ -125,7 +113,6 @@ import CategoryCard from '@/apps/categories/components/CategoryCard';
 export default {
   components: {
     Spinner,
-    CategoryCard
   },
   i18n: messages,
   computed: {
