@@ -61,7 +61,7 @@ async function save({ commit }, page) {
   try {
     const api = new JSONAPI({ source: Page });
     var result = await api.save(page);
-    commit('page', result);
+    commit('page', result.data);
     return result.data;
   } catch (error) {
     commit('error', error);
