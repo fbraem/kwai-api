@@ -116,8 +116,6 @@ blockquote {
 <script>
 import messages from './lang';
 
-import Page from '@/components/Page';
-import Sidebar from './Sidebar';
 import Spinner from '@/components/Spinner';
 import CategoryCard from '@/apps/categories/components/CategoryCard';
 
@@ -126,8 +124,6 @@ import CategoryCard from '@/apps/categories/components/CategoryCard';
  */
 export default {
   components: {
-    Page,
-    Sidebar,
     Spinner,
     CategoryCard
   },
