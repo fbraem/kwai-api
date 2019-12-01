@@ -13,12 +13,35 @@
         />
       </div>
       <div class="container mx-auto mt-3 p-2">
-        <h2 class="text-2xl md:text-6xl text-center">
-          {{ title }}
-        </h2>
+        <div class="flex justify-center">
+          <h2 class="text-3xl md:text-6xl">
+            {{ title }}
+          </h2>
+          <div
+            v-if="badge"
+            class="ml-3"
+          >
+            <router-link
+              :to="badge.route"
+              class="badge red-badge mb-4 no-underline hover:no-underline"
+            >
+              {{ badge.name }}
+            </router-link>
+          </div>
+        </div>
         <div class="text-xl md:text-3xl text-center">
           <slot></slot>
         </div>
+      </div>
+      <div
+        v-if="hasToolbar"
+        class="flex flex-row justify-end mr-2"
+      >
+        <IconButtons
+          :toolbar="toolbar"
+          normalClass="text-gray-300"
+          hoverClass="hover:bg-gray-900"
+        />
       </div>
     </div>
   </div>
@@ -26,17 +49,12 @@
 
 <style scoped>
 .double-color {
-  @apply bg-gray-800 w-full;
-  position: relative;
+  @apply bg-gray-800 w-full relative;
 }
 
 .double-color:before {
   content: '';
-  @apply bg-gray-300 w-full h-32;
-  position: absolute;
-  top: 0px;
-  left: 0;
-  right: 0;
+  @apply bg-gray-300 w-full h-32 absolute inset-0;
   z-index: 1;
 }
 @screen sm {
@@ -56,13 +74,21 @@
     @apply h-64;
   }
 };
+.red-badge {
+  @apply bg-red-700 text-red-300;
+}
 </style>
 
 <script>
 /**
  * Component for a header of a page
  */
+import IconButtons from './IconButtons';
+
 export default {
+  components: {
+    IconButtons
+  },
   props: {
     /**
      * Title of the header
