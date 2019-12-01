@@ -361,8 +361,7 @@ export default {
   },
   computed: {
     story() {
-      return this.$store.getters['news/story'](this.$route.params.id)
-        || new Story();
+      return this.$store.state.news.active || new Story();
     },
     dateFormat() {
       return '(' + moment.localeData().longDateFormat('L') + ')';
