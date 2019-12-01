@@ -2,7 +2,10 @@
   <div>
     <router-view name="hero"></router-view>
     <router-view></router-view>
-    <CategoryCards :categories="categories" />
+    <CategoryCards
+      v-if="categories"
+      :categories="categories"
+    />
   </div>
 </template>
 
