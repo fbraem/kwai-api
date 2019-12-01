@@ -14,7 +14,7 @@
       </div>
       <div class="container mx-auto mt-3 p-2">
         <div class="flex justify-center">
-          <h2 class="text-3xl md:text-6xl">
+          <h2 class="text-white font-extrabold text-3xl md:text-6xl">
             {{ title }}
           </h2>
           <div
