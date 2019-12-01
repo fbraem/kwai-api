@@ -11,16 +11,16 @@ function pages(state, { meta, data }) {
 }
 
 /**
- * Update a page in the list
+ * Update a page in the list (if it's there ...)
+ * It will also set the page as the active page.
  */
 function page(state, page, insert = false) {
+  console.log(page);
   state.error = null;
-  const index = state.all.findIndex((p) => p.id === page.id);
-  if (index !== -1) {
-    Vue.set(state.all, index, page);
-  } else {
-    if (insert) {
-      state.all.push(page);
+  if (state.all) {
+    const index = state.all.findIndex((p) => p.id === page.id);
+    if (index !== -1) {
+      Vue.set(state.all, index, page);
     }
   }
   state.active = page;
