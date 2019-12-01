@@ -1,9 +1,13 @@
 <template>
-  <Header
+  <ImageHeader
     :title="$t('news')"
-    :subtitle="$t('archive_title', { monthName : monthName, year : year })"
     :toolbar="toolbar"
-  />
+    :pictures="pictures"
+  >
+    <p>
+      {{ $t('archive_title', { monthName : monthName, year : year }) }}
+    </p>
+  </ImageHeader>
 </template>
 
 <script>
@@ -13,16 +17,25 @@ import moment from 'moment';
 
 import messages from './lang';
 
-import Header from '@/components/Header';
+import ImageHeader from '@/components/ImageHeader';
 
 /**
  * Component for header of archive page
  */
 export default {
   components: {
-    Header
+    ImageHeader
   },
   i18n: messages,
+  data() {
+    return {
+      pictures: {
+        '1024w': require('./images/archive_lg.jpg'),
+        '768w': require('./images/archive_md.jpg'),
+        '640w': require('./images/archive_sm.jpg')
+      }
+    };
+  },
   computed: {
     year() {
       return this.$route.params.year;
