@@ -1,7 +1,9 @@
 <template>
   <!-- eslint-disable max-len -->
-  <Header
+  <ImageHeader
     :picture="require('./images/judokwaikemzeke.jpg')"
+    :pictures="pictures"
+    title="Judokwai Kemzeke"
   >
     <div style="grid-area: hero-text; display: flex; flex-direction: column; justify-content: center;align-items: center">
       <div>
@@ -10,29 +12,31 @@
           style="width:121px;height:121px;" />
       </div>
       <div class="text-center">
-        <h2 class="text-white font-extrabold md:text-4xl text-5xl">Judokwai Kemzeke</h2>
         {{ $t("message.hello") }}
-        <br />
         {{ $t("message.info") }}
       </div>
-      <div>
-        <img
-          :src="require('./images/40jaar.png')"
-          style="width:200px;height:200px;" />
-      </div>
     </div>
-  </Header>
+  </ImageHeader>
 </template>
 
 <script>
 import messages from './lang';
 
-import Header from '@/components/Header';
+import ImageHeader from '@/components/ImageHeader';
 
 export default {
   components: {
-    Header
+    ImageHeader
   },
-  i18n: messages
+  i18n: messages,
+  data() {
+    return {
+      pictures: {
+        '1024w': require('./images/judokwaikemzeke_lg.jpg'),
+        '768w': require('./images/judokwaikemzeke_md.jpg'),
+        '640w': require('./images/judokwaikemzeke_sm.jpg')
+      }
+    };
+  },
 };
 </script>
