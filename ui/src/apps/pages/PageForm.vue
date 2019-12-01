@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-3">
+  <div class="container mx-auto my-3">
     <KwaiForm
       :form="form"
       :error="error"
@@ -117,7 +117,6 @@ export default {
   },
   data() {
     return {
-      page: new Page(),
       form: makePageForm({
         enabled: makeField({
           value: true
@@ -173,8 +172,8 @@ export default {
     };
   },
   computed: {
-    creating() {
-      return this.page.id == null;
+    page() {
+      return this.$store.state.page.active || new Page();
     },
     error() {
       return this.$store.state.page.error;
@@ -196,7 +195,7 @@ export default {
   methods: {
     async fetchData(params) {
       if (params.id) {
-        this.page = await this.$store.dispatch('page/read', {
+        await this.$store.dispatch('page/read', {
           id: params.id
         });
         this.form.writeForm(this.page);
@@ -206,7 +205,8 @@ export default {
       this.form.clearErrors();
       this.form.readForm(this.page);
       try {
-        this.page = await this.$store.dispatch('page/save', this.page);
+        await this.$store.dispatch('page/save', this.page);
+        console.log(this.page);
         this.$router.push({
           name: 'pages.read',
           params: {
