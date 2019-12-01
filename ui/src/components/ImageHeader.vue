@@ -147,7 +147,7 @@ export default {
     srcset() {
       if (this.pictures) {
         let srcset = Object.keys(this.pictures).map(
-          x => x + ' ' + this.pictures[x]
+          x => this.pictures[x] + ' ' + x
         );
         return srcset.join(',');
       }

@@ -54,13 +54,13 @@ export default {
     pictures() {
       const pictures = {};
       if (this.page.images.crop_lg) {
-        pictures[this.page.images.crop_lg] = '1024w';
+        pictures['1024w'] = this.page.images.crop_lg;
       }
       if (this.page.images.crop_md) {
-        pictures[this.page.images.crop_md] = '768w';
+        pictures['768w'] = this.page.images.crop_md;
       }
       if (this.page.images.crop_sm) {
-        pictures[this.page.images.crop_sm] = '640w';
+        pictures['640w'] = this.page.images.crop_sm;
       }
       return pictures;
     },
