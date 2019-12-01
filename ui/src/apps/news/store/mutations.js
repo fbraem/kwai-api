@@ -19,20 +19,25 @@ function stories(state, { meta, data }) {
 };
 
 /**
- * Change/Add a story in the list
+ * Change a story in the list and set as active
  */
 function story(state, { data }) {
   state.error = null;
-  if (state.all == null) {
-    state.all = [];
+  if (state.all) {
+    var index = state.all.findIndex((s) => s.id === data.id);
+    if (index !== -1) {
+      Vue.set(state.all, index, data);
+    }
   }
-  var index = state.all.findIndex((s) => s.id === data.id);
-  if (index !== -1) {
-    Vue.set(state.all, index, data);
-  } else {
-    state.all.push(data);
-  }
+  state.active = data;
 };
+
+/**
+ * Set the active story
+ */
+function active(state, active) {
+  state.active = active;
+}
 
 /**
  * Removes a story from the list
@@ -76,6 +81,7 @@ export const mutations = {
   reset,
   stories,
   story,
+  active,
   deleteStory,
   archive,
   error

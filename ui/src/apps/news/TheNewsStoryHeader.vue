@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     story() {
-      return this.$store.getters['news/story'](this.$route.params.id);
+      return this.$store.state.news.active;
     },
     picture() {
       if (this.story) {

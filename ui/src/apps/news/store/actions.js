@@ -37,16 +37,22 @@ async function browse({ dispatch, commit }, payload) {
  * Read a new story.
  */
 async function read({ getters, dispatch, commit, state }, payload) {
+  // Don't read it again when it is active ...
+  if (state.active?.id === payload.id) {
+    return;
+  }
+
   var story = getters['story'](payload.id);
   if (story) { // already read
-    return story;
+    commit('active', story);
+    return;
   }
 
   dispatch('wait/start', 'news.read', { root: true });
   var api = new JSONAPI({ source: Story });
   try {
     var result = await api.get(payload.id);
-    commit('story', result);
+    commit('active', result.data);
     return result.data;
   } catch (error) {
     commit('error', error);

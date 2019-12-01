@@ -85,7 +85,7 @@ export default {
   i18n: messages,
   computed: {
     story() {
-      return this.$store.getters['news/story'](this.$route.params.id);
+      return this.$store.state.news.active;
     },
     facebookUrl() {
       // TODO: remove the host
