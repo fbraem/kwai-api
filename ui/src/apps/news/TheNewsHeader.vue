@@ -1,24 +1,34 @@
 <template>
-  <Header
+  <ImageHeader
     :title="$t('news')"
     :toolbar="toolbar"
+    :pictures="pictures"
   >
     <p>
       {{ $t('all_news') }}
     </p>
-  </Header>
+  </ImageHeader>
 </template>
 
 <script>
 import Story from '@/models/Story';
 import messages from './lang';
-import Header from '@/components/Header';
+import ImageHeader from '@/components/ImageHeader';
 
 export default {
   components: {
-    Header
+    ImageHeader
   },
   i18n: messages,
+  data() {
+    return {
+      pictures: {
+        '1024w': require('./images/exclamation_lg.jpg'),
+        '768w': require('./images/exclamation_md.jpg'),
+        '640w': require('./images/exclamation_sm.jpg')
+      }
+    };
+  },
   computed: {
     toolbar() {
       const buttons = [];
