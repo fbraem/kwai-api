@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto w-full flex flex-wrap justify-between mx-2">
+  <div class="container mx-auto w-full flex flex-wrap mx-2">
     <div
       v-if="title"
       class="w-full text-white mb-8"
