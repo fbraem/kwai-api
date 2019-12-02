@@ -7,7 +7,7 @@
         class="fa-2x mr-3 fill-current"
       >
       </i>
-      <h3 class="font-bold text-xl text-bold mb-0">
+      <h3 class="font-bold text-xl text-bold mb-0 truncate">
         <slot name="title">
           {{ title }}
         </slot>
