@@ -56,29 +56,14 @@
         </div>
         <div
           v-if="hasToolbar"
-          class="flex flex-row"
-          style="grid-area: hero-toolbar;"
+          class="flex flex-row justify-end mr-2"
+          style="grid-area: hero-toolbar"
         >
-          <template v-for="(button, index) in toolbar">
-            <template v-if="button.route">
-              <router-link
-                class="mr-1 last:mr-0 icon-button header-icon-button"
-                :to="button.route"
-                :key="index"
-              >
-                <i :class="button.icon"></i>
-              </router-link>
-            </template>
-            <template v-if="button.method">
-              <a
-                :key="index"
-                class="mr-1 last:mr-0 icon-button header-icon-button"
-                @click.prevent.stop="button.method"
-              >
-                <i :class="button.icon"></i>
-              </a>
-            </template>
-          </template>
+          <IconButtons
+            :toolbar="toolbar"
+            normalClass="text-gray-300"
+            hoverClass="hover:bg-gray-900"
+          />
         </div>
       </div>
     </div>
@@ -130,6 +115,7 @@
 
 <script>
 import InlineSvg from 'vue-inline-svg';
+import IconButtons from './IconButtons';
 
 /**
  * Component for a header of a page
@@ -184,7 +170,7 @@ export default {
     }
   },
   components: {
-    InlineSvg
+    InlineSvg, IconButtons
   },
   computed: {
     hasToolbar() {
