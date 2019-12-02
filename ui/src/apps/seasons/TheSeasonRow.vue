@@ -1,21 +1,21 @@
 <template>
-  <tr class="odd:bg-gray-200 border-b border-gray-400">
-    <td class="py-2 px-3 text-gray-700">
+  <tr>
+    <td>
       <i class="fas fa-check" v-if="season.active"></i>
     </td>
-    <td class="py-2 px-3 text-gray-700">
+    <td>
       <router-link
         :to="{ name: 'seasons.read', params: { id: season.id} }"
       >
         {{ season.name }}
       </router-link>
     </td>
-    <td class="py-2 px-3 text-gray-700">
+    <td>
       {{ season.formatted_start_date }}
       <i class="fas fa-arrows-alt-h"></i>
       {{ season.formatted_end_date }}
     </td>
-    <td class="py-2 px-3 text-gray-700">
+    <td>
       <router-link
         v-if="$can('update', season)"
         class="icon-button text-gray-700 hover:bg-gray-300"

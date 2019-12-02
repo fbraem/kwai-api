@@ -8,17 +8,17 @@
       {{ $t('no_seasons') }}
     </Alert>
     <div v-else>
-      <table class="w-full border-collapse text-left">
+      <table class="table">
         <thead>
-          <tr class="bg-gray-500 border-b border-gray-200">
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white"></th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+          <tr>
+            <th></th>
+            <th>
               {{ $t('form.season.name.label') }}
             </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
+            <th>
               {{ $t('period') }}
             </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white"></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     seasons() {
-      return this.$store.state.season.seasons;
+      return this.$store.state.season.all;
     },
     noSeasons() {
       return this.seasons && this.seasons.length === 0;

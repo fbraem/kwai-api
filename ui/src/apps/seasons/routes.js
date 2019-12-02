@@ -16,6 +16,22 @@ const SeasonForm = () => import(
   /* webpackChunkName: "seasons_admin" */
   '@/apps/seasons/SeasonForm.vue'
 );
+const SeasonTeams = () => import(
+  /* webpackChunkName: "seasons_admin" */
+  '@/apps/seasons/SeasonTeams.vue'
+);
+const SeasonDefinitions = () => import(
+  /* webpackChunkName: "seasons_admin" */
+  '@/apps/seasons/SeasonDefinitions.vue'
+);
+const SeasonTrainings = () => import(
+  /* webpackChunkName: "seasons_admin" */
+  '@/apps/seasons/SeasonTrainings.vue'
+);
+const SeasonDetail = () => import(
+  /* webpackChunkName: "seasons_admin" */
+  '@/apps/seasons/SeasonDetail.vue'
+);
 const SeasonsHeader = () => import(
   /* webpackChunkName: "seasons_chunck" */
   '@/apps/seasons/TheSeasonsHeader.vue'
@@ -36,7 +52,36 @@ export default [
           hero: SeasonHeader,
           default: SeasonRead
         },
-        name: 'seasons.read',
+        children: [
+          {
+            path: 'teams',
+            components: {
+              season_information: SeasonTeams
+            },
+            name: 'seasons.teams'
+          },
+          {
+            path: 'definitions',
+            components: {
+              season_information: SeasonDefinitions
+            },
+            name: 'seasons.definitions'
+          },
+          {
+            path: 'trainings',
+            components: {
+              season_information: SeasonTrainings
+            },
+            name: 'seasons.trainings'
+          },
+          {
+            path: '',
+            components: {
+              season_information: SeasonDetail
+            },
+            name: 'seasons.read',
+          },
+        ]
       },
       {
         path: 'create',
