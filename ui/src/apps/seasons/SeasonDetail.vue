@@ -1,5 +1,8 @@
 <template>
-  <div v-if="season" style="grid-area: page-content">
+  <div
+    v-if="season"
+    class="flex flex-col"
+  >
     <h1>
       {{ $t('season') }}
     </h1>
@@ -8,6 +11,15 @@
       <i class="fas fa-check"></i>
       &nbsp;&nbsp;{{ $t('active_message') }}
     </Alert>
+    <div class="p-3 self-end">
+      <router-link
+        v-if="$can('update', season)"
+        class="icon-button text-gray-700 hover:bg-gray-300"
+        :to="{ name: 'seasons.update', params: { id: season.id } }"
+      >
+        <i class="fas fa-edit"></i>
+      </router-link>
+    </div>
   </div>
 </template>
 
