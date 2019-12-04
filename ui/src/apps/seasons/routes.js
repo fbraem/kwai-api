@@ -22,11 +22,11 @@ const SeasonTeams = () => import(
 );
 const SeasonDefinitions = () => import(
   /* webpackChunkName: "seasons_admin" */
-  '@/apps/seasons/SeasonDefinitions.vue'
+  '@/apps/seasons/NotImplemented.vue'
 );
 const SeasonTrainings = () => import(
   /* webpackChunkName: "seasons_admin" */
-  '@/apps/seasons/SeasonTrainings.vue'
+  '@/apps/seasons/NotImplemented.vue'
 );
 const SeasonDetail = () => import(
   /* webpackChunkName: "seasons_admin" */
