@@ -73,7 +73,6 @@ export default {
   },
   data() {
     return {
-      season: new Season(),
       form: makeSeasonForm({
         name: makeField({
           required: true,
@@ -136,6 +135,9 @@ export default {
     };
   },
   computed: {
+    season() {
+      return this.$store.state.season.active || new Season();
+    },
     error() {
       return this.$store.state.season.error;
     },
@@ -152,7 +154,7 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      this.season = await this.$store.dispatch('season/read', {
+      await this.$store.dispatch('season/read', {
         id: params.id
       });
       this.form.writeForm(this.season);
@@ -161,7 +163,7 @@ export default {
       this.form.clearErrors();
       this.form.readForm(this.season);
       try {
-        this.season = await this.$store.dispatch('season/save', this.season);
+        await this.$store.dispatch('season/save', this.season);
         this.$router.push({
           name: 'seasons.read',
           params: {
