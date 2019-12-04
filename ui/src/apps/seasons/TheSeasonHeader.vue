@@ -109,15 +109,14 @@
 <script>
 import messages from './lang';
 
-import AreYouSure from '@/components/AreYouSure';
-import Header from '@/components/Header';
+// import AreYouSure from '@/components/AreYouSure';
 import MegaMenu from '@/components/MegaMenu';
 import MegaMenuBlock from '@/components/MegaMenuBlock';
 
 export default {
   i18n: messages,
   components: {
-    AreYouSure, Header, MegaMenu, MegaMenuBlock
+    /* AreYouSure, */ MegaMenu, MegaMenuBlock
   },
   data() {
     return {
