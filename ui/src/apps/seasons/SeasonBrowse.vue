@@ -1,13 +1,13 @@
 <template>
   <div class="container mx-auto mt-3">
     <Spinner v-if="$wait.is('seasons.browse')" />
-    <Alert
-      v-if="noSeasons"
-      type="warning"
-    >
-      {{ $t('no_seasons') }}
-    </Alert>
     <div v-else>
+      <Alert
+        v-if="noSeasons"
+        type="warning"
+      >
+        {{ $t('no_seasons') }}
+      </Alert>
       <table class="table">
         <thead>
           <tr>
