@@ -41,7 +41,7 @@
             :to="{ name: 'seasons.teams', params: { id: season.id }}"
             logo="fas fa-users"
             :title="$t('teams')"
-            linkTitle='Toon de teams ...'
+            :linkTitle="$t('show_teams')"
           >
             <div class="flex justify-center align-center mb-2 rounded-full">
               <p class="text-gray-100 text-sm">
