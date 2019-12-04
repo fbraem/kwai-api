@@ -136,9 +136,6 @@ export default {
     };
   },
   computed: {
-    creating() {
-      return this.season != null && this.season.id == null;
-    },
     error() {
       return this.$store.state.season.error;
     },
