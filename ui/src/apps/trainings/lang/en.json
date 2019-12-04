@@ -1,214 +1,214 @@
 {
-    "training" : {
-        "definitions" : {
-            "title" : "Training Definitions",
-            "no_data" : "There are no training definitions yet",
-            "not_found" : "This training definition doesn't exist",
-            "create" : "Create a new training definition",
-            "update" : "Update a training definition",
-            "time" : "Tijdstip",
-            "weekday": "Day",
-            "form" : {
-                "name" : {
-                    "label": "Name",
-                    "required" : "Name is required",
-                    "placeholder" : "Enter a name"
-                },
-                "description" : {
-                    "label" : "Description",
-                    "placeholder" : "Enter a description",
-                    "required" : "Description is required"
-                },
-                "location" : {
-                    "label" : "Location",
-                    "placeholder" : "Enter a location"
-                },
-                "weekday" : {
-                    "label" : "Weekday",
-                    "required" : "Weekday is required",
-                    "numeric" : "Weekday must be numeric"
-                },
-                "season" : {
-                    "label" : "Season",
-                    "no_season" : "< No Season >"
-                },
-                "team" : {
-                    "label" : "Team",
-                    "no_team" : "< No Team >"
-                },
-                "start_time" : {
-                    "label" : "Starttime",
-                    "required" : "Starttime is required",
-                    "invalid" : "Starttime is wrong.",
-                    "before" : "Starttime must be before the endtime",
-                    "placeholder" : "Enter a starttime"
-                },
-                "end_time" : {
-                    "label" : "Endtime",
-                    "required" : "Endtime is required",
-                    "invalid" : "Endtime is wrong.",
-                    "after" : "Endtime must be after the starttime",
-                    "placeholder" : "Enter an endtime"
-                },
-                "active" : {
-                    "label" : "Active"
-                },
-                "remark" : {
-                    "label" : "Remark",
-                    "placeholder" : "Enter a remark"
-                }
-            }
+  "cancelled": "This training is cancelled!",
+  "coaches": "Coaches",
+  "description": "Description",
+  "name": "Name",
+  "no_coach": "No coach",
+  "save": "Save",
+  "season": "Season",
+  "team": "Team",
+  "title": "Training",
+  "training": {
+    "coaches": {
+      "create": "Add a new coach",
+      "form": {
+        "active": {
+          "label": "Active"
         },
-        "coaches" : {
-            "title" : "Coaches",
-            "no_data" : "There are no coaches",
-            "not_found" : "This coach doesn't exist",
-            "create" : "Add a new coach",
-            "update" : "Update a coach",
-            "form" : {
-                "member" : {
-                    "label" : "Member",
-                    "placeholder" : "Search a member",
-                    "not_found" : "No members found",
-                    "required": "This is required"
-                },
-                "diploma" : {
-                    "label" : "Diploma",
-                    "placeholder" : "Enter a diploma"
-                },
-                "description" : {
-                    "label" : "Description",
-                    "placeholder" : "Enter a description"
-                },
-                "remark" : {
-                    "label" : "Remark",
-                    "placeholder" : "Enter a remark"
-                },
-                "active" : {
-                    "label" : "Active"
-                }
-            },
-            "trainings" : "The trainings of {coach}"
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter a description"
         },
-        "generator" : {
-            "create" : "Create trainings by entering a start and enddate. It's also possible to attach coaches to these trainings.",
-            "form" : {
-                "start_date" : {
-                    "label" : "Startdate",
-                    "placeholder" : "Enter a date",
-                    "required": "Startdate is required",
-                    "invalid": "Invalid startdate (Format: {format})"
-                },
-                "end_date" : {
-                    "label" : "Enddate",
-                    "placeholder" : "Enter a date",
-                    "required": "Enddate is required",
-                    "invalid": "Invalid enddate (Format: {format})",
-                    "after": "Enddate must be after startdate"
-                },
-                "coaches": {
-                    "label": "Coaches",
-                    "placeholder": "Select coaches for the training",
-                    "selectLabel" : "Press enter to select",
-                    "deselectLabel" : "Press enter to remove"
-                },
-                "generate": "Generate"
-            },
-            "help" : "Select all trainings to create and click on 'Save'"
+        "diploma": {
+          "label": "Diploma",
+          "placeholder": "Enter a diploma"
         },
-        "events": {
-            "title": "Trainings",
-            "generate": "Generate new trainings",
-            "no_generated_data": "There are no trainings generated",
-            "day": "Day",
-            "time": "Time",
-            "date": "Date",
-            "coaches":  "Coaches",
-            "form" : {
-                "title" : {
-                    "label" : "Title",
-                    "required" : "Title is required",
-                    "placeholder" : "Enter a title"
-                },
-                "summary" : {
-                    "label" : "Description",
-                    "required" : "Description is required",
-                    "placeholder" : "Enter a description"
-                },
-                "active" : {
-                    "label" : "Active"
-                },
-                "cancelled" : {
-                    "label" : "Cancelled"
-                },
-                "start_date": {
-                    "label" : "Date",
-                    "placeholder" : "Enter a date",
-                    "required" : "Date is required",
-                    "invalid" : "Date is not valid"
-                },
-                "start_time": {
-                    "label" : "Starttime",
-                    "placeholder" : "Enter a time",
-                    "required" : "Starttime is required",
-                    "invalid" : "Starttime is invalid"
-                },
-                "end_time" : {
-                    "label" : "Endtime",
-                    "placeholder" : "Enter a time",
-                    "required" : "Endtime is required",
-                    "after" : "Endtime must be after starttime",
-                    "invalid" : "Endtime is required"
-                },
-                "remark" : {
-                    "label" : "Remark",
-                    "placeholder" : "Enter a remark"
-                },
-                "season" : {
-                    "label" : "Season",
-                    "no_season" : "< No Season >"
-                },
-                "coaches": {
-                    "label": "Coaches",
-                    "placeholder": "Select coaches for the training",
-                    "selectLabel" : "Press enter to select",
-                    "deselectLabel" : "Press enter to remove"
-                },
-                "teams": {
-                    "label": "Teams",
-                    "placeholder": "Select a team for this training",
-                    "selectLabel" : "Press enter to select",
-                    "deselectLabel" : "Press enter to remove"
-                }
-            },
-            "no_data" : "There are no events for this period."
+        "member": {
+          "label": "Member",
+          "not_found": "No members found",
+          "placeholder": "Search a member",
+          "required": "This is required"
         },
-        "presences" : {
-            "title" : "Attendance List",
-            "attendees" : "Attendees",
-            "possible" : "Possible Attendees",
-            "team" : "Removed members or members of the team that belongs to this training.",
-            "nobody" : "No Attendees",
-            "form" : {
-                "other_members": {
-                    "label": "Other members"
-                },
-                "select_label" : "Press enter to select",
-                "deselect_label": "Press enter to deselect",
-                "add_others" : "Add"
-            },
-            "save_warning": "Click on SAVE to store the changes!",
-            "save": "save"
+        "remark": {
+          "label": "Remark",
+          "placeholder": "Enter a remark"
         }
+      },
+      "no_data": "There are no coaches",
+      "not_found": "This coach doesn't exist",
+      "title": "Coaches",
+      "trainings": "The trainings of {coach}",
+      "update": "Update a coach"
     },
-    "save" : "Save",
-    "team" : "Team",
-    "season" : "Season",
-    "name" : "Name",
-    "description" : "Description",
-    "trainings" : "Trainings",
-    "title" : "Training",
-    "coaches" : "Coaches",
-    "cancelled" : "This training is cancelled!",
-    "no_coach" : "No coach"
+    "definitions": {
+      "create": "Create a new training definition",
+      "form": {
+        "active": {
+          "label": "Active"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter a description",
+          "required": "Description is required"
+        },
+        "end_time": {
+          "after": "Endtime must be after the starttime",
+          "invalid": "Endtime is wrong.",
+          "label": "Endtime",
+          "placeholder": "Enter an endtime",
+          "required": "Endtime is required"
+        },
+        "location": {
+          "label": "Location",
+          "placeholder": "Enter a location"
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter a name",
+          "required": "Name is required"
+        },
+        "remark": {
+          "label": "Remark",
+          "placeholder": "Enter a remark"
+        },
+        "season": {
+          "label": "Season",
+          "no_season": "< No Season >"
+        },
+        "start_time": {
+          "before": "Starttime must be before the endtime",
+          "invalid": "Starttime is wrong.",
+          "label": "Starttime",
+          "placeholder": "Enter a starttime",
+          "required": "Starttime is required"
+        },
+        "team": {
+          "label": "Team",
+          "no_team": "< No Team >"
+        },
+        "weekday": {
+          "label": "Weekday",
+          "numeric": "Weekday must be numeric",
+          "required": "Weekday is required"
+        }
+      },
+      "no_data": "There are no training definitions yet",
+      "not_found": "This training definition doesn't exist",
+      "time": "Tijdstip",
+      "title": "Training Definitions",
+      "update": "Update a training definition",
+      "weekday": "Day"
+    },
+    "events": {
+      "coaches": "Coaches",
+      "date": "Date",
+      "day": "Day",
+      "form": {
+        "active": {
+          "label": "Active"
+        },
+        "cancelled": {
+          "label": "Cancelled"
+        },
+        "coaches": {
+          "deselectLabel": "Press enter to remove",
+          "label": "Coaches",
+          "placeholder": "Select coaches for the training",
+          "selectLabel": "Press enter to select"
+        },
+        "end_time": {
+          "after": "Endtime must be after starttime",
+          "invalid": "Endtime is required",
+          "label": "Endtime",
+          "placeholder": "Enter a time",
+          "required": "Endtime is required"
+        },
+        "remark": {
+          "label": "Remark",
+          "placeholder": "Enter a remark"
+        },
+        "season": {
+          "label": "Season",
+          "no_season": "< No Season >"
+        },
+        "start_date": {
+          "invalid": "Date is not valid",
+          "label": "Date",
+          "placeholder": "Enter a date",
+          "required": "Date is required"
+        },
+        "start_time": {
+          "invalid": "Starttime is invalid",
+          "label": "Starttime",
+          "placeholder": "Enter a time",
+          "required": "Starttime is required"
+        },
+        "summary": {
+          "label": "Description",
+          "placeholder": "Enter a description",
+          "required": "Description is required"
+        },
+        "teams": {
+          "deselectLabel": "Press enter to remove",
+          "label": "Teams",
+          "placeholder": "Select a team for this training",
+          "selectLabel": "Press enter to select"
+        },
+        "title": {
+          "label": "Title",
+          "placeholder": "Enter a title",
+          "required": "Title is required"
+        }
+      },
+      "generate": "Generate new trainings",
+      "no_data": "There are no events for this period.",
+      "no_generated_data": "There are no trainings generated",
+      "time": "Time",
+      "title": "Trainings"
+    },
+    "generator": {
+      "create": "Create trainings by entering a start and enddate. It's also possible to attach coaches to these trainings.",
+      "form": {
+        "coaches": {
+          "deselectLabel": "Press enter to remove",
+          "label": "Coaches",
+          "placeholder": "Select coaches for the training",
+          "selectLabel": "Press enter to select"
+        },
+        "end_date": {
+          "after": "Enddate must be after startdate",
+          "invalid": "Invalid enddate (Format: {format})",
+          "label": "Enddate",
+          "placeholder": "Enter a date",
+          "required": "Enddate is required"
+        },
+        "generate": "Generate",
+        "start_date": {
+          "invalid": "Invalid startdate (Format: {format})",
+          "label": "Startdate",
+          "placeholder": "Enter a date",
+          "required": "Startdate is required"
+        }
+      },
+      "help": "Select all trainings to create and click on 'Save'"
+    },
+    "presences": {
+      "attendees": "Attendees",
+      "form": {
+        "add_others": "Add",
+        "deselect_label": "Press enter to deselect",
+        "other_members": {
+          "label": "Other members"
+        },
+        "select_label": "Press enter to select"
+      },
+      "nobody": "No Attendees",
+      "possible": "Possible Attendees",
+      "save": "save",
+      "save_warning": "Click on SAVE to store the changes!",
+      "team": "Removed members or members of the team that belongs to this training.",
+      "title": "Attendance List"
+    }
+  },
+  "trainings": "Trainings"
 }

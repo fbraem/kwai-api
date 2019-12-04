@@ -1,4 +1,4 @@
 {
-    "event" : "Event",
-    "no_data" : "There are no events"
+  "event": "Event",
+  "no_data": "There are no events"
 }

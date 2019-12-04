@@ -1,77 +1,77 @@
 {
-    "types" : "Team Types",
-    "no_types" : "Er zijn geen team types gedefiniëerd",
-    "no_teams" : "Er zijn geen teams gedefiniëerd",
-    "active" : "Actief",
-    "competition" : "Wordt dit type gebruikt in competitie?",
-    "save" : "Bewaar",
-    "clear" : "Maak Leeg",
-    "teams" : "Teams",
-    "remark" : "Opmerking",
-    "no_season" : "Geen Seizoen",
-    "no_type" : "Geen Teamtype",
-    "no_restriction" : "Geen beperking",
-    "not_active" : "Niet actief",
-    "used_competition" : "Gebruikt voor competitie",
-    "no_competition" : "Niet gebruikt voor competitie",
-    "male" : "Man",
-    "female" : "Vrouw",
-    "create" : "Maak nieuw team",
-    "update" : "Wijzig Team",
-    "details" : "Team Details",
-    "last_modified" : "Gewijzigd op",
-    "created" : "Aangemaakt op",
-    "form" : {
-        "team" : {
-            "name" : {
-                "label" : "Naam",
-                "placeholder" : "Geef de naam van het team in",
-                "required": "Naam is verplicht in te vullen"
-            },
-            "season" : {
-                "label" : "Seizoen",
-                "empty" : "<Geen Seizoen>",
-                "hint" : "Een team dat niet gebonden is aan een seizoen kan gebruikt worden om leden te groeperen (bv. bij registratie trainingen). Een team dat bij een seizoen hoort kan gebruikt worden voor tornooien/wedstrijden."
-            },
-            "team_type" : {
-                "label" : "Teamtype",
-                "empty" : "<Geen Type>",
-                "hint" : "Een type kan gebruikt worden om extra controles uit te voeren bij het toevoegen van leden (Bv. leeftijd)."
-            },
-            "remark" : {
-                "label" : "Opmerking",
-                "placeholder" : "Geef een opmerking in"
-            }
-        }
-    },
-    "members" : "Leden",
-    "age" : "jaar",
-    "age_remark" : "Leeftijd is berekend op de einddatum van het seizoen {season} ({start} &ndash; {end})",
-    "no_members" : "Dit team heeft geen leden",
-    "no_available_members" : "Er zijn geen leden meer die toegevoegd kunnen worden",
-    "delete" : "Verwijder",
-    "sure_to_delete" : "Bent u zeker om deze leden te verwijderen uit dit team?",
-    "sure_to_delete_team" : "Bent u zeker om dit team te verwijderen?",
-    "cancel" : "Annuleer",
-    "name" : "Naam",
-    "required" : "Dit veld is verplicht in te vullen.",
-    "add_members" : "Leden toevoegen",
-    "add_members_info" : "Leden worden automatisch geselecteerd op basis van het teamtype.",
-    "add" : "Toevoegen",
-    "not_allowed" : "Je hebt geen toelating tot deze informatie",
-    "not_found" : "Dit team bestaat niet",
-    "count" : "Aantal leden",
-    "min_age" : "Min. Leeftijd",
-    "max_age" : "Max. Leeftijd",
-    "gender" : "Geslacht",
-    "filter" : "Filter",
-    "use_filter" : "Gebruik de filter om een lijst van leden te krijgen. De leeftijd wordt berekend op de laatste dag van het lopende jaar.",
-    "season" : "Seizoen",
-    "member" : {
-        "name" : "Naam",
-        "birthdate" : "Gebdat.",
-        "age" : "Leeftijd",
-        "license" : "Licensie",
-        "gender" : "M/V"
+  "active": "Actief",
+  "add": "Toevoegen",
+  "add_members": "Leden toevoegen",
+  "add_members_info": "Leden worden automatisch geselecteerd op basis van het teamtype.",
+  "age": "jaar",
+  "age_remark": "Leeftijd is berekend op de einddatum van het seizoen {season} ({start} &ndash; {end})",
+  "cancel": "Annuleer",
+  "clear": "Maak Leeg",
+  "competition": "Wordt dit type gebruikt in competitie?",
+  "count": "Aantal leden",
+  "create": "Maak nieuw team",
+  "created": "Aangemaakt op",
+  "delete": "Verwijder",
+  "details": "Team Details",
+  "female": "Vrouw",
+  "filter": "Filter",
+  "form": {
+    "team": {
+      "name": {
+        "label": "Naam",
+        "placeholder": "Geef de naam van het team in",
+        "required": "Naam is verplicht in te vullen"
+      },
+      "remark": {
+        "label": "Opmerking",
+        "placeholder": "Geef een opmerking in"
+      },
+      "season": {
+        "empty": "<Geen Seizoen>",
+        "hint": "Een team dat niet gebonden is aan een seizoen kan gebruikt worden om leden te groeperen (bv. bij registratie trainingen). Een team dat bij een seizoen hoort kan gebruikt worden voor tornooien/wedstrijden.",
+        "label": "Seizoen"
+      },
+      "team_type": {
+        "empty": "<Geen Type>",
+        "hint": "Een type kan gebruikt worden om extra controles uit te voeren bij het toevoegen van leden (Bv. leeftijd).",
+        "label": "Teamtype"
+      }
     }
+  },
+  "gender": "Geslacht",
+  "last_modified": "Gewijzigd op",
+  "male": "Man",
+  "max_age": "Max. Leeftijd",
+  "member": {
+    "age": "Leeftijd",
+    "birthdate": "Gebdat.",
+    "gender": "M/V",
+    "license": "Licensie",
+    "name": "Naam"
+  },
+  "members": "Leden",
+  "min_age": "Min. Leeftijd",
+  "name": "Naam",
+  "no_available_members": "Er zijn geen leden meer die toegevoegd kunnen worden",
+  "no_competition": "Niet gebruikt voor competitie",
+  "no_members": "Dit team heeft geen leden",
+  "no_restriction": "Geen beperking",
+  "no_season": "Geen Seizoen",
+  "no_teams": "Er zijn geen teams gedefiniëerd",
+  "no_type": "Geen Teamtype",
+  "no_types": "Er zijn geen team types gedefiniëerd",
+  "not_active": "Niet actief",
+  "not_allowed": "Je hebt geen toelating tot deze informatie",
+  "not_found": "Dit team bestaat niet",
+  "remark": "Opmerking",
+  "required": "Dit veld is verplicht in te vullen.",
+  "save": "Bewaar",
+  "season": "Seizoen",
+  "sure_to_delete": "Bent u zeker om deze leden te verwijderen uit dit team?",
+  "sure_to_delete_team": "Bent u zeker om dit team te verwijderen?",
+  "teams": "Teams",
+  "types": "Team Types",
+  "update": "Wijzig Team",
+  "use_filter": "Gebruik de filter om een lijst van leden te krijgen. De leeftijd wordt berekend op de laatste dag van het lopende jaar.",
+  "used_competition": "Gebruikt voor competitie"
 }

@@ -1,37 +1,38 @@
 {
-    "categories" : "Categories",
-    "published" : "Written on {publishDate} - {publishDateFromNow}",
-    "category" : "Category",
-    "create" : "Create a new category",
-    "update" : "Edit a category",
-    "save" : "Save",
-    "featured_news" : "Featured News",
-    "no_featured_news" : "No featured news at the moment",
-    "more_news" : "More news ...",
-    "overview" : "Overview",
-    "form" : {
-        "name" : {
-            "label" : "Name",
-            "placeholder" : "Enter a name",
-            "required" : "A name is required"
-        },
-        "slug" : {
-            "label" : "Slug",
-            "placeholder" : "Enter a slug",
-            "required" : "Slug is required"
-        },
-        "description" : {
-            "label" : "Description",
-            "placeholder" : "Enter a description"
-        },
-        "remark" : {
-            "label" : "Remark",
-            "placeholder" : "Enter a remark"
-        },
-        "short_description" : {
-            "label" : "Short Description",
-            "placeholder" : "Enter a short description",
-            "required" : "A short description is required"
-        }
+  "categories": "Categories",
+  "category": "Category",
+  "create": "Create a new category",
+  "featured_news": "Featured News",
+  "form": {
+    "description": {
+      "label": "Description",
+      "placeholder": "Enter a description"
+    },
+    "name": {
+      "label": "Name",
+      "placeholder": "Enter a name",
+      "required": "A name is required"
+    },
+    "remark": {
+      "label": "Remark",
+      "placeholder": "Enter a remark"
+    },
+    "short_description": {
+      "label": "Short Description",
+      "placeholder": "Enter a short description",
+      "required": "A short description is required"
+    },
+    "slug": {
+      "label": "Slug",
+      "placeholder": "Enter a slug",
+      "required": "Slug is required"
     }
+  },
+  "more_news": "More news ...",
+  "name": "Name",
+  "no_featured_news": "No featured news at the moment",
+  "overview": "Overview",
+  "published": "Written on {publishDate} - {publishDateFromNow}",
+  "save": "Save",
+  "update": "Edit a category"
 }

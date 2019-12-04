@@ -1,216 +1,216 @@
 {
-    "training" : {
-        "definitions" : {
-            "create" : "Maak een nieuw trainingsmoment",
-            "update" : "Wijzig een trainingsmoment",
-            "title" : "Trainingsmomenten",
-            "no_data" : "Er zijn momenteel nog geen trainingsmomenten",
-            "not_found" : "Dit trainingsmoment bestaat niet",
-            "time" : "Tijdstip",
-            "weekday": "Dag",
-            "form" : {
-                "name" : {
-                    "label" : "Naam",
-                    "required" : "Naam is verplicht",
-                    "placeholder" : "Geef een naam in"
-                },
-                "description" : {
-                    "label" : "Omschrijving",
-                    "placeholder" : "Geef een omschrijving in",
-                    "required" : "Omschrijving is verplicht in te vullen"
-                },
-                "location" : {
-                    "label" : "Locatie",
-                    "placeholder" : "Geef een locatie in"
-                },
-                "weekday" : {
-                    "label" : "Weekdag",
-                    "required" : "Weekdag is verplicht",
-                    "numeric" : "Weekdag moet numerisch zijn"
-                },
-                "season" : {
-                    "label" : "Seizoen",
-                    "no_season" : "< Geen Seizoen >"
-                },
-                "team" : {
-                    "label" : "Team",
-                    "no_team" : "< Geen Team >"
-                },
-                "start_time" : {
-                    "label" : "Begintijd",
-                    "required" : "Begintijd is verplicht",
-                    "invalid" : "Begintijd is foutief.",
-                    "before" : "Begintijd moet voor de eindtijd liggen",
-                    "placeholder" : "Geef een begintijd in"
-                },
-                "end_time" : {
-                    "label" : "Eindtijd",
-                    "required" : "Eindtijd is verplicht",
-                    "invalid" : "Eindtijd is foutief.",
-                    "after" : "Eindtijd moet na de aanvangstijd liggen",
-                    "placeholder" : "Geef een eindtijd in"
-                },
-                "active" : {
-                    "label" : "Actief"
-                },
-                "remark" : {
-                    "label" : "Opmerking",
-                    "placeholder" : "Geef een opmerking in"
-                }
-            }
+  "cancelled": "Opgelet, deze training is geannuleerd!",
+  "coaches": "Trainers",
+  "description": "Omschrijving",
+  "name": "Naam",
+  "no_coach": "Nog geen coach aangeduid",
+  "save": "Bewaar",
+  "season": "Seizoen",
+  "team": "Team",
+  "title": "Training",
+  "training": {
+    "coaches": {
+      "create": "Voeg een nieuwe coach toe",
+      "form": {
+        "active": {
+          "label": "Actief"
         },
-        "coaches" : {
-            "title" : "Coaches",
-            "no_data" : "Er zijn momenteel geen coaches",
-            "not_found" : "Deze coach bestaat niet",
-            "create" : "Voeg een nieuwe coach toe",
-            "update" : "Wijzig een coach",
-            "form" : {
-                "member" : {
-                    "label" : "Lid",
-                    "placeholder" : "Zoek een lid",
-                    "not_found" : "Geen leden gevonden",
-                    "required" : "Dit veld is verplicht in te vullen"
-                },
-                "diploma" : {
-                    "label" : "Diploma",
-                    "placeholder" : "Geef een diploma in"
-                },
-                "description" : {
-                    "label" : "Omschrijving",
-                    "placeholder" : "Geef een omschrijving in"
-                },
-                "remark" : {
-                    "label" : "Opmerking",
-                    "placeholder" : "Geef een opmerking in"
-                },
-                "active" : {
-                    "label" : "Actief"
-                }
-            },
-            "trainings" : "De trainingen van {coach}"
+        "description": {
+          "label": "Omschrijving",
+          "placeholder": "Geef een omschrijving in"
         },
-        "generator" : {
-            "create" : "Maak trainingen door een start en einddatum in te geven. Je kan ook meteen coaches koppelen aan deze trainingen.",
-            "form" : {
-                "start_date" : {
-                    "label" : "Startdatum",
-                    "placeholder" : "Geef een startdatum in",
-                    "required": "Startdatum is verplicht in te vullen.",
-                    "invalid": "Ongeldige startdatum (Formaat: {format})."
-                },
-                "end_date" : {
-                    "label" : "Einddatum",
-                    "placeholder" : "Geef een einddatum in",
-                    "required": "Einddatum is verplicht in te vullen.",
-                    "invalid": "Ongeldige einddatum (Formaat: {format}).",
-                    "after": "Einddatum moet na de startdatum liggen"
-                },
-                "coaches": {
-                    "label": "Coaches",
-                    "placeholder": "Selecteer coaches voor de trainingen",
-                    "selectLabel" : "Druk enter om te selecteren",
-                    "deselectLabel" : "Druk enter om te verwijderen"
-                },
-                "generate": "Genereer"
-            },
-            "help" : "Selecteer alle trainingen die aangemaakt moeten worden en klik onderaan op 'Bewaar'"
+        "diploma": {
+          "label": "Diploma",
+          "placeholder": "Geef een diploma in"
         },
-        "events": {
-            "title": "Trainingen",
-            "generate": "Genereer nieuwe trainingen",
-            "no_generated_data": "Er zijn geen trainingen gegenereerd",
-            "create" : "Maak een nieuwe training",
-            "update" : "Wijzig de training",
-            "day": "Dag",
-            "time": "Tijdstip",
-            "date": "Datum",
-            "coaches":  "Coaches",
-            "form" : {
-                "title" : {
-                    "label" : "Titel",
-                    "required" : "Titel is verplicht in te vullen",
-                    "placeholder" : "Geef een titel in"
-                },
-                "summary" : {
-                    "label" : "Omschrijving",
-                    "required" : "Omschrijving is verplicht in te vullen",
-                    "placeholder" : "Geef een omschrijving in"
-                },
-                "active" : {
-                    "label" : "Actief"
-                },
-                "cancelled" : {
-                    "label" : "Geannulleerd"
-                },
-                "start_date": {
-                    "label" : "Datum",
-                    "placeholder" : "Geef een datum in",
-                    "required" : "Datum is verplicht in te vullen",
-                    "invalid" : "Datum is niet geldig"
-                },
-                "start_time": {
-                    "label" : "Begintijd",
-                    "placeholder" : "Geef een tijd in",
-                    "required" : "Begintijd is verplicht in te vullen",
-                    "invalid" : "Begintijd is niet geldig"
-                },
-                "end_time" : {
-                    "label" : "Eindtijd",
-                    "placeholder" : "Geef een tijd in",
-                    "required" : "Eindtijd is verplicht in te vullen",
-                    "after" : "Eindtijd moet na de begintijd liggen",
-                    "invalid" : "Eindtijd is niet geldig"
-                },
-                "remark" : {
-                    "label" : "Opmerking",
-                    "placeholder" : "Geef een opmerking in"
-                },
-                "season" : {
-                    "label" : "Seizoen",
-                    "no_season" : "< Geen Seizoen >"
-                },
-                "coaches": {
-                    "label": "Coaches",
-                    "placeholder": "Selecteer coaches voor de trainingen",
-                    "selectLabel" : "Druk enter om te selecteren",
-                    "deselectLabel" : "Druk enter om te verwijderen"
-                },
-                "teams": {
-                    "label": "Teams",
-                    "placeholder": "Selecteer teams voor de trainingen",
-                    "selectLabel" : "Druk enter om te selecteren",
-                    "deselectLabel" : "Druk enter om te verwijderen"
-                }
-            },
-            "no_data" : "Er zijn geen trainingen gevonden in deze periode."
+        "member": {
+          "label": "Lid",
+          "not_found": "Geen leden gevonden",
+          "placeholder": "Zoek een lid",
+          "required": "Dit veld is verplicht in te vullen"
         },
-        "presences" : {
-            "title" : "Aanwezigheidslijst",
-            "attendees" : "Aanwezigen",
-            "possible" : "Mogelijke Aanwezigen",
-            "team" : "Verwijderde leden of leden van het team dat bij deze training hoort.",
-            "nobody" : "Niemand aanwezig",
-            "form" : {
-                "other_members": {
-                    "label": "Andere leden"
-                },
-                "select_label" : "Druk enter om te selecteren",
-                "deselect_label": "Druk enter om te verwijderen",
-                "add_others" : "Voeg toe"
-            },
-            "save_warning": "Klik op BEWAAR om de wijzigingen definitief op te slaan!",
-            "save": "bewaar"
+        "remark": {
+          "label": "Opmerking",
+          "placeholder": "Geef een opmerking in"
         }
+      },
+      "no_data": "Er zijn momenteel geen coaches",
+      "not_found": "Deze coach bestaat niet",
+      "title": "Coaches",
+      "trainings": "De trainingen van {coach}",
+      "update": "Wijzig een coach"
     },
-    "save" : "Bewaar",
-    "team" : "Team",
-    "season" : "Seizoen",
-    "name" : "Naam",
-    "description" : "Omschrijving",
-    "trainings" : "Trainingen",
-    "title" : "Training",
-    "coaches" : "Trainers",
-    "cancelled" : "Opgelet, deze training is geannuleerd!",
-    "no_coach" : "Nog geen coach aangeduid"
+    "definitions": {
+      "create": "Maak een nieuw trainingsmoment",
+      "form": {
+        "active": {
+          "label": "Actief"
+        },
+        "description": {
+          "label": "Omschrijving",
+          "placeholder": "Geef een omschrijving in",
+          "required": "Omschrijving is verplicht in te vullen"
+        },
+        "end_time": {
+          "after": "Eindtijd moet na de aanvangstijd liggen",
+          "invalid": "Eindtijd is foutief.",
+          "label": "Eindtijd",
+          "placeholder": "Geef een eindtijd in",
+          "required": "Eindtijd is verplicht"
+        },
+        "location": {
+          "label": "Locatie",
+          "placeholder": "Geef een locatie in"
+        },
+        "name": {
+          "label": "Naam",
+          "placeholder": "Geef een naam in",
+          "required": "Naam is verplicht"
+        },
+        "remark": {
+          "label": "Opmerking",
+          "placeholder": "Geef een opmerking in"
+        },
+        "season": {
+          "label": "Seizoen",
+          "no_season": "< Geen Seizoen >"
+        },
+        "start_time": {
+          "before": "Begintijd moet voor de eindtijd liggen",
+          "invalid": "Begintijd is foutief.",
+          "label": "Begintijd",
+          "placeholder": "Geef een begintijd in",
+          "required": "Begintijd is verplicht"
+        },
+        "team": {
+          "label": "Team",
+          "no_team": "< Geen Team >"
+        },
+        "weekday": {
+          "label": "Weekdag",
+          "numeric": "Weekdag moet numerisch zijn",
+          "required": "Weekdag is verplicht"
+        }
+      },
+      "no_data": "Er zijn momenteel nog geen trainingsmomenten",
+      "not_found": "Dit trainingsmoment bestaat niet",
+      "time": "Tijdstip",
+      "title": "Trainingsmomenten",
+      "update": "Wijzig een trainingsmoment",
+      "weekday": "Dag"
+    },
+    "events": {
+      "coaches": "Coaches",
+      "create": "Maak een nieuwe training",
+      "date": "Datum",
+      "day": "Dag",
+      "form": {
+        "active": {
+          "label": "Actief"
+        },
+        "cancelled": {
+          "label": "Geannulleerd"
+        },
+        "coaches": {
+          "deselectLabel": "Druk enter om te verwijderen",
+          "label": "Coaches",
+          "placeholder": "Selecteer coaches voor de trainingen",
+          "selectLabel": "Druk enter om te selecteren"
+        },
+        "end_time": {
+          "after": "Eindtijd moet na de begintijd liggen",
+          "invalid": "Eindtijd is niet geldig",
+          "label": "Eindtijd",
+          "placeholder": "Geef een tijd in",
+          "required": "Eindtijd is verplicht in te vullen"
+        },
+        "remark": {
+          "label": "Opmerking",
+          "placeholder": "Geef een opmerking in"
+        },
+        "season": {
+          "label": "Seizoen",
+          "no_season": "< Geen Seizoen >"
+        },
+        "start_date": {
+          "invalid": "Datum is niet geldig",
+          "label": "Datum",
+          "placeholder": "Geef een datum in",
+          "required": "Datum is verplicht in te vullen"
+        },
+        "start_time": {
+          "invalid": "Begintijd is niet geldig",
+          "label": "Begintijd",
+          "placeholder": "Geef een tijd in",
+          "required": "Begintijd is verplicht in te vullen"
+        },
+        "summary": {
+          "label": "Omschrijving",
+          "placeholder": "Geef een omschrijving in",
+          "required": "Omschrijving is verplicht in te vullen"
+        },
+        "teams": {
+          "deselectLabel": "Druk enter om te verwijderen",
+          "label": "Teams",
+          "placeholder": "Selecteer teams voor de trainingen",
+          "selectLabel": "Druk enter om te selecteren"
+        },
+        "title": {
+          "label": "Titel",
+          "placeholder": "Geef een titel in",
+          "required": "Titel is verplicht in te vullen"
+        }
+      },
+      "generate": "Genereer nieuwe trainingen",
+      "no_data": "Er zijn geen trainingen gevonden in deze periode.",
+      "no_generated_data": "Er zijn geen trainingen gegenereerd",
+      "time": "Tijdstip",
+      "title": "Trainingen",
+      "update": "Wijzig de training"
+    },
+    "generator": {
+      "create": "Maak trainingen door een start en einddatum in te geven. Je kan ook meteen coaches koppelen aan deze trainingen.",
+      "form": {
+        "coaches": {
+          "deselectLabel": "Druk enter om te verwijderen",
+          "label": "Coaches",
+          "placeholder": "Selecteer coaches voor de trainingen",
+          "selectLabel": "Druk enter om te selecteren"
+        },
+        "end_date": {
+          "after": "Einddatum moet na de startdatum liggen",
+          "invalid": "Ongeldige einddatum (Formaat: {format}).",
+          "label": "Einddatum",
+          "placeholder": "Geef een einddatum in",
+          "required": "Einddatum is verplicht in te vullen."
+        },
+        "generate": "Genereer",
+        "start_date": {
+          "invalid": "Ongeldige startdatum (Formaat: {format}).",
+          "label": "Startdatum",
+          "placeholder": "Geef een startdatum in",
+          "required": "Startdatum is verplicht in te vullen."
+        }
+      },
+      "help": "Selecteer alle trainingen die aangemaakt moeten worden en klik onderaan op 'Bewaar'"
+    },
+    "presences": {
+      "attendees": "Aanwezigen",
+      "form": {
+        "add_others": "Voeg toe",
+        "deselect_label": "Druk enter om te verwijderen",
+        "other_members": {
+          "label": "Andere leden"
+        },
+        "select_label": "Druk enter om te selecteren"
+      },
+      "nobody": "Niemand aanwezig",
+      "possible": "Mogelijke Aanwezigen",
+      "save": "bewaar",
+      "save_warning": "Klik op BEWAAR om de wijzigingen definitief op te slaan!",
+      "team": "Verwijderde leden of leden van het team dat bij deze training hoort.",
+      "title": "Aanwezigheidslijst"
+    }
+  },
+  "trainings": "Trainingen"
 }

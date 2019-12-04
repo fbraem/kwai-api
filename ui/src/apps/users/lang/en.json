@@ -1,79 +1,79 @@
 {
-    "id" : "ID",
-    "email" : "Email",
-    "users" : "Users",
-    "firstname" : "Firstname",
-    "lastname" : "Lastname",
-    "last_login" : "Last login",
-    "news" : "News",
-    "news_info" : "News written by this user",
-    "information" : "Information",
-    "information_info" : "Articles written by tis user",
-    "title" : "Title",
-    "user_mgmt" : "User Management",
-    "member_since" : "Member since",
-    "invitation" : {
-        "title" : "User Invitation",
-        "expired" : "Sorry, your invitation is expired. Contact the webmaster .",
-        "intro" : "You are about to become a member of our website. Please fill in all the required fields.",
-        "not_found" : "Sorry, this invitation doesn't exist!"
+  "email": "Email",
+  "firstname": "Firstname",
+  "form": {
+    "email": {
+      "invalid": "Invalid email",
+      "label": "Email",
+      "placeholder": "Enter email"
     },
-    "form" : {
-        "first_name" : {
-            "label" : "Firstname",
-            "placeholder" : "Enter the firstname"
-        },
-        "last_name" : {
-            "label" : "Lastname",
-            "placeholder" : "Enter the lastname"
-        },
-        "email" : {
-            "label" : "Email",
-            "placeholder" : "Enter email",
-            "invalid" : "Invalid email"
-        },
-        "password" : {
-            "label" : "Password",
-            "placeholder" : "Enter a password",
-            "minLength" : "The password must have at least 8 characters",
-            "complex" : "The password must contain at least 1 digit and one upper- and lowercase letter"
-        },
-        "retype_password" : {
-            "label" : "Retype Password",
-            "placeholder" : "Retype your password",
-            "sameas" : "The passwords are not the same"
-        }
+    "first_name": {
+      "label": "Firstname",
+      "placeholder": "Enter the firstname"
     },
-    "required" : "This is a required field",
-    "save" : "Save",
-    "invite" : "Invite a new user",
-    "invite_intro" : "Your about to invite a user to become a member of your website. The invitation will be send to the given email address.",
-    "no_data" : "There are no users defined",
-    "not_found" : "This user doesn't exist!",
-    "not_allowed" : "You are not allowed to view this information",
-    "rules" : {
-        "title" : "Abilities",
-        "groups" : "Ability List",
-        "groups_info": "This user has the following abilities.",
-        "name" : "Name",
-        "create" : "Make a new permission",
-        "update" : "Update the permission",
-        "form" : {
-            "name" : {
-                "label" : "Name",
-                "placeholder" : "Enter a name",
-                "required" : "This is a required field."
-            },
-            "remark" : {
-                "label" : "Remark",
-                "placeholder" : "Enter a remark"
-            },
-            "actions": {
-                "label": "Actions",
-                "placeholder": "Select actions that are allowed for this group",
-                "selectLabel" : "Press enter to select",
-                "deselectLabel" : "Press enter to deselect"
-            }
-        }
+    "last_name": {
+      "label": "Lastname",
+      "placeholder": "Enter the lastname"
+    },
+    "password": {
+      "complex": "The password must contain at least 1 digit and one upper- and lowercase letter",
+      "label": "Password",
+      "minLength": "The password must have at least 8 characters",
+      "placeholder": "Enter a password"
+    },
+    "retype_password": {
+      "label": "Retype Password",
+      "placeholder": "Retype your password",
+      "sameas": "The passwords are not the same"
     }
+  },
+  "id": "ID",
+  "information": "Information",
+  "information_info": "Articles written by tis user",
+  "invitation": {
+    "expired": "Sorry, your invitation is expired. Contact the webmaster .",
+    "intro": "You are about to become a member of our website. Please fill in all the required fields.",
+    "not_found": "Sorry, this invitation doesn't exist!",
+    "title": "User Invitation"
+  },
+  "invite": "Invite a new user",
+  "invite_intro": "Your about to invite a user to become a member of your website. The invitation will be send to the given email address.",
+  "last_login": "Last login",
+  "lastname": "Lastname",
+  "member_since": "Member since",
+  "news": "News",
+  "news_info": "News written by this user",
+  "no_data": "There are no users defined",
+  "not_allowed": "You are not allowed to view this information",
+  "not_found": "This user doesn't exist!",
+  "required": "This is a required field",
+  "rules": {
+    "create": "Make a new permission",
+    "form": {
+      "actions": {
+        "deselectLabel": "Press enter to deselect",
+        "label": "Actions",
+        "placeholder": "Select actions that are allowed for this group",
+        "selectLabel": "Press enter to select"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a name",
+        "required": "This is a required field."
+      },
+      "remark": {
+        "label": "Remark",
+        "placeholder": "Enter a remark"
+      }
+    },
+    "groups": "Ability List",
+    "groups_info": "This user has the following abilities.",
+    "name": "Name",
+    "title": "Abilities",
+    "update": "Update the permission"
+  },
+  "save": "Save",
+  "title": "Title",
+  "user_mgmt": "User Management",
+  "users": "Users"
 }

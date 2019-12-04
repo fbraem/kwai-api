@@ -1,46 +1,46 @@
 {
-    "page" : "Informatie",
-    "pages" : "Informatie",
-    "category" : "Categorie",
-    "no_pages" : "Geen informatie gevonden",
-    "are_you_sure" : "Ben je zeker om deze pagina te verwijderen?",
-    "cancel" : "Annuleer",
-    "delete" : "Verwijder",
-    "delete_page" : "Pagina verwijderen",
-    "create" : "Maak een pagina",
-    "update" : "Wijzig de pagina",
-    "form" : {
-        "page" : {
-            "category" : {
-                "label" : "Categorie",
-                "required" : "Categorie is verplicht"
-            },
-            "remark" : {
-                "label" : "Opmerking",
-                "placeholder" : "Geef een opmerking in"
-            }
-        },
-        "content" : {
-            "title" : {
-                "label" : "Titel",
-                "placeholder" : "Geef een titel in",
-                "required" : "Titel is verplicht in te vullen"
-            },
-            "summary" : {
-                "label" : "Samenvatting",
-                "placeholder" : "Geef een samenvatting in",
-                "required" : "Een samenvatting is verplicht in te vullen"
-            },
-            "content" : {
-                "label" : "Inhoud",
-                "placeholder" : "Geef de inhoud in",
-                "required" : "Inhoud is verplicht in te vullen"
-            }
-        }
+  "all_pages": "Alle informatie op één plaats ...",
+  "are_you_sure": "Ben je zeker om deze pagina te verwijderen?",
+  "cancel": "Annuleer",
+  "category": "Categorie",
+  "content": "Inhoud",
+  "create": "Maak een pagina",
+  "delete": "Verwijder",
+  "delete_page": "Pagina verwijderen",
+  "enabled": "Actief",
+  "form": {
+    "content": {
+      "content": {
+        "label": "Inhoud",
+        "placeholder": "Geef de inhoud in",
+        "required": "Inhoud is verplicht in te vullen"
+      },
+      "summary": {
+        "label": "Samenvatting",
+        "placeholder": "Geef een samenvatting in",
+        "required": "Een samenvatting is verplicht in te vullen"
+      },
+      "title": {
+        "label": "Titel",
+        "placeholder": "Geef een titel in",
+        "required": "Titel is verplicht in te vullen"
+      }
     },
-    "content" : "Inhoud",
-    "save" : "Bewaar",
-    "enabled" : "Actief",
-    "all_pages" : "Alle informatie op één plaats ...",
-    "published" : "Geschreven op {publishDate}"
+    "page": {
+      "category": {
+        "label": "Categorie",
+        "required": "Categorie is verplicht"
+      },
+      "remark": {
+        "label": "Opmerking",
+        "placeholder": "Geef een opmerking in"
+      }
+    }
+  },
+  "no_pages": "Geen informatie gevonden",
+  "page": "Informatie",
+  "pages": "Informatie",
+  "published": "Geschreven op {publishDate}",
+  "save": "Bewaar",
+  "update": "Wijzig de pagina"
 }

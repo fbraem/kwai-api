@@ -1,42 +1,42 @@
 {
-    "seasons": "Seasons",
-    "season" : "Season",
-    "no_seasons" : "There are no seasons yet",
-    "form" : {
-        "season" : {
-            "name" : {
-                "label" : "Name",
-                "placeholder" : "Enter a name",
-                "required" : "Name is required."
-            },
-            "start_date" : {
-                "label" : "Start Date",
-                "placeholder" : "Enter a date",
-                "invalid" : "Invalid date. Format is {format}",
-                "required" : "Start date is required."
-            },
-            "end_date" : {
-                "label" : "End Date",
-                "placeholder" : "Enter a date",
-                "invalid" : "Invalid date. Format is {format}",
-                "required" : "End date is required.",
-                "after" : "End date must be after start date"
-            },
-            "remark" : {
-                "label" : "Remark",
-                "placeholder" : "Enter a remark"
-            }
-        }
-    },
-    "active_message" : "This season is currently active",
-    "update" : "Edit Season",
-    "create" : "Create Season",
-    "save" : "Save",
-    "season_not_found" : "Season doesn't exist",
-    "are_you_sure" : "Are you sure to delete this season?",
-    "cancel" : "Annuleer",
-    "delete" : "Verwijder",
-    "teams" : "Teams",
-    "no_teams" : "There are no teams defined for this season",
-    "period" : "Period"
+  "active_message": "This season is currently active",
+  "are_you_sure": "Are you sure to delete this season?",
+  "cancel": "Annuleer",
+  "create": "Create Season",
+  "delete": "Verwijder",
+  "form": {
+    "season": {
+      "end_date": {
+        "after": "End date must be after start date",
+        "invalid": "Invalid date. Format is {format}",
+        "label": "End Date",
+        "placeholder": "Enter a date",
+        "required": "End date is required."
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a name",
+        "required": "Name is required."
+      },
+      "remark": {
+        "label": "Remark",
+        "placeholder": "Enter a remark"
+      },
+      "start_date": {
+        "invalid": "Invalid date. Format is {format}",
+        "label": "Start Date",
+        "placeholder": "Enter a date",
+        "required": "Start date is required."
+      }
+    }
+  },
+  "no_seasons": "There are no seasons yet",
+  "no_teams": "There are no teams defined for this season",
+  "period": "Period",
+  "save": "Save",
+  "season": "Season",
+  "season_not_found": "Season doesn't exist",
+  "seasons": "Seasons",
+  "teams": "Teams",
+  "update": "Edit Season"
 }

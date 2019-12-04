@@ -1,91 +1,91 @@
 {
-    "published" : "Geschreven op {publishDate} - {publishDateFromNow}",
-    "news" : "Nieuws",
-    "all_news" : "Al het nieuws op één pagina ...",
-    "archive" : "Archief",
-    "category" : "Categorie",
-    "archive_title" : "Archief van {monthName} {year}",
-    "no_news" : "Er zijn geen nieuwsberichten gevonden",
-    "create" : "Schrijf een nieuwsbericht",
-    "story" : "Nieuwsbericht",
-    "content" : "Inhoud",
-    "featured" : "Aanbevolen",
-    "featured_hint" : "Een aanbevolen bericht kan op de startpagina geplaatst worden. Een geldigheidsperiode kan gebruikt worden. Een bericht is aanbevolen wanneer de prioriteit groter is dan 0.",
-    "form" : {
-        "content" : {
-            "title" : {
-                "label" : "Titel",
-                "placeholder" : "Geef een titel in",
-                "required" : "Titel is verplicht in te vullen"
-            },
-            "summary" : {
-                "label" : "Samenvatting",
-                "placeholder" : "Geef een samenvatting in",
-                "required" : "Een samenvatting is verplicht in te vullen"
-            },
-            "content" : {
-                "label" : "Inhoud",
-                "placeholder" : "Geef de inhoud in"
-            }
-        },
-        "story" : {
-            "remark" : {
-                "label": "Opmerking",
-                "placeholder" : "Geef een opmerking in"
-            },
-            "enabled" : {
-                "label" : "Actief"
-            },
-            "category" : {
-                "label" : "Categorie"
-            },
-            "publish_date" : {
-                "label": "Publicatie Datum",
-                "required" : "Publicatie datum is verplicht in te vullen",
-                "placeholder" : "Geef de publicatie datum in {format}",
-                "invalid" : "Ongeldige datum. Het formaat is {format}."
-            },
-            "publish_time" : {
-                "label": "Publicatie Tijdstip",
-                "required" : "Publicatie tijdstip is verplicht in te vullen",
-                "placeholder" : "Geef het tijdstip van de publicatie in {format}",
-                "invalid" : "Ongeldige tijd. Het formaat is {format}."
-            },
-            "end_date" : {
-                "label": "Einddatum",
-                "placeholder" : "Geef de einddatum in {format}",
-                "invalid" : "Ongeldige datum. Het formaat is {format}."
-            },
-            "end_time" : {
-                "label": "Eindtijd",
-                "placeholder" : "Geef de eindtijd in {format}",
-                "invalid" : "Ongeldige tijd. Het formaat is {format}."
-            },
-            "featured_priority" : {
-                "label": "Prioriteit"
-            },
-            "featured_end_date" : {
-                "label" : "Einddatum aanbevolen periode",
-                "placeholder" : "Geef de einddatum van de periode in {format}",
-                "invalid" : "Ongeldige datum. Het formaat is {format}."
-            },
-            "featured_end_time" : {
-                "label": "Eindtijd aanbevolen periode",
-                "placeholder" : "Geef de eindtijd van de periode in {format}",
-                "invalid" : "Ongeldige tijd. Het formaat is {format}."
-            }
-        }
+  "all_news": "Al het nieuws op één pagina ...",
+  "archive": "Archief",
+  "archive_title": "Archief van {monthName} {year}",
+  "are_you_sure": "Ben je zeker om dit nieuwsbericht te verwijderen?",
+  "cancel": "Annuleer",
+  "category": "Categorie",
+  "content": "Inhoud",
+  "create": "Schrijf een nieuwsbericht",
+  "delete": "Verwijder",
+  "delete_story": "Nieuwsbericht verwijderen",
+  "featured": "Aanbevolen",
+  "featured_hint": "Een aanbevolen bericht kan op de startpagina geplaatst worden. Een geldigheidsperiode kan gebruikt worden. Een bericht is aanbevolen wanneer de prioriteit groter is dan 0.",
+  "featured_news": "Belangrijke Berichten",
+  "form": {
+    "content": {
+      "content": {
+        "label": "Inhoud",
+        "placeholder": "Geef de inhoud in"
+      },
+      "summary": {
+        "label": "Samenvatting",
+        "placeholder": "Geef een samenvatting in",
+        "required": "Een samenvatting is verplicht in te vullen"
+      },
+      "title": {
+        "label": "Titel",
+        "placeholder": "Geef een titel in",
+        "required": "Titel is verplicht in te vullen"
+      }
     },
-    "save" : "Bewaar",
-    "update" : "Wijzig het nieuwsbericht",
-    "required" : "Dit veld is verplicht in te vullen.",
-    "delete_story" : "Nieuwsbericht verwijderen",
-    "are_you_sure" : "Ben je zeker om dit nieuwsbericht te verwijderen?",
-    "cancel" : "Annuleer",
-    "delete" : "Verwijder",
-    "share" : "Deel",
-    "featured_news" : "Belangrijke Berichten",
-    "no_featured_news" : "Momenteel zijn er geen belangrijke berichten.",
-    "see_old_news" : "Bekijk de vorige berichten",
-    "more_news" : "Lees meer nieuws"
+    "story": {
+      "category": {
+        "label": "Categorie"
+      },
+      "enabled": {
+        "label": "Actief"
+      },
+      "end_date": {
+        "invalid": "Ongeldige datum. Het formaat is {format}.",
+        "label": "Einddatum",
+        "placeholder": "Geef de einddatum in {format}"
+      },
+      "end_time": {
+        "invalid": "Ongeldige tijd. Het formaat is {format}.",
+        "label": "Eindtijd",
+        "placeholder": "Geef de eindtijd in {format}"
+      },
+      "featured_end_date": {
+        "invalid": "Ongeldige datum. Het formaat is {format}.",
+        "label": "Einddatum aanbevolen periode",
+        "placeholder": "Geef de einddatum van de periode in {format}"
+      },
+      "featured_end_time": {
+        "invalid": "Ongeldige tijd. Het formaat is {format}.",
+        "label": "Eindtijd aanbevolen periode",
+        "placeholder": "Geef de eindtijd van de periode in {format}"
+      },
+      "featured_priority": {
+        "label": "Prioriteit"
+      },
+      "publish_date": {
+        "invalid": "Ongeldige datum. Het formaat is {format}.",
+        "label": "Publicatie Datum",
+        "placeholder": "Geef de publicatie datum in {format}",
+        "required": "Publicatie datum is verplicht in te vullen"
+      },
+      "publish_time": {
+        "invalid": "Ongeldige tijd. Het formaat is {format}.",
+        "label": "Publicatie Tijdstip",
+        "placeholder": "Geef het tijdstip van de publicatie in {format}",
+        "required": "Publicatie tijdstip is verplicht in te vullen"
+      },
+      "remark": {
+        "label": "Opmerking",
+        "placeholder": "Geef een opmerking in"
+      }
+    }
+  },
+  "more_news": "Lees meer nieuws",
+  "news": "Nieuws",
+  "no_featured_news": "Momenteel zijn er geen belangrijke berichten.",
+  "no_news": "Er zijn geen nieuwsberichten gevonden",
+  "published": "Geschreven op {publishDate} - {publishDateFromNow}",
+  "required": "Dit veld is verplicht in te vullen.",
+  "save": "Bewaar",
+  "see_old_news": "Bekijk de vorige berichten",
+  "share": "Deel",
+  "story": "Nieuwsbericht",
+  "update": "Wijzig het nieuwsbericht"
 }

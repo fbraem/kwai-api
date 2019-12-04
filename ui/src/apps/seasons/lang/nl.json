@@ -1,42 +1,42 @@
 {
-    "seasons" : "Seizoenen",
-    "season" : "Seizoen",
-    "no_seasons" : "Er zijn nog geen seizoenen gedefiniëerd",
-    "form" : {
-        "season" : {
-            "name" : {
-                "label" : "Naam",
-                "placeholder" : "Geef een naam in",
-                "required" : "Naam is is verplicht in te vullen."
-            },
-            "start_date" : {
-                "label" : "Begin Datum",
-                "placeholder" : "Geef een datum in",
-                "invalid" : "Ongeldige datum. Formaat is {format}",
-                "required" : "Begin datum is is verplicht in te vullen."
-            },
-            "end_date" : {
-                "label" : "Eind Datum",
-                "placeholder" : "Geef een datum in",
-                "invalid" : "Ongeldige datum. Formaat is {format}",
-                "required" : "Eind datum is is verplicht in te vullen.",
-                "after" : "Eind datum moet na de begin datum liggen"
-            },
-            "remark" : {
-                "label" : "Opmerking",
-                "placeholder" : "Geef een opmerking in"
-            }
-        }
-    },
-    "active_message" : "Dit seizoen is momenteel actief",
-    "update" : "Wijzig Seizoen",
-    "create" : "Maak Seizoen",
-    "save" : "Bewaar",
-    "season_not_found" : "Seizoen niet gevonden",
-    "are_you_sure" : "Ben je zeker om dit seizoen te verwijderen?",
-    "cancel" : "Cancel",
-    "delete" : "Delete",
-    "teams" : "Teams",
-    "no_teams" : "Er zijn nog geen teams gedefiniëerd voor dit seizoen",
-    "period" : "Periode"
+  "active_message": "Dit seizoen is momenteel actief",
+  "are_you_sure": "Ben je zeker om dit seizoen te verwijderen?",
+  "cancel": "Cancel",
+  "create": "Maak Seizoen",
+  "delete": "Delete",
+  "form": {
+    "season": {
+      "end_date": {
+        "after": "Eind datum moet na de begin datum liggen",
+        "invalid": "Ongeldige datum. Formaat is {format}",
+        "label": "Eind Datum",
+        "placeholder": "Geef een datum in",
+        "required": "Eind datum is is verplicht in te vullen."
+      },
+      "name": {
+        "label": "Naam",
+        "placeholder": "Geef een naam in",
+        "required": "Naam is is verplicht in te vullen."
+      },
+      "remark": {
+        "label": "Opmerking",
+        "placeholder": "Geef een opmerking in"
+      },
+      "start_date": {
+        "invalid": "Ongeldige datum. Formaat is {format}",
+        "label": "Begin Datum",
+        "placeholder": "Geef een datum in",
+        "required": "Begin datum is is verplicht in te vullen."
+      }
+    }
+  },
+  "no_seasons": "Er zijn nog geen seizoenen gedefiniëerd",
+  "no_teams": "Er zijn nog geen teams gedefiniëerd voor dit seizoen",
+  "period": "Periode",
+  "save": "Bewaar",
+  "season": "Seizoen",
+  "season_not_found": "Seizoen niet gevonden",
+  "seasons": "Seizoenen",
+  "teams": "Teams",
+  "update": "Wijzig Seizoen"
 }

@@ -1,96 +1,96 @@
 {
-    "published" : "Published on {publishDate} - {publishDateFromNow}",
-    "news" : "News",
-    "all_news" : "All news on one page ...",
-    "archive" : "Archive",
-    "category" : "Category",
-    "archive_title" : "Archive of {monthName} {year}",
-    "no_news" : "There are no newsstories",
-    "create" : "Write a newsstory",
-    "story" : "Newsstory",
-    "content" : "Content",
-    "featured" : "Featured",
-    "featured_hint" : "A featured story can be selected to show on the front page for example. A story is featured when the priority is greater then 0.",
-    "form" : {
-        "content" : {
-            "title" : {
-                "label" : "Title",
-                "placeholder" : "Enter a title",
-                "required" : "Title is required"
-            },
-            "summary" : {
-                "label" : "Summary",
-                "placeholder" : "Enter a summary",
-                "required" : "Summary is required"
-            },
-            "content" : {
-                "label" : "Content",
-                "placeholder" : "Enter the content"
-            }
-        },
-        "story" : {
-            "remark" : {
-                "label": "Remark",
-                "placeholder" : "Enter a remark"
-            },
-            "enabled" : {
-                "label" : "Active"
-            },
-            "category" : {
-                "label" : "Category"
-            },
-            "publish_date" : {
-                "label": "Publish Date",
-                "required" : "Publish date is required",
-                "placeholder" : "Enter a date in {format}",
-                "invalid" : "Invalid date. The format is {format}."
-            },
-            "publish_time" : {
-                "label": "Publish Time",
-                "required" : "Publish time is required",
-                "placeholder" : "Enter a time in {format}",
-                "invalid" : "Invalid time. The format is {format}."
-            },
-            "end_date" : {
-                "label": "Enddate",
-                "placeholder" : "Enter a date in {format}",
-                "invalid" : "Invalid date. The format is {format}."
-            },
-            "end_time" : {
-                "label": "Eindtime",
-                "placeholder" : "Enter a time in {format}",
-                "invalid" : "Invalid time. The format is {format}."
-            },
-            "featured_priority" : {
-                "label": "Priority"
-            },
-            "featured_end_date" : {
-                "label" : "Featured Enddate",
-                "placeholder" : "Enter a date in {format}",
-                "invalid" : "Invalid date. The format is {format}."
-            },
-            "featured_end_time" : {
-                "label": "Featured Endtime",
-                "placeholder" : "Enter a time in {format}",
-                "invalid" : "Invalid time. The format is {format}."
-            }
-        }
+  "all_news": "All news on one page ...",
+  "archive": "Archive",
+  "archive_title": "Archive of {monthName} {year}",
+  "are_you_sure": "Are you sure to delete this newsstory?",
+  "cancel": "Cancel",
+  "category": "Category",
+  "content": "Content",
+  "create": "Write a newsstory",
+  "delete": "Delete",
+  "delete_story": "Delete Newsstory",
+  "featured": "Featured",
+  "featured_hint": "A featured story can be selected to show on the front page for example. A story is featured when the priority is greater then 0.",
+  "featured_news": "Headline News",
+  "form": {
+    "content": {
+      "content": {
+        "label": "Content",
+        "placeholder": "Enter the content"
+      },
+      "summary": {
+        "label": "Summary",
+        "placeholder": "Enter a summary",
+        "required": "Summary is required"
+      },
+      "title": {
+        "label": "Title",
+        "placeholder": "Enter a title",
+        "required": "Title is required"
+      }
     },
-    "save" : "Save",
-    "update" : "Update",
-    "required" : "This is a required field.",
-    "invalid_date" : "Invalid date. The format is {format}.",
-    "invalid_time" : "Invalid time. The format is {format}",
-    "invalid_end_date" : "Enddate must be after the publicationdate.",
-    "invalid_featured_date" : "Date must be between publicationdate and enddate.",
-    "invalid_numeric" : "Invalid value. Enter a number.",
-    "delete_story" : "Delete Newsstory",
-    "are_you_sure" : "Are you sure to delete this newsstory?",
-    "cancel" : "Cancel",
-    "delete" : "Delete",
-    "share" : "Share",
-    "featured_news" : "Headline News",
-    "no_featured_news" : "At the moment there are no important news items",
-    "see_old_news" : "Read old news",
-    "more_news" : "Read more news"
+    "story": {
+      "category": {
+        "label": "Category"
+      },
+      "enabled": {
+        "label": "Active"
+      },
+      "end_date": {
+        "invalid": "Invalid date. The format is {format}.",
+        "label": "Enddate",
+        "placeholder": "Enter a date in {format}"
+      },
+      "end_time": {
+        "invalid": "Invalid time. The format is {format}.",
+        "label": "Eindtime",
+        "placeholder": "Enter a time in {format}"
+      },
+      "featured_end_date": {
+        "invalid": "Invalid date. The format is {format}.",
+        "label": "Featured Enddate",
+        "placeholder": "Enter a date in {format}"
+      },
+      "featured_end_time": {
+        "invalid": "Invalid time. The format is {format}.",
+        "label": "Featured Endtime",
+        "placeholder": "Enter a time in {format}"
+      },
+      "featured_priority": {
+        "label": "Priority"
+      },
+      "publish_date": {
+        "invalid": "Invalid date. The format is {format}.",
+        "label": "Publish Date",
+        "placeholder": "Enter a date in {format}",
+        "required": "Publish date is required"
+      },
+      "publish_time": {
+        "invalid": "Invalid time. The format is {format}.",
+        "label": "Publish Time",
+        "placeholder": "Enter a time in {format}",
+        "required": "Publish time is required"
+      },
+      "remark": {
+        "label": "Remark",
+        "placeholder": "Enter a remark"
+      }
+    }
+  },
+  "invalid_date": "Invalid date. The format is {format}.",
+  "invalid_end_date": "Enddate must be after the publicationdate.",
+  "invalid_featured_date": "Date must be between publicationdate and enddate.",
+  "invalid_numeric": "Invalid value. Enter a number.",
+  "invalid_time": "Invalid time. The format is {format}",
+  "more_news": "Read more news",
+  "news": "News",
+  "no_featured_news": "At the moment there are no important news items",
+  "no_news": "There are no newsstories",
+  "published": "Published on {publishDate} - {publishDateFromNow}",
+  "required": "This is a required field.",
+  "save": "Save",
+  "see_old_news": "Read old news",
+  "share": "Share",
+  "story": "Newsstory",
+  "update": "Update"
 }

@@ -1,46 +1,46 @@
 {
-    "page" : "Information",
-    "pages" : "Information",
-    "category" : "Category",
-    "no_pages" : "No information found",
-    "are_you_sure" : "Are you sure to delete this page?",
-    "cancel" : "Cancel",
-    "delete" : "Delete",
-    "delete_page" : "Delete Page",
-    "create" : "Create a page",
-    "update" : "Edit a page",
-    "form" : {
-        "page" : {
-            "category" : {
-                "label" : "Category",
-                "required" : "Category is required"
-            },
-            "remark" : {
-                "label" : "Remark",
-                "placeholder" : "Enter a remark"
-            }
-        },
-        "content" : {
-            "title" : {
-                "label" : "Title",
-                "placeholder" : "Enter a title",
-                "required" : "Title is required"
-            },
-            "summary" : {
-                "label" : "Summary",
-                "placeholder" : "Enter a summary",
-                "required" : "Summary is required"
-            },
-            "content" : {
-                "label" : "Content",
-                "placeholder" : "Enter the content",
-                "required" : "Content is required"
-            }
-        }
+  "all_pages": "All information on one place ...",
+  "are_you_sure": "Are you sure to delete this page?",
+  "cancel": "Cancel",
+  "category": "Category",
+  "content": "Content",
+  "create": "Create a page",
+  "delete": "Delete",
+  "delete_page": "Delete Page",
+  "enabled": "Active",
+  "form": {
+    "content": {
+      "content": {
+        "label": "Content",
+        "placeholder": "Enter the content",
+        "required": "Content is required"
+      },
+      "summary": {
+        "label": "Summary",
+        "placeholder": "Enter a summary",
+        "required": "Summary is required"
+      },
+      "title": {
+        "label": "Title",
+        "placeholder": "Enter a title",
+        "required": "Title is required"
+      }
     },
-    "content" : "Content",
-    "save" : "Save",
-    "enabled" : "Active",
-    "all_pages" : "All information on one place ...",
-    "published" : "Written on {publishDate}"
+    "page": {
+      "category": {
+        "label": "Category",
+        "required": "Category is required"
+      },
+      "remark": {
+        "label": "Remark",
+        "placeholder": "Enter a remark"
+      }
+    }
+  },
+  "no_pages": "No information found",
+  "page": "Information",
+  "pages": "Information",
+  "published": "Written on {publishDate}",
+  "save": "Save",
+  "update": "Edit a page"
 }

@@ -1,7 +1,6 @@
 {
-    "members" : "Members",
-    "no_members" : "There are no members registered yet",
-    "upload" : "Import members",
-    "license_date": "(Expires {0})"
-
+  "license_date": "(Expires {0})",
+  "members": "Members",
+  "no_members": "There are no members registered yet",
+  "upload": "Import members"
 }

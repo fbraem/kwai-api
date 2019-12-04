@@ -1,77 +1,77 @@
 {
-    "types" : "Team Types",
-    "no_types" : "There are no team types defined yet",
-    "no_teams" : "There are no teams defined yet",
-    "active" : "Active",
-    "competition" : "Is this for a competition?",
-    "save": "Save",
-    "clear": "Clear",
-    "teams": "Teams",
-    "remark" : "Remark",
-    "no_season" : "No Season",
-    "no_type" : "No Teamtype",
-    "no_restriction" : "No restriction",
-    "not_active" : "Not active",
-    "used_competition" : "Used for competition",
-    "no_competition" : "Not used for competition",
-    "male" : "Male",
-    "female" : "Female",
-    "create" : "Create new team",
-    "update" : "Edit Team",
-    "details" : "Team Details",
-    "last_modified" : "Last modified on",
-    "created" : "Created on",
-    "form" : {
-        "team" : {
-            "name" : {
-                "label" : "Name",
-                "placeholder" : "Enter the name of the team",
-                "required": "The name is required"
-            },
-            "season" : {
-                "label" : "Season",
-                "empty" : "<No Season>",
-                "hint" : "A team that is not related to a season can be used to group members (to register the presence on a training for example). A team that is related to a season can be used for tournaments/games."
-            },
-            "team_type" : {
-                "label" : "Teamtype",
-                "empty" : "<No Type>",
-                "hint" : "A type can be used to add more checks when a member is added to the team (Age for example)."
-            },
-            "remark" : {
-                "label" : "Remark",
-                "placeholder" : "Enter a remark"
-            }
-        }
-    },
-    "members" : "Members",
-    "age" : "years",
-    "age_remark" : "Age is determined on the end date of the season {season} ({start} &ndash; {end})",
-    "no_members" : "This team doesn't have members",
-    "no_available_members" : "There are no more members to add to this team",
-    "delete" : "Delete",
-    "sure_to_delete" : "Are you sure to remove these members from this team?",
-    "sure_to_delete_team" : "Are you sure to delete this team?",
-    "cancel" : "Cancel",
-    "name" : "Name",
-    "required" : "This field is required.",
-    "add_members" : "Add Members",
-    "add_members_info" : "Members are automatically selected based on the team type.",
-    "add" : "Add",
-    "not_allowed" : "You're not allowed to this information.",
-    "not_found" : "This team doesn't exist",
-    "count" : "Member count",
-    "min_age" : "Min. Age",
-    "max_age" : "Max. Age",
-    "gender" : "Gender",
-    "filter" : "Filter",
-    "use_filter" : "Use filter to get a list of members that can be added this team. The age is calculated on the end of the year.",
-    "season" : "Season",
-    "member" : {
-        "name" : "Name",
-        "birthdate" : "Birthdate",
-        "age" : "Age",
-        "license" : "License",
-        "gender" : "M/F"
+  "active": "Active",
+  "add": "Add",
+  "add_members": "Add Members",
+  "add_members_info": "Members are automatically selected based on the team type.",
+  "age": "years",
+  "age_remark": "Age is determined on the end date of the season {season} ({start} &ndash; {end})",
+  "cancel": "Cancel",
+  "clear": "Clear",
+  "competition": "Is this for a competition?",
+  "count": "Member count",
+  "create": "Create new team",
+  "created": "Created on",
+  "delete": "Delete",
+  "details": "Team Details",
+  "female": "Female",
+  "filter": "Filter",
+  "form": {
+    "team": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter the name of the team",
+        "required": "The name is required"
+      },
+      "remark": {
+        "label": "Remark",
+        "placeholder": "Enter a remark"
+      },
+      "season": {
+        "empty": "<No Season>",
+        "hint": "A team that is not related to a season can be used to group members (to register the presence on a training for example). A team that is related to a season can be used for tournaments/games.",
+        "label": "Season"
+      },
+      "team_type": {
+        "empty": "<No Type>",
+        "hint": "A type can be used to add more checks when a member is added to the team (Age for example).",
+        "label": "Teamtype"
+      }
     }
+  },
+  "gender": "Gender",
+  "last_modified": "Last modified on",
+  "male": "Male",
+  "max_age": "Max. Age",
+  "member": {
+    "age": "Age",
+    "birthdate": "Birthdate",
+    "gender": "M/F",
+    "license": "License",
+    "name": "Name"
+  },
+  "members": "Members",
+  "min_age": "Min. Age",
+  "name": "Name",
+  "no_available_members": "There are no more members to add to this team",
+  "no_competition": "Not used for competition",
+  "no_members": "This team doesn't have members",
+  "no_restriction": "No restriction",
+  "no_season": "No Season",
+  "no_teams": "There are no teams defined yet",
+  "no_type": "No Teamtype",
+  "no_types": "There are no team types defined yet",
+  "not_active": "Not active",
+  "not_allowed": "You're not allowed to this information.",
+  "not_found": "This team doesn't exist",
+  "remark": "Remark",
+  "required": "This field is required.",
+  "save": "Save",
+  "season": "Season",
+  "sure_to_delete": "Are you sure to remove these members from this team?",
+  "sure_to_delete_team": "Are you sure to delete this team?",
+  "teams": "Teams",
+  "types": "Team Types",
+  "update": "Edit Team",
+  "use_filter": "Use filter to get a list of members that can be added this team. The age is calculated on the end of the year.",
+  "used_competition": "Used for competition"
 }

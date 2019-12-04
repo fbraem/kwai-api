@@ -1,38 +1,38 @@
 {
-    "categories" : "Overzicht per categorie",
-    "published" : "Geschreven op {publishDate} - {publishDateFromNow}",
-    "category" : "Categorie",
-    "create" : "Maak een nieuwe categorie",
-    "update" : "Wijzig een categorie",
-    "name" : "Naam",
-    "save" : "Bewaar",
-    "featured_news" : "Nieuws in de kijker",
-    "no_featured_news" : "Geen nieuws in de kijker momenteel ...",
-    "more_news" : "Meer nieuws ...",
-    "overview" : "Overzicht",
-    "form" : {
-        "name" : {
-            "label" : "Naam",
-            "placeholder" : "Geef een naam in",
-            "required" : "Naam is verplicht in te vullen"
-        },
-        "slug" : {
-            "label" : "Slug",
-            "placeholder" : "Geef een slug in",
-            "required" : "Slug is verplicht in te vullen"
-        },
-        "description" : {
-            "label" : "Omschrijving",
-            "placeholder" : "Geef een omschrijving in"
-        },
-        "remark" : {
-            "label" : "Opmerking",
-            "placeholder" : "Geef een opmerking in"
-        },
-        "short_description" : {
-            "label" : "Kort Omschrijving",
-            "placeholder" : "Geef een korte omschrijving in",
-            "required" : "Korte omschrijving is verplicht in te vullen"
-        }
+  "categories": "Overzicht per categorie",
+  "category": "Categorie",
+  "create": "Maak een nieuwe categorie",
+  "featured_news": "Nieuws in de kijker",
+  "form": {
+    "description": {
+      "label": "Omschrijving",
+      "placeholder": "Geef een omschrijving in"
+    },
+    "name": {
+      "label": "Naam",
+      "placeholder": "Geef een naam in",
+      "required": "Naam is verplicht in te vullen"
+    },
+    "remark": {
+      "label": "Opmerking",
+      "placeholder": "Geef een opmerking in"
+    },
+    "short_description": {
+      "label": "Kort Omschrijving",
+      "placeholder": "Geef een korte omschrijving in",
+      "required": "Korte omschrijving is verplicht in te vullen"
+    },
+    "slug": {
+      "label": "Slug",
+      "placeholder": "Geef een slug in",
+      "required": "Slug is verplicht in te vullen"
     }
+  },
+  "more_news": "Meer nieuws ...",
+  "name": "Naam",
+  "no_featured_news": "Geen nieuws in de kijker momenteel ...",
+  "overview": "Overzicht",
+  "published": "Geschreven op {publishDate} - {publishDateFromNow}",
+  "save": "Bewaar",
+  "update": "Wijzig een categorie"
 }

@@ -1,79 +1,79 @@
 {
-    "id" : "ID",
-    "email" : "Email",
-    "users" : "Gebruikers",
-    "firstname" : "Voornaam",
-    "lastname" : "Familienaam",
-    "last_login" : "Laatste login",
-    "news" : "Nieuws",
-    "news_info" : "Nieuwsberichten geschreven door deze gebruiker",
-    "information" :  "Informatie",
-    "information_info" : "Artikels geschreven door deze gebruiker",
-    "title" : "Titel",
-    "user_mgmt" : "Beheer Gebruikers",
-    "member_since" : "Lid sinds",
-    "invitation" : {
-        "title" : "Gebruikers Uitnodiging",
-        "expired" : "Sorry, maar uw uitndoging is verlopen. Neem contact op met onze webmaster.",
-        "intro" : "Je staat op het punt om lid te worden van onze website. Gelieve alle informatie in te vullen.",
-        "not_found" : "Sorry, deze uitnodiging bestaat niet!"
+  "email": "Email",
+  "firstname": "Voornaam",
+  "form": {
+    "email": {
+      "invalid": "Ongeldig email adres",
+      "label": "Email",
+      "placeholder": "Geef het email adres in"
     },
-    "form" : {
-        "first_name" : {
-            "label" : "Voornaam",
-            "placeholder" : "Geef de voornaam in"
-        },
-        "last_name" : {
-            "label" : "Familienaam",
-            "placeholder" : "Geef de familienaam in"
-        },
-        "email" : {
-            "label" : "Email",
-            "placeholder" : "Geef het email adres in",
-            "invalid" : "Ongeldig email adres"
-        },
-        "password" : {
-            "label" : "Paswoord",
-            "placeholder" : "Geef een paswoord in",
-            "minLength" : "Het paswoord moet minstens 8 karakters bevatten",
-            "complex" : "Het paswoord moet mininum 1 cijfer en 1 hoofd en kleine letter bevatten"
-        },
-        "retype_password" : {
-            "label" : "Hertype Paswoord",
-            "placeholder" : "Geef uw paswoord nogmaals in",
-            "sameas" : "De paswoorden zijn niet hetzelfde"
-        }
+    "first_name": {
+      "label": "Voornaam",
+      "placeholder": "Geef de voornaam in"
     },
-    "required" : "Dit is een verplicht in te vullen veld",
-    "save" : "Bewaar",
-    "invite" : "Nodig een gebruiker uit",
-    "invite_intro" : "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd.",
-    "no_data" : "Er zijn momenteel geen gebruikers",
-    "not_found" : "Deze gebruiker bestaat niet!",
-    "not_allowed" : "Je hebt geen toelating om deze informatie te bekijken",
-    "rules" : {
-        "title" : "Toelatingen",
-        "groups" : "Groepen",
-        "groups_info" : "Deze gebruiker heeft volgende toelatingen.",
-        "name" : "Naam",
-        "create" : "Maak een nieuwe toelating",
-        "update" : "Wijzig de toelating",
-        "form" : {
-            "name" : {
-                "label" : "Naam",
-                "placeholder" : "Geef een naam in",
-                "required" : "Dit veld is verplicht in te vullen."
-            },
-            "remark" : {
-                "label" : "Opmerking",
-                "placeholder" : "Geef een opmerking in"
-            },
-            "rules": {
-                "label": "Acties",
-                "placeholder": "Selecteer acties die zijn toegelaten",
-                "selectLabel" : "Druk enter om te selecteren",
-                "deselectLabel" : "Druk enter om te verwijderen"
-            }
-        }
+    "last_name": {
+      "label": "Familienaam",
+      "placeholder": "Geef de familienaam in"
+    },
+    "password": {
+      "complex": "Het paswoord moet mininum 1 cijfer en 1 hoofd en kleine letter bevatten",
+      "label": "Paswoord",
+      "minLength": "Het paswoord moet minstens 8 karakters bevatten",
+      "placeholder": "Geef een paswoord in"
+    },
+    "retype_password": {
+      "label": "Hertype Paswoord",
+      "placeholder": "Geef uw paswoord nogmaals in",
+      "sameas": "De paswoorden zijn niet hetzelfde"
     }
+  },
+  "id": "ID",
+  "information": "Informatie",
+  "information_info": "Artikels geschreven door deze gebruiker",
+  "invitation": {
+    "expired": "Sorry, maar uw uitndoging is verlopen. Neem contact op met onze webmaster.",
+    "intro": "Je staat op het punt om lid te worden van onze website. Gelieve alle informatie in te vullen.",
+    "not_found": "Sorry, deze uitnodiging bestaat niet!",
+    "title": "Gebruikers Uitnodiging"
+  },
+  "invite": "Nodig een gebruiker uit",
+  "invite_intro": "Je staat op het punt om iemand uit te nodigen om lid te worden van jouw website. De uitnodiging zal naar het opgegeven adres worden gestuurd.",
+  "last_login": "Laatste login",
+  "lastname": "Familienaam",
+  "member_since": "Lid sinds",
+  "news": "Nieuws",
+  "news_info": "Nieuwsberichten geschreven door deze gebruiker",
+  "no_data": "Er zijn momenteel geen gebruikers",
+  "not_allowed": "Je hebt geen toelating om deze informatie te bekijken",
+  "not_found": "Deze gebruiker bestaat niet!",
+  "required": "Dit is een verplicht in te vullen veld",
+  "rules": {
+    "create": "Maak een nieuwe toelating",
+    "form": {
+      "name": {
+        "label": "Naam",
+        "placeholder": "Geef een naam in",
+        "required": "Dit veld is verplicht in te vullen."
+      },
+      "remark": {
+        "label": "Opmerking",
+        "placeholder": "Geef een opmerking in"
+      },
+      "rules": {
+        "deselectLabel": "Druk enter om te verwijderen",
+        "label": "Acties",
+        "placeholder": "Selecteer acties die zijn toegelaten",
+        "selectLabel": "Druk enter om te selecteren"
+      }
+    },
+    "groups": "Groepen",
+    "groups_info": "Deze gebruiker heeft volgende toelatingen.",
+    "name": "Naam",
+    "title": "Toelatingen",
+    "update": "Wijzig de toelating"
+  },
+  "save": "Bewaar",
+  "title": "Titel",
+  "user_mgmt": "Beheer Gebruikers",
+  "users": "Gebruikers"
 }

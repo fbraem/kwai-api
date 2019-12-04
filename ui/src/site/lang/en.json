@@ -1,10 +1,10 @@
 {
-    "message" : {
-        "hello" : "",
-        "info" : ""
-    },
-    "more_news" : "Read more news ...",
-    "delete" : "Delete",
-    "cancel" : "Cancel",
-    "are_you_sure" : "Are you sure to remove this newsstory?"
+  "are_you_sure": "Are you sure to remove this newsstory?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "message": {
+    "hello": "",
+    "info": ""
+  },
+  "more_news": "Read more news ..."
 }
