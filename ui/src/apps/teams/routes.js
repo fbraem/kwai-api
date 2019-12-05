@@ -2,27 +2,70 @@ import App from './App.vue';
 
 const TeamRead = () => import(
   /* webpackChunkName: "teams_chunck" */
-  '@/apps/teams/TeamRead.vue'
+  './TeamRead.vue'
 );
 const TeamHeader = () => import(
   /* webpackChunkName: "teams_chunck" */
-  '@/apps/teams/TheTeamHeader.vue'
+  './TheTeamHeader.vue'
 );
+const TeamDetails = () => import(
+  /* webpackChunkName: "teams_chunck" */
+  './TeamDetails.vue'
+);
+const TeamTrainings = () => import(
+  /* webpackChunkName: "teams_chunck" */
+  './NotImplemented.vue'
+);
+const TeamMembers = () => import(
+  /* webpackChunkName: "teams_chunck" */
+  './TeamMembers.vue'
+);
+const TeamTournaments = () => import(
+  /* webpackChunkName: "teams_chunck" */
+  './NotImplemented.vue'
+);
+
 const TeamBrowse = () => import(
   /* webpackChunkName: "teams_chunck" */
-  '@/apps/teams/TeamBrowse.vue'
+  './TeamBrowse.vue'
 );
 const TeamsHeader = () => import(
   /* webpackChunkName: "teams_chunck" */
-  '@/apps/teams/TheTeamsHeader.vue'
+  './TheTeamsHeader.vue'
 );
 const TeamForm = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  '@/apps/teams/TeamForm.vue'
+  './TeamForm.vue'
 );
 const TeamFormHeader = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  '@/apps/teams/TheTeamFormHeader.vue'
+  './TheTeamFormHeader.vue'
+);
+
+const TeamTypeRead = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
+  './TeamTypeRead.vue'
+);
+
+const TeamTypeHeader = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
+  './TheTeamTypeHeader.vue'
+);
+const TeamTypeBrowse = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
+  '@/apps/team_types/TeamTypeBrowse.vue'
+);
+const TeamTypesHeader = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
+  './TheTeamTypesHeader.vue'
+);
+const TeamTypeForm = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
+  './TeamTypeForm.vue'
+);
+const TeamTypeFormHeader = () => import(
+  /* webpackChunkName: "teams_admin_chunck" */
+  './TheTeamTypeFormHeader.vue'
 );
 
 export default [
@@ -36,7 +79,36 @@ export default [
           hero: TeamHeader,
           default: TeamRead
         },
-        name: 'teams.read',
+        children: [
+          {
+            path: 'members',
+            components: {
+              team_information: TeamMembers
+            },
+            name: 'team.members'
+          },
+          {
+            path: 'season',
+            components: {
+              team_information: TeamTournaments
+            },
+            name: 'team.tournaments'
+          },
+          {
+            path: 'trainings',
+            components: {
+              team_information: TeamTrainings
+            },
+            name: 'team.trainings'
+          },
+          {
+            path: '',
+            components: {
+              team_information: TeamDetails
+            },
+            name: 'teams.read',
+          },
+        ]
       },
       {
         path: 'create',
@@ -63,6 +135,54 @@ export default [
           }
         },
         name: 'teams.update',
+      },
+      {
+        path: '/team_types',
+        component: App,
+        children: [
+          {
+            path: ':id(\\d+)',
+            components: {
+              hero: TeamTypeHeader,
+              default: TeamTypeRead
+            },
+            name: 'team_types.read',
+          },
+          {
+            path: 'create',
+            components: {
+              hero: TeamTypeFormHeader,
+              default: TeamTypeForm
+            },
+            props: {
+              hero: {
+                creating: true
+              }
+            },
+            name: 'team_types.create',
+          },
+          {
+            path: 'update/:id(\\d+)',
+            components: {
+              hero: TeamTypeFormHeader,
+              default: TeamTypeForm
+            },
+            props: {
+              hero: {
+                creating: false
+              }
+            },
+            name: 'team_types.update',
+          },
+          {
+            path: '',
+            components: {
+              hero: TeamTypesHeader,
+              default: TeamTypeBrowse
+            },
+            name: 'team_types.browse',
+          },
+        ]
       },
       {
         path: '',
