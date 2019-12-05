@@ -45,7 +45,7 @@ a {
 
 .header-line:after {
     content: '';
-    @apply border-t border-solid mx-4 flex-grow flex-shrink-0;
+    @apply border-t border-solid ml-4 flex-grow flex-shrink-0;
 }
 
 .default-button {
