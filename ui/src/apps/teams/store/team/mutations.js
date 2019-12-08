@@ -20,16 +20,7 @@ const team = (state, { data }) => {
 };
 
 const setMembers = (state, data) => {
-/*
-  if (state.all) {
-    var index = state.all.findIndex((t) => t.id === data.id);
-    if (state.all[index]) {
-      if (state.all[index].members) Vue.delete(state.all[index], 'members');
-      Vue.set(state.all[index], 'members', data.members);
-    }
-  }
-*/
-  state.active.members = data.members;
+  Vue.set(state.active, 'members', data.members);
 };
 
 const availableMembers = (state, { data }) => {
