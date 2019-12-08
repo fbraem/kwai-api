@@ -71,50 +71,56 @@
       <div class="mb-4 h-64 overflow-auto">
         <table
           v-if="availableMembers.length > 0"
-          class="w-full border-collapse text-left"
+          class="table table-striped"
         >
-          <tr class="bg-gray-500 border-b border-gray-200">
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              <input
-                type="checkbox"
-                v-model="selectAll"
-              />
-            </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              {{ $t('member.name')}}<br />
-              {{ $t('member.birthdate')}} ({{ $t('member.age')}})
-            </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              {{ $t('member.license')}}<br />
-              {{ $t('member.gender')}}
-            </th>
-          </tr>
-          <tr
-            v-for="member in availableMembers"
-            :key="member.id"
-            class="odd:bg-gray-200 border-b border-gray-400"
-          >
-            <td class="py-2 px-3 text-sm text-gray-700">
-              <input
-                type="checkbox"
-                v-model="selectedAvailableMembers"
-                :value="member.id"
-              />
-            </td>
-            <td class="py-2 px-3 text-sm text-gray-700">
-              <strong>
-                {{ member.person.name }}
-              </strong>
-              <br />
-              {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
-            </td>
-            <td class="py-2 px-3 text-sm text-gray-700">
-              {{ member.license }}<br />
-              <i class="fas fa-male" v-if="member.person.gender == 1"></i>
-              <i class="fas fa-female" v-if="member.person.gender == 2"></i>
-              <i class="fas fa-question" v-if="member.person.gender == 0"></i>
-            </td>
-          </tr>
+          <thead>
+            <tr class="table-active">
+              <th
+                scope="col"
+                class="checkbox_cell"
+              >
+                <input
+                  type="checkbox"
+                  v-model="selectAll"
+                />
+              </th>
+              <th scope="col">
+                {{ $t('member.name')}}<br />
+                {{ $t('member.birthdate')}} ({{ $t('member.age')}})
+              </th>
+              <th scope="col">
+                {{ $t('member.license')}}<br />
+                {{ $t('member.gender')}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="member in availableMembers"
+              :key="member.id"
+            >
+              <td class="checkbox_cell">
+                <input
+                  type="checkbox"
+                  v-model="selectedAvailableMembers"
+                  :value="member.id"
+                />
+              </td>
+              <td>
+                <strong>
+                  {{ member.person.name }}
+                </strong>
+                <br />
+                {{ member.person.formatted_birthdate }} ({{ memberAge(member) }})
+              </td>
+              <td>
+                {{ member.license }}<br />
+                <i class="fas fa-male" v-if="member.person.gender == 1"></i>
+                <i class="fas fa-female" v-if="member.person.gender == 2"></i>
+                <i class="fas fa-question" v-if="member.person.gender == 0"></i>
+              </td>
+            </tr>
+          </tbody>
         </table>
         <p v-else-if="team.team_type">
           {{ $t('no_available_members') }}
@@ -137,6 +143,12 @@
     </slot>
   </Modal>
 </template>
+
+<style scoped>
+.checkbox_cell {
+  @apply align-middle !important;
+}
+</style>
 
 <script>
 import makeForm, { makeField } from '@/js/Form';
