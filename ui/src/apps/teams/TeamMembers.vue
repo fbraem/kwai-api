@@ -103,6 +103,7 @@
       <a
         v-if="selectedMembers.length > 0"
         class="icon-button text-red-700 hover:bg-red-300"
+        @click.prevent.stop="showDeleteMemberDialog = true;"
       >
         <i class="fas fa-trash"></i>
       </a>
@@ -175,6 +176,7 @@ export default {
   },
   methods: {
     deleteMembers() {
+      this.showDeleteMemberDialog = false;
       var members = [];
       this.selectedMembers.forEach((id) => {
         var member = new Member();
