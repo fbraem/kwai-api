@@ -78,11 +78,10 @@ const getMembers = async({ dispatch, commit, state, getters }, payload) => {
   }
 };
 
-const addMembers = async({ getters, commit }, payload) => {
-  var team = getters['team'](payload.id);
+const addMembers = async({ getters, commit, state }, payload) => {
   try {
     const api = new JSONAPI({source: Team, target: Member});
-    let result = await api.attach(team, payload.members);
+    let result = await api.attach(state.active, payload.members);
     commit('setMembers', {
       id: payload.id,
       members: result.data,
@@ -93,11 +92,10 @@ const addMembers = async({ getters, commit }, payload) => {
   }
 };
 
-const deleteMembers = async({ getters, commit }, payload) => {
-  var team = getters['team'](payload.id);
+const deleteMembers = async({ getters, commit, state }, payload) => {
   try {
     const api = new JSONAPI({source: Team, target: Member});
-    let result = await api.detach(team, payload.members);
+    let result = await api.detach(state.active, payload.members);
     commit('setMembers', {
       id: payload.id,
       members: result.data,
@@ -127,7 +125,8 @@ const availableMembers = async({ dispatch, commit }, payload) => {
   try {
     var members = await api.custom({
       id: payload.id,
-      path: 'available_members'
+      path: 'available_members',
+      method: 'GET'
     });
     commit('availableMembers', members);
   } catch (error) {
