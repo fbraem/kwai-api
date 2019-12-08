@@ -19,9 +19,9 @@ const season = (state, { data }) => {
   if (state.all == null) {
     return;
   }
-  var index = state.seasons.findIndex((s) => s.id === data.id);
+  var index = state.all.findIndex((s) => s.id === data.id);
   if (index !== -1) {
-    Vue.set(state.seasons, index, data);
+    Vue.set(state.all, index, data);
   }
   state.active = season;
 };
