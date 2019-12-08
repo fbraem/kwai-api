@@ -16,12 +16,11 @@ const seasons = (state, {meta, data}) => {
  */
 const season = (state, { data }) => {
   state.error = null;
-  if (state.all == null) {
-    return;
-  }
-  var index = state.all.findIndex((s) => s.id === data.id);
-  if (index !== -1) {
-    Vue.set(state.all, index, data);
+  if (state.all != null) {
+    var index = state.all.findIndex((s) => s.id === data.id);
+    if (index !== -1) {
+      Vue.set(state.all, index, data);
+    }
   }
   state.active = data;
 };
