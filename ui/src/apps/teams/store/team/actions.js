@@ -18,6 +18,7 @@ const browse = async({ dispatch, commit }, payload) => {
 
 const save = async({ dispatch, commit }, team) => {
   try {
+    console.log(team);
     var api = new JSONAPI({ source: Team });
     var result = await api.save(team);
     commit('team', result);
@@ -142,11 +143,18 @@ const reset = ({ commit }) => {
 };
 
 /**
- * When a type was read in another instance of this module, set can be
+ * When a team was read in another instance of this module, set can be
  * used to make it available in the current instance.
  */
-const set = ({ commit }, type) => {
-  commit('active', type);
+const set = ({ commit }, team) => {
+  commit('active', team);
+};
+
+/**
+ * Set the active team to a new Team
+ */
+const create = ({ commit }) => {
+  commit('active', new Team());
 };
 
 export const actions = {
@@ -159,4 +167,5 @@ export const actions = {
   availableMembers,
   reset,
   set,
+  create
 };

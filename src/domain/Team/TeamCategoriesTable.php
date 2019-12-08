@@ -2,11 +2,11 @@
 
 namespace Domain\Team;
 
-class TeamTypesTable extends \Cake\ORM\Table
+class TeamCategoriesTable extends \Cake\ORM\Table
 {
-    public static $registryName = 'TeamTypes';
-    public static $tableName = 'team_types';
-    public static $entityClass = 'Domain\Team\TeamType';
+    public static $registryName = 'TeamCategories';
+    public static $tableName = 'team_categories';
+    public static $entityClass = 'Domain\Team\TeamCategory';
 
     use \Domain\DomainTableTrait;
 

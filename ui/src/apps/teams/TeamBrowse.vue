@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap justify-center">
+  <AdminPage :toolbar="toolbar">
     <Spinner v-if="$wait.is('teams.browse')" />
     <div v-else-if="teams && teams.length == 0">
       {{ $t('no_teams') }}
@@ -54,22 +54,37 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </AdminPage>
 </template>
 
 <script>
 import messages from './lang';
 
 import Spinner from '@/components/Spinner';
+import AdminPage from '@/components/AdminPage';
+
+import Team from '@/models/Team';
 
 export default {
   i18n: messages,
   components: {
-    Spinner
+    Spinner, AdminPage
   },
   computed: {
     teams() {
       return this.$store.state.team.all;
+    },
+    toolbar() {
+      const buttons = [];
+      if (this.$can('create', Team.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'teams.create'
+          }
+        });
+      }
+      return buttons;
     }
   },
   beforeRouteEnter(to, from, next) {

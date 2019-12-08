@@ -8,46 +8,46 @@
     >
       <KwaiField
         name="name"
-        :label="$t('form.team_type.name.label')"
+        :label="$t('form.team_category.name.label')"
       >
-        <KwaiInputText :placeholder="$t('form.team_type.name.placeholder')" />
+        <KwaiInputText :placeholder="$t('form.team_category.name.placeholder')" />
       </KwaiField>
       <KwaiField
         name="start_age"
-        :label="$t('form.team_type.start_age.label')"
+        :label="$t('form.team_category.start_age.label')"
       >
-        <KwaiInputText :placeholder="$t('form.team_type.start_age.placeholder')" />
+        <KwaiInputText :placeholder="$t('form.team_category.start_age.placeholder')" />
       </KwaiField>
       <KwaiField
         name="end_age"
-        :label="$t('form.team_type.end_age.label')"
+        :label="$t('form.team_category.end_age.label')"
       >
-        <KwaiInputText :placeholder="$t('form.team_type.end_age.placeholder')" />
+        <KwaiInputText :placeholder="$t('form.team_category.end_age.placeholder')" />
       </KwaiField>
       <KwaiField
         name="gender"
-        :label="$t('form.team_type.gender.label')"
+        :label="$t('form.team_category.gender.label')"
       >
         <KwaiSelect :items="genders" />
       </KwaiField>
       <KwaiField
         name="active"
-        :label="$t('form.team_type.active.label')"
+        :label="$t('form.team_category.active.label')"
       >
         <KwaiCheckbox />
       </KwaiField>
       <KwaiField
         name="competition"
-        :label="$t('form.team_type.competition.label')"
+        :label="$t('form.team_category.competition.label')"
       >
         <KwaiCheckbox />
       </KwaiField>
       <KwaiField
         name="remark"
-        :label="$t('form.team_type.remark.label')"
+        :label="$t('form.team_category.remark.label')"
       >
         <KwaiTextarea
-          :placeholder="$t('form.team_type.remark.placeholder')"
+          :placeholder="$t('form.team_category.remark.placeholder')"
           :rows="5"
         />
       </KwaiField>
@@ -56,27 +56,27 @@
 </template>
 
 <script>
-import TeamType from '@/models/TeamType';
+import TeamCategory from '@/models/TeamCategory';
 
 import makeForm, { makeField, notEmpty, isInteger } from '@/js/Form';
 const makeTeamTypeForm = (fields) => {
-  const writeForm = (teamType) => {
-    fields.name.value = teamType.name;
-    fields.start_age.value = teamType.start_age;
-    fields.end_age.value = teamType.end_age;
-    fields.gender.value = teamType.gender;
-    fields.active.value = teamType.active;
-    fields.competition.value = teamType.competition;
-    fields.remark.value = teamType.remark;
+  const writeForm = (teamCategory) => {
+    fields.name.value = teamCategory.name;
+    fields.start_age.value = teamCategory.start_age;
+    fields.end_age.value = teamCategory.end_age;
+    fields.gender.value = teamCategory.gender;
+    fields.active.value = teamCategory.active;
+    fields.competition.value = teamCategory.competition;
+    fields.remark.value = teamCategory.remark;
   };
-  const readForm = (teamType) => {
-    teamType.name = fields.name.value;
-    teamType.start_age = fields.start_age.value;
-    teamType.end_age = fields.end_age.value;
-    teamType.gender = fields.gender.value;
-    teamType.active = fields.active.value;
-    teamType.competition = fields.competition.value;
-    teamType.remark = fields.remark.value;
+  const readForm = (teamCategory) => {
+    teamCategory.name = fields.name.value;
+    teamCategory.start_age = fields.start_age.value;
+    teamCategory.end_age = fields.end_age.value;
+    teamCategory.gender = fields.gender.value;
+    teamCategory.active = fields.active.value;
+    teamCategory.competition = fields.competition.value;
+    teamCategory.remark = fields.remark.value;
   };
   return { ...makeForm(fields), writeForm, readForm };
 };
@@ -97,7 +97,6 @@ export default {
   i18n: messages,
   data() {
     return {
-      teamType: new TeamType(),
       genders: [
         {
           value: 0,
@@ -119,7 +118,7 @@ export default {
           validators: [
             {
               v: notEmpty,
-              error: this.$t('form.team_type.name.required'),
+              error: this.$t('form.team_category.name.required'),
             },
           ]
         }),
@@ -127,7 +126,7 @@ export default {
           validators: [
             {
               v: isInteger,
-              error: this.$t('form.team_type.start_age.numeric'),
+              error: this.$t('form.team_category.start_age.numeric'),
             },
           ]
         }),
@@ -135,7 +134,7 @@ export default {
           validators: [
             {
               v: isInteger,
-              error: this.$t('form.team_type.start_age.numeric'),
+              error: this.$t('form.team_category.start_age.numeric'),
             },
           ]
         }),
@@ -155,11 +154,11 @@ export default {
     };
   },
   computed: {
-    creating() {
-      return this.teamType != null && this.teamType.id == null;
+    category() {
+      return this.$store.state.team.category.active || new TeamCategory();
     },
     error() {
-      return this.$store.state.teamType.error;
+      return this.$store.state.team.category.error;
     },
   },
   beforeRouteEnter(to, from, next) {
@@ -188,20 +187,20 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      this.teamType = await this.$store.dispatch('teamType/read', {
+      await this.$store.dispatch('team/category/read', {
         id: params.id
       });
-      this.form.writeForm(this.teamType);
+      this.form.writeForm(this.category);
     },
     submit() {
       this.form.clearErrors();
-      this.form.readForm(this.teamType);
-      this.$store.dispatch('teamType/save', this.teamType)
+      this.form.readForm(this.category);
+      this.$store.dispatch('team/category/save', this.category)
         .then((newType) => {
           this.$router.push({
-            name: 'team_types.read',
+            name: 'team_categories.read',
             params: {
-              id: newType.id
+              id: this.category.id
             }
           });
         }).catch(err => {

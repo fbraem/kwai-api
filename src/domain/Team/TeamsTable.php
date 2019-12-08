@@ -14,11 +14,11 @@ class TeamsTable extends \Cake\ORM\Table
     {
         $this->initializeTable();
 
-        $this->belongsTo('TeamType', [
-                'className' => TeamTypesTable::class
+        $this->belongsTo('TeamCategory', [
+                'className' => TeamCategoriesTable::class
             ])
-            ->setForeignKey('team_type_id')
-            ->setProperty('team_type')
+            ->setForeignKey('team_category_id')
+            ->setProperty('team_category')
         ;
         $this->belongsTo('Season', [
                 'className' => \Domain\Game\SeasonsTable::class
@@ -44,7 +44,7 @@ class TeamsTable extends \Cake\ORM\Table
             ->addColumn('id', [ 'type' => 'integer' ])
             ->addColumn('name', [ 'type' => 'string' ])
             ->addColumn('season_id', [ 'type' => 'integer' ])
-            ->addColumn('team_type_id', [ 'type' => 'integer' ])
+            ->addColumn('team_category_id', [ 'type' => 'integer' ])
             ->addColumn('active', ['type' => 'boolean'])
             ->addColumn('remark', [ 'type' => 'text'])
             ->addColumn('created_at', [ 'type' => 'timestamp'])

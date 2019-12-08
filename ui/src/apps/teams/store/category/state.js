@@ -1,5 +1,5 @@
 /**
- * State of team types
+ * State of team categories
  */
 export const state = () => {
   return {

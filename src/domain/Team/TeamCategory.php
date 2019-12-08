@@ -2,7 +2,7 @@
 
 namespace Domain\Team;
 
-class TeamType extends \Cake\ORM\Entity
+class TeamCategory extends \Cake\ORM\Entity
 {
     use \Domain\DatetimeMetaTrait;
 }

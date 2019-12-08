@@ -22,13 +22,13 @@
         {{ $t('form.team.season.hint')}}
       </p>
       <KwaiField
-        name="team_type"
-        :label="$t('form.team.team_type.label')"
+        name="category"
+        :label="$t('form.team.category.label')"
       >
-        <KwaiSelect :items="team_types" />
+        <KwaiSelect :items="categories" />
       </KwaiField>
       <p class="uk-text-meta">
-        {{ $t('form.team.team_type.hint')}}
+        {{ $t('form.team.category.hint')}}
       </p>
       <KwaiField
         name="remark"
@@ -45,7 +45,7 @@
 
 <script>
 import Team from '@/models/Team';
-import TeamType from '@/models/TeamType';
+import TeamCategory from '@/models/TeamCategory';
 import Season from '@/models/Season';
 
 import makeForm, { makeField, notEmpty } from '@/js/Form';
@@ -56,8 +56,8 @@ const makeTeamForm = (fields) => {
     if (team.season) {
       fields.season.value = team.season.id;
     }
-    if (team.team_type) {
-      fields.team_type.value = team.team_type.id;
+    if (team.category) {
+      fields.category.value = team.category.id;
     }
   };
   const readForm = (team) => {
@@ -69,11 +69,11 @@ const makeTeamForm = (fields) => {
       team.season = new Season();
       team.season.id = fields.season.value;
     }
-    if (fields.team_type.value === 0) {
-      team.team_type = null;
+    if (fields.category.value === 0) {
+      team.category = null;
     } else {
-      team.team_type = new TeamType();
-      team.team_type.id = fields.team_type.value;
+      team.category = new TeamCategory();
+      team.category.id = fields.category.value;
     }
   };
   return { ...makeForm(fields), writeForm, readForm };
@@ -94,7 +94,6 @@ export default {
   i18n: messages,
   data() {
     return {
-      team: new Team(),
       form: makeTeamForm({
         name: makeField({
           value: '',
@@ -109,7 +108,7 @@ export default {
         season: makeField({
           value: 0
         }),
-        team_type: makeField({
+        category: makeField({
           value: 0
         }),
         remark: makeField({
@@ -119,41 +118,49 @@ export default {
     };
   },
   computed: {
-    creating() {
-      return this.team != null && this.team.id == null;
+    team() {
+      return this.$store.state.team.active;
     },
     error() {
       return this.$store.state.team.error;
     },
     seasons() {
-      var seasons = this.$store.getters['season/seasonsAsOptions'];
+      var seasons = this.$store.getters['team/season/seasonsAsOptions'];
       seasons.unshift({
         value: 0,
         text: this.$t('form.team.season.empty')
       });
       return seasons;
     },
-    team_types() {
-      var seasons = this.$store.getters['teamType/typesAsOptions'];
-      seasons.unshift({
+    categories() {
+      var categories = this.$store.getters['team/category/categoriesAsOptions'];
+      categories.unshift({
         value: 0,
-        text: this.$t('form.team.team_type.empty')
+        text: this.$t('form.team.category.empty')
       });
-      return seasons;
+      return categories;
     },
   },
   async created() {
-    await this.$store.dispatch('season/browse');
-    await this.$store.dispatch('teamType/browse');
+    await this.$store.dispatch('team/season/browse');
+    await this.$store.dispatch('team/category/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
       if (to.params.id) await vm.fetchData(to.params);
+      else {
+        vm.$store.dispatch('team/create');
+      }
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    if (to.params.id) await this.fetchData(to.params);
+    if (to.params.id) {
+      await this.fetchData(to.params);
+    } else {
+      this.store.dispatch('team/create');
+      this.form.writeForm(this.team);
+    }
     next();
   },
   watch: {
@@ -172,7 +179,7 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      this.team = await this.$store.dispatch('team/read', {
+      await this.$store.dispatch('team/read', {
         id: params.id
       });
       this.form.writeForm(this.team);
@@ -181,7 +188,7 @@ export default {
       this.form.clearErrors();
       this.form.readForm(this.team);
       try {
-        this.team = await this.$store.dispatch('team/save', this.team);
+        await this.$store.dispatch('team/save', this.team);
         this.$router.push({
           name: 'teams.read',
           params: {

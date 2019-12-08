@@ -42,30 +42,30 @@ const TeamFormHeader = () => import(
   './TheTeamFormHeader.vue'
 );
 
-const TeamTypeRead = () => import(
+const TeamCategoryRead = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  './TeamTypeRead.vue'
+  './TeamCategoryRead.vue'
 );
 
-const TeamTypeHeader = () => import(
+const TeamCategoryHeader = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  './TheTeamTypeHeader.vue'
+  './TheTeamCategoryHeader.vue'
 );
-const TeamTypeBrowse = () => import(
+const TeamCategoryBrowse = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  '@/apps/team_types/TeamTypeBrowse.vue'
+  './TeamCategoryBrowse.vue'
 );
-const TeamTypesHeader = () => import(
+const TeamCategoriesHeader = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  './TheTeamTypesHeader.vue'
+  './TheTeamCategoriesHeader.vue'
 );
-const TeamTypeForm = () => import(
+const TeamCategoryForm = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  './TeamTypeForm.vue'
+  './TeamCategoryForm.vue'
 );
-const TeamTypeFormHeader = () => import(
+const TeamCategoryFormHeader = () => import(
   /* webpackChunkName: "teams_admin_chunck" */
-  './TheTeamTypeFormHeader.vue'
+  './TheTeamCategoryFormHeader.vue'
 );
 
 export default [
@@ -137,52 +137,46 @@ export default [
         name: 'teams.update',
       },
       {
-        path: '/team_types',
-        component: App,
-        children: [
-          {
-            path: ':id(\\d+)',
-            components: {
-              hero: TeamTypeHeader,
-              default: TeamTypeRead
-            },
-            name: 'team_types.read',
-          },
-          {
-            path: 'create',
-            components: {
-              hero: TeamTypeFormHeader,
-              default: TeamTypeForm
-            },
-            props: {
-              hero: {
-                creating: true
-              }
-            },
-            name: 'team_types.create',
-          },
-          {
-            path: 'update/:id(\\d+)',
-            components: {
-              hero: TeamTypeFormHeader,
-              default: TeamTypeForm
-            },
-            props: {
-              hero: {
-                creating: false
-              }
-            },
-            name: 'team_types.update',
-          },
-          {
-            path: '',
-            components: {
-              hero: TeamTypesHeader,
-              default: TeamTypeBrowse
-            },
-            name: 'team_types.browse',
-          },
-        ]
+        path: 'categories/:id(\\d+)',
+        components: {
+          hero: TeamCategoryHeader,
+          default: TeamCategoryRead
+        },
+        name: 'team_categories.read',
+      },
+      {
+        path: 'categories/create',
+        components: {
+          hero: TeamCategoryFormHeader,
+          default: TeamCategoryForm
+        },
+        props: {
+          hero: {
+            creating: true
+          }
+        },
+        name: 'team_categories.create',
+      },
+      {
+        path: 'categories/update/:id(\\d+)',
+        components: {
+          hero: TeamCategoryFormHeader,
+          default: TeamCategoryForm
+        },
+        props: {
+          hero: {
+            creating: false
+          }
+        },
+        name: 'team_categories.update',
+      },
+      {
+        path: 'categories',
+        components: {
+          hero: TeamCategoriesHeader,
+          default: TeamCategoryBrowse
+        },
+        name: 'team_types.browse',
       },
       {
         path: '',

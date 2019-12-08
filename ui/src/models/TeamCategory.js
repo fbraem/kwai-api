@@ -4,9 +4,9 @@ import { Attribute, DateAttribute } from './Attribute';
 /**
  * TeamType model
  */
-export default class TeamType extends Model {
+export default class TeamCategory extends Model {
   static type() {
-    return 'team_types';
+    return 'team_categories';
   }
 
   static fields() {

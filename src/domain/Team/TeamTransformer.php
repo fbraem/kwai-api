@@ -9,7 +9,7 @@ class TeamTransformer extends Fractal\TransformerAbstract
     private static $type = 'teams';
 
     protected $defaultIncludes = [
-        'team_type',
+        'team_category',
         'season',
         'members'
     ];
@@ -24,11 +24,11 @@ class TeamTransformer extends Fractal\TransformerAbstract
         return new Fractal\Resource\Collection($teams, new self(), self::$type);
     }
 
-    public function includeTeamType(Team $team)
+    public function includeTeamCategory(Team $team)
     {
-        $type = $team->team_type;
-        if ($type) {
-            return TeamTypeTransformer::createForItem($type);
+        $category = $team->team_category;
+        if ($category) {
+            return TeamCategoryTransformer::createForItem($category);
         }
     }
 

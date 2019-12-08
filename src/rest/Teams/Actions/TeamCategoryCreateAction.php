@@ -7,20 +7,20 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Domain\Team\TeamTypesTable;
-use Domain\Team\TeamTypeTransformer;
+use Domain\Team\TeamCategoriesTable;
+use Domain\Team\TeamCategoryTransformer;
 
 use Respect\Validation\Validator as v;
 
 use Core\Validators\ValidationException;
 use Core\Validators\InputValidator;
 use Core\Validators\EntityExistValidator;
-use REST\Teams\TeamTypeValidator;
+use REST\Teams\TeamCategoryValidator;
 
 use Core\Responses\UnprocessableEntityResponse;
 use Core\Responses\ResourceResponse;
 
-class TypeCreateAction
+class TeamCategoryCreateAction
 {
     private $container;
 
@@ -45,27 +45,27 @@ class TypeCreateAction
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
-            $typesTable = TeamTypesTable::getTableFromRegistry();
-            $type = $typesTable->newEntity();
-            $type->name = $attributes['name'];
-            $type->start_age = $attributes['start_age'];
-            $type->end_age = $attributes['end_age'];
-            $type->competition = $attributes['competition'] ?? false;
-            $type->gender = $attributes['gender'] ?? 0;
-            $type->active = $attributes['active'] ?? false;
-            $type->remark = $attributes['remark'];
+            $categoriesTable = TeamCategoriesTable::getTableFromRegistry();
+            $category = $categoriesTable->newEntity();
+            $category->name = $attributes['name'];
+            $category->start_age = $attributes['start_age'];
+            $category->end_age = $attributes['end_age'];
+            $category->competition = $attributes['competition'] ?? false;
+            $category->gender = $attributes['gender'] ?? 0;
+            $category->active = $attributes['active'] ?? false;
+            $category->remark = $attributes['remark'];
 
-            $typeValidator = (new TeamTypeValidator())->validate($type);
+            $categoryValidator = (new TeamCategoryValidator())->validate($category);
 
-            $typesTable->save($type);
+            $categoriesTable->save($category);
 
             $route = $request->getAttribute('route');
             if (! empty($route)) {
-                $route->setArgument('id', $type->id);
+                $route->setArgument('id', $category->id);
             }
 
             $response = (new ResourceResponse(
-                TeamTypeTransformer::createForItem($type)
+                TeamCategoryTransformer::createForItem($category)
             ))($response)->withStatus(201);
         } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);

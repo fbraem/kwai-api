@@ -7,12 +7,12 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Domain\Team\TeamTypesTable;
-use Domain\Team\TeamTypeTransformer;
+use Domain\Team\TeamCategoriesTable;
+use Domain\Team\TeamCategoryTransformer;
 
 use Core\Responses\ResourceResponse;
 
-class TypeBrowseAction
+class TeamCategoryBrowseAction
 {
     private $container;
 
@@ -24,8 +24,8 @@ class TypeBrowseAction
     public function __invoke(Request $request, Response $response, $args)
     {
         return (new ResourceResponse(
-                TeamTypeTransformer::createForCollection(
-                    TeamTypesTable::getTableFromRegistry()
+                TeamCategoryTransformer::createForCollection(
+                    TeamCategoriesTable::getTableFromRegistry()
                         ->find()
                         ->all()
                 )

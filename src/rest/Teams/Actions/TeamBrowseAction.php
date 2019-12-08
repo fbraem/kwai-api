@@ -30,9 +30,9 @@ class TeamBrowseAction
             TeamTransformer::createForCollection(
                 $query->select($table)
                     ->select($table->Season)
-                    ->select($table->TeamType)
+                    ->select($table->TeamCategory)
                     ->select(['members_count' => $query->func()->count('Members.id')])
-                    ->contain(['Season', 'TeamType'])
+                    ->contain(['Season', 'TeamCategory'])
                     ->leftJoinWith('Members')
                     ->order([
                         'Season.name' => 'DESC',

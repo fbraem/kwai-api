@@ -4,7 +4,7 @@ namespace REST\Teams;
 use Core\Validators\ValidatorInterface;
 use Core\Validators\ValidationException;
 
-class TeamTypeValidator implements \Core\Validators\ValidatorInterface
+class TeamCategoryValidator implements \Core\Validators\ValidatorInterface
 {
     public function validate($data)
     {

@@ -7,8 +7,8 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Domain\Team\TeamTypesTable;
-use Domain\Team\TeamTypeTransformer;
+use Domain\Team\TeamCategoriesTable;
+use Domain\Team\TeamCategoryTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
@@ -17,13 +17,13 @@ use Respect\Validation\Validator as v;
 use Core\Validators\ValidationException;
 use Core\Validators\InputValidator;
 use Core\Validators\EntityExistValidator;
-use REST\Teams\TeamTypeValidator;
+use REST\Teams\TeamCategoryValidator;
 
 use Core\Responses\UnprocessableEntityResponse;
 use Core\Responses\ResourceResponse;
 use Core\Responses\NotFoundResponse;
 
-class TypeUpdateAction
+class TeamCategoryUpdateAction
 {
     private $container;
 
@@ -34,10 +34,10 @@ class TypeUpdateAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $table = TeamTypesTable::getTableFromRegistry();
+        $table = TeamCategoriesTable::getTableFromRegistry();
         try {
             $data = $request->getParsedBody();
-            $type = $table->get($args['id']);
+            $category = $table->get($args['id']);
 
             (new InputValidator([
                 'data.attributes.name' => v::notEmpty()->length(1, 255),
@@ -51,33 +51,33 @@ class TypeUpdateAction
             $attributes = \JmesPath\search('data.attributes', $data);
 
             if (isset($attributes['name'])) {
-                $type->name = $attributes['name'];
+                $category->name = $attributes['name'];
             }
             if (isset($attributes['start_age'])) {
-                $type->start_age = $attributes['start_age'];
+                $category->start_age = $attributes['start_age'];
             }
             if (isset($attributes['end_age'])) {
-                $type->end_age = $attributes['end_age'];
+                $category->end_age = $attributes['end_age'];
             }
             if (isset($attributes['competition'])) {
-                $type->competition = $attributes['competition'];
+                $category->competition = $attributes['competition'];
             }
             if (isset($attributes['gender'])) {
-                $type->gender = $attributes['gender'];
+                $category->gender = $attributes['gender'];
             }
             if (isset($attributes['active'])) {
-                $type->active = $attributes['active'];
+                $category->active = $attributes['active'];
             }
             if (isset($attributes['remark'])) {
-                $type->remark = $attributes['remark'];
+                $category->remark = $attributes['remark'];
             }
 
-            $typeValidator = (new TeamTypeValidator())->validate($type);
+            $categoryValidator = (new TeamCategoryValidator())->validate($category);
 
-            $table->save($type);
+            $table->save($category);
 
             $response = (new ResourceResponse(
-                    TeamTypeTransformer::createForItem($type)
+                    TeamCategoryTransformer::createForItem($category)
             ))($response)->withStatus(201);
         } catch (ValidationException $ve) {
             $response = (new UnprocessableEntityResponse($ve->getErrors()))($response);

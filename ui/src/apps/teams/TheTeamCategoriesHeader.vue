@@ -1,12 +1,11 @@
 <template>
   <Header
-    :title="$t('types')"
-    :toolbar="toolbar"
+    :title="$t('categories')"
   />
 </template>
 
 <script>
-import TeamType from '@/models/TeamType';
+import TeamCategory from '@/models/TeamCategory';
 
 import messages from './lang';
 
@@ -20,11 +19,11 @@ export default {
   computed: {
     toolbar() {
       const buttons = [];
-      if (this.$can('create', TeamType.type())) {
+      if (this.$can('create', TeamCategory.type())) {
         buttons.push({
           icon: 'fas fa-plus',
           route: {
-            name: 'team_types.create'
+            name: 'team_categories.create'
           }
         });
       }

@@ -9,16 +9,20 @@
 
 <script>
 import teamStore from './store/team';
-import typeStore from './store/type';
+import teamCategoryStore from './store/category';
+import seasonStore from '@/apps/seasons/store';
 
 export default {
   beforeCreate() {
     this.$store.registerModule('team', teamStore);
-    this.$store.registerModule(['team', 'type'], typeStore);
+    this.$store.registerModule(['team', 'category'], teamCategoryStore);
+    this.$store.registerModule(['team', 'season'], seasonStore);
   },
   beforeDestroy() {
-    this.$store.dispatch('team/type/reset');
-    this.$store.unregisterModule(['team', 'type']);
+    this.$store.dispatch('team/season/reset');
+    this.$store.unregisterModule(['team', 'season']);
+    this.$store.dispatch('team/category/reset');
+    this.$store.unregisterModule(['team', 'category']);
     this.$store.dispatch('team/reset');
     this.$store.unregisterModule('team');
   },

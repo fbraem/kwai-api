@@ -3,23 +3,23 @@ import Vue from 'vue';
 import { state as initialize } from './state';
 
 /**
- * Mutate all types
+ * Mutate all team categories
  */
-const types = (state, { meta, data }) => {
+const team_categories = (state, { meta, data }) => {
   state.all = data;
   state.meta = meta;
   state.error = null;
 };
 
 /**
- * Mutate a type in the list (if present) and update active type
+ * Mutate a category in the list (if present) and update active type
  */
-const type = (state, { data }) => {
+const team_category = (state, { data }) => {
   state.error = null;
   if (state.all == null) {
     state.all = [];
   }
-  var index = state.all.findIndex((t) => t.id === data.id);
+  var index = state.all.findIndex((c) => c.id === data.id);
   if (index !== -1) {
     Vue.set(state.all, index, data);
   }
@@ -48,8 +48,8 @@ const reset = (state) => {
 };
 
 export const mutations = {
-  types,
-  type,
+  team_categories,
+  team_category,
   error,
   active,
   reset

@@ -1,24 +1,17 @@
 <template>
-  <div class="mt-3">
+  <AdminPage :toolbar="toolbar">
     <router-view name="team_information"></router-view>
-    <div class="p-3 flex flex-row justify-end">
-      <IconButtons
-        :toolbar="toolbar"
-        normalClass="text-gray-700"
-        hoverClass="hover:bg-gray-300"
-      />
-    </div>
-  </div>
+  </AdminPage>
 </template>
 
 <script>
 import Team from '@/models/Team';
 
-import IconButtons from '@/components/IconButtons';
+import AdminPage from '@/components/AdminPage';
 
 export default {
   components: {
-    IconButtons
+    AdminPage
   },
   computed: {
     team() {

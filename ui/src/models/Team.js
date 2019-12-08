@@ -1,7 +1,7 @@
 import Model from './Model';
 import { Attribute, DateAttribute } from './Attribute';
 
-import TeamType from './TeamType';
+import TeamCategory from './TeamCategory';
 import Member from './Member';
 import Season from './Season';
 
@@ -26,7 +26,7 @@ export default class Team extends Model {
 
   static relationships() {
     return {
-      team_type: TeamType,
+      team_category: TeamCategory,
       season: Season,
       members: Member,
     };

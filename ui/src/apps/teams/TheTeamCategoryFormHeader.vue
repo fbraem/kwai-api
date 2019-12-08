@@ -1,6 +1,6 @@
 <template>
   <Header
-    :title="$t('types')"
+    :title="$t('categories')"
     :subtitle="subtitle"
   />
 </template>
@@ -22,8 +22,8 @@ export default {
   },
   computed: {
     subtitle() {
-      if (this.creating) return this.$t('create');
-      return this.$t('update');
+      if (this.creating) return this.$t('create_category');
+      return this.$t('update_category');
     }
   }
 };
