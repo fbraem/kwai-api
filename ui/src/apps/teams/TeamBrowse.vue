@@ -1,6 +1,9 @@
 <template>
   <AdminPage :toolbar="toolbar">
-    <Spinner v-if="$wait.is('teams.browse')" />
+    <Spinner
+      v-if="$wait.is('teams.browse')"
+      class="text-center"
+    />
     <div v-else-if="teams && teams.length == 0">
       {{ $t('no_teams') }}
     </div>
