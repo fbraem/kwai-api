@@ -33,24 +33,26 @@ export default {
           }
         },
       ];
-      if (this.team && this.$can('update', this.team)) {
-        buttons.push({
-          icon: 'fas fa-edit',
-          route: {
-            name: 'teams.update',
-            params: {
-              id: this.team.id
+      if (this.$route.name === 'teams.read') {
+        if (this.team && this.$can('update', this.team)) {
+          buttons.push({
+            icon: 'fas fa-edit',
+            route: {
+              name: 'teams.update',
+              params: {
+                id: this.team.id
+              }
             }
-          }
-        });
-      }
-      if (this.$can('create', Team.type())) {
-        buttons.push({
-          icon: 'fas fa-plus',
-          route: {
-            name: 'teams.create',
-          }
-        });
+          });
+        }
+        if (this.$can('create', Team.type())) {
+          buttons.push({
+            icon: 'fas fa-plus',
+            route: {
+              name: 'teams.create',
+            }
+          });
+        }
       }
       return buttons;
     }
