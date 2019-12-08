@@ -162,7 +162,7 @@ export default {
       return this.$store.state.team.active;
     },
     hasMembers() {
-      return this.team && this.team.members !== null
+      return this.team && this.team.members != null
         && this.team.members.length > 0;
     },
     seasonAgeRemark() {
