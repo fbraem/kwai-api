@@ -56,8 +56,6 @@
 </template>
 
 <script>
-import TeamCategory from '@/models/TeamCategory';
-
 import makeForm, { makeField, notEmpty, isInteger } from '@/js/Form';
 const makeTeamTypeForm = (fields) => {
   const writeForm = (teamCategory) => {
@@ -155,7 +153,7 @@ export default {
   },
   computed: {
     category() {
-      return this.$store.state.team.category.active || new TeamCategory();
+      return this.$store.state.team.category.active;
     },
     error() {
       return this.$store.state.team.category.error;
@@ -163,12 +161,12 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      if (to.params.id) await vm.fetchData(to.params);
+      await vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params);
+    await this.setupForm(to.params);
     next();
   },
   watch: {
@@ -186,11 +184,15 @@ export default {
     }
   },
   methods: {
-    async fetchData(params) {
-      await this.$store.dispatch('team/category/read', {
-        id: params.id
-      });
-      this.form.writeForm(this.category);
+    async setupForm(params) {
+      if (params.id) {
+        await this.$store.dispatch('team/category/read', {
+          id: params.id
+        });
+        this.form.writeForm(this.category);
+      } else {
+        this.$store.dispatch('team/category/create');
+      }
     },
     submit() {
       this.form.clearErrors();

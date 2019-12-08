@@ -96,10 +96,15 @@ function set({ commit }, member) {
   commit('active', { data: member });
 }
 
+function create({ commit}) {
+  commit('active', new Member);
+}
+
 export const actions = {
   browse,
   read,
   readTeams,
   reset,
-  set
+  set,
+  create
 };

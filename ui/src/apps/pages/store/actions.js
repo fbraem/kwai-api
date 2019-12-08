@@ -95,11 +95,16 @@ function set({ commit }, page) {
   commit('active', page);
 }
 
+function create({ commit}) {
+  commit('active', new Page());
+}
+
 export const actions = {
   browse,
   read,
   save,
   remove,
   reset,
-  set
+  set,
+  create
 };

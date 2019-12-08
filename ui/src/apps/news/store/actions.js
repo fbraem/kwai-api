@@ -116,6 +116,10 @@ function reset({ commit }) {
   commit('reset');
 }
 
+function create({ commit}) {
+  commit('active', new Story());
+}
+
 export const actions = {
   browse,
   read,
@@ -123,5 +127,6 @@ export const actions = {
   remove,
   loadArchive,
   set,
-  reset
+  reset,
+  create
 };

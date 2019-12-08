@@ -61,7 +61,6 @@
 
 <script>
 import Category from '@/models/Category';
-import Page from '@/models/Page';
 
 import messages from './lang';
 
@@ -173,7 +172,7 @@ export default {
   },
   computed: {
     page() {
-      return this.$store.state.page.active || new Page();
+      return this.$store.state.page.active;
     },
     error() {
       return this.$store.state.page.error;
@@ -184,21 +183,23 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      await vm.fetchData(to.params);
+      await vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params);
+    await this.setupForm(to.params);
     next();
   },
   methods: {
-    async fetchData(params) {
+    async setupForm(params) {
       if (params.id) {
         await this.$store.dispatch('page/read', {
           id: params.id
         });
         this.form.writeForm(this.page);
+      } else {
+        this.$store.dispatch('page/create');
       }
     },
     async submit() {

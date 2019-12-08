@@ -62,10 +62,14 @@ function set({ commit }, event) {
   commit('event', { data: event });
 }
 
+function create({ commit}) {
+  commit('active', new Event);
+}
 
 export const actions = {
   browse,
   save,
   read,
-  set
+  set,
+  create
 };

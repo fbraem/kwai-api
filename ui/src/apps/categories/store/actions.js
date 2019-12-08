@@ -77,10 +77,15 @@ function reset({ commit }) {
   commit('reset');
 }
 
+function create({ commit}) {
+  commit('active', new Category);
+}
+
 export const actions = {
   browse,
   read,
   readApp,
   save,
-  reset
+  reset,
+  create
 };

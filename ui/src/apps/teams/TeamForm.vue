@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import Team from '@/models/Team';
 import TeamCategory from '@/models/TeamCategory';
 import Season from '@/models/Season';
 
@@ -147,20 +146,12 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      if (to.params.id) await vm.fetchData(to.params);
-      else {
-        vm.$store.dispatch('team/create');
-      }
+      vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    if (to.params.id) {
-      await this.fetchData(to.params);
-    } else {
-      this.store.dispatch('team/create');
-      this.form.writeForm(this.team);
-    }
+    this.setupForm(to.params);
     next();
   },
   watch: {
@@ -178,11 +169,15 @@ export default {
     }
   },
   methods: {
-    async fetchData(params) {
-      await this.$store.dispatch('team/read', {
-        id: params.id
-      });
-      this.form.writeForm(this.team);
+    async setupForm(params) {
+      if (params.id) {
+        await this.$store.dispatch('team/read', {
+          id: params.id
+        });
+        this.form.writeForm(this.team);
+      } else {
+        this.$store.dispatch('team/create');
+      }
     },
     async submit() {
       this.form.clearErrors();

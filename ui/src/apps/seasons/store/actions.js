@@ -63,10 +63,15 @@ const set = ({ commit }, season) => {
   commit('active', season);
 };
 
+function create({ commit}) {
+  commit('active', new Season());
+}
+
 export const actions = {
   browse,
   read,
   save,
   reset,
-  set
+  set,
+  create
 };

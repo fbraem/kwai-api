@@ -133,7 +133,6 @@ import 'moment-timezone';
 import messages from './lang';
 
 import Category from '@/models/Category';
-import Story from '@/models/Story';
 
 import makeForm, { makeField, notEmpty, isDate, isTime } from '@/js/Form';
 const makeStoryForm = (fields) => {
@@ -361,7 +360,7 @@ export default {
   },
   computed: {
     story() {
-      return this.$store.state.news.active || new Story();
+      return this.$store.state.news.active;
     },
     dateFormat() {
       return '(' + moment.localeData().longDateFormat('L') + ')';
@@ -375,21 +374,23 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      await vm.fetchData(to.params);
+      await vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params);
+    await this.setupForm(to.params);
     next();
   },
   methods: {
-    async fetchData(params) {
+    async setupForm(params) {
       if (params.id) {
         await this.$store.dispatch('news/read', {
           id: params.id
         });
         this.form.writeForm(this.story);
+      } else {
+        this.$store.dispatch('news/create');
       }
     },
     async submit() {

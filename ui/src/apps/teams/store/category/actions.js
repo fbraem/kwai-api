@@ -67,10 +67,15 @@ const set = ({ commit }, teamCategory) => {
   commit('active', teamCategory);
 };
 
+function create({ commit}) {
+  commit('active', new TeamCategory());
+}
+
 export const actions = {
   browse,
   read,
   save,
   reset,
-  set
+  set,
+  create
 };

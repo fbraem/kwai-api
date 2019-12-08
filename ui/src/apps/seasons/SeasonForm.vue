@@ -37,7 +37,6 @@
 
 <script>
 import moment from 'moment';
-import Season from '@/models/Season';
 
 import makeForm, { makeField, notEmpty, isDate } from '@/js/Form.js';
 const makeSeasonForm = (fields, validations) => {
@@ -136,7 +135,7 @@ export default {
   },
   computed: {
     season() {
-      return this.$store.state.season.active || new Season();
+      return this.$store.state.season.active;
     },
     error() {
       return this.$store.state.season.error;
@@ -144,20 +143,24 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      if (to.params.id) await vm.fetchData(to.params);
+      await vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    if (to.params.id) await this.fetchData(to.params);
+    await this.setupForm(to.params);
     next();
   },
   methods: {
-    async fetchData(params) {
-      await this.$store.dispatch('season/read', {
-        id: params.id
-      });
-      this.form.writeForm(this.season);
+    async setupForm(params) {
+      if (params.id) {
+        await this.$store.dispatch('season/read', {
+          id: params.id
+        });
+        this.form.writeForm(this.season);
+      } else {
+        this.$store.dispatch('season/create');
+      }
     },
     async submit() {
       this.form.clearErrors();

@@ -47,8 +47,6 @@
 </template>
 
 <script>
-import Category from '@/models/Category';
-
 import makeForm, { makeField, notEmpty } from '@/js/Form.js';
 import KwaiForm from '@/components/forms/KwaiForm.vue';
 import KwaiField from '@/components/forms/KwaiField.vue';
@@ -123,8 +121,7 @@ export default {
   },
   computed: {
     category() {
-      return this.$store.getters['category/category'](this.$route.params.id)
-        || new Category();
+      return this.$store.state.category.active;
     },
     error() {
       return this.$store.state.category.error;
@@ -132,21 +129,23 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      await vm.fetchData(to.params);
+      await vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params);
+    await this.setupForm(to.params);
     next();
   },
   methods: {
-    async fetchData(params) {
+    async setupForm(params) {
       if (params.id) {
         await this.$store.dispatch('category/read', {
           id: params.id
         });
         this.form.writeForm(this.category);
+      } else {
+        this.$store.dispatch('category/create');
       }
     },
     submit() {
