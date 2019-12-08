@@ -23,7 +23,7 @@ const season = (state, { data }) => {
   if (index !== -1) {
     Vue.set(state.all, index, data);
   }
-  state.active = season;
+  state.active = data;
 };
 
 /**
