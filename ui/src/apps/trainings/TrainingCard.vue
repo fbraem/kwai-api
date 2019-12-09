@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div class="flex flex-col shadow-lg">
     <div class="flex flex-col md:flex-row">
-      <div class="text-center bg-red-700 text-red-300 p-6 w-full md:w-1/2 self-center">
+      <div class="text-center bg-red-700 text-red-300 p-6 w-full lg:w-1/2 self-center">
         <div class="text-4xl leading-none lowercase">
           {{ dayName }}
         </div>
@@ -13,7 +13,7 @@
           {{ month }}
         </div>
       </div>
-      <div class="text-center p-6 w-full md:w-1/2 self-center">
+      <div class="text-center p-6 w-full lg:w-1/2 self-center">
         <div class="text-4xl leading-none lowercase">
           {{ training.formattedStartTime }}
         </div>
