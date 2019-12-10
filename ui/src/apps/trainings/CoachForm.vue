@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import TrainingCoach from '@/models/trainings/Coach';
 import Member from '@/models/Member';
 
 import makeForm, { makeField } from '@/js/Form';
@@ -118,7 +117,6 @@ export default {
   i18n: messages,
   data() {
     return {
-      coach: new TrainingCoach(),
       items: [],
       form: makeCoachForm({
         member: makeField({
@@ -152,24 +150,28 @@ export default {
     };
   },
   computed: {
-    creating() {
-      return this.coach != null && this.coach.id == null;
+    coach() {
+      return this.$store.state.training.coach.active;
     },
     error() {
-      return this.$store.getters['training/coach/error'];
+      return this.$store.state.training.coach.error;
     },
     members() {
-      return this.$store.state.member.members;
+      return this.$store.state.training.member.all;
     },
+    creating() {
+      if (!this.coach) return true;
+      return !this.coach.id;
+    }
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      await vm.fetchData(to.params);
+      await vm.setupForm(to.params);
       next();
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    await this.fetchData(to.params);
+    await this.setupForm(to.params);
     next();
   },
   watch: {
@@ -187,16 +189,16 @@ export default {
     }
   },
   methods: {
-    async fetchData(params) {
+    async setupForm(params) {
       if (params.id) {
-        this.coach
-          = await this.$store.dispatch('training/coach/read', {
-            id: params.id
-          });
+        await this.$store.dispatch('training/coach/read', {
+          id: params.id
+        });
         this.form.writeForm(this.coach);
       } else {
-        await this.$store.dispatch('member/browse');
+        this.$store.dispatch('training/coach/create');
       }
+      await this.$store.dispatch('training/member/browse');
     },
     submit() {
       this.form.clearErrors();

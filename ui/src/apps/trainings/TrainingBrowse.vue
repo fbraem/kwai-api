@@ -46,7 +46,7 @@ export default {
   i18n: messages,
   computed: {
     trainings() {
-      var trainings = this.$store.state.training.trainings;
+      var trainings = this.$store.state.training.all;
       return trainings || [];
     },
     noData() {

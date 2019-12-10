@@ -2,7 +2,7 @@
   <!-- eslint-disable max-len -->
   <div
     v-if="training"
-    class="container mx-auto mt-6 w-full sm:w-1/2 lg:w-1/3"
+    class="container mx-auto mt-6 w-full sm:w-1/2 lg:w-2/3"
   >
     <TrainingCard :training="training">
       <div class="border-t border-gray-300 p-6">
@@ -75,9 +75,7 @@ export default {
   },
   computed: {
     training() {
-      return this.$store.getters['training/training'](
-        this.$route.params.id
-      );
+      return this.$store.state.training.active;
     },
     day() {
       return this.training.event.start_date.date();

@@ -43,9 +43,7 @@ export default {
   i18n: messages,
   computed: {
     coach() {
-      return this.$store.getters['training/coach/coach'](
-        this.$route.params.id
-      );
+      return this.$store.state.training.coach.active;
     },
     error() {
       return this.$store.state.training.coach.error;

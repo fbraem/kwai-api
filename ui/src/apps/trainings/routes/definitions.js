@@ -1,4 +1,4 @@
-import App from './App.vue';
+import App from '../App.vue';
 
 const DefinitionsHeader = () =>
   import(/* webpackChunkName: "trainings_admin_chunck" */

@@ -35,12 +35,10 @@ export default {
   i18n: messages,
   computed: {
     trainings() {
-      return this.$store.state.training.trainings || [];
+      return this.$store.state.training.all || [];
     },
     coach() {
-      return this.$store.getters['training/coach/coach'](
-        this.$route.params.id
-      );
+      return this.$store.state.training.coach.active;
     },
   },
   beforeRouteEnter(to, from, next) {

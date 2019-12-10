@@ -119,7 +119,6 @@
 <script>
 import moment from 'moment';
 
-import Training from '@/models/trainings/Training';
 import Season from '@/models/Season';
 
 import makeForm, { makeField, notEmpty, isTime, isDate } from '@/js/Form';
@@ -199,7 +198,6 @@ export default {
   i18n: messages,
   data() {
     return {
-      training: new Training(),
       form: makeTrainingForm({
         title: makeField({
           required: true,
@@ -292,11 +290,14 @@ export default {
     };
   },
   computed: {
+    training() {
+      return this.$store.state.training.active;
+    },
     error() {
       return this.$store.state.training.error;
     },
     seasons() {
-      var seasons = this.$store.getters['season/seasonsAsOptions'];
+      var seasons = this.$store.getters['training/season/seasonsAsOptions'];
       seasons.unshift({
         value: 0,
         text: this.$t('training.events.form.season.no_season')
@@ -311,13 +312,13 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch('season/browse');
+    await this.$store.dispatch('training/season/browse');
     await this.$store.dispatch('training/coach/browse');
-    await this.$store.dispatch('team/browse');
+    await this.$store.dispatch('training/team/browse');
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
-      if (to.params.id) await vm.fetchData(to.params.id);
+      vm.setupForm(to.params);
       next();
     });
   },
@@ -336,12 +337,15 @@ export default {
     }
   },
   methods: {
-    async fetchData(id) {
-      this.training
-        = await this.$store.dispatch('training/read', {
-          id: id
+    async setupForm(params) {
+      if (params.id) {
+        await this.$store.dispatch('training/read', {
+          id: params.id
         });
-      this.form.writeForm(this.training);
+        this.form.writeForm(this.training);
+      } else {
+        this.$store.dispatch('training/create');
+      }
     },
     submit() {
       this.form.clearErrors();

@@ -53,6 +53,9 @@
 <script>
 import moment from 'moment';
 
+import newsStore from '@/apps/news/store';
+import pageStore from '@/apps/pages/store';
+
 import NewsListCard from '@/apps/news/components/NewsListCard';
 import PageListCard from '@/apps/pages/components/PageListCard';
 import Calendar from '@/apps/trainings/Calendar';
@@ -76,19 +79,19 @@ export default {
       return this.$store.getters['category/categoryApp'](this.$route.meta.app);
     },
     stories() {
-      return this.$store.state.news.stories || [];
+      return this.$store.state.training.news.all || [];
     },
     hasStories() {
       return this.stories.length > 0;
     },
     pages() {
-      return this.$store.state.page.pages || [];
+      return this.$store.state.training.page.all || [];
     },
     coaches() {
-      return this.$store.state.training.coach.coaches || [];
+      return this.$store.state.training.coach.all || [];
     },
     trainings() {
-      return this.$store.state.training.trainings || [];
+      return this.$store.state.training.all || [];
     },
     calendarLink() {
       return {
@@ -99,6 +102,14 @@ export default {
         }
       };
     }
+  },
+  beforeCreate() {
+    this.$store.registerModule(['training', 'news'], newsStore);
+    this.$store.registerModule(['training', 'page'], pageStore);
+  },
+  destroyed() {
+    this.$store.unregisterModule(['training', 'news']);
+    this.$store.unregisterModule(['training', 'page']);
   },
   beforeRouteEnter(to, from, next) {
     next(async(vm) => {
@@ -112,11 +123,11 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      this.$store.dispatch('news/browse', {
+      this.$store.dispatch('training/news/browse', {
         category: this.category.id,
         featured: true
       });
-      this.$store.dispatch('page/browse', {
+      this.$store.dispatch('training/page/browse', {
         category: this.category.id
       });
       this.$store.dispatch('training/browse', {

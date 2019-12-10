@@ -134,19 +134,16 @@ export default {
   },
   computed: {
     training() {
-      return this.$store.getters['training/training'](
-        this.$route.params.id
-      );
+      return this.$store.state.training.active;
     },
     hasPresences() {
       return this.presences.length > 0;
     },
     teamMembers() {
       // TODO: For the moment only one team!
-      if (this.training.teams.length > 0) {
-        let teamId = this.training.teams[0].id;
+      if (this.$store.state.training.team.active) {
         // Create a copy of the members array
-        let members = [ ... this.$store.getters['team/members'](teamId) || []];
+        let members = [...this.$store.state.training.team.active.members || []];
         if (members.length > 0) {
           this.presences.forEach((p) => {
             let index = members.findIndex(o => o.id === p.id);
@@ -160,7 +157,7 @@ export default {
       return [];
     },
     otherMembers() {
-      var others = this.$store.state.member.members || [];
+      var others = this.$store.state.training.member.all || [];
       this.presences.forEach((p) => {
         let index = others.findIndex(o => o.id === p.id);
         if (index !== -1) {
@@ -197,11 +194,11 @@ export default {
       }
       if (this.training && this.training.teams.length > 0) {
         // TODO: For the moment only one team!
-        this.$store.dispatch('team/members', {
+        this.$store.dispatch('training/team/getMembers', {
           id: this.training.teams[0].id
         });
       }
-      this.$store.dispatch('member/browse');
+      this.$store.dispatch('training/member/browse');
     },
     removePresence(member) {
       this.presences = this.presences.filter(p => p.id !== member.id);

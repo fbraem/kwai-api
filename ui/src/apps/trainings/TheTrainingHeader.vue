@@ -17,9 +17,7 @@ export default {
   i18n: messages,
   computed: {
     training() {
-      return this.$store.getters['training/training'](
-        this.$route.params.id
-      );
+      return this.$store.state.training.active;
     },
     toolbar() {
       const buttons = [];
