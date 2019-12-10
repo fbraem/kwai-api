@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable max-len -->
   <div class="container mx-auto flex flex-col">
-    <div class="flex">
+    <div class="flex flex-wrap">
       <div class="w-full md:w-1/2 p-4">
         <NewsListCard
           :stories="stories"
