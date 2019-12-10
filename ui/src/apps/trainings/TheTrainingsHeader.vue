@@ -1,10 +1,9 @@
 <template>
-  <Header
+  <ImageHeader
     :title="$t('training.events.title')"
     :toolbar="toolbar"
-    :logo="logo"
-    :route= "{ name: 'trainings.index' }"
-  />
+    :pictures="pictures">
+  </ImageHeader>
 </template>
 
 <script>
@@ -12,15 +11,24 @@ import Training from '@/models/trainings/Training';
 import Coach from '@/models/trainings/Coach';
 import Team from '@/models/Team';
 
-import Header from '@/components/Header';
+import ImageHeader from '@/components/ImageHeader';
 
 import messages from './lang';
 
 export default {
   components: {
-    Header
+    ImageHeader
   },
   i18n: messages,
+  data() {
+    return {
+      pictures: {
+        '1024w': 'files/images/trainings/training_lg.jpg',
+        '768w': 'files/images/trainings/training_md.jpg',
+        '640w': 'files/images/trainings/training_sm.jpg',
+      }
+    };
+  },
   computed: {
     logo() {
       const category
