@@ -35,6 +35,7 @@ const read = async({ dispatch, getters, commit, state }, payload) => {
 
   const coach = getters['coach'](payload.id);
   if (coach) { // already read
+    commit('active', coach);
     return;
   }
 
