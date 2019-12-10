@@ -9,6 +9,7 @@
 
 <script>
 import trainingStore from './store/training';
+import definitionStore from './store/definition';
 import coachStore from './store/coach';
 import teamStore from '@/apps/teams/store/team';
 import seasonStore from '@/apps/seasons/store';
@@ -18,11 +19,13 @@ export default {
   beforeCreate() {
     this.$store.registerModule('training', trainingStore);
     this.$store.registerModule(['training', 'coach'], coachStore);
+    this.$store.registerModule(['training', 'definition'], definitionStore);
     this.$store.registerModule(['training', 'season'], seasonStore);
     this.$store.registerModule(['training', 'team'], teamStore);
     this.$store.registerModule(['training', 'member'], memberStore);
   },
   destroyed() {
+    this.$store.unregisterModule(['training', 'definition']);
     this.$store.unregisterModule(['training', 'coach']);
     this.$store.unregisterModule(['training', 'season']);
     this.$store.unregisterModule(['training', 'team']);

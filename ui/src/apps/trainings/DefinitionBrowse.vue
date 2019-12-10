@@ -14,95 +14,120 @@
       </Alert>
       <table
         v-else
-        class="w-full border-collapse text-left"
+        class="table table-striped"
       >
-        <tr class="bg-gray-500 border-b border-gray-200">
-          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-            {{ $t('name') }}
-          </th>
-          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-            {{ $t('training.definitions.weekday') }}
-          </th>
-          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-            {{ $t('description') }}
-          </th>
-          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-            {{ $t('team') }}
-          </th>
-          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-            {{ $t('season') }}
-          </th>
-          <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-            {{ $t('training.definitions.form.active.label') }}
-          </th>
-          <th></th>
-        </tr>
-        <tr
-          v-for="definition in definitions"
-          :key="definition.id"
-          class="odd:bg-gray-200 border-b border-gray-400"
-        >
-          <td class="py-2 px-3 text-gray-700">
-            <router-link :to="{ name: 'trainings.definitions.read', params: { id : definition.id} }">
-              {{ definition.name }}
-            </router-link>
-          </td>
-          <td class="py-2 px-3 text-gray-700">
-            {{ definition.weekdayText }}
-          </td>
-          <td class="py-2 px-3 text-gray-700 text-sm">
-            {{ definition.description }}
-          </td>
-          <td class="py-2 px-3 text-gray-700">
-            <router-link
-              v-if="definition.team"
-              :to="{ name: 'teams.read', params: { id : definition.team.id} }"
-            >
-              {{ definition.team.name }}
-            </router-link>
-            <div
-              v-else
-              class="text-center"
-            >
-              <i class="fas fa-minus"></i>
-            </div>
-          </td>
-          <td class="py-2 px-3 text-gray-700">
-            <router-link
-              v-if="definition.season"
-              :to="{ name: 'seasons.read', params: { id : definition.season.id} }"
-            >
-              {{ definition.season.name }}
-            </router-link>
-            <div
-              v-else
-              class="text-center"
-            >
-              <i class="fas fa-minus"></i>
-            </div>
-          </td>
-          <td class="py-2 px-3 text-gray-700 text-center">
-            <i
-              v-if="definition.active"
-              class="fas fa-check"
-            >
-            </i>
-            <i
-              v-else
-              class="fas fa-times text-red-500"
-            >
-            </i>
-          </td>
-          <td class="py-2 px-3 text-gray-700 text-right">
-            <router-link
-              v-if="$can('update', definition)"
-              class="icon-button text-gray-700 hover:bg-gray-300"
-              :to="{ name : 'trainings.definitions.update', params : { id : definition.id } }"
-            >
-              <i class="fas fa-edit"></i>
-            </router-link>
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th scope="col">
+              {{ $t('name') }}
+            </th>
+            <th scope="col">
+              {{ $t('training.definitions.weekday') }}
+            </th>
+            <th scope="col">
+              {{ $t('description') }}
+            </th>
+            <th scope="col">
+              {{ $t('team') }}
+            </th>
+            <th scope="col">
+              {{ $t('season') }}
+            </th>
+            <th scope="col">
+              {{ $t('training.definitions.form.active.label') }}
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="definition in definitions"
+            :key="definition.id"
+          >
+            <th scope="row">
+              <router-link
+                :to="{
+                  name: 'trainings.definitions.read',
+                  params: {
+                    id : definition.id
+                  }
+                }"
+              >
+                {{ definition.name }}
+              </router-link>
+            </th>
+            <td>
+              {{ definition.weekdayText }}
+            </td>
+            <td>
+              {{ definition.description }}
+            </td>
+            <td>
+              <router-link
+                v-if="definition.team"
+                :to="{
+                  name: 'teams.read',
+                  params: {
+                    id: definition.team.id
+                  }
+                }"
+              >
+                {{ definition.team.name }}
+              </router-link>
+              <div
+                v-else
+                class="text-center"
+              >
+                <i class="fas fa-minus"></i>
+              </div>
+            </td>
+            <td>
+              <router-link
+                v-if="definition.season"
+                :to="{
+                  name: 'seasons.read',
+                  params: {
+                    id: definition.season.id
+                  }
+                }"
+              >
+                {{ definition.season.name }}
+              </router-link>
+              <div
+                v-else
+                class="text-center"
+              >
+                <i class="fas fa-minus"></i>
+              </div>
+            </td>
+            <td>
+              <i
+                v-if="definition.active"
+                class="fas fa-check"
+              >
+              </i>
+              <i
+                v-else
+                class="fas fa-times text-red-500"
+              >
+              </i>
+            </td>
+            <td class="text-right">
+              <router-link
+                v-if="$can('update', definition)"
+                class="icon-button text-gray-700 hover:bg-gray-300"
+                :to="{
+                  name: 'trainings.definitions.update',
+                    params: {
+                      id: definition.id
+                    }
+                }"
+              >
+                <i class="fas fa-edit"></i>
+              </router-link>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
@@ -122,7 +147,7 @@ export default {
   i18n: messages,
   computed: {
     definitions() {
-      return this.$store.state.training.definition.definitions;
+      return this.$store.state.training.definition.all;
     },
     noData() {
       return this.definitions && this.definitions.length === 0;
