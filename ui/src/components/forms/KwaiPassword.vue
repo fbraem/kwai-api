@@ -15,12 +15,6 @@
   </div>
 </template>
 
-<style scoped>
-input:required {
-  @apply border-l-4 border-solid;
-}
-</style>
-
 <script>
 export default {
   inject: {

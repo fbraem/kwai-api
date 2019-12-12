@@ -7,6 +7,10 @@
       :for="name"
     >
       {{ label }}
+      <i
+        v-if="field.required"
+        class="fas fa-asterisk text-red-700 text-xs align-top">
+      </i>
     </label>
     <slot></slot>
     <div

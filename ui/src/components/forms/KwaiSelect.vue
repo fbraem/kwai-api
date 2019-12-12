@@ -14,12 +14,6 @@
   </select>
 </template>
 
-<style scoped>
-  select:required {
-    border-left: 3px solid;
-  }
-</style>
-
 <script>
 export default {
   inject: {

@@ -9,12 +9,6 @@
   </textarea>
 </template>
 
-<style scoped>
-textarea:required {
-  @apply border-l-4 border-solid;
-}
-</style>
-
 <script>
 export default {
   inject: {

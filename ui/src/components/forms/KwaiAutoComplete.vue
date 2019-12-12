@@ -44,9 +44,6 @@
 </template>
 
 <style>
-input:required {
-  @apply border-l-4 border-solid;
-}
 .autocomplete-results {
   @apply p-0 m-0 overflow-auto;
   border: 1px solid #eeeeee;
