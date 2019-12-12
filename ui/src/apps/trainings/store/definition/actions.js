@@ -58,10 +58,15 @@ const set = ({ commit, data }) => {
   commit('active', data);
 };
 
+const create = ({ commit }) => {
+  commit('active', new TrainingDefinition());
+};
+
 export const actions = {
   browse,
   read,
   reset,
   save,
-  set
+  set,
+  create
 };
