@@ -22,13 +22,6 @@
 export default {
   props: {
     /**
-     * Is this form stacked?
-     */
-    stacked: {
-      type: Boolean,
-      default: true
-    },
-    /**
      * The form
      */
     form: {
