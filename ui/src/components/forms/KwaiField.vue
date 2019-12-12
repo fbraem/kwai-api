@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mb-5">
+  <div class="flex flex-col">
     <label
       v-if="hasLabel"
       class="block font-bold mb-2"
