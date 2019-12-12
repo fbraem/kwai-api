@@ -6,7 +6,7 @@
     </span>
     <input v-model="field.value"
       :id="id"
-      class="flex-grow flex-shrink h-auto appearance-once block w-full bg-gray-200 border py-3 px-4 leading-thight focus:outline-none focus:bg-white rounded rounded-l-none"
+      class="flex-grow flex-shrink h-auto appearance-once block w-full bg-gray-200 border py-3 px-4 leading-thight focus:outline-none focus:shadow-outline rounded rounded-l-none"
       :class="{ 'border-red-600' : field.errors.length > 0 }"
       type="password"
       :required="field.required"

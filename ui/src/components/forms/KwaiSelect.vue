@@ -3,7 +3,7 @@
   <select
     v-model="field.value"
     :id="id"
-    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 leading-thight rounded focus:outline-none focus:bg-white focus:border-gray-500"
+    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 leading-thight rounded focus:outline-none focus:shadow-outline focus:border-gray-500"
     :class="{ 'border-red-600' : field.errors.length > 0 }"
     :required="field.required"
     v-bind="$attrs">

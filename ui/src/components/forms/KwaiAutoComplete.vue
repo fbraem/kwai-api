@@ -5,7 +5,7 @@
       v-model="search"
       :id="id"
       :name="id"
-      class="appearance-once block w-full bg-gray-200 border rounded py-3 px-4 mb-3 leading-thight focus:outline-none focus:bg-white"
+      class="appearance-once block w-full bg-gray-200 border rounded py-3 px-4 mb-3 leading-thight focus:outline-none focus:shadow-outline"
       :class="{ 'text-red-600' : field.errors.length > 0 }"
       type="search"
       :required="field.required"
