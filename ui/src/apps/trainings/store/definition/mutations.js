@@ -25,7 +25,7 @@ const error = (state, data) => {
 
 const active = (state, data) => {
   state.error = null;
-  state.data = active;
+  state.active = data;
 };
 
 const reset = (state) => {
