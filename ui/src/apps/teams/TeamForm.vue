@@ -55,8 +55,8 @@ const makeTeamForm = (fields) => {
     if (team.season) {
       fields.season.value = team.season.id;
     }
-    if (team.category) {
-      fields.category.value = team.category.id;
+    if (team.team_category) {
+      fields.category.value = team.team_category.id;
     }
   };
   const readForm = (team) => {
@@ -69,10 +69,10 @@ const makeTeamForm = (fields) => {
       team.season.id = fields.season.value;
     }
     if (fields.category.value === 0) {
-      team.category = null;
+      team.team_category = null;
     } else {
-      team.category = new TeamCategory();
-      team.category.id = fields.category.value;
+      team.team_category = new TeamCategory();
+      team.team_category.id = fields.category.value;
     }
   };
   return { ...makeForm(fields), writeForm, readForm };
