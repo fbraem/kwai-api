@@ -13,7 +13,7 @@
         </slot>
       </dt>
       <dd class="w-full sm:w-2/3">
-        <slot name="value" :prop="name" :attribute="attribute">
+        <slot :name="'value_' + name" :attribute="attribute">
           {{ attribute.value }}
         </slot>
       </dd>
