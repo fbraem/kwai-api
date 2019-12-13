@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div
       v-if="title"
-      class="text-xl leading-none leading-none font-medium p-4">
+      class="text-xl leading-none font-medium p-4">
       {{ title }}
     </div>
     <form>
