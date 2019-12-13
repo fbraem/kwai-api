@@ -55,7 +55,7 @@
           <div>
             <IconButtons
               :toolbar="toolbar"
-              normal-class="text-gray-800"
+              normal-class="text-gray-700"
               hover-class="hover:bg-gray-300"
             />
           </div>
