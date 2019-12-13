@@ -12,13 +12,11 @@
       &nbsp;&nbsp;{{ $t('active_message') }}
     </Alert>
     <div class="p-3 self-end">
-      <router-link
-        v-if="$can('update', season)"
-        class="icon-button text-gray-700 hover:bg-gray-300"
-        :to="{ name: 'seasons.update', params: { id: season.id } }"
-      >
-        <i class="fas fa-edit"></i>
-      </router-link>
+      <IconButtons
+        :toolbar="toolbar"
+        normal-class="text-gray-700"
+        hover-class="hover:bg-gray-300"
+      />
     </div>
   </div>
 </template>
@@ -28,15 +26,38 @@ import messages from './lang';
 
 import Attributes from '@/components/Attributes';
 import Alert from '@/components/Alert';
+import IconButtons from '@/components/IconButtons';
 
 export default {
   components: {
-    Attributes, Alert
+    Attributes, Alert, IconButtons
   },
   i18n: messages,
   computed: {
     season() {
       return this.$store.state.season.active;
+    },
+    toolbar() {
+      const buttons = [
+        {
+          icon: 'fas fa-list',
+          route: {
+            name: 'seasons.browse'
+          }
+        },
+      ];
+      if (this.$can('update', this.season)) {
+        buttons.push({
+          icon: 'fas fa-edit',
+          route: {
+            name: 'seasons.update',
+            params: {
+              id: this.season.id
+            }
+          }
+        });
+      }
+      return buttons;
     },
     attributes() {
       return {
