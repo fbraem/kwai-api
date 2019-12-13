@@ -1,20 +1,28 @@
 <template>
-  <div class="flex justify-between items-center bg-red-700 sm:p-4">
-    <div class="text-xl ml-2">
-      <a class="no-underline text-red-300 hover:no-underline fond-bold"
-        href="/"
-      >
-        {{ title }}
-      </a>
-    </div>
-    <div class="flex mr-1">
-      <a
-        class="icon-button text-red-300 hover:bg-red-900 mr-1"
-        :href="facebook"
-      >
-        <i class="fab fa-facebook-f"></i>
-      </a>
-      <Login />
+  <div>
+    <div class="bg-red-700 border-b-8 border-gray-800">
+      <div class="container mx-auto">
+        <div class="flex flex-col">
+          <div class="flex justify-between items-center sm:p-4 w-full">
+            <div class="text-xl ml-2">
+              <a class="no-underline text-red-300 hover:no-underline fond-bold"
+                href="/"
+              >
+                {{ title }}
+              </a>
+            </div>
+            <div class="flex mr-1">
+              <a
+                class="icon-button text-red-300 hover:bg-red-900 mr-1"
+                :href="facebook"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <Login />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
