@@ -42,26 +42,24 @@
           <i class="far fa-clock"></i> {{ attribute.value }}
         </template>
       </Attributes>
-      <div>
-        <div class="flex justify-between border-t mb-2 sm:mb-4 pt-3">
-          <div class="flex flex-wrap text-xs">
-            <div class="mr-4">
-              <strong>Aangemaakt:</strong> {{ definition.localCreatedAt }}
-            </div>
-            <div>
-              <strong>Laatst gewijzigd:</strong> {{ definition.localUpdatedAt }}
-            </div>
+      <div class="flex justify-between border-t mb-2 sm:mb-4 pt-3">
+        <div class="flex flex-wrap text-xs">
+          <div class="mr-4">
+            <strong>Aangemaakt:</strong> {{ definition.localCreatedAt }}
           </div>
           <div>
-            <IconButtons
-              :toolbar="toolbar"
-              normal-class="text-gray-700"
-              hover-class="hover:bg-gray-300"
-            />
+            <strong>Laatst gewijzigd:</strong> {{ definition.localUpdatedAt }}
           </div>
         </div>
-        <TrainingGeneratorForm :definition="definition" />
+        <div>
+          <IconButtons
+            :toolbar="toolbar"
+            normal-class="text-gray-700"
+            hover-class="hover:bg-gray-300"
+          />
+        </div>
       </div>
+      <TrainingGeneratorForm :definition="definition" />
     </div>
   </div>
 </template>
