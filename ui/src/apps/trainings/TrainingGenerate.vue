@@ -12,58 +12,64 @@
         {{ $t('training.generator.help') }}
       </Alert>
       <div class="mt-6">
-        <table class="w-full border-collapse text-left">
-          <tr class="bg-gray-500 border-b border-gray-200">
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              <input
-                type="checkbox"
-                v-model="selectAll"
-              />
-            </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              {{ $t('training.events.day') }}
-            </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              {{ $t('training.events.date') }}
-            </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              {{ $t('training.events.time') }}
-            </th>
-            <th class="py-2 px-3 font-bold uppercase text-sm text-white">
-              {{ $t('training.events.coaches') }}
-            </th>
-          </tr>
-          <tr
-            v-for="(training, index) in trainings"
-            :key="index"
-            class="odd:bg-gray-200 border-b border-gray-400"
-          >
-            <td class="py-2 px-3 text-gray-700">
-              <input
-                type="checkbox"
-                v-model="selectedTrainings"
-                :value="index"
-              />
-            </td>
-            <td class="py-2 px-3 text-gray-700">
-              {{ training.event.start_date.format('dddd') }}
-            </td>
-            <td class="py-2 px-3 text-gray-700">
-              {{ training.event.start_date.format('L') }}
-            </td>
-            <td class="py-2 px-3 text-gray-700">
-              {{ training.event.start_date.format('HH:mm') }} -
-              {{ training.event.end_date.format('HH:mm') }}
-            </td>
-            <td class="py-2 px-3 text-gray-700">
-              <template v-for="(coach, index) in training.coaches">
-                <div :key="coach.id">
-                  <span>{{ coach.name }}</span>
-                  <span v-if="index != Object.keys(training.coaches).length - 1">,&nbsp;</span>
-                </div>
-              </template>
-            </td>
-          </tr>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  v-model="selectAll"
+                />
+              </th>
+              <th scope="col">
+                {{ $t('training.events.day') }}
+              </th>
+              <th scope="col">
+                {{ $t('training.events.date') }}
+              </th>
+              <th scope="col">
+                {{ $t('training.events.time') }}
+              </th>
+              <th scope="col">
+                {{ $t('training.events.coaches') }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(training, index) in trainings"
+              :key="index"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  v-model="selectedTrainings"
+                  :value="index"
+                />
+              </td>
+              <td>
+                {{ training.event.start_date.format('dddd') }}
+              </td>
+              <td>
+                {{ training.event.start_date.format('L') }}
+              </td>
+              <td>
+                {{ training.event.start_date.format('HH:mm') }} -
+                {{ training.event.end_date.format('HH:mm') }}
+              </td>
+              <td class="text-sm">
+                <template v-for="(coach, index) in training.coaches">
+                  <div :key="coach.id">
+                    <span>{{ coach.name }}</span>
+                    <span
+                      v-if="index != Object.keys(training.coaches).length - 1">
+                      ,&nbsp;
+                    </span>
+                  </div>
+                </template>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
       <div class="flex justify-end mt-6">
