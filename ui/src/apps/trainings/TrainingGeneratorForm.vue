@@ -15,37 +15,55 @@
       v-show="showForm"
       class="mt-6"
     >
-      <p>
-        {{ $t('training.generator.create') }}
-      </p>
       <KwaiForm
+        title="Genereer Trainingen"
         :form="form"
         @submit="generate"
         :save="$t('training.generator.form.generate')"
       >
-        <div class="flex flex-row">
-          <div class="pr-6 w-full sm:w-1/2">
-            <KwaiField name="start_date">
-              <KwaiInputText :placeholder="$t('training.generator.form.start_date.placeholder')" />
-            </KwaiField>
+        <KwaiFieldset title="Periode">
+          <template slot="description">
+            Geef de periode in waarvoor trainingen moeten aangemaakt worden.
+          </template>
+          <div class="flex flex-row">
+            <div class="pr-6 w-full sm:w-1/2">
+              <KwaiField
+                label="Start periode"
+                name="start_date"
+              >
+                <KwaiInputText
+                  :placeholder="$t('training.generator.form.start_date.placeholder')"
+                />
+              </KwaiField>
+            </div>
+            <div class="pr-6 w-full sm:w-1/2">
+              <KwaiField
+                label="Einde periode"
+                name="end_date"
+              >
+                <KwaiInputText
+                  :placeholder="$t('training.generator.form.end_date.placeholder')"
+                />
+              </KwaiField>
+            </div>
           </div>
-          <div class="pr-6 w-full sm:w-1/2">
-            <KwaiField name="end_date">
-              <KwaiInputText :placeholder="$t('training.generator.form.end_date.placeholder')" />
-            </KwaiField>
-          </div>
-        </div>
-        <KwaiField name="coaches">
-          <multiselect
-            :options="coaches"
-            label="name"
-            track-by="id"
-            :multiple="true"
-            :close-on-select="false"
-            :selectLabel="$t('training.generator.form.coaches.selectLabel')"
-            :deselectLabel="$t('training.generator.form.coaches.deselectLabel')"
-          />
-        </KwaiField>
+        </KwaiFieldset>
+        <KwaiFieldset title="Coaches">
+          <template slot="description">
+            Selecteer de coaches voor deze trainingen.
+          </template>
+          <KwaiField name="coaches">
+            <multiselect
+              :options="coaches"
+              label="name"
+              track-by="id"
+              :multiple="true"
+              :close-on-select="false"
+              :selectLabel="$t('training.generator.form.coaches.selectLabel')"
+              :deselectLabel="$t('training.generator.form.coaches.deselectLabel')"
+            />
+          </KwaiField>
+        </KwaiFieldset>
       </KwaiForm>
       <EventGenerate
         v-if="trainings"
@@ -65,7 +83,8 @@ import messages from './lang';
 import Training from '@/models/trainings/Training';
 
 import KwaiForm from '@/components/forms/KwaiForm';
-import KwaiField from '@/components/forms/KwaiField.vue';
+import KwaiField from '@/components/forms/KwaiField';
+import KwaiFieldset from '@/components/forms/KwaiFieldset';
 import KwaiInputText from '@/components/forms/KwaiInputText.vue';
 import Multiselect from '@/components/forms/MultiSelect.vue';
 
@@ -78,7 +97,7 @@ export default {
     'definition',
   ],
   components: {
-    KwaiForm, Multiselect, KwaiField, KwaiInputText, EventGenerate
+    KwaiForm, Multiselect, KwaiField, KwaiFieldset, KwaiInputText, EventGenerate
   },
   i18n: messages,
   data() {
@@ -132,7 +151,7 @@ export default {
       return this.$store.state.training.definition.error;
     },
     coaches() {
-      var coaches = this.$store.state.training.coach.coaches;
+      var coaches = this.$store.state.training.coach.all;
       return coaches || [];
     }
   },
