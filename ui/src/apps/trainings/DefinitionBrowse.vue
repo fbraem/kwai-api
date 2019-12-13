@@ -129,6 +129,13 @@
           </tr>
         </tbody>
       </table>
+      <div class="flex flex-col w-full items-end">
+        <IconButtons
+          :toolbar="toolbar"
+          normal-class="text-gray-800"
+          hover-class="hover:bg-gray-300"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -138,11 +145,15 @@ import messages from './lang';
 
 import Spinner from '@/components/Spinner';
 import Alert from '@/components/Alert';
+import IconButtons from '@/components/IconButtons';
+
+import TrainingDefinition from '@/models/trainings/Definition';
 
 export default {
   components: {
     Spinner,
-    Alert
+    Alert,
+    IconButtons
   },
   i18n: messages,
   computed: {
@@ -151,6 +162,18 @@ export default {
     },
     noData() {
       return this.definitions && this.definitions.length === 0;
+    },
+    toolbar() {
+      let buttons = [];
+      if (this.$can('create', TrainingDefinition.type())) {
+        buttons.push({
+          icon: 'fas fa-plus',
+          route: {
+            name: 'trainings.definitions.create'
+          }
+        });
+      }
+      return buttons;
     }
   },
   beforeRouteEnter(to, from, next) {

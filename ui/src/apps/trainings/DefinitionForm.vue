@@ -2,6 +2,7 @@
   <!-- eslint-disable max-len -->
   <KwaiForm
     :form="form"
+    :title="title"
     :save="$t('save')"
     :error="error"
     @submit="submit"
@@ -205,6 +206,11 @@ export default {
     KwaiTextarea, KwaiSelect, KwaiSwitch
   },
   i18n: messages,
+  props: {
+    creating: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       weekdays: moment.weekdays(true).map((d, i) => {
@@ -283,6 +289,11 @@ export default {
     };
   },
   computed: {
+    title() {
+      return this.creating
+        ? this.$t('training.definitions.create')
+        : this.$t('training.definitions.update');
+    },
     definition() {
       return this.$store.state.training.definition.active;
     },

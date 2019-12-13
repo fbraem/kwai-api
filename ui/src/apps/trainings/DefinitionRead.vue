@@ -1,6 +1,10 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="container mx-auto py-3 px-3 sm:px-0">
+  <div>
+    <h1 class="text-xl header-line font-medium mb-0">
+      Trainingsmoment
+    </h1>
+    <Spinner v-if="$wait.is('training.definitions.read')" />
     <Alert
       v-if="notAllowed"
       type="danger"
@@ -13,47 +17,52 @@
     >
         {{ $t('training.definitions.not_found') }}
     </Alert>
-    <Spinner v-if="$wait.is('training.definitions.read')" />
-    <SimpleCard
+    <div
       v-if="definition"
-      :title="definition.name"
-      :note="definition.description"
-      :toolbar="toolbar"
-      class="mb-6"
+      class="p-2"
     >
       <Attributes :attributes="attributes">
-        <template v-slot:value="{prop, attribute}">
-          <template v-if="prop === 'season'">
-            <router-link
-              v-if="attribute.value"
-              :to="{ name: 'seasons.read', params: { id : attribute.value.id} }"
-            >
-              {{ attribute.value.name }}
-            </router-link>
-          </template>
-          <template v-else-if="prop === 'team'">
-            <router-link
-              v-if="attribute.value"
-              :to="{ name: 'teams.read', params: { id : attribute.value.id} }"
-            >
-              {{ attribute.value.name }}
-            </router-link>
-          </template>
-          <span v-else>
-            {{ attribute.value }}
-          </span>
+        <template v-slot:value_season="{ attribute }">
+          <router-link
+            v-if="attribute.value"
+            :to="{ name: 'seasons.read', params: { id : attribute.value.id} }"
+          >
+            {{ attribute.value.name }}
+          </router-link>
+        </template>
+        <template v-slot:value_team="{ attribute }">
+          <router-link
+            v-if="attribute.value"
+            :to="{ name: 'teams.read', params: { id : attribute.value.id} }"
+          >
+            {{ attribute.value.name }}
+          </router-link>
+        </template>
+        <template v-slot:value_time="{ attribute }">
+          <i class="far fa-clock"></i> {{ attribute.value }}
         </template>
       </Attributes>
-      <template slot="footer">
-        <div class="mr-4">
-          <strong>Aangemaakt:</strong> {{ definition.localCreatedAt }}
+      <div>
+        <div class="flex justify-between border-t mb-2 sm:mb-4 pt-3">
+          <div class="flex flex-wrap text-xs">
+            <div class="mr-4">
+              <strong>Aangemaakt:</strong> {{ definition.localCreatedAt }}
+            </div>
+            <div>
+              <strong>Laatst gewijzigd:</strong> {{ definition.localUpdatedAt }}
+            </div>
+          </div>
+          <div>
+            <IconButtons
+              :toolbar="toolbar"
+              normal-class="text-gray-800"
+              hover-class="hover:bg-gray-300"
+            />
+          </div>
         </div>
-        <div>
-          <strong>Laatst gewijzigd:</strong> {{ definition.localUpdatedAt }}
-        </div>
-      </template>
-    </SimpleCard>
-    <TrainingGeneratorForm :definition="definition" />
+        <TrainingGeneratorForm :definition="definition" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,23 +72,21 @@ import messages from './lang';
 import TrainingGeneratorForm from './TrainingGeneratorForm';
 import Spinner from '@/components/Spinner';
 import Alert from '@/components/Alert';
-import SimpleCard from '@/components/SimpleCard';
 import Attributes from '@/components/Attributes';
+import IconButtons from '@/components/IconButtons';
 
 export default {
   components: {
     Spinner,
     TrainingGeneratorForm,
     Alert,
-    SimpleCard,
-    Attributes
+    Attributes,
+    IconButtons
   },
   i18n: messages,
   computed: {
     definition() {
-      return this.$store.getters['training/definition/definition'](
-        this.$route.params.id
-      );
+      return this.$store.state.training.definition.active;
     },
     error() {
       return this.$store.state.training.definition.error;
@@ -92,9 +99,13 @@ export default {
     },
     attributes() {
       return {
-        location: {
-          label: this.$t('training.definitions.form.location.label'),
+        name: {
+          label: this.$t('training.definitions.form.name.label'),
           value: this.definition.name
+        },
+        description: {
+          label: this.$t('training.definitions.form.description.label'),
+          value: this.definition.description
         },
         weekday: {
           label: this.$t('training.definitions.form.weekday.label'),
@@ -115,6 +126,10 @@ export default {
           label: this.$t('training.definitions.form.season.label'),
           value: this.definition.season
         },
+        location: {
+          label: this.$t('training.definitions.form.location.label'),
+          value: this.definition.location
+        },
         remark: {
           label: this.$t('training.definitions.form.remark.label'),
           value: this.definition.remark
@@ -122,7 +137,14 @@ export default {
       };
     },
     toolbar() {
-      const buttons = [];
+      const buttons = [
+        {
+          icon: 'fas fa-list',
+          route: {
+            name: 'trainings.definitions.browse'
+          }
+        },
+      ];
       if (this.$can('update', this.definition)) {
         buttons.push({
           icon: 'fas fa-edit',
