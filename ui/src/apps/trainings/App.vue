@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-view name="hero"></router-view>
     <div class="container mx-auto p-4 lg:p-6">
       <router-view></router-view>
     </div>
