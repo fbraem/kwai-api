@@ -10,7 +10,7 @@
     </form>
     <div
       v-if="hasSubmitListener"
-      class="flex justify-end"
+      class="flex justify-end mt-3"
     >
       <button
         class="red-button disabled:opacity-50 disabled:cursor-not-allowed"
