@@ -305,10 +305,10 @@ export default {
       return seasons;
     },
     coaches() {
-      return this.$store.state.training.coach.coaches || [];
+      return this.$store.state.training.coach.all || [];
     },
     teams() {
-      return this.$store.state.team.teams || [];
+      return this.$store.state.training.team.all || [];
     },
   },
   async created() {
