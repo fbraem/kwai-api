@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
-use Domain\Team\TeamTypesTable;
 
 use Respect\Validation\Validator as v;
 
