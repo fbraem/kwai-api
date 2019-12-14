@@ -10,6 +10,9 @@ export const state = () => {
       subTitle: ''
     },
     facebook: config.facebook,
-    error: null
+    error: null,
+    mail: config.mail,
+    url: config.site,
+    location: config.location
   };
 };

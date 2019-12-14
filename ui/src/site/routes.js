@@ -3,12 +3,14 @@ import Toolbar from './Toolbar';
 import App from './App';
 import HomeApp from './Home';
 import Header from './Header';
+import Footer from './Footer';
 
 let routes = {
   path: '/',
   components: {
     toolbar: Toolbar,
-    default: Site
+    default: Site,
+    footer: Footer
   },
 };
 
