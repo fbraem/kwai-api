@@ -9,16 +9,21 @@
       <blockquote>
         <div v-html="story.content.html_summary"></div>
       </blockquote>
-      <div class="news-content" v-html="story.content.html_content">
+      <div
+        class="news-content"
+        v-html="story.content.html_content"
+      >
       </div>
-      <vue-goodshare-facebook class="no-underline hover:no-underline"
-        :title_social="$t('share')"
-        :page_url="facebookUrl"
-        has_icon />
+      <!-- used to copy the url to the clipboard -->
+      <input id="cb" type="text" hidden>
+      <button class="red-button" @click="copyText(facebookUrl)">
+        <i class="fab fa-facebook-f mr-2"></i> Deel
+      </button>
     </article>
     <template slot="sidebar">
       <Sidebar />
     </template>
+    <notifications position="bottom right" />
   </Page>
 </template>
 
@@ -69,8 +74,6 @@ blockquote {
 <script>
 import messages from './lang';
 
-import VueGoodshareFacebook from 'vue-goodshare/src/providers/Facebook.vue';
-
 import Page from '@/components/Page';
 import Sidebar from './Sidebar';
 import Spinner from '@/components/Spinner';
@@ -79,7 +82,6 @@ export default {
   components: {
     Page,
     Sidebar,
-    VueGoodshareFacebook,
     Spinner
   },
   i18n: messages,
@@ -114,6 +116,19 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    copyText(text) {
+      var cb = document.getElementById('cb');
+      cb.value = text;
+      cb.style.display = 'block';
+      cb.select();
+      document.execCommand('copy');
+      cb.style.display = 'none';
+      this.$notify({
+        title: 'Link Gekopieerd!',
+        text: 'De link om te delen op Facebook is in de clipboard geplaatst!',
+        duration: 10000
+      });
     }
   }
 };
