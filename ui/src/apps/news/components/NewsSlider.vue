@@ -2,7 +2,7 @@
   <div class="container mx-auto">
     <div class="flex justify-center">
       <div
-        class="m-2 w-full md:w-1/2 lg:w-1/3"
+        class="m-2 w-full md:w-1/2"
         v-for="story in activeStories"
         :key="story.id"
       >
@@ -60,7 +60,6 @@ export default {
       return this.stories.length;
     },
     columns() {
-      if (this.$vssWidth >= 1280) return 3;
       if (this.$vssWidth >= 768) return 2;
       return 1;
     },

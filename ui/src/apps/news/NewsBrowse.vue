@@ -17,7 +17,7 @@
         <div
           v-for="story in stories"
           :key="story.id"
-          class="p-2 w-full xl:w-1/2"
+          class="p-2 w-full"
         >
           <NewsCard
             :story="story"
@@ -27,7 +27,7 @@
       </div>
       <div
         v-if="storiesMeta"
-        class="flex justify-center"
+        class="flex justify-center mb-4"
       >
         <Paginator
           :count="storiesMeta.count"

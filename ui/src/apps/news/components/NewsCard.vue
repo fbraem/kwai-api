@@ -1,107 +1,74 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="news-card">
-    <div style="grid-area: news-card-title">
-      <h3 class="mb-0">
+  <div class="w-full relative flex flex-col md:flex-row border rounded">
+    <div
+      v-if="story.overview_picture"
+      class="self-center md:self-start py-2 md:py-0 flex-none"
+    >
+      <router-link
+        :to="contentLink"
+      >
+        <img
+          :src="story.overview_picture"
+          alt=""
+          class="rounded w-64 h-64 md:w-48 md:h-48"
+        />
+      </router-link>
+    </div>
+    <div class="w-full p-2 md:px-4 flex flex-col md:h-48 bg-gray-100 relative">
+      <span
+        v-if="story.isNew"
+        class="ml-2 mt-2 mr-4 mb-1 badge right-0 top-0 absolute red-badge"
+      >
+        Nieuw
+      </span>
+      <h2
+        class="font-bold text-lg font-bold mb-0"
+        :class="{ 'w-3/4': story.isNew, 'sm:w-4/5': story.isNew }"
+      >
         <router-link
-          v-if="story.content"
           :to="contentLink"
-          class="no-underline hover:no-underline"
-          style="color: inherit;"
+          class="text-gray-900"
         >
           {{ story.content.title }}
         </router-link>
-        <span v-else>
-          {{ story.content.title }}
+      </h2>
+      <p class="text-xs text-gray-600">
+        <span v-if="showCategory">
+          Gepubliceerd in&nbsp;
+          <router-link
+            :to="categoryLink"
+            class="font-bold"
+          >
+            {{ story.category.name }}
+          </router-link>
+          &nbsp;|&nbsp;
         </span>
-      </h3>
-      <div
-        v-if="story.publish_date"
-        class="text-xs text-gray-600"
-      >
-        {{ $t('published', {
-          publishDate: story.localPublishDate,
-          publishDateFromNow: story.publishDateFromNow
+        {{
+          $t('published', {
+            publishDate: story.localPublishDate,
+            publishDateFromNow: story.publishDateFromNow
           })
         }}
-      </div>
-    </div>
-    <div
-      v-if="story.overview_picture"
-      class="self-center"
-      style="grid-area: news-card-image;"
-    >
-      <img
-        :src="story.overview_picture"
-        alt=""
-        class="rounded w-32 h-32"
-      />
-    </div>
-    <div style="grid-area: news-card-content">
-      <router-link
-        v-if="showCategory"
-        class="badge red-badge no-underline hover:no-underline mb-1"
-        :to="categoryLink"
-        >
-        {{ story.category.name }}
-      </router-link>
+      </p>
       <div
-       v-html="story.content.html_summary"
-       >
+        class="text-gray-700 text-sm"
+        v-html="story.content.html_summary"
+      >
       </div>
-    </div>
-    <div style="grid-area: news-card-tools;justify-self:right">
-      <router-link
-        v-if="story.content"
-        class="icon-button text-gray-700 hover:bg-gray-300"
-        :to="contentLink"
-      >
-        <i class="fas fa-ellipsis-h"></i>
-      </router-link>
-      <router-link
-        v-if="$can('update', story)"
-        :to="{ name : 'news.update', params : { id : story.id }}"
-        class="icon-button text-gray-700 hover:bg-gray-300"
-      >
-        <i class="fas fa-edit"></i>
-      </router-link>
-      <a
-        v-if="$can('delete', story)"
-        @click="deleteStory"
-        class="icon-button text-gray-700 hover:bg-gray-300"
-      >
-        <i class="fas fa-trash"></i>
-      </a>
+      <div class="absolute right-0 bottom-0 mb-2 mr-4">
+        <router-link
+          :to="contentLink"
+          class="text-gray-700"
+        >
+          <i class="fas fa-ellipsis-h"></i>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.news-card {
-  @apply h-full shadow p-3;
-  display: grid;
-  grid-gap: 10px;
-
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr auto;
-  grid-template-areas:
-      "news-card-title"
-      "news-card-image"
-      "news-card-content"
-      "news-card-tools"
-  ;
-}
-@screen sm {
-  .news-card {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-        "news-card-title news-card-title"
-        "news-card-image news-card-content"
-        "news-card-image news-card-tools"
-    ;
-  }
-}
 .red-badge {
   @apply bg-red-700 text-red-300;
 }
