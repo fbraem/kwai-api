@@ -35,7 +35,7 @@
       </h2>
       <p class="text-xs text-gray-600">
         <span v-if="showCategory">
-          Gepubliceerd in&nbsp;
+          Gepubliceerd in
           <router-link
             :to="categoryLink"
             class="font-bold"
