@@ -16,7 +16,7 @@
           <h1 class="uppercase">Contacteer ons</h1>
           <p>
             <strong>Judokwai Kemzeke vzw</strong><br />
-            p/a Polderstraat 10<br />
+            <i class="fas fa-home"></i> Polderstraat 10<br />
             9190 Stekene<br />
           </p>
           <div class="relative w-20 h-20 mx-auto my-12 bg-red-700 rotate-45">
@@ -41,6 +41,23 @@
               </a>
             </div>
           </div>
+        </div>
+
+        <!-- LINKS -->
+        <div class="w-full md:w-1/3 p-5 text-center">
+          <h1 class="uppercase">Links</h1>
+          <ul>
+            <li>
+              <a href="https://wwww.vjf.be">Vlaamse Judo Federatie</a>
+              <span class="text-sm">(Aansluitnr. 4033)</span>
+            </li>
+            <li>
+              <a href="https://www.vjf.be/nl/ovl/oost-vlaanderen">Judo Oost-Vlaanderen</a>
+            </i>
+            <li>
+              <a href="http://www.judoverenigingclinge.com/">Judovereniging Clinge</a>
+            </li>
+          </ul>
         </div>
 
       </div>
