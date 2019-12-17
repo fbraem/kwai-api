@@ -26,6 +26,7 @@
           <KwaiField
             name="login_email"
             :label="$t('email.label')"
+            class="mb-4"
           >
             <KwaiEmail :placeholder="$t('email.placeholder')" />
           </KwaiField>
