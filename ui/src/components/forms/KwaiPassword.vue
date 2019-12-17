@@ -1,22 +1,24 @@
 <template>
   <!-- eslint-disable max-len -->
-  <div class="flex mb-4">
-    <span class="flex items-center py-2 px-4 rounded rounded-r-none border border-r-0 bg-gray-500">
-      <i class="fas fa-lock"></i>
-    </span>
+  <KwaiInputGroupAddon left="fas fa-lock">
     <input v-model="field.value"
       :id="id"
-      class="flex-grow flex-shrink h-auto appearance-once block w-full bg-gray-200 border py-3 px-4 leading-thight focus:outline-none focus:shadow-outline rounded rounded-l-none"
+      class="flex-grow flex-shrink appearance-once bg-gray-200 border py-3 px-4 leading-normal focus:outline-none focus:shadow-outline rounded rounded-l-none"
       :class="{ 'border-red-600' : field.errors.length > 0 }"
       type="password"
       :required="field.required"
       v-bind="$attrs"
     />
-  </div>
+  </KwaiInputGroupAddon>
 </template>
 
 <script>
+import KwaiInputGroupAddon from './KwaiInputGroupAddon';
+
 export default {
+  components: {
+    KwaiInputGroupAddon
+  },
   inject: {
     field: 'field',
     id: 'id'
