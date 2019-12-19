@@ -31,3 +31,53 @@ There is still a lot to do:
 - ...
 
 Kwai is currently more CRUD then domain oriented. This api must evolve from an anemic model to real DDD.
+
+Installation
+============
+
+Clone this repository and run `composer install` in the `src` as current directory. When all goes well, create a `config.php` in the `api` directory. This PHP file must return an array with some configuration:
+
+    return [
+        'database' => [
+            'development' => [
+                'adapter' => 'mysql',
+                'host' => '',
+                'user' => '',
+                'pass' => '',
+                'name' => '',
+                'charset' => 'utf8',
+                'prefix' => ''
+            ]
+        ],
+        'default_database' => 'development',
+        'files' => '',
+        'oauth2' => [
+            'private_key' => 'file:///',
+            'public_key' => 'file:///',
+            'encryption_key' => '',
+            'client' => [
+                'name' => '',
+                'identifier' => '',
+                'secret' => '',
+                'redirect' => ''
+            ]
+        ],
+        'mail' => [
+            'host' => '',
+            'user' => '',
+            'pass' => '',
+            'port' => 2525,
+            'from' => [ ],
+            'subject' => ''
+        ],
+        'website' => [
+            'url' => '',
+            'email' => ''
+        ]
+    ];
+
+Create a public and private key as explained on [league/oauth2-server](https://oauth2.thephpleague.com/installation/).
+
+When the configuration is finished, run the database migrations from the `src` directory:
+
+    ./vendor/bin/phinx migrate -c phinx.php
