@@ -1,35 +1,33 @@
-Kwai
-====
+Kwai-api
+========
 
-Kwai is a club/content management system. At the moment it's main focus is a
-judo club (kwai means club), but in the future it may be possible to support
+Kwai-api is a part of the kwai system. The ultimate goal of Kwai is to manage a (sports)club. The focus is currently on judo sport (Kwai means club in Japanese), but in the future it may be possible to support
 other sports.
 
-High level
-==========
+The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwai-ui) repository.
 
-- club website
-    - news
-    - events
-    - information
-- membership management
-- team management
-- team membership management
-- training calendar
-- absence / presence registration
+API
+===
+Kwai-api is the REST api for Kwai. It's written in PHP and it tries to follow the [JSONAPI](http://jsonapi.org) standard.
+
+Currently the following api's are already available:
+
+- news
+- pages
+- members
+- teams
+- trainings
+
+Although there is still a lot to do, kwai is already used in production for our club.
+
+TODO
+====
+
+There is still a lot to do:
+
 - tournament management
+- member follow-up system
+- events
 - ...
 
-Kwai is already used in production but it is still a work in progress and there
-is still a lot of work to do:
-
-- Contains some club specific data which needs to be standardized... It's usable
-but you will need to do some work to adopt it to your club ...
-- Kwai is currently more CRUD then domain oriented. On the server, Kwai must
-evolve from an anemic model to real DDD.
-- New technology is used, and that has some consequences. Reasons to refactor
-code:
-  + New insights in the technology.
-  + New releases of code (Vue 3 for example), or totally new packages
-   (tailwindcss for example).
-  + New insights in patterns.
+Kwai is currently more CRUD then domain oriented. This api must evolve from an anemic model to real DDD.
