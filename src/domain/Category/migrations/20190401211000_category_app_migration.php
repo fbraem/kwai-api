@@ -10,7 +10,7 @@ class CategoryAppMigration extends AbstractMigration
     public function up()
     {
         $this->table('categories', ['signed' => false])
-            ->addColumn('app', 'string')
+            ->addColumn('app', 'string', ['null' => true])
             ->save()
         ;
     }
