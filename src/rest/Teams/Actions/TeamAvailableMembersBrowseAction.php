@@ -42,7 +42,7 @@ class TeamAvailableMembersBrowseAction
         $teamTable = \Domain\Team\TeamsTable::getTableFromRegistry();
         try {
             $team = $teamTable->get($args['id'], [
-                'contain' => ['TeamType', 'Season']
+                'contain' => ['TeamCategory', 'Season']
             ]);
         } catch (RecordNotFoundException $rnfe) {
             return $response->withStatus(404, _("Team doesn't exist"));

@@ -44,17 +44,24 @@ $app->get('/facebook/news/{id}', function (Request $request, Response $response,
 
     if ($facebook) {
         // This is the Facebook crawler ...
-        $images = $this->filesystem->listContents('images/news/' . $story->id);
         $meta = [];
         $meta['og:url'] = $uri->__toString();
         $meta['og:type'] = 'article';
         $meta['og:title'] = $story->contents[0]['title'];
         $meta['og:description'] = $story->contents[0]['social_media'] ?? '';
-        foreach ($images as $image) {
-            if (isset($image['filename']) && $image['filename'] == 'header_detail_crop') {
+
+        $images = $this->filesystem->listContents('images/news/' . $story->id);
+        $image = array_search('header_detail_crop', array_column($images, 'filename'));
+        if ($image) {
+            $meta['og:image'] = $uri->withPath('/files/' . $image['path'])->__toString();
+            $meta['og:image:width'] = 800;
+            $meta['og:image:height'] = 300;
+        } else {
+            $image = array_search('header_overview_crop', array_column($images, 'filename'));
+            if ($image) {
                 $meta['og:image'] = $uri->withPath('/files/' . $image['path'])->__toString();
-                $meta['og:image:width'] = 800;
-                $meta['og:image:height'] = 300;
+                $meta['og:image:width'] = 500;
+                $meta['og:image:height'] = 500;
             }
         }
 

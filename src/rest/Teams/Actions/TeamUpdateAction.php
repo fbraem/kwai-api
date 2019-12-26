@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
-use Domain\Team\TeamTypesTable;
 
 use Respect\Validation\Validator as v;
 
@@ -47,7 +46,7 @@ class TeamUpdateAction
                 'data.attributes.active' => [ v::boolType(), true ]
             ], true))->validate($data);
 
-            $seasonData = \JmesPath\search('data.relationships.season.data', $data);
+            $seasonData = \JmesPath\search('data.relationships.season', $data);
             if (isset($seasonData)) {
                 $season = (new EntityExistValidator('data.relationships.season', $teamsTable->Season, false))->validate($data);
                 if ($season) {
@@ -58,14 +57,14 @@ class TeamUpdateAction
                 }
             }
 
-            $typeData = \JmesPath\search('data.relationships.team_type.data', $data);
-            if (isset($typeData)) {
-                $team_type = (new EntityExistValidator('data.relationships.team_type', $teamsTable->TeamType, false))->validate($data);
-                if ($team_type) {
-                    $team->team_type = $team_type;
+            $teamCategoryData = \JmesPath\search('data.relationships.team_category', $data);
+            if (isset($teamCategoryData)) {
+                $team_category = (new EntityExistValidator('data.relationships.team_category', $teamsTable->TeamCategory, false))->validate($data);
+                if ($team_category) {
+                    $team->team_category = $team_category;
                 } else {
-                    $team->team_type_id = null;
-                    $team->team_type = null;
+                    $team->team_category_id = null;
+                    $team->team_category = null;
                 }
             }
 

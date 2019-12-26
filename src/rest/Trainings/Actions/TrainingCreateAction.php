@@ -123,7 +123,7 @@ class TrainingCreateAction
         $event->end_date = $attributes['event']['end_date'];
         $event->time_zone = $attributes['event']['time_zone'];
         $event->active = $attributes['event']['active'] ?? true;
-        $event->remark = $attributes['event']['remark'];
+        $event->remark = $attributes['event']['remark'] ?? null;
         $event->user = $request->getAttribute('clubman.user');
         $training->season = $season;
         $training->definition = $def;

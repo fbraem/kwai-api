@@ -13,12 +13,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         $accessToken = AccessTokensTable::getTableFromRegistry()->newEntity();
         $accessToken->client = $clientEntity;
 
-        /* Ignore scopes here: see https://github.com/thephpleague/oauth2-server/issues/728
-        foreach($scopes as $scope)
-        {
-            $accessToken->scopes->push($scope);
+        $accessToken->scopes = [];
+        foreach ($scopes as $scope) {
+            $accessToken->scopes[$scope->getIdentifier()] = $scope;
         }
-        */
+
         if ($userIdentifier) {
             $accessToken->setUserIdentifier($userIdentifier);
         }

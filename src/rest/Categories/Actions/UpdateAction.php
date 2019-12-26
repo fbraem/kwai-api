@@ -72,7 +72,10 @@ class UpdateAction
             $categoriesTable->save($category);
 
             return (new ResourceResponse(
-                CategoryTransformer::createForItem($category)
+                CategoryTransformer::createForItem(
+                    $category,
+                    $this->container->get('filesystem')
+                )
             ))($response);
         } catch (ValidationException $ve) {
             return (new UnprocessableEntityResponse(

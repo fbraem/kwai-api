@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
-use Domain\Team\TeamTypesTable;
 
 use Respect\Validation\Validator as v;
 
@@ -42,7 +41,7 @@ class TeamCreateAction
             $teamsTable = TeamsTable::getTableFromRegistry();
 
             $season = (new EntityExistValidator('data.relationships.season', $teamsTable->Season, false))->validate($data);
-            $teamType = (new EntityExistValidator('data.relationships.team_type', $teamsTable->TeamType, false))->validate($data);
+            $teamCategory = (new EntityExistValidator('data.relationships.team_category', $teamsTable->TeamCategory, false))->validate($data);
 
             $attributes = \JmesPath\search('data.attributes', $data);
 
@@ -51,7 +50,7 @@ class TeamCreateAction
             $team->remark = $attributes['remark'] ?? null;
             $team->active = $attribute['active'] ?? true;
             $team->season = $season ?? null;
-            $team->team_type = $teamType ?? null;
+            $team->team_category = $teamCategory ?? null;
             $teamsTable->save($team);
 
             $route = $request->getAttribute('route');

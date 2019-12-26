@@ -7,7 +7,7 @@ use League\CommonMark\Converter;
 use League\CommonMark\DocParser;
 use League\CommonMark\Environment;
 use League\CommonMark\HtmlRenderer;
-use Webuni\CommonMark\TableExtension\TableExtension;
+use League\CommonMark\Ext\Table\TableExtension;
 
 class ContentTransformer extends Fractal\TransformerAbstract
 {

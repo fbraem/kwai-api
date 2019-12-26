@@ -37,6 +37,7 @@ class BrowseAction
         $contain = [
             'Person',
             'Person.Contact',
+            'Person.Contact.Country',
             'Person.Nationality'
         ];
 

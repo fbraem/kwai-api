@@ -29,7 +29,7 @@ class TeamReadAction
         $parameters = $request->getAttribute('parameters');
         $contain = [
             'Season',
-            'TeamType'
+            'TeamCategory'
         ];
         if (isset($parameters['include'])) {
             foreach ($parameters['include'] as $include) {
