@@ -36,6 +36,7 @@
             "Core\\" : "./core",
             "Domain\\" : "./domain",
             "REST\\" : "./rest",
+            "Kwai\\" : "./kwai",
             "Judo\\Domain\\" : "./sport/judo/domain",
             "Judo\\REST\\" : "./sport/judo/rest"
         }
