@@ -81,3 +81,7 @@ Create a public and private key as explained on [league/oauth2-server](https://o
 When the configuration is finished, run the database migrations from the `src` directory:
 
     ./vendor/bin/phinx migrate -c phinx.php
+
+On shared hosting:
+
+    php ./vendor/robmorgan/phinx/phinx.php migrate -c phinx.php
