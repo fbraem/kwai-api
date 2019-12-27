@@ -40,5 +40,10 @@
             "Judo\\Domain\\" : "./sport/judo/domain",
             "Judo\\REST\\" : "./sport/judo/rest"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\" : "./tests"
+        }
     }
 }
