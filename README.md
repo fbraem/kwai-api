@@ -85,3 +85,9 @@ When the configuration is finished, run the database migrations from the `src` d
 On shared hosting:
 
     php ./vendor/robmorgan/phinx/phinx.php migrate -c phinx.php
+
+Running Tests
+=============
+Run the following command from the `src` directory:
+
+    ./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox tests
