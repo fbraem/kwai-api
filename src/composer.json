@@ -29,7 +29,8 @@
         "guzzlehttp/psr7": "1.6.1",
         "ramsey/uuid": "^3.9",
         "opis/database": "^4.1",
-        "spatie/data-transfer-object": "^1.12"
+        "spatie/data-transfer-object": "^1.12",
+        "tuupola/slim-jwt-auth": "^3.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"
