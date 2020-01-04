@@ -27,6 +27,9 @@ use Core\Middlewares\LogActionMiddleware;
 use Core\Middlewares\AuthenticationMiddleware;
 use Core\Middlewares\TransactionMiddleware;
 
+use Opis\Database\Database;
+use Opis\Database\Connection;
+
 class Clubman
 {
     private static $application;
@@ -59,6 +62,17 @@ class Clubman
                 'encoding' => $dbConfig[$dbDefault]['charset'],
                 'quoteIdentifiers' => true
             ]);
+
+            $connection = new Connection(
+                $dbConfig[$dbDefault]['adapter']
+                    . ':host=' . $dbConfig[$dbDefault]['host']
+                    . ';dbname=' . $dbConfig[$dbDefault]['name'],
+                $dbConfig[$dbDefault]['user'],
+                $dbConfig[$dbDefault]['pass']
+            );
+            $connection->initCommand('SET NAMES UTF8');
+            $connection->option(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+            $container['pdo_db'] = new Database($connection);
 
             $container['filesystem'] = function ($c) {
                 $settings = $c->get('settings');
