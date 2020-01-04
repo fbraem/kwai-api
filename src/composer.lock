@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "938456f4fec7add0e256ff086096d7da",
+    "content-hash": "9f897c5827a6ca0b3d246d77cc069496",
     "packages": [
         {
             "name": "aura/intl",
@@ -1643,6 +1643,68 @@
             "time": "2018-02-13T20:26:39+00:00"
         },
         {
+            "name": "opis/database",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opis/database.git",
+                "reference": "cfff46dc6fc5c1ad45c6a31cc83a2fedc5874b7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opis/database/zipball/cfff46dc6fc5c1ad45c6a31cc83a2fedc5874b7f",
+                "reference": "cfff46dc6fc5c1ad45c6a31cc83a2fedc5874b7f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.5",
+                "symfony/yaml": "^3.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Opis\\Database\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Marius Sarca",
+                    "email": "marius.sarca@gmail.com"
+                },
+                {
+                    "name": "Sorin Sarca",
+                    "email": "sarca_sorin@hotmail.com"
+                }
+            ],
+            "description": "A database abstraction layer over PDO, that provides a powerful and intuitive query builder, bundled with an easy to use schema builder",
+            "homepage": "https://opis.io/database",
+            "keywords": [
+                "Abstraction Layer",
+                "database",
+                "mysql",
+                "postgre",
+                "query",
+                "query builder",
+                "schema builder",
+                "sql",
+                "sqlite"
+            ],
+            "time": "2019-03-25T17:12:29+00:00"
+        },
+        {
             "name": "paragonie/random_compat",
             "version": "v9.99.99",
             "source": {
@@ -2334,6 +2396,53 @@
                 "router"
             ],
             "time": "2019-04-16T16:47:29+00:00"
+        },
+        {
+            "name": "spatie/data-transfer-object",
+            "version": "1.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/data-transfer-object.git",
+                "reference": "6b929bf1f9c0e320f594d3d2db6c3249485f1b85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/data-transfer-object/zipball/6b929bf1f9c0e320f594d3d2db6c3249485f1b85",
+                "reference": "6b929bf1f9c0e320f594d3d2db6c3249485f1b85",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.0",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\DataTransferObject\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brent Roose",
+                    "email": "brent@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Data transfer objects with batteries included",
+            "homepage": "https://github.com/spatie/data-transfer-object",
+            "keywords": [
+                "data-transfer-object",
+                "spatie"
+            ],
+            "time": "2019-12-19T13:30:38+00:00"
         },
         {
             "name": "symfony/config",

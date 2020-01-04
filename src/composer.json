@@ -27,7 +27,9 @@
         "cakephp/chronos": "1.2.8",
         "lcobucci/jwt": "3.3.1",
         "guzzlehttp/psr7": "1.6.1",
-        "ramsey/uuid": "^3.9"
+        "ramsey/uuid": "^3.9",
+        "opis/database": "^4.1",
+        "spatie/data-transfer-object": "^1.12"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"
