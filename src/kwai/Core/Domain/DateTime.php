@@ -11,6 +11,8 @@ namespace Kwai\Core\Domain;
  */
 final class DateTime
 {
+    const TIMEZONE = 'UTC';
+
     /**
      * @var \Carbon\CarbonImmutable
      */
@@ -33,7 +35,7 @@ final class DateTime
      * @param string $format The format to use
      * @return string A formatted datetime
      */
-    public function format($format = null) : string
+    public function format($format = null): string
     {
         if ($format) {
             return $this->datetime->format($format);
@@ -46,7 +48,7 @@ final class DateTime
      *
      * @return string A formatted datetime
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->format();
     }
@@ -69,8 +71,8 @@ final class DateTime
         int $hour = 0,
         int $minute = 0,
         int $sec = 0,
-        string $timezone = 'UTC'
-    ) : self {
+        string $timezone = self::TIMEZONE
+    ): self {
         $object = new self();
         $object->datetime = \Carbon\CarbonImmutable::create(
             $year,
@@ -89,7 +91,7 @@ final class DateTime
      *
      * @param object $object An object containing all properties to create a new datetime object.
      */
-    public static function createFromObject(object $datetimeObject) : self
+    public static function createFromObject(object $datetimeObject): self
     {
         $object = new self();
         $object->datetime = \Carbon\CarbonImmutable::create(
@@ -99,7 +101,7 @@ final class DateTime
              $datetimeObject->hour ?? 0,
              $datetimeObject->minute ?? 0,
              $datetimeObject->sec ?? 0,
-             $datetimeObject->timezone ?? 'UTC'
+             $datetimeObject->timezone ?? self::TIMEZONE
          );
         return $object;
     }
@@ -109,10 +111,29 @@ final class DateTime
      *
      * @param string $timezone The timezone to use. Default is UTC.
      */
-    public static function createNow($timezone = 'UTC') : self
+    public static function createNow($timezone = self::TIMEZONE): self
     {
         $object = new self();
         $object->datetime = \Carbon\CarbonImmutable::now($timezone);
+        return $object;
+    }
+
+    /**
+     * Create from a string
+     *
+     * @param string $str A datetime in format Y-m-d H:i:s
+     * @param string $timezone The timezone to use. Default is UTC.
+     */
+    public static function createFromString(
+        string $str,
+        string $timezone = self::TIMEZONE
+    ): self {
+        $object = new self();
+        $object->datetime = \Carbon\CarbonImmutable::createFromFormat(
+            'Y-m-d H:i:s',
+            $str,
+            $timezone
+        );
         return $object;
     }
 }
