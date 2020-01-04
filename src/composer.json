@@ -29,7 +29,8 @@
         "opis/database": "^4.1",
         "spatie/data-transfer-object": "^1.12",
         "tuupola/slim-jwt-auth": "^3.4",
-        "slim/psr7": "^0.6.0"
+        "slim/psr7": "^0.6.0",
+        "league/container": "^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"
