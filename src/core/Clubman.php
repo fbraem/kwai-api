@@ -14,6 +14,8 @@ use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 
+use League\Container\Container;
+
 use Domain\Auth\AccessTokenRepository;
 use Domain\Auth\ClientRepository;
 use Domain\Auth\RefreshTokenRepository;
@@ -30,16 +32,20 @@ use Core\Middlewares\TransactionMiddleware;
 use Opis\Database\Database;
 use Opis\Database\Connection;
 
+use Slim\Factory\AppFactory;
+
 class Clubman
 {
     private static $application;
 
-    public static function getApplication()
+    public static function getApplication($basePath = '/api')
     {
         if (self::$application == null) {
-            $container = new \Slim\Container();
+            $container = new Container();
+            $container->defaultToShared();
+            AppFactory::setContainer($container);
 
-            $container['settings'] = function ($c) {
+            $container->add('settings', function ($c) {
                 $config = include __DIR__ . '/../../api/config.php';
                 $config['displayErrorDetails'] = true;
                 $config['determineRouteBeforeAppMiddleware'] = true;
@@ -47,8 +53,7 @@ class Clubman
                 $config['httpVersion'] = '1.1';
                 $config['responseChunkSize'] = 4096;
                 return $config;
-            };
-            $app = new \Slim\App($container);
+            })->addArgument($container);
 
             $dbConfig = $container->get('settings')['database'];
             $dbDefault = $container->get('settings')['default_database'];
@@ -63,28 +68,32 @@ class Clubman
                 'quoteIdentifiers' => true
             ]);
 
-            $connection = new Connection(
-                $dbConfig[$dbDefault]['adapter']
-                    . ':host=' . $dbConfig[$dbDefault]['host']
-                    . ';dbname=' . $dbConfig[$dbDefault]['name'],
-                $dbConfig[$dbDefault]['user'],
-                $dbConfig[$dbDefault]['pass']
-            );
-            $connection->initCommand('SET NAMES UTF8');
-            $connection->option(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-            $container['pdo_db'] = new Database($connection);
+            $container->add('pdo_db', function ($c) {
+                $dbConfig = $c->get('settings')['database'];
+                $dbDefault = $c->get('settings')['default_database'];
+                $connection = new Connection(
+                    $dbConfig[$dbDefault]['adapter']
+                        . ':host=' . $dbConfig[$dbDefault]['host']
+                        . ';dbname=' . $dbConfig[$dbDefault]['name'],
+                    $dbConfig[$dbDefault]['user'],
+                    $dbConfig[$dbDefault]['pass']
+                );
+                $connection->initCommand('SET NAMES UTF8');
+                $connection->option(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+                return new Database($connection);
+            })->addArgument($container);
 
-            $container['filesystem'] = function ($c) {
+            $container->add('filesystem', function ($c) {
                 $settings = $c->get('settings');
                 $flyAdapter = new Local($settings['files']);
                 return new Filesystem($flyAdapter);
-            };
+            })->addArgument($container);
 
-            $container['template'] = function ($c) {
+            $container->add('template', function ($c) {
                 return new TemplateEngine(__DIR__ . '/../templates');
-            };
+            })->addArgument($container);
 
-            $container['authorizationServer'] = function ($c) {
+            $container->add('authorizationServer', function ($c) {
                 $config = $c->get('settings');
                 $server = new AuthorizationServer(
                     new ClientRepository(),
@@ -109,13 +118,13 @@ class Clubman
                 $server->enableGrantType(new ImplicitGrant(new \DateInterval('PT1H')));
 
                 return $server;
-            };
-            $container['resourceServer'] = function ($c) {
+            })->addArgument($container);
+            $container->add('resourceServer', function ($c) {
                 $config = $c->get('settings');
                 return new ResourceServer(new AccessTokenRepository(), $config['oauth2']['public_key']);
-            };
+            })->addArgument($container);
 
-            $container['mailer'] = function ($c) {
+            $container->add('mailer', function ($c) {
                 $config = $c->get('settings');
                 $mail = new PHPMailer(true);
                 //Server settings
@@ -135,14 +144,15 @@ class Clubman
                 $mail->addReplyTo($recipientMail, $recipient[$recipientMail]);
 
                 return $mail;
-            };
+            })->addArgument($container);
 
-            $app->add(new ParametersMiddleware());
-            $app->add(new TransactionMiddleware($container));
-            $app->add(new LogActionMiddleware($container));
-            $app->add(new AuthenticationMiddleware($container));
-
-            self::$application = $app;
+            self::$application = AppFactory::create();
+            self::$application->setBasePath($basePath);
+            self::$application->add(new ParametersMiddleware());
+            self::$application->add(new TransactionMiddleware($container));
+            self::$application->add(new LogActionMiddleware($container));
+            self::$application->add(new AuthenticationMiddleware($container));
+            self::$application->addRoutingMiddleware();
         }
         return self::$application;
     }

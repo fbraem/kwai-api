@@ -3,7 +3,9 @@
 namespace Core\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Psr\Http\Server\MiddlewareInterface;
 
 use Domain\User\UserLogsTable;
 
@@ -14,7 +16,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 /**
  * Middleware that is responsible for logging the action
  */
-class LogActionMiddleware
+class LogActionMiddleware implements MiddlewareInterface
 {
     private $container;
 
@@ -23,9 +25,11 @@ class LogActionMiddleware
         $this->container = $container;
     }
 
-    public function __invoke(Request $request, Response $response, $next)
-    {
-        $response = $next($request, $response);
+    public function process(
+        Request $request,
+        RequestHandler $handler
+    ): ResponseInterface {
+        $response = $handler->handle($request);
 
         $route = $request->getAttribute('route');
         if (! empty($route)) {

@@ -2,7 +2,7 @@
 
 namespace REST\Pages\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -38,7 +38,7 @@ class ReadAction
         } catch (RecordNotFoundException $rnfe) {
             $response = (new NotFoundResponse(_("Page doesn't exist")))($response);
         }
-        
+
         return $response;
     }
 }

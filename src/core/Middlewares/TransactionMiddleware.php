@@ -3,14 +3,16 @@
 namespace Core\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Psr\Http\Server\MiddlewareInterface;
 
 use Cake\Datasource\ConnectionManager;
 
 /**
  * Middleware that is responsible for starting and committing a transaction
  */
-class TransactionMiddleware
+class TransactionMiddleware implements MiddlewareInterface
 {
     private $container;
 
@@ -19,12 +21,14 @@ class TransactionMiddleware
         $this->container = $container;
     }
 
-    public function __invoke(Request $request, Response $response, $next)
-    {
+    public function process(
+        Request $request,
+        RequestHandler $handler
+    ): ResponseInterface {
         $connection = ConnectionManager::get('default');
         $connection->begin();
 
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
 
         if ($response->getStatusCode() > 399) { // Error
             $connection->rollback();

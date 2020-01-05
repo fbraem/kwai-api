@@ -1,9 +1,11 @@
 <?php
 require '../src/vendor/autoload.php';
 
+use Slim\Routing\RouteCollectorProxy;
+
 $app = \Core\Clubman::getApplication();
 
-$app->group('/users', function () {
+$app->group('/users', function (RouteCollectorProxy $group) {
     $this->get('', \REST\Users\Actions\BrowseAction::class)
         ->setName('users.browse')
         ->setArgument('auth', true)

@@ -1,38 +1,40 @@
 <?php
 require '../src/vendor/autoload.php';
 
+use Slim\Routing\RouteCollectorProxy;
+
 $app = \Core\Clubman::getApplication();
 
-$app->group('/teams', function () {
-    $this->get('', \REST\Teams\Actions\TeamBrowseAction::class)
+$app->group('/teams', function (RouteCollectorProxy $group) {
+    $group->get('', \REST\Teams\Actions\TeamBrowseAction::class)
         ->setName('teams.browse')
         ->setArgument('auth', true)
     ;
-    $this->get('/{id:[0-9]+}', \REST\Teams\Actions\TeamReadAction::class)
+    $group->get('/{id:[0-9]+}', \REST\Teams\Actions\TeamReadAction::class)
         ->setName('teams.read')
         ->setArgument('auth', true)
     ;
-    $this->post('', \REST\Teams\Actions\TeamCreateAction::class)
+    $group->post('', \REST\Teams\Actions\TeamCreateAction::class)
         ->setName('teams.create')
         ->setArgument('auth', true)
     ;
-    $this->patch('/{id:[0-9]+}', \REST\Teams\Actions\TeamUpdateAction::class)
+    $group->patch('/{id:[0-9]+}', \REST\Teams\Actions\TeamUpdateAction::class)
         ->setName('teams.update')
         ->setArgument('auth', true)
     ;
-    $this->get('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersBrowseAction::class)
+    $group->get('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersBrowseAction::class)
         ->setName('teams.members.browse')
         ->setArgument('auth', true)
     ;
-    $this->get('/{id:[0-9]+}/available_members', \REST\Teams\Actions\TeamAvailableMembersBrowseAction::class)
+    $group->get('/{id:[0-9]+}/available_members', \REST\Teams\Actions\TeamAvailableMembersBrowseAction::class)
         ->setName('teams.available_members.browse')
         ->setArgument('auth', true)
     ;
-    $this->post('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersAddAction::class)
+    $group->post('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersAddAction::class)
         ->setName('teams.members.add')
         ->setArgument('auth', true)
     ;
-    $this->delete('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersDeleteAction::class)
+    $group->delete('/{id:[0-9]+}/members', \REST\Teams\Actions\TeamMembersDeleteAction::class)
         ->setName('teams.members.delete')
         ->setArgument('auth', true)
     ;

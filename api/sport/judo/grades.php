@@ -1,10 +1,12 @@
 <?php
 require '../../../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Slim\Routing\RouteCollectorProxy;
 
-$app->group('/grades', function () {
-    $this->get('', \Judo\REST\Grades\Actions\BrowseAction::class)
+$app = \Core\Clubman::getApplication('/api/sport/judo');
+
+$app->group('/grades', function (RouteCollectorProxy $group) {
+    $group->get('', \Judo\REST\Grades\Actions\BrowseAction::class)
         ->setName('sport.judo.grades.browse')
     ;
 });
