@@ -38,7 +38,7 @@ class Clubman
 {
     private static $application;
 
-    public static function getApplication($basePath = '/api')
+    public static function getApplication(string $basePath = '/api')
     {
         if (self::$application == null) {
             $container = new Container();
