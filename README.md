@@ -6,6 +6,8 @@ other sports.
 
 The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwai-ui) repository.
 
+> Although there is still a lot to do, kwai is already used in production for our club. Be aware that until there is no official release, a lot can change!
+
 API
 ===
 Kwai-api is the REST api for Kwai. It's written in PHP and it tries to follow the [JSONAPI](http://jsonapi.org) standard.
@@ -17,8 +19,6 @@ Currently the following api's are already available:
 - members
 - teams
 - trainings
-
-Although there is still a lot to do, kwai is already used in production for our club.
 
 TODO
 ====
