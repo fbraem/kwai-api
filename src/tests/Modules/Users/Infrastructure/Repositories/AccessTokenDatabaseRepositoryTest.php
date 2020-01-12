@@ -11,10 +11,13 @@ use Opis\Database\Connection;
 
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 
+use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
-final class UserDatabaseRepositoryTest extends TestCase
+final class AccessTokenDatabaseRepositoryTest extends TestCase
 {
     private static $db;
 
@@ -31,20 +34,29 @@ final class UserDatabaseRepositoryTest extends TestCase
         self::$db = new Database($connection);
     }
 
-    public function testGetById(): void
+    public function testGetTokensForUser(): void
     {
         $repo = new UserDatabaseRepository(self::$db);
         $user = $repo->getById(1);
-        $this->assertInstanceOf(
-            User::class,
-            $user
+
+        $repo = new AccessTokenDatabaseRepository(self::$db);
+        $accessTokens = $repo->getTokensForUser($user);
+        $this->assertContainsOnlyInstancesOf(
+            AccessToken::class,
+            $accessTokens
         );
     }
 
-    public function testGetByIdNotFound(): void
+    public function testGetByTokenIdentifier(): void
     {
-        $this->expectException(NotFoundException::class);
-        $repo = new UserDatabaseRepository(self::$db);
-        $user = $repo->getById(10000);
+        //TODO: Make sure the token is there ...
+        $repo = new AccessTokenDatabaseRepository(self::$db);
+        $accessToken = $repo->getByTokenIdentifier(
+            new TokenIdentifier('dc23ea481a27e4ec1bc6ea20923bf4eb7b10e63f7a5df74e1be486a74a46c8ed7944c7287d234895')
+        );
+        $this->assertInstanceOf(
+            AccessToken::class,
+            $accessToken
+        );
     }
 }

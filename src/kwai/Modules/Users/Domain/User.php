@@ -14,16 +14,25 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DateTime;
 
+use Kwai\Modules\Users\Domain\ValueObjects\Password;
+use Kwai\Modules\Users\Domain\ValueObjects\Username;
+
 /**
- * User entity class
+ * User aggregate class
  */
 class User
 {
     /**
+     * Unique id of the user.
+     * @var int
+     */
+    private $id;
+
+    /**
      * A UUID of the user.
      * @var UniqueId
      */
-    private $uid;
+    private $uuid;
 
     /**
      * The emailaddress of the user
@@ -62,24 +71,25 @@ class User
     private $password;
 
     /**
-     * Constructor
+     * An array of access tokens associated with the user.
+     * @var AccessToken[]
      */
-    public function __construct(
-        UniqueId $uid,
-        EmailAddress $emailAddress,
-        TraceableTime $traceableTime,
-        DateTime $lastLogin,
-        string $remark,
-        Username $username,
-        Password $password
-    ) {
-        $this->uid = $uid;
-        $this->emailAddress = $emailAddress;
-        $this->traceableTime = $traceableTime;
-        $this->lastLogin = $lastLogin;
-        $this->remark = $remark;
-        $this->username = $username;
-        $this->password = $password;
+    private $accessTokens = [];
+
+    /**
+     * Private constructor
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * Returns the id of the user.
+     * @return int The id of the user.
+     */
+    public function id(): int
+    {
+        return $this->id;
     }
 
     /**
@@ -90,5 +100,30 @@ class User
      */
     public function login(EmailAddress $email, Password $password): bool
     {
+    }
+
+    /**
+     * Add an access token
+     * @param AccessToken $token
+     */
+    public function addAccessToken(AccessToken $token): void
+    {
+        $this->accessTokens[] = $token;
+    }
+
+    public static function create(object $props, int $id = null): User
+    {
+        $user = new User();
+        $user->uuid = $props->uuid;
+        $user->emailAddress = $props->emailAddress;
+        $user->traceableTime = $props->traceableTime;
+        $user->lastLogin = $props->lastLogin;
+        $user->remark = $props->remark;
+        $user->username = $props->username;
+        $user->password = $props->password;
+        if ($id) {
+            $user->id = $id;
+        }
+        return $user;
     }
 }

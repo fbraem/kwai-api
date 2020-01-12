@@ -7,7 +7,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Modules\Users\Domain;
+namespace Kwai\Modules\Users\Domain\ValueObjects;
 
 /**
  * Value object for a password.
