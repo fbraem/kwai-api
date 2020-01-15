@@ -12,10 +12,16 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 
 use Kwai\Core\Infrastructure\TableData;
+use Kwai\Core\Infrastructure\AliasTable;
 
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
+use Kwai\Modules\Users\Infrastructure\UserTable;
+use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
+
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 use Opis\Database\Database;
 
@@ -25,44 +31,11 @@ use Opis\Database\Database;
 final class UserDatabaseRepository implements UserRepository
 {
     /**
-     * The name of the table
-     * @var string
-     */
-    public const TABLE_NAME = 'users';
-
-    /**
-     * The prefix used in select statement
-     * @var string
-     */
-    private const TABLE_NAME_PREFIX = self::TABLE_NAME . '_';
-
-    /**
-     * The column names of the table
-     * @var string[]
-     */
-    public const COLUMNS = [
-        'id',
-        'email',
-        'password',
-        'last_login',
-        'first_name',
-        'last_name',
-        'remark',
-        'uuid',
-        'created_at',
-        'updated_at'
-    ];
-
-    /**
      * @var Database
      */
     private $db;
 
-    /**
-     * The columns with their prefix
-     * @var string[]
-     */
-    private $columns;
+    private $table;
 
     /**
      * Constructor
@@ -72,10 +45,7 @@ final class UserDatabaseRepository implements UserRepository
     public function __construct(Database $db)
     {
         $this->db = $db;
-        $aliases = array_map(function ($value) {
-            return self::TABLE_NAME_PREFIX . $value;
-        }, self::COLUMNS);
-        $this->columns = array_combine(self::COLUMNS, $aliases);
+        $this->table = new UserTable();
     }
 
     /**
@@ -86,16 +56,16 @@ final class UserDatabaseRepository implements UserRepository
      */
     public function getById(int $id): User
     {
-        $user = $this->db->from(self::TABLE_NAME)
+        $user = $this->db->from($this->table->from())
             ->where('id')->is($id)
             ->select(function ($include) {
-                $include->columns($this->columns);
+                $include->columns($this->table->alias());
             })
-            ->first();
+            ->first()
         ;
         if ($user) {
             return UserMapper::toDomain(
-                new TableData($user, self::TABLE_NAME_PREFIX)
+                new TableData($user, $this->table->prefix())
             );
         }
         throw new NotFoundException('User');
@@ -103,5 +73,35 @@ final class UserDatabaseRepository implements UserRepository
 
     public function getByUUID(UniqueId $uid): User
     {
+    }
+
+    public function getByAccessToken(TokenIdentifier $token): User
+    {
+        $accessTokenTable = new AliasTable(new AccessTokenTable(), 'oat');
+        $data = $this->db->from($this->table->from())
+            ->where('oat.identifier')->is(strval($token))
+            ->leftJoin(
+                $accessTokenTable->from(),
+                function ($join) use ($token) {
+                    $join->on('users.id', 'oat.user_id');
+                }
+            )
+            ->select(function ($include) use ($accessTokenTable) {
+                $include->columns($this->table->alias());
+                $include->columns($accessTokenTable->alias());
+            })
+            ->first()
+        ;
+        if ($data) {
+            $user = UserMapper::toDomain(
+                new TableData($data, $this->table->prefix())
+            );
+            $token = AccessTokenMapper::toDomain(
+                new TableData($data, $accessTokenTable->prefix())
+            );
+            echo var_dump($token), PHP_EOL;
+            return $user;
+        }
+        throw new NotFoundException('User');
     }
 }
