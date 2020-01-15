@@ -13,6 +13,7 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 final class UserDatabaseRepositoryTest extends TestCase
 {
@@ -46,5 +47,17 @@ final class UserDatabaseRepositoryTest extends TestCase
         $this->expectException(NotFoundException::class);
         $repo = new UserDatabaseRepository(self::$db);
         $user = $repo->getById(10000);
+    }
+
+    public function testGetByAccessToken(): void
+    {
+        $repo = new UserDatabaseRepository(self::$db);
+        $user = $repo->getByAccessToken(
+            new TokenIdentifier('dc23ea481a27e4ec1bc6ea20923bf4eb7b10e63f7a5df74e1be486a74a46c8ed7944c7287d234895')
+        );
+        $this->assertInstanceOf(
+            User::class,
+            $user
+        );
     }
 }
