@@ -8,8 +8,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Modules\Users\Domain\AccessToken;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
@@ -44,9 +43,9 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      * Get an accesstoken by its token identifier.
      *
      * @param  TokenIdentifier $identifier A token identifier
-     * @return AccessToken                 An accesstoken
+     * @return Entity                 An accesstoken
      */
-    public function getByTokenIdentifier(TokenIdentifier $identifier) : AccessToken
+    public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
         $row = $this->db->from(self::TABLE_NAME)
             ->where('identifier')->is(strval($identifier))
@@ -61,9 +60,9 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     /**
      * Get all accesstokens of a user.
      * @param  int     $user_id A user id
-     * @return array            An array with accesstokens
+     * @return Entity[]         An array with accesstokens
      */
-    public function getTokensForUser(User $user): array
+    public function getTokensForUser(Entity $user): array
     {
         $rows = $this->db->from(self::TABLE_NAME)
             ->where('user_id')->is($user->id())

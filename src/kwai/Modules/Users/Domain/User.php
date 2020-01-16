@@ -1,7 +1,5 @@
 <?php
 /**
- * User entity
- *
  * @package Kwai/Modules
  * @subpackage Users
  */
@@ -13,21 +11,16 @@ use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DateTime;
+use Kwai\Core\Domain\DomainEntity;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
- * User aggregate class
+ * User Entity
  */
-class User
+class User implements DomainEntity
 {
-    /**
-     * Unique id of the user.
-     * @var int
-     */
-    private $id;
-
     /**
      * A UUID of the user.
      * @var UniqueId
@@ -71,25 +64,18 @@ class User
     private $password;
 
     /**
-     * An array of access tokens associated with the user.
-     * @var AccessToken[]
+     * Constructor.
+     * @param  object $props User properties
      */
-    private $accessTokens = [];
-
-    /**
-     * Private constructor
-     */
-    private function __construct()
+    public function __construct(object $props)
     {
-    }
-
-    /**
-     * Returns the id of the user.
-     * @return int The id of the user.
-     */
-    public function id(): int
-    {
-        return $this->id;
+        $this->uuid = $props->uuid;
+        $this->emailAddress = $props->emailAddress;
+        $this->traceableTime = $props->traceableTime;
+        $this->lastLogin = $props->lastLogin;
+        $this->remark = $props->remark;
+        $this->username = $props->username;
+        $this->password = $props->password;
     }
 
     /**
@@ -100,30 +86,5 @@ class User
      */
     public function login(EmailAddress $email, Password $password): bool
     {
-    }
-
-    /**
-     * Add an access token
-     * @param AccessToken $token
-     */
-    public function addAccessToken(AccessToken $token): void
-    {
-        $this->accessTokens[] = $token;
-    }
-
-    public static function create(object $props, int $id = null): User
-    {
-        $user = new User();
-        $user->uuid = $props->uuid;
-        $user->emailAddress = $props->emailAddress;
-        $user->traceableTime = $props->traceableTime;
-        $user->lastLogin = $props->lastLogin;
-        $user->remark = $props->remark;
-        $user->username = $props->username;
-        $user->password = $props->password;
-        if ($id) {
-            $user->id = $id;
-        }
-        return $user;
     }
 }

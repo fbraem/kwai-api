@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 
 use Kwai\Core\Infrastructure\TableData;
@@ -54,7 +55,7 @@ final class UserDatabaseRepository implements UserRepository
      * @return User     The user
      * @throws NotFoundException When user is not found
      */
-    public function getById(int $id): User
+    public function getById(int $id): Entity
     {
         $user = $this->db->from($this->table->from())
             ->where('id')->is($id)
@@ -71,11 +72,11 @@ final class UserDatabaseRepository implements UserRepository
         throw new NotFoundException('User');
     }
 
-    public function getByUUID(UniqueId $uid): User
+    public function getByUUID(UniqueId $uid): Entity
     {
     }
 
-    public function getByAccessToken(TokenIdentifier $token): User
+    public function getByAccessToken(TokenIdentifier $token): Entity
     {
         $accessTokenTable = new AliasTable(new AccessTokenTable(), 'oat');
         $data = $this->db->from($this->table->from())

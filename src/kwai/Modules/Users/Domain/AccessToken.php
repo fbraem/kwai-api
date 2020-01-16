@@ -1,7 +1,5 @@
 <?php
 /**
- * AccessToken entity
- *
  * @package Kwai/Modules
  * @subpackage Users
  */
@@ -11,18 +9,13 @@ namespace Kwai\Modules\Users\Domain;
 
 use Kwai\Core\Domain\DateTime;
 use Kwai\Core\Domain\TraceableTime;
+use Kwai\Core\Domain\DomainEntity;
 
 /**
- * AccessToken entity class
+* AccessToken entity
  */
-class AccessToken
+class AccessToken implements DomainEntity
 {
-    /**
-     * The id of the accesstoken.
-     * @var int
-     */
-    private $id;
-
     /**
      * A unique identifier for the token.
      * @var Identifier
@@ -47,17 +40,16 @@ class AccessToken
      */
     private $traceableTime;
 
-    private function __construct()
-    {
-    }
-
     /**
-     * Returns the id of the accesstoken
-     * @return int The id of the accesstoken
+     * Constructor
+     * @param object $props
      */
-    public function id(): int
+    public function __construct(object $props)
     {
-        return $this->id;
+        $this->identifier = $props->identifier;
+        $this->expiration = $props->expiration;
+        $this->revoked = $props->revoked;
+        $this->traceableTime = $props->traceableTime;
     }
 
     /**
@@ -66,18 +58,5 @@ class AccessToken
     public function revoke() : void
     {
         $this->revoked = true;
-    }
-
-    public static function create(object $props, int $id = null): self
-    {
-        $token = new self();
-        $token->identifier = $props->identifier;
-        $token->expiration = $props->expiration;
-        $token->revoked = $props->revoked;
-        $token->traceableTime = $props->traceableTime;
-        if ($id) {
-            $token->id = $id;
-        }
-        return $token;
     }
 }

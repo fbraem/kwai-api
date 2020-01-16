@@ -10,6 +10,7 @@ use Opis\Database\Database;
 use Opis\Database\Connection;
 
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -42,7 +43,7 @@ final class AccessTokenDatabaseRepositoryTest extends TestCase
         $repo = new AccessTokenDatabaseRepository(self::$db);
         $accessTokens = $repo->getTokensForUser($user);
         $this->assertContainsOnlyInstancesOf(
-            AccessToken::class,
+            Entity::class,
             $accessTokens
         );
     }
@@ -55,7 +56,7 @@ final class AccessTokenDatabaseRepositoryTest extends TestCase
             new TokenIdentifier('dc23ea481a27e4ec1bc6ea20923bf4eb7b10e63f7a5df74e1be486a74a46c8ed7944c7287d234895')
         );
         $this->assertInstanceOf(
-            AccessToken::class,
+            Entity::class,
             $accessToken
         );
     }
