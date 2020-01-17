@@ -1,0 +1,12 @@
+<!-- Copy this file to phpunit.xml and change user/password -->
+<!-- Do not version this file when there are passwords in it !!! -->
+<phpunit>
+    <testsuite name="unit">
+        <directory>.</directory>
+    </testsuite>
+    <php>
+        <includePath>.</includePath>
+        <env name="user" value="" />
+        <env name="password" value="" />
+    </php>
+</phpunit>
