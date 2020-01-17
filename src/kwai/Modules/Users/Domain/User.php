@@ -79,12 +79,11 @@ class User implements DomainEntity
     }
 
     /**
-     * Checks if the email and password are correct.
-     *
-     * @param EmailAddress $email The emailaddress used to login.
-     * @param Password $password The password to login.
+     * Verify the password.
+     * @param string $password The password to login.
      */
-    public function login(EmailAddress $email, Password $password): bool
+    public function login(string $password): bool
     {
+        return $this->password->verify($password);
     }
 }

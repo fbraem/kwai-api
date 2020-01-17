@@ -52,6 +52,6 @@ class Entity
 
     public function __call($method, $args)
     {
-        return $this->domain->{$method}($args);
+        return $this->domain->{$method}(...$args);
     }
 }

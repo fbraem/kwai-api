@@ -34,4 +34,9 @@ final class Password
     {
         return new self($str);
     }
+
+    public function verify(string $password)
+    {
+        return password_verify($password, $this->password);
+    }
 }

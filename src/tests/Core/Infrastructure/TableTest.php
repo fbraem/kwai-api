@@ -34,7 +34,6 @@ final class TableTest extends TestCase
             ['users' => 'u']
         );
         $this->assertArrayHasKey('u.id', $table->alias());
-        echo var_dump($table->alias()), PHP_EOL;
         $this->assertContains('u_id', $table->alias());
     }
 }

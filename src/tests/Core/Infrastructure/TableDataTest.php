@@ -38,8 +38,6 @@ final class TableDataTest extends TestCase
             'column_3' => 3
         ];
         $t = new TableData($object, 'test_');
-        echo var_dump($t->column_2), PHP_EOL;
-        echo var_dump($t), PHP_EOL;
         $this->assertInstanceOf(
             TableData::class,
             $t
