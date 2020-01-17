@@ -88,6 +88,6 @@ On shared hosting:
 
 Running Tests
 =============
-Run the following command from the `src` directory:
+Run the following command from the `src\tests` directory:
 
-    ./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox tests
+    ../src/vendor/bin/phpunit --testdox
