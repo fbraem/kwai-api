@@ -20,19 +20,27 @@ final class AuthenticateUser
 {
     private $userRepo;
 
+    /**
+     * Constructor.
+     * @param UserRepository $userRepo A user repository
+     */
     public function __construct(UserRepository $userRepo)
     {
         $this->userRepo = $userRepo;
     }
 
+    /**
+     * Find the user by email and check the password.
+     * @param  AuthenticateUserCommand $command
+     * @return Entity                           The user if authentication is
+     *                                          successful.
+     * @throws NotFoundExcpetion                Thrown when user can't be found.
+     */
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
-        try {
-            $user = $this->userRepo->getByEmail(new EmailAddress($command->email));
-            if ($user->login($command->password)) {
-                return $user;
-            }
-        } catch (NotFoundException $nfe) {
+        $user = $this->userRepo->getByEmail(new EmailAddress($command->email));
+        if ($user->login($command->password)) {
+            return $user;
         }
     }
 }
