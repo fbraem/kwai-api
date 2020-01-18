@@ -45,9 +45,18 @@ class Entity
      * Returns the id.
      * @return int The id of the entity
      */
-    public function id(): ?int
+    public function id(): int
     {
         return $this->id;
+    }
+
+    /**
+     * Returns the wrapped domain object
+     * @return mixed
+     */
+    public function domain()
+    {
+        return $this->domain;
     }
 
     public function __call($method, $args)
