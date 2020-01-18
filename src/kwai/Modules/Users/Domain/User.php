@@ -64,6 +64,12 @@ class User implements DomainEntity
     private $password;
 
     /**
+     * Is the user revoked?
+     * @var bool
+     */
+    private $revoked;
+
+    /**
      * Constructor.
      * @param  object $props User properties
      */
@@ -74,6 +80,7 @@ class User implements DomainEntity
         $this->traceableTime = $props->traceableTime;
         $this->lastLogin = $props->lastLogin;
         $this->remark = $props->remark;
+        $this->revoked = $props->revoked;
         $this->username = $props->username;
         $this->password = $props->password;
     }
@@ -85,5 +92,15 @@ class User implements DomainEntity
     public function login(string $password): bool
     {
         return $this->password->verify($password);
+    }
+
+    /**
+     * TODO: Add revoked to table
+     * Checks if the user is revoked.
+     * @return bool
+     */
+    public function isRevoked(): bool
+    {
+        return $this->revoked;
     }
 }

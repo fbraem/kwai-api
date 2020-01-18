@@ -38,7 +38,8 @@ final class UserMapper
                     : null,
                 'remark' => $raw->remark,
                 'username' => new Username($raw->first_name, $raw->last_name),
-                'password' => new Password($raw->password)
+                'password' => new Password($raw->password),
+                'revoked' => $raw->revoked ?? false
             ])
         );
     }
