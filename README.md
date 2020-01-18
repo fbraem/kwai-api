@@ -90,4 +90,4 @@ Running Tests
 =============
 Run the following command from the `src\tests` directory:
 
-    ../src/vendor/bin/phpunit --testdox
+    ../vendor/bin/phpunit --testdox
