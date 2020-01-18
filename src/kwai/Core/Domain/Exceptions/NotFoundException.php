@@ -27,6 +27,7 @@ class NotFoundException extends \Exception
     public function __construct(string $entity)
     {
         parent::__construct($entity . 'not found');
+        $this->entity = $entity;
     }
 
     public function __toString()
