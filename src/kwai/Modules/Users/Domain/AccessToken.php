@@ -7,7 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
-use Kwai\Core\Domain\DateTime;
+use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -25,7 +25,7 @@ class AccessToken implements DomainEntity
 
     /**
      * Timestamp when the token expires
-     * @var DateTime
+     * @var Timestamp
      */
     private $expiration;
 
@@ -72,9 +72,9 @@ class AccessToken implements DomainEntity
 
     /**
      * Get expiration
-     * @return DateTime
+     * @return Timestamp
      */
-    public function getExpiration(): DateTime
+    public function getExpiration(): Timestamp
     {
         return $this->expiration;
     }

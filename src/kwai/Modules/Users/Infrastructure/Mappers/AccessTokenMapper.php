@@ -11,7 +11,7 @@ namespace Kwai\Modules\Users\Infrastructure\Mappers;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\DateTime;
+use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\AccessToken;
@@ -25,11 +25,11 @@ final class AccessTokenMapper
             $raw->id,
             new AccessToken((object)[
                 'identifier' => new TokenIdentifier($raw->identifier),
-                'expiration' => DateTime::createFromString($raw->expiration),
+                'expiration' => Timestamp::createFromString($raw->expiration),
                 'revoked' => $raw->revoked,
                 'traceableTime' => new TraceableTime(
                     DateTime::createFromString($raw->created_at),
-                    isset($raw->updated_at) ? DateTime::createFromString($raw->updated_at) : null
+                    isset($raw->updated_at) ? Timestamp::createFromString($raw->updated_at) : null
                 ),
             ])
         );

@@ -13,44 +13,44 @@
  {
      /**
       * Time of creation
-      * @var Kwai\Core\Domain\DateTime
+      * @var Timestamp
       */
      private $created_at;
 
      /**
       * Time of last update
-      * @var Kwai\Core\Domain\DateTime
+      * @var Timestamp
       */
      private $updated_at;
 
      /**
       * Constructor
       *
-      * @param DateTime $created_at The timestamp of creation
-      * @param DateTime $updated_at The timestamp of the last modification
+      * @param Timestamp $created_at The timestamp of creation
+      * @param Timestamp $updated_at The timestamp of the last modification
       */
      public function __construct(
-         DateTime $created_at = null,
-         DateTime $updated_at = null
+         Timestamp $created_at = null,
+         Timestamp $updated_at = null
      ) {
-         $this->created_at = $created_at ?? DateTime::createNow();
+         $this->created_at = $created_at ?? Timestamp::createNow();
          $this->updated_at = $updated_at;
      }
 
      /**
       * Returns the timestamp of creation.
-      * @return DateTime
+      * @return Timestamp
       */
-     public function created_at(): DateTime
+     public function created_at(): Timestamp
      {
          return $this->created_at;
      }
 
      /**
       * Returns the timestamp of the last modification
-      * @return DateTime
+      * @return Timestamp
       */
-     public function updated_at(): DateTime
+     public function updated_at(): Timestamp
      {
          return $this->created_at;
      }

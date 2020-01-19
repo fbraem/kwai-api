@@ -10,7 +10,7 @@ namespace Kwai\Modules\Users\Domain;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\DateTime;
+use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
@@ -41,7 +41,7 @@ class User implements DomainEntity
 
     /**
      * The timestamp of the last login
-     * @var DateTime
+     * @var Timestamp
      */
     private $lastLogin;
 

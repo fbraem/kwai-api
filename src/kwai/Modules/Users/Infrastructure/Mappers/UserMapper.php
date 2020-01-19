@@ -11,7 +11,7 @@ namespace Kwai\Modules\Users\Infrastructure\Mappers;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\DateTime;
+use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\User;
@@ -28,13 +28,13 @@ final class UserMapper
                 'uuid' => new UniqueId($raw->uuid),
                 'emailAddress' => new EmailAddress($raw->email),
                 'traceableTime' => new TraceableTime(
-                    DateTime::createFromString($raw->created_at),
+                    Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at)
-                        ? DateTime::createFromString($raw->updated_at)
+                        ? Timestamp::createFromString($raw->updated_at)
                         : null
                 ),
                 'lastLogin' => isset($raw->last_login)
-                    ? DateTime::createFromString($raw->last_login)
+                    ? Timestamp::createFromString($raw->last_login)
                     : null,
                 'remark' => $raw->remark,
                 'username' => new Username($raw->first_name, $raw->last_name),
