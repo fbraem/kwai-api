@@ -8,10 +8,10 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\EmailAddress;
 
 use Kwai\Modules\Users\Repositories\UserRepository;
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Modules\Users\Exceptions\AuthenticationException;
 
 /**
  * Usecase: Authenticate a user
@@ -30,17 +30,24 @@ final class AuthenticateUser
     }
 
     /**
-     * Find the user by email and check the password.
+     * Find the user by email and check the password. When the password is
+     * not verified or the user is revoked an AuthenticationException will
+     * be thrown.
      * @param  AuthenticateUserCommand $command
      * @return Entity                           The user if authentication is
-     *                                          successful.
-     * @throws NotFoundExcpetion                Thrown when user can't be found.
+     *                                          successful
+     * @throws NotFoundException                Thrown when user can't be found
+     * @throws NotAuthorizedException           Thrown when login fails
      */
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
         $user = $this->userRepo->getByEmail(new EmailAddress($command->email));
-        if ($user->login($command->password)) {
-            return $user;
+        if (!$user->login($command->password)) {
+            throw new AuthenticationException('Invalid password');
         }
+        if ($user->isRevoked()) {
+            throw new AuthenticationException('User is revoked');
+        }
+        return $user;
     }
 }
