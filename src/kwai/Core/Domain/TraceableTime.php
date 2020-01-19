@@ -37,7 +37,21 @@
          $this->updated_at = $updated_at;
      }
 
-     public function __toString() : string
+     /**
+      * Returns the timestamp of creation.
+      * @return DateTime
+      */
+     public function created_at(): DateTime
      {
+         return $this->created_at;
+     }
+
+     /**
+      * Returns the timestamp of the last modification
+      * @return DateTime
+      */
+     public function updated_at(): DateTime
+     {
+         return $this->created_at;
      }
  }
