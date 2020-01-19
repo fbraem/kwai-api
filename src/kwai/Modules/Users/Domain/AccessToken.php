@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Domain;
 use Kwai\Core\Domain\DateTime;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 /**
 * AccessToken entity
@@ -18,7 +19,7 @@ class AccessToken implements DomainEntity
 {
     /**
      * A unique identifier for the token.
-     * @var Identifier
+     * @var TokenIdentifier
      */
     private $identifier;
 
@@ -58,5 +59,41 @@ class AccessToken implements DomainEntity
     public function revoke() : void
     {
         $this->revoked = true;
+    }
+
+    /**
+     * Get identifier
+     * @return TokenIdentifier
+     */
+    public function getIdentifier(): TokenIdentifier
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Get expiration
+     * @return DateTime
+     */
+    public function getExpiration(): DateTime
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * Is this token revoked?
+     * @return bool
+     */
+    public function isRevoked(): bool
+    {
+        return $this->revoked;
+    }
+
+    /**
+     * Get traceable time
+     * @return TraceableTime
+     */
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
     }
 }
