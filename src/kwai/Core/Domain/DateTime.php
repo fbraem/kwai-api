@@ -63,6 +63,7 @@ final class DateTime
      * @param int $minute
      * @param int $sec
      * @param string $timezone The timezone to use. Default is UTC.
+     * @return DateTime
      */
     public static function create(
         int $year = null,
@@ -90,6 +91,7 @@ final class DateTime
      * Creates a new datetime object from an object.
      *
      * @param object $object An object containing all properties to create a new datetime object.
+     * @return DateTime
      */
     public static function createFromObject(object $datetimeObject): self
     {
@@ -110,6 +112,7 @@ final class DateTime
      * Create a datetime with the current time
      *
      * @param string $timezone The timezone to use. Default is UTC.
+     * @return DateTime
      */
     public static function createNow($timezone = self::TIMEZONE): self
     {
@@ -123,6 +126,7 @@ final class DateTime
      *
      * @param string $str A datetime in format Y-m-d H:i:s
      * @param string $timezone The timezone to use. Default is UTC.
+     * @return DateTime
      */
     public static function createFromString(
         string $str,
@@ -134,6 +138,18 @@ final class DateTime
             $str,
             $timezone
         );
+        return $object;
+    }
+
+    /**
+     * Create from a DateTime
+     * @param  DateTime $time
+     * @return DateTime
+     */
+    public static function createFromDateTime(DateTime $time)
+    {
+        $object = new self();
+        $object->datetime = \Carbon\CarbonImmutable::instance($time);
         return $object;
     }
 }
