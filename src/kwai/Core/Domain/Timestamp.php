@@ -1,15 +1,15 @@
 <?php
 /**
- * Class DateTime
+ * Class Timestamp
  */
 declare(strict_types = 1);
 
 namespace Kwai\Core\Domain;
 
 /**
- * Value object for a datetime.
+ * Value object for a timestamp.
  */
-final class DateTime
+final class Timestamp
 {
     const TIMEZONE = 'UTC';
 
@@ -27,13 +27,13 @@ final class DateTime
     }
 
     /**
-     * Returns a formatted date.
+     * Returns a formatted timestamp.
      *
      * When format is null, toDateTimeString will be used.
      * @see https://carbon.nesbot.com/docs/#api-formatting String Formatting.
      *
      * @param string $format The format to use
-     * @return string A formatted datetime
+     * @return string A formatted timestamp
      */
     public function format($format = null): string
     {
@@ -44,9 +44,9 @@ final class DateTime
     }
 
     /**
-     * Returns a string representation of the datetime in the default format.
+     * Returns a string representation of the timestamp in the default format.
      *
-     * @return string A formatted datetime
+     * @return string A formatted timestamp
      */
     public function __toString(): string
     {
@@ -54,7 +54,7 @@ final class DateTime
     }
 
     /**
-     * Creates a new datetime object.
+     * Creates a new Timestamp object.
      *
      * @param int $year
      * @param int $month
@@ -63,7 +63,7 @@ final class DateTime
      * @param int $minute
      * @param int $sec
      * @param string $timezone The timezone to use. Default is UTC.
-     * @return DateTime
+     * @return Timestamp
      */
     public static function create(
         int $year = null,
@@ -88,10 +88,11 @@ final class DateTime
     }
 
     /**
-     * Creates a new datetime object from an object.
+     * Creates a new Timestamp object from an object.
      *
-     * @param object $object An object containing all properties to create a new datetime object.
-     * @return DateTime
+     * @param object $object An object containing all properties to create a
+     *                       new Timestamp object.
+     * @return Timestamp
      */
     public static function createFromObject(object $datetimeObject): self
     {
@@ -109,10 +110,10 @@ final class DateTime
     }
 
     /**
-     * Create a datetime with the current time
+     * Create a Timestamp with the current time
      *
      * @param string $timezone The timezone to use. Default is UTC.
-     * @return DateTime
+     * @return Timestamp
      */
     public static function createNow($timezone = self::TIMEZONE): self
     {
@@ -122,11 +123,11 @@ final class DateTime
     }
 
     /**
-     * Create from a string
+     * Create a Timestamp from a string
      *
      * @param string $str A datetime in format Y-m-d H:i:s
      * @param string $timezone The timezone to use. Default is UTC.
-     * @return DateTime
+     * @return Timestamp
      */
     public static function createFromString(
         string $str,
@@ -142,9 +143,9 @@ final class DateTime
     }
 
     /**
-     * Create from a DateTime
+     * Create from a Timestamp object from a DateTime object.
      * @param  DateTime $time
-     * @return DateTime
+     * @return Timestamp
      */
     public static function createFromDateTime(DateTime $time)
     {
