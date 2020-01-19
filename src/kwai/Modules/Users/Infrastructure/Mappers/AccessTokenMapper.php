@@ -28,7 +28,7 @@ final class AccessTokenMapper
                 'expiration' => Timestamp::createFromString($raw->expiration),
                 'revoked' => $raw->revoked,
                 'traceableTime' => new TraceableTime(
-                    DateTime::createFromString($raw->created_at),
+                    Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at) ? Timestamp::createFromString($raw->updated_at) : null
                 ),
             ])

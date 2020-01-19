@@ -1,26 +1,26 @@
 <?php
 /**
- * Testcase for DateTime
+ * Testcase for Timestamp
  */
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Kwai\Core\Domain\DateTime;
+use Kwai\Core\Domain\Timestamp;
 
-final class DateTimeTest extends TestCase
+final class TimestampTest extends TestCase
 {
     public function testCreateNow(): void
     {
         $this->assertInstanceOf(
-            DateTime::class,
-            DateTime::createNow()
+            Timestamp::class,
+            Timestamp::createNow()
         );
     }
 
     public function testCreate(): void
     {
         $this->assertEquals(
-            strval(DateTime::create(2020, 1, 2, 10, 30, 30)),
+            strval(Timestamp::create(2020, 1, 2, 10, 30, 30)),
             '2020-01-02 10:30:30'
         );
     }
@@ -28,7 +28,7 @@ final class DateTimeTest extends TestCase
     public function testCreateObject(): void
     {
         $this->assertEquals(
-            strval(DateTime::createFromObject((object) [
+            strval(Timestamp::createFromObject((object) [
                 'year' => 2020,
                 'month' => 1,
                 'day' => 31
@@ -41,7 +41,7 @@ final class DateTimeTest extends TestCase
     {
         $currentYear = date('Y');
         $this->assertEquals(
-            strval(DateTime::createFromObject((object) [
+            strval(Timestamp::createFromObject((object) [
                 'month' => 1,
                 'day' => 31
             ])),
@@ -53,7 +53,7 @@ final class DateTimeTest extends TestCase
     {
         $currentYear = date('Y');
         $this->assertEquals(
-            strval(DateTime::create()),
+            strval(Timestamp::create()),
             "$currentYear-01-01 00:00:00"
         );
     }
