@@ -103,4 +103,13 @@ class User implements DomainEntity
     {
         return $this->revoked;
     }
+
+    /**
+     * Returns the email address.
+     * @return EmailAddress
+     */
+    public function getEmailAddress(): EmailAddress
+    {
+        return $this->emailAddress;
+    }
 }
