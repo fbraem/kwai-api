@@ -41,7 +41,7 @@
       * Returns the timestamp of creation.
       * @return Timestamp
       */
-     public function created_at(): Timestamp
+     public function getCreatedAt(): Timestamp
      {
          return $this->created_at;
      }
@@ -50,7 +50,7 @@
       * Returns the timestamp of the last modification
       * @return Timestamp
       */
-     public function updated_at(): Timestamp
+     public function getUpdatedAt(): Timestamp
      {
          return $this->created_at;
      }
