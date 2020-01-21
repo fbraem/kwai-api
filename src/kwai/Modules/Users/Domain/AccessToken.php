@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Domain;
 
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\TraceableTime;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
@@ -42,6 +43,12 @@ class AccessToken implements DomainEntity
     private $traceableTime;
 
     /**
+     * The user that owns the token.
+     * @var int
+     */
+    private $user;
+
+    /**
      * Constructor
      * @param object $props
      */
@@ -49,8 +56,8 @@ class AccessToken implements DomainEntity
     {
         $this->identifier = $props->identifier;
         $this->expiration = $props->expiration;
-        $this->revoked = $props->revoked;
-        $this->traceableTime = $props->traceableTime;
+        $this->revoked = $props->revoked ?? false;
+        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
     }
 
     /**
@@ -95,5 +102,23 @@ class AccessToken implements DomainEntity
     public function getTraceableTime(): TraceableTime
     {
         return $this->traceableTime;
+    }
+
+    /**
+     * Get the owner of this token
+     * @return Entity
+     */
+    public function getUser(): ?Entity
+    {
+        return $this->user;
+    }
+
+    /**
+     * Attach a user to the token
+     * @param Entity $user The user that owns this token.
+     */
+    public function attachUser(Entity $user): void
+    {
+        $this->user = $user;
     }
 }
