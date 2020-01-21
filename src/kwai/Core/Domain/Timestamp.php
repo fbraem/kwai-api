@@ -147,7 +147,7 @@ final class Timestamp
      * @param  DateTime $time
      * @return Timestamp
      */
-    public static function createFromDateTime(DateTime $time)
+    public static function createFromDateTime(\DateTime $time)
     {
         $object = new self();
         $object->datetime = \Carbon\CarbonImmutable::instance($time);
