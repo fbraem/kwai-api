@@ -7,7 +7,16 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
+use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
+use Kwai\Modules\Users\UseCases\AuthenticateUser;
+use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
+
+use Kwai\Core\Domain\Exceptions\NotFoundExcpetion;
+use Core\Responses\NotAuthorizedResponse;
+
+use Firebase\JWT\JWT;
 
 class AccessTokenAction
 {
@@ -20,13 +29,39 @@ class AccessTokenAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $server = $this->container->get('authorizationServer');
+        $data = $request->getParsedBody();
+        $command = new AuthenticateUserCommand([
+            'email' => $data['username'],
+            'password' => $data['password']
+        ]);
+
         try {
-            $application = \Core\Clubman::getApplication();
-            $request = $request->withAttribute('client_secret', $this->container->get('settings')['oauth2']['client']['secret']);
-            return $server->respondToAccessTokenRequest($request, $response);
-        } catch (OAuthServerException $exception) {
-            return $exception->generateHttpResponse($response);
+            $accessToken = (new AuthenticateUser(
+                new UserDatabaseRepository($this->container->get('pdo_db')),
+                new AccessTokenRepository($this->container->get('pdo_db'))
+            ))($command);
+        } catch (NotFoundException $nfe) {
+            return new NotAuthorizedResponse('Unknown user');
+        } catch (AuthenticationException $ae) {
+            return new NotAuthorizedResponse('Authentication failed');
         }
+
+        $payload = [
+            'iat' => strval($accessToken->getTraceableTime()->getCreatedAt()),
+            'exp' => strval($accessToken->getExpiration()),
+            'jti' => strval($accessToken->getIdentifier()),
+            'sub' => strval($accessToken->getUser()->getEmailAddress()),
+            'scope' => []
+        ];
+
+        $secret = $this->container->get('settings')['oauth2']['client']['secret'];
+        $data = [
+            'access_token' => JWT::encode($payload, $secret, "HS256"),
+            'expires' => strval($accessToken->getExpiration())
+        ];
+        $response->withStatus(201)
+            ->withHeader("Content-Type", "application/json")
+            ->getBody()->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        return $response;
     }
 }

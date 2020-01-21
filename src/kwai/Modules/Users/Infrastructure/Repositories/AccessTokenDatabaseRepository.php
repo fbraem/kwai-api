@@ -9,9 +9,12 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
+use Kwai\Core\Infrastructure\TableData;
 
+use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
+use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
 
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 
@@ -30,6 +33,12 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     private $db;
 
     /**
+     * AccessToken table
+     * @var AccessTokenTable
+     */
+    private $table;
+
+    /**
      * Constructor
      *
      * @param Database $db A database object
@@ -37,22 +46,27 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     public function __construct(Database $db)
     {
         $this->db = $db;
+        $this->table = new AccessTokenTable();
     }
 
     /**
      * Get an accesstoken by its token identifier.
      *
      * @param  TokenIdentifier $identifier A token identifier
-     * @return Entity                 An accesstoken
+     * @return Entity                      An accesstoken
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
-        $row = $this->db->from(self::TABLE_NAME)
+        $row = $this->db->from($this->table->from())
             ->where('identifier')->is(strval($identifier))
-            ->select()
+            ->select(function ($include) {
+                $include->columns($this->table->alias());
+            })
             ->first();
         if ($row) {
-            return AccessTokenMapper::toDomain($row);
+            return AccessTokenMapper::toDomain(
+                new TableData($row, $this->table->prefix())
+            );
         }
         throw new NotFoundException('AccessToken');
     }
@@ -64,18 +78,37 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     public function getTokensForUser(Entity $user): array
     {
-        $rows = $this->db->from(self::TABLE_NAME)
+        $rows = $this->db->from($this->table->from())
             ->where('user_id')->is($user->id())
-            ->select()
+            ->select(function ($include) {
+                $include->columns($this->table->alias());
+            })
             ->all();
         ;
-        if ($rows) {
-            $tokens = [];
-            foreach ($rows as $row) {
-                $tokens[] = AccessTokenMapper::toDomain($row);
-            }
-            return $tokens;
+        $tokens = [];
+        foreach ($rows as $row) {
+            $token = AccessTokenMapper::toDomain(
+                new TableData($row, $this->table->prefix())
+            );
+            $token->attachUser($user);
+            $tokens[] = $token;
         }
-        throw new NotFoundException('User');
+        return $tokens;
+    }
+
+    public function create(AccessToken $token): ?Entity
+    {
+        $data = AccessTokenMapper::toPersistence($token);
+
+        $result = $this->db
+            ->insert($data)
+            ->into($this->table->from());
+        if ($result) {
+            return new Entity(
+                (int) $this->db->getConnection()->getPDO()->lastInsertId(),
+                $token
+            );
+        }
+        //TODO: Throw an exception ?
     }
 }
