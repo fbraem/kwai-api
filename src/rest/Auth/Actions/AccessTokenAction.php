@@ -38,7 +38,7 @@ class AccessTokenAction
         try {
             $accessToken = (new AuthenticateUser(
                 new UserDatabaseRepository($this->container->get('pdo_db')),
-                new AccessTokenRepository($this->container->get('pdo_db'))
+                new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
         } catch (NotFoundException $nfe) {
             return new NotAuthorizedResponse('Unknown user');
