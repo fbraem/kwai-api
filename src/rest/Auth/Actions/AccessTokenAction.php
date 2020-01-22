@@ -47,8 +47,8 @@ class AccessTokenAction
         }
 
         $payload = [
-            'iat' => strval($accessToken->getTraceableTime()->getCreatedAt()),
-            'exp' => strval($accessToken->getExpiration()),
+            'iat' => $accessToken->getTraceableTime()->getCreatedAt()->format('U'),
+            'exp' => $accessToken->getExpiration()->format('U'),
             'jti' => strval($accessToken->getIdentifier()),
             'sub' => strval($accessToken->getUser()->getEmailAddress()),
             'scope' => []
