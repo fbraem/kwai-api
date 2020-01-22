@@ -97,6 +97,12 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         return $tokens;
     }
 
+    /**
+     * Inserts the accesstoken in the table.
+     * @param  AccessToken $token
+     * @return Entity
+     * @throws NotCreatedException Thrown when insert fails
+     */
     public function create(AccessToken $token): Entity
     {
         $data = AccessTokenMapper::toPersistence($token);
