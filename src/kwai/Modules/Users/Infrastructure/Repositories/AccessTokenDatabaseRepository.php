@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotCreatedException;
 use Kwai\Core\Infrastructure\TableData;
 
 use Kwai\Modules\Users\Domain\AccessToken;
@@ -96,7 +97,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         return $tokens;
     }
 
-    public function create(AccessToken $token): ?Entity
+    public function create(AccessToken $token): Entity
     {
         $data = AccessTokenMapper::toPersistence($token);
 
@@ -109,6 +110,6 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
                 $token
             );
         }
-        //TODO: Throw an exception ?
+        throw new NotCreatedException('AccessToken');
     }
 }
