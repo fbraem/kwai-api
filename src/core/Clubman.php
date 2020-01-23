@@ -36,6 +36,9 @@ use Opis\Database\Connection;
 
 use Slim\Factory\AppFactory;
 
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Core\Domain\UniqueId;
+
 //TODO: Extract all code to services, etc, ...
 class Clubman
 {
@@ -157,14 +160,22 @@ class Clubman
             $settings = $container->get('settings');
             self::$application->add(new JwtAuthentication([
                 'secret' => $settings['oauth2']['client']['secret'],
-                "algorithm" => [ "HS256" ],
-                "rules" => [ new AuthenticationRule() ],
+                'algorithm' => [ 'HS256' ],
+                'rules' => [ new AuthenticationRule() ],
                 'error' => function ($response, $arguments) {
-                    $data["status"] = "error";
-                    $data["message"] = $arguments["message"];
+                    $data['status'] = 'error';
+                    $data['message'] = $arguments['message'];
                     return $response
-                        ->withHeader("Content-Type", "application/json")
+                        ->withHeader('Content-Type', 'application/json')
                         ->getBody()->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+                },
+                'before' => function ($request, $arguments) use ($container) {
+                    $uuid = new UniqueId($arguments['decoded']['sub']);
+                    $userRepo = new UserDatabaseRepository($container->get('pdo_db'));
+                    return $request->withAttribute(
+                        'kwai.user',
+                        $userRepo->getByUUID($uuid)
+                    );
                 }
             ]));
 
