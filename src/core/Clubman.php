@@ -29,11 +29,14 @@ use Core\Middlewares\LogActionMiddleware;
 use Core\Middlewares\AuthenticationMiddleware;
 use Core\Middlewares\TransactionMiddleware;
 
+use Tuupola\Middleware\JwtAuthentication;
+
 use Opis\Database\Database;
 use Opis\Database\Connection;
 
 use Slim\Factory\AppFactory;
 
+//TODO: Extract all code to services, etc, ...
 class Clubman
 {
     private static $application;
@@ -79,7 +82,6 @@ class Clubman
                     $dbConfig[$dbDefault]['pass']
                 );
                 $connection->initCommand('SET NAMES UTF8');
-                $connection->option(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
                 return new Database($connection);
             })->addArgument($container);
 
@@ -151,7 +153,22 @@ class Clubman
             self::$application->add(new ParametersMiddleware());
             self::$application->add(new TransactionMiddleware($container));
             self::$application->add(new LogActionMiddleware($container));
-            self::$application->add(new AuthenticationMiddleware($container));
+
+            $settings = $container->get('settings');
+            self::$application->add(new JwtAuthentication([
+                'secret' => $settings['oauth2']['client']['secret'],
+                "algorithm" => [ "HS256" ],
+                "rules" => [ new AuthenticationRule() ],
+                'error' => function ($response, $arguments) {
+                    $data["status"] = "error";
+                    $data["message"] = $arguments["message"];
+                    return $response
+                        ->withHeader("Content-Type", "application/json")
+                        ->getBody()->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+                }
+            ]));
+
+            // self::$application->add(new AuthenticationMiddleware($container));
             self::$application->addRoutingMiddleware();
         }
         return self::$application;
