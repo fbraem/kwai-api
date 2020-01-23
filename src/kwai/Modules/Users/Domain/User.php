@@ -112,4 +112,13 @@ class User implements DomainEntity
     {
         return $this->emailAddress;
     }
+
+    /**
+     * Get the unique id of the user
+     * @return UniqueId
+     */
+    public function getUuid(): UniqueId
+    {
+        return $this->uuid;
+    }
 }
