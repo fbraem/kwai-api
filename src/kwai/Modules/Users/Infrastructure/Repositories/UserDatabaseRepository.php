@@ -73,8 +73,26 @@ final class UserDatabaseRepository implements UserRepository
         throw new NotFoundException('User');
     }
 
+    /**
+     * Get the user with the given uuid
+     * @param  UniqueId $uid
+     * @return Entity
+     */
     public function getByUUID(UniqueId $uid): Entity
     {
+        $user = $this->db->from($this->table->from())
+            ->where('uuid')->is(strval($uid))
+            ->select(function ($include) {
+                $include->columns($this->table->alias());
+            })
+            ->first()
+        ;
+        if ($user) {
+            return UserMapper::toDomain(
+                new TableData($user, $this->table->prefix())
+            );
+        }
+        throw new NotFoundException('User');
     }
 
     /**
