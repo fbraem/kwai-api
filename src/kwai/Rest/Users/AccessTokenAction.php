@@ -1,6 +1,6 @@
 <?php
 
-namespace REST\Auth\Actions;
+namespace Kwai\Rest\Users;
 
 use Psr\Container\ContainerInterface;
 
