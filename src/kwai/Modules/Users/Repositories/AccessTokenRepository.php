@@ -21,7 +21,7 @@ interface AccessTokenRepository
      * Get an accesstoken by its token identifier.
      *
      * @param  TokenIdentifier $identifier A token identifier
-     * @return AccessToken                 An accesstoken
+     * @return Entity                      An accesstoken
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity;
 
