@@ -30,20 +30,30 @@ class UserMigration extends AbstractMigration
         ;
 
         $application = \Core\Clubman::getApplication();
-        $pwd = $this->randomPassword();
-        $data = [
-            [
-                'email' => $application->getContainer()->settings['website']['email'],
-                'password' => password_hash($pwd, PASSWORD_DEFAULT),
-                'remark' => 'Root User'
-            ]
-        ];
+        $settings = $application->getContainer()->get('settings');
+        if ($this->getEnvironment() == 'test') {
+            $data = [
+                [
+                    'email' => 'test@kwai.com',
+                    'password' => 'hajime',
+                    'remark' => 'Root User'
+                ]
+            ];
+        } else {
+            $data = [
+                [
+                    'email' => $settings['website']['email'],
+                    'password' => $this->randomPassword(),
+                    'remark' => 'Root User'
+                ]
+            ];
+        }
         $this->table('users')->insert($data)->save();
 
         echo 'Root User', PHP_EOL;
         echo '---------', PHP_EOL;
-        echo 'Email: ', $application->getContainer()->settings['website']['email'], PHP_EOL;
-        echo 'Password: ', $pwd, PHP_EOL;
+        echo 'Email: ', $data[0]['email'], PHP_EOL;
+        echo 'Password: ', $data[0]['password'], PHP_EOL;
     }
 
     public function down()
@@ -55,7 +65,7 @@ class UserMigration extends AbstractMigration
     private function randomPassword()
     {
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        $pass = array(); //remember to declare $pass as an array
+        $pass = [];
         $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
         for ($i = 0; $i < 8; $i++) {
             $n = rand(0, $alphaLength);
