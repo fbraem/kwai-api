@@ -9,11 +9,17 @@ class UserLogRenameColumnMigration extends AbstractMigration
 {
     public function up()
     {
-        $this->table('user_logs')->renameColumn('domain', 'rest');
+        $this->table('user_logs')
+            ->renameColumn('domain', 'rest')
+            ->save()
+        ;
     }
 
     public function down()
     {
-        $this->table('user_logs')->renameColumn('rest', 'domain');
+        $this->table('user_logs')
+            ->renameColumn('rest', 'domain')
+            ->save()
+        ;
     }
 }
