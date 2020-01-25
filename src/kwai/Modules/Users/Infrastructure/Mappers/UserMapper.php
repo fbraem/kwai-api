@@ -23,7 +23,7 @@ final class UserMapper
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
-            $raw->id,
+            (int) $raw->id,
             new User((object)[
                 'uuid' => new UniqueId($raw->uuid),
                 'emailAddress' => new EmailAddress($raw->email),
