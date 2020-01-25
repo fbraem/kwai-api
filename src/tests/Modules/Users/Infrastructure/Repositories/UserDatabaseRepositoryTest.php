@@ -18,7 +18,6 @@ use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 require_once('Database.php');
-// echo var_dump(Database::getDatabase()), PHP_EOL;
 
 /**
  * @group DB
