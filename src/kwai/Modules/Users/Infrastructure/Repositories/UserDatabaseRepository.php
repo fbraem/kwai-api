@@ -125,7 +125,7 @@ final class UserDatabaseRepository implements UserRepository
             ->where('oat.identifier')->is(strval($token))
             ->leftJoin(
                 $accessTokenTable->from(),
-                function ($join) use ($token) {
+                function ($join) {
                     $join->on('users.id', 'oat.user_id');
                 }
             )
