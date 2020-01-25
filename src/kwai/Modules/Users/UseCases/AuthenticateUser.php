@@ -15,7 +15,7 @@ use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
-use Kwai\Modules\Users\Exceptions\AuthenticationException;
+use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 
 use Firebase\JWT\JWT;
 
