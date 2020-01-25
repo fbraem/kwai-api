@@ -35,7 +35,7 @@ class UserMigration extends AbstractMigration
             $data = [
                 [
                     'email' => 'test@kwai.com',
-                    'password' => 'hajime',
+                    'password' => password_hash('hajime', PASSWORD_DEFAULT),
                     'remark' => 'Root User'
                 ]
             ];
@@ -43,7 +43,7 @@ class UserMigration extends AbstractMigration
             $data = [
                 [
                     'email' => $settings['website']['email'],
-                    'password' => $this->randomPassword(),
+                    'password' => password_hash($this->randomPassword(), PASSWORD_DEFAULT),
                     'remark' => 'Root User'
                 ]
             ];
