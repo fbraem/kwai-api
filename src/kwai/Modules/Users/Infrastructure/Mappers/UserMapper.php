@@ -1,6 +1,6 @@
 <?php
 /**
- * User Repository.
+ * Mapper for User entity.
  * @package kwai
  * @subpackage Users
  */

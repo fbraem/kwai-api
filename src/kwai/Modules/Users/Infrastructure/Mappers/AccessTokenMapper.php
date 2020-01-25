@@ -1,6 +1,6 @@
 <?php
 /**
- * User Repository.
+ * Mapper for AccessToken entity.
  * @package kwai
  * @subpackage Users
  */
