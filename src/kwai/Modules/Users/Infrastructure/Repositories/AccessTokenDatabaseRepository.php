@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\NotCreatedException;
 use Kwai\Core\Infrastructure\TableData;
 
