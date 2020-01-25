@@ -22,7 +22,7 @@ final class AccessTokenMapper
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
-            $raw->id,
+            (int) $raw->id,
             new AccessToken((object)[
                 'identifier' => new TokenIdentifier($raw->identifier),
                 'expiration' => Timestamp::createFromString($raw->expiration),
