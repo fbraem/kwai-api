@@ -20,6 +20,10 @@ final class Password
      */
     private $password;
 
+    /**
+     * Constructor.
+     * @param string $password A hashed string used as password.
+     */
     public function __construct(string $password)
     {
         $this->password = $password;
@@ -30,11 +34,21 @@ final class Password
         return $this->password;
     }
 
+    /**
+     * Creates a new password. String will be hashed.
+     * @param  string $str
+     * @return self
+     */
     public static function fromString(string $str): self
     {
-        return new self($str);
+        return new self(password_hash($str, PASSWORD_DEFAULT));
     }
 
+    /**
+     * Verify this password against the given password.
+     * @param  string $password
+     * @return bool             Returns true when the password matches
+     */
     public function verify(string $password)
     {
         return password_verify($password, $this->password);
