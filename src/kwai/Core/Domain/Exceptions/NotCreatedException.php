@@ -26,7 +26,7 @@ class NotCreatedException extends \Exception
      */
     public function __construct(string $entity)
     {
-        parent::__construct($entity . 'not created');
+        parent::__construct($entity . ' not created');
         $this->entity = $entity;
     }
 
