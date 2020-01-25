@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Core\Domain\Exceptions;
+namespace Kwai\Modules\Users\Domain\Exceptions;
 
 /**
  * AuthenticationException class. This exception is thrown
