@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\Timestamp;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -22,25 +24,53 @@ require_once('Database.php');
  */
 final class AccessTokenDatabaseRepositoryTest extends TestCase
 {
+    private $user;
+
+    private $repo;
+
+    public function setup() : void
+    {
+        $this->repo = new AccessTokenDatabaseRepository(Database::getDatabase());
+        $userRepo = new UserDatabaseRepository(Database::getDatabase());
+        $this->user = $userRepo->getByEmail(new EmailAddress($_ENV['user']));
+    }
+
+    public function testCreateAccessToken()
+    {
+        $future = new \DateTime('now +2 hours');
+        $tokenIdentifier = new TokenIdentifier();
+        $accessToken = new AccessToken((object) [
+            'identifier' => $tokenIdentifier,
+            'expiration' => Timestamp::createFromDateTime($future)
+        ]);
+        $accessToken->attachUser($this->user);
+        $entity = $this->repo->create($accessToken);
+        $this->assertInstanceOf(
+            Entity::class,
+            $entity
+        );
+        return $tokenIdentifier;
+    }
+
+    /**
+     * @depends testCreateAccessToken
+     */
     public function testGetTokensForUser(): void
     {
-        $repo = new UserDatabaseRepository(Database::getDatabase());
-        $user = $repo->getById(1);
-
-        $repo = new AccessTokenDatabaseRepository(Database::getDatabase());
-        $accessTokens = $repo->getTokensForUser($user);
+        $accessTokens = $this->repo->getTokensForUser($this->user);
         $this->assertContainsOnlyInstancesOf(
             Entity::class,
             $accessTokens
         );
     }
 
-    public function testGetByTokenIdentifier(): void
+    /**
+     * @depends testCreateAccessToken
+     */
+    public function testGetByTokenIdentifier($tokenIdentifier): void
     {
-        //TODO: Make sure the token is there ...
-        $repo = new AccessTokenDatabaseRepository(Database::getDatabase());
-        $accessToken = $repo->getByTokenIdentifier(
-            new TokenIdentifier('dc23ea481a27e4ec1bc6ea20923bf4eb7b10e63f7a5df74e1be486a74a46c8ed7944c7287d234895')
+        $accessToken = $this->repo->getByTokenIdentifier(
+            $tokenIdentifier
         );
         $this->assertInstanceOf(
             Entity::class,
