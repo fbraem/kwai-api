@@ -27,8 +27,6 @@ use Opis\Database\Database;
 */
 final class AccessTokenDatabaseRepository implements AccessTokenRepository
 {
-    const TABLE_NAME = 'oauth_access_tokens';
-
     /**
      * @var Database
      */
