@@ -16,6 +16,7 @@ use Kwai\Core\Infrastructure\AliasTable;
 
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\AbilityTable;
 
 use Opis\Database\Database;
@@ -38,11 +39,6 @@ final class AbilityDatabaseRepository implements AbilityRepository
         $this->table = new AbilityTable();
     }
 
-    // SELECT rules.id as rule_id, rule_subjects.name as subject, rule_actions.name as action from ability_rules
-    // left join rules on rules.id = ability_rules.rule_id
-    // left join rule_actions on rules.action_id = rule_actions.id
-    // left join rule_subjects on rules.subject_id = rule_subjects.id
-    // where ability_id = 1
     public function getById(int $id): Entity
     {
         $ability = $this->db->from($this->table->from())
@@ -76,6 +72,9 @@ final class AbilityDatabaseRepository implements AbilityRepository
                 ->select(function ($include) {
                     $include->columns([
                         'rules.id' => 'rule_id',
+                        'rules.remark' => 'rule_remark',
+                        'rules.created_at' => 'rule_created_at',
+                        'rules.updated_at' => 'rule_updated_at',
                         'rule_actions.name' => 'rule_action',
                         'rule_subjects.name' => 'rule_subject',
                     ]);
@@ -84,8 +83,8 @@ final class AbilityDatabaseRepository implements AbilityRepository
             ;
             $rules = [];
             foreach ($rows as $row) {
-                $rule = new TableData($row, 'rule_');
-                $rules[$rule->id] = $rule;
+                $rule = RuleMapper::toDomain(new TableData($row, 'rule_'));
+                $rules[] = $rule;
             }
             $ability->abilities_rules = $rules;
 

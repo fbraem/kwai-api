@@ -11,15 +11,27 @@ use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
 
 /**
- * Ability Entity
+ * Rule Entity
  */
-class Ability implements DomainEntity
+class Rule implements DomainEntity
 {
     /**
-     * The name of the ability.
+     * The name of the rule.
      * @var string
      */
     private $name;
+
+    /**
+     * The subject of the rule.
+     * @var string
+     */
+    private $subject;
+
+    /**
+     * The action of the rule.
+     * @var string
+     */
+    private $action;
 
     /**
      * A remark
@@ -34,32 +46,33 @@ class Ability implements DomainEntity
     private $traceableTime;
 
     /**
-     * The rules associated with this ability
-     * @var array Rule[]
-     */
-    private $rules;
-
-    /**
      * Constructor.
      * @param  object $props Ability properties
      */
     public function __construct(object $props)
     {
         $this->name = $props->name;
+        $this->action = $props->action;
+        $this->subject = $props->subject;
         $this->traceableTime = $props->traceableTime;
         $this->remark = $props->remark;
-        $this->rules = $props->rules ?? [];
     }
 
     /**
-     * Add a rule to this ability
-     * @param Entity $rule
+     * Return the action.
+     * @return string
      */
-    public function addRule(Entity $rule): void
+    public function getAction(): string
     {
-        if (!is_a($rule->domain(), Rule::class)) {
-            throw new InvalidArgumentException('$rule argument is not a Rule class');
-        }
-        $this->rules[] = $rule;
+        return $this->action;
+    }
+
+    /**
+     * Returns the subject
+     * @return string
+     */
+    public function getSubject(): string
+    {
+        return $this->subject;
     }
 }
