@@ -52,8 +52,8 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * Get the user with the given id.
-     * @param  int  $id The id of the user
-     * @return User     The user
+     * @param  int  $id         The id of the user
+     * @return Entity<User>     The user
      * @throws NotFoundException When user is not found
      */
     public function getById(int $id): Entity
@@ -76,7 +76,7 @@ final class UserDatabaseRepository implements UserRepository
     /**
      * Get the user with the given uuid
      * @param  UniqueId $uid
-     * @return Entity
+     * @return Entity<User>
      */
     public function getByUUID(UniqueId $uid): Entity
     {
@@ -98,7 +98,7 @@ final class UserDatabaseRepository implements UserRepository
     /**
      * Get the user with the given email.
      * @param  EmailAddress  $email The email address of the user
-     * @return User                 The user
+     * @return Entity<User>         The user
      * @throws NotFoundException    When user is not found
      */
     public function getByEmail(EmailAddress $email): Entity
@@ -118,6 +118,12 @@ final class UserDatabaseRepository implements UserRepository
         throw new NotFoundException('User');
     }
 
+    /**
+     * Get a user using a token
+     * @param  TokenIdentifier $token
+     * @return Entity<User>
+     * @throws NotFoundException    When user is not found
+     */
     public function getByAccessToken(TokenIdentifier $token): Entity
     {
         $accessTokenTable = new AliasTable(new AccessTokenTable(), 'oat');

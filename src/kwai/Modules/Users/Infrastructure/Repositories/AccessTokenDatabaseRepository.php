@@ -13,6 +13,7 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\NotCreatedException;
 use Kwai\Core\Infrastructure\TableData;
 
+use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
@@ -53,7 +54,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      * Get an accesstoken by its token identifier.
      *
      * @param  TokenIdentifier $identifier A token identifier
-     * @return Entity                      An accesstoken
+     * @return Entity<AccessToken>         An accesstoken
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
@@ -73,8 +74,8 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
     /**
      * Get all accesstokens of a user.
-     * @param  int     $user_id A user id
-     * @return Entity[]         An array with accesstokens
+     * @param  Entity<User> $user
+     * @return Entity<AccessToken>[]  An array with accesstokens
      */
     public function getTokensForUser(Entity $user): array
     {
@@ -99,7 +100,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     /**
      * Inserts the accesstoken in the table.
      * @param  AccessToken $token
-     * @return Entity
+     * @return Entity<User>
      * @throws NotCreatedException Thrown when insert fails
      */
     public function create(AccessToken $token): Entity

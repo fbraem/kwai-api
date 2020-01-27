@@ -52,9 +52,11 @@ final class AuthenticateUser
      * not verified or the user is revoked an AuthenticationException will
      * be thrown. On success, the user and accesstoken will be returned.
      * @param  AuthenticateUserCommand $command
-     * @return Entity                           An AccessToken entity
-     * @throws NotFoundException                Thrown when user can't be found
-     * @throws NotAuthorizedException           Thrown when login fails
+     * @return Entity<AccessToken>              An AccessToken entity
+     * @throws \Kwai\Core\Domain\Exceptions\NotFoundException
+     *    Thrown when user can't be found
+     * @throws AuthenticationException
+     *    Thrown when the password is invalid, or when the user is revoked.
      */
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
