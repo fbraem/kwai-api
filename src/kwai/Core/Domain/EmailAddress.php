@@ -25,7 +25,7 @@ final class EmailAddress
      * Constructs a new EmailAddress.
      *
      * @param string $emailAddress
-     * @throws InvalidArgumentException Thrown when the emailaddress is invalid
+     * @throws \InvalidArgumentException Thrown when the emailaddress is invalid
      */
     public function __construct(string $emailAddress)
     {
