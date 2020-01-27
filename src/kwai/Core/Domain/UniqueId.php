@@ -26,7 +26,7 @@ class UniqueId
      * passed, a new UUID4 will be generated.
      *
      * @param string|null $id
-     * @throws InvalidArgumentException Thrown when $id is invalid.
+     * @throws \InvalidArgumentException Thrown when $id is invalid.
      */
     public function __construct(string $id = null)
     {

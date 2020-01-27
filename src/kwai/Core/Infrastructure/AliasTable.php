@@ -28,7 +28,7 @@ final class AliasTable implements Table
 
     /**
      * Constructor
-     * @param string $name The name of the table
+     * @param Table $table The aliased the table
      * @param string $alias The alias of the table
      */
     public function __construct(Table $table, string $alias)
