@@ -11,6 +11,7 @@ namespace Kwai\Modules\Users\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\User;
 
 /**
  * AccessToken repository interface
@@ -27,15 +28,15 @@ interface AccessTokenRepository
 
     /**
      * Get all accesstokens of a user.
-     * @param  User $user A user
-     * @return Entity[]   An array with accesstokens
+     * @param  Entity<User> $user    A user
+     * @return Entity<AccessToken>[] An array with accesstokens
      */
     public function getTokensForUser(Entity $user): array;
 
     /**
      * Save a new AccessToken
      * @param  AccessToken $token
-     * @return Entity
+     * @return Entity<AccessToken>
      */
     public function create(AccessToken $token): Entity;
 }
