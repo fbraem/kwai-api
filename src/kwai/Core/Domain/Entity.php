@@ -13,7 +13,7 @@ namespace Kwai\Core\Domain;
  * and provides an Id. All method calls are forwarded to the wrapped domain
  * object.
  *
- * Waiting for generics in PHP, to make the $domain object typesafe.
+ * @template T of DomainEntity
  */
 class Entity
 {
@@ -25,15 +25,14 @@ class Entity
 
     /**
      * The real domain object
-     * @var mixed
+     * @var T
      */
     private $domain;
 
     /**
      * Constructor
-     *
-     * @param int $id       The id of the entity
-     * @param DomainEntity $domain The domain entity
+     * @param int $id   The id of the entity
+     * @param T $domain The domain entity
      */
     public function __construct(int $id, DomainEntity $domain)
     {
