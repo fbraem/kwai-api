@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Domain;
 
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Core\Domain\Entity;
 
 /**
  * Ability Entity
@@ -53,12 +54,12 @@ class Ability implements DomainEntity
 
     /**
      * Add a rule to this ability
-     * @param Entity $rule
+     * @param Entity<Rule> $rule
      */
     public function addRule(Entity $rule): void
     {
         if (!is_a($rule->domain(), Rule::class)) {
-            throw new InvalidArgumentException('$rule argument is not a Rule class');
+            throw new \InvalidArgumentException('$rule argument is not a Rule class');
         }
         $this->rules[] = $rule;
     }
