@@ -13,7 +13,7 @@ use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 
-use Kwai\Core\Domain\Exceptions\NotFoundExcpetion;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Core\Responses\NotAuthorizedResponse;
 
 use Firebase\JWT\JWT;
