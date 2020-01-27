@@ -90,8 +90,8 @@ final class Timestamp
     /**
      * Creates a new Timestamp object from an object.
      *
-     * @param object $object An object containing all properties to create a
-     *                       new Timestamp object.
+     * @param object $datetimeObject An object containing all properties to
+     *                               create a new Timestamp object.
      * @return Timestamp
      */
     public static function createFromObject(object $datetimeObject): self
@@ -144,7 +144,7 @@ final class Timestamp
 
     /**
      * Create from a Timestamp object from a DateTime object.
-     * @param  DateTime $time
+     * @param  \DateTime $time
      * @return Timestamp
      */
     public static function createFromDateTime(\DateTime $time)
