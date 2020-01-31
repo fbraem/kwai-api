@@ -35,12 +35,12 @@ final class AccessTokenMapper
         );
     }
 
-    public static function toPersistence(AccessToken $accessToken): array
+    public static function toPersistence(AccessToken $accessToken): object
     {
-        return [
+        return (object)[
             'identifier' => strval($accessToken->getIdentifier()),
             'expiration' => strval($accessToken->getExpiration()),
-            'revoked' => $accessToken->isRevoked(),
+            'revoked' => $accessToken->isRevoked() ? '1' : '0',
             'created_at' => strval($accessToken->getTraceableTime()->getCreatedAt()),
             'updated_at' => strval($accessToken->getTraceableTime()->getUpdatedAt()),
             'user_id' => $accessToken->getUser()->id()
