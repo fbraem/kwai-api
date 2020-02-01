@@ -48,10 +48,10 @@
 
      /**
       * Returns the timestamp of the last modification
-      * @return Timestamp
+      * @return Timestamp|null
       */
-     public function getUpdatedAt(): Timestamp
+     public function getUpdatedAt(): ?Timestamp
      {
-         return $this->created_at;
+         return $this->updated_at;
      }
  }
