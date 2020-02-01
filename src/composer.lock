@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a179ea41660996d0757fdb117616dcd",
+    "content-hash": "b1ef435272277127f098261480acb43a",
     "packages": [
         {
             "name": "aura/intl",
@@ -806,6 +806,54 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2017-06-27T22:17:23+00:00"
+        },
+        {
+            "name": "latitude/latitude",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shadowhand/latitude.git",
+                "reference": "6aeaee4f4c80e0f4289b8daf6eb0830f6de49f5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/6aeaee4f4c80e0f4289b8daf6eb0830f6de49f5f",
+                "reference": "6aeaee4f4c80e0f4289b8daf6eb0830f6de49f5f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "eloquent/liberator": "^2.0",
+                "eloquent/phpstan-phony": "^0.5.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.11.12",
+                "phpstan/phpstan-phpunit": "^0.11.2",
+                "phpunit/phpunit": "^8.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Latitude\\QueryBuilder\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Woody Gilk",
+                    "email": "woody.gilk@gmail.com",
+                    "homepage": "https://github.com/shadowhand"
+                }
+            ],
+            "description": "A SQL query builder with zero dependencies",
+            "time": "2019-08-10T15:05:09+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -1630,68 +1678,6 @@
                 "routing"
             ],
             "time": "2018-02-13T20:26:39+00:00"
-        },
-        {
-            "name": "opis/database",
-            "version": "4.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/opis/database.git",
-                "reference": "cfff46dc6fc5c1ad45c6a31cc83a2fedc5874b7f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/opis/database/zipball/cfff46dc6fc5c1ad45c6a31cc83a2fedc5874b7f",
-                "reference": "cfff46dc6fc5c1ad45c6a31cc83a2fedc5874b7f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pdo": "*",
-                "php": "^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.5",
-                "symfony/yaml": "^3.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Opis\\Database\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Marius Sarca",
-                    "email": "marius.sarca@gmail.com"
-                },
-                {
-                    "name": "Sorin Sarca",
-                    "email": "sarca_sorin@hotmail.com"
-                }
-            ],
-            "description": "A database abstraction layer over PDO, that provides a powerful and intuitive query builder, bundled with an easy to use schema builder",
-            "homepage": "https://opis.io/database",
-            "keywords": [
-                "Abstraction Layer",
-                "database",
-                "mysql",
-                "postgre",
-                "query",
-                "query builder",
-                "schema builder",
-                "sql",
-                "sqlite"
-            ],
-            "time": "2019-03-25T17:12:29+00:00"
         },
         {
             "name": "paragonie/random_compat",
