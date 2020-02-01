@@ -31,13 +31,11 @@ use Core\Middlewares\TransactionMiddleware;
 
 use Tuupola\Middleware\JwtAuthentication;
 
-use Opis\Database\Database;
-use Opis\Database\Connection;
-
 use Slim\Factory\AppFactory;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Infrastructure\Database;
 
 //TODO: Extract all code to services, etc, ...
 class Clubman
@@ -63,29 +61,19 @@ class Clubman
 
             $dbConfig = $container->get('settings')['database'];
             $dbDefault = $container->get('settings')['default_database'];
-            \Cake\Datasource\ConnectionManager::setConfig('default', [
-                'className' => 'Cake\Database\Connection',
-                'driver' => 'Cake\Database\Driver\Mysql',
-                'host' => $dbConfig[$dbDefault]['host'],
-                'username' => $dbConfig[$dbDefault]['user'],
-                'password' => $dbConfig[$dbDefault]['pass'],
-                'database' => $dbConfig[$dbDefault]['name'],
-                'encoding' => $dbConfig[$dbDefault]['charset'],
-                'quoteIdentifiers' => true
-            ]);
+            $dsnConfig = \Cake\Datasource\ConnectionManager::parseDsn($dbConfig[$dbDefault]['cake_dsn']);
+            $dnsConfig['username'] = $dbConfig[$dbDefault]['user'];
+            $dnsConfig['password'] = $dbConfig[$dbDefault]['pass'];
+            \Cake\Datasource\ConnectionManager::setConfig('default', $dsnConfig);
 
             $container->add('pdo_db', function ($c) {
                 $dbConfig = $c->get('settings')['database'];
                 $dbDefault = $c->get('settings')['default_database'];
-                $connection = new Connection(
-                    $dbConfig[$dbDefault]['adapter']
-                        . ':host=' . $dbConfig[$dbDefault]['host']
-                        . ';dbname=' . $dbConfig[$dbDefault]['name'],
+                return new Database(
+                    $dbConfig[$dbDefault]['dsn'],
                     $dbConfig[$dbDefault]['user'],
                     $dbConfig[$dbDefault]['pass']
                 );
-                $connection->initCommand('SET NAMES UTF8');
-                return new Database($connection);
             })->addArgument($container);
 
             $container->add('filesystem', function ($c) {
