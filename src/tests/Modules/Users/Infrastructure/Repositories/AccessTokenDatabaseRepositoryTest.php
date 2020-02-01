@@ -30,8 +30,8 @@ final class AccessTokenDatabaseRepositoryTest extends TestCase
 
     public function setup() : void
     {
-        $this->repo = new AccessTokenDatabaseRepository(Database::getDatabase());
-        $userRepo = new UserDatabaseRepository(Database::getDatabase());
+        $this->repo = new AccessTokenDatabaseRepository(\Database::getDatabase());
+        $userRepo = new UserDatabaseRepository(\Database::getDatabase());
         $this->user = $userRepo->getByEmail(new EmailAddress($_ENV['user']));
     }
 

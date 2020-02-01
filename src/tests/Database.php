@@ -9,28 +9,42 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class Database
 {
-    const CONNECTION_STR = 'sqlite:/var/tmp/kwai.db';
-
     private static $db;
 
     public static function getDatabase()
     {
         if (! self::$db) {
-            $connection = new \Opis\Database\Connection(self::CONNECTION_STR);
-            $connection->option(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+            $application = \Core\Clubman::getApplication();
+            $config = $application->getContainer()->get('settings');
+
+            $pdo = new \PDO(
+                $config['database']['test']['dsn'],
+                $config['database']['test']['user'],
+                $config['database']['test']['pass'],
+                [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_PERSISTENT => true, // BEST OPTION
+                    \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+                ]
+            );
 
             $configArray = require('../phinx.php');
             $configArray['environments']['test'] = [
-                'adapter'    => 'sqlite',
-                'connection' => $connection->getPDO()
+                'connection' => $pdo
             ];
-            $config = new Config($configArray);
-            $manager = new Manager($config, new StringInput(' '), new NullOutput());
+            $manager = new Manager(
+                new Config($configArray),
+                new StringInput(' '),
+                new NullOutput()
+            );
             $manager->migrate('test');
 
-            $connection = new \Opis\Database\Connection(self::CONNECTION_STR);
-            $connection->option(\PDO::ATTR_STRINGIFY_FETCHES, false);
-            self::$db = new \Opis\Database\Database($connection);
+            self::$db = new \Kwai\Core\Infrastructure\Database(
+                $config['database']['test']['dsn'],
+                $config['database']['test']['user'],
+                $config['database']['test']['pass']
+            );
         }
         return self::$db;
     }

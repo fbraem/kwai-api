@@ -77,10 +77,10 @@ final class UserDatabaseRepositoryTest extends TestCase
      */
     public function testGetByAccessToken(Entity $user): void
     {
-        $accessTokenRepo = new AccessTokenDatabaseRepository(Database::getDatabase());
+        $accessTokenRepo = new AccessTokenDatabaseRepository(\Database::getDatabase());
         $accessTokens = $accessTokenRepo->getTokensForUser($user);
         if (count($accessTokens) > 0) {
-            $repo = new UserDatabaseRepository(Database::getDatabase());
+            $repo = new UserDatabaseRepository(\Database::getDatabase());
             $user = $this->repo->getByAccessToken(
                 $accessTokens[0]->getIdentifier()
             );

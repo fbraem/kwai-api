@@ -28,8 +28,8 @@ final class AuthenticateUserTest extends TestCase
         ]);
 
         $accessToken = (new AuthenticateUser(
-            new UserDatabaseRepository(Database::getDatabase()),
-            new AccessTokenDatabaseRepository(Database::getDatabase())
+            new UserDatabaseRepository(\Database::getDatabase()),
+            new AccessTokenDatabaseRepository(\Database::getDatabase())
         ))($command);
 
         $this->assertInstanceOf(

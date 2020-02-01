@@ -34,15 +34,16 @@ final class AbilityDatabaseRepositoryTest extends TestCase
             $ability
         );
     }
-
-    public function testGetAbilitiesForUser()
-    {
-        $userRepo = new UserDatabaseRepository(\Database::getDatabase());
-        $user = $userRepo->getById(1);
-        $abilities = $this->repo->getByUser($user);
-        $this->assertContainsOnlyInstancesOf(
-            Entity::class,
-            $abilities
-        );
-    }
+    /*
+        public function testGetAbilitiesForUser()
+        {
+            $userRepo = new UserDatabaseRepository(\Database::getDatabase());
+            $user = $userRepo->getById(1);
+            $abilities = $this->repo->getByUser($user);
+            $this->assertContainsOnlyInstancesOf(
+                Entity::class,
+                $abilities
+            );
+        }
+    */
 }
