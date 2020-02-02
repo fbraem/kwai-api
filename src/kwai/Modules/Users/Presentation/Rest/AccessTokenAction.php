@@ -1,6 +1,6 @@
 <?php
 
-namespace Kwai\Rest\Users;
+namespace Kwai\Modules\Users\Presentation\Rest;
 
 use Psr\Container\ContainerInterface;
 
