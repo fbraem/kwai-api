@@ -70,6 +70,12 @@ class User implements DomainEntity
     private $revoked;
 
     /**
+     * The abilities of the user.
+     * @var Ability[]
+     */
+    private $abilities;
+
+    /**
      * Constructor.
      * @param  object $props User properties
      */
@@ -78,20 +84,25 @@ class User implements DomainEntity
         $this->uuid = $props->uuid;
         $this->emailAddress = $props->emailAddress;
         $this->traceableTime = $props->traceableTime;
-        $this->lastLogin = $props->lastLogin;
+        $this->lastLogin = $props->lastLogin ?? null;
         $this->remark = $props->remark;
-        $this->revoked = $props->revoked;
-        $this->username = $props->username;
-        $this->password = $props->password;
+        $this->revoked = $props->revoked ?? false;
+        $this->username = $props->username ?? null;
+        $this->password = $props->password ?? null;
+        $this->abilities = $props->abilities ?? [];
     }
 
     /**
-     * Verify the password.
+     * Verify the password. When no password is set, false will be returned.
      * @param string $password The password to login.
+     * @return bool
      */
     public function login(string $password): bool
     {
-        return $this->password->verify($password);
+        if ($this->password) {
+            return $this->password->verify($password);
+        }
+        return false;
     }
 
     /**
@@ -105,6 +116,15 @@ class User implements DomainEntity
     }
 
     /**
+     * Return the abilities of this user.
+     * @return Ability[]
+     */
+    public function getAbilities(): array
+    {
+        return $this->abilities;
+    }
+
+    /**
      * Returns the email address.
      * @return EmailAddress
      */
@@ -114,11 +134,47 @@ class User implements DomainEntity
     }
 
     /**
+     * Get the last login timestamp
+     * @return Timestamp
+     */
+    public function getLastLogin(): ?Timestamp
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Get the created_at/updated_at timestamps
+     * @return TraceableTime
+     */
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
+    }
+
+    /**
+     * Get the remark
+     * @return string
+     */
+    public function getRemark(): string
+    {
+        return $this->remark;
+    }
+
+    /**
      * Get the unique id of the user
      * @return UniqueId
      */
     public function getUuid(): UniqueId
     {
         return $this->uuid;
+    }
+
+    /**
+     * Get the username
+     * @return Username
+     */
+    public function getUsername(): ?Username
+    {
+        return $this->username;
     }
 }
