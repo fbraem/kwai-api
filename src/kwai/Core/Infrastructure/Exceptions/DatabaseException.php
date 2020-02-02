@@ -19,12 +19,21 @@ class DatabaseException extends \Exception
     private $wrappedException;
 
     /**
-     * DatabaseException constructor
+     * Query, if available.
+     * @var string|null
      */
-    public function __construct(\PDOException $exception)
+    private $query;
+
+    /**
+     * DatabaseException constructor
+     * @param \PDOException $exception The PDO exception
+     * @param string|null $query       The query, if available
+     */
+    public function __construct(\PDOException $exception, ?string $query = null)
     {
         parent::__construct();
         $this->wrappedException = $exception;
+        $this->query = $query;
     }
 
     /**
@@ -33,6 +42,15 @@ class DatabaseException extends \Exception
      */
     public function __toString()
     {
-        return __CLASS__ . ': ' . $this->wrappedException->toString();
+        if ($this->query) {
+            return
+                __CLASS__
+                . ': '
+                . strval($this->wrappedException)
+                . ': '
+                . $this->query
+            ;
+        }
+        return __CLASS__ . ': ' . strval($this->wrappedException);
     }
 }

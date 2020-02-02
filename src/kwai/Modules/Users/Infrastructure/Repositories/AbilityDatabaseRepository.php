@@ -11,9 +11,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 
-use Kwai\Core\Infrastructure\TableData;
-use Kwai\Core\Infrastructure\AliasTable;
-use Kwai\Core\Infrastructure\DefaultTable;
 use Kwai\Core\Infrastructure\Database;
 
 use Kwai\Modules\Users\Domain\User;
@@ -23,6 +20,7 @@ use Kwai\Modules\Users\Repositories\AbilityRepository;
 use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\AbilityTable;
+use Kwai\Modules\Users\Infrastructure\RuleTable;
 
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\alias;
@@ -54,17 +52,6 @@ final class AbilityDatabaseRepository implements AbilityRepository
         $this->table = new AbilityTable();
     }
 
-    private function getColumns()
-    {
-        return [
-            alias('abilities.id', 'abilities_id'),
-            alias('abilities.name', 'abilities_name'),
-            alias('abilities.remark', 'abilities_remark'),
-            alias('abilities.created_at', 'abilities_created_at'),
-            alias('abilities.updated_at', 'abilities_updated_at')
-        ];
-    }
-
     /**
      * Get the ability with the given id.
      * @param  int    $id
@@ -73,21 +60,20 @@ final class AbilityDatabaseRepository implements AbilityRepository
     public function getById(int $id): Entity
     {
         $query = $this->db->createQueryFactory()
-            ->select(... $this->getColumns())
-            ->from('abilities')
+            ->select(... $this->table->alias())
+            ->from($this->table->from())
             ->where(field('abilities_id')->eq($id))
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
-        $ability = $stmt->fetch();
 
+        $ability = $this->db->execute($query)->fetch();
         if ($ability) {
             $rules = $this->getRulesForAbilities([$id]);
             $ability->abilities_rules = $rules[$id];
             $ability->ability_rules = [];
 
             return AbilityMapper::toDomain(
-                new TableData($ability, 'abilities_')
+                $this->table->filter($ability)
             );
         }
         throw new NotFoundException('Ability');
@@ -100,24 +86,25 @@ final class AbilityDatabaseRepository implements AbilityRepository
      */
     public function getByUser(Entity $user): array
     {
-        $rows = $this->db->from('user_abilities')
-            ->where('user_id')->is($user->id())
-            ->leftJoin(
-                $this->table->name(),
-                function ($join) {
-                    $join->on('user_abilities.ability_id', 'abilities.id');
-                }
+        $query = $this->db->createQueryFactory()
+            ->select($this->table->alias())
+            ->from('user_abilities')
+            ->join(
+                $this->table->from(),
+                on('user_abilities.ability_id', 'abilities.id')
             )
-            ->select(function ($include) {
-                $include->columns($this->table->alias());
-            })
-            ->all()
+            ->where(field('user_id')->eq($user->id()))
+            ->compile()
         ;
+
+        $rows = $this->db->execute($query)->fetchAll();
+
         $abilities = array_map(function ($row) {
             return AbilityMapper::toDomain(
-                new TableData($row, $this->table->prefix())
+                $this->table->filter($row)
             );
         }, $rows);
+
         $ability_ids = array_map(function ($ability) {
             return $ability->id();
         }, $abilities);
@@ -140,16 +127,17 @@ final class AbilityDatabaseRepository implements AbilityRepository
      */
     private function getRulesForAbilities(array $abilities): array
     {
-        $query = $this->db->createQueryFactory()
-            ->select(
+        $rulesTable = new RuleTable();
+        $columns = array_merge(
+            $rulesTable->alias(),
+            [
                 alias('ability_rules.ability_id', 'ability_id'),
-                alias('rules.id', 'rule_id'),
-                alias('rules.remark', 'rule_remark'),
-                alias('rules.created_at', 'rule_created_at'),
-                alias('rules.updated_at', 'rule_updated_at'),
-                alias('rule_actions.name', 'rule_action'),
-                alias('rule_subjects.name', 'rule_subject')
-            )
+                alias('rule_actions.name', 'rules_action'),
+                alias('rule_subjects.name', 'rules_subject')
+            ]
+        );
+        $query = $this->db->createQueryFactory()
+            ->select(... $columns)
             ->from('ability_rules')
             ->join('rules', on('ability_rules.rule_id', 'rules.id'))
             ->join('rule_actions', on('rules.action_id', 'rule_actions.id'))
@@ -162,7 +150,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
 
         $result = [];
         foreach ($rows as $row) {
-            $rule = RuleMapper::toDomain(new TableData($row, 'rule_'));
+            $rule = RuleMapper::toDomain($rulesTable->filter($row));
             if (! isset($result[$row->ability_id])) {
                 $result[$row->ability_id] = [];
             }

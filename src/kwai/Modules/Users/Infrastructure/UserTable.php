@@ -2,9 +2,9 @@
 
 namespace Kwai\Modules\Users\Infrastructure;
 
-use Kwai\Core\Infrastructure\DefaultTable;
+use Kwai\Core\Infrastructure\Table;
 
-final class UserTable extends DefaultTable
+final class UserTable extends Table
 {
     public function __construct()
     {

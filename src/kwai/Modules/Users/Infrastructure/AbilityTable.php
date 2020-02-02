@@ -2,9 +2,9 @@
 
 namespace Kwai\Modules\Users\Infrastructure;
 
-use Kwai\Core\Infrastructure\DefaultTable;
+use Kwai\Core\Infrastructure\Table;
 
-final class AbilityTable extends DefaultTable
+final class AbilityTable extends Table
 {
     public function __construct()
     {

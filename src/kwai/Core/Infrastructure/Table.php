@@ -1,6 +1,5 @@
 <?php
 /**
- * Table interface
  * @package Kwai
  * @subpackage Core
  * @author Franky Braem
@@ -9,38 +8,49 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure;
 
-/**
- * Interface for a database table
- */
-interface Table
+use function Latitude\QueryBuilder\alias;
+
+class Table
 {
-    /**
-     * Returns the name of the table.
-     * @return string The name of the table
-     */
-    public function name(): string;
+    private $name;
 
-    /**
-     * Returns the columns of the table.
-     * @return array The columns of the table
-     */
-    public function columns(): array;
+    private $columns;
 
-    /**
-     * Returns the columns for including them in the SQL statement.
-     * @return array [description]
-     */
-    public function alias(): array;
+    public function __construct(string $name, array $columns)
+    {
+        $this->name = $name;
+        $this->columns = $columns;
+    }
 
-    /**
-     * Returns the prefix used for naming the columns.
-     * @return string The prefix used for the column names
-     */
-    public function prefix(): string;
+    public function getColumns(): array
+    {
+        return $this->columns;
+    }
 
-    /**
-     * Returns the name of the table or an array with alias.
-     * @return string|array
-     */
-    public function from();
+    public function from(): string
+    {
+        return $this->name;
+    }
+
+    public function alias(): array
+    {
+        $prefix = $this->name . '_';
+        return array_map(function ($column) use ($prefix) {
+            return alias($this->name . '.' . $column, $prefix . $column);
+        }, $this->columns);
+    }
+
+    public function filter(object $row): object
+    {
+        $prefix = $this->name . '_';
+        $prefixLength = strlen($prefix);
+        $obj = new \stdClass();
+        foreach (get_object_vars($row) as $key => $element) {
+            if (strpos($key, $prefix) === 0) {
+                $prop = substr($key, $prefixLength);
+                $obj->$prop = $element;
+            }
+        }
+        return $obj;
+    }
 }

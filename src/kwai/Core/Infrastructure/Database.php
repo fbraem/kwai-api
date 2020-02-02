@@ -73,8 +73,8 @@ final class Database
     /**
      * Execute the query and returns a PDOStatement on success.
      * @param  Query         $query The query to execute
-     * @return PDOStatement         The executed statement
-     * @throws PDOException         Thrown when a PDOException occurred
+     * @return \PDOStatement        The executed statement
+     * @throws DatabaseException    Thrown when a PDOException occurred
      */
     public function execute(Query $query): \PDOStatement
     {
@@ -83,7 +83,7 @@ final class Database
             $stmt->execute($query->params());
             return $stmt;
         } catch (\PDOException $e) {
-            throw new DatabaseException($e);
+            throw new DatabaseException($e, $query->sql());
         }
     }
 

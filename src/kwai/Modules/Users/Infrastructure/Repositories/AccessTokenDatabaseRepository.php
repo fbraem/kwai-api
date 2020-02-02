@@ -11,7 +11,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\NotCreatedException;
-use Kwai\Core\Infrastructure\TableData;
 use Kwai\Core\Infrastructure\Database;
 
 use Kwai\Modules\Users\Domain\User;
@@ -52,18 +51,6 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $this->table = new AccessTokenTable();
     }
 
-    private function getColumns(): array
-    {
-        return [
-            alias('oauth_access_tokens.id', 'oauth_access_tokens_id'),
-            alias('oauth_access_tokens.identifier', 'oauth_access_tokens_identifier'),
-            alias('oauth_access_tokens.expiration', 'oauth_access_tokens_expiration'),
-            alias('oauth_access_tokens.revoked', 'oauth_access_tokens_revoked'),
-            alias('oauth_access_tokens.created_at', 'oauth_access_tokens_created_at'),
-            alias('oauth_access_tokens.updated_at', 'oauth_access_tokens_updated_at')
-        ];
-    }
-
     /**
      * Get an accesstoken by its token identifier.
      *
@@ -73,15 +60,16 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
         $query = $this->db->createQueryFactory()
-            ->select(... $this->getColumns())
-            ->from('oauth_access_tokens')
+            ->select(... $this->table->alias())
+            ->from($this->table->from())
             ->where(field('identifier')->eq(strval($identifier)))
-            ->compile();
+            ->compile()
+        ;
 
         $row = $this->db->execute($query)->fetch();
         if ($row) {
             return AccessTokenMapper::toDomain(
-                new TableData($row, 'oauth_access_tokens_')
+                $this->table->filter($row)
             );
         }
         throw new NotFoundException('AccessToken');
@@ -95,8 +83,8 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     public function getTokensForUser(Entity $user): array
     {
         $query = $this->db->createQueryFactory()
-            ->select(... $this->getColumns())
-            ->from('oauth_access_tokens')
+            ->select(... $this->table->alias())
+            ->from($this->table->from())
             ->where(field('user_id')->eq($user->id()))
             ->compile()
         ;
@@ -106,7 +94,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $tokens = [];
         foreach ($rows as $row) {
             $token = AccessTokenMapper::toDomain(
-                new TableData($row, 'oauth_access_tokens_')
+                $this->table->filter($row)
             );
             $token->attachUser($user);
             $tokens[] = $token;
@@ -125,20 +113,12 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $data = AccessTokenMapper::toPersistence($token);
 
         $query = $this->db->createQueryFactory()
-            ->insert('oauth_access_tokens')
+            ->insert($this->table->from())
             ->columns(
-                'identifier',
-                'expiration',
-                'revoked',
-                'created_at',
-                'updated_at'
+                ... array_keys($data)
             )
             ->values(
-                $data->identifier,
-                $data->expiration,
-                $data->revoked,
-                $data->created_at,
-                $data->updated_at
+                ... array_values($data)
             )
             ->compile()
         ;

@@ -1,6 +1,5 @@
 <?php
 /**
- * AliasTable class
  * @package Kwai
  * @subpackage Core
  * @author Franky Braem
@@ -9,79 +8,44 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure;
 
-/**
- * A class that represents a database table with an alias
- */
-final class AliasTable implements Table
+use function Latitude\QueryBuilder\alias;
+
+class AliasTable
 {
-    /**
-     * Table name
-     * @var Table
-     */
     private $table;
 
-    /**
-     * The alias of the table
-     * @var string
-     */
     private $alias;
 
-    /**
-     * Constructor
-     * @param Table $table The aliased the table
-     * @param string $alias The alias of the table
-     */
     public function __construct(Table $table, string $alias)
     {
         $this->table = $table;
         $this->alias = $alias;
     }
 
-    public function columns(): array
+    public function from(): string
     {
-        return $this->table->columns();
+        return alias($this->table->from(), $this->alias);
     }
 
-    /**
-     * Returns an associative array with column name as key
-     * and alias as value.
-     * For example: Table 'users' with alias 'u' and column 'id' will return
-     * this array:
-     *    [ 'users.id' => 'u_id' ]
-     * @return array
-     */
     public function alias(): array
     {
-        $columns = array_map(function ($value) {
-            return $this->alias . '.' . $value;
-        }, $this->columns());
-        $aliases = array_map(function ($value) {
-            return $this->prefix() . $value;
-        }, $this->columns());
-        return array_combine($columns, $aliases);
+        $prefix = $this->alias . '_';
+        return array_map(function ($column) use ($prefix) {
+            return alias($this->table->name() . '.' . $column, $prefix . $column);
+        }, $this->table->getColumns());
     }
 
-    /**
-     * Returns the prefix used to alias the column names. In this case
-     * this is the alias of the table followed with _.
-     * @return string
-     */
-    public function prefix(): string
+    public function filter(object $row): object
     {
-        return $this->alias . '_';
-    }
-
-    /**
-     * Returns the name of the table
-     * @return string The name of the table
-     */
-    public function name(): string
-    {
-        return $this->table->name();
-    }
-
-    public function from(): array
-    {
-        return [ $this->table->name() => $this->alias ];
+        $prefix = $this->alias . '_';
+        $prefixLength = strlen($prefix);
+        $obj = new \stdClass();
+        foreach (get_object_vars($row) as $key => $element) {
+            if (strpos($key, $prefix) === 0) {
+                $prop = substr($key, $prefixLength);
+                $obj->$prop = $element;
+            }
+        }
+        return $obj;
     }
 }
