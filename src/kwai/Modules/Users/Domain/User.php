@@ -177,4 +177,13 @@ class User implements DomainEntity
     {
         return $this->username;
     }
+
+    /**
+     * Checks if the user has loggedin before
+     * @return bool
+     */
+    public function hasLastLogin(): bool
+    {
+        return $this->lastLogin != null;
+    }
 }
