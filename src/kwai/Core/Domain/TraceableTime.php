@@ -54,4 +54,13 @@
      {
          return $this->updated_at;
      }
+
+     /**
+      * Check if there was an update.
+      * @return bool
+      */
+     public function isUpdated(): bool
+     {
+         return $this->updated_at != null;
+     }
  }
