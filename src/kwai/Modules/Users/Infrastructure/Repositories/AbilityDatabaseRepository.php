@@ -87,7 +87,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
     public function getByUser(Entity $user): array
     {
         $query = $this->db->createQueryFactory()
-            ->select($this->table->alias())
+            ->select(... $this->table->alias())
             ->from('user_abilities')
             ->join(
                 $this->table->from(),
