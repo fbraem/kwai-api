@@ -89,11 +89,12 @@ class UserTransformer extends Fractal\TransformerAbstract
             'revoked' => $user->isRevoked(),
             'created_at' => strval($traceableTime->getCreatedAt())
         ];
-        $lastLogin = $user->getLastLogin();
-        $result['last_login'] = $lastLogin ? strval($lastLogin) : null;
-
-        $updated_at = $traceableTime->getUpdatedAt();
-        $result['updated_at'] = $updated_at ? strval($updated_at) : null;
+        $result['last_login'] = $user->hasLastLogin()
+            ? strval($user->getLastLogin())
+            : null;
+        $result['updated_at'] = $traceableTime->isUpdated()
+            ? strval($traceableTime->getUpdatedAt())
+            : null;
 
         return $result;
     }
