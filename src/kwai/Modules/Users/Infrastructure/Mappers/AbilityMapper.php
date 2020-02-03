@@ -30,7 +30,7 @@ final class AbilityMapper
                         : null
                 ),
                 'remark' => $raw->remark,
-                'rules' => $raw->rules
+                'rules' => $raw->rules ?? []
             ])
         );
     }
