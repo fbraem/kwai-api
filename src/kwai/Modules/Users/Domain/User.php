@@ -12,6 +12,7 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
@@ -185,5 +186,14 @@ class User implements DomainEntity
     public function hasLastLogin(): bool
     {
         return $this->lastLogin != null;
+    }
+
+    /**
+     * Adds an ability to this user.
+     * @param Entity<Ability> $ability
+     */
+    public function addAbility(Entity $ability)
+    {
+        $this->abilities[] = $ability;
     }
 }
