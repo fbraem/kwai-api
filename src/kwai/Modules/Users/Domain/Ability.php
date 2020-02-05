@@ -63,4 +63,40 @@ class Ability implements DomainEntity
         }
         $this->rules[] = $rule;
     }
+
+    /**
+     * Returns the name of the ability
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the created_at/updated_at timestamps
+     * @return TraceableTime
+     */
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
+    }
+
+    /**
+     * Returns the remark
+     * @return string
+     */
+    public function getRemark(): string
+    {
+        return $this->remark;
+    }
+
+    /**
+     * Get the associated rules
+     * @return Rule[]
+     */
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
 }
