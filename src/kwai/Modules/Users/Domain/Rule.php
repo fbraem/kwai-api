@@ -68,11 +68,37 @@ class Rule implements DomainEntity
     }
 
     /**
+     * Get the name of the rule
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
      * Returns the subject
      * @return string
      */
     public function getSubject(): string
     {
         return $this->subject;
+    }
+
+    /**
+     * Get the created_at/updated_at timestamps
+     * @return TraceableTime
+     */
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
+    }
+
+    /**
+     * Returns the remark
+     * @return string
+     */
+    public function getRemark(): string
+    {
+        return $this->remark;
     }
 }
