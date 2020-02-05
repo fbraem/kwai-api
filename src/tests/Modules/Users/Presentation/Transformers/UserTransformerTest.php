@@ -7,7 +7,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use League\Fractal\Manager;
-use League\Fractal\Serializer\ArraySerializer;
+use League\Fractal\Serializer\DataArraySerializer;
 
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\EmailAddress;
@@ -35,7 +35,7 @@ final class UserTransformerTest extends TestCase
         $entity = new Entity(1, $user);
 
         $fractal = new Manager();
-        $fractal->setSerializer(new ArraySerializer());
+        $fractal->setSerializer(new DataArraySerializer());
         $data = $fractal
             ->createData(UserTransformer::createForItem($entity))
             ->toArray();
@@ -43,15 +43,20 @@ final class UserTransformerTest extends TestCase
         $this->assertEquals(
             $data,
             [
-                'id' => 1,
-                'uuid' => strval($uuid),
-                'email' => 'test@kwai.com',
-                'revoked' => false,
-                'remark' => 'test',
-                'created_at' => strval($traceableTime->getCreatedAt()),
-                'updated_at' => null,
-                'username' => null,
-                'last_login' => null,
+                'data' => [
+                    'id' => 1,
+                    'uuid' => strval($uuid),
+                    'email' => strval($email),
+                    'revoked' => false,
+                    'remark' => 'test',
+                    'created_at' => strval($traceableTime->getCreatedAt()),
+                    'updated_at' => null,
+                    'username' => null,
+                    'last_login' => null,
+                    'abilities' => [
+                        'data' => []
+                    ]
+                ]
             ]
         );
     }
