@@ -9,8 +9,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Core\Responses\ResourceResponse;
 
-use Domain\User\UserTransformer;
+use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\UseCases\GetCurrentUserCommand;
 use Kwai\Modules\Users\UseCases\GetCurrentUser;
 
@@ -31,7 +32,8 @@ class UserAction
         ]);
 
         $user = (new GetCurrentUser(
-            new UserDatabaseRepository($this->container->get('pdo_db'))
+            new UserDatabaseRepository($this->container->get('pdo_db')),
+            new AbilityDatabaseRepository($this->container->get('pdo_db'))
         ))($command);
 
         return (new ResourceResponse(
