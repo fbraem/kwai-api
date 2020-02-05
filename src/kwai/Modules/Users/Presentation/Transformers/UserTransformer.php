@@ -54,23 +54,10 @@ class UserTransformer extends Fractal\TransformerAbstract
      * @param  Entity $user The user containing the abilities.
      * @return Fractal\Resource\Collection|null
      */
-    public static function includeAbilities(Entity $user): ?Fractal\Resource\Collection
+    public function includeAbilities(Entity $user): Fractal\Resource\Collection
     {
-        $abilities = $user->getAbilities();
-        if ($abilities && count($abilities) > 0) {
-            return AbilityTransformer::createForCollection($abilities);
-        }
-        return null;
+        return AbilityTransformer::createForCollection($user->getAbilities());
     }
-    /*
-        public static function includeLogs(Entity $user)
-        {
-            $logs = $user->logs;
-            if ($logs) {
-                return UserLogTransformer::createForItem($logs);
-            }
-        }
-    */
 
     /**
      * Transforms a User entity to an array.
