@@ -8,6 +8,8 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\Ability;
 
 /**
  * Ability repository interface
