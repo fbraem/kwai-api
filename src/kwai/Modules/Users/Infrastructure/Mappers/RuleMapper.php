@@ -30,7 +30,7 @@ final class RuleMapper
                         ? Timestamp::createFromString($raw->updated_at)
                         : null
                 ),
-                'remark' => $raw->remark
+                'remark' => $raw->remark ?? ''
             ])
         );
     }
