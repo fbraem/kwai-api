@@ -31,6 +31,7 @@ final class AccessTokenMapper
                     Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at) ? Timestamp::createFromString($raw->updated_at) : null
                 ),
+                'user' => UserMapper::toDomain($raw->user)
             ])
         );
     }

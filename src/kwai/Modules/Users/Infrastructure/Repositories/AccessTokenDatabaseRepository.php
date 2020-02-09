@@ -18,11 +18,13 @@ use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
+use Kwai\Modules\Users\Infrastructure\UserTable;
 
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\alias;
+use function Latitude\QueryBuilder\on;
 
 /**
 * AccessToken Repository for read/write AccessToken entity from/to a database.
@@ -59,18 +61,31 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
+        $userTable = new UserTable();
+        $columns = array_merge(
+            $this->table->alias(),
+            $userTable->alias()
+        );
+
         $query = $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
+            ->select(... $columns)
             ->from($this->table->from())
+            ->join(
+                $userTable->from(),
+                on(
+                    $this->table->from() . '.user_id',
+                    $userTable->from() . '.id'
+                )
+            )
             ->where(field('identifier')->eq(strval($identifier)))
             ->compile()
         ;
 
         $row = $this->db->execute($query)->fetch();
         if ($row) {
-            return AccessTokenMapper::toDomain(
-                $this->table->filter($row)
-            );
+            $accessTokenRow = $this->table->filter($row);
+            $accessTokenRow->user = $userTable->filter($row);
+            return AccessTokenMapper::toDomain($accessTokenRow);
         }
         throw new NotFoundException('AccessToken');
     }
@@ -82,9 +97,21 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     public function getTokensForUser(Entity $user): array
     {
+        $userTable = new UserTable();
+        $columns = array_merge(
+            $this->table->alias(),
+            $userTable->alias()
+        );
         $query = $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
+            ->select(... $columns)
             ->from($this->table->from())
+            ->join(
+                $userTable->from(),
+                on(
+                    $this->table->from() . '.user_id',
+                    $userTable->from() . '.id'
+                )
+            )
             ->where(field('user_id')->eq($user->id()))
             ->compile()
         ;
@@ -93,11 +120,9 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
         $tokens = [];
         foreach ($rows as $row) {
-            $token = AccessTokenMapper::toDomain(
-                $this->table->filter($row)
-            );
-            $token->attachUser($user);
-            $tokens[] = $token;
+            $accessTokenRow = $this->table->filter($row);
+            $accessTokenRow->user = $userTable->filter($row);
+            $tokens[] = AccessTokenMapper::toDomain($accessTokenRow);
         }
         return $tokens;
     }

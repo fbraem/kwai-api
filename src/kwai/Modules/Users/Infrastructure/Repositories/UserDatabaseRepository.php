@@ -146,12 +146,13 @@ final class UserDatabaseRepository implements UserRepository
 
         $data = $this->db->execute($query)->fetch();
         if ($data) {
-            $user = UserMapper::toDomain(
-                $this->table->filter($data)
-            );
-            $token = AccessTokenMapper::toDomain(
-                $accessTokenTable->filter($data)
-            );
+            $userRow = $this->table->filter($data);
+            $accessTokenRow = $accessTokenTable->filter($data);
+            $accessTokenRow->user = $userRow;
+
+            $user = UserMapper::toDomain($userRow);
+            // TODO: return token also?
+            // $token = AccessTokenMapper::toDomain($accessTokenRow);
             return $user;
         }
         throw new NotFoundException('User');
