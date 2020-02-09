@@ -14,6 +14,8 @@ use Kwai\Core\Domain\Timestamp;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 
+use Kwai\Modules\Users\Domain\User;
+
 /**
  * Usecase: Get current user with his/her abilities
  */
