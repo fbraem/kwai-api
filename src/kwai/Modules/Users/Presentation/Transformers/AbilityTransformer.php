@@ -48,7 +48,7 @@ class AbilityTransformer extends Fractal\TransformerAbstract
     /**
      * Get the included rules
      * @param  Entity $ability The ability containing the rules.
-     * @return Fractal\Resource\Collection|null
+     * @return Fractal\Resource\Collection
      */
     public function includeRules(Entity $ability): Fractal\Resource\Collection
     {

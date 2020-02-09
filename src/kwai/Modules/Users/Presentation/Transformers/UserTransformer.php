@@ -52,7 +52,7 @@ class UserTransformer extends Fractal\TransformerAbstract
     /**
      * Get the included abilities
      * @param  Entity $user The user containing the abilities.
-     * @return Fractal\Resource\Collection|null
+     * @return Fractal\Resource\Collection
      */
     public function includeAbilities(Entity $user): Fractal\Resource\Collection
     {
