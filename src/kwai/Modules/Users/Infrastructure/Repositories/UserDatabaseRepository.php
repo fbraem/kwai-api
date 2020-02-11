@@ -39,6 +39,10 @@ final class UserDatabaseRepository implements UserRepository
      */
     private $db;
 
+    /**
+     * The table for 'users'
+     * @var UserTable
+     */
     private $table;
 
     /**
