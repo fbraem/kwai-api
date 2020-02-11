@@ -15,8 +15,16 @@ use Kwai\Modules\Users\Domain\Ability;
  */
 class AbilityTransformer extends Fractal\TransformerAbstract
 {
+    /**
+     * The JSON-API type
+     * @var string
+     */
     private static $type = 'abilities';
 
+    /**
+     * The default includes
+     * @var string[]
+     */
     protected $defaultIncludes = [
         'rules'
     ];

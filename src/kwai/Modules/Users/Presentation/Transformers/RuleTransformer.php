@@ -15,6 +15,10 @@ use Kwai\Modules\Users\Domain\Rule;
  */
 class RuleTransformer extends Fractal\TransformerAbstract
 {
+    /**
+     * The JSON-API type
+     * @var string
+     */
     private static $type = 'rules';
 
     /**
