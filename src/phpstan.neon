@@ -4,3 +4,8 @@ parameters:
         - kwai
     excludes_analyse:
         - kwai/Modules/Users/Infrastructure/Migrations/*
+# services:
+#    -
+#        class: App\PHPStan\EntityClassReflectionExtension
+#        tags:
+#            - phpstan.broker.methodsClassReflectionExtension
