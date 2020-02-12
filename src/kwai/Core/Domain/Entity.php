@@ -51,7 +51,7 @@ class Entity
 
     /**
      * Returns the wrapped domain object
-     * @return mixed
+     * @return T
      */
     public function domain()
     {
