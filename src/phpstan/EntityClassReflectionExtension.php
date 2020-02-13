@@ -53,8 +53,8 @@ class EntityClassReflectionExtension implements MethodsClassReflectionExtension
 
     /**
      * T is the domain class. Return the ObjectType of T.
-     * @param  ClassReflection $classReflection [description]
-     * @return ObjectType                       [description]
+     * @param  ClassReflection $classReflection
+     * @return ObjectType
      */
     private function getT(ClassReflection $classReflection): ObjectType
     {
