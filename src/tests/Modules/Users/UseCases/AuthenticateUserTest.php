@@ -10,8 +10,10 @@ use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
 use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
+use Kwai\Modules\Users\Domain\RefreshToken;
 
 require_once('Database.php');
 
@@ -27,14 +29,19 @@ final class AuthenticateUserTest extends TestCase
             'password' => $_ENV['password']
         ]);
 
-        $accessToken = (new AuthenticateUser(
+        $refreshToken = (new AuthenticateUser(
             new UserDatabaseRepository(\Database::getDatabase()),
-            new AccessTokenDatabaseRepository(\Database::getDatabase())
+            new AccessTokenDatabaseRepository(\Database::getDatabase()),
+            new RefreshTokenDatabaseRepository(\Database::getDatabase())
         ))($command);
 
         $this->assertInstanceOf(
             Entity::class,
-            $accessToken
+            $refreshToken
+        );
+        $this->assertInstanceOf(
+            RefreshToken::class,
+            $refreshToken->domain()
         );
     }
 }

@@ -13,14 +13,16 @@ use Kwai\Core\Domain\Timestamp;
 
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
+use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 
 use Firebase\JWT\JWT;
 
 /**
- * Usecase: Authenticate a user
+ * Usecase: Authenticate a user and create a refresh token.
  */
 final class AuthenticateUser
 {
@@ -35,24 +37,33 @@ final class AuthenticateUser
     private $accessTokenRepo;
 
     /**
+     * @var RefreshTokenRepository
+     */
+    private $refreshTokenRepo;
+
+    /**
      * Constructor.
      * @param UserRepository $userRepo A user repository
      * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
      */
     public function __construct(
         UserRepository $userRepo,
-        AccessTokenRepository $accessTokenRepo
+        AccessTokenRepository $accessTokenRepo,
+        RefreshTokenRepository $refreshTokenRepo
     ) {
         $this->userRepo = $userRepo;
         $this->accessTokenRepo = $accessTokenRepo;
+        $this->refreshTokenRepo = $refreshTokenRepo;
     }
 
     /**
      * Find the user by email and check the password. When the password is
      * not verified or the user is revoked an AuthenticationException will
-     * be thrown. On success, the user and accesstoken will be returned.
+     * be thrown. On success, a refreshtoken will be returned. This refresh
+     * token will contain an access token. This access token will be
+     * associated with the authenticated user.
      * @param  AuthenticateUserCommand $command
-     * @return Entity<AccessToken>              An AccessToken entity
+     * @return Entity<RefreshToken>              A RefreshToken entity
      * @throws \Kwai\Core\Domain\Exceptions\NotFoundException
      *    Thrown when user can't be found
      * @throws AuthenticationException
@@ -68,13 +79,26 @@ final class AuthenticateUser
             throw new AuthenticationException('User is revoked');
         }
 
-        $future = new \DateTime('now +2 hours');
+        $accessToken = $this->accessTokenRepo->create(
+            new AccessToken((object) [
+                'identifier' => new TokenIdentifier(),
+                'expiration' => Timestamp::createFromDateTime(
+                    new \DateTime('now +2 hours')
+                ),
+                'user' => $user
+            ])
+        );
 
-        $accessToken = new AccessToken((object) [
-            'identifier' => new TokenIdentifier(),
-            'expiration' => Timestamp::createFromDateTime($future)
-        ]);
-        $accessToken->attachUser($user);
-        return $this->accessTokenRepo->create($accessToken);
+        $refreshToken = $this->refreshTokenRepo->create(
+            new RefreshToken((object)[
+                'identifier' => new TokenIdentifier(),
+                'expiration' => Timestamp::createFromDateTime(
+                    new \DateTime('now +1 month')
+                ),
+                'accessToken' => $accessToken
+            ])
+        );
+
+        return $refreshToken;
     }
 }

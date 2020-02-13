@@ -36,7 +36,7 @@ class AccessTokenAction
         ]);
 
         try {
-            $accessToken = (new AuthenticateUser(
+            $refreshToken = (new AuthenticateUser(
                 new UserDatabaseRepository($this->container->get('pdo_db')),
                 new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
@@ -46,17 +46,29 @@ class AccessTokenAction
             return new NotAuthorizedResponse('Authentication failed');
         }
 
-        $payload = [
-            'iat' => $accessToken->getTraceableTime()->getCreatedAt()->format('U'),
-            'exp' => $accessToken->getExpiration()->format('U'),
-            'jti' => strval($accessToken->getIdentifier()),
-            'sub' => strval($accessToken->getUser()->getUuid()),
-            'scope' => []
-        ];
-
         $secret = $this->container->get('settings')['oauth2']['client']['secret'];
+        $accessToken = $refreshToken->getAccessToken();
         $data = [
-            'access_token' => JWT::encode($payload, $secret, "HS256"),
+            'access_token' => JWT::encode(
+                [
+                    'iat' => $accessToken->getTraceableTime()->getCreatedAt()->format('U'),
+                    'exp' => $accessToken->getExpiration()->format('U'),
+                    'jti' => strval($accessToken->getIdentifier()),
+                    'sub' => strval($accessToken->getUser()->getUuid()),
+                    'scope' => []
+                ],
+                $secret,
+                "HS256"
+            ),
+            'refresh_token' => JWT::encode(
+                [
+                    'iat' => $refreshToken->getTraceableTime()->getCreatedAt()->format('U'),
+                    'exp' => $refreshToken->getExpiration()->format('U'),
+                    'jti' => strval($refreshToken->getIdentifier())
+                ],
+                $secret,
+                "HS256"
+            ),
             'expires' => strval($accessToken->getExpiration())
         ];
         $response->withStatus(201)

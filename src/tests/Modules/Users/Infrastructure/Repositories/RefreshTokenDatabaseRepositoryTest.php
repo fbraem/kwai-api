@@ -46,9 +46,9 @@ final class RefreshTokenDatabaseRepositoryTest extends TestCase
         $tokenIdentifier = new TokenIdentifier();
         $accessToken = new AccessToken((object) [
             'identifier' => $tokenIdentifier,
-            'expiration' => Timestamp::createFromDateTime($future)
+            'expiration' => Timestamp::createFromDateTime($future),
+            'user' => $this->user
         ]);
-        $accessToken->attachUser($this->user);
         $accessTokenEntity = $accessTokenRepo->create($accessToken);
 
         $tokenIdentifier = new TokenIdentifier();
