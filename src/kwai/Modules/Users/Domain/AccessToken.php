@@ -107,7 +107,7 @@ class AccessToken implements DomainEntity
 
     /**
      * Get the owner of this token
-     * @return Entity
+     * @return Entity<User>
      */
     public function getUser(): Entity
     {
