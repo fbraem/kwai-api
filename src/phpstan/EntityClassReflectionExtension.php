@@ -6,37 +6,47 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 use PHPStan\Analyser\OutOfClassScope;
-use PHPStan\Broker\Broker;
+use PHPStan\Type\ObjectType;
 
 class EntityClassReflectionExtension implements MethodsClassReflectionExtension
 {
-    private $broker;
-
-    public function setBroker(Broker $broker)
-    {
-        $this->broker = $broker;
-    }
-
-    public function hasMethod(ClassReflection $classReflection, string $methodName): bool
-    {
+    public function hasMethod(
+        ClassReflection $classReflection,
+        string $methodName
+    ): bool {
         if ($classReflection->getName() === 'Kwai\Core\Domain\Entity') {
-            $domain = $classReflection->getNativeProperty('domain');
-            if ($domain) {
-                $type = $domain->getReadableType();
-                echo var_dump($type);
-                exit;
-                if ($type->hasMethod($methodName)) {
-                    return true;
-                }
-            }
+            return $this->findMethod(
+                $this->getT($classReflection),
+                $methodName
+            ) != null;
         }
         return false;
     }
 
-    public function getMethod(ClassReflection $classReflection, string $methodName): MethodReflection
+    public function getMethod(
+        ClassReflection $classReflection,
+        string $methodName
+    ): MethodReflection {
+        return $this->findMethod(
+            $this->getT($classReflection),
+            $methodName
+        );
+    }
+
+    private function getT(ClassReflection $classReflection): ObjectType
     {
-        $property = $classReflection->getNativeProperty('domain');
-        return $property->getReadableType()->getMethod($methodName, new OutOfClassScope());
-        // return new EntityMethodReflection($methodName, $classReflection);
+        return $classReflection
+            ->getActiveTemplateTypeMap()
+            ->getType('T');
+    }
+
+    private function findMethod(
+        ObjectType $type,
+        string $method
+    ): ?MethodReflection {
+        if (!$type->hasMethod($method)->yes()) {
+            return null;
+        }
+        return $type->getMethod($method, new OutOfClassScope());
     }
 }
