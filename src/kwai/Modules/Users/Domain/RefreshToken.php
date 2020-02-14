@@ -88,6 +88,15 @@ class RefreshToken implements DomainEntity
     }
 
     /**
+     * Returns true when the refreshToken is expired.
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        return $this->expiration->isPast();
+    }
+    
+    /**
      * Is this token revoked?
      * @return bool
      */
