@@ -44,6 +44,15 @@ final class Timestamp
     }
 
     /**
+     * Returns true when the timestamp is in the past.
+     * @return bool
+     */
+    public function isPast(): bool
+    {
+        return $this->datetime->isPast();
+    }
+
+    /**
      * Returns a string representation of the timestamp in the default format.
      *
      * @return string A formatted timestamp
