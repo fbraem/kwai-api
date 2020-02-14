@@ -11,6 +11,9 @@ $app->group('/auth', function (RouteCollectorProxy $group) {
             ->setName('auth.authorize')
         ;
     */
+    $group->post('/login', '\Kwai\Modules\Users\Presentation\Rest\LoginAction')
+        ->setName('auth.login')
+    ;
     $group->post('/access_token', '\Kwai\Modules\Users\Presentation\Rest\AccessTokenAction')
         ->setName('auth.access_token')
     ;

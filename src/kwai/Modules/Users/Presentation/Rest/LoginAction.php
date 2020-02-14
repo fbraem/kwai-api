@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Kwai/Modules
+ * @subpackage User
+ */
+declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
@@ -19,17 +24,38 @@ use Core\Responses\NotAuthorizedResponse;
 
 use Firebase\JWT\JWT;
 
-class AccessTokenAction
+/**
+ * Login a user with email/pwd and return access- and refreshtoken on succes.
+ */
+class LoginAction
 {
+    /**
+     * The DI container
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * Constructor
+     * @param ContainerInterface $container The DI container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
-    public function __invoke(Request $request, Response $response, $args)
-    {
+    /**
+     * Login the user and return an access- and refreshtoken.
+     * @param  Request  $request  The current HTTP request
+     * @param  Response $response The current HTTP response
+     * @param  string[] $args     Route’s named placeholders
+     * @return Response
+     */
+    public function __invoke(
+        Request $request,
+        Response $response,
+        array $args
+    ): Response {
         $data = $request->getParsedBody();
         $command = new AuthenticateUserCommand([
             'email' => $data['username'],
