@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
