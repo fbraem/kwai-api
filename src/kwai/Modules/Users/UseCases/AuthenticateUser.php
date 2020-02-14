@@ -45,6 +45,7 @@ final class AuthenticateUser
      * Constructor.
      * @param UserRepository $userRepo A user repository
      * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
+     * @param RefreshTokenRepository $refreshTokenRepo An refreshtoken repository
      */
     public function __construct(
         UserRepository $userRepo,
