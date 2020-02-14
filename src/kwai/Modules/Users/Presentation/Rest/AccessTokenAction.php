@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
@@ -38,7 +39,8 @@ class AccessTokenAction
         try {
             $refreshToken = (new AuthenticateUser(
                 new UserDatabaseRepository($this->container->get('pdo_db')),
-                new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
+                new AccessTokenDatabaseRepository($this->container->get('pdo_db')),
+                new RefreshTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
         } catch (NotFoundException $nfe) {
             return new NotAuthorizedResponse('Unknown user');
