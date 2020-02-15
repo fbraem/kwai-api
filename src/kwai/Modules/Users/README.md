@@ -7,10 +7,13 @@ Login user
 ----------
 :heavy_check_mark: A user must be able to login.
 
-Automatic Reactivate
+Automatic reactivate
 --------------------
-:heavy_check_mark: A user gets an accesstoken, it must be possible to renew this using
-a refreshtoken.
+:heavy_check_mark: A user gets an accesstoken, it must be possible to renew this using a refreshtoken.
+
+Logout
+------
+:x: A user must be able to logout.
 
 Change password
 ---------------
