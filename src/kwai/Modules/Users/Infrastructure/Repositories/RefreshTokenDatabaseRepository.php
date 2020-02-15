@@ -112,12 +112,8 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
 
         $query = $this->db->createQueryFactory()
             ->insert($this->table->from())
-            ->columns(
-                ... array_keys($data)
-            )
-            ->values(
-                ... array_values($data)
-            )
+            ->columns(... array_keys($data))
+            ->values(... array_values($data))
             ->compile()
         ;
         $stmt = $this->db->execute($query);
@@ -126,5 +122,20 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
             $this->db->lastInsertId(),
             $token
         );
+    }
+
+    /**
+     * Update the refreshtoken.
+     * @param  Entity<RefreshToken> $token
+     */
+    public function update(Entity $token): void
+    {
+        $data = RefreshTokenMapper::toPersistence($token);
+        $query = $this->db->createQueryFactory()
+            ->update($this->table->from(), $data)
+            ->where(field('id')->eq($token->id()))
+            ->compile()
+        ;
+        $stmt = $this->db->execute($query);
     }
 }

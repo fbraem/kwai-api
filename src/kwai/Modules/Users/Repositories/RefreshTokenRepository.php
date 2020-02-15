@@ -31,4 +31,10 @@ interface RefreshTokenRepository
      * @return Entity<RefreshToken>
      */
     public function create(RefreshToken $token): Entity;
+
+    /**
+     * Update the refreshtoken.
+     * @param  Entity<RefreshToken> $token
+     */
+    public function update(Entity $token): void;
 }
