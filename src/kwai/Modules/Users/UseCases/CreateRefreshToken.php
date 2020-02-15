@@ -77,6 +77,7 @@ final class CreateRefreshToken
 
         $refreshToken->getAccessToken()->revoke();
         $refreshToken->revoke();
+        $this->refreshTokenRepo->update($refreshToken);
 
         $user = $refreshToken->getAccessToken()->getUser();
         if ($user->isRevoked()) {
