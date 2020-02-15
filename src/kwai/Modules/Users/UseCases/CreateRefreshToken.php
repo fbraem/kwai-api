@@ -64,7 +64,9 @@ final class CreateRefreshToken
     {
         $refreshToken = $this
             ->refreshTokenRepo
-            ->getByTokenIdentifier($command->refresh_token_identifier)
+            ->getByTokenIdentifier(
+                new TokenIdentifier($command->refresh_token_identifier)
+            )
         ;
         if ($refreshToken->isExpired()) {
             throw new AuthenticationException('Refreshtoken is expired');
