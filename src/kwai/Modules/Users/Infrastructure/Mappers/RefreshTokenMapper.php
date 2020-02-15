@@ -34,7 +34,7 @@ final class RefreshTokenMapper
             new RefreshToken((object)[
                 'identifier' => new TokenIdentifier($raw->identifier),
                 'expiration' => Timestamp::createFromString($raw->expiration),
-                'revoked' => $raw->revoked,
+                'revoked' => ($raw->revoked ?? '0') == '1',
                 'traceableTime' => new TraceableTime(
                     Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at) ? Timestamp::createFromString($raw->updated_at) : null
