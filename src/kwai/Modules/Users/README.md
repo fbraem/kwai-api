@@ -11,6 +11,10 @@ Automatic reactivate
 --------------------
 :heavy_check_mark: A user gets an accesstoken, it must be possible to renew this using a refreshtoken.
 
+Get current user
+----------------
+:heavy_check_mark: It must be possible to get the abilities of the logged in user
+
 Logout
 ------
 :x: A user must be able to logout.
