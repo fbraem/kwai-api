@@ -5,11 +5,11 @@ The following use cases must be implemented for the users module:
 
 Login user
 ----------
-[X] A user must be able to login.
+:heavy_check_mark: A user must be able to login.
 
 Automatic Reactivate
 --------------------
-[X] A user gets an accesstoken, it must be possible to renew this using
+:heavy_check_mark: A user gets an accesstoken, it must be possible to renew this using
 a refreshtoken.
 
 Change password
