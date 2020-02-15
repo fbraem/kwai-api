@@ -38,15 +38,15 @@ final class CreateRefreshToken
 
     /**
      * Constructor.
-     * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
      * @param RefreshTokenRepository $refreshTokenRepo An refreshtoken repository
+     * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
      */
     public function __construct(
-        AccessTokenRepository $accessTokenRepo,
-        RefreshTokenRepository $refreshTokenRepo
+        RefreshTokenRepository $refreshTokenRepo,
+        AccessTokenRepository $accessTokenRepo
     ) {
-        $this->accessTokenRepo = $accessTokenRepo;
         $this->refreshTokenRepo = $refreshTokenRepo;
+        $this->accessTokenRepo = $accessTokenRepo;
     }
 
     /**

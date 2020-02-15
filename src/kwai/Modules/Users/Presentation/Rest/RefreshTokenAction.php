@@ -70,8 +70,8 @@ class RefreshTokenAction
 
         try {
             $refreshToken = (new CreateRefreshToken(
-                new AccessTokenDatabaseRepository($this->container->get('pdo_db')),
-                new RefreshTokenDatabaseRepository($this->container->get('pdo_db'))
+                new RefreshTokenDatabaseRepository($this->container->get('pdo_db')),
+                new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
         } catch (NotFoundException $nfe) {
             return new NotAuthorizedResponse('Unknown refreshtoken');
