@@ -14,6 +14,7 @@ use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepositor
 use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Kwai\Modules\Users\Domain\RefreshToken;
+use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 
 require_once('Database.php');
 
@@ -43,5 +44,21 @@ final class AuthenticateUserTest extends TestCase
             RefreshToken::class,
             $refreshToken->domain()
         );
+    }
+
+    public function testAuthenticateFailure(): void
+    {
+        $this->expectException(AuthenticationException::class);
+
+        $command = new AuthenticateUserCommand([
+            'email' => $_ENV['user'],
+            'password' => 'invalid'
+        ]);
+
+        $refreshToken = (new AuthenticateUser(
+            new UserDatabaseRepository(\Database::getDatabase()),
+            new AccessTokenDatabaseRepository(\Database::getDatabase()),
+            new RefreshTokenDatabaseRepository(\Database::getDatabase())
+        ))($command);
     }
 }
