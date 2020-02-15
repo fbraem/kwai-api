@@ -130,7 +130,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
      */
     public function update(Entity $token): void
     {
-        $data = RefreshTokenMapper::toPersistence($token);
+        $data = RefreshTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)
             ->where(field('id')->eq($token->id()))
