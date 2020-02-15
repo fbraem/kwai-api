@@ -44,6 +44,11 @@ final class RefreshTokenMapper
         );
     }
 
+    /**
+     * Maps the RefreshToken entity to the RefreshToken table.
+     * @param  RefreshToken $refreshToken
+     * @return array                       The raw table data.
+     */
     public static function toPersistence(RefreshToken $refreshToken): array
     {
         if ($refreshToken->getTraceableTime()->getUpdatedAt()) {
