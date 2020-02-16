@@ -58,7 +58,7 @@ class LogoutAction
         $data = $request->getParsedBody();
 
         $secret = $this->container->get('settings')['security']['secret'];
-        $algorithm = $this->container->get('settings')['security']['secret'];
+        $algorithm = $this->container->get('settings')['security']['algorithm'];
 
         $decodedRefreshToken = JWT::decode(
             $data['refresh_token'],
