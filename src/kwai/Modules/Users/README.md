@@ -17,7 +17,7 @@ Get current user
 
 Logout
 ------
-:x: A user must be able to logout.
+:heavy_check_mark: A user must be able to logout.
 
 Change password
 ---------------
