@@ -55,7 +55,7 @@ final class DatabaseTest extends TestCase
     {
         $this->expectException(DatabaseException::class);
 
-        $db = new Database('sqlite::memory');
+        $db = new Database('sqlite::memory:');
         $qf = $db->createQueryFactory();
         $query = $qf
             ->select()
