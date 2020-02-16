@@ -75,9 +75,15 @@ final class CreateRefreshToken
             throw new AuthenticationException('Refreshtoken is revoked');
         }
 
+        // Revoke the old refreshtoken
         $refreshToken->getAccessToken()->revoke();
         $refreshToken->revoke();
         $this->refreshTokenRepo->update($refreshToken);
+
+        // Revoke the old accesstoken
+        $accessToken = $refreshToken->getAccessToken();
+        $accessToken->revoke();
+        $this->accessTokenRepo->update($accessToken);
 
         $user = $refreshToken->getAccessToken()->getUser();
         if ($user->isRevoked()) {
