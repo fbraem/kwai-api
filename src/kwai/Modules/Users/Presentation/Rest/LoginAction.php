@@ -74,7 +74,9 @@ class LoginAction
             return new NotAuthorizedResponse('Authentication failed');
         }
 
-        $secret = $this->container->get('settings')['oauth2']['client']['secret'];
+        $secret = $this->container->get('settings')['security']['secret'];
+        $algorithm = $this->container->get('settings')['security']['algorithm'];
+
         $accessToken = $refreshToken->getAccessToken();
         $data = [
             'access_token' => JWT::encode(
@@ -86,7 +88,7 @@ class LoginAction
                     'scope' => []
                 ],
                 $secret,
-                "HS256"
+                $algorithm
             ),
             'refresh_token' => JWT::encode(
                 [
@@ -95,7 +97,7 @@ class LoginAction
                     'jti' => strval($refreshToken->getIdentifier())
                 ],
                 $secret,
-                "HS256"
+                $algorithm
             ),
             'expires' => strval($accessToken->getExpiration())
         ];

@@ -57,11 +57,12 @@ class RefreshTokenAction
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->container->get('settings')['oauth2']['client']['secret'];
+        $secret = $this->container->get('settings')['security']['secret'];
+        $algorithm = $this->container->get('settings')['security']['algorithm'];
         $decodedRefreshToken = JWT::decode(
             $data['refresh_token'],
             $secret,
-            ['HS256']
+            [ $algorithm ]
         );
 
         $command = new CreateRefreshTokenCommand([
@@ -90,7 +91,7 @@ class RefreshTokenAction
                     'scope' => []
                 ],
                 $secret,
-                "HS256"
+                $algorithm
             ),
             'refresh_token' => JWT::encode(
                 [
@@ -99,7 +100,7 @@ class RefreshTokenAction
                     'jti' => strval($refreshToken->getIdentifier())
                 ],
                 $secret,
-                "HS256"
+                $algorithm
             ),
             'expires' => strval($accessToken->getExpiration())
         ];

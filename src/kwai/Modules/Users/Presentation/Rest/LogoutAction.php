@@ -57,11 +57,13 @@ class LogoutAction
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->container->get('settings')['oauth2']['client']['secret'];
+        $secret = $this->container->get('settings')['security']['secret'];
+        $algorithm = $this->container->get('settings')['security']['secret'];
+
         $decodedRefreshToken = JWT::decode(
             $data['refresh_token'],
             $secret,
-            ['HS256']
+            [ $algorithm ]
         );
 
         $command = new LogoutCommand([

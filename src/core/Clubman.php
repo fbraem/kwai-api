@@ -7,13 +7,6 @@ use League\Flysystem\Filesystem;
 
 use League\Plates\Engine as TemplateEngine;
 
-use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\ResourceServer;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Grant\PasswordGrant;
-use League\OAuth2\Server\Grant\ImplicitGrant;
-use League\OAuth2\Server\Grant\RefreshTokenGrant;
-
 use League\Container\Container;
 
 use Domain\Auth\AccessTokenRepository;
@@ -86,37 +79,6 @@ class Clubman
                 return new TemplateEngine(__DIR__ . '/../templates');
             })->addArgument($container);
 
-            $container->add('authorizationServer', function ($c) {
-                $config = $c->get('settings');
-                $server = new AuthorizationServer(
-                    new ClientRepository(),
-                    new AccessTokenRepository(),
-                    new ScopeRepository(),
-                    $config['oauth2']['private_key'],
-                    $config['oauth2']['encryption_key']
-                );
-                $refreshTokenRepo = new RefreshTokenRepository();
-
-                $grant = new PasswordGrant(
-                    new UserRepository(),
-                    $refreshTokenRepo
-                );
-                $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
-                $server->enableGrantType($grant, new \DateInterval('PT1H'));
-
-                $grant = new RefreshTokenGrant($refreshTokenRepo);
-                $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
-                $server->enableGrantType($grant, new \DateInterval('PT1H'));
-
-                $server->enableGrantType(new ImplicitGrant(new \DateInterval('PT1H')));
-
-                return $server;
-            })->addArgument($container);
-            $container->add('resourceServer', function ($c) {
-                $config = $c->get('settings');
-                return new ResourceServer(new AccessTokenRepository(), $config['oauth2']['public_key']);
-            })->addArgument($container);
-
             $container->add('mailer', function ($c) {
                 $config = $c->get('settings');
                 $mail = new PHPMailer(true);
@@ -147,8 +109,8 @@ class Clubman
 
             $settings = $container->get('settings');
             self::$application->add(new JwtAuthentication([
-                'secret' => $settings['oauth2']['client']['secret'],
-                'algorithm' => [ 'HS256' ],
+                'secret' => $settings['security']['secret'],
+                'algorithm' => [ $settings['security']['algorithm'] ],
                 'rules' => [ new AuthenticationRule() ],
                 'error' => function ($response, $arguments) {
                     $data['status'] = 'error';
