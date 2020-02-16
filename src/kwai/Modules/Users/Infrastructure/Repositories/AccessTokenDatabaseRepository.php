@@ -25,6 +25,7 @@ use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\on;
+use Latitude\QueryBuilder\Query\SelectQuery;
 
 /**
 * AccessToken Repository for read/write AccessToken entity from/to a database.
@@ -43,6 +44,12 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     private $table;
 
     /**
+     * User table
+     * @var UserTable
+     */
+    private $userTable;
+
+    /**
      * Constructor
      *
      * @param Database $db A database object
@@ -51,6 +58,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     {
         $this->db = $db;
         $this->table = new AccessTokenTable();
+        $this->userTable = new UserTable();
     }
 
     /**
@@ -61,22 +69,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
-        $userTable = new UserTable();
-        $columns = array_merge(
-            $this->table->alias(),
-            $userTable->alias()
-        );
-
-        $query = $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
-            ->join(
-                $userTable->from(),
-                on(
-                    $this->table->from() . '.user_id',
-                    $userTable->from() . '.id'
-                )
-            )
+        $query = $this->createBaseQuery()
             ->where(field('identifier')->eq(strval($identifier)))
             ->compile()
         ;
@@ -84,7 +77,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $row = $this->db->execute($query)->fetch();
         if ($row) {
             $accessTokenRow = $this->table->filter($row);
-            $accessTokenRow->user = $userTable->filter($row);
+            $accessTokenRow->user = $this->userTable->filter($row);
             return AccessTokenMapper::toDomain($accessTokenRow);
         }
         throw new NotFoundException('AccessToken');
@@ -97,21 +90,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     public function getTokensForUser(Entity $user): array
     {
-        $userTable = new UserTable();
-        $columns = array_merge(
-            $this->table->alias(),
-            $userTable->alias()
-        );
-        $query = $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
-            ->join(
-                $userTable->from(),
-                on(
-                    $this->table->from() . '.user_id',
-                    $userTable->from() . '.id'
-                )
-            )
+        $query = $this->createBaseQuery()
             ->where(field('user_id')->eq($user->id()))
             ->compile()
         ;
@@ -121,7 +100,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $tokens = [];
         foreach ($rows as $row) {
             $accessTokenRow = $this->table->filter($row);
-            $accessTokenRow->user = $userTable->filter($row);
+            $accessTokenRow->user = $this->userTable->filter($row);
             $tokens[] = AccessTokenMapper::toDomain($accessTokenRow);
         }
         return $tokens;
@@ -167,5 +146,29 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             ->compile()
         ;
         $stmt = $this->db->execute($query);
+    }
+
+    /**
+     * Create the base SELECT query
+     * @return SelectQuery
+     */
+    private function createBaseQuery(): SelectQuery
+    {
+        $columns = array_merge(
+            $this->table->alias(),
+            $this->userTable->alias()
+        );
+
+        return $this->db->createQueryFactory()
+            ->select(... $columns)
+            ->from($this->table->from())
+            ->join(
+                $this->userTable->from(),
+                on(
+                    $this->table->from() . '.user_id',
+                    $this->userTable->from() . '.id'
+                )
+            )
+        ;
     }
 }
