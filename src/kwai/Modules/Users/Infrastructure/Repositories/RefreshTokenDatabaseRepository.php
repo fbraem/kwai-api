@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\Exceptions\NotCreatedException;
 use Kwai\Core\Infrastructure\Database;
 
 use Kwai\Modules\Users\Domain\RefreshToken;
@@ -104,7 +103,6 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
      * Inserts the refreshtoken in the table.
      * @param  RefreshToken $token
      * @return Entity<RefreshToken>
-     * @throws NotCreatedException Thrown when insert fails
      */
     public function create(RefreshToken $token): Entity
     {

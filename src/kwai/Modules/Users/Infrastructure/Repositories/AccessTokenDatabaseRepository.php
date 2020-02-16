@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\Exceptions\NotCreatedException;
 use Kwai\Core\Infrastructure\Database;
 
 use Kwai\Modules\Users\Domain\User;
@@ -110,7 +109,6 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      * Inserts the accesstoken in the table.
      * @param  AccessToken $token
      * @return Entity<AccessToken>
-     * @throws NotCreatedException Thrown when insert fails
      */
     public function create(AccessToken $token): Entity
     {
