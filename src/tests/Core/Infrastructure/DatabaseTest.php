@@ -13,11 +13,13 @@ use Latitude\QueryBuilder\QueryFactory;
 
 final class DatabaseTest extends TestCase
 {
+    const DB_MEMORY = 'sqlite::memory:';
+
     public function testDatabase(): void
     {
         $this->assertInstanceOf(
             Database::class,
-            new Database('sqlite::memory:')
+            new Database(self::DB_MEMORY)
         );
     }
 
@@ -29,7 +31,7 @@ final class DatabaseTest extends TestCase
 
     public function testDatabaseQueryFactory(): void
     {
-        $db = new Database('sqlite::memory:');
+        $db = new Database(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $this->assertInstanceOf(
             QueryFactory::class,
@@ -39,7 +41,7 @@ final class DatabaseTest extends TestCase
 
     public function testDatabaseQuery(): void
     {
-        $db = new Database('sqlite::memory:');
+        $db = new Database(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $query = $qf
             ->select('name', 'type')
@@ -55,7 +57,7 @@ final class DatabaseTest extends TestCase
     {
         $this->expectException(DatabaseException::class);
 
-        $db = new Database('sqlite::memory:');
+        $db = new Database(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $query = $qf
             ->select()
