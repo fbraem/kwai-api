@@ -17,7 +17,7 @@ final class DatabaseTest extends TestCase
     {
         $this->assertInstanceOf(
             Database::class,
-            new Database('sqlite::memory')
+            new Database('sqlite::memory:')
         );
     }
 
