@@ -44,6 +44,15 @@ final class Timestamp
     }
 
     /**
+     * Get the timezone
+     * @return string
+     */
+    public function getTimezone(): string
+    {
+        return $this->datetime->tzName;
+    }
+
+    /**
      * Returns true when the timestamp is in the past.
      * @return bool
      */

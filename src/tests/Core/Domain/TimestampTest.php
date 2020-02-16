@@ -57,4 +57,12 @@ final class TimestampTest extends TestCase
             "$currentYear-01-01 00:00:00"
         );
     }
+
+    public function testGetTimezone(): void
+    {
+        $this->assertEquals(
+            Timestamp::createNow()->getTimezone(),
+            'UTC'
+        );
+    }
 }
