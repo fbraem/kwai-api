@@ -154,4 +154,18 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             $token
         );
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function update(Entity $token): void
+    {
+        $data = AccessTokenMapper::toPersistence($token->domain());
+        $query = $this->db->createQueryFactory()
+            ->update($this->table->from(), $data)
+            ->where(field('id')->eq($token->id()))
+            ->compile()
+        ;
+        $stmt = $this->db->execute($query);
+    }
 }

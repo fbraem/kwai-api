@@ -39,4 +39,10 @@ interface AccessTokenRepository
      * @return Entity<AccessToken>
      */
     public function create(AccessToken $token): Entity;
+
+    /**
+     * Update the accesstoken.
+     * @param  Entity<AccessToken> $token
+     */
+    public function update(Entity $token): void;
 }
