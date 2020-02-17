@@ -34,6 +34,7 @@ final class GetCurrentUser
     /**
      * Constructor.
      * @param UserRepository $userRepo A user repository
+     * @param AbilityRepository $abilityRepo An ability repository
      */
     public function __construct(
         UserRepository $userRepo,
