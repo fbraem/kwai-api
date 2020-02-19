@@ -53,4 +53,10 @@ interface UserRepository
      * @return Entity<User>
      */
     public function getByAccessToken(TokenIdentifier $token) : Entity;
+
+    /**
+     * Update the login information
+     * @param Entity $account
+     */
+    public function updateLogin(Entity $account): void;
 }

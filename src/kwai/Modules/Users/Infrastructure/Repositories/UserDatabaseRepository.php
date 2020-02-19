@@ -187,4 +187,18 @@ final class UserDatabaseRepository implements UserRepository
         }
         throw new NotFoundException('User');
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function updateLogin(Entity $account): void
+    {
+        $data = UserAccountTokenMapper::toPersistence($account->domain());
+        $query = $this->db->createQueryFactory()
+            ->update($this->table->from(), $data)
+            ->where(field('id')->eq($account->id()))
+            ->compile()
+        ;
+        $stmt = $this->db->execute($query);
+    }
 }
