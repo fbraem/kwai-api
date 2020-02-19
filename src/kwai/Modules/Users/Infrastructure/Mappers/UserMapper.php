@@ -33,13 +33,8 @@ final class UserMapper
                         ? Timestamp::createFromString($raw->updated_at)
                         : null
                 ),
-                'lastLogin' => isset($raw->last_login)
-                    ? Timestamp::createFromString($raw->last_login)
-                    : null,
                 'remark' => $raw->remark,
-                'username' => new Username($raw->first_name, $raw->last_name),
-                'password' => new Password($raw->password),
-                'revoked' => $raw->revoked ?? false
+                'username' => new Username($raw->first_name, $raw->last_name)
             ])
         );
     }

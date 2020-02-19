@@ -84,7 +84,7 @@ final class CreateRefreshToken
         $accessToken->revoke();
         $this->accessTokenRepo->update($accessToken);
 
-        $user = $refreshToken->getAccessToken()->getUser();
+        $user = $refreshToken->getAccessToken()->getUserAccount();
         if ($user->isRevoked()) {
             throw new AuthenticationException('User is revoked');
         }
@@ -95,7 +95,7 @@ final class CreateRefreshToken
                 'expiration' => Timestamp::createFromDateTime(
                     new \DateTime('now +2 hours')
                 ),
-                'user' => $user
+                'account' => $user
             ])
         );
 

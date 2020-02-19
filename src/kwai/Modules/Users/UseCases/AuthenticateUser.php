@@ -72,11 +72,11 @@ final class AuthenticateUser
      */
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
-        $user = $this->userRepo->getByEmail(new EmailAddress($command->email));
-        if (!$user->login($command->password)) {
+        $account = $this->userRepo->getAccount(new EmailAddress($command->email));
+        if (!$account->login($command->password)) {
             throw new AuthenticationException('Invalid password');
         }
-        if ($user->isRevoked()) {
+        if ($account->isRevoked()) {
             throw new AuthenticationException('User is revoked');
         }
 
@@ -86,7 +86,7 @@ final class AuthenticateUser
                 'expiration' => Timestamp::createFromDateTime(
                     new \DateTime('now +2 hours')
                 ),
-                'user' => $user
+                'account' => $account
             ])
         );
 

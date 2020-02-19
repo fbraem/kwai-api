@@ -31,7 +31,7 @@ final class AccessTokenMapper
                     Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at) ? Timestamp::createFromString($raw->updated_at) : null
                 ),
-                'user' => UserMapper::toDomain($raw->user)
+                'account' => UserAccountMapper::toDomain($raw->user)
             ])
         );
     }
@@ -51,7 +51,7 @@ final class AccessTokenMapper
             'revoked' => $accessToken->isRevoked() ? '1' : '0',
             'created_at' => strval($accessToken->getTraceableTime()->getCreatedAt()),
             'updated_at' => $updated_at,
-            'user_id' => $accessToken->getUser()->id()
+            'user_id' => $accessToken->getUserAccount()->id()
         ];
     }
 }

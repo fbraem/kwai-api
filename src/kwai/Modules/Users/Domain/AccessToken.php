@@ -44,9 +44,9 @@ class AccessToken implements DomainEntity
 
     /**
      * The user that owns the token.
-     * @var Entity<User>
+     * @var Entity<UserAccount>
      */
-    private $user;
+    private $account;
 
     /**
      * Constructor
@@ -58,7 +58,7 @@ class AccessToken implements DomainEntity
         $this->expiration = $props->expiration;
         $this->revoked = $props->revoked ?? false;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->user = $props->user;
+        $this->account = $props->account;
     }
 
     /**
@@ -107,10 +107,10 @@ class AccessToken implements DomainEntity
 
     /**
      * Get the owner of this token
-     * @return Entity<User>
+     * @return Entity<UserAccount>
      */
-    public function getUser(): Entity
+    public function getUserAccount(): Entity
     {
-        return $this->user;
+        return $this->account;
     }
 }

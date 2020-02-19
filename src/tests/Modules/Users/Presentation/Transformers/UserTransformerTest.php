@@ -47,12 +47,10 @@ final class UserTransformerTest extends TestCase
                     'id' => 1,
                     'uuid' => strval($uuid),
                     'email' => strval($email),
-                    'revoked' => false,
                     'remark' => 'test',
                     'created_at' => strval($traceableTime->getCreatedAt()),
                     'updated_at' => null,
                     'username' => null,
-                    'last_login' => null,
                     'abilities' => [
                         'data' => []
                     ]

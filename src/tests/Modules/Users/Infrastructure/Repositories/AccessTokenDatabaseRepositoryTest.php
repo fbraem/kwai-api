@@ -13,7 +13,7 @@ use Kwai\Core\Domain\Timestamp;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
@@ -32,7 +32,7 @@ final class AccessTokenDatabaseRepositoryTest extends TestCase
     {
         $this->repo = new AccessTokenDatabaseRepository(\Database::getDatabase());
         $userRepo = new UserDatabaseRepository(\Database::getDatabase());
-        $this->user = $userRepo->getByEmail(new EmailAddress($_ENV['user']));
+        $this->user = $userRepo->getAccount(new EmailAddress($_ENV['user']));
     }
 
     public function testCreateAccessToken()
@@ -42,7 +42,7 @@ final class AccessTokenDatabaseRepositoryTest extends TestCase
         $accessToken = new AccessToken((object) [
             'identifier' => $tokenIdentifier,
             'expiration' => Timestamp::createFromDateTime($future),
-            'user' => $this->user
+            'account' => $this->user
         ]);
         $entity = $this->repo->create($accessToken);
         $this->assertInstanceOf(

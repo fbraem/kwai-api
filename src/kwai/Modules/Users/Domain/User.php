@@ -41,12 +41,6 @@ class User implements DomainEntity
     private $traceableTime;
 
     /**
-     * The timestamp of the last login
-     * @var Timestamp
-     */
-    private $lastLogin;
-
-    /**
      * A remark about the user
      * @var string
      */
@@ -57,18 +51,6 @@ class User implements DomainEntity
      * @var Username
      */
     private $username;
-
-    /**
-     * The password of the user
-     * @var Password
-     */
-    private $password;
-
-    /**
-     * Is the user revoked?
-     * @var bool
-     */
-    private $revoked;
 
     /**
      * The abilities of the user.
@@ -85,35 +67,9 @@ class User implements DomainEntity
         $this->uuid = $props->uuid;
         $this->emailAddress = $props->emailAddress;
         $this->traceableTime = $props->traceableTime;
-        $this->lastLogin = $props->lastLogin ?? null;
         $this->remark = $props->remark;
-        $this->revoked = $props->revoked ?? false;
         $this->username = $props->username ?? null;
-        $this->password = $props->password ?? null;
         $this->abilities = $props->abilities ?? [];
-    }
-
-    /**
-     * Verify the password. When no password is set, false will be returned.
-     * @param string $password The password to login.
-     * @return bool
-     */
-    public function login(string $password): bool
-    {
-        if ($this->password) {
-            return $this->password->verify($password);
-        }
-        return false;
-    }
-
-    /**
-     * TODO: Add revoked to table
-     * Checks if the user is revoked.
-     * @return bool
-     */
-    public function isRevoked(): bool
-    {
-        return $this->revoked;
     }
 
     /**
@@ -132,15 +88,6 @@ class User implements DomainEntity
     public function getEmailAddress(): EmailAddress
     {
         return $this->emailAddress;
-    }
-
-    /**
-     * Get the last login timestamp
-     * @return Timestamp
-     */
-    public function getLastLogin(): ?Timestamp
-    {
-        return $this->lastLogin;
     }
 
     /**
@@ -177,15 +124,6 @@ class User implements DomainEntity
     public function getUsername(): ?Username
     {
         return $this->username;
-    }
-
-    /**
-     * Checks if the user has loggedin before
-     * @return bool
-     */
-    public function hasLastLogin(): bool
-    {
-        return $this->lastLogin != null;
     }
 
     /**

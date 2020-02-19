@@ -17,11 +17,13 @@ use Kwai\Core\Infrastructure\Database;
 
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\UserTable;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
 
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Core\Domain\EmailAddress;
 
@@ -97,6 +99,30 @@ final class UserDatabaseRepository implements UserRepository
         $user = $this->db->execute($query)->fetch();
         if ($user) {
             return UserMapper::toDomain(
+                $this->table->filter($user)
+            );
+        }
+        throw new NotFoundException('User');
+    }
+
+    /**
+     * Get the user account with the given email.
+     * @param  EmailAddress  $email The email address of the user
+     * @return Entity<User>         The user
+     * @throws NotFoundException    When user is not found
+     */
+    public function getAccount(EmailAddress $email): Entity
+    {
+        $query = $this->db->createQueryFactory()
+            ->select(... $this->table->alias())
+            ->from($this->table->from())
+            ->where(field('email')->eq($email))
+            ->compile()
+        ;
+
+        $user = $this->db->execute($query)->fetch();
+        if ($user) {
+            return UserAccountMapper::toDomain(
                 $this->table->filter($user)
             );
         }

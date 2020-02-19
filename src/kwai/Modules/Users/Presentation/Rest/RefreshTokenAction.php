@@ -87,7 +87,7 @@ class RefreshTokenAction
                     'iat' => $accessToken->getTraceableTime()->getCreatedAt()->format('U'),
                     'exp' => $accessToken->getExpiration()->format('U'),
                     'jti' => strval($accessToken->getIdentifier()),
-                    'sub' => strval($accessToken->getUser()->getUuid()),
+                    'sub' => strval($accessToken->getUserAccount()->getUser()->getUuid()),
                     'scope' => []
                 ],
                 $secret,

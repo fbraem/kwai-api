@@ -11,6 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserAccount;
 
 /**
  * User repository interface
@@ -37,6 +38,13 @@ interface UserRepository
      * @return Entity<User>
      */
     public function getByEmail(EmailAddress $email) : Entity;
+
+    /**
+     * Get the user account with the given emailaddress.
+     * @param  EmailAddress $email
+     * @return Entity<UserAccount>
+     */
+    public function getAccount(EmailAddress $email) : Entity;
 
     /**
      * Get the user associated with the given token identifier
