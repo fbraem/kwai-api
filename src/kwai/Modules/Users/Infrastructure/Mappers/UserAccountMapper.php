@@ -20,6 +20,11 @@ use Kwai\Modules\Users\Domain\ValueObjects\Password;
 
 final class UserAccountMapper
 {
+    /**
+     * Maps the table row object to UserAccount entity.
+     * @param  object $raw
+     * @return Entity<UserAccount>
+     */
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
@@ -36,7 +41,26 @@ final class UserAccountMapper
         );
     }
 
-    public static function toPersistence(Entity $user): object
+    /**
+     * Returns a data array from a UserAccount entity.
+     * @param  Entity<UserAccount> $account
+     * @return array
+     */
+    public static function toPersistence(Entity $account): array
     {
+        if ($account->getTraceableTime()->getUpdatedAt()) {
+            $updated_at = strval(
+                $refreshToken->getTraceableTime()->getUpdatedAt()
+            );
+        } else {
+            $updated_at = null;
+        }
+
+        //TODO: add last_unsuccessful_login
+        return [
+            'last_login' => strval($account->getLastLogin()),
+            'updated_at' => $updated_at,
+            'revoked' => $account->isRevoked() ? '1' : '0'
+        ];
     }
 }
