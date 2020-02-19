@@ -12,6 +12,7 @@ return [
     'paths' => [
         'migrations' => [
             __DIR__ . '/kwai/Modules/Users/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Mails/Infrastructure/Migrations',
             __DIR__ . '/domain/Category/migrations',
             __DIR__ . '/domain/News/migrations',
             __DIR__ . '/domain/Content/migrations',
