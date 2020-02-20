@@ -2376,16 +2376,16 @@
         },
         {
             "name": "spatie/data-transfer-object",
-            "version": "1.12.0",
+            "version": "1.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/data-transfer-object.git",
-                "reference": "6b929bf1f9c0e320f594d3d2db6c3249485f1b85"
+                "reference": "2f6291620f1f067508b7d80d3b0346609adc265e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/data-transfer-object/zipball/6b929bf1f9c0e320f594d3d2db6c3249485f1b85",
-                "reference": "6b929bf1f9c0e320f594d3d2db6c3249485f1b85",
+                "url": "https://api.github.com/repos/spatie/data-transfer-object/zipball/2f6291620f1f067508b7d80d3b0346609adc265e",
+                "reference": "2f6291620f1f067508b7d80d3b0346609adc265e",
                 "shasum": ""
             },
             "require": {
@@ -2419,7 +2419,7 @@
                 "data-transfer-object",
                 "spatie"
             ],
-            "time": "2019-12-19T13:30:38+00:00"
+            "time": "2020-01-29T15:10:20+00:00"
         },
         {
             "name": "symfony/config",
