@@ -18,6 +18,7 @@ class MailMigration extends AbstractMigration
             ->addColumn('body', 'text')
             ->addColumn('sent_time', 'datetime', ['null' => true])
             ->addColumn('remark', 'text', ['null' => true])
+            ->addColumn('user_id', 'integer')
             ->addTimestamps()
             ->create()
         ;
