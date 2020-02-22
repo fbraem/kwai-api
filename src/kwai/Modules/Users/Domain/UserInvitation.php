@@ -145,6 +145,6 @@ class UserInvitation implements DomainEntity
      */
     public function getCreator(): Entity
     {
-        return $this->user;
+        return $this->creator;
     }
 }
