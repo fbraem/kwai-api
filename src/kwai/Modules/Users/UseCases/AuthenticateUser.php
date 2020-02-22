@@ -80,6 +80,8 @@ final class AuthenticateUser
             throw new AuthenticationException('User is revoked');
         }
 
+        $this->userRepo->updateAccount($account);
+
         $accessToken = $this->accessTokenRepo->create(
             new AccessToken((object) [
                 'identifier' => new TokenIdentifier(),
