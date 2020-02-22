@@ -43,10 +43,10 @@ final class UserAccountMapper
 
     /**
      * Returns a data array from a UserAccount entity.
-     * @param  Entity<UserAccount> $account
+     * @param  UserAccount $account
      * @return array
      */
-    public static function toPersistence(Entity $account): array
+    public static function toPersistence(UserAccount $account): array
     {
         if ($account->getUser()->getTraceableTime()->getUpdatedAt()) {
             $updated_at = strval(
@@ -57,10 +57,11 @@ final class UserAccountMapper
         }
 
         //TODO: add last_unsuccessful_login
+        //TODO: add revoked to table
         return [
             'last_login' => strval($account->getLastLogin()),
             'updated_at' => $updated_at,
-            'revoked' => $account->isRevoked() ? '1' : '0'
+            // 'revoked' => $account->isRevoked() ? '1' : '0'
         ];
     }
 }
