@@ -56,7 +56,7 @@ interface UserRepository
 
     /**
      * Update the login information
-     * @param Entity $account
+     * @param Entity<UserAccount> $account
      */
     public function updateAccount(Entity $account): void;
 }
