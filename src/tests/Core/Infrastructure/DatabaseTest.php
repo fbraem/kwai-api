@@ -7,7 +7,6 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use Kwai\Core\Infrastructure\Database;
-use Kwai\Core\Infrastructure\Exceptions\DatabaseException;
 
 use Latitude\QueryBuilder\QueryFactory;
 
@@ -18,20 +17,20 @@ final class DatabaseTest extends TestCase
     public function testDatabase(): void
     {
         $this->assertInstanceOf(
-            Database::class,
-            new Database(self::DB_MEMORY)
+            Database\Connection::class,
+            new Database\Connection(self::DB_MEMORY)
         );
     }
 
     public function testDatabaseException(): void
     {
-        $this->expectException(DatabaseException::class);
-        $db = new Database('sqlite');
+        $this->expectException(Database\DatabaseException::class);
+        $db = new Database\Connection('sqlite');
     }
 
     public function testDatabaseQueryFactory(): void
     {
-        $db = new Database(self::DB_MEMORY);
+        $db = new Database\Connection(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $this->assertInstanceOf(
             QueryFactory::class,
@@ -41,7 +40,7 @@ final class DatabaseTest extends TestCase
 
     public function testDatabaseQuery(): void
     {
-        $db = new Database(self::DB_MEMORY);
+        $db = new Database\Connection(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $query = $qf
             ->select('name', 'type')
@@ -55,9 +54,9 @@ final class DatabaseTest extends TestCase
 
     public function testDatabaseQueryException(): void
     {
-        $this->expectException(DatabaseException::class);
+        $this->expectException(Database\DatabaseException::class);
 
-        $db = new Database(self::DB_MEMORY);
+        $db = new Database\Connection(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $query = $qf
             ->select()

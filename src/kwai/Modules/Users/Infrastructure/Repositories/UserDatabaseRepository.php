@@ -37,7 +37,7 @@ use function Latitude\QueryBuilder\on;
 final class UserDatabaseRepository implements UserRepository
 {
     /**
-     * @var Database
+     * @var Database\Connection
      */
     private $db;
 
@@ -50,9 +50,9 @@ final class UserDatabaseRepository implements UserRepository
     /**
      * Constructor
      *
-     * @param Database $db A database object
+     * @param Database\Connection $db A database object
      */
-    public function __construct(Database $db)
+    public function __construct(Database\Connection $db)
     {
         $this->db = $db;
         $this->table = new UserTable();

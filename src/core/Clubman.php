@@ -62,7 +62,7 @@ class Clubman
             $container->add('pdo_db', function ($c) {
                 $dbConfig = $c->get('settings')['database'];
                 $dbDefault = $c->get('settings')['default_database'];
-                return new Database(
+                return new Database\Connection(
                     $dbConfig[$dbDefault]['dsn'],
                     $dbConfig[$dbDefault]['user'],
                     $dbConfig[$dbDefault]['pass']

@@ -7,7 +7,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Core\Infrastructure;
+namespace Kwai\Core\Infrastructure\Database;
 
 use Latitude\QueryBuilder\QueryFactory;
 use Latitude\QueryBuilder\Query;
@@ -15,12 +15,10 @@ use Latitude\QueryBuilder\Query;
 use Latitude\QueryBuilder\Engine\CommonEngine;
 use Latitude\QueryBuilder\Engine\MySqlEngine;
 
-use Kwai\Core\Infrastructure\Exceptions\DatabaseException;
-
 /**
- * A class that represents a database
+ * A class that represents a database connection
  */
-final class Database
+final class Connection
 {
     /**
      * A PDO connection
@@ -48,7 +46,6 @@ final class Database
                 [
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                     \PDO::ATTR_PERSISTENT => true, // BEST OPTION
-                    \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                     \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
                 ]
             );

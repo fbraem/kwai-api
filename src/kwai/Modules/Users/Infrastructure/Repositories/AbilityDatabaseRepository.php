@@ -32,7 +32,7 @@ use function Latitude\QueryBuilder\on;
 final class AbilityDatabaseRepository implements AbilityRepository
 {
     /**
-     * @var Database
+     * @var Database\Connection
      */
     private $db;
 
@@ -44,9 +44,9 @@ final class AbilityDatabaseRepository implements AbilityRepository
 
     /**
      * Constructor
-     * @param Database $db
+     * @param Database\Connection $db
      */
-    public function __construct(Database $db)
+    public function __construct(Database\Connection $db)
     {
         $this->db = $db;
         $this->table = new AbilityTable();

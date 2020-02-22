@@ -2,7 +2,7 @@
 
 namespace Kwai\Modules\Users\Infrastructure;
 
-use Kwai\Core\Infrastructure\Table;
+use Kwai\Core\Infrastructure\Database\Table;
 
 final class AbilityTable extends Table
 {

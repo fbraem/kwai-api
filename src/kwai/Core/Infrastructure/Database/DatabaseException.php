@@ -5,7 +5,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Core\Infrastructure\Exceptions;
+namespace Kwai\Core\Infrastructure\Database;
 
 /**
  * DatabaseException

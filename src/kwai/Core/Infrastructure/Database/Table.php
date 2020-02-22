@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Core\Infrastructure;
+namespace Kwai\Core\Infrastructure\Database;
 
 use function Latitude\QueryBuilder\alias;
 
