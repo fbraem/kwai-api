@@ -193,6 +193,7 @@ final class UserDatabaseRepository implements UserRepository
      */
     public function updateAccount(Entity $account): void
     {
+        $account->getUser()->getTraceableTime()->markUpdated();
         $data = UserAccountMapper::toPersistence($account->domain());
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)
