@@ -191,9 +191,9 @@ final class UserDatabaseRepository implements UserRepository
     /**
      * @inheritdoc
      */
-    public function updateLogin(Entity $account): void
+    public function updateAccount(Entity $account): void
     {
-        $data = UserAccountTokenMapper::toPersistence($account->domain());
+        $data = UserAccountMapper::toPersistence($account->domain());
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)
             ->where(field('id')->eq($account->id()))
