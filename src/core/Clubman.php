@@ -15,8 +15,6 @@ use Domain\Auth\RefreshTokenRepository;
 use Domain\Auth\ScopeRepository;
 use Domain\Auth\UserRepository;
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 use Core\Middlewares\ParametersMiddleware;
 use Core\Middlewares\LogActionMiddleware;
 use Core\Middlewares\AuthenticationMiddleware;
@@ -29,6 +27,7 @@ use Slim\Factory\AppFactory;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database;
+use Kwai\Modules\Mails\Infrastructure\SmtpMailerService;
 
 //TODO: Extract all code to services, etc, ...
 class Clubman
@@ -81,24 +80,10 @@ class Clubman
 
             $container->add('mailer', function ($c) {
                 $config = $c->get('settings');
-                $mail = new PHPMailer(true);
-                //Server settings
-                //$mail->SMTPDebug = 2;
-                $mail->isSMTP();
-                $mail->Host = $config['mail']['host'];
-                $mail->SMTPAuth = true;
-                $mail->Username = $config['mail']['user'];
-                $mail->Password = $config['mail']['pass'];
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = $config['mail']['port'];
-
-                //Recipients
-                $recipient = $config['mail']['from'];
-                $recipientMail = array_keys($recipient)[0];
-                $mail->setFrom($recipientMail, $recipient[$recipientMail]);
-                $mail->addReplyTo($recipientMail, $recipient[$recipientMail]);
-
-                return $mail;
+                return new SmtpMailerService(
+                    $config['mail']['url'],
+                    $config['mail']['from']
+                );
             })->addArgument($container);
 
             self::$application = AppFactory::create();
