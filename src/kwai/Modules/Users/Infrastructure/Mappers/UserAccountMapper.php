@@ -48,9 +48,9 @@ final class UserAccountMapper
      */
     public static function toPersistence(Entity $account): array
     {
-        if ($account->getTraceableTime()->getUpdatedAt()) {
+        if ($account->getUser()->getTraceableTime()->getUpdatedAt()) {
             $updated_at = strval(
-                $refreshToken->getTraceableTime()->getUpdatedAt()
+                $account->getUser()->getTraceableTime()->getUpdatedAt()
             );
         } else {
             $updated_at = null;
