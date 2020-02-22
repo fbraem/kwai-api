@@ -63,4 +63,12 @@
      {
          return $this->updated_at != null;
      }
+
+     /**
+      * Change the updateAt to the current timestamp
+      */
+     public function markUpdated(): void
+     {
+         $this->updated_at = Timestamp::createNow();
+     }
  }
