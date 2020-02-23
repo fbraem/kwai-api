@@ -4,7 +4,7 @@ namespace Kwai\Modules\Users\Infrastructure;
 
 use Kwai\Core\Infrastructure\Database\Table;
 
-final class AbilityTable extends Table
+final class AbilitiesTable extends Table
 {
     public function __construct()
     {

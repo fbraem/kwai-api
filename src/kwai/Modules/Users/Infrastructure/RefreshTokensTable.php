@@ -4,14 +4,16 @@ namespace Kwai\Modules\Users\Infrastructure;
 
 use Kwai\Core\Infrastructure\Database\Table;
 
-final class RuleTable extends Table
+final class RefreshTokensTable extends Table
 {
     public function __construct()
     {
-        parent::__construct('rules', [
+        parent::__construct('oauth_refresh_tokens', [
             'id',
-            'name',
-            'remark',
+            'identifier',
+            'access_token_id',
+            'expiration',
+            'revoked',
             'created_at',
             'updated_at'
         ]);

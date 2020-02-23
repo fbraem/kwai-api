@@ -19,8 +19,8 @@ use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
-use Kwai\Modules\Users\Infrastructure\AbilityTable;
-use Kwai\Modules\Users\Infrastructure\RuleTable;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
+use Kwai\Modules\Users\Infrastructure\RulesTable;
 
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\alias;
@@ -38,7 +38,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
 
     /**
      * Main table for this repository.
-     * @var AbilityTable
+     * @var AbilitiesTable
      */
     private $table;
 
@@ -49,7 +49,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
     public function __construct(Database\Connection $db)
     {
         $this->db = $db;
-        $this->table = new AbilityTable();
+        $this->table = new AbilitiesTable();
     }
 
     /**
@@ -127,7 +127,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
      */
     private function getRulesForAbilities(array $abilities): array
     {
-        $rulesTable = new RuleTable();
+        $rulesTable = new RulesTable();
         $columns = array_merge(
             $rulesTable->alias(),
             [

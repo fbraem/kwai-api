@@ -4,7 +4,7 @@ namespace Kwai\Modules\Users\Infrastructure;
 
 use Kwai\Core\Infrastructure\Database\Table;
 
-final class UserInvitationTable extends Table
+final class UserInvitationsTable extends Table
 {
     public function __construct()
     {

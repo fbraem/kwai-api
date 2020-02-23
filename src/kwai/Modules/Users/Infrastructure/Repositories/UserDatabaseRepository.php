@@ -20,7 +20,7 @@ use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
-use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
+use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
@@ -178,7 +178,7 @@ final class UserDatabaseRepository implements UserRepository
      */
     public function getByAccessToken(TokenIdentifier $token): Entity
     {
-        $accessTokenTable = new AccessTokenTable();
+        $accessTokenTable = new AccessTokensTable();
         $columns = array_merge(
             $this->table->alias(),
             $accessTokenTable->alias()

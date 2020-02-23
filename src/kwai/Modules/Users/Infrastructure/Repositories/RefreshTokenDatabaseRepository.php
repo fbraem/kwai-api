@@ -15,8 +15,8 @@ use Kwai\Core\Infrastructure\Database;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenMapper;
-use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
-use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
+use Kwai\Modules\Users\Infrastructure\RefreshTokensTable;
+use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
@@ -37,7 +37,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
 
     /**
      * RefreshToken table
-     * @var RefreshTokenTable
+     * @var RefreshTokensTable
      */
     private $table;
 
@@ -49,7 +49,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     public function __construct(Database\Connection $db)
     {
         $this->db = $db;
-        $this->table = new RefreshTokenTable();
+        $this->table = new RefreshTokensTable();
     }
 
     /**
@@ -60,7 +60,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
-        $accessTokenTable = new AccessTokenTable();
+        $accessTokenTable = new AccessTokensTable();
         $userTable = new UsersTable();
         $columns = array_merge(
             $this->table->alias(),
