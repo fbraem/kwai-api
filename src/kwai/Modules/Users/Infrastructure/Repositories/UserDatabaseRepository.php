@@ -19,7 +19,7 @@ use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
-use Kwai\Modules\Users\Infrastructure\UserTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
 
 use Kwai\Modules\Users\Domain\User;
@@ -44,7 +44,7 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * The table for 'users'
-     * @var UserTable
+     * @var UsersTable
      */
     private $table;
 
@@ -56,7 +56,7 @@ final class UserDatabaseRepository implements UserRepository
     public function __construct(Database\Connection $db)
     {
         $this->db = $db;
-        $this->table = new UserTable();
+        $this->table = new UsersTable();
     }
 
     /**

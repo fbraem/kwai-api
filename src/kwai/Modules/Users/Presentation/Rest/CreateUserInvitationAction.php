@@ -46,6 +46,9 @@ class CreateUserInvitationAction
             new UserInvitationDatabaseRepository(
                 $this->container->get('pdo_db')
             ),
+            new UserDatabaseRepository(
+                $this->container->get('pdo_db')
+            ),
             $user
         ))($command);
 

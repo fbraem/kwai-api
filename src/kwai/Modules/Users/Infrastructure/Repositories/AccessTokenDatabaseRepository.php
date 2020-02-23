@@ -17,7 +17,7 @@ use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
-use Kwai\Modules\Users\Infrastructure\UserTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 
@@ -44,7 +44,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
     /**
      * User table
-     * @var UserTable
+     * @var UsersTable
      */
     private $userTable;
 
@@ -57,7 +57,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     {
         $this->db = $db;
         $this->table = new AccessTokenTable();
-        $this->userTable = new UserTable();
+        $this->userTable = new UsersTable();
     }
 
     /**

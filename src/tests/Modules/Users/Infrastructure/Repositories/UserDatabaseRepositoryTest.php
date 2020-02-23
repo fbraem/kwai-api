@@ -11,7 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\EmailAddress;
 
-use Kwai\Modules\Users\Infrastructure\UserTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Domain\User;

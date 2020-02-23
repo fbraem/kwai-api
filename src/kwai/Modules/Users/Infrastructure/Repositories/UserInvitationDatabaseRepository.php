@@ -16,7 +16,7 @@ use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
 use Kwai\Modules\Users\Infrastructure\UserInvitationTable;
-use Kwai\Modules\Users\Infrastructure\UserTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
@@ -44,7 +44,7 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * User table
-     * @var UserTable
+     * @var UsersTable
      */
     private $userTable;
 
@@ -57,7 +57,7 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
     {
         $this->db = $db;
         $this->table = new UserInvitationTable();
-        $this->userTable = new UserTable();
+        $this->userTable = new UsersTable();
     }
 
     /**

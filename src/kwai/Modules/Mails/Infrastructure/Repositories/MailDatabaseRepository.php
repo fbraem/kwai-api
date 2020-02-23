@@ -19,7 +19,7 @@ use Kwai\Modules\Mails\Infrastructure\Mappers\MailMapper;
 use Kwai\Modules\Mails\Infrastructure\MailsTable;
 use Kwai\Modules\Mails\Infrastructure\RecipientsTable;
 
-use Kwai\Modules\Users\Infrastructure\UserTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\alias;
@@ -40,7 +40,7 @@ final class MailDatabaseRepository implements MailRepository
     {
         $this->db = $db;
         $this->table = new MailsTable();
-        $this->usersTable = new UserTable();
+        $this->usersTable = new UsersTable();
         $this->recipientsTable = new RecipientsTable();
     }
     /**
