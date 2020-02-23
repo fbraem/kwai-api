@@ -5,8 +5,6 @@ namespace Core;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
-use League\Plates\Engine as TemplateEngine;
-
 use League\Container\Container;
 
 use Domain\Auth\AccessTokenRepository;
@@ -28,6 +26,7 @@ use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database;
 use Kwai\Modules\Mails\Infrastructure\SmtpMailerService;
+use Kwai\Core\Infrastructure\Template\PlatesEngine;
 
 //TODO: Extract all code to services, etc, ...
 class Clubman
@@ -75,7 +74,7 @@ class Clubman
             })->addArgument($container);
 
             $container->add('template', function ($c) {
-                return new TemplateEngine(__DIR__ . '/../templates');
+                return new PlatesEngine(__DIR__ . '/../templates');
             })->addArgument($container);
 
             $container->add('mailer', function ($c) {
