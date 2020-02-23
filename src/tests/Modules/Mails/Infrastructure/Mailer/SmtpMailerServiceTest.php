@@ -11,6 +11,9 @@ use Kwai\Modules\Mails\Infrastructure\Mailer\SimpleMessage;
 use Kwai\Modules\Mails\Infrastructure\Mailer\Recipient;
 use Kwai\Modules\Mails\Infrastructure\Mailer\MailerException;
 
+/**
+ * @group mail
+ */
 final class SmtpMailerServiceTest extends TestCase
 {
     public function testSimpleMail()
