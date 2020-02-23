@@ -10,6 +10,7 @@ class MailMigration extends AbstractMigration
     public function up()
     {
         $this->table('mails', ['signed' => false])
+            ->addColumn('tag', 'string')
             ->addColumn('uuid', 'string')
             ->addColumn('from', 'string')
             ->addColumn('html_body', 'text', ['null' => true])
