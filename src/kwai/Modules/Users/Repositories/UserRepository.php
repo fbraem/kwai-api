@@ -40,6 +40,13 @@ interface UserRepository
     public function getByEmail(EmailAddress $email) : Entity;
 
     /**
+     * Checks if a user with the given emailaddress exists
+     * @param  EmailAddress $email
+     * @return bool
+     */
+    public function existsWithEmail(EmailAddress $email) : bool;
+
+    /**
      * Get the user account with the given emailaddress.
      * @param  EmailAddress $email
      * @return Entity<UserAccount>

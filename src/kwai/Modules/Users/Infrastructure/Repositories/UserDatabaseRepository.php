@@ -30,6 +30,7 @@ use Kwai\Core\Domain\EmailAddress;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\on;
+use function Latitude\QueryBuilder\func;
 
 /**
 * User Repository for read/write User entity from/to a database.
@@ -152,6 +153,22 @@ final class UserDatabaseRepository implements UserRepository
         }
         throw new NotFoundException('User');
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function existsWithEmail(EmailAddress $email) : bool
+    {
+        $query = $this->db->createQueryFactory()
+            ->select(alias(func('COUNT', $this->table->from() . '.id'), 'c'))
+            ->from($this->table->from())
+            ->where(field('email')->eq($email))
+            ->compile()
+        ;
+        $count = $this->db->execute($query)->fetch();
+        return $count->c > 0;
+    }
+
 
     /**
      * Get a user using a token

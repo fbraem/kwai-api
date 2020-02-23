@@ -41,6 +41,18 @@ final class UserDatabaseRepositoryTest extends TestCase
         return $user;
     }
 
+    public function testExistsWithEmail(): void
+    {
+        $exist = $this->repo->existsWithEmail(new EmailAddress('test@kwai.com'));
+        $this->assertTrue($exist);
+    }
+
+    public function testNotExistsWithEmail(): void
+    {
+        $exist = $this->repo->existsWithEmail(new EmailAddress('test@example.com'));
+        $this->assertFalse($exist);
+    }
+
     /**
      * @depends testGetByEmail
      */
