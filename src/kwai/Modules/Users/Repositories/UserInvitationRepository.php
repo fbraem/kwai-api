@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Repositories;
 
+use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Modules\Users\Domain\UserInvitation;
@@ -29,6 +30,13 @@ interface UserInvitationRepository
      * @return Entity<UserInvitation>[]
      */
     public function getActive(): array;
+
+    /**
+     * Get all invitations for the given email address.
+     * @param EmailAddress $email
+     * @return Entity<UserInvitation>[]
+     */
+    public function getByEmail(EmailAddress $email): array;
 
     /**
      * Save a new UserInvitation
