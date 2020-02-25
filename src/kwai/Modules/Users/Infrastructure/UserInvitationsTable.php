@@ -12,7 +12,7 @@ final class UserInvitationsTable extends Table
             'id',
             'email',
             'name',
-            'token',
+            'uuid',
             'expired_at',
             'expired_at_timezone',
             'remark',
