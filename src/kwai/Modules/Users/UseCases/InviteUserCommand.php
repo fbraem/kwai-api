@@ -16,25 +16,21 @@ final class InviteUserCommand extends FlexibleDataTransferObject
 {
     /**
      * Email
-     * @var string
      */
-    public $email;
+    public string $email;
 
     /**
      * Number of days before the invitation expires
-     * @var int
      */
-    public $expiration;
+    public int $expiration;
 
     /**
      * Remark
-     * @var string|null
      */
-    public $remark;
+    public ?string $remark;
 
     /**
      * Username
-     * @var string
      */
-    public $name;
+    public string $name;
 }
