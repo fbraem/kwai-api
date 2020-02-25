@@ -13,7 +13,7 @@ namespace Kwai\Core\Domain;
  * and provides an Id. All method calls are forwarded to the wrapped domain
  * object.
  *
- * @template T of DomainEntity
+ * @phpstan-template T of DomainEntity
  */
 class Entity
 {
@@ -25,14 +25,15 @@ class Entity
 
     /**
      * The real domain object
-     * @var T
+     * @phpstan-var T
      */
     private $domain;
 
     /**
      * Constructor
      * @param int $id   The id of the entity
-     * @param T $domain The domain entity
+     * @phpstan-param T $domain The domain entity
+     * @param mixed $domain The domain entity
      */
     public function __construct(int $id, DomainEntity $domain)
     {
@@ -51,7 +52,8 @@ class Entity
 
     /**
      * Returns the wrapped domain object
-     * @return T
+     * @phpstan-return T
+     * @return mixed
      */
     public function domain()
     {
