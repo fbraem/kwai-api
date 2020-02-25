@@ -7,13 +7,13 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
+use DateTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\Exceptions\AlreadyExistException;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
@@ -24,7 +24,7 @@ use Kwai\Modules\Users\Domain\UserInvitation;
 
 /**
  * Usecase: Invite user.
- * - Step 1 - Check if the emailadress isn't used yet by another user
+ * - Step 1 - Check if the email address isn't used yet by another user
  * - Step 2 - Check if there is a previous non-expired invitation
  * - Step 3 - Create the invitation
  * - Step 4 - Create the mail
@@ -36,22 +36,13 @@ final class InviteUser
     /**
      * @var Entity<User>
      */
-    private $user;
+    private Entity $user;
 
-    /**
-     * @var UserInvitationRepository
-     */
-    private $userInvitationRepo;
+    private UserInvitationRepository $userInvitationRepo;
 
-    /**
-     * @var UserRepository
-     */
-    private $userRepo;
+    private UserRepository $userRepo;
 
-    /**
-     * @var MailRepository
-     */
-    private $mailRepo;
+    private MailRepository $mailRepo;
 
     /**
      * Constructor.
@@ -76,6 +67,7 @@ final class InviteUser
      * Create an invitation and create a mail.
      * @param  InviteUserCommand $command
      * @return Entity<UserInvitation> A user invitation
+     * @throws AlreadyExistException
      */
     public function __invoke(InviteUserCommand $command): Entity
     {
@@ -87,16 +79,14 @@ final class InviteUser
             );
         }
 
-        try {
-            $invitation = $this->userInvitationRepo->getByEmail($email);
-            if (! $invitation->isExpired() || $invitation->isRevoked()) {
+        $invitations = $this->userInvitationRepo->getByEmail($email);
+        foreach($invitations as $invitation) {
+            if ($invitation->isValid()) {
                 throw new AlreadyExistException(
                     'UserInvitation',
                     'An invitation is still pending for ' . $email
                 );
             }
-        } catch (NotFoundException $nfe) {
-            //no problem
         }
 
         $invitation = $this->userInvitationRepo->create(new UserInvitation(
@@ -105,11 +95,12 @@ final class InviteUser
                 'emailAddress' => new EmailAddress($command->email),
                 'traceableTime' => new TraceableTime(),
                 'expiration' => Timestamp::createFromDateTime(
-                    new \DateTime("now +{$command->expiration} days")
+                    new DateTime("now +{$command->expiration} days")
                 ),
                 'remark' => $command->remark,
                 'name' => $command->name,
-                'creator' => $this->user
+                'creator' => $this->user,
+                'revoked' => false
             ]
         ));
 
