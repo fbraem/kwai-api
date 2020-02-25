@@ -7,8 +7,6 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Domain\ValueObjects;
 
-use Kwai\Core\Domain\EmailAddress;
-
 /**
  * Valueobject for mail content
  */
