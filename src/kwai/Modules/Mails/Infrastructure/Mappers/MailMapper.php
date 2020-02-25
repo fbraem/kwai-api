@@ -1,7 +1,7 @@
 <?php
 /**
  * @package kwai
- * @subpackage Users
+ * @subpackage Mails
  */
 declare(strict_types = 1);
 
