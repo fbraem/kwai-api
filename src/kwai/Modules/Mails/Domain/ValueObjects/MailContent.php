@@ -16,24 +16,21 @@ final class MailContent
 {
     /**
      * Subject
-     * @var string
      */
-    private $subject;
+    private string $subject;
 
     /**
      * HTML
-     * @var string
      */
-    private $html;
+    private string $html;
 
     /**
      * Plain text
-     * @var string
      */
-    private $text;
+    private string $text;
 
     /**
-     * Constructor
+     * MailContent constructor.
      * @param string $subject [description]
      * @param string $text    [description]
      * @param string $html    [description]
@@ -50,7 +47,6 @@ final class MailContent
 
     /**
      * Returns the HTML content
-     * @return string
      */
     public function getHtml(): string
     {
@@ -59,7 +55,6 @@ final class MailContent
 
     /**
      * Returns true when there is HTML content available
-     * @return bool
      */
     public function hasHtml(): bool
     {
@@ -68,7 +63,6 @@ final class MailContent
 
     /**
      * Returns the plain text of the content
-     * @return string [description]
      */
     public function getText(): string
     {
@@ -77,7 +71,6 @@ final class MailContent
 
     /**
      * Returns the subject
-     * @return string
      */
     public function getSubject(): string
     {
