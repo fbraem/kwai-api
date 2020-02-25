@@ -21,49 +21,45 @@ class UserInvitation implements DomainEntity
 {
     /**
      * A UUID of the invitation.
-     * @var UniqueId
      */
-    private $uuid;
+    private UniqueId $uuid;
 
     /**
-     * The emailaddress of the invited user
-     * @var EmailAddress
+     * The email address of the invited user
      */
-    private $emailAddress;
+    private EmailAddress $emailAddress;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * The timestamp when the invitation expires
-     * @var Timestamp
      */
-    private $expiration;
+    private Timestamp $expiration;
 
     /**
      * A remark about the invitation
-     * @var string
      */
-    private $remark;
+    private string $remark;
 
     /**
      * The name of the invited user
-     * @var string
      */
-    private $name;
+    private string $name;
 
     /**
-     * The user that sends the invitation.
+     * The creator of the invitation.
      * @var Entity<User>
      */
-    private $creator;
+    private Entity $creator;
+
+    private bool $revoked;
 
     /**
      * Constructor.
-     * @param  object $props User Invitation properties
+     * @param object $props User Invitation properties
      */
     public function __construct(object $props)
     {
@@ -74,11 +70,11 @@ class UserInvitation implements DomainEntity
         $this->remark = $props->remark;
         $this->name = $props->name;
         $this->creator = $props->creator;
+        $this->revoked = $props->revoked;
     }
 
     /**
      * Returns the email address.
-     * @return EmailAddress
      */
     public function getEmailAddress(): EmailAddress
     {
@@ -87,7 +83,6 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the last login timestamp
-     * @return Timestamp
      */
     public function getExpiration(): ?Timestamp
     {
@@ -96,7 +91,6 @@ class UserInvitation implements DomainEntity
 
     /**
      * Returns true when the invitation is expired
-     * @return bool
      */
     public function isExpired(): bool
     {
@@ -105,7 +99,6 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the created_at/updated_at timestamps
-     * @return TraceableTime
      */
     public function getTraceableTime(): TraceableTime
     {
@@ -114,7 +107,6 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the remark
-     * @return string
      */
     public function getRemark(): string
     {
@@ -123,7 +115,6 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the unique id of the invitation
-     * @return UniqueId
      */
     public function getUuid(): UniqueId
     {
@@ -132,7 +123,6 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the name of the invited user
-     * @return string
      */
     public function getName(): string
     {
@@ -146,5 +136,21 @@ class UserInvitation implements DomainEntity
     public function getCreator(): Entity
     {
         return $this->creator;
+    }
+
+    /**
+     * Returns true when the invitation is revoked.
+     */
+    public function isRevoked(): bool
+    {
+        return $this->revoked;
+    }
+
+    /**
+     * Returns true when the invitation is not revoked and not expired.
+     */
+    public function isValid(): bool
+    {
+        return !$this->isRevoked() && !$this->isExpired();
     }
 }
