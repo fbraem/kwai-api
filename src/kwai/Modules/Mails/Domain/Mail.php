@@ -24,57 +24,50 @@ class Mail implements DomainEntity
 {
     /**
      * Tag of the email
-     * @var string
      */
-    private $tag;
+    private ?string $tag;
 
     /**
      * Uniqued ID for this mail
-     * @var UniqueId
      */
-    private $uuid;
+    private UniqueId $uuid;
 
     /**
      * Sender
-     * @var Address
      */
-    private $sender;
+    private Address $sender;
 
     /**
      * Content of the mail
-     * @var MailContent
      */
-    private $content;
+    private MailContent $content;
 
     /**
      * Time of sending
-     * @var Timestamp
      */
-    private $sentTime;
+    private Timestamp $sentTime;
 
     /**
      * Remark
-     * @var string
      */
-    private $remark;
+    private ?string $remark;
 
     /**
      * User that created this mail
      * @var Entity<User>
      */
-    private $creator;
+    private Entity $creator;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * The recipients
      * @var Recipient[]
      */
-    private $recipients;
+    private array $recipients;
 
     /**
      * Constructor
@@ -100,5 +93,87 @@ class Mail implements DomainEntity
     public function addRecipient(Recipient $recipient): void
     {
         $this->recipients[] = $recipient;
+    }
+
+    /**
+     * Return the unique id
+     */
+    public function getUniqueId()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Get the sender
+     */
+    public function getSender(): Address
+    {
+        return $this->sender;
+    }
+
+    /**
+     * Return the sent timestamp
+     */
+    public function getSentTime(): ?Timestamp
+    {
+        return $this->sentTime;
+    }
+
+    /**
+     * Returns true when the mail was sent.
+     */
+    public function isSent(): bool
+    {
+        return $this->sentTime != null;
+    }
+
+    /**
+     * Get the content
+     */
+    public function getContent(): MailContent
+    {
+        return $this->content;
+    }
+
+    /**
+     * Get the associated tag
+     */
+    public function getTag(): ?string
+    {
+        return $this->tag;
+    }
+
+    /**
+     * Get the remark
+     */
+    public function getRemark(): ?string
+    {
+        return $this->remark;
+    }
+
+    /**
+     * Get the creator of this mail
+     * @phpstan-return Entity<User>
+     */
+    public function getCreator(): Entity
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Get the traceable timestamps
+     */
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
+    }
+
+    /**
+     * Get the recipients
+     * @return Recipient[]
+     */
+    public function getRecipients(): array
+    {
+        return $this->recipients;
     }
 }
