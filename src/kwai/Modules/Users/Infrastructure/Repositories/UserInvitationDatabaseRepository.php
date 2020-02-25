@@ -7,12 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
+use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database;
 
-use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
@@ -21,7 +21,6 @@ use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
 use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\on;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
@@ -31,22 +30,11 @@ use Latitude\QueryBuilder\Query\SelectQuery;
 */
 final class UserInvitationDatabaseRepository implements UserInvitationRepository
 {
-    /**
-     * @var Database\Connection
-     */
-    private $db;
+    private Database\Connection $db;
 
-    /**
-     * UserInvitation table
-     * @var UserInvitationsTable
-     */
-    private $table;
+    private UserInvitationsTable $table;
 
-    /**
-     * User table
-     * @var UsersTable
-     */
-    private $userTable;
+    private UsersTable $userTable;
 
     /**
      * Constructor
@@ -62,6 +50,8 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
+     * @throws NotFoundException
      */
     public function getByUniqueId(UniqueId $uuid) : Entity
     {
@@ -89,10 +79,11 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
      */
     public function create(UserInvitation $invitation): Entity
     {
-        $data = UserInvitation::toPersistence($invitation);
+        $data = UserInvitationMapper::toPersistence($invitation);
 
         $query = $this->db->createQueryFactory()
             ->insert($this->table->from())
@@ -104,7 +95,7 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
             )
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
 
         return new Entity(
             $this->db->lastInsertId(),
@@ -114,6 +105,7 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
      */
     public function update(Entity $invitation): void
     {
@@ -123,12 +115,11 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
             ->where(field('id')->eq($invitation->id()))
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
     }
 
     /**
      * Create the base SELECT query
-     * @return SelectQuery
      */
     private function createBaseQuery(): SelectQuery
     {
@@ -148,5 +139,24 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
                 )
             )
         ;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Database\DatabaseException
+     */
+    public function getByEmail(EmailAddress $email): array
+    {
+        $query = $this->createBaseQuery()
+            ->where(field('email')->eq(strval($email)))
+            ->compile()
+        ;
+
+        $rows = $this->db->execute($query)->fetchAll();
+        return array_map(function ($row) {
+            return UserInvitationMapper::toDomain(
+                $this->table->filter($row)
+            );
+        }, $rows);
     }
 }
