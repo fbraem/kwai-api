@@ -72,6 +72,6 @@ final class MailContent
      */
     public function getSubject(): string
     {
-        return $this->text;
+        return $this->subject;
     }
 }
