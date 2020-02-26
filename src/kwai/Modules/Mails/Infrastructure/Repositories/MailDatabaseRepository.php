@@ -22,19 +22,18 @@ use Kwai\Modules\Mails\Infrastructure\RecipientsTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\on;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
 final class MailDatabaseRepository implements MailRepository
 {
-    private $db;
+    private Database\Connection $db;
 
-    private $table;
+    private MailsTable $table;
 
-    private $usersTable;
+    private UsersTable $usersTable;
 
-    private $recipientsTable;
+    private RecipientsTable $recipientsTable;
 
     public function __construct(Database\Connection $db)
     {
@@ -43,8 +42,11 @@ final class MailDatabaseRepository implements MailRepository
         $this->usersTable = new UsersTable();
         $this->recipientsTable = new RecipientsTable();
     }
+
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
+     * @throws NotFoundException
      */
     public function getById(int $id) : Entity
     {
@@ -64,6 +66,8 @@ final class MailDatabaseRepository implements MailRepository
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
+     * @throws NotFoundException
      */
     public function getByUUID(UniqueId $uid) : Entity
     {
@@ -83,6 +87,7 @@ final class MailDatabaseRepository implements MailRepository
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
      */
     public function create(Mail $mail): Entity
     {
@@ -98,7 +103,7 @@ final class MailDatabaseRepository implements MailRepository
             )
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
 
         return new Entity(
             $this->db->lastInsertId(),
