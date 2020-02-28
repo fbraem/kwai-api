@@ -57,7 +57,7 @@ class MailTemplate
      */
     public function renderPlainText(array $vars): string
     {
-        return $this->htmlTemplate->render($vars);
+        return $this->plainTextTemplate->render($vars);
     }
 
     /**
