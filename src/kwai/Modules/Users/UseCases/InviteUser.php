@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package    Kwai
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -15,9 +15,15 @@ use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\Exceptions\AlreadyExistException;
 
+use Kwai\Core\Infrastructure\Template\MailTemplate;
+use Kwai\Modules\Mails\Domain\Mail;
+use Kwai\Modules\Mails\Domain\Recipient;
+use Kwai\Modules\Mails\Domain\ValueObjects\Address;
+use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
+use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
+use Kwai\Modules\Mails\Repositories\MailRepository;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
-use Kwai\Modules\Mails\Repositories\MailRepository;
 
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserInvitation;
@@ -34,37 +40,57 @@ use Kwai\Modules\Users\Domain\UserInvitation;
 final class InviteUser
 {
     /**
+     * The active user.
      * @var Entity<User>
      */
     private Entity $user;
 
+    /**
+     * Repository for user invitation.
+     */
     private UserInvitationRepository $userInvitationRepo;
 
+    /**
+     *  Repository for user.
+     */
     private UserRepository $userRepo;
 
+    /**
+     * Repository for mail
+     */
     private MailRepository $mailRepo;
 
     /**
+     * Template for generating the invitation mail.
+     */
+    private MailTemplate $template;
+
+    /**
      * Constructor.
+     *
      * @param UserInvitationRepository $userInvitationRepo A user invitation repo
-     * @param UserRepository $userRepo A user repo
-     * @param MailRepository $mailRepo An email repo
-     * @param Entity<User> $user The user that will execute this use case
+     * @param UserRepository           $userRepo           A user repo
+     * @param MailRepository           $mailRepo           A mail repo
+     * @param MailTemplate             $template           A template to generate the mail body
+     * @param Entity<User>             $user               The user that will execute this use case
      */
     public function __construct(
         UserInvitationRepository $userInvitationRepo,
         UserRepository $userRepo,
         MailRepository $mailRepo,
+        MailTemplate $template,
         Entity $user
     ) {
         $this->userInvitationRepo = $userInvitationRepo;
         $this->userRepo = $userRepo;
         $this->mailRepo = $mailRepo;
+        $this->template = $template;
         $this->user = $user;
     }
 
     /**
      * Create an invitation and create a mail.
+     *
      * @param  InviteUserCommand $command
      * @return Entity<UserInvitation> A user invitation
      * @throws AlreadyExistException
@@ -80,7 +106,7 @@ final class InviteUser
         }
 
         $invitations = $this->userInvitationRepo->getByEmail($email);
-        foreach($invitations as $invitation) {
+        foreach ($invitations as $invitation) {
             if ($invitation->isValid()) {
                 throw new AlreadyExistException(
                     'UserInvitation',
@@ -89,8 +115,9 @@ final class InviteUser
             }
         }
 
-        $invitation = $this->userInvitationRepo->create(new UserInvitation(
-            (object) [
+        $invitation = $this->userInvitationRepo->create(
+            new UserInvitation(
+                (object) [
                 'uuid' => new UniqueId(),
                 'emailAddress' => new EmailAddress($command->email),
                 'traceableTime' => new TraceableTime(),
@@ -101,8 +128,39 @@ final class InviteUser
                 'name' => $command->name,
                 'creator' => $this->user,
                 'revoked' => false
-            ]
-        ));
+                ]
+            )
+        );
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->mailRepo->create(
+            new Mail(
+                (object) [
+                'tag' => 'user.invitation',
+                'uuid' =>  $invitation->getUniqueId(),
+                'sender' => new Address(
+                    new EmailAddress($command->sender_mail),
+                    $command->sender_name
+                ),
+                'content' => new MailContent(
+                    $this->template->getSubject(),
+                    $this->template->renderHtml([]),
+                    $this->template->renderPlainText([])
+                ),
+                'traceableTime' => new TraceableTime(),
+                'recipients' => [
+                    new Recipient(
+                        (object) [
+                           'type' => RecipientType::TO(),
+                            new Address(
+                                new EmailAddress($command->email),
+                                $command->name
+                            )
+                        ]
+                    )]
+                ]
+            )
+        );
 
         return $invitation;
     }

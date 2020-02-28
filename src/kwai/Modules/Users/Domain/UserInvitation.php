@@ -153,4 +153,12 @@ class UserInvitation implements DomainEntity
     {
         return !$this->isRevoked() && !$this->isExpired();
     }
+
+    /**
+     * Get the unique id of the invitation.
+     */
+    public function getUniqueId(): UniqueId
+    {
+        return $this->uuid;
+    }
 }

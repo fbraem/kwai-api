@@ -15,7 +15,17 @@ use Spatie\DataTransferObject\FlexibleDataTransferObject;
 final class InviteUserCommand extends FlexibleDataTransferObject
 {
     /**
-     * Email
+     * Email of the sender
+     */
+    public string $sender_mail;
+
+    /**
+     * The name of the sender;
+     */
+    public string $sender_name;
+
+    /**
+     * Email of the recipient
      */
     public string $email;
 
