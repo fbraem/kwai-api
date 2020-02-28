@@ -30,15 +30,11 @@ class Recipient implements DomainEntity
 
     /**
      * Constructor
-     * @param RecipientType $type    The type of the recipient
-     * @param Address       $address The address of the recipient
+     * @param object $props Recipient properties
      */
-    public function __construct(
-        RecipientType $type,
-        Address $address
-    ) {
-        $this->type = $type;
-        $this->address = $address;
+    public function __construct(object $props) {
+        $this->type = $props->type;
+        $this->address = $props->address;
     }
 
     /**
