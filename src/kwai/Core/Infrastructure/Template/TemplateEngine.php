@@ -12,5 +12,5 @@ namespace Kwai\Core\Infrastructure\Template;
  */
 interface TemplateEngine
 {
-    public function render(string $template, array $vars): string;
+    public function createTemplate(string $template): Template;
 }
