@@ -29,7 +29,9 @@
         "league/container": "^3.3",
         "latitude/latitude": "^4.0",
         "genkgo/mail": "^2.5",
-        "myclabs/php-enum": "^1.7"
+        "myclabs/php-enum": "^1.7",
+        "ext-pdo": "*",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",
