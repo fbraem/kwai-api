@@ -4,9 +4,11 @@
  */
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Tests\Modules\Users\Infrastructure\Repositories;
 
+use DateTime;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Timestamp;
@@ -18,31 +20,35 @@ use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-
-require_once('Database.php');
+use Tests\DatabaseTestCase;
 
 /**
  * @group DB
  */
-final class RefreshTokenDatabaseRepositoryTest extends TestCase
+final class RefreshTokenDatabaseRepositoryTest extends DatabaseTestCase
 {
-    private $user;
+    /**
+     * @var Entity<User>
+     */
+    private Entity $user;
 
-    private $accessToken;
-
-    private $repo;
+    private RefreshTokenRepository $repo;
 
     public function setup() : void
     {
-        $this->repo = new RefreshTokenDatabaseRepository(\Database::getDatabase());
-        $userRepo = new UserDatabaseRepository(\Database::getDatabase());
-        $this->user = $userRepo->getByEmail(new EmailAddress($_ENV['user']));
+        $this->repo = new RefreshTokenDatabaseRepository(self::getDatabase());
+        $userRepo = new UserDatabaseRepository(self::getDatabase());
+        try {
+            $this->user = $userRepo->getByEmail(new EmailAddress($_ENV['user']));
+        } catch (NotFoundException $e) {
+            echo $e->getMessage(), PHP_EOL;
+        }
     }
 
     public function testCreateRefreshToken(): TokenIdentifier
     {
-        $accessTokenRepo = new AccessTokenDatabaseRepository(\Database::getDatabase());
-        $future = new \DateTime('now +2 hours');
+        $accessTokenRepo = new AccessTokenDatabaseRepository(self::getDatabase());
+        $future = new DateTime('now +2 hours');
         $tokenIdentifier = new TokenIdentifier();
         $accessToken = new AccessToken((object) [
             'identifier' => $tokenIdentifier,
@@ -67,15 +73,20 @@ final class RefreshTokenDatabaseRepositoryTest extends TestCase
 
     /**
      * @depends testCreateRefreshToken
+     * @param TokenIdentifier $tokenIdentifier
      */
-    public function testGetByTokenIdentifier($tokenIdentifier): void
+    public function testGetByTokenIdentifier(TokenIdentifier $tokenIdentifier): void
     {
-        $refreshToken = $this->repo->getByTokenIdentifier(
-            $tokenIdentifier
-        );
-        $this->assertInstanceOf(
-            Entity::class,
-            $refreshToken
-        );
+        try {
+            $refreshToken = $this->repo->getByTokenIdentifier(
+                $tokenIdentifier
+            );
+            $this->assertInstanceOf(
+                Entity::class,
+                $refreshToken
+            );
+        } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
     }
 }

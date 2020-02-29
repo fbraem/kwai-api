@@ -4,46 +4,36 @@
  */
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Tests\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Entity;
-
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-
-require_once('Database.php');
+use Kwai\Modules\Users\Repositories\AbilityRepository;
+use Tests\DatabaseTestCase;
 
 /**
  * @group DB
  */
-final class AbilityDatabaseRepositoryTest extends TestCase
+final class AbilityDatabaseRepositoryTest extends DatabaseTestCase
 {
-    private $repo;
+    private AbilityRepository $repo;
 
     public function setup(): void
     {
-        $this->repo = new AbilityDatabaseRepository(\Database::getDatabase());
+        $this->repo = new AbilityDatabaseRepository(self::getDatabase());
     }
 
     public function testGetAbilityById()
     {
-        $ability = $this->repo->getById(1);
-        $this->assertInstanceOf(
-            Entity::class,
-            $ability
-        );
-    }
-    /*
-        public function testGetAbilitiesForUser()
-        {
-            $userRepo = new UserDatabaseRepository(\Database::getDatabase());
-            $user = $userRepo->getById(1);
-            $abilities = $this->repo->getByUser($user);
-            $this->assertContainsOnlyInstancesOf(
+        try {
+            $ability = $this->repo->getById(1);
+            $this->assertInstanceOf(
                 Entity::class,
-                $abilities
+                $ability
             );
+        } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
         }
-    */
+    }
 }

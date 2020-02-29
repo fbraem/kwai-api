@@ -4,41 +4,46 @@
  */
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Tests\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\EmailAddress;
-
-use Kwai\Modules\Users\Infrastructure\UsersTable;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
+use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\UniqueId;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-
-require_once('Database.php');
+use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Repositories\UserRepository;
+use Tests\DatabaseTestCase;
 
 /**
  * @group DB
  */
-final class UserDatabaseRepositoryTest extends TestCase
+final class UserDatabaseRepositoryTest extends DatabaseTestCase
 {
-    private $repo;
+    private UserRepository $repo;
 
     public function setup(): void
     {
-        $this->repo = new UserDatabaseRepository(\Database::getDatabase());
+        $this->repo = new UserDatabaseRepository(self::getDatabase());
     }
 
+    /**
+     * @return Entity<User>
+     */
     public function testGetByEmail(): Entity
     {
-        $user = $this->repo->getByEmail(new EmailAddress('test@kwai.com'));
-        $this->assertInstanceOf(
-            Entity::class,
-            $user
-        );
-        return $user;
+        try {
+            $user = $this->repo->getByEmail(new EmailAddress('test@kwai.com'));
+            $this->assertInstanceOf(
+                Entity::class,
+                $user
+            );
+            return $user;
+        } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+        return null;
     }
 
     public function testExistsWithEmail(): void
@@ -55,51 +60,69 @@ final class UserDatabaseRepositoryTest extends TestCase
 
     /**
      * @depends testGetByEmail
+     * @param Entity $user
+     * @return UniqueId
      */
     public function testGetById(Entity $user): UniqueId
     {
-        $entity = $this->repo->getById($user->id());
-        $this->assertInstanceOf(
-            Entity::class,
-            $entity
-        );
-        return $entity->getUuid();
+        try {
+            $entity = $this->repo->getById($user->id());
+            $this->assertInstanceOf(
+                Entity::class,
+                $entity
+            );
+            /* @noinspection PhpUndefinedMethodInspection */
+            return $entity->getUuid();
+        } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+        return null;
     }
 
     /**
      * @depends testGetById
+     * @param UniqueId $uuid
      */
     public function testGetByUuid(UniqueId $uuid): void
     {
-        $user = $this->repo->getByUuid($uuid);
-        $this->assertInstanceOf(
-            Entity::class,
-            $user
-        );
-    }
-
-    public function testGetByIdNotFound(): void
-    {
-        $this->expectException(NotFoundException::class);
-        $user = $this->repo->getById(10000);
-    }
-
-    /**
-     * @depends testGetByEmail
-     */
-    public function testGetByAccessToken(Entity $user): void
-    {
-        $accessTokenRepo = new AccessTokenDatabaseRepository(\Database::getDatabase());
-        $accessTokens = $accessTokenRepo->getTokensForUser($user);
-        if (count($accessTokens) > 0) {
-            $repo = new UserDatabaseRepository(\Database::getDatabase());
-            $user = $this->repo->getByAccessToken(
-                $accessTokens[0]->getIdentifier()
-            );
+        try {
+            $user = $this->repo->getByUuid($uuid);
             $this->assertInstanceOf(
                 Entity::class,
                 $user
             );
+        } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /** @noinspection PhpUnhandledExceptionInspection */
+    public function testGetByIdNotFound(): void
+    {
+        $this->expectException(NotFoundException::class);
+        $this->repo->getById(10000);
+    }
+
+    /**
+     * @depends testGetByEmail
+     * @param Entity<User> $user
+     */
+    public function testGetByAccessToken(Entity $user): void
+    {
+        $accessTokenRepo = new AccessTokenDatabaseRepository(self::getDatabase());
+        $accessTokens = $accessTokenRepo->getTokensForUser($user);
+        if (count($accessTokens) > 0) {
+            try {
+                $user = $this->repo->getByAccessToken(
+                    $accessTokens[0]->getIdentifier()
+                );
+                $this->assertInstanceOf(
+                    Entity::class,
+                    $user
+                );
+            } catch (NotFoundException $e) {
+                $this->assertTrue(false, $e->getMessage());
+            }
         }
     }
 }

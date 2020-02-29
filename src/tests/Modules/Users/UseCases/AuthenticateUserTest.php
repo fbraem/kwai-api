@@ -1,13 +1,14 @@
 <?php
 /**
- * Testcase for TokenIdentifier
+ * Testcase for AuthenticationUser
  */
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Tests\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
 
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
@@ -15,13 +16,12 @@ use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
-
-require_once('Database.php');
+use Tests\DatabaseTestCase;
 
 /**
  * @group DB
  */
-final class AuthenticateUserTest extends TestCase
+final class AuthenticateUserTest extends DatabaseTestCase
 {
     public function testAuthenticate(): void
     {
@@ -30,11 +30,15 @@ final class AuthenticateUserTest extends TestCase
             'password' => $_ENV['password']
         ]);
 
-        $refreshToken = (new AuthenticateUser(
-            new UserDatabaseRepository(\Database::getDatabase()),
-            new AccessTokenDatabaseRepository(\Database::getDatabase()),
-            new RefreshTokenDatabaseRepository(\Database::getDatabase())
-        ))($command);
+        try {
+            $refreshToken = (new AuthenticateUser(
+                new UserDatabaseRepository(self::getDatabase()),
+                new AccessTokenDatabaseRepository(self::getDatabase()),
+                new RefreshTokenDatabaseRepository(self::getDatabase())
+            ))($command);
+        } catch (NotFoundException $e) {
+        } catch (AuthenticationException $e) {
+        }
 
         $this->assertInstanceOf(
             Entity::class,
@@ -46,6 +50,7 @@ final class AuthenticateUserTest extends TestCase
         );
     }
 
+    /** @noinspection PhpUnhandledExceptionInspection */
     public function testAuthenticateFailure(): void
     {
         $this->expectException(AuthenticationException::class);
@@ -56,9 +61,9 @@ final class AuthenticateUserTest extends TestCase
         ]);
 
         $refreshToken = (new AuthenticateUser(
-            new UserDatabaseRepository(\Database::getDatabase()),
-            new AccessTokenDatabaseRepository(\Database::getDatabase()),
-            new RefreshTokenDatabaseRepository(\Database::getDatabase())
+            new UserDatabaseRepository(self::getDatabase()),
+            new AccessTokenDatabaseRepository(self::getDatabase()),
+            new RefreshTokenDatabaseRepository(self::getDatabase())
         ))($command);
     }
 }

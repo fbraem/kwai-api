@@ -4,7 +4,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Tests\Core\Infrastructure;
+namespace Tests\Core\Domain\Infrastructure;
 
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use PHPUnit\Framework\TestCase;

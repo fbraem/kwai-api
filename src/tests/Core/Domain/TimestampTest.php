@@ -4,6 +4,8 @@
  */
 declare(strict_types=1);
 
+namespace Tests\Core\Domain;
+
 use PHPUnit\Framework\TestCase;
 use Kwai\Core\Domain\Timestamp;
 

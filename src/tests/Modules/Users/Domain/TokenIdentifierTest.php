@@ -4,6 +4,8 @@
  */
 declare(strict_types=1);
 
+namespace Tests\Modules\Users\Domain;
+
 use PHPUnit\Framework\TestCase;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 

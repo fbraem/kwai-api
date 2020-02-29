@@ -1,9 +1,14 @@
 <?php
 /**
- * Testcase for TokenIdentifier
+ * Testcase for Logout
  */
 declare(strict_types=1);
 
+namespace Tests\Modules\Users\UseCases;
+
+use Core\Clubman;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use PHPUnit\Framework\TestCase;
 
 use Kwai\Core\Domain\Entity;
@@ -16,13 +21,12 @@ use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Kwai\Modules\Users\UseCases\Logout;
 use Kwai\Modules\Users\UseCases\LogoutCommand;
 use Kwai\Modules\Users\Domain\RefreshToken;
-
-require_once('Database.php');
+use Tests\DatabaseTestCase;
 
 /**
  * @group DB
  */
-final class LogoutTest extends TestCase
+final class LogoutTest extends DatabaseTestCase
 {
     public function testAuthenticate(): void
     {
@@ -31,30 +35,37 @@ final class LogoutTest extends TestCase
             'password' => $_ENV['password']
         ]);
 
-        $refreshTokenRepo = new RefreshTokenDatabaseRepository(\Database::getDatabase());
-        $accessTokenRepo = new AccessTokenDatabaseRepository(\Database::getDatabase());
+        $refreshTokenRepo = new RefreshTokenDatabaseRepository(self::getDatabase());
+        $accessTokenRepo = new AccessTokenDatabaseRepository(self::getDatabase());
 
-        $refreshToken = (new AuthenticateUser(
-            new UserDatabaseRepository(\Database::getDatabase()),
-            $accessTokenRepo,
-            $refreshTokenRepo
-        ))($command);
+        try {
+            $refreshToken = (new AuthenticateUser(
+                new UserDatabaseRepository(self::getDatabase()),
+                $accessTokenRepo,
+                $refreshTokenRepo
+            ))($command);
+            $this->assertInstanceOf(
+                Entity::class,
+                $refreshToken
+            );
+            $this->assertInstanceOf(
+                RefreshToken::class,
+                $refreshToken->domain()
+            );
 
-        $command = new LogoutCommand([
-            'refresh_token_identifier' => strval($refreshToken->getIdentifier())
-        ]);
-        (new Logout(
-            $refreshTokenRepo,
-            $accessTokenRepo
-        ))($command);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $command = new LogoutCommand([
+                'refresh_token_identifier' => strval($refreshToken->getIdentifier())
+            ]);
 
-        $this->assertInstanceOf(
-            Entity::class,
-            $refreshToken
-        );
-        $this->assertInstanceOf(
-            RefreshToken::class,
-            $refreshToken->domain()
-        );
+            (new Logout(
+                $refreshTokenRepo,
+                $accessTokenRepo
+            ))($command);
+        } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        } catch (AuthenticationException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
     }
 }

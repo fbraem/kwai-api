@@ -4,11 +4,12 @@
  */
 declare(strict_types=1);
 
+namespace Tests\Modules\Mails\Infstrastucture\Mailer;
+
 use PHPUnit\Framework\TestCase;
 
 use Kwai\Modules\Mails\Infrastructure\Mailer\SmtpMailerService;
 use Kwai\Modules\Mails\Infrastructure\Mailer\SimpleMessage;
-use Kwai\Modules\Mails\Infrastructure\Mailer\Recipient;
 use Kwai\Modules\Mails\Infrastructure\Mailer\MailerException;
 
 /**
@@ -44,13 +45,14 @@ final class SmtpMailerServiceTest extends TestCase
             $_ENV['from']
         );
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $mailer->send(
             new SimpleMessage('Hello', 'World'),
             ['franky.braem@gmail.com' => 'Franky Braem']
         );
     }
 
-    public function testSimpleNoRecpients()
+    public function testSimpleNoRecipients()
     {
         $this->expectException(MailerException::class);
 
@@ -58,6 +60,8 @@ final class SmtpMailerServiceTest extends TestCase
             $_ENV['smtp'],
             $_ENV['from']
         );
+
+        /** @noinspection PhpUnhandledExceptionInspection */
         $mailer->send(
             new SimpleMessage('Hello', 'World'),
             []

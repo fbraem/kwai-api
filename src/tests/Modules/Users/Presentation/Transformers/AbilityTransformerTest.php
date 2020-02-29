@@ -1,22 +1,18 @@
 <?php
 /**
- * Testcase for Password
+ * Testcase for AbilityTransformer
  */
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Tests\Modules\Users\Presentation\Transformers;
 
+use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\TraceableTime;
+use Kwai\Modules\Users\Domain\Ability;
+use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
-
-use Kwai\Core\Domain\UniqueId;
-use Kwai\Core\Domain\EmailAddress;
-use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\Entity;
-
-use Kwai\Modules\Users\Domain\Ability;
-
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use PHPUnit\Framework\TestCase;
 
 final class AbilityTransformerTest extends TestCase
 {

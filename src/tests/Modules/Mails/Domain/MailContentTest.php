@@ -5,6 +5,8 @@
  */
 declare(strict_types=1);
 
+namespace Tests\Modules\Mails\Domain;
+
 use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 use PHPUnit\Framework\TestCase;
 

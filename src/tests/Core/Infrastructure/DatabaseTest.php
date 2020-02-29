@@ -4,6 +4,8 @@
  */
 declare(strict_types=1);
 
+namespace Tests\Core\Domain\Infrastructure;
+
 use PHPUnit\Framework\TestCase;
 
 use Kwai\Core\Infrastructure\Database;
@@ -12,7 +14,7 @@ use Latitude\QueryBuilder\QueryFactory;
 
 final class DatabaseTest extends TestCase
 {
-    const DB_MEMORY = 'sqlite::memory:';
+    private const DB_MEMORY = 'sqlite::memory:';
 
     public function testDatabase(): void
     {
