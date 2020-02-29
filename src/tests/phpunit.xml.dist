@@ -1,6 +1,6 @@
 <!-- Copy this file to phpunit.xml and change user/password -->
 <!-- Do not version this file when there are passwords in it !!! -->
-<phpunit>
+<phpunit bootstrap="../vendor/autoload.php">
     <testsuite name="unit">
         <directory>.</directory>
     </testsuite>
