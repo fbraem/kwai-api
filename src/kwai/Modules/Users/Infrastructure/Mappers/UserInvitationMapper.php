@@ -7,7 +7,6 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Timestamp;
@@ -42,8 +41,27 @@ class UserInvitationMapper
         );
     }
 
+    /**
+     * Maps the UserInvitation to a table row
+     * @param UserInvitation $invitation
+     * @return array
+     */
     public static function toPersistence(UserInvitation $invitation): array
     {
-        return [];
+        if ($invitation->getTraceableTime()->isUpdated()) {
+            $updated_at = strval($invitation->getTraceableTime()->getUpdatedAt());
+        } else {
+            $updated_at = null;
+        }
+        return [
+            'uuid' => strval($invitation->getUniqueId()),
+            'email' => strval($invitation->getEmailAddress()),
+            'expiration' => strval($invitation->getExpiration()),
+            'name' => $invitation->getName(),
+            'user_id' => $invitation->getCreator()->id(),
+            'remark' => $invitation->getRemark(),
+            'created_at' => strval($invitation->getTraceableTime()->getCreatedAt()),
+            'updated_at' => $updated_at
+        ];
     }
 }
