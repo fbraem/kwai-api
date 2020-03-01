@@ -56,7 +56,7 @@ class UserInvitationMapper
         return [
             'uuid' => strval($invitation->getUniqueId()),
             'email' => strval($invitation->getEmailAddress()),
-            'expiration' => strval($invitation->getExpiration()),
+            'expired_at' => strval($invitation->getExpiration()),
             'name' => $invitation->getName(),
             'user_id' => $invitation->getCreator()->id(),
             'remark' => $invitation->getRemark(),
