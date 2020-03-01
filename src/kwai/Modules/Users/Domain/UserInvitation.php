@@ -67,10 +67,10 @@ class UserInvitation implements DomainEntity
         $this->emailAddress = $props->emailAddress;
         $this->traceableTime = $props->traceableTime;
         $this->expiration = $props->expiration;
-        $this->remark = $props->remark;
+        $this->remark = $props->remark ?? '';
         $this->name = $props->name;
         $this->creator = $props->creator;
-        $this->revoked = $props->revoked;
+        $this->revoked = $props->revoked ?? false;
     }
 
     /**
