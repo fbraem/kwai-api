@@ -7,31 +7,32 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Exception;
+use PDOException;
+
 /**
  * DatabaseException
  */
-class DatabaseException extends \Exception
+class DatabaseException extends Exception
 {
     /**
      * The wrapped PDO exception
-     * @var \PDOException
      */
-    private $wrappedException;
+    private PDOException $wrappedException;
 
     /**
      * Query, if available.
-     * @var string|null
      */
-    private $query;
+    private ?string $query;
 
     /**
      * DatabaseException constructor
-     * @param \PDOException $exception The PDO exception
+     * @param PDOException $exception The PDO exception
      * @param string|null $query       The query, if available
      */
-    public function __construct(\PDOException $exception, ?string $query = null)
+    public function __construct(PDOException $exception, ?string $query = null)
     {
-        parent::__construct();
+        parent::__construct($exception->getMessage());
         $this->wrappedException = $exception;
         $this->query = $query;
     }
