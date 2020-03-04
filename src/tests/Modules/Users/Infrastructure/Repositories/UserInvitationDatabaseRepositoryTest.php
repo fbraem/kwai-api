@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
+use Exception;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
@@ -55,8 +56,10 @@ final class UserInvitationDatabaseRepositoryTest extends DatabaseTestCase
             $this->assertInstanceOf(Entity::class, $invitation);
             return $invitation;
         } catch (DatabaseException $e) {
-            $this->assertTrue(false, $e->getMessage());
+            $this->assertTrue(false, strval($e));
         } catch (NotFoundException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        } catch (Exception $e) {
             $this->assertTrue(false, $e->getMessage());
         }
         return null;
