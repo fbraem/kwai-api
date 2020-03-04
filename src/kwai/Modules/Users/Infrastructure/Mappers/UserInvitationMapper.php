@@ -57,6 +57,7 @@ class UserInvitationMapper
             'uuid' => strval($invitation->getUniqueId()),
             'email' => strval($invitation->getEmailAddress()),
             'expired_at' => strval($invitation->getExpiration()),
+            'expired_at_timezone' => strval($invitation->getExpiration()->getTimezone()),
             'name' => $invitation->getName(),
             'user_id' => $invitation->getCreator()->id(),
             'remark' => $invitation->getRemark(),
