@@ -34,7 +34,7 @@ final class UserMapper
                         : null
                 ),
                 'remark' => $raw->remark,
-                'username' => new Username($raw->first_name, $raw->last_name)
+                'username' => new Username($raw->first_name ?? null, $raw->last_name ?? null)
             ])
         );
     }
