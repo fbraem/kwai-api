@@ -148,7 +148,7 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
     public function getByEmail(EmailAddress $email): array
     {
         $query = $this->createBaseQuery()
-            ->where(field('email')->eq(strval($email)))
+            ->where(field($this->table->from() . '.email')->eq(strval($email)))
             ->compile()
         ;
 
