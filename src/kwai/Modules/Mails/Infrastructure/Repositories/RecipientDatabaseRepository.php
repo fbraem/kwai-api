@@ -71,7 +71,7 @@ class RecipientDatabaseRepository implements RecipientRepository
      * @inheritDoc
      * @throws Database\DatabaseException
      */
-    public function create(array $recipients): array
+    public function create(Entity $mail, array $recipients): array
     {
         $result = [];
         foreach ($recipients as $recipient) {
@@ -79,9 +79,11 @@ class RecipientDatabaseRepository implements RecipientRepository
             $query = $this->db->createQueryFactory()
                 ->insert($this->table->from())
                 ->columns(
+                    'mail_id',
                     ... array_keys($data)
                 )
                 ->values(
+                    $mail->id(),
                     ... array_values($data)
                 )
                 ->compile()

@@ -33,8 +33,12 @@ interface RecipientRepository
     public function getForMails(array $mailIds): array;
 
     /**
+     * Create a recipient for the given mail entity
+     * @param Entity $mail
+     * @phpstan-param Entity<Mail> $mail
      * @param Recipient[] $recipients
-     * @return Entity<Recipient>[]
+     * @return Entity[]
+     * @phpstan-return Entity<Recipient>[]
      */
-    public function create(array $recipients): array;
+    public function create(Entity $mail, array $recipients): array;
 }
