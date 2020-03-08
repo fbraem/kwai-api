@@ -8,18 +8,19 @@ namespace Kwai\Modules\Mails\Repositories;
 
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\EmailAddress;
 use Kwai\Modules\Mails\Domain\Mail;
 
 /**
  * Mail repository interface
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 interface MailRepository
 {
     /**
      * Get the email with the given id
      * @param  int    $id
-     * @return Entity<Mail>
+     * @return Entity
+     * @phpstan-return Entity<Mail>
      */
     public function getById(int $id) : Entity;
 
@@ -33,7 +34,8 @@ interface MailRepository
     /**
      * Save a new Mail
      * @param  Mail $mail
-     * @return Entity<Mail>
+     * @return Entity
+     * @phpstan-return Entity<Mail>
      */
     public function create(Mail $mail): Entity;
 }
