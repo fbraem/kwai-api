@@ -45,7 +45,7 @@ class Mail implements DomainEntity
     /**
      * Time of sending
      */
-    private Timestamp $sentTime;
+    private ?Timestamp $sentTime;
 
     /**
      * Remark
