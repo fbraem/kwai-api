@@ -79,8 +79,8 @@ class Mail implements DomainEntity
         $this->uuid = $props->uuid;
         $this->sender = $props->sender;
         $this->content = $props->content;
-        $this->sentTime = $props->sentTime;
-        $this->remark = $props->remark;
+        $this->sentTime = $props->sentTime ?? null;
+        $this->remark = $props->remark ?? null;
         $this->creator = $props->creator;
         $this->traceableTime = $props->traceableTime;
         $this->recipients = $props->recipients;
