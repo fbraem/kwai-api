@@ -5,9 +5,7 @@
  */
 declare(strict_types=1);
 
-
 namespace Kwai\Modules\Mails\Repositories;
-
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Mails\Domain\Recipient;
