@@ -32,6 +32,11 @@ class Table
         return $this->name;
     }
 
+    public function column(string $name): string
+    {
+        return $this->name . '.' . $name;
+    }
+
     public function alias(): array
     {
         $prefix = $this->name . '_';

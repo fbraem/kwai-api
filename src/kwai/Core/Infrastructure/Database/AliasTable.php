@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Latitude\QueryBuilder\ExpressionInterface;
 use function Latitude\QueryBuilder\alias;
 
 class AliasTable
@@ -22,9 +23,14 @@ class AliasTable
         $this->alias = $alias;
     }
 
-    public function from(): string
+    public function from(): ExpressionInterface
     {
         return alias($this->table->from(), $this->alias);
+    }
+
+    public function column(string $name): string
+    {
+        return $this->table->column($name);
     }
 
     public function alias(): array
