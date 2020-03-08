@@ -109,9 +109,8 @@ final class MailDatabaseRepository implements MailRepository
             ->compile()
         ;
         $this->db->execute($query);
-        $mailId = $this->db->lastInsertId();
         return new Entity(
-            $mailId,
+            $this->db->lastInsertId(),
             $mail
         );
     }
