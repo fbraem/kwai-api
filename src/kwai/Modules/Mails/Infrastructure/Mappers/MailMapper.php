@@ -44,7 +44,10 @@ final class MailMapper
                 ),
                 'remark' => $raw->remark ?? null,
                 'creator' => UserMapper::toDomain($raw->user),
-                'recipients' => []
+                'recipients' => array_map(
+                    fn($recipient) => RecipientMapper::toDomain($recipient),
+                    $raw->recipients
+                )
             ])
         );
     }

@@ -25,6 +25,11 @@ use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
+/**
+ * Class MailDatabaseRepository
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 final class MailDatabaseRepository implements MailRepository
 {
     private Database\Connection $db;
@@ -104,9 +109,9 @@ final class MailDatabaseRepository implements MailRepository
             ->compile()
         ;
         $this->db->execute($query);
-
+        $mailId = $this->db->lastInsertId();
         return new Entity(
-            $this->db->lastInsertId(),
+            $mailId,
             $mail
         );
     }
@@ -128,8 +133,8 @@ final class MailDatabaseRepository implements MailRepository
             ->join(
                 $this->usersTable->from(),
                 on(
-                    $this->table->from() . '.user_id',
-                    $this->usersTable->from() . '.id'
+                    $this->table->column('user_id'),
+                    $this->usersTable->column('.id')
                 )
             )
         ;
