@@ -65,7 +65,7 @@ class Mail implements DomainEntity
 
     /**
      * The recipients
-     * @var Recipient[]
+     * @var Entity<Recipient>[]
      */
     private array $recipients;
 
@@ -88,9 +88,10 @@ class Mail implements DomainEntity
 
     /**
      * Add recipient
-     * @param Recipient $recipient
+     * @param Entity $recipient
+     * @param-phpstan Entity<Recipient> $recipient
      */
-    public function addRecipient(Recipient $recipient): void
+    public function addRecipient(Entity $recipient): void
     {
         $this->recipients[] = $recipient;
     }
