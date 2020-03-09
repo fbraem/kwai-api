@@ -14,6 +14,9 @@ use Latitude\QueryBuilder\Query;
 
 use Latitude\QueryBuilder\Engine\CommonEngine;
 use Latitude\QueryBuilder\Engine\MySqlEngine;
+use PDO;
+use PDOException;
+use PDOStatement;
 
 /**
  * A class that represents a database connection
@@ -22,9 +25,9 @@ final class Connection
 {
     /**
      * A PDO connection
-     * @var \PDO
+     * @var PDO
      */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * Constructor.
@@ -39,17 +42,45 @@ final class Connection
         string $password = ''
     ) {
         try {
-            $this->pdo = new \PDO(
+            $this->pdo = new PDO(
                 $dsn,
                 $user,
                 $password,
                 [
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_PERSISTENT => true, // BEST OPTION
-                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_PERSISTENT => true, // BEST OPTION
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
                 ]
             );
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
+            throw new DatabaseException($e);
+        }
+    }
+
+    /**
+     * Begins a transaction
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function begin(): bool
+    {
+        try {
+            return $this->pdo->beginTransaction();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e);
+        }
+    }
+
+    /**
+     * Commits a transaction
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function commit(): bool
+    {
+        try {
+            return $this->pdo->commit();
+        } catch (PDOException $e) {
             throw new DatabaseException($e);
         }
     }
@@ -60,7 +91,7 @@ final class Connection
      */
     public function createQueryFactory(): QueryFactory
     {
-        $driver = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver == 'mysql') {
             return new QueryFactory(new MySqlEngine());
         }
@@ -70,16 +101,16 @@ final class Connection
     /**
      * Execute the query and returns a PDOStatement on success.
      * @param  Query         $query The query to execute
-     * @return \PDOStatement        The executed statement
+     * @return PDOStatement         The executed statement
      * @throws DatabaseException    Thrown when a PDOException occurred
      */
-    public function execute(Query $query): \PDOStatement
+    public function execute(Query $query): PDOStatement
     {
         try {
             $stmt = $this->pdo->prepare($query->sql());
             $stmt->execute($query->params());
             return $stmt;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new DatabaseException($e, $query->sql());
         }
     }
@@ -91,5 +122,19 @@ final class Connection
     public function lastInsertId(): int
     {
         return (int) $this->pdo->lastInsertId();
+    }
+
+    /**
+     * Rollbacks a transaction
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function rollback(): bool
+    {
+        try {
+            return $this->pdo->rollBack();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e);
+        }
     }
 }
