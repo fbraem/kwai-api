@@ -116,6 +116,15 @@ final class Connection
     }
 
     /**
+     * Checks if a transaction is currently active
+     * @return bool
+     */
+    public function inTransaction(): bool
+    {
+        return $this->pdo->inTransaction();
+    }
+
+    /**
      * Returns the last inserted id
      * @return int
      */
