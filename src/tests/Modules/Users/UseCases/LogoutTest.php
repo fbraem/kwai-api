@@ -6,10 +6,8 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Users\UseCases;
 
-use Core\Clubman;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
-use PHPUnit\Framework\TestCase;
 
 use Kwai\Core\Domain\Entity;
 
