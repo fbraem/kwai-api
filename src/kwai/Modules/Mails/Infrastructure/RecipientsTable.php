@@ -8,7 +8,7 @@ final class RecipientsTable extends Table
 {
     public function __construct()
     {
-        parent::__construct('mails_recipients', [
+        parent::__construct('mail_recipients', [
             'id',
             'mail_id',
             'type',
