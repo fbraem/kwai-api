@@ -82,8 +82,8 @@ class Mail implements DomainEntity
         $this->sentTime = $props->sentTime ?? null;
         $this->remark = $props->remark ?? null;
         $this->creator = $props->creator;
-        $this->traceableTime = $props->traceableTime;
-        $this->recipients = $props->recipients;
+        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
+        $this->recipients = $props->recipients ?? [];
     }
 
     /**
