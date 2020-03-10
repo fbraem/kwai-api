@@ -21,7 +21,7 @@ final class AbilityDatabaseRepositoryTest extends DatabaseTestCase
 
     public function setup(): void
     {
-        $this->repo = new AbilityDatabaseRepository(self::getDatabase());
+        $this->repo = new AbilityDatabaseRepository(self::$db);
     }
 
     public function testGetAbilityById()

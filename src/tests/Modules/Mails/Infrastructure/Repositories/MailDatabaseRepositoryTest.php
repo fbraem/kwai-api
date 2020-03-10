@@ -29,7 +29,7 @@ class MailDatabaseRepositoryTest extends DatabaseTestCase
 
     public function setup(): void
     {
-        $this->repo = new MailDatabaseRepository(self::getDatabase());
+        $this->repo = new MailDatabaseRepository(self::$db);
     }
 
     /**
@@ -38,7 +38,7 @@ class MailDatabaseRepositoryTest extends DatabaseTestCase
     public function testCreate(): Entity
     {
         $user = null;
-        $userRepo = new UserDatabaseRepository(self::getDatabase());
+        $userRepo = new UserDatabaseRepository(self::$db);
         try {
             $user = $userRepo->getByEmail(new EmailAddress('test@kwai.com'));
         } catch (NotFoundException $e) {

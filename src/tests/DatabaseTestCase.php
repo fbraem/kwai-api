@@ -10,24 +10,21 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseTestCase extends TestCase
 {
-    private static ?Connection $db = null;
+    protected static ?Connection $db;
 
-    public static function getDatabase(): Connection
+    /**
+     * @throws DatabaseException
+     */
+    public static function setUpBeforeClass(): void
     {
-        if (!self::$db) {
-            $application = Clubman::getApplication();
-            $config = $application->getContainer()->get('settings');
+        parent::setUpBeforeClass();
+        $application = Clubman::getApplication();
+        $config = $application->getContainer()->get('settings');
 
-            try {
-                self::$db = new Connection(
-                    $config['database']['test']['dsn'],
-                    $config['database']['test']['user'],
-                    $config['database']['test']['pass']
-                );
-            } catch (DatabaseException $e) {
-                echo $e->getMessage();
-            }
-        }
-        return self::$db;
+        self::$db = new Connection(
+            $config['database']['test']['dsn'],
+            $config['database']['test']['user'],
+            $config['database']['test']['pass']
+        );
     }
 }

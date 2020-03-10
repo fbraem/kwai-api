@@ -33,8 +33,8 @@ final class UserInvitationDatabaseRepositoryTest extends DatabaseTestCase
 
     public function setup(): void
     {
-        $this->repo = new UserInvitationDatabaseRepository(self::getDatabase());
-        $this->userRepo = new UserDatabaseRepository(self::getDatabase());
+        $this->repo = new UserInvitationDatabaseRepository(self::$db);
+        $this->userRepo = new UserDatabaseRepository(self::$db);
     }
 
     /**

@@ -35,12 +35,12 @@ final class LogoutTest extends DatabaseTestCase
             'password' => $_ENV['password']
         ]);
 
-        $refreshTokenRepo = new RefreshTokenDatabaseRepository(self::getDatabase());
-        $accessTokenRepo = new AccessTokenDatabaseRepository(self::getDatabase());
+        $refreshTokenRepo = new RefreshTokenDatabaseRepository(self::$db);
+        $accessTokenRepo = new AccessTokenDatabaseRepository(self::$db);
 
         try {
             $refreshToken = (new AuthenticateUser(
-                new UserDatabaseRepository(self::getDatabase()),
+                new UserDatabaseRepository(self::$db),
                 $accessTokenRepo,
                 $refreshTokenRepo
             ))($command);

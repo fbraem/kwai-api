@@ -32,9 +32,9 @@ final class AuthenticateUserTest extends DatabaseTestCase
 
         try {
             $refreshToken = (new AuthenticateUser(
-                new UserDatabaseRepository(self::getDatabase()),
-                new AccessTokenDatabaseRepository(self::getDatabase()),
-                new RefreshTokenDatabaseRepository(self::getDatabase())
+                new UserDatabaseRepository(self::$db),
+                new AccessTokenDatabaseRepository(self::$db),
+                new RefreshTokenDatabaseRepository(self::$db)
             ))($command);
         } catch (NotFoundException $e) {
         } catch (AuthenticationException $e) {
@@ -61,9 +61,13 @@ final class AuthenticateUserTest extends DatabaseTestCase
         ]);
 
         $refreshToken = (new AuthenticateUser(
-            new UserDatabaseRepository(self::getDatabase()),
-            new AccessTokenDatabaseRepository(self::getDatabase()),
-            new RefreshTokenDatabaseRepository(self::getDatabase())
+            new UserDatabaseRepository(self::$db),
+            new AccessTokenDatabaseRepository(self::$db),
+            new RefreshTokenDatabaseRepository(self::$db)
         ))($command);
+        $this->assertInstanceOf(
+            RefreshToken::class,
+            $refreshToken->domain()
+        );
     }
 }

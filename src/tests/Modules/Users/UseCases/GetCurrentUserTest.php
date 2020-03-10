@@ -34,8 +34,8 @@ final class GetCurrentUserTest extends DatabaseTestCase
 
     public function setup(): void
     {
-        $this->userRepo = new UserDatabaseRepository(self::getDatabase());
-        $this->abilityRepo = new AbilityDatabaseRepository(self::getDatabase());
+        $this->userRepo = new UserDatabaseRepository(self::$db);
+        $this->abilityRepo = new AbilityDatabaseRepository(self::$db);
         try {
             $this->user = $this->userRepo->getByEmail(new EmailAddress('test@kwai.com'));
         } catch (NotFoundException $e) {

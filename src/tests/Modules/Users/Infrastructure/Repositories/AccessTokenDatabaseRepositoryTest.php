@@ -33,8 +33,8 @@ final class AccessTokenDatabaseRepositoryTest extends DatabaseTestCase
 
     public function setup() : void
     {
-        $this->repo = new AccessTokenDatabaseRepository(self::getDatabase());
-        $userRepo = new UserDatabaseRepository(self::getDatabase());
+        $this->repo = new AccessTokenDatabaseRepository(self::$db);
+        $userRepo = new UserDatabaseRepository(self::$db);
         try {
             $this->user = $userRepo->getAccount(new EmailAddress($_ENV['user']));
         } catch (NotFoundException $e) {

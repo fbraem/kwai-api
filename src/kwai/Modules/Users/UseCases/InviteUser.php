@@ -142,6 +142,12 @@ final class InviteUser
         );
 
         /** @noinspection PhpUndefinedMethodInspection */
+        $templateVars = [
+            'uuid' => $invitation->getUniqueId(),
+            'name' => $command->name
+        ];
+
+        /** @noinspection PhpUndefinedMethodInspection */
         $mail = new Mail(
             (object) [
                 'tag' => 'user.invitation',
@@ -152,25 +158,33 @@ final class InviteUser
                 ),
                 'content' => new MailContent(
                     $this->template->getSubject(),
-                    $this->template->renderHtml([]),
-                    $this->template->renderPlainText([])
+                    $this->template->renderHtml($templateVars),
+                    $this->template->renderPlainText($templateVars)
                 ),
                 'traceableTime' => new TraceableTime(),
-                'recipients' => [
-                    new Recipient(
-                        (object) [
-                            'type' => RecipientType::TO(),
-                            new Address(
-                                new EmailAddress($command->email),
-                                $command->name
-                            )
-                        ]
-                    )]
             ]
         );
         $mailEntity = $this->mailRepo->create(
             $mail
         );
+
+        $recipients = $this->recipientRepo->create(
+            $mailEntity,
+            [
+            new Recipient(
+                (object) [
+                    'type' => RecipientType::TO(),
+                    new Address(
+                        new EmailAddress($command->email),
+                        $command->name
+                    )
+                ]
+            )]
+        );
+        foreach ($recipients as $recipient) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $mailEntity->addRecipient($recipient);
+        }
 
         return $invitation;
     }

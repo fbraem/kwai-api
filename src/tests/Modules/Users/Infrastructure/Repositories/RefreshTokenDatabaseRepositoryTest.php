@@ -36,8 +36,8 @@ final class RefreshTokenDatabaseRepositoryTest extends DatabaseTestCase
 
     public function setup() : void
     {
-        $this->repo = new RefreshTokenDatabaseRepository(self::getDatabase());
-        $userRepo = new UserDatabaseRepository(self::getDatabase());
+        $this->repo = new RefreshTokenDatabaseRepository(self::$db);
+        $userRepo = new UserDatabaseRepository(self::$db);
         try {
             $this->user = $userRepo->getByEmail(new EmailAddress($_ENV['user']));
         } catch (NotFoundException $e) {
@@ -47,7 +47,7 @@ final class RefreshTokenDatabaseRepositoryTest extends DatabaseTestCase
 
     public function testCreateRefreshToken(): TokenIdentifier
     {
-        $accessTokenRepo = new AccessTokenDatabaseRepository(self::getDatabase());
+        $accessTokenRepo = new AccessTokenDatabaseRepository(self::$db);
         $future = new DateTime('now +2 hours');
         $tokenIdentifier = new TokenIdentifier();
         $accessToken = new AccessToken((object) [
