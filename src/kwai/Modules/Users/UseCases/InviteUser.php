@@ -161,7 +161,7 @@ final class InviteUser
                     $this->template->renderHtml($templateVars),
                     $this->template->renderPlainText($templateVars)
                 ),
-                'traceableTime' => new TraceableTime(),
+                'creator' => $this->user
             ]
         );
         $mailEntity = $this->mailRepo->create(
@@ -174,7 +174,7 @@ final class InviteUser
             new Recipient(
                 (object) [
                     'type' => RecipientType::TO(),
-                    new Address(
+                    'address' => new Address(
                         new EmailAddress($command->email),
                         $command->name
                     )
