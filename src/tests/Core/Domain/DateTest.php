@@ -15,14 +15,14 @@ final class DateTest extends TestCase
     {
         $this->assertInstanceOf(
             Date::class,
-            new Date()
+            Date::createFromDate()
         );
     }
 
     public function testCreateStartOfYear(): void
     {
         $this->assertEquals(
-            strval(new Date(2019)),
+            strval(Date::createFromDate(2019)),
             '2019-01-01'
         );
     }
@@ -30,7 +30,7 @@ final class DateTest extends TestCase
     public function testCreateStartOfMonth(): void
     {
         $this->assertEquals(
-            strval(new Date(2019, 2)),
+            strval(Date::createFromDate(2019, 2)),
             '2019-02-01'
         );
     }
@@ -38,7 +38,7 @@ final class DateTest extends TestCase
     public function testCreateDate(): void
     {
         $this->assertEquals(
-            strval(new Date(2019, 2, 28)),
+            strval(Date::createFromDate(2019, 2, 28)),
             '2019-02-28'
         );
     }
