@@ -19,9 +19,8 @@ class Entity
 {
     /**
      * The id of the entity
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * The real domain object
@@ -60,6 +59,12 @@ class Entity
         return $this->domain;
     }
 
+    /**
+     * Forward the method call to the wrapped domain object.
+     * @param $method
+     * @param $args
+     * @return mixed
+     */
     public function __call($method, $args)
     {
         return $this->domain->{$method}(...$args);
