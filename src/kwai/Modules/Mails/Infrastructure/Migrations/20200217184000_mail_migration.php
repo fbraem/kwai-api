@@ -7,6 +7,9 @@ use Phinx\Migration\AbstractMigration;
  */
 class MailMigration extends AbstractMigration
 {
+    /**
+     * @SuppressWarnings(PHPMD.ShortMethodName)
+     */
     public function up()
     {
         $this->table('mails', ['signed' => false])
