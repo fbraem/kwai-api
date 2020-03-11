@@ -7,17 +7,18 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Domain\Exceptions;
 
+use Exception;
+
 /**
  * AllReadyExistException class. This exception is thrown
  * when an entity already exists.
  */
-class AlreadyExistException extends \Exception
+class AlreadyExistException extends Exception
 {
     /**
      * Entity that already exists
-     * @var string
      */
-    private $entity;
+    private string $entity;
 
     /**
      * Constructor
