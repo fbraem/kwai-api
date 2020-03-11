@@ -10,43 +10,40 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database;
-
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
+use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenMapper;
 use Kwai\Modules\Users\Infrastructure\RefreshTokensTable;
-use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
-
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
-
 use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\on;
 
 /**
-* RefreshToken Repository for read/write RefreshToken entity from/to a database.
-*/
+ * RefreshToken Repository for read/write RefreshToken entity from/to a database.
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
 {
     /**
-     * @var Database\Connection
+     * The database connection
      */
-    private $db;
+    private Connection $db;
 
     /**
      * RefreshToken table
-     * @var RefreshTokensTable
      */
-    private $table;
+    private RefreshTokensTable $table;
 
     /**
      * Constructor
      *
-     * @param Database\Connection $db A database object
+     * @param Connection $db A database object
      */
-    public function __construct(Database\Connection $db)
+    public function __construct(Connection $db)
     {
         $this->db = $db;
         $this->table = new RefreshTokensTable();
@@ -55,8 +52,10 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     /**
      * Get an refreshtoken by its token identifier.
      *
-     * @param  TokenIdentifier $identifier A token identifier
+     * @param TokenIdentifier $identifier A token identifier
      * @return Entity<RefreshToken>         An refreshtoken
+     * @throws DatabaseException
+     * @throws NotFoundException
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
@@ -101,8 +100,10 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
 
     /**
      * Inserts the refreshtoken in the table.
-     * @param  RefreshToken $token
+     *
+     * @param RefreshToken $token
      * @return Entity<RefreshToken>
+     * @throws DatabaseException
      */
     public function create(RefreshToken $token): Entity
     {
@@ -114,7 +115,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
             ->values(... array_values($data))
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
 
         return new Entity(
             $this->db->lastInsertId(),
@@ -124,7 +125,8 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
 
     /**
      * Update the refreshtoken.
-     * @param  Entity<RefreshToken> $token
+     * @param Entity<RefreshToken> $token
+     * @throws DatabaseException
      */
     public function update(Entity $token): void
     {
@@ -134,6 +136,6 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
     }
 }

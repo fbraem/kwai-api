@@ -13,6 +13,7 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database;
 
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
@@ -25,12 +26,13 @@ use function Latitude\QueryBuilder\on;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
 /**
-* UserInvitation Repository for read/write UserInvitation entity
-* from/to a database.
+ * UserInvitation Repository for read/write UserInvitation entity
+ * from/to a database.
+ * @SuppressWarnings(PHPMD.ShortVariable)
 */
 final class UserInvitationDatabaseRepository implements UserInvitationRepository
 {
-    private Database\Connection $db;
+    private Connection $db;
 
     private UserInvitationsTable $table;
 
@@ -39,9 +41,9 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
     /**
      * Constructor
      *
-     * @param Database\Connection $db A database object
+     * @param Connection $db A database object
      */
-    public function __construct(Database\Connection $db)
+    public function __construct(Connection $db)
     {
         $this->db = $db;
         $this->table = new UserInvitationsTable();

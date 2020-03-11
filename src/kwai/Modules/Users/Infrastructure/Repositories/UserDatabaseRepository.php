@@ -8,52 +8,46 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-
-use Kwai\Core\Infrastructure\TableData;
+use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database;
-
-use Kwai\Modules\Users\Repositories\UserRepository;
-use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
-use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
-use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
-use Kwai\Modules\Users\Infrastructure\UsersTable;
-use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
-
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Core\Domain\EmailAddress;
-
-use function Latitude\QueryBuilder\field;
+use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
+use Kwai\Modules\Users\Repositories\UserRepository;
 use function Latitude\QueryBuilder\alias;
-use function Latitude\QueryBuilder\on;
+use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
+use function Latitude\QueryBuilder\on;
 
 /**
-* User Repository for read/write User entity from/to a database.
-*/
+ * User Repository for read/write User entity from/to a database.
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 final class UserDatabaseRepository implements UserRepository
 {
     /**
-     * @var Database\Connection
+     * The database connection
      */
-    private $db;
+    private Connection $db;
 
     /**
      * The table for 'users'
-     * @var UsersTable
      */
-    private $table;
+    private UsersTable $table;
 
     /**
      * Constructor
      *
-     * @param Database\Connection $db A database object
+     * @param Connection $db A database object
      */
-    public function __construct(Database\Connection $db)
+    public function __construct(Connection $db)
     {
         $this->db = $db;
         $this->table = new UsersTable();
@@ -61,8 +55,10 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * Get the user with the given id.
-     * @param  int  $id         The id of the user
+     *
+     * @param int $id The id of the user
      * @return Entity<User>     The user
+     * @throws Database\DatabaseException
      * @throws NotFoundException When user is not found
      */
     public function getById(int $id): Entity
@@ -85,8 +81,11 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * Get the user with the given uuid
-     * @param  UniqueId $uid
+     *
+     * @param UniqueId $uid
      * @return Entity<User>
+     * @throws Database\DatabaseException
+     * @throws NotFoundException
      */
     public function getByUUID(UniqueId $uid): Entity
     {
@@ -108,9 +107,11 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * Get the user account with the given email.
-     * @param  EmailAddress  $email The email address of the user
+     *
+     * @param EmailAddress $email The email address of the user
      * @return Entity<User>         The user
-     * @throws NotFoundException    When user is not found
+     * @throws Database\DatabaseException
+     * @throws NotFoundException When user is not found
      */
     public function getAccount(EmailAddress $email): Entity
     {
@@ -132,9 +133,11 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * Get the user with the given email.
-     * @param  EmailAddress  $email The email address of the user
+     *
+     * @param EmailAddress $email The email address of the user
      * @return Entity<User>         The user
-     * @throws NotFoundException    When user is not found
+     * @throws Database\DatabaseException
+     * @throws NotFoundException When user is not found
      */
     public function getByEmail(EmailAddress $email): Entity
     {
@@ -156,6 +159,7 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
      */
     public function existsWithEmail(EmailAddress $email) : bool
     {
@@ -172,9 +176,11 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * Get a user using a token
-     * @param  TokenIdentifier $token
+     *
+     * @param TokenIdentifier $token
      * @return Entity<User>
-     * @throws NotFoundException    When user is not found
+     * @throws Database\DatabaseException
+     * @throws NotFoundException When user is not found
      */
     public function getByAccessToken(TokenIdentifier $token): Entity
     {
@@ -197,19 +203,18 @@ final class UserDatabaseRepository implements UserRepository
             $accessTokenRow = $accessTokenTable->filter($data);
             $accessTokenRow->user = $userRow;
 
-            $user = UserMapper::toDomain($userRow);
-            // TODO: return token also?
-            // $token = AccessTokenMapper::toDomain($accessTokenRow);
-            return $user;
+            return UserMapper::toDomain($userRow);
         }
         throw new NotFoundException('User');
     }
 
     /**
      * @inheritdoc
+     * @throws Database\DatabaseException
      */
     public function updateAccount(Entity $account): void
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         $account->getUser()->getTraceableTime()->markUpdated();
         $data = UserAccountMapper::toPersistence($account->domain());
         $query = $this->db->createQueryFactory()
@@ -217,6 +222,6 @@ final class UserDatabaseRepository implements UserRepository
             ->where(field('id')->eq($account->id()))
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
     }
 }
