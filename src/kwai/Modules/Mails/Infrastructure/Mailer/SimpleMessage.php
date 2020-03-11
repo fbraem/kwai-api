@@ -17,15 +17,13 @@ class SimpleMessage implements Message
 {
     /**
      * The subject
-     * @var string
      */
-    private $subject;
+    private string $subject;
 
     /**
      * The message body
-     * @var string
      */
-    private $body;
+    private string $body;
 
     /**
      * Create a new message
