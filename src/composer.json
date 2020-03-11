@@ -31,7 +31,8 @@
         "genkgo/mail": "^2.5",
         "myclabs/php-enum": "^1.7",
         "ext-pdo": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",
