@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use InvalidArgumentException;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
@@ -18,21 +19,18 @@ class Ability implements DomainEntity
 {
     /**
      * The name of the ability.
-     * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * A remark
-     * @var string
      */
-    private $remark;
+    private ?string $remark;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * The rules associated with this ability
@@ -47,7 +45,7 @@ class Ability implements DomainEntity
     public function __construct(object $props)
     {
         $this->name = $props->name;
-        $this->traceableTime = $props->traceableTime;
+        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
         $this->remark = $props->remark;
         $this->rules = $props->rules ?? [];
     }
@@ -59,7 +57,7 @@ class Ability implements DomainEntity
     public function addRule(Entity $rule): void
     {
         if (!is_a($rule->domain(), Rule::class)) {
-            throw new \InvalidArgumentException('$rule argument is not a Rule class');
+            throw new InvalidArgumentException('$rule argument is not a Rule class');
         }
         $this->rules[] = $rule;
     }

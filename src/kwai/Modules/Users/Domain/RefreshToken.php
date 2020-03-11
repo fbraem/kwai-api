@@ -20,33 +20,29 @@ class RefreshToken implements DomainEntity
 {
     /**
      * A unique identifier for the token.
-     * @var TokenIdentifier
      */
-    private $identifier;
+    private TokenIdentifier $identifier;
 
     /**
      * Timestamp when the token expires
-     * @var Timestamp
      */
-    private $expiration;
+    private Timestamp $expiration;
 
     /**
      * Is this token revoked?
-     * @var bool
      */
-    private $revoked;
+    private bool $revoked;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * Associated AccessToken
      * @var Entity<AccessToken>
      */
-    private $accessToken;
+    private Entity $accessToken;
 
     /**
      * Constructor

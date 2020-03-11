@@ -17,33 +17,28 @@ class Rule implements DomainEntity
 {
     /**
      * The name of the rule.
-     * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * The subject of the rule.
-     * @var string
      */
-    private $subject;
+    private string $subject;
 
     /**
      * The action of the rule.
-     * @var string
      */
-    private $action;
+    private string $action;
 
     /**
      * A remark
-     * @var string
      */
-    private $remark;
+    private ?string $remark;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * Constructor.
@@ -54,8 +49,8 @@ class Rule implements DomainEntity
         $this->name = $props->name;
         $this->action = $props->action;
         $this->subject = $props->subject;
-        $this->traceableTime = $props->traceableTime;
-        $this->remark = $props->remark;
+        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
+        $this->remark = $props->remark ?? null;
     }
 
     /**

@@ -12,6 +12,7 @@ use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
+use TheSeer\Tokenizer\Token;
 
 /**
 * AccessToken entity
@@ -20,33 +21,29 @@ class AccessToken implements DomainEntity
 {
     /**
      * A unique identifier for the token.
-     * @var TokenIdentifier
      */
-    private $identifier;
+    private TokenIdentifier $identifier;
 
     /**
      * Timestamp when the token expires
-     * @var Timestamp
      */
-    private $expiration;
+    private Timestamp $expiration;
 
     /**
      * Is this token revoked?
-     * @var bool
      */
-    private $revoked;
+    private bool $revoked;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * The user that owns the token.
      * @var Entity<UserAccount>
      */
-    private $account;
+    private Entity $account;
 
     /**
      * Constructor

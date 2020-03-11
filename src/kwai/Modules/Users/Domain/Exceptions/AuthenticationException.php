@@ -8,11 +8,13 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain\Exceptions;
 
+use Exception;
+
 /**
  * AuthenticationException class. This exception is thrown
  * when the user can't login or when an accesstoken can't be created..
  */
-class AuthenticationException extends \Exception
+class AuthenticationException extends Exception
 {
     /**
      * AuthenticationException constructor

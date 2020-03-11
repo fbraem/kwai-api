@@ -37,28 +37,25 @@ class UserAccount implements DomainEntity
 
     /**
      * TODO: add to table
-     * The last unsuccessfull login
-     * @var Timestamp
+     * The last unsuccessful login
      */
-    private $lastUnsuccessfulLogin;
+    private Timestamp $lastUnsuccessfulLogin;
 
     /**
      * The password of the user
-     * @var Password
      */
-    private $password;
+    private Password $password;
 
     /**
      * Is the user revoked?
-     * @var bool
      */
-    private $revoked;
+    private bool $revoked;
 
     /**
      * The abilities of the user.
      * @var Ability[]
      */
-    private $abilities;
+    private array $abilities;
 
     /**
      * Constructor.

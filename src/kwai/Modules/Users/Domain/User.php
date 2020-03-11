@@ -24,39 +24,34 @@ class User implements DomainEntity
 {
     /**
      * A UUID of the user.
-     * @var UniqueId
      */
-    private $uuid;
+    private UniqueId $uuid;
 
     /**
-     * The emailaddress of the user
-     * @var EmailAddress
+     * The email address of the user
      */
-    private $emailAddress;
+    private EmailAddress $emailAddress;
 
     /**
      * Track create & modify times
-     * @var TraceableTime
      */
-    private $traceableTime;
+    private TraceableTime $traceableTime;
 
     /**
      * A remark about the user
-     * @var string
      */
-    private $remark;
+    private ?string $remark;
 
     /**
      * The username
-     * @var Username
      */
-    private $username;
+    private ?Username $username;
 
     /**
      * The abilities of the user.
      * @var Ability[]
      */
-    private $abilities;
+    private array $abilities;
 
     /**
      * Constructor.
@@ -66,8 +61,8 @@ class User implements DomainEntity
     {
         $this->uuid = $props->uuid;
         $this->emailAddress = $props->emailAddress;
-        $this->traceableTime = $props->traceableTime;
-        $this->remark = $props->remark;
+        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
+        $this->remark = $props->remark ?? null;
         $this->username = $props->username ?? null;
         $this->abilities = $props->abilities ?? [];
     }
@@ -119,7 +114,7 @@ class User implements DomainEntity
 
     /**
      * Get the username
-     * @return Username
+     * @return Username|null ?Username
      */
     public function getUsername(): ?Username
     {
