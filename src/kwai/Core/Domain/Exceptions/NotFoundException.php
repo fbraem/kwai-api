@@ -8,17 +8,18 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Domain\Exceptions;
 
+use Exception;
+
 /**
  * NotFoundException class. This exception is thrown
  * when an entity isn't found.
  */
-class NotFoundException extends \Exception
+class NotFoundException extends Exception
 {
     /**
      * Entity that isn't found.
-     * @var string
      */
-    private $entity;
+    private string $entity;
 
     /**
      * NotFoundException constructor
