@@ -16,10 +16,17 @@ use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
-use Kwai\Modules\Users\Domain\ValueObjects\Password;
 
+/**
+ * Mapper for the entity User
+ */
 final class UserMapper
 {
+    /**
+     * Creates a User entity from a database row
+     * @param object $raw
+     * @return Entity
+     */
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
@@ -39,7 +46,14 @@ final class UserMapper
         );
     }
 
+    /**
+     * Create a database object from a User entity
+     * @param Entity $user
+     * @return object
+     */
     public static function toPersistence(Entity $user): object
     {
+        //TODO: implement
+        return (object)[];
     }
 }

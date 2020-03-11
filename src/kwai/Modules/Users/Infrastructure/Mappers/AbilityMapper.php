@@ -13,7 +13,6 @@ use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\Ability;
-use Kwai\Modules\Users\Domain\ValueObjects\Rule;
 
 final class AbilityMapper
 {
@@ -37,5 +36,8 @@ final class AbilityMapper
 
     public static function toPersistence(Entity $ability): object
     {
+        //TODO: implement
+        return (object)[
+        ];
     }
 }

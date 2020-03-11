@@ -16,6 +16,11 @@ use Kwai\Modules\Users\Domain\Rule;
 
 final class RuleMapper
 {
+    /**
+     * Make a Rule entity from a row object
+     * @param object $raw
+     * @return Entity
+     */
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
@@ -35,7 +40,14 @@ final class RuleMapper
         );
     }
 
+    /**
+     * Persist a Rule entity to a Database row object
+     * @param Entity $rule
+     * @return object
+     */
     public static function toPersistence(Entity $rule): object
     {
+        //TODO: implement
+        return (object)[];
     }
 }

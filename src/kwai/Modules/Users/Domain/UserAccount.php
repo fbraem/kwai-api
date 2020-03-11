@@ -109,7 +109,8 @@ class UserAccount implements DomainEntity
 
     /**
      * Returns the user.
-     * @return Entity<User>
+     * @return Entity
+     * @phpstan-param Entity<User>
      */
     public function getUser(): Entity
     {

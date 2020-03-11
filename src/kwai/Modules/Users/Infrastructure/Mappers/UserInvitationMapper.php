@@ -20,6 +20,11 @@ use Kwai\Modules\Users\Domain\UserInvitation;
  */
 class UserInvitationMapper
 {
+    /**
+     * Create a UserInvitation entity from a database row
+     * @param object $raw
+     * @return Entity
+     */
     public static function toDomain(object $raw): Entity
     {
         return new Entity(

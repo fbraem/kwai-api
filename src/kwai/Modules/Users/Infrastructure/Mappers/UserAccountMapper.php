@@ -8,14 +8,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\UniqueId;
-use Kwai\Core\Domain\EmailAddress;
-use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\UserAccount;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 
 final class UserAccountMapper
@@ -45,6 +41,7 @@ final class UserAccountMapper
      * Returns a data array from a UserAccount entity.
      * @param  UserAccount $account
      * @return array
+     * @noinspection PhpUndefinedMethodInspection
      */
     public static function toPersistence(UserAccount $account): array
     {
