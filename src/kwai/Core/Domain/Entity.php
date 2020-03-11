@@ -14,6 +14,7 @@ namespace Kwai\Core\Domain;
  * object.
  *
  * @phpstan-template T of DomainEntity
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class Entity
 {
