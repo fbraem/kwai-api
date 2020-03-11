@@ -31,9 +31,8 @@ class LoginAction
 {
     /**
      * The DI container
-     * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * Constructor
@@ -50,6 +49,7 @@ class LoginAction
      * @param  Response $response The current HTTP response
      * @param  string[] $args     Route’s named placeholders
      * @return Response
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(
         Request $request,
@@ -69,15 +69,17 @@ class LoginAction
                 new RefreshTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
         } catch (NotFoundException $nfe) {
-            return new NotAuthorizedResponse('Unknown user');
+            return (new NotAuthorizedResponse('Unknown user'))($response);
         } catch (AuthenticationException $ae) {
-            return new NotAuthorizedResponse('Authentication failed');
+            return (new NotAuthorizedResponse('Authentication failed'))($response);
         }
 
         $secret = $this->container->get('settings')['security']['secret'];
         $algorithm = $this->container->get('settings')['security']['algorithm'];
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = $refreshToken->getAccessToken();
+        /** @noinspection PhpUndefinedMethodInspection */
         $data = [
             'access_token' => JWT::encode(
                 [
