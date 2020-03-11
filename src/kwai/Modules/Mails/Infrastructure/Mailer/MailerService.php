@@ -9,6 +9,7 @@ namespace Kwai\Modules\Mails\Infrastructure\Mailer;
 
 /**
  * Interface for a mailer service
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 interface MailerService
 {
