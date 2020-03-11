@@ -10,50 +10,46 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database;
-
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
+use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
-
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
-
-use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\alias;
-use function Latitude\QueryBuilder\on;
 use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\field;
+use function Latitude\QueryBuilder\on;
 
 /**
-* AccessToken Repository for read/write AccessToken entity from/to a database.
-*/
+ * AccessToken Repository for read/write AccessToken entity from/to a database.
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 final class AccessTokenDatabaseRepository implements AccessTokenRepository
 {
     /**
-     * @var Database\Connection
+     * The database connection
      */
-    private $db;
+    private Connection $db;
 
     /**
      * AccessToken table
-     * @var AccessTokensTable
      */
-    private $table;
+    private AccessTokensTable $table;
 
     /**
      * User table
-     * @var UsersTable
      */
-    private $userTable;
+    private UsersTable $userTable;
 
     /**
      * Constructor
      *
-     * @param Database\Connection $db A database object
+     * @param Connection $db A database object
      */
-    public function __construct(Database\Connection $db)
+    public function __construct(Connection $db)
     {
         $this->db = $db;
         $this->table = new AccessTokensTable();
@@ -63,8 +59,10 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     /**
      * Get an accesstoken by its token identifier.
      *
-     * @param  TokenIdentifier $identifier A token identifier
+     * @param TokenIdentifier $identifier A token identifier
      * @return Entity<AccessToken>         An accesstoken
+     * @throws DatabaseException
+     * @throws NotFoundException
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
@@ -84,8 +82,10 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
     /**
      * Get all accesstokens of a user.
-     * @param  Entity<User> $user
+     *
+     * @param Entity<User> $user
      * @return Entity<AccessToken>[]  An array with accesstokens
+     * @throws DatabaseException
      */
     public function getTokensForUser(Entity $user): array
     {
@@ -107,8 +107,10 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
     /**
      * Inserts the accesstoken in the table.
-     * @param  AccessToken $token
+     *
+     * @param AccessToken $token
      * @return Entity<AccessToken>
+     * @throws DatabaseException
      */
     public function create(AccessToken $token): Entity
     {
@@ -124,7 +126,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             )
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
 
         return new Entity(
             $this->db->lastInsertId(),
@@ -134,6 +136,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
     /**
      * @inheritdoc
+     * @throws DatabaseException
      */
     public function update(Entity $token): void
     {
@@ -143,7 +146,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;
-        $stmt = $this->db->execute($query);
+        $this->db->execute($query);
     }
 
     /**
