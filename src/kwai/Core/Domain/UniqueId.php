@@ -31,7 +31,6 @@ class UniqueId
      *
      * @param string|null $id
      * @throws InvalidArgumentException Thrown when $id is invalid.
-     * @throws Exception
      */
     public function __construct(string $id = null)
     {
@@ -45,7 +44,11 @@ class UniqueId
                 throw new InvalidArgumentException('UUID is not valid');
             }
         } else {
-            $this->id = Uuid::uuid4();
+            try {
+                $this->id = Uuid::uuid4();
+            } catch (Exception $e) {
+                // Ignore
+            }
         }
     }
 
