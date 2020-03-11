@@ -10,43 +10,41 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-
-use Kwai\Core\Infrastructure\Database;
-
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Rule;
-use Kwai\Modules\Users\Repositories\AbilityRepository;
+use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
-use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
-
-use function Latitude\QueryBuilder\field;
+use Kwai\Modules\Users\Repositories\AbilityRepository;
 use function Latitude\QueryBuilder\alias;
+use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
-* Ability repository for read/write Ability entity from/to a database.
-*/
+ * Ability repository for read/write Ability entity from/to a database.
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 final class AbilityDatabaseRepository implements AbilityRepository
 {
     /**
-     * @var Database\Connection
+     * The database connection
      */
-    private $db;
+    private Connection $db;
 
     /**
      * Main table for this repository.
-     * @var AbilitiesTable
      */
-    private $table;
+    private AbilitiesTable $table;
 
     /**
      * Constructor
-     * @param Database\Connection $db
+     * @param Connection $db
      */
-    public function __construct(Database\Connection $db)
+    public function __construct(Connection $db)
     {
         $this->db = $db;
         $this->table = new AbilitiesTable();
@@ -54,8 +52,10 @@ final class AbilityDatabaseRepository implements AbilityRepository
 
     /**
      * Get the ability with the given id.
-     * @param  int    $id
+     * @param int $id
      * @return Entity<Ability>
+     * @throws NotFoundException
+     * @throws DatabaseException
      */
     public function getById(int $id): Entity
     {
@@ -81,8 +81,9 @@ final class AbilityDatabaseRepository implements AbilityRepository
 
     /**
      * Get all abilities for the given user
-     * @param  Entity<User> $user
+     * @param Entity<User> $user
      * @return Entity<Ability>[]
+     * @throws DatabaseException
      */
     public function getByUser(Entity $user): array
     {
@@ -105,7 +106,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
             );
         }, $rows);
 
-        $ability_ids = array_map(function ($ability) {
+        $ability_ids = array_map(function (Entity $ability) {
             return $ability->id();
         }, $abilities);
 
@@ -122,8 +123,9 @@ final class AbilityDatabaseRepository implements AbilityRepository
     /**
      * Get the the rules for all abilities. The returned array uses the id
      * of the ability as key. The value contains all rules of the ability.
-     * @param  int[] $abilities Array with ids of abilities
+     * @param int[] $abilities Array with ids of abilities
      * @return Entity<Rule>[]
+     * @throws DatabaseException
      */
     private function getRulesForAbilities(array $abilities): array
     {
