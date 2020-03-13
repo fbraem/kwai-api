@@ -18,14 +18,14 @@ class MailerException extends Exception
     /**
      * Original exception
      */
-    private Exception $exception;
+    private ?Exception $exception;
 
     /**
      * Constructor
      * @param string $message
      * @param Exception $exception Original exception
      */
-    public function __construct(string $message, Exception $exception = null)
+    public function __construct(string $message, ?Exception $exception = null)
     {
         parent::__construct($message);
         $this->exception = $exception;

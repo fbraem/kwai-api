@@ -7,8 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Mailer;
 
-use Genkgo\Mail\MessageInterface;
-use Genkgo\Mail\PlainTextMessage;
+use Swift_Message;
 
 /**
  * An email message
@@ -49,8 +48,8 @@ class SimpleMessage implements Message
     /**
     * @inheritdoc
      */
-    public function createMessage(): MessageInterface
+    public function createMessage(): Swift_Message
     {
-        return new PlainTextMessage($this->body);
+        return (new Swift_Message($this->getSubject()))->setBody($this->body);
     }
 }

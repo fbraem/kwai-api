@@ -6,9 +6,11 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Infstrastucture\Mailer;
 
+use Kwai\Core\Domain\EmailAddress;
+use Kwai\Modules\Mails\Domain\ValueObjects\Address;
+use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
 use PHPUnit\Framework\TestCase;
 
-use Kwai\Modules\Mails\Infrastructure\Mailer\SmtpMailerService;
 use Kwai\Modules\Mails\Infrastructure\Mailer\SimpleMessage;
 use Kwai\Modules\Mails\Infrastructure\Mailer\MailerException;
 
@@ -19,51 +21,29 @@ final class SmtpMailerServiceTest extends TestCase
 {
     public function testSimpleMail()
     {
-        $mailer = new SmtpMailerService(
-            $_ENV['smtp'],
-            $_ENV['from']
+        $mailer = (new MailerServiceFactory())->create(
+            $_ENV['smtp']
         );
 
-        try {
-            $mailer->send(
-                new SimpleMessage('Hello', 'World'),
-                ['franky.braem@gmail.com' => 'Franky Braem']
-            );
-            $mailSend = true;
-        } catch (MailerException $me) {
-            $mailSend = false;
-        }
-        $this->assertTrue($mailSend);
-    }
-
-    public function testSimpleInvalidMailHost()
-    {
-        $this->expectException(MailerException::class);
-
-        $mailer = new SmtpMailerService(
-            'smtp://wrong:user@smtp.mailtrap.io',
-            $_ENV['from']
-        );
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $mailer->send(
+        $result = $mailer->send(
             new SimpleMessage('Hello', 'World'),
+            new Address(new EmailAddress($_ENV['from'])),
             ['franky.braem@gmail.com' => 'Franky Braem']
         );
+        $this->assertGreaterThan(0, $result, 'No mails send');
     }
 
     public function testSimpleNoRecipients()
     {
         $this->expectException(MailerException::class);
 
-        $mailer = new SmtpMailerService(
-            $_ENV['smtp'],
-            $_ENV['from']
+        $mailer = (new MailerServiceFactory())->create(
+            $_ENV['smtp']
         );
 
-        /** @noinspection PhpUnhandledExceptionInspection */
         $mailer->send(
             new SimpleMessage('Hello', 'World'),
+            new Address(new EmailAddress($_ENV['from'])),
             []
         );
     }
