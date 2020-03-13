@@ -5,10 +5,9 @@
  */
 namespace Kwai\Modules\Users\Presentation\Transformers;
 
-use League\Fractal;
-
 use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\Rule;
+use League\Fractal;
 
 /**
  * A transformer for a Rule entity
@@ -17,9 +16,8 @@ class RuleTransformer extends Fractal\TransformerAbstract
 {
     /**
      * The JSON-API type
-     * @var string
      */
-    private static $type = 'rules';
+    private static string $type = 'rules';
 
     /**
      * Create a singular resource of a Rule entity
@@ -45,6 +43,7 @@ class RuleTransformer extends Fractal\TransformerAbstract
      * Transforms a Rule entity to an array.
      * @param Entity<Rule> $rule
      * @return array
+     * @noinspection PhpUndefinedMethodInspection
      */
     public function transform(Entity $rule): array
     {

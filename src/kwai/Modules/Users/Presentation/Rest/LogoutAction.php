@@ -30,13 +30,12 @@ class LogoutAction
 {
     /**
      * The DI container
-     * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
-     * The constructor
-     * @param ContainerInterface $container The DI container
+     * LogoutAction constructor.
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -49,6 +48,7 @@ class LogoutAction
      * @param  Response $response The current HTTP response
      * @param  array    $args     Route’s named placeholders
      * @return Response
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(
         Request $request,
@@ -76,7 +76,7 @@ class LogoutAction
                 new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
         } catch (NotFoundException $nfe) {
-            return new NotAuthorizedResponse('Unknown refreshtoken');
+            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         }
 
         return (new OkResponse())($response);

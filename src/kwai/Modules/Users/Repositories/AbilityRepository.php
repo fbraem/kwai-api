@@ -21,6 +21,7 @@ interface AbilityRepository
      *
      * @param  int $id Id of an ability
      * @return Entity<Ability>  An ability
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function getById(int $id) : Entity;
 

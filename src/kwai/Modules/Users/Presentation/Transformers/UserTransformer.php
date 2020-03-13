@@ -17,9 +17,8 @@ class UserTransformer extends Fractal\TransformerAbstract
 {
     /**
      * The type of User
-     * @var string
      */
-    private static $type = 'users';
+    private static string $type = 'users';
 
     /**
      * Default includes
@@ -56,6 +55,7 @@ class UserTransformer extends Fractal\TransformerAbstract
      */
     public function includeAbilities(Entity $user): Fractal\Resource\Collection
     {
+        /* @noinspection PhpUndefinedMethodInspection */
         return AbilityTransformer::createForCollection($user->getAbilities());
     }
 
@@ -63,6 +63,7 @@ class UserTransformer extends Fractal\TransformerAbstract
      * Transforms a User entity to an array.
      * @param Entity<User> $user
      * @return array
+     * @noinspection PhpUndefinedMethodInspection
      */
     public function transform(Entity $user): array
     {

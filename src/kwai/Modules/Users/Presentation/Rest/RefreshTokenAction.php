@@ -7,21 +7,17 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Psr\Container\ContainerInterface;
-
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
-
+use Core\Responses\NotAuthorizedResponse;
+use Firebase\JWT\JWT;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
-use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\UseCases\CreateRefreshToken;
 use Kwai\Modules\Users\UseCases\CreateRefreshTokenCommand;
-
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Core\Responses\NotAuthorizedResponse;
-
-use Firebase\JWT\JWT;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Return a new refresh- and accesstoken (when the refreshtoken is valid).
@@ -30,13 +26,12 @@ class RefreshTokenAction
 {
     /**
      * The DI container
-     * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
-     * The constructor
-     * @param ContainerInterface $container The DI container
+     * RefreshTokenAction constructor.
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -49,6 +44,7 @@ class RefreshTokenAction
      * @param  Response $response The current HTTP response
      * @param  array    $args     Route’s named placeholders
      * @return Response
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(
         Request $request,
@@ -75,12 +71,14 @@ class RefreshTokenAction
                 new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
             ))($command);
         } catch (NotFoundException $nfe) {
-            return new NotAuthorizedResponse('Unknown refreshtoken');
+            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         } catch (AuthenticationException $ae) {
-            return new NotAuthorizedResponse('Authentication failed');
+            return (new NotAuthorizedResponse('Authentication failed'))($response);
         }
 
+        /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = $refreshToken->getAccessToken();
+        /** @noinspection PhpUndefinedMethodInspection */
         $data = [
             'access_token' => JWT::encode(
                 [

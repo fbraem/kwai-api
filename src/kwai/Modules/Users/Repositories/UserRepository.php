@@ -22,6 +22,7 @@ interface UserRepository
      * Get the user with the given id
      * @param  int    $id
      * @return Entity<User>
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function getById(int $id) : Entity;
 

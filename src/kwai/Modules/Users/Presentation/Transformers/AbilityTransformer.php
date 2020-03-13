@@ -5,10 +5,9 @@
  */
 namespace Kwai\Modules\Users\Presentation\Transformers;
 
-use League\Fractal;
-
 use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\Ability;
+use League\Fractal;
 
 /**
  * A transformer for the Ability entity.
@@ -17,9 +16,8 @@ class AbilityTransformer extends Fractal\TransformerAbstract
 {
     /**
      * The JSON-API type
-     * @var string
      */
-    private static $type = 'abilities';
+    private static string $type = 'abilities';
 
     /**
      * The default includes
@@ -60,6 +58,7 @@ class AbilityTransformer extends Fractal\TransformerAbstract
      */
     public function includeRules(Entity $ability): Fractal\Resource\Collection
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         return RuleTransformer::createForCollection($ability->getRules());
     }
 
@@ -67,6 +66,7 @@ class AbilityTransformer extends Fractal\TransformerAbstract
      * Transforms an Ability entity to an array.
      * @param Entity<Ability> $ability
      * @return array
+     * @noinspection PhpUndefinedMethodInspection
      */
     public function transform(Entity $ability): array
     {

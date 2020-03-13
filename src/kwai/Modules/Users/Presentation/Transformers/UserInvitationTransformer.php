@@ -55,6 +55,7 @@ class UserInvitationTransformer extends Fractal\TransformerAbstract
      * Transforms a User entity to an array.
      * @param Entity<UserInvitation> $invitation
      * @return array
+     * @noinspection PhpUndefinedMethodInspection
      */
     public function transform(Entity $invitation): array
     {
