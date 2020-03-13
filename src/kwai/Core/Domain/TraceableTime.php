@@ -19,7 +19,7 @@ final class TraceableTime
     /**
      * Time of last update
      */
-    private Timestamp $updated_at;
+    private ?Timestamp $updated_at;
 
     /**
      * Constructor
