@@ -31,15 +31,14 @@ class UserAccount implements DomainEntity
 
     /**
      * The timestamp of the last login
-     * @var Timestamp
      */
-    private $lastLogin;
+    private ?Timestamp $lastLogin;
 
     /**
      * TODO: add to table
      * The last unsuccessful login
      */
-    private Timestamp $lastUnsuccessfulLogin;
+    private ?Timestamp $lastUnsuccessfulLogin;
 
     /**
      * The password of the user
