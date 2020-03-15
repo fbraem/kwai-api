@@ -1,9 +1,10 @@
 <?php
 require '../src/vendor/autoload.php';
 
+use Core\Clubman;
 use Slim\Routing\RouteCollectorProxy;
 
-$app = \Core\Clubman::getApplication();
+$app = Clubman::getApplication();
 
 $app->group('/auth', function (RouteCollectorProxy $group) {
     /*
@@ -14,7 +15,7 @@ $app->group('/auth', function (RouteCollectorProxy $group) {
     $group->post('/login', Kwai\Modules\Users\Presentation\Rest\LoginAction::class)
         ->setName('auth.login')
     ;
-    $group->post('/access_token', Kwai\Modules\Users\Presentation\Rest\AccessTokenAction::class)
+    $group->post('/access_token', Kwai\Modules\Users\Presentation\Rest\RefreshTokenAction::class)
         ->setName('auth.access_token')
     ;
     $group->post('/logout', Kwai\Modules\Users\Presentation\Rest\LogoutAction::class)
