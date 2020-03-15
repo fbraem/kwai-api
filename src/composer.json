@@ -23,13 +23,14 @@
         "cakephp/orm": "^3.8",
         "cakephp/chronos": "1.2.8",
         "ramsey/uuid": "^3.9",
-        "spatie/data-transfer-object": "^1.12",
         "tuupola/slim-jwt-auth": "^3.4",
         "slim/psr7": "^0.6.0",
         "league/container": "^3.3",
         "latitude/latitude": "^4.0",
-        "genkgo/mail": "^2.5",
         "myclabs/php-enum": "^1.7",
+        "swiftmailer/swiftmailer": "v6.2.3",
+        "league/uri": "6.2.0",
+        "nette/schema": "v1.0.2",
         "ext-pdo": "*",
         "ext-mbstring": "*",
         "ext-json": "*"
@@ -38,10 +39,7 @@
         "phpunit/phpunit": "^8",
         "phpstan/phpstan": "^0.12.8",
         "mockery/mockery": "^1.3",
-        "phpmd/phpmd": "2.8.2",
-        "swiftmailer/swiftmailer": "v6.2.3",
-        "league/uri": "6.2.0",
-        "nette/schema": "v1.0.2"
+        "phpmd/phpmd": "2.8.2"
     },
     "autoload" : {
         "psr-4" : {
