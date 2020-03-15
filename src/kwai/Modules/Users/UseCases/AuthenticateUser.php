@@ -7,8 +7,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
+use DateTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Timestamp;
 
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -18,8 +20,6 @@ use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
-
-use Firebase\JWT\JWT;
 
 /**
  * Usecase: Authenticate a user and create a refresh token.
@@ -56,7 +56,7 @@ final class AuthenticateUser
      * associated with the authenticated user.
      * @param  AuthenticateUserCommand $command
      * @return Entity<RefreshToken>              A RefreshToken entity
-     * @throws \Kwai\Core\Domain\Exceptions\NotFoundException
+     * @throws NotFoundException
      *    Thrown when user can't be found
      * @throws AuthenticationException
      *    Thrown when the password is invalid, or when the user is revoked.
@@ -64,9 +64,11 @@ final class AuthenticateUser
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
         $account = $this->userRepo->getAccount(new EmailAddress($command->email));
+        /** @noinspection PhpUndefinedMethodInspection */
         if (!$account->login($command->password)) {
             throw new AuthenticationException('Invalid password');
         }
+        /** @noinspection PhpUndefinedMethodInspection */
         if ($account->isRevoked()) {
             throw new AuthenticationException('User is revoked');
         }
@@ -77,22 +79,20 @@ final class AuthenticateUser
             new AccessToken((object) [
                 'identifier' => new TokenIdentifier(),
                 'expiration' => Timestamp::createFromDateTime(
-                    new \DateTime('now +2 hours')
+                    new DateTime('now +2 hours')
                 ),
                 'account' => $account
             ])
         );
 
-        $refreshToken = $this->refreshTokenRepo->create(
+        return $this->refreshTokenRepo->create(
             new RefreshToken((object)[
                 'identifier' => new TokenIdentifier(),
                 'expiration' => Timestamp::createFromDateTime(
-                    new \DateTime('now +1 month')
+                    new DateTime('now +1 month')
                 ),
                 'accessToken' => $accessToken
             ])
         );
-
-        return $refreshToken;
     }
 }
