@@ -2,31 +2,21 @@
 
 namespace Core;
 
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
-
-use League\Container\Container;
-
-use Domain\Auth\AccessTokenRepository;
-use Domain\Auth\ClientRepository;
-use Domain\Auth\RefreshTokenRepository;
-use Domain\Auth\ScopeRepository;
-use Domain\Auth\UserRepository;
-
-use Core\Middlewares\ParametersMiddleware;
+use Core\Middlewares\JsonBodyParserMiddleware;
 use Core\Middlewares\LogActionMiddleware;
-use Core\Middlewares\AuthenticationMiddleware;
+use Core\Middlewares\ParametersMiddleware;
 use Core\Middlewares\TransactionMiddleware;
-
-use Tuupola\Middleware\JwtAuthentication;
-
-use Slim\Factory\AppFactory;
-
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database;
-use Kwai\Modules\Mails\Infrastructure\SmtpMailerService;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
+use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
+use Kwai\Modules\Mails\Infrastructure\Mailer\SmtpMailerService;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use League\Container\Container;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+use Slim\Factory\AppFactory;
+use Tuupola\Middleware\JwtAuthentication;
 
 //TODO: Extract all code to services, etc, ...
 class Clubman
@@ -79,9 +69,8 @@ class Clubman
 
             $container->add('mailer', function ($c) {
                 $config = $c->get('settings');
-                return new SmtpMailerService(
-                    $config['mail']['url'],
-                    $config['mail']['from']
+                return (new MailerServiceFactory())->create(
+                    $config['mail']['url']
                 );
             })->addArgument($container);
 
@@ -90,6 +79,7 @@ class Clubman
             self::$application->add(new ParametersMiddleware());
             self::$application->add(new TransactionMiddleware($container));
             self::$application->add(new LogActionMiddleware($container));
+            self::$application->add(new JsonBodyParserMiddleware());
 
             $settings = $container->get('settings');
             self::$application->add(new JwtAuthentication([
