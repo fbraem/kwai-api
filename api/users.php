@@ -9,7 +9,6 @@ use REST\Users\Actions\AbilityReadAction;
 use REST\Users\Actions\AbilityUpdateAction;
 use REST\Users\Actions\BrowseAction;
 use REST\Users\Actions\BrowseInvitationAction;
-use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
 use REST\Users\Actions\CreateWithTokenAction;
 use REST\Users\Actions\ReadAction;
 use REST\Users\Actions\ReadInvitationByTokenAction;
@@ -67,7 +66,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     ;
 
     // Invitations
-    $group->post('/invitations', CreateUserInvitationAction::class)
+    $group->post('/invitations', Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction::class)
         ->setName('users.invitations.create')
         ->setArgument('auth', true)
     ;
