@@ -25,15 +25,9 @@ use Firebase\JWT\JWT;
  */
 final class CreateRefreshToken
 {
-    /**
-     * @var AccessTokenRepository
-     */
-    private $accessTokenRepo;
+    private AccessTokenRepository $accessTokenRepo;
 
-    /**
-     * @var RefreshTokenRepository
-     */
-    private $refreshTokenRepo;
+    private RefreshTokenRepository $refreshTokenRepo;
 
     /**
      * Constructor.

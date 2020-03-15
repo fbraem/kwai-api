@@ -26,20 +26,11 @@ use Firebase\JWT\JWT;
  */
 final class AuthenticateUser
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepo;
+    private UserRepository $userRepo;
 
-    /**
-     * @var AccessTokenRepository
-     */
-    private $accessTokenRepo;
+    private AccessTokenRepository $accessTokenRepo;
 
-    /**
-     * @var RefreshTokenRepository
-     */
-    private $refreshTokenRepo;
+    private RefreshTokenRepository $refreshTokenRepo;
 
     /**
      * Constructor.

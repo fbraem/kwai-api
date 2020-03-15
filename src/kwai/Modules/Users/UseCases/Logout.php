@@ -24,15 +24,9 @@ use Firebase\JWT\JWT;
  */
 final class Logout
 {
-    /**
-     * @var AccessTokenRepository
-     */
-    private $accessTokenRepo;
+    private AccessTokenRepository $accessTokenRepo;
 
-    /**
-     * @var RefreshTokenRepository
-     */
-    private $refreshTokenRepo;
+    private RefreshTokenRepository $refreshTokenRepo;
 
     /**
      * Constructor.

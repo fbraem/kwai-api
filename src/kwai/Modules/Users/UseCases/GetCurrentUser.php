@@ -21,15 +21,9 @@ use Kwai\Modules\Users\Domain\User;
  */
 final class GetCurrentUser
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepo;
+    private UserRepository $userRepo;
 
-    /**
-     * @var AbilityRepository
-     */
-    private $abilityRepo;
+    private AbilityRepository $abilityRepo;
 
     /**
      * Constructor.
