@@ -14,10 +14,12 @@ use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseReposit
 use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
 use Kwai\Modules\Users\UseCases\InviteUser;
 use Kwai\Modules\Users\UseCases\InviteUserCommand;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Spatie\DataTransferObject\DataTransferObjectError;
 
 class CreateUserInvitationAction
 {
@@ -35,6 +37,33 @@ class CreateUserInvitationAction
         $this->container = $container;
     }
 
+    /**
+     * Creates the command input from the JSONAPI payload.
+     * @param array $data
+     * @return InviteUserCommand
+     * @throws ValidationException
+     */
+    private function createCommand(array $data): InviteUserCommand
+    {
+        $schema = Expect::structure([
+            'data' => Expect::structure([
+                'type' => Expect::string(),
+                'attributes' => Expect::structure([
+                    'email' => Expect::string()->required(),
+                    'name' => Expect::string()->required(),
+                    'remark' => Expect::string()
+                ])
+            ])
+        ]);
+        $processor = new Processor();
+        $normalized = $processor->process($schema, $data);
+
+        $command = new InviteUserCommand();
+        $command->email = $normalized->data->attributes->email;
+        $command->name = $normalized->data->attributes->name;
+        $command->remark = $normalized->data->attributes->remark ?? null;
+        return $command;
+    }
 
     /**
      * @param Request $request
@@ -46,16 +75,21 @@ class CreateUserInvitationAction
     public function __invoke(Request $request, Response $response, $args)
     {
         $user = $request->getAttribute('kwai.user');
-        $data = $request->getParsedBody();
-
-        if (! isset($data['data']['attributes'])) {
-            return (new SimpleResponse(422, 'Missing data'))($response);
+        try {
+            $command = $this->createCommand($request->getParsedBody());
+        } catch (ValidationException $ve) {
+            return (new SimpleResponse(422, $ve->getMessage()))($response);
         }
 
-        try {
-            $command = new InviteUserCommand($data['data']['attributes']);
-        } catch (DataTransferObjectError $e) {
-            return (new SimpleResponse(422, 'Missing data'))($response);
+        // Add some additional properties to the command.
+        $command->expiration = 14;
+        $from = $this->container->get('settings')['mail']['from'];
+        if (is_array($from)) {
+            $command->sender_mail = array_key_first($from);
+            $command->sender_name = $from[$command->sender_mail];
+        } else {
+            $command->sender_mail = $from;
+            $command->sender_name = '';
         }
 
         //TODO: for now, we pass the user as argument to the use case.
@@ -77,8 +111,8 @@ class CreateUserInvitationAction
                 ),
                 new MailTemplate(
                     'User Invitation',
-                    $this->container->get('template')->createTemplate(''),
-                    $this->container->get('template')->createTemplate(''),
+                    $this->container->get('template')->createTemplate('User/invitation_html'),
+                    $this->container->get('template')->createTemplate('User/invitation_txt'),
                 ),
                 $user
             ))($command);

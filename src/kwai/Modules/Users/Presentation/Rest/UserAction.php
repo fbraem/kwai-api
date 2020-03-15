@@ -44,9 +44,8 @@ class UserAction
     public function __invoke(Request $request, Response $response, $args)
     {
         $user = $request->getAttribute('kwai.user');
-        $command = new GetCurrentUserCommand([
-            'uuid' => strval($user->getUuid())
-        ]);
+        $command = new GetCurrentUserCommand();
+        $command->uuid = strval($user->getUuid());
 
         try {
             $user = (new GetCurrentUser(

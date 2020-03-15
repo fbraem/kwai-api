@@ -12,11 +12,10 @@ use Spatie\DataTransferObject\DataTransferObject;
 /**
  * GetCurrentUserCommand is a DataTransferObject for the GetCurrentUser usecase.
  */
-final class GetCurrentUserCommand extends DataTransferObject
+final class GetCurrentUserCommand
 {
     /**
      * Unique ID of the user
-     * @var string
      */
-    public $uuid;
+    public string $uuid;
 }

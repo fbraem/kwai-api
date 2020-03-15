@@ -7,12 +7,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Spatie\DataTransferObject\FlexibleDataTransferObject;
-
 /**
- * InviteUserCommand is a DataTransferObject for the InviteUser usecase.
+ * InviteUserCommand.
  */
-final class InviteUserCommand extends FlexibleDataTransferObject
+final class InviteUserCommand
 {
     /**
      * Email of the sender

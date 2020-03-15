@@ -66,9 +66,8 @@ class LogoutAction
             [ $algorithm ]
         );
 
-        $command = new LogoutCommand([
-            'refresh_token_identifier' => $decodedRefreshToken->jti
-        ]);
+        $command = new LogoutCommand();
+        $command->identifier = $decodedRefreshToken->jti;
 
         try {
             (new Logout(

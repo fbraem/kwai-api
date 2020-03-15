@@ -7,22 +7,22 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Psr\Container\ContainerInterface;
-
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
-
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Core\Responses\NotAuthorizedResponse;
+use Core\Responses\SimpleResponse;
+use Firebase\JWT\JWT;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
-use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
-
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Core\Responses\NotAuthorizedResponse;
-
-use Firebase\JWT\JWT;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Login a user with email/pwd and return access- and refreshtoken on succes.
@@ -43,6 +43,22 @@ class LoginAction
         $this->container = $container;
     }
 
+    private function createCommand(array $data): AuthenticateUserCommand
+    {
+        $schema = Expect::structure([
+            'email' => Expect::string()->required(),
+            'password' => Expect::string()->required()
+        ]);
+        $processor = new Processor();
+        $normalized = $processor->process($schema, $data);
+
+        $command = new AuthenticateUserCommand();
+        $command->email = $normalized->email;
+        $command->password = $normalized->password;
+
+        return $command;
+    }
+
     /**
      * Login the user and return an access- and refreshtoken.
      * @param  Request  $request  The current HTTP request
@@ -56,11 +72,11 @@ class LoginAction
         Response $response,
         array $args
     ): Response {
-        $data = $request->getParsedBody();
-        $command = new AuthenticateUserCommand([
-            'email' => $data['username'],
-            'password' => $data['password']
-        ]);
+        try {
+            $command = $this->createCommand($request->getParsedBody());
+        } catch (ValidationException $ve) {
+            return (new SimpleResponse(422, $ve->getMessage()))($response);
+        }
 
         try {
             $refreshToken = (new AuthenticateUser(

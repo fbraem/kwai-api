@@ -58,7 +58,7 @@ final class Logout
         $refreshToken = $this
             ->refreshTokenRepo
             ->getByTokenIdentifier(
-                new TokenIdentifier($command->refresh_token_identifier)
+                new TokenIdentifier($command->identifier)
             )
         ;
 

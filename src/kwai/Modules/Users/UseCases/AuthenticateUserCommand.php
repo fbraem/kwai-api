@@ -7,13 +7,11 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Spatie\DataTransferObject\DataTransferObject;
-
 /**
  * AuthenticateUserCommand is a DataTransferObject for the AuthenicateUser
  * usecase.
  */
-final class AuthenticateUserCommand extends DataTransferObject
+final class AuthenticateUserCommand
 {
     /**
      * Email

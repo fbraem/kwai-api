@@ -61,9 +61,8 @@ class RefreshTokenAction
             [ $algorithm ]
         );
 
-        $command = new CreateRefreshTokenCommand([
-            'refresh_token_identifier' => $decodedRefreshToken->jti
-        ]);
+        $command = new CreateRefreshTokenCommand();
+        $command->identifier = $decodedRefreshToken->jti;
 
         try {
             $refreshToken = (new CreateRefreshToken(
