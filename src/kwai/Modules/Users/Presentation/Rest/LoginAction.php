@@ -46,14 +46,14 @@ class LoginAction
     private function createCommand(array $data): AuthenticateUserCommand
     {
         $schema = Expect::structure([
-            'email' => Expect::string()->required(),
-            'password' => Expect::string()->required()
-        ]);
+            'username' => Expect::string()->required(),
+            'password' => Expect::string()->required(),
+        ])->otherItems(Expect::string());
         $processor = new Processor();
         $normalized = $processor->process($schema, $data);
 
         $command = new AuthenticateUserCommand();
-        $command->email = $normalized->email;
+        $command->email = $normalized->username;
         $command->password = $normalized->password;
 
         return $command;
