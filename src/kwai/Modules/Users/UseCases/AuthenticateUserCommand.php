@@ -15,13 +15,11 @@ final class AuthenticateUserCommand
 {
     /**
      * Email
-     * @var string
      */
-    public $email;
+    public string $email;
 
     /**
      * Password
-     * @var string
      */
-    public $password;
+    public string $password;
 }
