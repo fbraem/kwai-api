@@ -166,7 +166,7 @@ final class UserDatabaseRepository implements UserRepository
         $query = $this->db->createQueryFactory()
             ->select(alias(func('COUNT', $this->table->from() . '.id'), 'c'))
             ->from($this->table->from())
-            ->where(field('email')->eq($email))
+            ->where(field('email')->eq(strval($email)))
             ->compile()
         ;
         $count = $this->db->execute($query)->fetch();
