@@ -11,7 +11,7 @@
         "league/fractal": "0.18.*",
         "nesbot/carbon": "2.25.3",
         "mtdowling/jmespath.php": "^2.4",
-        "robmorgan/phinx": "0.11.1",
+        "robmorgan/phinx": "^0.11",
         "league/flysystem": "1.0.57",
         "league/commonmark": "1.1.0",
         "league/csv": "9.4.1",
