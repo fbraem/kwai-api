@@ -2,7 +2,10 @@
 /**
  * Phinx migration configuration
  */
-$application = \Core\Clubman::getApplication();
+
+use Core\Clubman;
+
+$application = Clubman::getApplication();
 $config = $application->getContainer()->get('settings');
 
 $environments = $config['database'];
