@@ -28,10 +28,9 @@ final class LogoutTest extends DatabaseTestCase
 {
     public function testAuthenticate(): void
     {
-        $command = new AuthenticateUserCommand([
-            'email' => $_ENV['user'],
-            'password' => $_ENV['password']
-        ]);
+        $command = new AuthenticateUserCommand();
+        $command->email = $_ENV['user'];
+        $command->password = $_ENV['password'];
 
         $refreshTokenRepo = new RefreshTokenDatabaseRepository(self::$db);
         $accessTokenRepo = new AccessTokenDatabaseRepository(self::$db);
@@ -51,10 +50,9 @@ final class LogoutTest extends DatabaseTestCase
                 $refreshToken->domain()
             );
 
+            $command = new LogoutCommand();
             /** @noinspection PhpUndefinedMethodInspection */
-            $command = new LogoutCommand([
-                'refresh_token_identifier' => strval($refreshToken->getIdentifier())
-            ]);
+            $command->identifier = strval($refreshToken->getIdentifier());
 
             (new Logout(
                 $refreshTokenRepo,

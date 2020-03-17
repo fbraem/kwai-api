@@ -45,10 +45,9 @@ final class GetCurrentUserTest extends DatabaseTestCase
 
     public function testGetCurrentUser(): void
     {
+        $command = new GetCurrentUserCommand();
         /** @noinspection PhpUndefinedMethodInspection */
-        $command = new GetCurrentUserCommand([
-            'uuid' => strval($this->user->getUuid())
-        ]);
+        $command->uuid = strval($this->user->getUuid());
 
         try {
             $user = (new GetCurrentUser(

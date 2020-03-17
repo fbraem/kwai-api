@@ -26,10 +26,9 @@ final class CreateRefreshTokenTest extends DatabaseTestCase
 {
     public function testAuthenticate(): void
     {
-        $command = new AuthenticateUserCommand([
-            'email' => $_ENV['user'],
-            'password' => $_ENV['password']
-        ]);
+        $command = new AuthenticateUserCommand();
+        $command->email = $_ENV['user'];
+        $command->password = $_ENV['password'];
 
         $refreshTokenRepo = new RefreshTokenDatabaseRepository(self::$db);
         $accessTokenRepo = new AccessTokenDatabaseRepository(self::$db);
@@ -41,10 +40,9 @@ final class CreateRefreshTokenTest extends DatabaseTestCase
                 $refreshTokenRepo
             ))($command);
 
+            $command = new CreateRefreshTokenCommand();
             /** @noinspection PhpUndefinedMethodInspection */
-            $command = new CreateRefreshTokenCommand([
-                'refresh_token_identifier' => strval($refreshToken->getIdentifier())
-            ]);
+            $command->identifier = strval($refreshToken->getIdentifier());
 
             $refreshToken = (new CreateRefreshToken(
                 $refreshTokenRepo,
@@ -59,7 +57,6 @@ final class CreateRefreshTokenTest extends DatabaseTestCase
                 RefreshToken::class,
                 $refreshToken->domain()
             );
-
         } catch (NotFoundException $e) {
             $this->assertTrue(false, $e->getMessage());
         } catch (AuthenticationException $e) {

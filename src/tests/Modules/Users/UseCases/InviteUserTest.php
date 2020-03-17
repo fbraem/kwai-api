@@ -10,6 +10,7 @@ use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\AlreadyExistException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
@@ -49,18 +50,19 @@ final class InviteUserTest extends DatabaseTestCase
             $this->user = $this->userRepo->getByEmail(new EmailAddress('test@kwai.com'));
         } catch (NotFoundException $e) {
             echo $e->getMessage(), PHP_EOL;
+        } catch (DatabaseException $e) {
+            echo $e->getMessage(), PHP_EOL;
         }
     }
 
     public function testInviteUser(): void
     {
-        $command = new InviteUserCommand([
-            'sender_mail' => 'test@kwai.com',
-            'sender_name' => 'Webmaster',
-            'email' => 'jigoro.kano@kwai.com',
-            'name' => 'Jigoro Kano',
-            'expiration' => 14,
-        ]);
+        $command = new InviteUserCommand();
+        $command->sender_mail = 'test@kwai.com';
+        $command->sender_name = 'Webmaster';
+        $command->email = 'jigoro.kano@kwai.com';
+        $command->name = 'Jigoro Kano';
+        $command->expiration = 14;
 
         $engine = new PlatesEngine(__DIR__);
         $template = new MailTemplate(

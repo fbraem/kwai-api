@@ -25,10 +25,9 @@ final class AuthenticateUserTest extends DatabaseTestCase
 {
     public function testAuthenticate(): void
     {
-        $command = new AuthenticateUserCommand([
-            'email' => $_ENV['user'],
-            'password' => $_ENV['password']
-        ]);
+        $command = new AuthenticateUserCommand();
+        $command->email = $_ENV['user'];
+        $command->password = $_ENV['password'];
 
         try {
             $refreshToken = (new AuthenticateUser(
@@ -55,10 +54,9 @@ final class AuthenticateUserTest extends DatabaseTestCase
     {
         $this->expectException(AuthenticationException::class);
 
-        $command = new AuthenticateUserCommand([
-            'email' => $_ENV['user'],
-            'password' => 'invalid'
-        ]);
+        $command = new AuthenticateUserCommand();
+        $command->email = $_ENV['user'];
+        $command->password = 'invalid';
 
         $refreshToken = (new AuthenticateUser(
             new UserDatabaseRepository(self::$db),
