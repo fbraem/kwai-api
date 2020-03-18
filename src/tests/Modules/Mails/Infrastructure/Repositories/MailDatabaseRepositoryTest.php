@@ -43,6 +43,8 @@ class MailDatabaseRepositoryTest extends DatabaseTestCase
             $user = $userRepo->getByEmail(new EmailAddress('test@kwai.com'));
         } catch (NotFoundException $e) {
             $this->assertTrue(false, strval($e));
+        } catch (DatabaseException $e) {
+            $this->assertTrue(false, strval($e));
         }
 
         try {
