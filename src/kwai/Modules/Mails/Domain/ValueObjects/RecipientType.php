@@ -18,7 +18,7 @@ use MyCLabs\Enum\Enum;
  */
 final class RecipientType extends Enum
 {
-    private const TO = 'to';
-    private const BCC = 'bcc';
-    private const CC = 'cc';
+    private const TO = 1;
+    private const BCC = 2;
+    private const CC = 3;
 }
