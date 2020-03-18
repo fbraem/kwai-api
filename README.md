@@ -8,6 +8,8 @@ The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwa
 
 > Although there is still a lot to do, kwai is already used in production for our club. Be aware that until there is no official release, a lot can change!
 
+![phpstorm](jetbrains.png){width="200px"}
+
 API
 ===
 Kwai-api is the REST api for Kwai. It's written in PHP and it tries to follow the [JSONAPI](http://jsonapi.org) standard.
