@@ -74,7 +74,7 @@ final class MailMapper
             'subject' => $mail->getContent()->getSubject(),
             'html_body' => $mail->getContent()->getHtml(),
             'text_body' => $mail->getContent()->getText(),
-            'sent_time' => strval($mail->getSentTime()),
+            'sent_time' => $mail->getSentTime() ? strval($mail->getSentTime()) : null,
             'remark' => $mail->getRemark(),
             'user_id' => $mail->getCreator()->id(),
             'created_at' => strval($mail->getTraceableTime()->getCreatedAt()),
