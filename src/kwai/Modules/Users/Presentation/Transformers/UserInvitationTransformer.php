@@ -64,7 +64,7 @@ class UserInvitationTransformer extends Fractal\TransformerAbstract
             'id' => $invitation->id(),
             'uuid' => strval($invitation->getUuid()),
             'email' => strval($invitation->getEmailAddress()),
-            'username' => $invitation->getUsername(),
+            'username' => $invitation->getName(),
             'remark' => $invitation->getRemark(),
             'created_at' => strval($traceableTime->getCreatedAt())
         ];
