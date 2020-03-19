@@ -116,14 +116,14 @@ final class Timestamp
     {
         $object = new self();
         $object->datetime = \Carbon\CarbonImmutable::create(
-             $datetimeObject->year ?? null,
-             $datetimeObject->month ?? 1,
-             $datetimeObject->day ?? 1,
-             $datetimeObject->hour ?? 0,
-             $datetimeObject->minute ?? 0,
-             $datetimeObject->sec ?? 0,
-             $datetimeObject->timezone ?? self::TIMEZONE
-         );
+            $datetimeObject->year ?? null,
+            $datetimeObject->month ?? 1,
+            $datetimeObject->day ?? 1,
+            $datetimeObject->hour ?? 0,
+            $datetimeObject->minute ?? 0,
+            $datetimeObject->sec ?? 0,
+            $datetimeObject->timezone ?? self::TIMEZONE
+        );
         return $object;
     }
 
