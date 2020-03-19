@@ -6,6 +6,7 @@ namespace Kwai\Modules\Users\Presentation\Rest;
 use Core\Responses\ResourceResponse;
 use Core\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\AlreadyExistException;
+use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
 use Kwai\Modules\Mails\Infrastructure\Repositories\RecipientDatabaseRepository;
@@ -21,22 +22,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class CreateUserInvitationAction
+class CreateUserInvitationAction extends Action
 {
-    /**
-     * The container
-     */
-    private ContainerInterface $container;
-
-    /**
-     * CreateUserInvitationAction constructor.
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Creates the command input from the JSONAPI payload.
      * @param array $data
@@ -83,7 +70,7 @@ class CreateUserInvitationAction
 
         // Add some additional properties to the command.
         $command->expiration = 14;
-        $from = $this->container->get('settings')['mail']['from'];
+        $from = $this->getContainerEntry('settings')['mail']['from'];
         if (is_array($from)) {
             $command->sender_mail = array_key_first($from);
             $command->sender_name = $from[$command->sender_mail];
@@ -96,23 +83,16 @@ class CreateUserInvitationAction
         //TODO: In the future, move this to an execution context?
         //TODO: Check if we need to create a InviteService?
         try {
+            $database = $this->getContainerEntry('pdo_db');
             $invitation = (new InviteUser(
-                new UserInvitationDatabaseRepository(
-                    $this->container->get('pdo_db')
-                ),
-                new UserDatabaseRepository(
-                    $this->container->get('pdo_db')
-                ),
-                new MailDatabaseRepository(
-                    $this->container->get('pdo_db')
-                ),
-                new RecipientDatabaseRepository(
-                    $this->container->get('pdo_db')
-                ),
+                new UserInvitationDatabaseRepository($database),
+                new UserDatabaseRepository($database),
+                new MailDatabaseRepository($database),
+                new RecipientDatabaseRepository($database),
                 new MailTemplate(
                     'User Invitation',
-                    $this->container->get('template')->createTemplate('User/invitation_html'),
-                    $this->container->get('template')->createTemplate('User/invitation_txt'),
+                    $this->getContainerEntry('template')->createTemplate('User/invitation_html'),
+                    $this->getContainerEntry('template')->createTemplate('User/invitation_txt'),
                 ),
                 $user
             ))($command);

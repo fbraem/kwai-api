@@ -11,6 +11,7 @@ use Core\Responses\NotAuthorizedResponse;
 use Core\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
@@ -20,29 +21,14 @@ use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Login a user with email/pwd and return access- and refreshtoken on succes.
  */
-class LoginAction
+class LoginAction extends Action
 {
-    /**
-     * The DI container
-     */
-    private ContainerInterface $container;
-
-    /**
-     * Constructor
-     * @param ContainerInterface $container The DI container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     private function createCommand(array $data): AuthenticateUserCommand
     {
         $schema = Expect::structure([
@@ -79,10 +65,11 @@ class LoginAction
         }
 
         try {
+            $database = $this->getContainerEntry('pdo_db');
             $refreshToken = (new AuthenticateUser(
-                new UserDatabaseRepository($this->container->get('pdo_db')),
-                new AccessTokenDatabaseRepository($this->container->get('pdo_db')),
-                new RefreshTokenDatabaseRepository($this->container->get('pdo_db'))
+                new UserDatabaseRepository($database),
+                new AccessTokenDatabaseRepository($database),
+                new RefreshTokenDatabaseRepository($database)
             ))($command);
         } catch (NotFoundException $nfe) {
             return (new NotAuthorizedResponse('Unknown user'))($response);
@@ -90,8 +77,8 @@ class LoginAction
             return (new NotAuthorizedResponse('Authentication failed'))($response);
         }
 
-        $secret = $this->container->get('settings')['security']['secret'];
-        $algorithm = $this->container->get('settings')['security']['algorithm'];
+        $secret = $this->getContainerEntry('settings')['security']['secret'];
+        $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
 
         /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = $refreshToken->getAccessToken();

@@ -7,7 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Psr\Container\ContainerInterface;
+use Kwai\Core\Infrastructure\Presentation\Action;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -26,22 +26,8 @@ use Firebase\JWT\JWT;
 /**
  * Revokes the current refreshtoken and the associated accesstoken.
  */
-class LogoutAction
+class LogoutAction extends Action
 {
-    /**
-     * The DI container
-     */
-    private ContainerInterface $container;
-
-    /**
-     * LogoutAction constructor.
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Create a new accesstoken
      * @param  Request  $request  The current HTTP request
@@ -57,8 +43,8 @@ class LogoutAction
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->container->get('settings')['security']['secret'];
-        $algorithm = $this->container->get('settings')['security']['algorithm'];
+        $secret = $this->getContainerEntry('settings')['security']['secret'];
+        $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
 
         $decodedRefreshToken = JWT::decode(
             $data['refresh_token'],
@@ -70,9 +56,10 @@ class LogoutAction
         $command->identifier = $decodedRefreshToken->jti;
 
         try {
+            $database = $this->getContainerEntry('pdo_db');
             (new Logout(
-                new RefreshTokenDatabaseRepository($this->container->get('pdo_db')),
-                new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
+                new RefreshTokenDatabaseRepository($database),
+                new AccessTokenDatabaseRepository($database)
             ))($command);
         } catch (NotFoundException $nfe) {
             return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);

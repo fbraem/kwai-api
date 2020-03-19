@@ -5,7 +5,7 @@ namespace Kwai\Modules\Users\Presentation\Rest;
 
 use Core\Responses\NotFoundResponse;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Psr\Container\ContainerInterface;
+use Kwai\Core\Infrastructure\Presentation\Action;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,22 +18,8 @@ use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\UseCases\GetCurrentUserCommand;
 use Kwai\Modules\Users\UseCases\GetCurrentUser;
 
-class UserAction
+class UserAction extends Action
 {
-    /**
-     * The DI container
-     */
-    private ContainerInterface $container;
-
-    /**
-     * UserAction constructor.
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param Request $request
      * @param Response $response
@@ -48,9 +34,10 @@ class UserAction
         $command->uuid = strval($user->getUuid());
 
         try {
+            $database = $this->getContainerEntry('pdo_db');
             $user = (new GetCurrentUser(
-                new UserDatabaseRepository($this->container->get('pdo_db')),
-                new AbilityDatabaseRepository($this->container->get('pdo_db'))
+                new UserDatabaseRepository($database),
+                new AbilityDatabaseRepository($database)
             ))($command);
         } catch (NotFoundException $e) {
             return (new NotFoundResponse('User not found'))($response);

@@ -10,34 +10,20 @@ namespace Kwai\Modules\Users\Presentation\Rest;
 use Core\Responses\NotAuthorizedResponse;
 use Firebase\JWT\JWT;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
 use Kwai\Modules\Users\UseCases\CreateRefreshToken;
 use Kwai\Modules\Users\UseCases\CreateRefreshTokenCommand;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Return a new refresh- and accesstoken (when the refreshtoken is valid).
  */
-class RefreshTokenAction
+class RefreshTokenAction extends Action
 {
-    /**
-     * The DI container
-     */
-    private ContainerInterface $container;
-
-    /**
-     * RefreshTokenAction constructor.
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Create a new accesstoken
      * @param  Request  $request  The current HTTP request
@@ -53,8 +39,8 @@ class RefreshTokenAction
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->container->get('settings')['security']['secret'];
-        $algorithm = $this->container->get('settings')['security']['algorithm'];
+        $secret = $this->getContainerEntry('settings')['security']['secret'];
+        $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
         $decodedRefreshToken = JWT::decode(
             $data['refresh_token'],
             $secret,
@@ -65,9 +51,10 @@ class RefreshTokenAction
         $command->identifier = $decodedRefreshToken->jti;
 
         try {
+            $database = $this->getContainerEntry('pdo_db');
             $refreshToken = (new CreateRefreshToken(
-                new RefreshTokenDatabaseRepository($this->container->get('pdo_db')),
-                new AccessTokenDatabaseRepository($this->container->get('pdo_db'))
+                new RefreshTokenDatabaseRepository($database),
+                new AccessTokenDatabaseRepository($database)
             ))($command);
         } catch (NotFoundException $nfe) {
             return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
