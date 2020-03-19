@@ -6,6 +6,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Domain;
 
+use Carbon\CarbonImmutable;
+use DateTime;
+
 /**
  * Value object for a timestamp.
  */
@@ -13,10 +16,7 @@ final class Timestamp
 {
     const TIMEZONE = 'UTC';
 
-    /**
-     * @var \Carbon\CarbonImmutable
-     */
-    private $datetime;
+    private CarbonImmutable $datetime;
 
     /**
      * Private constructor. Use one of the create methods to create an instance
@@ -93,7 +93,7 @@ final class Timestamp
         string $timezone = self::TIMEZONE
     ): self {
         $object = new self();
-        $object->datetime = \Carbon\CarbonImmutable::create(
+        $object->datetime = CarbonImmutable::create(
             $year,
             $month,
             $day,
@@ -115,7 +115,7 @@ final class Timestamp
     public static function createFromObject(object $datetimeObject): self
     {
         $object = new self();
-        $object->datetime = \Carbon\CarbonImmutable::create(
+        $object->datetime = CarbonImmutable::create(
             $datetimeObject->year ?? null,
             $datetimeObject->month ?? 1,
             $datetimeObject->day ?? 1,
@@ -136,7 +136,7 @@ final class Timestamp
     public static function createNow($timezone = self::TIMEZONE): self
     {
         $object = new self();
-        $object->datetime = \Carbon\CarbonImmutable::now($timezone);
+        $object->datetime = CarbonImmutable::now($timezone);
         return $object;
     }
 
@@ -152,7 +152,7 @@ final class Timestamp
         string $timezone = self::TIMEZONE
     ): self {
         $object = new self();
-        $object->datetime = \Carbon\CarbonImmutable::createFromFormat(
+        $object->datetime = CarbonImmutable::createFromFormat(
             'Y-m-d H:i:s',
             $str,
             $timezone
@@ -162,13 +162,13 @@ final class Timestamp
 
     /**
      * Create from a Timestamp object from a DateTime object.
-     * @param  \DateTime $time
+     * @param  DateTime $time
      * @return Timestamp
      */
-    public static function createFromDateTime(\DateTime $time)
+    public static function createFromDateTime(DateTime $time)
     {
         $object = new self();
-        $object->datetime = \Carbon\CarbonImmutable::instance($time);
+        $object->datetime = CarbonImmutable::instance($time);
         return $object;
     }
 }
