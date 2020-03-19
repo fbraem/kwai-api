@@ -64,7 +64,14 @@ class Clubman
             })->addArgument($container);
 
             $container->add('template', function ($c) {
-                return new PlatesEngine(__DIR__ . '/../templates');
+                $settings = $c->get('settings');
+                $variables = [
+                    'website' => [
+                        'url' => $settings['website']['url'],
+                        'email' => $settings['website']['email'],
+                    ]
+                ];
+                return new PlatesEngine(__DIR__ . '/../templates', $variables);
             })->addArgument($container);
 
             $container->add('mailer', function ($c) {
