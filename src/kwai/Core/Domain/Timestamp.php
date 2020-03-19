@@ -27,6 +27,19 @@ final class Timestamp
     }
 
     /**
+     * Returns the difference in days.
+     * @param Timestamp|null $timestamp
+     * @return int
+     */
+    public function diffInDays(Timestamp $timestamp = null): int
+    {
+        if ($timestamp == null) {
+            $timestamp = Timestamp::createNow();
+        }
+        return $this->datetime->diffInDays($timestamp->datetime);
+    }
+
+    /**
      * Returns a formatted timestamp.
      *
      * When format is null, toDateTimeString will be used.
