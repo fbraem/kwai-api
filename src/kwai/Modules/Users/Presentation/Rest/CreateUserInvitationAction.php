@@ -23,6 +23,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CreateUserInvitationAction extends Action
 {
+    const EXPIRE_IN_DAYS = 15;
+
     /**
      * Creates the command input from the JSONAPI payload.
      * @param array $data
@@ -68,7 +70,7 @@ class CreateUserInvitationAction extends Action
         }
 
         // Add some additional properties to the command.
-        $command->expiration = 14;
+        $command->expiration = self::EXPIRE_IN_DAYS;
         $from = $this->getContainerEntry('settings')['mail']['from'];
         if (is_array($from)) {
             $command->sender_mail = array_key_first($from);
