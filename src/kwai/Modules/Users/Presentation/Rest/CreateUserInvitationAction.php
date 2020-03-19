@@ -18,7 +18,6 @@ use Kwai\Modules\Users\UseCases\InviteUserCommand;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
