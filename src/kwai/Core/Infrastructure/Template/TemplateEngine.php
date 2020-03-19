@@ -12,5 +12,10 @@ namespace Kwai\Core\Infrastructure\Template;
  */
 interface TemplateEngine
 {
+    /**
+     * Create a template
+     * @param string $template
+     * @return Template
+     */
     public function createTemplate(string $template): Template;
 }

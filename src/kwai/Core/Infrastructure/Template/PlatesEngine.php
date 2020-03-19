@@ -25,10 +25,12 @@ class PlatesEngine implements TemplateEngine
     /**
      * PlatesEngine constructor.
      * @param string $templatePath The path where templates are located.
+     * @param array $variables Variables that are available for all templates
      */
-    public function __construct(string $templatePath)
+    public function __construct(string $templatePath, array $variables = [])
     {
         $this->engine = new Engine($templatePath);
+        $this->engine->addData($variables);
     }
 
     /**
