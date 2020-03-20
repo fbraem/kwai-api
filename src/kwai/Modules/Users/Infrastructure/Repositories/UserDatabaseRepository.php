@@ -12,9 +12,10 @@ use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
-use Kwai\Core\Infrastructure\Database;
 use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
@@ -58,7 +59,7 @@ final class UserDatabaseRepository implements UserRepository
      *
      * @param int $id The id of the user
      * @return Entity<User>     The user
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      * @throws NotFoundException When user is not found
      */
     public function getById(int $id): Entity
@@ -84,7 +85,7 @@ final class UserDatabaseRepository implements UserRepository
      *
      * @param UniqueId $uid
      * @return Entity<User>
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      * @throws NotFoundException
      */
     public function getByUUID(UniqueId $uid): Entity
@@ -110,7 +111,7 @@ final class UserDatabaseRepository implements UserRepository
      *
      * @param EmailAddress $email The email address of the user
      * @return Entity<User>         The user
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      * @throws NotFoundException When user is not found
      */
     public function getAccount(EmailAddress $email): Entity
@@ -136,7 +137,7 @@ final class UserDatabaseRepository implements UserRepository
      *
      * @param EmailAddress $email The email address of the user
      * @return Entity<User>         The user
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      * @throws NotFoundException When user is not found
      */
     public function getByEmail(EmailAddress $email): Entity
@@ -159,7 +160,7 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      */
     public function existsWithEmail(EmailAddress $email) : bool
     {
@@ -179,7 +180,7 @@ final class UserDatabaseRepository implements UserRepository
      *
      * @param TokenIdentifier $token
      * @return Entity<User>
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      * @throws NotFoundException When user is not found
      */
     public function getByAccessToken(TokenIdentifier $token): Entity
@@ -210,7 +211,7 @@ final class UserDatabaseRepository implements UserRepository
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
+     * @throws DatabaseException
      */
     public function updateAccount(Entity $account): void
     {
@@ -223,5 +224,30 @@ final class UserDatabaseRepository implements UserRepository
             ->compile()
         ;
         $this->db->execute($query);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws DatabaseException
+     */
+    public function create(UserAccount $user): Entity
+    {
+        $data = UserAccountMapper::toPersistence($user);
+
+        $query = $this->db->createQueryFactory()
+            ->insert($this->table->from())
+            ->columns(
+                ... array_keys($data)
+            )
+            ->values(
+                ... array_values($data)
+            )
+            ->compile()
+        ;
+        $this->db->execute($query);
+        return new Entity(
+            $this->db->lastInsertId(),
+            $user
+        );
     }
 }

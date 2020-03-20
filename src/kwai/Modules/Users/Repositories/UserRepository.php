@@ -73,4 +73,11 @@ interface UserRepository
      * @param Entity<UserAccount> $account
      */
     public function updateAccount(Entity $account): void;
+
+    /**
+     * Create a new user account
+     * @param UserAccount $user
+     * @return Entity
+     */
+    public function create(UserAccount $user): Entity;
 }
