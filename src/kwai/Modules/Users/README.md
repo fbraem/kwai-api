@@ -34,7 +34,11 @@ Register user
 
 Invite user
 -----------
-:x: An administrator of the site must be able to invite another user.
+:heavy_check_mark: An administrator of the site must be able to invite another user.
+
+Confirm invitation
+------------------
+:x: A new user must be able to confirm the invitation to create a new account.
 
 Approve user
 ------------
