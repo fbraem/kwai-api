@@ -6,6 +6,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Repositories;
 
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\EmailAddress;
@@ -22,6 +23,7 @@ interface UserRepository
      * Get the user with the given id
      * @param  int    $id
      * @return Entity<User>
+     * @throws NotFoundException
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function getById(int $id) : Entity;
@@ -30,6 +32,7 @@ interface UserRepository
      * Get the user with the given uuid
      * @param  UniqueId $uid
      * @return Entity<User>
+     * @throws NotFoundException
      */
     public function getByUUID(UniqueId $uid) : Entity;
 
@@ -37,6 +40,7 @@ interface UserRepository
      * Get the user with the given emailaddress.
      * @param  EmailAddress $email
      * @return Entity<User>
+     * @throws NotFoundException
      */
     public function getByEmail(EmailAddress $email) : Entity;
 
@@ -51,6 +55,7 @@ interface UserRepository
      * Get the user account with the given emailaddress.
      * @param  EmailAddress $email
      * @return Entity<UserAccount>
+     * @throws NotFoundException
      */
     public function getAccount(EmailAddress $email) : Entity;
 
@@ -59,6 +64,7 @@ interface UserRepository
      * (from an accesstoken).
      * @param  TokenIdentifier $token
      * @return Entity<User>
+     * @throws NotFoundException
      */
     public function getByAccessToken(TokenIdentifier $token) : Entity;
 

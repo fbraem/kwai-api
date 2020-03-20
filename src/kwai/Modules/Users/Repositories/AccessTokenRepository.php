@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\User;
@@ -23,6 +24,7 @@ interface AccessTokenRepository
      *
      * @param  TokenIdentifier $identifier A token identifier
      * @return Entity<AccessToken>         An accesstoken
+     * @throws NotFoundException
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity;
 

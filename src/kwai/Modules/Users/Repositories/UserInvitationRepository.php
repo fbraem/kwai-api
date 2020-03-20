@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Repositories;
 
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Modules\Users\Domain\UserInvitation;
 
@@ -22,6 +23,7 @@ interface UserInvitationRepository
      *
      * @param  UniqueId $uuid A unique id
      * @return Entity<UserInvitation> An invitation
+     * @throws NotFoundException
      */
     public function getByUniqueId(UniqueId $uuid) : Entity;
 
