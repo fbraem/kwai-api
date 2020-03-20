@@ -8,8 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * AuthenticateUserCommand is a DataTransferObject for the AuthenicateUser
- * usecase.
+ * AuthenticateUserCommand is a datatransferobject for AuthenicateUser usecase.
  */
 final class AuthenticateUserCommand
 {

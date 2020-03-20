@@ -7,10 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Spatie\DataTransferObject\DataTransferObject;
-
 /**
- * GetCurrentUserCommand is a DataTransferObject for the GetCurrentUser usecase.
+ * GetCurrentUserCommand is a datatransferobject for the GetCurrentUser usecase.
  */
 final class GetCurrentUserCommand
 {

@@ -8,7 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * InviteUserCommand.
+ * InviteUserCommand is a datatransferobject for the usecase InviteUser.
  */
 final class InviteUserCommand
 {

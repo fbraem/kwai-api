@@ -8,7 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * CreateRefreshTokenCommand is a DataTransferObject for the CreateRefreshToken usecase.
+ * CreateRefreshTokenCommand is a datatransferobject for the CreateRefreshToken usecase.
  */
 final class CreateRefreshTokenCommand
 {
