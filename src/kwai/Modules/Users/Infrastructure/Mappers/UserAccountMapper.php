@@ -26,7 +26,7 @@ final class UserAccountMapper
         return new Entity(
             (int) $raw->id,
             new UserAccount((object)[
-                'user' => UserMapper::toDomain($raw),
+                'user' => UserMapper::toDomain($raw)->domain(),
                 'lastLogin' => isset($raw->last_login)
                     ? Timestamp::createFromString($raw->last_login)
                     : null,
