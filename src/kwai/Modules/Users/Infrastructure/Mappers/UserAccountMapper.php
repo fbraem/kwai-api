@@ -41,24 +41,22 @@ final class UserAccountMapper
      * Returns a data array from a UserAccount entity.
      * @param  UserAccount $account
      * @return array
-     * @noinspection PhpUndefinedMethodInspection
      */
     public static function toPersistence(UserAccount $account): array
     {
-        if ($account->getUser()->getTraceableTime()->getUpdatedAt()) {
-            $updated_at = strval(
-                $account->getUser()->getTraceableTime()->getUpdatedAt()
-            );
-        } else {
-            $updated_at = null;
-        }
+        $lastLogin = $account->getLastLogin();
+        // $lastUnsuccessfulLogin = $account->getLastUnsuccessFulLogin();
 
-        //TODO: add last_unsuccessful_login
-        //TODO: add revoked to table
-        return [
-            'last_login' => strval($account->getLastLogin()),
-            'updated_at' => $updated_at,
-            // 'revoked' => $account->isRevoked() ? '1' : '0'
-        ];
+        return array_merge(
+            [
+                'last_login' => $lastLogin ? strval($lastLogin) : null,
+                'password' => strval($account->getPassword()),
+                // TODO: add last_unsuccessful_login
+                // TODO: add revoked to table
+                // 'last_unsuccessful_login' => $lastLogin ? strval($lastLogin) : null,
+                // 'revoked' => $account->isRevoked() ? '1' : '0',
+            ],
+            UserMapper::toPersistence($account->getUser())
+        );
     }
 }
