@@ -230,9 +230,9 @@ final class UserDatabaseRepository implements UserRepository
      * @inheritDoc
      * @throws DatabaseException
      */
-    public function create(UserAccount $user): Entity
+    public function create(UserAccount $account): Entity
     {
-        $data = UserAccountMapper::toPersistence($user);
+        $data = UserAccountMapper::toPersistence($account);
 
         $query = $this->db->createQueryFactory()
             ->insert($this->table->from())
@@ -247,7 +247,7 @@ final class UserDatabaseRepository implements UserRepository
         $this->db->execute($query);
         return new Entity(
             $this->db->lastInsertId(),
-            $user
+            $account
         );
     }
 }
