@@ -9,7 +9,8 @@ namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\ExpiredException;
+use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Modules\Users\Domain\User;
@@ -54,14 +55,18 @@ final class ConfirmInvitation
      * @param ConfirmInvitationCommand $command
      * @return Entity The new user account
      * @throws NotFoundException
-     * @throws ExpiredException
+     * @throws UnprocessableException
      * @noinspection PhpUndefinedMethodInspection
      */
     public function __invoke(ConfirmInvitationCommand $command): Entity
     {
         $invitation = $this->invitationRepo->getByUniqueId(new UniqueId($command->uuid));
         if ($invitation->isExpired()) {
-            throw new ExpiredException(('UserInvitation'));
+            throw new UnprocessableException(('Invitation is expired'));
+        }
+
+        if ($invitation->isRevoked()) {
+            throw new UnprocessableException('User invitation is revoked');
         }
 
         $user = new User((object)[

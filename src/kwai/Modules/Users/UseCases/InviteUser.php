@@ -8,13 +8,12 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 use DateTime;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\UniqueId;
-use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\Exceptions\AlreadyExistException;
-
+use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Domain\Mail;
 use Kwai\Modules\Mails\Domain\Recipient;
@@ -23,11 +22,10 @@ use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 use Kwai\Modules\Mails\Repositories\MailRepository;
 use Kwai\Modules\Mails\Repositories\RecipientRepository;
-use Kwai\Modules\Users\Repositories\UserInvitationRepository;
-use Kwai\Modules\Users\Repositories\UserRepository;
-
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Repositories\UserInvitationRepository;
+use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
  * Usecase: Invite user.
@@ -100,16 +98,15 @@ final class InviteUser
     /**
      * Create an invitation and create a mail.
      *
-     * @param  InviteUserCommand $command
+     * @param InviteUserCommand $command
      * @return Entity<UserInvitation> A user invitation
-     * @throws AlreadyExistException
+     * @throws UnprocessableException
      */
     public function __invoke(InviteUserCommand $command): Entity
     {
         $email = new EmailAddress($command->email);
         if ($this->userRepo->existsWithEmail($email)) {
-            throw new AlreadyExistException(
-                'User',
+            throw new UnprocessableException(
                 strval($email) . ' is already in use.'
             );
         }
@@ -117,8 +114,7 @@ final class InviteUser
         $invitations = $this->userInvitationRepo->getByEmail($email);
         foreach ($invitations as $invitation) {
             if ($invitation->isValid()) {
-                throw new AlreadyExistException(
-                    'UserInvitation',
+                throw new UnprocessableException(
                     'An invitation is still pending for ' . $email
                 );
             }

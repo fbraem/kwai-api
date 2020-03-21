@@ -10,7 +10,7 @@ namespace Kwai\Modules\Users\Presentation\Rest;
 use Core\Responses\NotFoundResponse;
 use Core\Responses\ResourceResponse;
 use Core\Responses\SimpleResponse;
-use Kwai\Core\Domain\Exceptions\ExpiredException;
+use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -85,8 +85,8 @@ class ConfirmInvitationAction extends Action
                 new UserInvitationDatabaseRepository($database),
                 new UserDatabaseRepository($database)
             ))($command);
-        } catch (ExpiredException $e) {
-            return (new SimpleResponse(422, 'Invitation is expired'))($response);
+        } catch (UnprocessableException $e) {
+            return (new SimpleResponse(422, $e->getMessage()))($response);
         } catch (NotFoundException $e) {
             return (new NotFoundResponse('User invitation does not exist'))($response);
         }

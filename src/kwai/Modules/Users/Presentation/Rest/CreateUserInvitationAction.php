@@ -5,7 +5,7 @@ namespace Kwai\Modules\Users\Presentation\Rest;
 
 use Core\Responses\ResourceResponse;
 use Core\Responses\SimpleResponse;
-use Kwai\Core\Domain\Exceptions\AlreadyExistException;
+use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
@@ -97,10 +97,10 @@ class CreateUserInvitationAction extends Action
                 ),
                 $user
             ))($command);
-        } catch (AlreadyExistException $e) {
+        } catch (UnprocessableException $e) {
             return (new SimpleResponse(
                 422,
-                'The email address is already used'
+                $e->getMessage()
             ))($response);
         }
 
