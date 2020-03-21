@@ -74,12 +74,12 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.invitations.browse')
         ->setArgument('auth', true)
     ;
-    $group->get('/invitations/{token:[0-9a-zA-Z]+}', ReadInvitationByTokenAction::class)
+    $group->get('/invitations/{token:[0-9a-zA-Z\-]+}', ReadInvitationByTokenAction::class)
         ->setName('users.invitations.token')
     ;
 
-    $group->post('/{token:[0-9a-zA-Z]+}', CreateWithTokenAction::class)
-        ->setName('users.create.token')
+    $group->post('/invitations/{uuid:[0-9a-zA-Z\-]+}', Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction::class)
+        ->setName('users.invitations.confirm')
     ;
 });
 
