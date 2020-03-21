@@ -25,9 +25,8 @@ class UserAccount implements DomainEntity
 {
     /**
      * User
-     * @var Entity<User>
      */
-    private $user;
+    private User $user;
 
     /**
      * The timestamp of the last login
@@ -108,10 +107,9 @@ class UserAccount implements DomainEntity
 
     /**
      * Returns the user.
-     * @return Entity
-     * @phpstan-param Entity<User>
+     * @return User
      */
-    public function getUser(): Entity
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -135,11 +133,25 @@ class UserAccount implements DomainEntity
     }
 
     /**
+     * Get the last unsuccessful login timestamp
+     * @return Timestamp
+     */
+    public function getLastUnsuccessfulLogin(): ?Timestamp
+    {
+        return $this->lastUnsuccessfulLogin;
+    }
+
+    /**
      * Adds an ability to this user.
      * @param Entity<Ability> $ability
      */
     public function addAbility(Entity $ability)
     {
         $this->abilities[] = $ability;
+    }
+
+    public function getPassword(): Password
+    {
+        return $this->password;
     }
 }
