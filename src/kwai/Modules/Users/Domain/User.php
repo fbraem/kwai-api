@@ -7,14 +7,11 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
-use Kwai\Core\Domain\EmailAddress;
-use Kwai\Core\Domain\UniqueId;
-use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
-
-use Kwai\Modules\Users\Domain\ValueObjects\Password;
+use Kwai\Core\Domain\TraceableTime;
+use Kwai\Core\Domain\UniqueId;
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
@@ -96,9 +93,9 @@ class User implements DomainEntity
 
     /**
      * Get the remark
-     * @return string
+     * @return string|null
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }
