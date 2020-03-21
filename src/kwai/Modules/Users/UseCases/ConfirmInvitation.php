@@ -62,11 +62,15 @@ final class ConfirmInvitation
     {
         $invitation = $this->invitationRepo->getByUniqueId(new UniqueId($command->uuid));
         if ($invitation->isExpired()) {
-            throw new UnprocessableException(('Invitation is expired'));
+            throw new UnprocessableException(('User invitation is expired'));
         }
 
         if ($invitation->isRevoked()) {
             throw new UnprocessableException('User invitation is revoked');
+        }
+
+        if ($invitation->isConfirmed()) {
+            throw new UnprocessableException('User invitation is already confirmed');
         }
 
         $user = new User((object)[
@@ -79,6 +83,9 @@ final class ConfirmInvitation
             'user' => $user,
             'password' => Password::fromString($command->password)
         ]);
+
+        $invitation->confirm();
+        $this->invitationRepo->update($invitation);
 
         return $this->userRepo->create($account);
     }

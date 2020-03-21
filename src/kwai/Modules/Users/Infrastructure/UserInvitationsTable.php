@@ -18,7 +18,8 @@ final class UserInvitationsTable extends Table
             'remark',
             'user_id',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'confirmed_at'
         ]);
     }
 }

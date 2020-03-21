@@ -34,8 +34,9 @@ class UserInvitationMapper
                 'emailAddress' => new EmailAddress($raw->email),
                 'expiration' => Timestamp::createFromString($raw->expired_at, $raw->expired_at_timezone),
                 'name' => $raw->name,
-                'creator' => UserMapper::toDomain($raw),
+                'creator' => UserMapper::toDomain($raw->user),
                 'remark' => $raw->remark,
+                'confirmation' => $raw->confirmed_at ? Timestamp::createFromString($raw->confirmed_at) : null,
                 'traceableTime' => new TraceableTime(
                     Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at)
@@ -63,6 +64,7 @@ class UserInvitationMapper
             'email' => strval($invitation->getEmailAddress()),
             'expired_at' => strval($invitation->getExpiration()),
             'expired_at_timezone' => strval($invitation->getExpiration()->getTimezone()),
+            'confirmed_at' => $invitation->isConfirmed() ? strval($invitation->getConfirmation()) : null,
             'name' => $invitation->getName(),
             'user_id' => $invitation->getCreator()->id(),
             'remark' => $invitation->getRemark(),

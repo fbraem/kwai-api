@@ -61,6 +61,11 @@ class UserInvitation implements DomainEntity
     private bool $revoked;
 
     /**
+     * Timestamp of confirmation
+     */
+    private ?Timestamp $confirmation;
+
+    /**
      * Constructor.
      * @param object $props User Invitation properties
      */
@@ -74,6 +79,7 @@ class UserInvitation implements DomainEntity
         $this->name = $props->name;
         $this->creator = $props->creator;
         $this->revoked = $props->revoked ?? false;
+        $this->confirmation = $props->confirmation ?? null;
     }
 
     /**
@@ -163,5 +169,29 @@ class UserInvitation implements DomainEntity
     public function getUniqueId(): UniqueId
     {
         return $this->uuid;
+    }
+
+    /**
+     * Is this invitation confirmed?
+     */
+    public function isConfirmed(): bool
+    {
+        return $this->confirmation != null;
+    }
+
+    /**
+     * Get timestamp of confirmation
+     */
+    public function getConfirmation(): ?Timestamp
+    {
+        return $this->confirmation;
+    }
+
+    /**
+     * Confirm the invitation by setting the confirmation timestamp to the current time.
+     */
+    public function confirm(): void
+    {
+        $this->confirmation = Timestamp::createNow();
     }
 }

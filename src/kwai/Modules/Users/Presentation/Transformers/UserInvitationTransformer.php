@@ -66,7 +66,8 @@ class UserInvitationTransformer extends Fractal\TransformerAbstract
             'email' => strval($invitation->getEmailAddress()),
             'username' => $invitation->getName(),
             'remark' => $invitation->getRemark(),
-            'created_at' => strval($traceableTime->getCreatedAt())
+            'created_at' => strval($traceableTime->getCreatedAt()),
+            'confirmed_at' => $invitation->isConfirmed() ? strval($invitation->getConfirmation()) : null
         ];
         $result['updated_at'] = $traceableTime->isUpdated()
             ? strval($traceableTime->getUpdatedAt())
