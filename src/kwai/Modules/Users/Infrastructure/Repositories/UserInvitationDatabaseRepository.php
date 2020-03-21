@@ -58,7 +58,7 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
     public function getByUniqueId(UniqueId $uuid) : Entity
     {
         $query = $this->createBaseQuery()
-            ->where(field('token')->eq(strval($uuid)))
+            ->where(field($this->table->column('uuid'))->eq(strval($uuid)))
             ->compile()
         ;
 
