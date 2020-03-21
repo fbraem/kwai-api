@@ -50,13 +50,12 @@ final class UserMapper
      * Returns a data array from a User domain object.
      * @param User $user
      * @return array
-     * @noinspection PhpUndefinedMethodInspection
      */
     public static function toPersistence(User $user): array
     {
         if ($user->getTraceableTime()->getUpdatedAt()) {
             $updated_at = strval(
-                $user->getUser()->getTraceableTime()->getUpdatedAt()
+                $user->getTraceableTime()->getUpdatedAt()
             );
         } else {
             $updated_at = null;
