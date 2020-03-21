@@ -55,6 +55,9 @@ class UserInvitation implements DomainEntity
      */
     private Entity $creator;
 
+    /**
+     * Is this invitation revoked?
+     */
     private bool $revoked;
 
     /**
