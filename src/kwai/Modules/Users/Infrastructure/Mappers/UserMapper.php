@@ -47,13 +47,29 @@ final class UserMapper
     }
 
     /**
-     * Create a database object from a User entity
-     * @param Entity $user
-     * @return object
+     * Returns a data array from a User domain object.
+     * @param User $user
+     * @return array
+     * @noinspection PhpUndefinedMethodInspection
      */
-    public static function toPersistence(Entity $user): object
+    public static function toPersistence(User $user): array
     {
-        //TODO: implement
-        return (object)[];
+        if ($user->getTraceableTime()->getUpdatedAt()) {
+            $updated_at = strval(
+                $user->getUser()->getTraceableTime()->getUpdatedAt()
+            );
+        } else {
+            $updated_at = null;
+        }
+
+        return [
+            'uuid' => strval($user->getUuid()),
+            'email' => strval($user->getEmailAddress()),
+            'first_name' => $user->getUsername()->getFirstName(),
+            'last_name' => $user->getUsername()->getLastName(),
+            'remark' => $user->getRemark(),
+            'created_at' => strval($user->getTraceableTime()->getCreatedAt()),
+            'updated_at' => $updated_at ? strval($updated_at) : null
+        ];
     }
 }
