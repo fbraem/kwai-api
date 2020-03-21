@@ -15,24 +15,24 @@ namespace Kwai\Modules\Users\Domain\ValueObjects;
 final class Username
 {
     /**
-     * The firstname of the user.
-     * @var string
+     * The first name of the user.
      */
-    private $firstname;
+    private ?string $firstName;
 
     /**
-     * The lastname of the user.
-     * @var string
+     * The last name of the user.
      */
-    private $lastname;
+    private ?string $lastName;
 
     /**
      * Constructor
+     * @param string|null $firstName
+     * @param string|null $lastName
      */
-    public function __construct(?string $firstname, ?string $lastname)
+    public function __construct(?string $firstName, ?string $lastName)
     {
-        $this->firstname = $firstname;
-        $this->lastname = $lastname;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
     }
 
     /**
@@ -40,6 +40,27 @@ final class Username
      */
     public function __toString(): string
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return join(
+            ' ',
+            array_filter([$this->firstName, $this->lastName])
+        );
+    }
+
+    /**
+     * Get first name
+     * @return string|null
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Get last name
+     * @return string|null
+     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
     }
 }
