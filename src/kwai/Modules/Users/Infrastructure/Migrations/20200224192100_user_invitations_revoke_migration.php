@@ -11,7 +11,7 @@ class UserInvitationsRevokeMigration extends AbstractMigration
     {
         $this->table('user_invitations')
             ->addColumn('revoked', 'boolean', [ 'default' => false ])
-            ->addColumn('confirmed_at', 'datetime', [ 'default' => false ])
+            ->addColumn('confirmed_at', 'datetime', [ 'null' => true ])
             ->renameColumn('token', 'uuid')
             ->save()
         ;
