@@ -35,7 +35,7 @@ final class InviteUserCommand
     /**
      * Remark
      */
-    public ?string $remark;
+    public ?string $remark = null;
 
     /**
      * Username
