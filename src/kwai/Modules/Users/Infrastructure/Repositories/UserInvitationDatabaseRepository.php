@@ -156,9 +156,9 @@ final class UserInvitationDatabaseRepository implements UserInvitationRepository
 
         $rows = $this->db->execute($query)->fetchAll();
         return array_map(function ($row) {
-            return UserInvitationMapper::toDomain(
-                $this->table->filter($row)
-            );
+            $invitationRow = $this->table->filter($row);
+            $invitationRow->user = $this->userTable->filter($row);
+            return UserInvitationMapper::toDomain($invitationRow);
         }, $rows);
     }
 }
