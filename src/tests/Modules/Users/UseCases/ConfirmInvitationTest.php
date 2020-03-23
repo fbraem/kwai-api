@@ -28,41 +28,49 @@ use PHPUnit\Framework\TestCase;
 
 class ConfirmInvitationTest extends TestCase
 {
-    private $userInvitationRepo;
+    private UserInvitationRepository $userInvitationRepo;
 
-    private $userRepo;
+    private UserRepository $userRepo;
+
+    private Entity $validInvitation;
+
+    private Entity $expiredInvitation;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $invitation = new Entity(1, new UserInvitation((object)[
+        $creator = new Entity(1, new User((object)[
+            'uuid' => new UniqueId(),
+            'emailAddress' => new EmailAddress('webmaster@kwai.com'),
+            'traceableTime' => new TraceableTime(),
+            'remark' => 'This is test admin user',
+            'username' => new Username('Webmaster')
+        ]));
+
+        $this->validInvitation = new Entity(1, new UserInvitation((object)[
             'uuid' => new UniqueId(),
             'emailAddress' => new EmailAddress('jigoro.kono@kwai.com'),
             'name' => 'Jigoro Kono',
-            'creator' => new Entity(1, new User((object)[
-                'uuid' => new UniqueId(),
-                'emailAddress' => new EmailAddress('webmaster@kwai.com'),
-                'traceableTime' => new TraceableTime(),
-                'remark' => 'This is test admin user',
-                'username' => new Username('Webmaster')
-            ])),
+            'creator' => $creator,
             'remark' => 'This is a test invitation',
             'confirmation' => null,
             'traceableTime' => new TraceableTime(),
             'expiration' => Timestamp::createFromDateTime(new DateTime('now +15 days'))
         ]));
 
-        $this->userInvitationRepo = Mockery::mock(UserInvitationRepository::class);
-        $this->userInvitationRepo
-            ->shouldReceive('getByUniqueId')
-            ->andReturn($invitation)
-        ;
-        $this->userInvitationRepo
-            ->shouldReceive('update')
-            ->andReturn($invitation)
-        ;
+        $this->expiredInvitation = new Entity(2, new UserInvitation((object)[
+            'uuid' => new UniqueId(),
+            'emailAddress' => new EmailAddress('jigoro.kono@kwai.com'),
+            'name' => 'Jigoro Kono',
+            'creator' => $creator,
+            'remark' => 'This is a test invitation',
+            'confirmation' => null,
+            'traceableTime' => new TraceableTime(),
+            'expiration' => Timestamp::createFromDateTime(new DateTime('now -1 days'))
+        ]));
 
+        /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
         $this->userRepo = Mockery::mock(UserRepository::class);
         $this->userRepo
             ->shouldReceive('create')
@@ -72,6 +80,16 @@ class ConfirmInvitationTest extends TestCase
 
     public function testConfirm()
     {
+        $this->userInvitationRepo = Mockery::mock(UserInvitationRepository::class);
+        $this->userInvitationRepo
+            ->shouldReceive('getByUniqueId')
+            ->andReturn($this->validInvitation)
+        ;
+        $this->userInvitationRepo
+            ->shouldReceive('update')
+            ->andReturn($this->validInvitation)
+        ;
+
         $command = new ConfirmInvitationCommand();
         $command->firstName = 'Jigoro';
         $command->lastName = 'Kano';
@@ -80,7 +98,6 @@ class ConfirmInvitationTest extends TestCase
         $command->password = 'Hajime';
 
         try {
-            /** @noinspection PhpParamsInspection */
             $user = (new ConfirmInvitation(
                 $this->userInvitationRepo,
                 $this->userRepo
@@ -92,5 +109,28 @@ class ConfirmInvitationTest extends TestCase
             self::assertTrue(true, strval($e));
         }
         $this->assertTrue(true, 'Jopla');
+    }
+
+    public function testExpired()
+    {
+        $this->userInvitationRepo = Mockery::mock(UserInvitationRepository::class);
+        $this->userInvitationRepo
+            ->shouldReceive('getByUniqueId')
+            ->andReturn($this->expiredInvitation)
+        ;
+
+        $command = new ConfirmInvitationCommand();
+        $command->firstName = 'Jigoro';
+        $command->lastName = 'Kano';
+        $command->uuid = '';
+        $command->remark = 'This is a user confirmed using a unit test';
+        $command->password = 'Hajime';
+
+        $this->expectException(UnprocessableException::class);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        (new ConfirmInvitation(
+            $this->userInvitationRepo,
+            $this->userRepo
+        ))($command);
     }
 }
