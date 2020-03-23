@@ -70,7 +70,6 @@ class ConfirmInvitationTest extends TestCase
         ;
     }
 
-    /** @noinspection PhpParamsInspection */
     public function testConfirm()
     {
         $command = new ConfirmInvitationCommand();
@@ -81,6 +80,7 @@ class ConfirmInvitationTest extends TestCase
         $command->password = 'Hajime';
 
         try {
+            /** @noinspection PhpParamsInspection */
             $user = (new ConfirmInvitation(
                 $this->userInvitationRepo,
                 $this->userRepo
