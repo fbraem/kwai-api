@@ -18,6 +18,11 @@ use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\UseCases\GetCurrentUserCommand;
 use Kwai\Modules\Users\UseCases\GetCurrentUser;
 
+/**
+ * Class UserAction
+ *
+ * Action to get the logged in user.
+ */
 class UserAction extends Action
 {
     /**

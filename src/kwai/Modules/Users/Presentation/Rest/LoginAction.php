@@ -25,10 +25,17 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Login a user with email/pwd and return access- and refreshtoken on succes.
+ * Class LoginAction
+ *
+ * Action to login a user with email/pwd and return access- and refreshtoken on success.
  */
 class LoginAction extends Action
 {
+    /**
+     * Create a command from the request data
+     * @param array $data
+     * @return AuthenticateUserCommand
+     */
     private function createCommand(array $data): AuthenticateUserCommand
     {
         $schema = Expect::structure([

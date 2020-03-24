@@ -24,12 +24,13 @@ use Core\Responses\OkResponse;
 use Firebase\JWT\JWT;
 
 /**
- * Revokes the current refreshtoken and the associated accesstoken.
+ * Class LogoutAction
+ *
+ * Action that revokes the current refreshtoken and the associated accesstoken.
  */
 class LogoutAction extends Action
 {
     /**
-     * Create a new accesstoken
      * @param  Request  $request  The current HTTP request
      * @param  Response $response The current HTTP response
      * @param  array    $args     Route’s named placeholders

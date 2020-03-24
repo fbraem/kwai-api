@@ -21,12 +21,17 @@ use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+/**
+ * Class CreateUserInvitationAction
+ *
+ * Action to create a new user invitation.
+ */
 class CreateUserInvitationAction extends Action
 {
     const EXPIRE_IN_DAYS = 15;
 
     /**
-     * Creates the command input from the JSONAPI payload.
+     * Create a command from the request data
      * @param array $data
      * @return InviteUserCommand
      * @throws ValidationException

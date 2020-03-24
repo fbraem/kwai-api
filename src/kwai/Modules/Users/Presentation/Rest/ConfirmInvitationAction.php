@@ -25,7 +25,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * ConfirmInvitationAction
+ * Class ConfirmInvitationAction
+ *
+ * Action to confirm an invitation.
  */
 class ConfirmInvitationAction extends Action
 {
@@ -61,7 +63,6 @@ class ConfirmInvitationAction extends Action
     }
 
     /**
-     * Confirm the invitation and create a user
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param array $args

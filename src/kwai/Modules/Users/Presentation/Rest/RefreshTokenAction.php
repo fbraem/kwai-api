@@ -20,12 +20,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Return a new refresh- and accesstoken (when the refreshtoken is valid).
+ * Class RefreshTokenAction
+ *
+ * Action to create a new refresh- and accesstoken (when the refreshtoken is valid).
  */
 class RefreshTokenAction extends Action
 {
     /**
-     * Create a new accesstoken
      * @param  Request  $request  The current HTTP request
      * @param  Response $response The current HTTP response
      * @param  array    $args     Route’s named placeholders
