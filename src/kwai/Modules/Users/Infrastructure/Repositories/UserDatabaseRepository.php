@@ -31,7 +31,7 @@ use function Latitude\QueryBuilder\on;
  * User Repository for read/write User entity from/to a database.
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-final class UserDatabaseRepository implements UserRepository
+class UserDatabaseRepository implements UserRepository
 {
     /**
      * The database connection

@@ -30,7 +30,7 @@ use Latitude\QueryBuilder\Query\SelectQuery;
  * from/to a database.
  * @SuppressWarnings(PHPMD.ShortVariable)
 */
-final class UserInvitationDatabaseRepository implements UserInvitationRepository
+class UserInvitationDatabaseRepository implements UserInvitationRepository
 {
     private Connection $db;
 
