@@ -140,6 +140,9 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     public function update(Entity $token): void
     {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $token->getTraceableTime()->markUpdated();
+
         $data = AccessTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)

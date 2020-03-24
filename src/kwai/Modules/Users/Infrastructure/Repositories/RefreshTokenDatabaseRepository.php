@@ -130,6 +130,9 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
      */
     public function update(Entity $token): void
     {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $token->getTraceableTime()->markUpdated();
+
         $data = RefreshTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)

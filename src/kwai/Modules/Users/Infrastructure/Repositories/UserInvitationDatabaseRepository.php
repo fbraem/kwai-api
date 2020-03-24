@@ -111,6 +111,8 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
      */
     public function update(Entity $invitation): void
     {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $invitation->getTraceableTime()->markUpdated();
         $data = UserInvitationMapper::toPersistence($invitation->domain());
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)
