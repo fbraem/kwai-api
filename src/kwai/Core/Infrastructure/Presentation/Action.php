@@ -8,11 +8,15 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Presentation;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Action base class
+ * Class Action
+ *
+ * Base class for all actions.
  */
-class Action
+abstract class Action
 {
     /**
      * The dependency container
@@ -37,4 +41,14 @@ class Action
     {
         return $this->container->get($key);
     }
+
+    /**
+     * Execute the action.
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return mixed
+     */
+    abstract public function __invoke(Request $request, Response $response, array $args);
 }
