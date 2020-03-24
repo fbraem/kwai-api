@@ -20,7 +20,6 @@ use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\UseCases\ConfirmInvitation;
 use Kwai\Modules\Users\UseCases\ConfirmInvitationCommand;
@@ -29,8 +28,6 @@ use Tests\DatabaseTestCase;
 
 class ConfirmInvitationTest extends DatabaseTestCase
 {
-    private UserInvitationRepository $userInvitationRepo;
-
     private UserRepository $userRepo;
 
     private Entity $creator;
