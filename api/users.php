@@ -3,13 +3,14 @@ require '../src/vendor/autoload.php';
 
 use Core\Clubman;
 
+use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
+use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
+use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
 use REST\Users\Actions\AbilityBrowseAction;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityReadAction;
 use REST\Users\Actions\AbilityUpdateAction;
-use REST\Users\Actions\BrowseAction;
 use REST\Users\Actions\BrowseInvitationAction;
-use REST\Users\Actions\CreateWithTokenAction;
 use REST\Users\Actions\ReadAction;
 use REST\Users\Actions\ReadInvitationByTokenAction;
 use REST\Users\Actions\RuleBrowseAction;
@@ -22,7 +23,7 @@ use Slim\Routing\RouteCollectorProxy;
 $app = Clubman::getApplication();
 
 $app->group('/users', function (RouteCollectorProxy $group) {
-    $group->get('', BrowseAction::class)
+    $group->get('', BrowseUserAction::class)
         ->setName('users.browse')
         ->setArgument('auth', true)
     ;
@@ -66,7 +67,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     ;
 
     // Invitations
-    $group->post('/invitations', Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction::class)
+    $group->post('/invitations', CreateUserInvitationAction::class)
         ->setName('users.invitations.create')
         ->setArgument('auth', true)
     ;
@@ -77,8 +78,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     $group->get('/invitations/{token:[0-9a-zA-Z\-]+}', ReadInvitationByTokenAction::class)
         ->setName('users.invitations.token')
     ;
-
-    $group->post('/invitations/{uuid:[0-9a-zA-Z\-]+}', Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction::class)
+    $group->post('/invitations/{uuid:[0-9a-zA-Z\-]+}', ConfirmInvitationAction::class)
         ->setName('users.invitations.confirm')
     ;
 });
