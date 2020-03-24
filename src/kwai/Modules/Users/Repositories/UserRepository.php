@@ -60,6 +60,13 @@ interface UserRepository
     public function getAccount(EmailAddress $email) : Entity;
 
     /**
+     * Get all users
+     *
+     * @return Entity[]
+     */
+    public function getAll(): array;
+
+    /**
      * Get the user associated with the given token identifier
      * (from an accesstoken).
      * @param  TokenIdentifier $token

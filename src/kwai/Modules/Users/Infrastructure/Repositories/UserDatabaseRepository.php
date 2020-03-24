@@ -1,10 +1,11 @@
 <?php
 /**
  * User Repository.
- * @package kwai
+ *
+ * @package    kwai
  * @subpackage Users
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
@@ -22,6 +23,7 @@ use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserRepository;
+use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
@@ -68,8 +70,7 @@ class UserDatabaseRepository implements UserRepository
             ->select(... $this->table->alias())
             ->from($this->table->from())
             ->where(field('id')->eq($id))
-            ->compile()
-        ;
+            ->compile();
 
         $user = $this->db->execute($query)->fetch();
         if ($user) {
@@ -94,8 +95,7 @@ class UserDatabaseRepository implements UserRepository
             ->select(... $this->table->alias())
             ->from($this->table->from())
             ->where(field('uuid')->eq($uid))
-            ->compile()
-        ;
+            ->compile();
 
         $user = $this->db->execute($query)->fetch();
         if ($user) {
@@ -120,8 +120,7 @@ class UserDatabaseRepository implements UserRepository
             ->select(... $this->table->alias())
             ->from($this->table->from())
             ->where(field('email')->eq($email))
-            ->compile()
-        ;
+            ->compile();
 
         $user = $this->db->execute($query)->fetch();
         if ($user) {
@@ -146,8 +145,7 @@ class UserDatabaseRepository implements UserRepository
             ->select(... $this->table->alias())
             ->from($this->table->from())
             ->where(field('email')->eq($email))
-            ->compile()
-        ;
+            ->compile();
 
         $user = $this->db->execute($query)->fetch();
         if ($user) {
@@ -162,14 +160,13 @@ class UserDatabaseRepository implements UserRepository
      * @inheritdoc
      * @throws DatabaseException
      */
-    public function existsWithEmail(EmailAddress $email) : bool
+    public function existsWithEmail(EmailAddress $email): bool
     {
         $query = $this->db->createQueryFactory()
             ->select(alias(func('COUNT', $this->table->from() . '.id'), 'c'))
             ->from($this->table->from())
             ->where(field('email')->eq(strval($email)))
-            ->compile()
-        ;
+            ->compile();
         $count = $this->db->execute($query)->fetch();
         return $count->c > 0;
     }
@@ -195,8 +192,7 @@ class UserDatabaseRepository implements UserRepository
             ->from($this->table->from())
             ->join($accessTokenTable->from(), on('users.id', 'oauth_access_tokens.user_id'))
             ->where(field('oauth_access_tokens.identifier')->eq(strval($token)))
-            ->compile()
-        ;
+            ->compile();
 
         $data = $this->db->execute($query)->fetch();
         if ($data) {
@@ -221,8 +217,7 @@ class UserDatabaseRepository implements UserRepository
         $query = $this->db->createQueryFactory()
             ->update($this->table->from(), $data)
             ->where(field('id')->eq($account->id()))
-            ->compile()
-        ;
+            ->compile();
         $this->db->execute($query);
     }
 
@@ -242,12 +237,34 @@ class UserDatabaseRepository implements UserRepository
             ->values(
                 ... array_values($data)
             )
-            ->compile()
-        ;
+            ->compile();
         $this->db->execute($query);
         return new Entity(
             $this->db->lastInsertId(),
             $account
+        );
+    }
+
+    private function createBaseQuery(): SelectQuery
+    {
+        return $this->db->createQueryFactory()
+            ->select(... $this->table->alias())
+            ->from($this->table->from())
+        ;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws DatabaseException
+     * @return Entity[]
+     */
+    public function getAll(): array
+    {
+        $query = $this->createBaseQuery()->compile();
+        $rows = $this->db->execute($query)->fetchAll();
+        return array_map(
+            fn ($row) => UserMapper::toDomain($this->table->filter($row)),
+            $rows
         );
     }
 }
