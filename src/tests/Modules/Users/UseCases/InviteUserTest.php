@@ -8,9 +8,10 @@ namespace Tests\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\AlreadyExistException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
@@ -49,9 +50,9 @@ final class InviteUserTest extends DatabaseTestCase
         try {
             $this->user = $this->userRepo->getByEmail(new EmailAddress('test@kwai.com'));
         } catch (NotFoundException $e) {
-            echo $e->getMessage(), PHP_EOL;
-        } catch (DatabaseException $e) {
-            echo $e->getMessage(), PHP_EOL;
+            self::assertTrue(false, $e->getMessage());
+        } catch (RepositoryException $e) {
+            self::assertTrue(false, $e->getMessage());
         }
     }
 
@@ -84,8 +85,10 @@ final class InviteUserTest extends DatabaseTestCase
                 Entity::class,
                 $invitation
             );
-        } catch (AlreadyExistException $e) {
-            $this->assertTrue(false, $e->getMessage());
+        } catch (UnprocessableException $e) {
+            self::assertTrue(false, $e->getMessage());
+        } catch (RepositoryException $e) {
+            self::assertTrue(false, $e->getMessage());
         }
     }
 }

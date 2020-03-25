@@ -7,8 +7,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
+use Core\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -64,6 +66,10 @@ class LogoutAction extends Action
             ))($command);
         } catch (NotFoundException $nfe) {
             return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
+        } catch (RepositoryException $e) {
+            return (
+                new SimpleResponse(500, 'An internal repository occurred.')
+            )($response);
         }
 
         return (new OkResponse())($response);

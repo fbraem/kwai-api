@@ -8,9 +8,11 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Timestamp;
 
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 
@@ -42,7 +44,8 @@ final class GetCurrentUser
      * Get the user with the given uuid.
      * @param  GetCurrentUserCommand $command
      * @return Entity<User>                   A user with his/her abilitities
-     * @throws \Kwai\Core\Domain\Exceptions\NotFoundException
+     * @throws NotFoundException
+     * @throws RepositoryException
      */
     public function __invoke(GetCurrentUserCommand $command): Entity
     {

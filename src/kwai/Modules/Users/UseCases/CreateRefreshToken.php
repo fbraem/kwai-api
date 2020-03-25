@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\UseCases;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Timestamp;
 
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
@@ -52,6 +53,7 @@ final class CreateRefreshToken
      *    Thrown when the refreshtoken can't be found
      * @throws AuthenticationException
      *    Thrown when the refresh token is expired.
+     * @throws RepositoryException
      */
     public function __invoke(CreateRefreshTokenCommand $command): Entity
     {

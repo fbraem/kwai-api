@@ -11,8 +11,11 @@ use Core\Responses\ResourceResponse;
 use Core\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
+use Kwai\Modules\Users\UseCases\BrowseUser;
+use Kwai\Modules\Users\UseCases\BrowseUserCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -30,12 +33,13 @@ class BrowseUserAction extends Action
     {
         $repo = new UserDatabaseRepository($this->getContainerEntry('pdo_db'));
         try {
+            $users = (new BrowseUser($repo))(new BrowseUserCommand());
             return (new ResourceResponse(
-                UserTransformer::createForCollection($repo->getAll())
+                UserTransformer::createForCollection($users)
             ))($response);
-        } catch (DatabaseException $e) {
+        } catch (RepositoryException $e) {
             return (
-                new SimpleResponse(500, 'A database error occurred')
+                new SimpleResponse(500, 'An internal repository occurred.')
             )($response);
         }
     }

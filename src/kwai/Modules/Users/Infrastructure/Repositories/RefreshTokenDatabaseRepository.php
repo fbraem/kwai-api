@@ -2,7 +2,7 @@
 /**
  * AccessToken Repository.
  * @package kwai
- * @subpackage Auth
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
@@ -12,6 +12,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
@@ -23,7 +24,10 @@ use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
+ * Class RefreshTokenDatabaseRepository
+ *
  * RefreshToken Repository for read/write RefreshToken entity from/to a database.
+ *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
 final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
@@ -39,9 +43,9 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     private RefreshTokensTable $table;
 
     /**
-     * Constructor
+     * RefreshTokenDatabaseRepository constructor.
      *
-     * @param Connection $db A database object
+     * @param Connection $db A database connection
      */
     public function __construct(Connection $db)
     {
@@ -50,12 +54,8 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     }
 
     /**
-     * Get an refreshtoken by its token identifier.
-     *
-     * @param TokenIdentifier $identifier A token identifier
-     * @return Entity<RefreshToken>         An refreshtoken
-     * @throws DatabaseException
-     * @throws NotFoundException
+     * @inheritDoc
+     * @return Entity<RefreshToken>
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
@@ -87,7 +87,11 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
             ->compile()
         ;
 
-        $row = $this->db->execute($query)->fetch();
+        try {
+            $row = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         if ($row) {
             $refreshTokenRow = $this->table->filter($row);
@@ -99,11 +103,8 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     }
 
     /**
-     * Inserts the refreshtoken in the table.
-     *
-     * @param RefreshToken $token
+     * @inheritDoc
      * @return Entity<RefreshToken>
-     * @throws DatabaseException
      */
     public function create(RefreshToken $token): Entity
     {
@@ -115,7 +116,11 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
             ->values(... array_values($data))
             ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         return new Entity(
             $this->db->lastInsertId(),
@@ -124,9 +129,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     }
 
     /**
-     * Update the refreshtoken.
-     * @param Entity<RefreshToken> $token
-     * @throws DatabaseException
+     * @inheritDoc
      */
     public function update(Entity $token): void
     {
@@ -139,6 +142,10 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 }

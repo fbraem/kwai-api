@@ -12,11 +12,11 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
- * Class BrowseUser
+ * Class GetUser
  *
- * Use case to browse all users.
+ * Use case to get a specific user.
  */
-class BrowseUser
+class GetUser
 {
     private UserRepository $userRepo;
 
@@ -26,13 +26,13 @@ class BrowseUser
     }
 
     /**
-     * Browse all users and returns a list
+     * Get a user
      *
-     * @param BrowseUserCommand $command
-     * @return Entity[]
+     * @param GetUserCommand $command
      * @throws RepositoryException
+     * @return Entity[]
      */
-    public function __invoke(BrowseUserCommand $command): array
+    public function __invoke(GetUserCommand $command): array
     {
         return $this->userRepo->getAll();
     }

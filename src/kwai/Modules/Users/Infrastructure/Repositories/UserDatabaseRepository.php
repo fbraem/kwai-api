@@ -1,7 +1,5 @@
 <?php
 /**
- * User Repository.
- *
  * @package    kwai
  * @subpackage Users
  */
@@ -15,6 +13,7 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -30,7 +29,10 @@ use function Latitude\QueryBuilder\func;
 use function Latitude\QueryBuilder\on;
 
 /**
+ * Class UserDatabaseRepository
+ *
  * User Repository for read/write User entity from/to a database.
+ *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class UserDatabaseRepository implements UserRepository
@@ -57,12 +59,8 @@ class UserDatabaseRepository implements UserRepository
     }
 
     /**
-     * Get the user with the given id.
-     *
-     * @param int $id The id of the user
-     * @return Entity<User>     The user
-     * @throws DatabaseException
-     * @throws NotFoundException When user is not found
+     * @inheritDoc
+     * @return Entity<User>
      */
     public function getById(int $id): Entity
     {
@@ -72,7 +70,12 @@ class UserDatabaseRepository implements UserRepository
             ->where(field('id')->eq($id))
             ->compile();
 
-        $user = $this->db->execute($query)->fetch();
+        try {
+            $user = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
         if ($user) {
             return UserMapper::toDomain(
                 $this->table->filter($user)
@@ -82,12 +85,8 @@ class UserDatabaseRepository implements UserRepository
     }
 
     /**
-     * Get the user with the given uuid
-     *
-     * @param UniqueId $uid
+     * @inheritDoc
      * @return Entity<User>
-     * @throws DatabaseException
-     * @throws NotFoundException
      */
     public function getByUUID(UniqueId $uid): Entity
     {
@@ -97,7 +96,11 @@ class UserDatabaseRepository implements UserRepository
             ->where(field('uuid')->eq($uid))
             ->compile();
 
-        $user = $this->db->execute($query)->fetch();
+        try {
+            $user = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($user) {
             return UserMapper::toDomain(
                 $this->table->filter($user)
@@ -107,12 +110,8 @@ class UserDatabaseRepository implements UserRepository
     }
 
     /**
-     * Get the user account with the given email.
-     *
-     * @param EmailAddress $email The email address of the user
-     * @return Entity<User>         The user
-     * @throws DatabaseException
-     * @throws NotFoundException When user is not found
+     * @inheritDoc
+     * @return Entity<User>
      */
     public function getAccount(EmailAddress $email): Entity
     {
@@ -122,7 +121,11 @@ class UserDatabaseRepository implements UserRepository
             ->where(field('email')->eq($email))
             ->compile();
 
-        $user = $this->db->execute($query)->fetch();
+        try {
+            $user = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($user) {
             return UserAccountMapper::toDomain(
                 $this->table->filter($user)
@@ -132,12 +135,8 @@ class UserDatabaseRepository implements UserRepository
     }
 
     /**
-     * Get the user with the given email.
-     *
-     * @param EmailAddress $email The email address of the user
-     * @return Entity<User>         The user
-     * @throws DatabaseException
-     * @throws NotFoundException When user is not found
+     * @inheritDoc
+     * @return Entity<User>
      */
     public function getByEmail(EmailAddress $email): Entity
     {
@@ -147,7 +146,11 @@ class UserDatabaseRepository implements UserRepository
             ->where(field('email')->eq($email))
             ->compile();
 
-        $user = $this->db->execute($query)->fetch();
+        try {
+            $user = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($user) {
             return UserMapper::toDomain(
                 $this->table->filter($user)
@@ -158,7 +161,6 @@ class UserDatabaseRepository implements UserRepository
 
     /**
      * @inheritdoc
-     * @throws DatabaseException
      */
     public function existsWithEmail(EmailAddress $email): bool
     {
@@ -167,18 +169,18 @@ class UserDatabaseRepository implements UserRepository
             ->from($this->table->from())
             ->where(field('email')->eq(strval($email)))
             ->compile();
-        $count = $this->db->execute($query)->fetch();
+        try {
+            $count = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         return $count->c > 0;
     }
 
 
     /**
-     * Get a user using a token
-     *
-     * @param TokenIdentifier $token
+     * @inheritDoc
      * @return Entity<User>
-     * @throws DatabaseException
-     * @throws NotFoundException When user is not found
      */
     public function getByAccessToken(TokenIdentifier $token): Entity
     {
@@ -194,7 +196,11 @@ class UserDatabaseRepository implements UserRepository
             ->where(field('oauth_access_tokens.identifier')->eq(strval($token)))
             ->compile();
 
-        $data = $this->db->execute($query)->fetch();
+        try {
+            $data = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($data) {
             $userRow = $this->table->filter($data);
             $accessTokenRow = $accessTokenTable->filter($data);
@@ -207,7 +213,6 @@ class UserDatabaseRepository implements UserRepository
 
     /**
      * @inheritdoc
-     * @throws DatabaseException
      */
     public function updateAccount(Entity $account): void
     {
@@ -218,12 +223,15 @@ class UserDatabaseRepository implements UserRepository
             ->update($this->table->from(), $data)
             ->where(field('id')->eq($account->id()))
             ->compile();
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 
     /**
      * @inheritDoc
-     * @throws DatabaseException
      */
     public function create(UserAccount $account): Entity
     {
@@ -238,13 +246,22 @@ class UserDatabaseRepository implements UserRepository
                 ... array_values($data)
             )
             ->compile();
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         return new Entity(
             $this->db->lastInsertId(),
             $account
         );
     }
 
+    /**
+     * Create the base query for SELECT
+     *
+     * @return SelectQuery
+     */
     private function createBaseQuery(): SelectQuery
     {
         return $this->db->createQueryFactory()
@@ -255,13 +272,16 @@ class UserDatabaseRepository implements UserRepository
 
     /**
      * @inheritDoc
-     * @throws DatabaseException
      * @return Entity[]
      */
     public function getAll(): array
     {
         $query = $this->createBaseQuery()->compile();
-        $rows = $this->db->execute($query)->fetchAll();
+        try {
+            $rows = $this->db->execute($query)->fetchAll();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         return array_map(
             fn ($row) => UserMapper::toDomain($this->table->filter($row)),
             $rows

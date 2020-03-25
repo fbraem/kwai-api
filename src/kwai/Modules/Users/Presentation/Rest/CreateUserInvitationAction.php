@@ -7,6 +7,7 @@ use Core\Responses\ResourceResponse;
 use Core\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
 use Kwai\Modules\Mails\Infrastructure\Repositories\RecipientDatabaseRepository;
@@ -59,9 +60,9 @@ class CreateUserInvitationAction extends Action
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
-     * @param $args
+     * @param          $args
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -107,6 +108,10 @@ class CreateUserInvitationAction extends Action
                 422,
                 $e->getMessage()
             ))($response);
+        } catch (RepositoryException $e) {
+            return (
+                new SimpleResponse(500, 'An internal repository occurred.')
+            )($response);
         }
 
         return (new ResourceResponse(

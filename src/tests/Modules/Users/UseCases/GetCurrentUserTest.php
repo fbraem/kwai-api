@@ -10,6 +10,7 @@ use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -40,9 +41,9 @@ final class GetCurrentUserTest extends DatabaseTestCase
         try {
             $this->user = $this->userRepo->getByEmail(new EmailAddress('test@kwai.com'));
         } catch (NotFoundException $e) {
-            echo $e->getMessage(), PHP_EOL;
-        } catch (DatabaseException $e) {
-            echo $e->getMessage(), PHP_EOL;
+            assertTrue(false, $e->getMessage());
+        } catch (RepositoryException $e) {
+            assertTrue(false, $e->getMessage());
         }
     }
 
@@ -62,6 +63,8 @@ final class GetCurrentUserTest extends DatabaseTestCase
                 $user
             );
         } catch (NotFoundException $e) {
+            assertTrue(false, $e->getMessage());
+        } catch (RepositoryException $e) {
             assertTrue(false, $e->getMessage());
         }
     }

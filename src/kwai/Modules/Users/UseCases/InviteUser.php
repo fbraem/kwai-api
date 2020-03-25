@@ -14,6 +14,7 @@ use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Domain\Mail;
 use Kwai\Modules\Mails\Domain\Recipient;
@@ -101,6 +102,7 @@ final class InviteUser
      * @param InviteUserCommand $command
      * @return Entity<UserInvitation> A user invitation
      * @throws UnprocessableException
+     * @throws RepositoryException
      */
     public function __invoke(InviteUserCommand $command): Entity
     {

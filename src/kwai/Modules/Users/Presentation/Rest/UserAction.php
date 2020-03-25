@@ -4,9 +4,11 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Presentation\Rest;
 
 use Core\Responses\NotFoundResponse;
+use Core\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -46,6 +48,10 @@ class UserAction extends Action
             ))($command);
         } catch (NotFoundException $e) {
             return (new NotFoundResponse('User not found'))($response);
+        } catch (RepositoryException $e) {
+            return (
+                new SimpleResponse(500, 'An internal repository occurred.')
+            )($response);
         }
 
         return (new ResourceResponse(

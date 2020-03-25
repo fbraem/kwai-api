@@ -13,6 +13,7 @@ use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Timestamp;
 
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
@@ -54,12 +55,14 @@ final class AuthenticateUser
      * be thrown. On success, a refreshtoken will be returned. This refresh
      * token will contain an access token. This access token will be
      * associated with the authenticated user.
+     *
      * @param  AuthenticateUserCommand $command
      * @return Entity<RefreshToken>              A RefreshToken entity
      * @throws NotFoundException
      *    Thrown when user can't be found
      * @throws AuthenticationException
      *    Thrown when the password is invalid, or when the user is revoked.
+     * @throws RepositoryException
      */
     public function __invoke(AuthenticateUserCommand $command): Entity
     {

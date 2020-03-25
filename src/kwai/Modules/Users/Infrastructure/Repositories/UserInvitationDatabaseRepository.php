@@ -1,7 +1,7 @@
 <?php
 /**
- * @package kwai
- * @subpackage Auth
+ * @package Kwai
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
@@ -14,6 +14,7 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database;
 
 use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
@@ -26,20 +27,32 @@ use function Latitude\QueryBuilder\on;
 use Latitude\QueryBuilder\Query\SelectQuery;
 
 /**
+ * Class UserInvitationDatabaseRepository
+ *
  * UserInvitation Repository for read/write UserInvitation entity
  * from/to a database.
+ *
  * @SuppressWarnings(PHPMD.ShortVariable)
-*/
+ */
 class UserInvitationDatabaseRepository implements UserInvitationRepository
 {
+    /**
+     * The database connection
+     */
     private Connection $db;
 
+    /**
+     * The user invitation table
+     */
     private UserInvitationsTable $table;
 
+    /**
+     * The user table
+     */
     private UsersTable $userTable;
 
     /**
-     * Constructor
+     * UserInvitationDatabaseRepository constructor
      *
      * @param Connection $db A database object
      */
@@ -52,8 +65,6 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
-     * @throws NotFoundException
      */
     public function getByUniqueId(UniqueId $uuid) : Entity
     {
@@ -62,7 +73,11 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
             ->compile()
         ;
 
-        $row = $this->db->execute($query)->fetch();
+        try {
+            $row = $this->db->execute($query)->fetch();
+        } catch (Database\DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($row) {
             $invitationRow = $this->table->filter($row);
             $invitationRow->user = $this->userTable->filter($row);
@@ -81,7 +96,6 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
      */
     public function create(UserInvitation $invitation): Entity
     {
@@ -97,7 +111,11 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
             )
             ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (Database\DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         return new Entity(
             $this->db->lastInsertId(),
@@ -107,7 +125,6 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
      */
     public function update(Entity $invitation): void
     {
@@ -119,7 +136,11 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
             ->where(field('id')->eq($invitation->id()))
             ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (Database\DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 
     /**
@@ -147,7 +168,6 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
 
     /**
      * @inheritDoc
-     * @throws Database\DatabaseException
      */
     public function getByEmail(EmailAddress $email): array
     {
@@ -156,7 +176,11 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
             ->compile()
         ;
 
-        $rows = $this->db->execute($query)->fetchAll();
+        try {
+            $rows = $this->db->execute($query)->fetchAll();
+        } catch (Database\DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         return array_map(function ($row) {
             $invitationRow = $this->table->filter($row);
             $invitationRow->user = $this->userTable->filter($row);

@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\RefreshToken;
 
@@ -22,14 +23,16 @@ interface RefreshTokenRepository
      * Get a refreshtoken by its token identifier.
      *
      * @param  TokenIdentifier $identifier A token identifier
-     * @return Entity<RefreshToken>        A refreshtoken
      * @throws NotFoundException
+     * @throws RepositoryException
+     * @return Entity<RefreshToken>        A refreshtoken
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity;
 
     /**
      * Save a new RefreshToken
      * @param  RefreshToken $token
+     * @throws RepositoryException
      * @return Entity<RefreshToken>
      */
     public function create(RefreshToken $token): Entity;
@@ -37,6 +40,7 @@ interface RefreshTokenRepository
     /**
      * Update the refreshtoken.
      * @param  Entity<RefreshToken> $token
+     * @throws RepositoryException
      */
     public function update(Entity $token): void;
 }

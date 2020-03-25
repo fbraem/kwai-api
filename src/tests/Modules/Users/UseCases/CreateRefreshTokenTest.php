@@ -8,6 +8,7 @@ namespace Tests\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
@@ -61,6 +62,8 @@ final class CreateRefreshTokenTest extends DatabaseTestCase
             $this->assertTrue(false, $e->getMessage());
         } catch (AuthenticationException $e) {
             $this->assertTrue(false, $e->getMessage());
+        } catch (RepositoryException $e) {
+            self::assertTrue(false, strval($e));
         }
     }
 }

@@ -13,6 +13,7 @@ use Core\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserAccountTransformer;
@@ -90,6 +91,10 @@ class ConfirmInvitationAction extends Action
             return (new SimpleResponse(422, $e->getMessage()))($response);
         } catch (NotFoundException $e) {
             return (new NotFoundResponse('User invitation does not exist'))($response);
+        } catch (RepositoryException $e) {
+            return (
+            new SimpleResponse(500, 'An internal repository occurred.')
+            )($response);
         }
 
         return (new ResourceResponse(

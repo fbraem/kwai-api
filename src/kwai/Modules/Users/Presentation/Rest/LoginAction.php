@@ -12,6 +12,7 @@ use Core\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
@@ -82,6 +83,10 @@ class LoginAction extends Action
             return (new NotAuthorizedResponse('Unknown user'))($response);
         } catch (AuthenticationException $ae) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);
+        } catch (RepositoryException $e) {
+            return (
+                new SimpleResponse(500, 'An internal repository occurred.')
+            )($response);
         }
 
         $secret = $this->getContainerEntry('settings')['security']['secret'];

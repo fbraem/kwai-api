@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 
 use Kwai\Core\Domain\Entity;
@@ -59,9 +60,11 @@ final class LogoutTest extends DatabaseTestCase
                 $accessTokenRepo
             ))($command);
         } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
+            self::assertTrue(false, $e->getMessage());
         } catch (AuthenticationException $e) {
-            $this->assertTrue(false, $e->getMessage());
+            self::assertTrue(false, $e->getMessage());
+        } catch (RepositoryException $e) {
+            self::assertTrue(false, $e->getMessage());
         }
     }
 }

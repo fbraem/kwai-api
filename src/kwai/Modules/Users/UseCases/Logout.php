@@ -7,16 +7,11 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Timestamp;
-
+use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Modules\Users\Domain\AccessToken;
-use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
-
-use Firebase\JWT\JWT;
 
 /**
  * Usecase: Logout a user. The refreshtoken and the associated accesstoken
@@ -43,10 +38,12 @@ final class Logout
 
     /**
      * The refreshtoken and the associated accesstoken will be revoked.
+     *
      * @param  LogoutCommand $command
-     * @throws \Kwai\Core\Domain\Exceptions\NotFoundException
+     * @throws NotFoundException
      *    Thrown when the refreshtoken can't be found
-     */
+     * @throws RepositoryException
+     * @noinspection PhpUndefinedMethodInspection*/
     public function __invoke(LogoutCommand $command): void
     {
         $refreshToken = $this

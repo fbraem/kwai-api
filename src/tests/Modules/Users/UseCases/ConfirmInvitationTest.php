@@ -15,6 +15,7 @@ use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\TraceableTime;
 use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
@@ -91,11 +92,12 @@ class ConfirmInvitationTest extends DatabaseTestCase
             ))($command);
             self::assertInstanceOf(UserAccount::class, $user->domain());
         } catch (NotFoundException $e) {
-            self::assertTrue(true, strval($e));
+            self::assertTrue(false, strval($e));
         } catch (UnprocessableException $e) {
-            self::assertTrue(true, strval($e));
+            self::assertTrue(false, strval($e));
+        } catch (RepositoryException $e) {
+            self::assertTrue(false, strval($e));
         }
-        $this->assertTrue(true, 'Jopla');
     }
 
     public function testExpired()

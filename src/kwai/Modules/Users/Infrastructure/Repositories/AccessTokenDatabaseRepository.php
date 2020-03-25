@@ -2,7 +2,7 @@
 /**
  * AccessToken Repository.
  * @package kwai
- * @subpackage Auth
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
@@ -12,6 +12,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -24,7 +25,10 @@ use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
+ * Class AccessTokenDatabaseRepository
+ *
  * AccessToken Repository for read/write AccessToken entity from/to a database.
+ *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
 final class AccessTokenDatabaseRepository implements AccessTokenRepository
@@ -45,7 +49,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     private UsersTable $userTable;
 
     /**
-     * Constructor
+     * AccessTokenDatabaseRepository constructor
      *
      * @param Connection $db A database object
      */
@@ -57,12 +61,8 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     }
 
     /**
-     * Get an accesstoken by its token identifier.
-     *
-     * @param TokenIdentifier $identifier A token identifier
-     * @return Entity<AccessToken>         An accesstoken
-     * @throws DatabaseException
-     * @throws NotFoundException
+     * @inheritDoc
+     * @return Entity<AccessToken>
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
@@ -71,7 +71,11 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             ->compile()
         ;
 
-        $row = $this->db->execute($query)->fetch();
+        try {
+            $row = $this->db->execute($query)->fetch();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($row) {
             $accessTokenRow = $this->table->filter($row);
             $accessTokenRow->user = $this->userTable->filter($row);
@@ -81,11 +85,9 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     }
 
     /**
-     * Get all accesstokens of a user.
-     *
+     * @inheritDoc
      * @param Entity<User> $user
-     * @return Entity<AccessToken>[]  An array with accesstokens
-     * @throws DatabaseException
+     * @return Entity<AccessToken>[]
      */
     public function getTokensForUser(Entity $user): array
     {
@@ -94,7 +96,11 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             ->compile()
         ;
 
-        $rows = $this->db->execute($query)->fetchAll();
+        try {
+            $rows = $this->db->execute($query)->fetchAll();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         $tokens = [];
         foreach ($rows as $row) {
@@ -106,11 +112,8 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     }
 
     /**
-     * Inserts the accesstoken in the table.
-     *
-     * @param AccessToken $token
+     * @inheritDoc
      * @return Entity<AccessToken>
-     * @throws DatabaseException
      */
     public function create(AccessToken $token): Entity
     {
@@ -126,7 +129,11 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             )
             ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         return new Entity(
             $this->db->lastInsertId(),
@@ -136,7 +143,6 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
     /**
      * @inheritdoc
-     * @throws DatabaseException
      */
     public function update(Entity $token): void
     {
@@ -149,7 +155,11 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
@@ -56,6 +57,7 @@ final class ConfirmInvitation
      * @return Entity The new user account
      * @throws NotFoundException
      * @throws UnprocessableException
+     * @throws RepositoryException
      * @noinspection PhpUndefinedMethodInspection
      */
     public function __invoke(ConfirmInvitationCommand $command): Entity
