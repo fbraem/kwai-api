@@ -6,12 +6,12 @@ use Core\Clubman;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
+use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use REST\Users\Actions\AbilityBrowseAction;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityReadAction;
 use REST\Users\Actions\AbilityUpdateAction;
 use REST\Users\Actions\BrowseInvitationAction;
-use REST\Users\Actions\ReadAction;
 use REST\Users\Actions\ReadInvitationByTokenAction;
 use REST\Users\Actions\RuleBrowseAction;
 use REST\Users\Actions\UserAbilityBrowseAction;
@@ -25,10 +25,6 @@ $app = Clubman::getApplication();
 $app->group('/users', function (RouteCollectorProxy $group) {
     $group->get('', BrowseUserAction::class)
         ->setName('users.browse')
-        ->setArgument('auth', true)
-    ;
-    $group->get('/{id:[0-9]+}', ReadAction::class)
-        ->setName('users.read')
         ->setArgument('auth', true)
     ;
     // Rules
@@ -80,6 +76,10 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     ;
     $group->post('/invitations/{uuid:[0-9a-zA-Z\-]+}', ConfirmInvitationAction::class)
         ->setName('users.invitations.confirm')
+    ;
+    $group->get('/{uuid:[0-9a-zA-Z\-]+}', GetUserAction::class)
+        ->setName('users.get')
+        ->setArgument('auth', true)
     ;
 });
 
