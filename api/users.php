@@ -7,6 +7,7 @@ use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
+use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use REST\Users\Actions\AbilityBrowseAction;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityReadAction;
@@ -71,7 +72,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.invitations.browse')
         ->setArgument('auth', true)
     ;
-    $group->get('/invitations/{token:[0-9a-zA-Z\-]+}', ReadInvitationByTokenAction::class)
+    $group->get('/invitations/{uuid:[0-9a-zA-Z\-]+}', GetUserInvitation::class)
         ->setName('users.invitations.token')
     ;
     $group->post('/invitations/{uuid:[0-9a-zA-Z\-]+}', ConfirmInvitationAction::class)
