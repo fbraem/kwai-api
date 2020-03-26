@@ -14,5 +14,8 @@ namespace Kwai\Modules\Users\UseCases;
  */
 class GetUserCommand
 {
-    public int $id;
+    /**
+     * The unique id of a user.
+     */
+    public string $uuid;
 }
