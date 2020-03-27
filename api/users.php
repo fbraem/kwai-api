@@ -2,13 +2,14 @@
 require '../src/vendor/autoload.php';
 
 use Core\Clubman;
+use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
+use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use Kwai\Modules\Users\UseCases\BrowseUserInvitation;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
-use REST\Users\Actions\AbilityBrowseAction;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityReadAction;
 use REST\Users\Actions\AbilityUpdateAction;
@@ -39,7 +40,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setArgument('auth', true)
     ;
 
-    $group->get('/abilities', AbilityBrowseAction::class)
+    $group->get('/abilities', BrowseAbilitiesAction::class)
         ->setName('users.abilities.browse')
         ->setArgument('auth', true)
     ;
@@ -47,7 +48,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.abilities.create')
         ->setArgument('auth', true)
     ;
-    $group->get('/abilities/{id:[0-9]+}', AbilityReadAction::class)
+    $group->get('/abilities/{id:[0-9]+}', GetAbilityAction::class)
         ->setName('users.abilities.read')
         ->setArgument('auth', true)
     ;
