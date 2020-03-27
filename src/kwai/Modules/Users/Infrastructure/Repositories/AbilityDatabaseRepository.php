@@ -21,6 +21,7 @@ use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
+use Latitude\QueryBuilder\Query;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
@@ -63,7 +64,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
         $query = $this->db->createQueryFactory()
             ->select(... $this->table->alias())
             ->from($this->table->from())
-            ->where(field('abilities_id')->eq($id))
+            ->where(field('id')->eq($id))
             ->compile()
         ;
 
@@ -101,7 +102,18 @@ final class AbilityDatabaseRepository implements AbilityRepository
             ->where(field('user_id')->eq($user->id()))
             ->compile()
         ;
+        return $this->fetchAll($query);
+    }
 
+    /**
+     * Fetch all abilities with their rules
+     *
+     * @param Query $query
+     * @return Entity<Ability>[]
+     * @throws RepositoryException
+     */
+    private function fetchAll(Query $query): array
+    {
         try {
             $rows = $this->db->execute($query)->fetchAll();
         } catch (DatabaseException $e) {
@@ -173,5 +185,19 @@ final class AbilityDatabaseRepository implements AbilityRepository
         }
 
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAll(): array
+    {
+        $query = $this->db->createQueryFactory()
+            ->select(... $this->table->alias())
+            ->from($this->table->from())
+            ->compile()
+        ;
+
+        return $this->fetchAll($query);
     }
 }
