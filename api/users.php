@@ -11,7 +11,6 @@ use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use Kwai\Modules\Users\UseCases\BrowseUserInvitation;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use REST\Users\Actions\AbilityCreateAction;
-use REST\Users\Actions\AbilityReadAction;
 use REST\Users\Actions\AbilityUpdateAction;
 use REST\Users\Actions\RuleBrowseAction;
 use REST\Users\Actions\UserAbilityBrowseAction;
