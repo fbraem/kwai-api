@@ -33,7 +33,14 @@ interface AbilityRepository
      * Get all abilities of the user
      * @param  Entity<User> $user
      * @throws RepositoryException
-     * @return array
+     * @return Ability[]
      */
     public function getByUser(Entity $user): array;
+
+    /**
+     * Get all abilities
+     * @throws RepositoryException
+     * @return Ability[]
+     */
+    public function getAll(): array;
 }
