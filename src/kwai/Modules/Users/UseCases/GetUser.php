@@ -12,20 +12,25 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Repositories\AbilityRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
  * Class GetUser
  *
  * Use case to get a user with the given unique id.
+ * Abilities are also returned when withAbilities is set to true.
  */
 class GetUser
 {
     private UserRepository $userRepo;
 
-    public function __construct(UserRepository $userRepo)
+    private AbilityRepository $abilityRepo;
+
+    public function __construct(UserRepository $userRepo, AbilityRepository $abilityRepo)
     {
         $this->userRepo = $userRepo;
+        $this->abilityRepo = $abilityRepo;
     }
 
     /**
@@ -38,6 +43,13 @@ class GetUser
      */
     public function __invoke(GetUserCommand $command): Entity
     {
-        return $this->userRepo->getByUUID(new UniqueId($command->uuid));
+        $user = $this->userRepo->getByUUID(new UniqueId($command->uuid));
+        if ($command->withAbilities) {
+            $abilities = $this->abilityRepo->getByUser($user);
+            foreach ($abilities as $ability) {
+                $user->domain()->addAbility($ability);
+            }
+        }
+        return $user;
     }
 }

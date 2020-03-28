@@ -18,4 +18,9 @@ class GetUserCommand
      * The unique id of a user.
      */
     public string $uuid;
+
+    /**
+     * Return the abilities of the user?
+     */
+    public bool $withAbilities;
 }
