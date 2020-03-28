@@ -22,18 +22,26 @@ class ParametersMiddleware implements MiddlewareInterface
         $pageParameters = $this->getPageParameters($queryParameters);
         if ($pageParameters !== null) {
             $parameters['page'] = $pageParameters;
+        } else {
+            $parameters['page'] = [];
         }
         $filterParameters = $this->getFilterParameters($queryParameters);
         if ($filterParameters !== null) {
             $parameters['filter'] = $filterParameters;
+        } else {
+            $parameters['filter'] = [];
         }
         $includeParameter = $this->getIncludeParameter($queryParameters);
         if ($includeParameter !== null) {
             $parameters['include'] = explode(',', $includeParameter);
+        } else {
+            $parameters['include'] = [];
         }
         $sortParameter = $this->getSortParameter($queryParameters);
         if ($sortParameter !== null) {
             $parameters['sort'] = explode(',', $sortParameter);
+        } else {
+            $parameters['sort'] = [];
         }
 
         $request = $request->withAttribute('parameters', $parameters);
