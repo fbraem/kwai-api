@@ -21,10 +21,9 @@ class UserTransformer extends Fractal\TransformerAbstract
     private static string $type = 'users';
 
     /**
-     * Default includes
-     * @var string[]
+     * The available includes
      */
-    protected $defaultIncludes = [
+    protected $availableIncludes = [
         'abilities'
     ];
 
@@ -50,8 +49,10 @@ class UserTransformer extends Fractal\TransformerAbstract
 
     /**
      * Get the included abilities
+     *
      * @param  Entity<User> $user The user containing the abilities.
      * @return Fractal\Resource\Collection
+     * @noinspection PhpUnused
      */
     public function includeAbilities(Entity $user): Fractal\Resource\Collection
     {
