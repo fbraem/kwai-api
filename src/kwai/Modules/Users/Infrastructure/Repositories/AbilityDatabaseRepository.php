@@ -106,7 +106,8 @@ final class AbilityDatabaseRepository implements AbilityRepository
     }
 
     /**
-     * Fetch all abilities with their rules
+     * Fetch all abilities with their rules.
+     * The id of the ability is used as key of the returned array.
      *
      * @param Query $query
      * @return Entity<Ability>[]
@@ -120,17 +121,15 @@ final class AbilityDatabaseRepository implements AbilityRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $abilities = array_map(function ($row) {
-            return AbilityMapper::toDomain(
+        $abilities = [];
+        foreach ($rows as $row) {
+            $ability = AbilityMapper::toDomain(
                 $this->table->filter($row)
             );
-        }, $rows);
+            $abilities[$ability->id()] = $ability;
+        }
 
-        $ability_ids = array_map(function (Entity $ability) {
-            return $ability->id();
-        }, $abilities);
-
-        $rules = $this->getRulesForAbilities($ability_ids);
+        $rules = $this->getRulesForAbilities(array_keys($abilities));
         foreach ($abilities as $ability) {
             foreach ($rules[$ability->id()] as $rule) {
                 $ability->addRule($rule);
