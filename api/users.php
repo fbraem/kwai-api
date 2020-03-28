@@ -7,13 +7,13 @@ use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
+use Kwai\Modules\Users\Presentation\Rest\GetUserAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use Kwai\Modules\Users\UseCases\BrowseUserInvitation;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityUpdateAction;
 use REST\Users\Actions\RuleBrowseAction;
-use REST\Users\Actions\UserAbilityBrowseAction;
 use REST\Users\Actions\UserAttachAbilityAction;
 use REST\Users\Actions\UserDetachAbilityAction;
 use Slim\Routing\RouteCollectorProxy;
@@ -21,15 +21,14 @@ use Slim\Routing\RouteCollectorProxy;
 $app = Clubman::getApplication();
 
 $app->group('/users', function (RouteCollectorProxy $group) {
+    $uuid_regex = '{uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}+}';
+
     $group->get('', BrowseUserAction::class)
         ->setName('users.browse')
         ->setArgument('auth', true)
     ;
+
     // Rules
-    $group->get('/{id:[0-9]+}/abilities', UserAbilityBrowseAction::class)
-        ->setName('user.abilities.browse')
-        ->setArgument('auth', true)
-    ;
     $group->patch('/{id:[0-9]+}/abilities/{ability:[0-9]+}', UserAttachAbilityAction::class)
         ->setName('user.abilities.attach')
         ->setArgument('auth', true)
@@ -69,13 +68,21 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.invitations.browse')
         ->setArgument('auth', true)
     ;
-    $group->get('/invitations/{uuid:[0-9a-zA-Z\-]+}', GetUserInvitation::class)
+    $group->get("/invitations/$uuid_regex", GetUserInvitation::class)
         ->setName('users.invitations.token')
     ;
-    $group->post('/invitations/{uuid:[0-9a-zA-Z\-]+}', ConfirmInvitationAction::class)
+    $group->post("/invitations/$uuid_regex", ConfirmInvitationAction::class)
         ->setName('users.invitations.confirm')
     ;
-    $group->get('/{uuid:[0-9a-zA-Z\-]+}', GetUserAction::class)
+
+    // Abilities of a user
+    $group->get("/$uuid_regex/abilities", GetUserAbilitiesAction::class)
+        ->setName('user.abilities.browse')
+        ->setArgument('auth', true)
+    ;
+
+    // Users
+    $group->get("/$uuid_regex", GetUserAction::class)
         ->setName('users.get')
         ->setArgument('auth', true)
     ;
