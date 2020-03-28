@@ -124,6 +124,6 @@ class User implements DomainEntity
      */
     public function addAbility(Entity $ability)
     {
-        $this->abilities[] = $ability;
+        $this->abilities[$ability->id()] = $ability;
     }
 }
