@@ -11,6 +11,7 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
@@ -105,4 +106,12 @@ interface UserRepository
      * @return Entity
      */
     public function create(UserAccount $account): Entity;
+
+    /**
+     * Add the ability to the user.
+     * @param Entity<Ability> $user
+     * @param Entity<Ability> $ability
+     * @return Entity<User>
+     */
+    public function addAbility(Entity $user, Entity $ability): Entity;
 }

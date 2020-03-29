@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
@@ -20,6 +21,7 @@ use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
+use Kwai\Modules\Users\Infrastructure\UserAbilitiesTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Latitude\QueryBuilder\Query\SelectQuery;
@@ -286,5 +288,31 @@ class UserDatabaseRepository implements UserRepository
             fn ($row) => UserMapper::toDomain($this->table->filter($row)),
             $rows
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addAbility(Entity $user, Entity $ability): Entity
+    {
+        $table = new UserAbilitiesTable();
+        $query = $this->db->createQueryFactory()
+            ->insert($table->from())
+            ->columns(... $table->getColumns())
+            ->values(
+                $user->id(),
+                $ability->id(),
+                strval(Timestamp::createNow()),
+                null
+            )
+            ->compile()
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        $user->addAbility($ability);
+        return $user;
     }
 }

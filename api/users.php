@@ -2,6 +2,7 @@
 require '../src/vendor/autoload.php';
 
 use Core\Clubman;
+use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
@@ -23,17 +24,27 @@ $app = Clubman::getApplication();
 $app->group('/users', function (RouteCollectorProxy $group) {
     $uuid_regex = '{uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}+}';
 
+    // Get all users
     $group->get('', BrowseUserAction::class)
         ->setName('users.browse')
         ->setArgument('auth', true)
     ;
-
-    // Rules
-    $group->patch('/{id:[0-9]+}/abilities/{ability:[0-9]+}', UserAttachAbilityAction::class)
+    // Get a user with the given uuid
+    $group->get("/$uuid_regex", GetUserAction::class)
+        ->setName('users.get')
+        ->setArgument('auth', true)
+    ;
+    // Get the abilities of the user with the given uuid
+    $group->get("/$uuid_regex/abilities", GetUserAbilitiesAction::class)
+        ->setName('user.abilities.browse')
+        ->setArgument('auth', true)
+    ;
+    // Attach an ability to the user with the given uuid
+    $group->patch("/$uuid_regex/abilities/{ability:[0-9]+}", AttachAbilityAction::class)
         ->setName('user.abilities.attach')
         ->setArgument('auth', true)
     ;
-    $group->delete('/{id:[0-9]+}/abilities/{ability:[0-9]+}', UserDetachAbilityAction::class)
+    $group->delete("/$uuid_regex/abilities/{ability:[0-9]+}", UserDetachAbilityAction::class)
         ->setName('user.abilities.detach')
         ->setArgument('auth', true)
     ;
@@ -73,18 +84,6 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     ;
     $group->post("/invitations/$uuid_regex", ConfirmInvitationAction::class)
         ->setName('users.invitations.confirm')
-    ;
-
-    // Abilities of a user
-    $group->get("/$uuid_regex/abilities", GetUserAbilitiesAction::class)
-        ->setName('user.abilities.browse')
-        ->setArgument('auth', true)
-    ;
-
-    // Users
-    $group->get("/$uuid_regex", GetUserAction::class)
-        ->setName('users.get')
-        ->setArgument('auth', true)
     ;
 });
 
