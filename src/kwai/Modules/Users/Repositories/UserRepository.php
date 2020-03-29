@@ -111,6 +111,7 @@ interface UserRepository
      * Add the ability to the user.
      * @param Entity<Ability> $user
      * @param Entity<Ability> $ability
+     * @throws RepositoryException
      * @return Entity<User>
      */
     public function addAbility(Entity $user, Entity $ability): Entity;
