@@ -7,6 +7,7 @@ use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
+use Kwai\Modules\Users\Presentation\Rest\DetachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
@@ -44,7 +45,8 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('user.abilities.attach')
         ->setArgument('auth', true)
     ;
-    $group->delete("/$uuid_regex/abilities/{ability:[0-9]+}", UserDetachAbilityAction::class)
+    // Detach an ability from the user with the given uuid
+    $group->delete("/$uuid_regex/abilities/{ability:[0-9]+}", DetachAbilityAction::class)
         ->setName('user.abilities.detach')
         ->setArgument('auth', true)
     ;

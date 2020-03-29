@@ -138,4 +138,14 @@ class User implements DomainEntity
             $this->addAbility($ability);
         }
     }
+
+    /**
+     * Removes the ability from the user.
+     *
+     * @param Entity $ability
+     */
+    public function removeAbility(Entity $ability)
+    {
+        unset($this->abilities[$ability->id()]);
+    }
 }

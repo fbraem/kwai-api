@@ -313,6 +313,7 @@ class UserDatabaseRepository implements UserRepository
         } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+        /** @noinspection PhpUndefinedMethodInspection */
         $user->addAbility($ability);
         return $user;
     }
@@ -325,8 +326,14 @@ class UserDatabaseRepository implements UserRepository
         $table = new UserAbilitiesTable();
         $query = $this->db->createQueryFactory()
             ->delete($table->from())
-            ->where($table->column('user_id')->eq($user->id()))
-            ->andWhere($table->column('ability_id')->eq($ability->id()))
+            ->where(
+                field($table->column('user_id'))
+                    ->eq($user->id())
+            )
+            ->andWhere(
+                field($table->column('ability_id'))
+                    ->eq($ability->id())
+            )
             ->compile()
         ;
         try {
@@ -334,6 +341,7 @@ class UserDatabaseRepository implements UserRepository
         } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+        /** @noinspection PhpUndefinedMethodInspection */
         $user->removeAbility($ability);
         return $user;
     }
