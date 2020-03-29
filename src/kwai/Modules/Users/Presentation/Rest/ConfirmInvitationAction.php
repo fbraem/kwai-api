@@ -93,7 +93,7 @@ class ConfirmInvitationAction extends Action
             return (new NotFoundResponse('User invitation does not exist'))($response);
         } catch (RepositoryException $e) {
             return (
-            new SimpleResponse(500, 'An internal repository occurred.')
+            new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 

@@ -54,7 +54,7 @@ class GetUserAction extends Action
             return (new NotFoundResponse('User not found'))($response);
         } catch (RepositoryException $e) {
             return (
-                new SimpleResponse(500, 'An internal repository occurred.')
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 

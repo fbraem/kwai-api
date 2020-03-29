@@ -68,7 +68,7 @@ class LogoutAction extends Action
             return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         } catch (RepositoryException $e) {
             return (
-                new SimpleResponse(500, 'An internal repository occurred.')
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 

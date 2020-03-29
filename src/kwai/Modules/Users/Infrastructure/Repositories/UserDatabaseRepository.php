@@ -15,6 +15,7 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -313,6 +314,27 @@ class UserDatabaseRepository implements UserRepository
             throw new RepositoryException(__METHOD__, $e);
         }
         $user->addAbility($ability);
+        return $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeAbility(Entity $user, Entity $ability): Entity
+    {
+        $table = new UserAbilitiesTable();
+        $query = $this->db->createQueryFactory()
+            ->delete($table->from())
+            ->where($table->column('user_id')->eq($user->id()))
+            ->andWhere($table->column('ability_id')->eq($ability->id()))
+            ->compile()
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        $user->removeAbility($ability);
         return $user;
     }
 }
