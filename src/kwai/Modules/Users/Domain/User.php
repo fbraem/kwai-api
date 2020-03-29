@@ -126,4 +126,16 @@ class User implements DomainEntity
     {
         $this->abilities[$ability->id()] = $ability;
     }
+
+    /**
+     * Set the abilities of the user
+     * @param array $abilities
+     */
+    public function setAbilities(array $abilities)
+    {
+        $this->abilities = [];
+        foreach ($abilities as $ability) {
+            $this->addAbility($ability);
+        }
+    }
 }
