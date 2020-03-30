@@ -4,6 +4,7 @@ require '../src/vendor/autoload.php';
 use Core\Clubman;
 use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
+use Kwai\Modules\Users\Presentation\Rest\BrowseRulesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUserInvitationsAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUsersAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
@@ -15,7 +16,6 @@ use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserInvitationAction;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityUpdateAction;
-use REST\Users\Actions\RuleBrowseAction;
 use Slim\Routing\RouteCollectorProxy;
 
 $app = Clubman::getApplication();
@@ -65,7 +65,8 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.abilities.update')
         ->setArgument('auth', true)
     ;
-    $group->get('/rules', RuleBrowseAction::class)
+    // Browse rules
+    $group->get('/rules', BrowseRulesAction::class)
         ->setName('users.rules.browse')
         ->setArgument('auth', true)
     ;
