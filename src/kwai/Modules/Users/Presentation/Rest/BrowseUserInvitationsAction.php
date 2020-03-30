@@ -11,30 +11,30 @@ use Core\Responses\ResourceResponse;
 use Core\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
-use Kwai\Modules\Users\UseCases\BrowseUser;
-use Kwai\Modules\Users\UseCases\BrowseUserCommand;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
+use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
+use Kwai\Modules\Users\UseCases\BrowseUserInvitations;
+use Kwai\Modules\Users\UseCases\BrowseUserInvitationsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Class BrowseUserAction
+ * Class BrowseUsersAction
  *
- * Action to browse all users
+ * Action to browse all user invitations
  */
-class BrowseUserAction extends Action
+class BrowseUserInvitationsAction extends Action
 {
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $repo = new UserDatabaseRepository($this->getContainerEntry('pdo_db'));
+        $repo = new UserInvitationDatabaseRepository($this->getContainerEntry('pdo_db'));
         try {
-            $users = (new BrowseUser($repo))(new BrowseUserCommand());
+            $invitations = (new BrowseUserInvitations($repo))(new BrowseUserInvitationsCommand());
             return (new ResourceResponse(
-                UserTransformer::createForCollection($users)
+                UserInvitationTransformer::createForCollection($invitations)
             ))($response);
         } catch (RepositoryException $e) {
             return (

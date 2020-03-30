@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * Class BrowseUserInvitationCommand
+ * Class BrowseUsersCommand
  *
- * Command for the BrowseUserInvitation use case.
+ * Command for the BrowseUsers use case.
  */
-class BrowseUserInvitationCommand
+class BrowseUsersCommand
 {
 }

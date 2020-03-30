@@ -12,11 +12,11 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
 /**
- * Class BrowseUserInvitation
+ * Class BrowseUserInvitations
  *
  * Use case to browse all users invitations.
  */
-class BrowseUserInvitation
+class BrowseUserInvitations
 {
     private UserInvitationRepository $repo;
 
@@ -28,11 +28,11 @@ class BrowseUserInvitation
     /**
      * Browse all user invitations and returns a list
      *
-     * @param BrowseUserInvitationCommand $command
+     * @param BrowseUserInvitationsCommand $command
      * @return Entity[]
      * @throws RepositoryException
      */
-    public function __invoke(BrowseUserInvitationCommand $command): array
+    public function __invoke(BrowseUserInvitationsCommand $command): array
     {
         return $this->repo->getActive();
     }

@@ -4,14 +4,14 @@ require '../src/vendor/autoload.php';
 use Core\Clubman;
 use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
-use Kwai\Modules\Users\Presentation\Rest\BrowseUserAction;
+use Kwai\Modules\Users\Presentation\Rest\BrowseUsersAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\DetachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
-use Kwai\Modules\Users\UseCases\BrowseUserInvitation;
+use Kwai\Modules\Users\UseCases\BrowseUserInvitations;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityUpdateAction;
@@ -24,7 +24,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     $uuid_regex = '{uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}+}';
 
     // Get all users
-    $group->get('', BrowseUserAction::class)
+    $group->get('', BrowseUsersAction::class)
         ->setName('users.browse')
         ->setArgument('auth', true)
     ;
@@ -75,7 +75,7 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.invitations.create')
         ->setArgument('auth', true)
     ;
-    $group->get('/invitations', BrowseUserInvitation::class)
+    $group->get('/invitations', BrowseUserInvitations::class)
         ->setName('users.invitations.browse')
         ->setArgument('auth', true)
     ;
