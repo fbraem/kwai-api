@@ -16,8 +16,6 @@ use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use REST\Users\Actions\AbilityCreateAction;
 use REST\Users\Actions\AbilityUpdateAction;
 use REST\Users\Actions\RuleBrowseAction;
-use REST\Users\Actions\UserAttachAbilityAction;
-use REST\Users\Actions\UserDetachAbilityAction;
 use Slim\Routing\RouteCollectorProxy;
 
 $app = Clubman::getApplication();
