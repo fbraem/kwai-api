@@ -48,10 +48,7 @@ final class UserTransformerTest extends TestCase
                     'remark' => 'test',
                     'created_at' => strval($traceableTime->getCreatedAt()),
                     'updated_at' => null,
-                    'username' => null,
-                    'abilities' => [
-                        'data' => []
-                    ]
+                    'username' => null
                 ]
             ]
         );
