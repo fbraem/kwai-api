@@ -65,15 +65,27 @@ class Table
     }
 
     /**
+     * Return the alias of a column.
+     * The name of the column will be joined with the name of the table
+     * using the underscore as separator.
+     *
+     * @param string $name
+     * @return string
+     */
+    public function aliasColumn(string $name): string
+    {
+        return $this->name . '_' . $name;
+    }
+
+    /**
      * Returns an array with aliases for all columns. For example: column id of table mails will be returned
      * as an alias 'mails_id' for 'mails.id'.
      * @return ExpressionInterface[]
      */
     public function alias(): array
     {
-        $prefix = $this->name . '_';
-        return array_map(function ($column) use ($prefix) {
-            return alias($this->name . '.' . $column, $prefix . $column);
+        return array_map(function ($column) {
+            return alias($this->column($column), $this->aliasColumn($column));
         }, $this->columns);
     }
 
