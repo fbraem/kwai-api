@@ -16,11 +16,6 @@ use PDOException;
 class DatabaseException extends Exception
 {
     /**
-     * The wrapped PDO exception
-     */
-    private PDOException $wrappedException;
-
-    /**
      * Query, if available.
      */
     private ?string $query;
@@ -32,8 +27,7 @@ class DatabaseException extends Exception
      */
     public function __construct(PDOException $exception, ?string $query = null)
     {
-        parent::__construct($exception->getMessage());
-        $this->wrappedException = $exception;
+        parent::__construct($exception->getMessage(), 0, $exception);
         $this->query = $query;
     }
 
@@ -47,11 +41,11 @@ class DatabaseException extends Exception
             return
                 __CLASS__
                 . ': '
-                . strval($this->wrappedException)
+                . strval($this->getPrevious())
                 . ': '
                 . $this->query
             ;
         }
-        return __CLASS__ . ': ' . strval($this->wrappedException);
+        return __CLASS__ . ': ' . strval($this->getPrevious());
     }
 }
