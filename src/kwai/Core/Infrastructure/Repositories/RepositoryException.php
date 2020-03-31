@@ -19,4 +19,13 @@ class RepositoryException extends Exception
     {
         parent::__construct($message, 0, $previous);
     }
+
+    /**
+     * Returns a string representation of this exception.
+     * @return string
+     */
+    public function __toString()
+    {
+        return __CLASS__ . ': ' . strval($this->getPrevious());
+    }
 }
