@@ -7,14 +7,17 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
 use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 use Kwai\Modules\Users\Repositories\RuleRepository;
+use Latitude\QueryBuilder\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
@@ -58,21 +61,7 @@ class RuleDatabaseRepository implements RuleRepository
             );
         }
         $query = $select->compile();
-
-        try {
-            $stmt = $this->db->execute($query);
-        } catch (DatabaseException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        $rows = $stmt->fetchAll();
-
-        $result = [];
-        foreach ($rows as $row) {
-            $rule = RuleMapper::toDomain($this->table->filter($row));
-            $result[$rule->id()] = $rule;
-        }
-
-        return $result;
+        return $this->execute($query);
     }
 
     /**
@@ -115,5 +104,42 @@ class RuleDatabaseRepository implements RuleRepository
                 )
             )
         ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByIds(array $ids): array
+    {
+        $query = $this->createBaseQuery()
+            ->where(field($this->table->column('id'))->in(...$ids))
+            ->compile()
+        ;
+        return $this->execute($query);
+    }
+
+    /**
+     * Execute the query and return an array of Rule entities.
+     *
+     * @param Query $query
+     * @return Entity<Rule>[]
+     * @throws RepositoryException
+     */
+    private function execute(Query $query): array
+    {
+        try {
+            $stmt = $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        $rows = $stmt->fetchAll();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $rule = RuleMapper::toDomain($this->table->filter($row));
+            $result[$rule->id()] = $rule;
+        }
+
+        return $result;
     }
 }

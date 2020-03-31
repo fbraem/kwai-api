@@ -34,6 +34,19 @@ class RuleDatabaseRepositoryTest extends DatabaseTestCase
         }
     }
 
+    public function testGetByIds(): void
+    {
+        try {
+            $rules = $this->repo->getByIds([1, 2]);
+            $this->assertContainsOnlyInstancesOf(
+                Entity::class,
+                $rules
+            );
+        } catch (RepositoryException $e) {
+            self::assertTrue(false, $e->getMessage());
+        }
+    }
+
     public function testGetAllWithSubject(): void
     {
         try {

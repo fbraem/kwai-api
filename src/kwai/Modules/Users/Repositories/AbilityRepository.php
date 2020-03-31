@@ -19,6 +19,15 @@ use Kwai\Modules\Users\Domain\Ability;
 interface AbilityRepository
 {
     /**
+     * Create a new ability entity
+     *
+     * @param Ability $ability
+     * @throws RepositoryException
+     * @return Entity<Ability>
+     */
+    public function create(Ability $ability): Entity;
+
+    /**
      * Get an ability.
      *
      * @param  int $id Id of an ability

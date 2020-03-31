@@ -8,6 +8,8 @@ namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 use Tests\DatabaseTestCase;
@@ -24,10 +26,30 @@ final class AbilityDatabaseRepositoryTest extends DatabaseTestCase
         $this->repo = new AbilityDatabaseRepository(self::$db);
     }
 
-    public function testGetAbilityById()
+    public function testCreate(): Entity
     {
         try {
-            $ability = $this->repo->getById(1);
+            $ability = $this->repo->create(new Ability((object) [
+                'name' => 'Test',
+                'remark' => 'Test Ability'
+            ]));
+            $this->assertInstanceOf(Entity::class, $ability);
+            return $ability;
+        } catch (RepositoryException $e) {
+            $this->assertTrue(false, strval($e));
+        }
+        return null;
+    }
+
+    /**
+     * @depends testCreate
+     * @param Entity $entity
+     * @throws RepositoryException
+     */
+    public function testGetAbilityById(Entity $entity)
+    {
+        try {
+            $ability = $this->repo->getById($entity->id());
             $this->assertInstanceOf(
                 Entity::class,
                 $ability

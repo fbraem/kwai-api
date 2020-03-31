@@ -17,6 +17,7 @@ use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
+use Kwai\Modules\Users\Infrastructure\AbilityRulesTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
@@ -75,8 +76,12 @@ final class AbilityDatabaseRepository implements AbilityRepository
         }
         if ($ability) {
             $rules = $this->getRulesForAbilities([$id]);
-            $ability->abilities_rules = $rules[$id];
-            $ability->ability_rules = [];
+            if (count($rules) > 0) {
+                $ability->abilities_rules = $rules[$id];
+            } else {
+                $ability->abilities_rules = [];
+            }
+            // $ability->ability_rules = [];
 
             return AbilityMapper::toDomain(
                 $this->table->filter($ability)
@@ -198,5 +203,58 @@ final class AbilityDatabaseRepository implements AbilityRepository
         ;
 
         return $this->fetchAll($query);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function create(Ability $ability): Entity
+    {
+        $data = AbilityMapper::toPersistence($ability);
+
+        $query = $this->db->createQueryFactory()
+            ->insert($this->table->from())
+            ->columns(
+                ... array_keys($data)
+            )
+            ->values(
+                ...array_values($data)
+            )
+            ->compile()
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $entity = new Entity(
+            $this->db->lastInsertId(),
+            $ability
+        );
+
+        if (count($ability->getRules()) > 0) {
+            $abilityRulesTable = new AbilityRulesTable();
+            $query = $this->db->createQueryFactory()
+                ->insert($abilityRulesTable->from())
+                ->columns(
+                    'ability_id',
+                    'rule_id'
+                );
+            foreach ($ability->getRules() as $rule) {
+                $query->values(
+                    $entity->id(),
+                    $rule->id()
+                );
+            }
+            try {
+                $this->db->execute($query->compile());
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+        }
+
+        return $entity;
     }
 }

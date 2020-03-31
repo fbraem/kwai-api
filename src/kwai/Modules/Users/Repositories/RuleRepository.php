@@ -22,4 +22,14 @@ interface RuleRepository
      * @return Entity<Rule>[]
      */
     public function getAll(?string $subject = null): array;
+
+    /**
+     * Get all rules with the given ids. The id is used
+     * as key of the returned array.
+     *
+     * @param int[] $ids
+     * @throws RepositoryException
+     * @return Entity<Rule>[]
+     */
+    public function getByIds(array $ids): array;
 }

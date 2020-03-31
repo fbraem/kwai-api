@@ -16,6 +16,12 @@ use Kwai\Modules\Users\Domain\Ability;
 
 final class AbilityMapper
 {
+    /**
+     * Create an Ability entity from a database row.
+     *
+     * @param object $raw
+     * @return Entity<Ability>
+     */
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
@@ -34,10 +40,22 @@ final class AbilityMapper
         );
     }
 
-    public static function toPersistence(Entity $ability): object
+    /**
+     * Return a data array from an Ability object.
+     *
+     * @param Ability $ability
+     * @return array
+     */
+    public static function toPersistence(Ability $ability): array
     {
-        //TODO: implement
-        return (object)[
+        $updated_at = $ability->getTraceableTime()->isUpdated() ?
+            strval($ability->getTraceableTime()->getUpdatedAt()) : null;
+
+        return [
+            'name' => $ability->getName(),
+            'remark' => $ability->getRemark(),
+            'created_at' => strval($ability->getTraceableTime()->getCreatedAt()),
+            'updated_at' => $updated_at
         ];
     }
 }
