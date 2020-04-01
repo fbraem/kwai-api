@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * CreateAbilityCommand
+ * Class CreateAbilityCommand
+ *
+ * Command for use case CreateAbility
  */
 class CreateAbilityCommand
 {
