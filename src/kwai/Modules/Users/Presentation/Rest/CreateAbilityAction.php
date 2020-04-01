@@ -30,6 +30,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class CreateAbilityAction extends Action
 {
+    /**
+     * Create the JSONAPI schema for this action
+     *
+     * @return Structure
+     */
     private function createSchema(): Structure
     {
         return Expect::structure([
@@ -53,12 +58,24 @@ class CreateAbilityAction extends Action
         ]);
     }
 
+    /**
+     * Process the data
+     *
+     * @param $data
+     * @return mixed
+     */
     private function processInput($data)
     {
         $processor = new Processor();
         return $processor->process($this->createSchema(), $data);
     }
 
+    /**
+     * Creates a command from the input data
+     *
+     * @param array $data
+     * @return CreateAbilityCommand
+     */
     private function createCommand(array $data): CreateAbilityCommand
     {
         $normalized = $this->processInput($data);
