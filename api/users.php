@@ -8,6 +8,7 @@ use Kwai\Modules\Users\Presentation\Rest\BrowseRulesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUserInvitationsAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseUsersAction;
 use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
+use Kwai\Modules\Users\Presentation\Rest\CreateAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\DetachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
@@ -48,15 +49,17 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('user.abilities.detach')
         ->setArgument('auth', true)
     ;
-
+    // Browse all abilities
     $group->get('/abilities', BrowseAbilitiesAction::class)
         ->setName('users.abilities.browse')
         ->setArgument('auth', true)
     ;
-    $group->post('/abilities', AbilityCreateAction::class)
+    // Create a new ability
+    $group->post('/abilities', CreateAbilityAction::class)
         ->setName('users.abilities.create')
         ->setArgument('auth', true)
     ;
+    // Get an ability with the given id
     $group->get('/abilities/{id:[0-9]+}', GetAbilityAction::class)
         ->setName('users.abilities.read')
         ->setArgument('auth', true)
@@ -70,19 +73,21 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.rules.browse')
         ->setArgument('auth', true)
     ;
-
-    // Invitations
+    // Create User Invitation
     $group->post('/invitations', CreateUserInvitationAction::class)
         ->setName('users.invitations.create')
         ->setArgument('auth', true)
     ;
+    // Browse all invitations
     $group->get('/invitations', BrowseUserInvitationsAction::class)
         ->setName('users.invitations.browse')
         ->setArgument('auth', true)
     ;
+    // Get an invitation
     $group->get("/invitations/$uuid_regex", GetUserInvitationAction::class)
         ->setName('users.invitations.token')
     ;
+    // Confirm an invitation
     $group->post("/invitations/$uuid_regex", ConfirmInvitationAction::class)
         ->setName('users.invitations.confirm')
     ;
