@@ -10,17 +10,18 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Database\ColumnFilter;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
-use Kwai\Modules\Users\Infrastructure\UsersTable;
+use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
@@ -39,16 +40,6 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     private Connection $db;
 
     /**
-     * AccessToken table
-     */
-    private AccessTokensTable $table;
-
-    /**
-     * User table
-     */
-    private UsersTable $userTable;
-
-    /**
      * AccessTokenDatabaseRepository constructor
      *
      * @param Connection $db A database object
@@ -56,8 +47,6 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
     public function __construct(Connection $db)
     {
         $this->db = $db;
-        $this->table = new AccessTokensTable();
-        $this->userTable = new UsersTable();
     }
 
     /**
@@ -77,8 +66,11 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($row) {
-            $accessTokenRow = $this->table->filter($row);
-            $accessTokenRow->user = $this->userTable->filter($row);
+            $accessTokenColumnFilter = new ColumnFilter(Tables::ACCESS_TOKENS . '_');
+            $userColumnFilter = new ColumnFilter(Tables::USERS . '_');
+
+            $accessTokenRow = $accessTokenColumnFilter->filter($row);
+            $accessTokenRow->user = $userColumnFilter->filter($row);
             return AccessTokenMapper::toDomain($accessTokenRow);
         }
         throw new NotFoundException('AccessToken');
@@ -102,10 +94,13 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
+        $accessTokenColumnFilter = new ColumnFilter(Tables::ACCESS_TOKENS . '_');
+        $userColumnFilter = new ColumnFilter(Tables::USERS . '_');
+
         $tokens = [];
         foreach ($rows as $row) {
-            $accessTokenRow = $this->table->filter($row);
-            $accessTokenRow->user = $this->userTable->filter($row);
+            $accessTokenRow = $accessTokenColumnFilter->filter($row);
+            $accessTokenRow->user = $userColumnFilter->filter($row);
             $tokens[] = AccessTokenMapper::toDomain($accessTokenRow);
         }
         return $tokens;
@@ -120,7 +115,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $data = AccessTokenMapper::toPersistence($token);
 
         $query = $this->db->createQueryFactory()
-            ->insert($this->table->from())
+            ->insert(Tables::ACCESS_TOKENS)
             ->columns(
                 ... array_keys($data)
             )
@@ -151,7 +146,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
         $data = AccessTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
-            ->update($this->table->from(), $data)
+            ->update(Tables::ACCESS_TOKENS, $data)
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;
@@ -168,20 +163,42 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     private function createBaseQuery(): SelectQuery
     {
-        $columns = array_merge(
-            $this->table->alias(),
-            $this->userTable->alias()
-        );
+        $aliasAccessTokenFn = fn($columnName) =>
+            alias(
+                Tables::ACCESS_TOKENS . '.' . $columnName,
+                Tables::ACCESS_TOKENS . '_' . $columnName
+            )
+        ;
+        $aliasUserFn = fn($columnName) =>
+            alias(
+                Tables::USERS . '.' . $columnName,
+                Tables::USERS . '_' . $columnName
+            )
+        ;
 
         return $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
+            ->select(
+                $aliasAccessTokenFn('id'),
+                $aliasAccessTokenFn('identifier'),
+                $aliasAccessTokenFn('expiration'),
+                $aliasAccessTokenFn('revoked'),
+                $aliasAccessTokenFn('created_at'),
+                $aliasAccessTokenFn('updated_at'),
+                $aliasUserFn('id'),
+                $aliasUserFn('email'),
+                $aliasUserFn('password'),
+                $aliasUserFn('last_login'),
+                $aliasUserFn('first_name'),
+                $aliasUserFn('last_name'),
+                $aliasUserFn('remark'),
+                $aliasUserFn('uuid'),
+                $aliasUserFn('created_at'),
+                $aliasUserFn('updated_at')
+            )
+            ->from(Tables::ACCESS_TOKENS)
             ->join(
-                $this->userTable->from(),
-                on(
-                    $this->table->from() . '.user_id',
-                    $this->userTable->from() . '.id'
-                )
+                Tables::USERS,
+                on(Tables::ACCESS_TOKENS . '.user_id', Tables::USERS . '.id')
             )
         ;
     }

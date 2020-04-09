@@ -10,16 +10,16 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Database\ColumnFilter;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenMapper;
-use Kwai\Modules\Users\Infrastructure\RefreshTokensTable;
-use Kwai\Modules\Users\Infrastructure\UsersTable;
+use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
+use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
@@ -38,11 +38,6 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     private Connection $db;
 
     /**
-     * RefreshToken table
-     */
-    private RefreshTokensTable $table;
-
-    /**
      * RefreshTokenDatabaseRepository constructor.
      *
      * @param Connection $db A database connection
@@ -50,7 +45,6 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
     public function __construct(Connection $db)
     {
         $this->db = $db;
-        $this->table = new RefreshTokensTable();
     }
 
     /**
@@ -59,31 +53,68 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
      */
     public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
     {
-        $accessTokenTable = new AccessTokensTable();
-        $userTable = new UsersTable();
-        $columns = array_merge(
-            $this->table->alias(),
-            $accessTokenTable->alias(),
-            $userTable->alias()
-        );
+        $aliasAccessTokenFn = fn($columnName) =>
+            alias(
+                Tables::ACCESS_TOKENS . '.' . $columnName,
+                Tables::ACCESS_TOKENS . '_' . $columnName
+            )
+        ;
+
+        $aliasRefreshTokenFn = fn($columnName) =>
+            alias(
+                Tables::REFRESH_TOKENS . '.' . $columnName,
+                Tables::REFRESH_TOKENS . '_' . $columnName
+            )
+        ;
+        $aliasUserFn = fn($columnName) =>
+            alias(
+                Tables::USERS . '.' . $columnName,
+                Tables::USERS . '_' . $columnName
+            )
+        ;
+
         $query = $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
+            ->select(
+                $aliasRefreshTokenFn('id'),
+                $aliasRefreshTokenFn('identifier'),
+                $aliasRefreshTokenFn('access_token_id'),
+                $aliasRefreshTokenFn('expiration'),
+                $aliasRefreshTokenFn('revoked'),
+                $aliasRefreshTokenFn('created_at'),
+                $aliasRefreshTokenFn('updated_at'),
+                $aliasAccessTokenFn('id'),
+                $aliasAccessTokenFn('identifier'),
+                $aliasAccessTokenFn('expiration'),
+                $aliasAccessTokenFn('revoked'),
+                $aliasAccessTokenFn('created_at'),
+                $aliasAccessTokenFn('updated_at'),
+                $aliasUserFn('id'),
+                $aliasUserFn('email'),
+                $aliasUserFn('password'),
+                $aliasUserFn('last_login'),
+                $aliasUserFn('first_name'),
+                $aliasUserFn('last_name'),
+                $aliasUserFn('remark'),
+                $aliasUserFn('uuid'),
+                $aliasUserFn('created_at'),
+                $aliasUserFn('updated_at')
+            )
+            ->from(Tables::REFRESH_TOKENS)
             ->join(
-                $accessTokenTable->from(),
+                Tables::ACCESS_TOKENS,
                 on(
-                    $this->table->from() . '.access_token_id',
-                    $accessTokenTable->from() . '.id'
+                    Tables::REFRESH_TOKENS . '.access_token_id',
+                    Tables::ACCESS_TOKENS . '.id'
                 )
             )
             ->join(
-                $userTable->from(),
+                Tables::USERS,
                 on(
-                    $accessTokenTable->from() . '.user_id',
-                    $userTable->from() . '.id'
+                    Tables::ACCESS_TOKENS . '.user_id',
+                    Tables::USERS . '.id'
                 )
             )
-            ->where(field($this->table->from() . '.identifier')->eq(strval($identifier)))
+            ->where(field(Tables::REFRESH_TOKENS . '.identifier')->eq(strval($identifier)))
             ->compile()
         ;
 
@@ -94,9 +125,12 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
         }
 
         if ($row) {
-            $refreshTokenRow = $this->table->filter($row);
-            $refreshTokenRow->accessToken = $accessTokenTable->filter($row);
-            $refreshTokenRow->accessToken->user = $userTable->filter($row);
+            $refreshTokenColumnFilter = new ColumnFilter(Tables::REFRESH_TOKENS . '_');
+            $accessTokenColumnFilter = new ColumnFilter(Tables::ACCESS_TOKENS . '_');
+            $userColumnFilter = new ColumnFilter(Tables::USERS . '_');
+            $refreshTokenRow = $refreshTokenColumnFilter->filter($row);
+            $refreshTokenRow->accessToken = $accessTokenColumnFilter->filter($row);
+            $refreshTokenRow->accessToken->user = $userColumnFilter->filter($row);
             return RefreshTokenMapper::toDomain($refreshTokenRow);
         }
         throw new NotFoundException('RefreshToken');
@@ -111,7 +145,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
         $data = RefreshTokenMapper::toPersistence($token);
 
         $query = $this->db->createQueryFactory()
-            ->insert($this->table->from())
+            ->insert(Tables::REFRESH_TOKENS)
             ->columns(... array_keys($data))
             ->values(... array_values($data))
             ->compile()
@@ -138,7 +172,7 @@ final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
 
         $data = RefreshTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
-            ->update($this->table->from(), $data)
+            ->update(Tables::REFRESH_TOKENS, $data)
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;

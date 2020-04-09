@@ -90,7 +90,10 @@ class Table
     }
 
     /**
-     * Filters all fields from a row that belongs to this table.
+     * Filters all fields from a row that has the same prefix and returns an object
+     * with properties. The name of the property is the name of the original property stripped
+     * with the prefix.
+     *
      * @param object $row
      * @return object
      */
