@@ -15,8 +15,7 @@ use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserInvitationAction;
-use REST\Users\Actions\AbilityCreateAction;
-use REST\Users\Actions\AbilityUpdateAction;
+use Kwai\Modules\Users\Presentation\Rest\UpdateAbilityAction;
 use Slim\Routing\RouteCollectorProxy;
 
 $app = Clubman::getApplication();
@@ -64,7 +63,8 @@ $app->group('/users', function (RouteCollectorProxy $group) {
         ->setName('users.abilities.read')
         ->setArgument('auth', true)
     ;
-    $group->patch('/abilities/{id:[0-9]+}', AbilityUpdateAction::class)
+    // Update an ability with the given id
+    $group->patch('/abilities/{id:[0-9]+}', UpdateAbilityAction::class)
         ->setName('users.abilities.update')
         ->setArgument('auth', true)
     ;
