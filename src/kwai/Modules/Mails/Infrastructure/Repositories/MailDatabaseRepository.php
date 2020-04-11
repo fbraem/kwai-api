@@ -9,21 +9,17 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Mails\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database;
-
 use Kwai\Modules\Mails\Domain\Mail;
-use Kwai\Modules\Mails\Repositories\MailRepository;
 use Kwai\Modules\Mails\Infrastructure\Mappers\MailMapper;
-use Kwai\Modules\Mails\Infrastructure\MailsTable;
-use Kwai\Modules\Mails\Infrastructure\RecipientsTable;
-
-use Kwai\Modules\Users\Infrastructure\UsersTable;
-
+use Kwai\Modules\Mails\Infrastructure\Tables;
+use Kwai\Modules\Mails\Repositories\MailRepository;
+use Kwai\Modules\Users\Infrastructure\Tables as UsersTables;
+use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
-use Latitude\QueryBuilder\Query\SelectQuery;
 
 /**
  * Class MailDatabaseRepository
@@ -34,18 +30,9 @@ final class MailDatabaseRepository implements MailRepository
 {
     private Database\Connection $db;
 
-    private MailsTable $table;
-
-    private UsersTable $usersTable;
-
-    private RecipientsTable $recipientsTable;
-
     public function __construct(Database\Connection $db)
     {
         $this->db = $db;
-        $this->table = new MailsTable();
-        $this->usersTable = new UsersTable();
-        $this->recipientsTable = new RecipientsTable();
     }
 
     /**
@@ -55,15 +42,16 @@ final class MailDatabaseRepository implements MailRepository
      */
     public function getById(int $id) : Entity
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
-            ->where(field($this->table->from() . '.id')->eq(strval($id)))
+            ->where(field(Tables::MAILS()->id)->eq(strval($id)))
             ->compile()
         ;
 
         $row = $this->db->execute($query)->fetch();
         if ($row) {
-            $mailRow = $this->table->filter($row);
-            $mailRow->user = $this->usersTable->filter($row);
+            $mailRow = Tables::MAILS()->createColumnFilter()->filter($row);
+            $mailRow->user = UsersTables::USERS()->createColumnFilter()->filter($row);
             return MailMapper::toDomain($mailRow);
         }
         throw new NotFoundException('Mail');
@@ -76,15 +64,16 @@ final class MailDatabaseRepository implements MailRepository
      */
     public function getByUUID(UniqueId $uid) : Entity
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
-            ->where(field($this->table->from() . '.uuid')->eq(strval($uid)))
+            ->where(field(Tables::MAILS()->uuid)->eq(strval($uid)))
             ->compile()
         ;
 
         $row = $this->db->execute($query)->fetch();
         if ($row) {
-            $mailRow = $this->table->filter($row);
-            $mailRow->user = $this->usersTable->filter($row);
+            $mailRow = Tables::MAILS()->createColumnFilter()->filter($row);
+            $mailRow->user = UsersTables::USERS()->createColumnFilter()->filter($row);
             return MailMapper::toDomain($mailRow);
         }
         throw new NotFoundException('Mail');
@@ -99,7 +88,7 @@ final class MailDatabaseRepository implements MailRepository
         $data = MailMapper::toPersistence($mail);
 
         $query = $this->db->createQueryFactory()
-            ->insert($this->table->from())
+            ->insert((string) Tables::MAILS())
             ->columns(
                 ... array_keys($data)
             )
@@ -121,19 +110,40 @@ final class MailDatabaseRepository implements MailRepository
      */
     private function createBaseQuery(): SelectQuery
     {
-        $columns = array_merge(
-            $this->table->alias(),
-            $this->usersTable->alias()
-        );
+        $aliasMailFn = Tables::MAILS()->getAliasFn();
+        $aliasUserFn = UsersTables::USERS()->getAliasFn();
 
+        /** @noinspection PhpUndefinedFieldInspection */
         return $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
+            ->select(
+                $aliasMailFn('id'),
+                $aliasMailFn('tag'),
+                $aliasMailFn('uuid'),
+                $aliasMailFn('sender_email'),
+                $aliasMailFn('sender_name'),
+                $aliasMailFn('subject'),
+                $aliasMailFn('html_body'),
+                $aliasMailFn('text_body'),
+                $aliasMailFn('sent_time'),
+                $aliasMailFn('remark'),
+                $aliasMailFn('user_id'),
+                $aliasMailFn('created_at'),
+                $aliasMailFn('updated_at'),
+                $aliasUserFn('id'),
+                $aliasUserFn('email'),
+                $aliasUserFn('first_name'),
+                $aliasUserFn('last_name'),
+                $aliasUserFn('remark'),
+                $aliasUserFn('uuid'),
+                $aliasUserFn('created_at'),
+                $aliasUserFn('updated_at')
+            )
+            ->from((string) Tables::MAILS())
             ->join(
-                $this->usersTable->from(),
+                (string) UsersTables::USERS(),
                 on(
-                    $this->table->column('user_id'),
-                    $this->usersTable->column('.id')
+                    Tables::MAILS()->user_id,
+                    UsersTables::USERS()->id
                 )
             )
         ;

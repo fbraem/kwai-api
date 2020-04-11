@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database\ColumnFilter;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -21,7 +20,6 @@ use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Latitude\QueryBuilder\Query\SelectQuery;
-use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
@@ -66,11 +64,14 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($row) {
-            $accessTokenColumnFilter = new ColumnFilter(Tables::ACCESS_TOKENS . '_');
-            $userColumnFilter = new ColumnFilter(Tables::USERS . '_');
-
-            $accessTokenRow = $accessTokenColumnFilter->filter($row);
-            $accessTokenRow->user = $userColumnFilter->filter($row);
+            $accessTokenRow = Tables::ACCESS_TOKENS()
+                ->createColumnFilter()
+                ->filter($row)
+            ;
+            $accessTokenRow->user = Tables::USERS()
+                ->createColumnFilter()
+                ->filter($row)
+            ;
             return AccessTokenMapper::toDomain($accessTokenRow);
         }
         throw new NotFoundException('AccessToken');
@@ -94,8 +95,8 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $accessTokenColumnFilter = new ColumnFilter(Tables::ACCESS_TOKENS . '_');
-        $userColumnFilter = new ColumnFilter(Tables::USERS . '_');
+        $accessTokenColumnFilter = Tables::ACCESS_TOKENS()->createColumnFilter();
+        $userColumnFilter = Tables::USERS()->createColumnFilter();
 
         $tokens = [];
         foreach ($rows as $row) {
@@ -115,7 +116,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
         $data = AccessTokenMapper::toPersistence($token);
 
         $query = $this->db->createQueryFactory()
-            ->insert(Tables::ACCESS_TOKENS)
+            ->insert((string) Tables::ACCESS_TOKENS())
             ->columns(
                 ... array_keys($data)
             )
@@ -146,7 +147,7 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
 
         $data = AccessTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
-            ->update(Tables::ACCESS_TOKENS, $data)
+            ->update((string) Tables::ACCESS_TOKENS(), $data)
             ->where(field('id')->eq($token->id()))
             ->compile()
         ;
@@ -163,19 +164,10 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
      */
     private function createBaseQuery(): SelectQuery
     {
-        $aliasAccessTokenFn = fn($columnName) =>
-            alias(
-                Tables::ACCESS_TOKENS . '.' . $columnName,
-                Tables::ACCESS_TOKENS . '_' . $columnName
-            )
-        ;
-        $aliasUserFn = fn($columnName) =>
-            alias(
-                Tables::USERS . '.' . $columnName,
-                Tables::USERS . '_' . $columnName
-            )
-        ;
+        $aliasAccessTokenFn = Tables::ACCESS_TOKENS()->getAliasFn();
+        $aliasUserFn = Tables::USERS()->getAliasFn();
 
+        /** @noinspection PhpUndefinedFieldInspection */
         return $this->db->createQueryFactory()
             ->select(
                 $aliasAccessTokenFn('id'),
@@ -195,10 +187,10 @@ final class AccessTokenDatabaseRepository implements AccessTokenRepository
                 $aliasUserFn('created_at'),
                 $aliasUserFn('updated_at')
             )
-            ->from(Tables::ACCESS_TOKENS)
+            ->from((string) Tables::ACCESS_TOKENS())
             ->join(
-                Tables::USERS,
-                on(Tables::ACCESS_TOKENS . '.user_id', Tables::USERS . '.id')
+                (string) Tables::USERS(),
+                on(Tables::ACCESS_TOKENS()->user_id, Tables::USERS()->id)
             )
         ;
     }

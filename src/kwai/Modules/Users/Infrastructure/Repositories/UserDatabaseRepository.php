@@ -15,15 +15,12 @@ use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Modules\Users\Infrastructure\AccessTokensTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
-use Kwai\Modules\Users\Infrastructure\UserAbilitiesTable;
-use Kwai\Modules\Users\Infrastructure\UsersTable;
+use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
@@ -46,11 +43,6 @@ class UserDatabaseRepository implements UserRepository
     private Connection $db;
 
     /**
-     * The table for 'users'
-     */
-    private UsersTable $table;
-
-    /**
      * Constructor
      *
      * @param Connection $db A database object
@@ -58,7 +50,6 @@ class UserDatabaseRepository implements UserRepository
     public function __construct(Connection $db)
     {
         $this->db = $db;
-        $this->table = new UsersTable();
     }
 
     /**
@@ -67,11 +58,10 @@ class UserDatabaseRepository implements UserRepository
      */
     public function getById(int $id): Entity
     {
-        $query = $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
-            ->from($this->table->from())
+        $query = $this->createBaseQuery()
             ->where(field('id')->eq($id))
-            ->compile();
+            ->compile()
+        ;
 
         try {
             $user = $this->db->execute($query)->fetch();
@@ -81,7 +71,7 @@ class UserDatabaseRepository implements UserRepository
 
         if ($user) {
             return UserMapper::toDomain(
-                $this->table->filter($user)
+                Tables::USERS()->createColumnFilter()->filter($user)
             );
         }
         throw new NotFoundException('User');
@@ -93,11 +83,10 @@ class UserDatabaseRepository implements UserRepository
      */
     public function getByUUID(UniqueId $uid): Entity
     {
-        $query = $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
-            ->from($this->table->from())
+        $query = $this->createBaseQuery()
             ->where(field('uuid')->eq($uid))
-            ->compile();
+            ->compile()
+        ;
 
         try {
             $user = $this->db->execute($query)->fetch();
@@ -106,7 +95,7 @@ class UserDatabaseRepository implements UserRepository
         }
         if ($user) {
             return UserMapper::toDomain(
-                $this->table->filter($user)
+                Tables::USERS()->createColumnFilter()->filter($user)
             );
         }
         throw new NotFoundException('User');
@@ -118,11 +107,10 @@ class UserDatabaseRepository implements UserRepository
      */
     public function getAccount(EmailAddress $email): Entity
     {
-        $query = $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
-            ->from($this->table->from())
+        $query = $this->createBaseQuery()
             ->where(field('email')->eq($email))
-            ->compile();
+            ->compile()
+        ;
 
         try {
             $user = $this->db->execute($query)->fetch();
@@ -131,7 +119,7 @@ class UserDatabaseRepository implements UserRepository
         }
         if ($user) {
             return UserAccountMapper::toDomain(
-                $this->table->filter($user)
+                Tables::USERS()->createColumnFilter()->filter($user)
             );
         }
         throw new NotFoundException('User');
@@ -143,11 +131,10 @@ class UserDatabaseRepository implements UserRepository
      */
     public function getByEmail(EmailAddress $email): Entity
     {
-        $query = $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
-            ->from($this->table->from())
+        $query = $this->createBaseQuery()
             ->where(field('email')->eq($email))
-            ->compile();
+            ->compile()
+        ;
 
         try {
             $user = $this->db->execute($query)->fetch();
@@ -156,7 +143,7 @@ class UserDatabaseRepository implements UserRepository
         }
         if ($user) {
             return UserMapper::toDomain(
-                $this->table->filter($user)
+                Tables::USERS()->createColumnFilter()->filter($user)
             );
         }
         throw new NotFoundException('User');
@@ -167,9 +154,15 @@ class UserDatabaseRepository implements UserRepository
      */
     public function existsWithEmail(EmailAddress $email): bool
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->db->createQueryFactory()
-            ->select(alias(func('COUNT', $this->table->from() . '.id'), 'c'))
-            ->from($this->table->from())
+            ->select(
+                alias(
+                    func('COUNT', Tables::USERS()->id),
+                    'c'
+                )
+            )
+            ->from((string) Tables::USERS())
             ->where(field('email')->eq(strval($email)))
             ->compile();
         try {
@@ -187,17 +180,28 @@ class UserDatabaseRepository implements UserRepository
      */
     public function getByAccessToken(TokenIdentifier $token): Entity
     {
-        $accessTokenTable = new AccessTokensTable();
-        $columns = array_merge(
-            $this->table->alias(),
-            $accessTokenTable->alias()
-        );
-        $query = $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
-            ->join($accessTokenTable->from(), on('users.id', 'oauth_access_tokens.user_id'))
-            ->where(field('oauth_access_tokens.identifier')->eq(strval($token)))
-            ->compile();
+        $aliasAccessTokenFn = Tables::ACCESS_TOKENS()->getAliasFn();
+        $query = $this->createBaseQuery();
+        /** @noinspection PhpUndefinedFieldInspection */
+        $query = $query
+            ->addColumns(
+                $aliasAccessTokenFn('id'),
+                $aliasAccessTokenFn('identifier'),
+                $aliasAccessTokenFn('expiration'),
+                $aliasAccessTokenFn('revoked'),
+                $aliasAccessTokenFn('created_at'),
+                $aliasAccessTokenFn('updated_at')
+            )
+            ->join(
+                (string) Tables::ACCESS_TOKENS(),
+                on(
+                    Tables::USERS()->id,
+                    Tables::ACCESS_TOKENS()->user_id
+                )
+            )
+            ->where(field(Tables::ACCESS_TOKENS()->identifier)->eq(strval($token)))
+            ->compile()
+        ;
 
         try {
             $data = $this->db->execute($query)->fetch();
@@ -205,8 +209,8 @@ class UserDatabaseRepository implements UserRepository
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($data) {
-            $userRow = $this->table->filter($data);
-            $accessTokenRow = $accessTokenTable->filter($data);
+            $userRow = Tables::USERS()->createColumnFilter()->filter($data);
+            $accessTokenRow = Tables::ACCESS_TOKENS()->createColumnFilter()->filter($data);
             $accessTokenRow->user = $userRow;
 
             return UserMapper::toDomain($userRow);
@@ -223,7 +227,7 @@ class UserDatabaseRepository implements UserRepository
         $account->getUser()->getTraceableTime()->markUpdated();
         $data = UserAccountMapper::toPersistence($account->domain());
         $query = $this->db->createQueryFactory()
-            ->update($this->table->from(), $data)
+            ->update((string) Tables::USERS(), $data)
             ->where(field('id')->eq($account->id()))
             ->compile();
         try {
@@ -241,7 +245,7 @@ class UserDatabaseRepository implements UserRepository
         $data = UserAccountMapper::toPersistence($account);
 
         $query = $this->db->createQueryFactory()
-            ->insert($this->table->from())
+            ->insert((string) Tables::USERS())
             ->columns(
                 ... array_keys($data)
             )
@@ -267,9 +271,21 @@ class UserDatabaseRepository implements UserRepository
      */
     private function createBaseQuery(): SelectQuery
     {
+        $aliasFn = Tables::USERS()->getAliasFn();
         return $this->db->createQueryFactory()
-            ->select(... $this->table->alias())
-            ->from($this->table->from())
+            ->select(
+                $aliasFn('id'),
+                $aliasFn('email'),
+                $aliasFn('password'),
+                $aliasFn('last_login'),
+                $aliasFn('first_name'),
+                $aliasFn('last_name'),
+                $aliasFn('remark'),
+                $aliasFn('uuid'),
+                $aliasFn('created_at'),
+                $aliasFn('updated_at')
+            )
+            ->from((string) Tables::USERS())
         ;
     }
 
@@ -285,8 +301,10 @@ class UserDatabaseRepository implements UserRepository
         } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+
+        $columnFilter = Tables::USERS()->createColumnFilter();
         return array_map(
-            fn ($row) => UserMapper::toDomain($this->table->filter($row)),
+            fn ($row) => UserMapper::toDomain($columnFilter->filter($row)),
             $rows
         );
     }
@@ -296,10 +314,14 @@ class UserDatabaseRepository implements UserRepository
      */
     public function addAbility(Entity $user, Entity $ability): Entity
     {
-        $table = new UserAbilitiesTable();
         $query = $this->db->createQueryFactory()
-            ->insert($table->from())
-            ->columns(... $table->getColumns())
+            ->insert((string) Tables::USER_ABILITIES())
+            ->columns(
+                'user_id',
+                'ability_id',
+                'created_at',
+                'updated_at'
+            )
             ->values(
                 $user->id(),
                 $ability->id(),
@@ -323,17 +345,10 @@ class UserDatabaseRepository implements UserRepository
      */
     public function removeAbility(Entity $user, Entity $ability): Entity
     {
-        $table = new UserAbilitiesTable();
         $query = $this->db->createQueryFactory()
-            ->delete($table->from())
-            ->where(
-                field($table->column('user_id'))
-                    ->eq($user->id())
-            )
-            ->andWhere(
-                field($table->column('ability_id'))
-                    ->eq($ability->id())
-            )
+            ->delete((string) Tables::USER_ABILITIES())
+            ->where(field('user_id')->eq($user->id()))
+            ->andWhere(field('ability_id')->eq($ability->id()))
             ->compile()
         ;
         try {

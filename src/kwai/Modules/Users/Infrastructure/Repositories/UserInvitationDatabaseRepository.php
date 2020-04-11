@@ -17,8 +17,7 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
-use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
-use Kwai\Modules\Users\Infrastructure\UsersTable;
+use Kwai\Modules\Users\Infrastructure\Tables;
 
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
@@ -42,16 +41,6 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
     private Connection $db;
 
     /**
-     * The user invitation table
-     */
-    private UserInvitationsTable $table;
-
-    /**
-     * The user table
-     */
-    private UsersTable $userTable;
-
-    /**
      * UserInvitationDatabaseRepository constructor
      *
      * @param Connection $db A database object
@@ -59,8 +48,6 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
     public function __construct(Connection $db)
     {
         $this->db = $db;
-        $this->table = new UserInvitationsTable();
-        $this->userTable = new UsersTable();
     }
 
     /**
@@ -68,8 +55,9 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
      */
     public function getByUniqueId(UniqueId $uuid) : Entity
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
-            ->where(field($this->table->column('uuid'))->eq(strval($uuid)))
+            ->where(field(Tables::USER_INVITATIONS()->uuid)->eq(strval($uuid)))
             ->compile()
         ;
 
@@ -79,8 +67,8 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($row) {
-            $invitationRow = $this->table->filter($row);
-            $invitationRow->user = $this->userTable->filter($row);
+            $invitationRow = Tables::USER_INVITATIONS()->createColumnFilter()->filter($row);
+            $invitationRow->user = Tables::USERS()->createColumnFilter()->filter($row);
             return UserInvitationMapper::toDomain($invitationRow);
         }
         throw new NotFoundException('UserInvitation');
@@ -102,7 +90,7 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
         $data = UserInvitationMapper::toPersistence($invitation);
 
         $query = $this->db->createQueryFactory()
-            ->insert($this->table->from())
+            ->insert((string) Tables::USER_INVITATIONS())
             ->columns(
                 ... array_keys($data)
             )
@@ -132,7 +120,7 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
         $invitation->getTraceableTime()->markUpdated();
         $data = UserInvitationMapper::toPersistence($invitation->domain());
         $query = $this->db->createQueryFactory()
-            ->update($this->table->from(), $data)
+            ->update((string) Tables::USER_INVITATIONS(), $data)
             ->where(field('id')->eq($invitation->id()))
             ->compile()
         ;
@@ -148,19 +136,40 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
      */
     private function createBaseQuery(): SelectQuery
     {
-        $columns = array_merge(
-            $this->table->alias(),
-            $this->userTable->alias()
-        );
+        $aliasUserFn = Tables::USERS()->getAliasFn();
+        $aliasUserInvitationFn = Tables::USER_INVITATIONS()->getAliasFn();
 
+        /** @noinspection PhpUndefinedFieldInspection */
         return $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
+            ->select(
+                $aliasUserInvitationFn('id'),
+                $aliasUserInvitationFn('email'),
+                $aliasUserInvitationFn('name'),
+                $aliasUserInvitationFn('uuid'),
+                $aliasUserInvitationFn('expired_at'),
+                $aliasUserInvitationFn('expired_at_timezone'),
+                $aliasUserInvitationFn('remark'),
+                $aliasUserInvitationFn('user_id'),
+                $aliasUserInvitationFn('created_at'),
+                $aliasUserInvitationFn('updated_at'),
+                $aliasUserInvitationFn('confirmed_at'),
+                $aliasUserFn('id'),
+                $aliasUserFn('email'),
+                $aliasUserFn('password'),
+                $aliasUserFn('last_login'),
+                $aliasUserFn('first_name'),
+                $aliasUserFn('last_name'),
+                $aliasUserFn('remark'),
+                $aliasUserFn('uuid'),
+                $aliasUserFn('created_at'),
+                $aliasUserFn('updated_at')
+            )
+            ->from((string) Tables::USER_INVITATIONS())
             ->join(
-                $this->userTable->from(),
+                (string) Tables::USERS(),
                 on(
-                    $this->table->from() . '.user_id',
-                    $this->userTable->from() . '.id'
+                    Tables::USER_INVITATIONS()->user_id,
+                    Tables::USERS()->id
                 )
             )
         ;
@@ -171,8 +180,9 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
      */
     public function getByEmail(EmailAddress $email): array
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
-            ->where(field($this->table->from() . '.email')->eq(strval($email)))
+            ->where(field(Tables::USER_INVITATIONS()->email)->eq(strval($email)))
             ->compile()
         ;
 
@@ -181,9 +191,12 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
         } catch (Database\DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        return array_map(function ($row) {
-            $invitationRow = $this->table->filter($row);
-            $invitationRow->user = $this->userTable->filter($row);
+
+        $userInvitationFilter = Tables::USER_INVITATIONS()->createColumnFilter();
+        $userFilter = Tables::USERS()->createColumnFilter();
+        return array_map(function ($row) use ($userInvitationFilter, $userFilter) {
+            $invitationRow = $userInvitationFilter->filter($row);
+            $invitationRow->user = $userFilter->filter($row);
             return UserInvitationMapper::toDomain($invitationRow);
         }, $rows);
     }

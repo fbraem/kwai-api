@@ -13,9 +13,7 @@ use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
-use Kwai\Modules\Users\Infrastructure\RulesTable;
-use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
-use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
+use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\RuleRepository;
 use Latitude\QueryBuilder\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
@@ -30,12 +28,6 @@ class RuleDatabaseRepository implements RuleRepository
 {
     private Connection $db;
 
-    private RulesTable $table;
-
-    private RuleSubjectsTable $subjectsTable;
-
-    private RuleActionsTable $actionsTable;
-
     /**
      * RuleDatabaseRepository constructor.
      *
@@ -44,9 +36,6 @@ class RuleDatabaseRepository implements RuleRepository
     public function __construct(Connection $db)
     {
         $this->db = $db;
-        $this->table = new RulesTable();
-        $this->subjectsTable = new RuleSubjectsTable();
-        $this->actionsTable = new RuleActionsTable();
     }
 
     /**
@@ -57,7 +46,7 @@ class RuleDatabaseRepository implements RuleRepository
         $select = $this->createBaseQuery();
         if ($subject) {
             $select->where(
-                field($this->subjectsTable->column('name'))->eq($subject)
+                field(Tables::RULE_SUBJECTS()->getColumn('name'))->eq($subject)
             );
         }
         $query = $select->compile();
@@ -71,36 +60,40 @@ class RuleDatabaseRepository implements RuleRepository
      */
     private function createBaseQuery(): SelectQuery
     {
-        $columns = array_merge(
-            $this->table->alias(),
-            [
-                alias(
-                    $this->actionsTable->column('name'),
-                    // Trick the mapper with the 'rules_' prefix ...
-                    $this->table->aliasColumn('action')
-                ),
-                alias(
-                    $this->subjectsTable->column('name'),
-                    // Trick the mapper with the 'rules_' prefix ...
-                    $this->table->aliasColumn('subject')
-                )
-            ]
-        );
+        $aliasRulesFn = Tables::RULES()->getAliasFn();
+
+        /** @noinspection PhpUndefinedFieldInspection */
         return $this->db->createQueryFactory()
-            ->select(... $columns)
-            ->from($this->table->from())
+            ->select(
+                $aliasRulesFn('id'),
+                $aliasRulesFn('name'),
+                $aliasRulesFn('remark'),
+                $aliasRulesFn('created_at'),
+                $aliasRulesFn('updated_at'),
+                // Trick the mapper with the 'rules_' prefix ...
+                alias(
+                    Tables::RULE_ACTIONS()->name,
+                    Tables::RULES()->getAlias('action')
+                ),
+                // Trick the mapper with the 'rules_' prefix ...
+                alias(
+                    Tables::RULE_SUBJECTS()->name,
+                    Tables::RULES()->getAlias('subject')
+                )
+            )
+            ->from((string) Tables::RULES())
             ->join(
-                $this->actionsTable->name(),
+                (string) Tables::RULE_ACTIONS(),
                 on(
-                    $this->table->column('action_id'),
-                    $this->actionsTable->column('id')
+                    Tables::RULES()->action_id,
+                    Tables::RULE_ACTIONS()->id
                 )
             )
             ->join(
-                $this->subjectsTable->name(),
+                (string) Tables::RULE_SUBJECTS(),
                 on(
-                    $this->table->column('subject_id'),
-                    $this->subjectsTable->column('id')
+                    Tables::RULES()->subject_id,
+                    Tables::RULE_SUBJECTS()->id
                 )
             )
         ;
@@ -111,8 +104,9 @@ class RuleDatabaseRepository implements RuleRepository
      */
     public function getByIds(array $ids): array
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
-            ->where(field($this->table->column('id'))->in(...$ids))
+            ->where(field(Tables::RULES()->id)->in(...$ids))
             ->compile()
         ;
         return $this->execute($query);
@@ -134,9 +128,10 @@ class RuleDatabaseRepository implements RuleRepository
         }
         $rows = $stmt->fetchAll();
 
+        $columnFilter = Tables::RULES()->createColumnFilter();
         $result = [];
         foreach ($rows as $row) {
-            $rule = RuleMapper::toDomain($this->table->filter($row));
+            $rule = RuleMapper::toDomain($columnFilter->filter($row));
             $result[$rule->id()] = $rule;
         }
 
