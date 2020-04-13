@@ -10,9 +10,8 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database\ColumnFilter;
-use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Rule;
@@ -34,22 +33,8 @@ use function Latitude\QueryBuilder\on;
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-final class AbilityDatabaseRepository implements AbilityRepository
+final class AbilityDatabaseRepository extends DatabaseRepository implements AbilityRepository
 {
-    /**
-     * The database connection
-     */
-    private Connection $db;
-
-    /**
-     * AbilityDatabaseRepository Constructor
-     * @param Connection $db
-     */
-    public function __construct(Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritDoc
      * @return Entity<Ability>

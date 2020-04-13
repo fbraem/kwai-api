@@ -10,8 +10,8 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\User;
@@ -30,23 +30,8 @@ use function Latitude\QueryBuilder\on;
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-final class AccessTokenDatabaseRepository implements AccessTokenRepository
+final class AccessTokenDatabaseRepository extends DatabaseRepository implements AccessTokenRepository
 {
-    /**
-     * The database connection
-     */
-    private Connection $db;
-
-    /**
-     * AccessTokenDatabaseRepository constructor
-     *
-     * @param Connection $db A database object
-     */
-    public function __construct(Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritDoc
      * @return Entity<AccessToken>

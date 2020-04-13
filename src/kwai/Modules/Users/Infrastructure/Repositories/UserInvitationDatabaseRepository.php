@@ -9,21 +9,18 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\EmailAddress;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database;
-
-use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
-
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
-
+use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
-use Latitude\QueryBuilder\Query\SelectQuery;
 
 /**
  * Class UserInvitationDatabaseRepository
@@ -33,23 +30,8 @@ use Latitude\QueryBuilder\Query\SelectQuery;
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-class UserInvitationDatabaseRepository implements UserInvitationRepository
+class UserInvitationDatabaseRepository extends DatabaseRepository implements UserInvitationRepository
 {
-    /**
-     * The database connection
-     */
-    private Connection $db;
-
-    /**
-     * UserInvitationDatabaseRepository constructor
-     *
-     * @param Connection $db A database object
-     */
-    public function __construct(Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritdoc
      */
@@ -63,7 +45,7 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
 
         try {
             $row = $this->db->execute($query)->fetch();
-        } catch (Database\DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($row) {
@@ -101,7 +83,7 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
         ;
         try {
             $this->db->execute($query);
-        } catch (Database\DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -126,7 +108,7 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
         ;
         try {
             $this->db->execute($query);
-        } catch (Database\DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -188,7 +170,7 @@ class UserInvitationDatabaseRepository implements UserInvitationRepository
 
         try {
             $rows = $this->db->execute($query)->fetchAll();
-        } catch (Database\DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 

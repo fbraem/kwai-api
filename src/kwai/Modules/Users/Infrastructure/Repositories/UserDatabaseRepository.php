@@ -12,8 +12,8 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Timestamp;
 use Kwai\Core\Domain\UniqueId;
-use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
@@ -35,23 +35,8 @@ use function Latitude\QueryBuilder\on;
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-class UserDatabaseRepository implements UserRepository
+class UserDatabaseRepository extends DatabaseRepository implements UserRepository
 {
-    /**
-     * The database connection
-     */
-    private Connection $db;
-
-    /**
-     * Constructor
-     *
-     * @param Connection $db A database object
-     */
-    public function __construct(Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritDoc
      * @return Entity<User>

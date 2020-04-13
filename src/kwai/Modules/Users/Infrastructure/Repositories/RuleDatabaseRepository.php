@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
@@ -24,20 +24,8 @@ use function Latitude\QueryBuilder\on;
 /**
  * RuleDatabaseRepository
  */
-class RuleDatabaseRepository implements RuleRepository
+class RuleDatabaseRepository extends DatabaseRepository implements RuleRepository
 {
-    private Connection $db;
-
-    /**
-     * RuleDatabaseRepository constructor.
-     *
-     * @param Connection $db
-     */
-    public function __construct(Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritDoc
      */

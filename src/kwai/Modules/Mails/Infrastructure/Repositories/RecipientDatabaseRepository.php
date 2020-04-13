@@ -20,15 +20,8 @@ use function Latitude\QueryBuilder\field;
  * RecipientDatabaseRepository
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-class RecipientDatabaseRepository implements RecipientRepository
+class RecipientDatabaseRepository extends Database\DatabaseRepository implements RecipientRepository
 {
-    private Database\Connection $db;
-
-    public function __construct(Database\Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritDoc
      * @throws Database\DatabaseException

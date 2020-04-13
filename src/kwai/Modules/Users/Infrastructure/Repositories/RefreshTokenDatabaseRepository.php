@@ -10,8 +10,8 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -28,23 +28,8 @@ use function Latitude\QueryBuilder\on;
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-final class RefreshTokenDatabaseRepository implements RefreshTokenRepository
+final class RefreshTokenDatabaseRepository extends DatabaseRepository implements RefreshTokenRepository
 {
-    /**
-     * The database connection
-     */
-    private Connection $db;
-
-    /**
-     * RefreshTokenDatabaseRepository constructor.
-     *
-     * @param Connection $db A database connection
-     */
-    public function __construct(Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritDoc
      * @return Entity<RefreshToken>

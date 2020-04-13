@@ -26,15 +26,8 @@ use function Latitude\QueryBuilder\on;
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-final class MailDatabaseRepository implements MailRepository
+final class MailDatabaseRepository extends Database\DatabaseRepository implements MailRepository
 {
-    private Database\Connection $db;
-
-    public function __construct(Database\Connection $db)
-    {
-        $this->db = $db;
-    }
-
     /**
      * @inheritdoc
      * @throws Database\DatabaseException
