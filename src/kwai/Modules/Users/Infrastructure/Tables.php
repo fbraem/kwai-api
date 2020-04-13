@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Infrastructure;
 
 use Closure;
 use Kwai\Core\Infrastructure\Database\ColumnFilter;
+use Kwai\Core\Infrastructure\Database\TableEnum;
 use MyCLabs\Enum\Enum;
 use function Latitude\QueryBuilder\alias;
 
@@ -27,7 +28,7 @@ use function Latitude\QueryBuilder\alias;
  * @method static Tables USERS()
  * @method static Tables USER_INVITATIONS()
  */
-class Tables extends Enum
+class Tables extends TableEnum
 {
     public const ABILITIES = 'abilities';
     public const ABILITY_RULES = 'ability_rules';
@@ -39,42 +40,4 @@ class Tables extends Enum
     public const USER_ABILITIES = 'user_abilities';
     public const USERS = 'users';
     public const USER_INVITATIONS = 'user_invitations';
-
-    /**
-     * @return Closure
-     */
-    public function getAliasFn()
-    {
-        return fn(string $column) =>
-            alias(
-                $this->getColumn($column),
-                $this->getAlias($column)
-            )
-        ;
-    }
-
-    public function getColumn(string $column): string
-    {
-        return $this->getValue() . '.' . $column;
-    }
-
-    public function getAlias(string $column): string
-    {
-        return $this->getAliasPrefix() . $column;
-    }
-
-    private function getAliasPrefix(): string
-    {
-        return $this->getValue() . '_';
-    }
-
-    public function createColumnFilter(): ColumnFilter
-    {
-        return new ColumnFilter($this->getAliasPrefix());
-    }
-
-    public function __get($name): string
-    {
-        return $this->getColumn($name);
-    }
 }
