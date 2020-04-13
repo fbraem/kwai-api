@@ -12,8 +12,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Domain\Training\TrainingsTable;
 use Domain\Training\TrainingTransformer;
 
-use Core\Responses\ResourceResponse;
-use Core\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
 
 class TrainingReadAction
 {

@@ -17,13 +17,13 @@ use Domain\User\UsersTable;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\InputValidator;
-use Core\Validators\ValidationException;
+use Kwai\Core\Infrastructure\Validators\InputValidator;
+use Kwai\Core\Infrastructure\Validators\ValidationException;
 
 
-use Core\Responses\SimpleResponse;
-use Core\Responses\ResourceResponse;
-use Core\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
 
 class CreateInvitationAction
 {

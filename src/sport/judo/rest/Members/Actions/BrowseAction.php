@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 class BrowseAction
 {

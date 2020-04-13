@@ -2,7 +2,7 @@
 /**
  * @package Kwai
  */
-namespace Core;
+namespace Kwai\Core\Infrastructure;
 
 use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 use Slim\Routing\RouteContext;

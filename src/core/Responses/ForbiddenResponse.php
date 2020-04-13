@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Responses;
+namespace Kwai\Core\Infrastructure\Responses;
 
 use Psr\Http\Message\ResponseInterface as Response;
 

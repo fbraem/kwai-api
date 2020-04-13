@@ -1,8 +1,8 @@
 <?php
 
-use Core\Application;
+use Kwai\Core\Infrastructure\Application;
 
 require '../src/vendor/autoload.php';
 
-$application = \Core\Clubman::getApplication();
+$application = \Kwai\Core\Infrastructure\Clubman::getApplication();
 $application->run();

@@ -7,8 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Core\Responses\NotAuthorizedResponse;
-use Core\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Responses\NotAuthorizedResponse;
+use Kwai\Core\Infrastructure\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;

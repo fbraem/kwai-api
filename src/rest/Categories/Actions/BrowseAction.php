@@ -29,7 +29,7 @@ class BrowseAction
             $query->where(['app' => $parameters['filter']['app']]);
         }
 
-        return (new \Core\Responses\ResourceResponse(
+        return (new \Kwai\Core\Infrastructure\Responses\ResourceResponse(
             CategoryTransformer::createForCollection(
                 $query->all(),
                 $this->container->get('filesystem')

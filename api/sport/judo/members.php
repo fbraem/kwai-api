@@ -3,7 +3,7 @@ require '../../../src/vendor/autoload.php';
 
 use Slim\Routing\RouteCollectorProxy;
 
-$app = \Core\Clubman::getApplication('/api/sport/judo');
+$app = \Kwai\Core\Infrastructure\Clubman::getApplication('/api/sport/judo');
 
 $app->group('/members', function (RouteCollectorProxy $group) {
     $group->get('', \Judo\REST\Members\Actions\BrowseAction::class)

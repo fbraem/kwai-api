@@ -24,7 +24,7 @@ class ReadAction
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $response = (new \Core\Responses\ResourceResponse(
+            $response = (new \Kwai\Core\Infrastructure\Responses\ResourceResponse(
                 CategoryTransformer::createForItem(
                     CategoriesTable::getTableFromRegistry()->get($args['id']),
                     $this->container->get('filesystem')

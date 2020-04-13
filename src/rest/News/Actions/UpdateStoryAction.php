@@ -16,13 +16,13 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
+use Kwai\Core\Infrastructure\Validators\ValidationException;
+use Kwai\Core\Infrastructure\Validators\InputValidator;
+use Kwai\Core\Infrastructure\Validators\EntityExistValidator;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\ResourceResponse;
-use Core\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
 
 class UpdateStoryAction
 {

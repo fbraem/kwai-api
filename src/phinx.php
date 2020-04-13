@@ -3,7 +3,7 @@
  * Phinx migration configuration
  */
 
-use Core\Clubman;
+use Kwai\Core\Infrastructure\Clubman;
 
 $application = Clubman::getApplication();
 $config = $application->getContainer()->get('settings');

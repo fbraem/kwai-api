@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Middlewares;
+namespace Kwai\Core\Infrastructure\Middlewares;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface;

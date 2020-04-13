@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\News\NewsStoryTransformer;
 use Domain\News\NewsStoriesTable;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 class BrowseStoryAction
 {

@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 class BrowseInvitationAction
 {

@@ -33,7 +33,7 @@ class TeamMembersBrowseAction
             );
 
             //TODO: Remove sport dependency?
-            return (new \Core\ResourceResponse(
+            return (new \Kwai\Core\Infrastructure\ResourceResponse(
                 MemberTransformer::createForCollection($team->members)
             ))($response);
         } catch (RecordNotFoundException $rnfe) {

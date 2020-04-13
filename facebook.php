@@ -12,7 +12,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 require 'src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+$app = \Kwai\Core\Infrastructure\Clubman::getApplication();
 
 $app->get('/facebook/news/{id}', function (Request $request, Response $response, array $args) {
     $id = $args['id'];

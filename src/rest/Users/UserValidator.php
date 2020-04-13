@@ -7,7 +7,7 @@ use Zend\Validator\EmailAddress;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 
-class UserValidator extends \Core\Validators\InputValidator
+class UserValidator extends \Kwai\Core\Infrastructure\Validators\InputValidator
 {
     public function __construct()
     {

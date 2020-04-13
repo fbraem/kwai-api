@@ -1,11 +1,11 @@
 <?php
 
-namespace Core;
+namespace Kwai\Core\Infrastructure;
 
-use Core\Middlewares\JsonBodyParserMiddleware;
-use Core\Middlewares\LogActionMiddleware;
-use Core\Middlewares\ParametersMiddleware;
-use Core\Middlewares\TransactionMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
 use Kwai\Core\Domain\UniqueId;
 use Kwai\Core\Infrastructure\Database;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
@@ -18,10 +18,12 @@ use League\Flysystem\Filesystem;
 use Slim\Factory\AppFactory;
 use Tuupola\Middleware\JwtAuthentication;
 
-//TODO: Extract all code to services, etc, ...
+/**
+ * Class Clubman
+ */
 class Clubman
 {
-    private static $application;
+    private static Clubman $application;
 
     public static function getApplication(string $basePath = '/api')
     {

@@ -1,7 +1,7 @@
 <?php
 require '../src/vendor/autoload.php';
 
-use Core\Clubman;
+use Kwai\Core\Infrastructure\Clubman;
 use Slim\Routing\RouteCollectorProxy;
 
 $app = Clubman::getApplication();

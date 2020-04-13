@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Event\EventsTable;
 use Domain\Training\EventTransformer;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 class EventBrowseAction
 {

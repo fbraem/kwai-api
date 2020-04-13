@@ -1,6 +1,6 @@
 <?php
 
-use Core\Clubman;
+use Kwai\Core\Infrastructure\Clubman;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;

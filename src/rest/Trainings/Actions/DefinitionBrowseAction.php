@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Training\DefinitionsTable;
 use Domain\Training\DefinitionTransformer;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 class DefinitionBrowseAction
 {

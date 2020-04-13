@@ -1,8 +1,8 @@
 <?php
 namespace REST\Trainings;
 
-use Core\Validators\ValidatorInterface;
-use Core\Validators\ValidationException;
+use Kwai\Core\Infrastructure\Validators\ValidatorInterface;
+use Kwai\Core\Infrastructure\Validators\ValidationException;
 
 use Carbon\Carbon;
 

@@ -12,8 +12,8 @@ use Domain\Team\TeamCategoryTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 class TeamCategoryReadAction
 {

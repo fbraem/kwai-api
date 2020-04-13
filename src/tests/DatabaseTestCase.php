@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Core\Clubman;
+use Kwai\Core\Infrastructure\Clubman;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use PHPUnit\Framework\TestCase;

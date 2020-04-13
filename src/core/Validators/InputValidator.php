@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Validators;
+namespace Kwai\Core\Infrastructure\Validators;
 
 use Respect\Validation\Validator as v;
 use Respect\Validation\Exceptions\NestedValidationException;

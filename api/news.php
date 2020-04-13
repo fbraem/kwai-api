@@ -3,7 +3,7 @@ require '../src/vendor/autoload.php';
 
 use Slim\Routing\RouteCollectorProxy;
 
-$app = \Core\Clubman::getApplication();
+$app = \Kwai\Core\Infrastructure\Clubman::getApplication();
 
 $app->group('/news', function (RouteCollectorProxy $group) {
     $group->get('/stories', \REST\News\Actions\BrowseStoryAction::class)

@@ -1,7 +1,7 @@
 <?php
 require '../src/vendor/autoload.php';
 
-use Core\Clubman;
+use Kwai\Core\Infrastructure\Clubman;
 use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseRulesAction;

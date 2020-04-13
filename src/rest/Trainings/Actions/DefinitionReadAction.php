@@ -12,8 +12,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Domain\Training\DefinitionsTable;
 use Domain\Training\DefinitionTransformer;
 
-use Core\Responses\ResourceResponse;
-use Core\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
 
 class DefinitionReadAction
 {

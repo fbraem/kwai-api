@@ -12,8 +12,8 @@ use \Domain\Content\ContentsTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\OkResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\OkResponse;
 
 class DeleteStoryAction
 {

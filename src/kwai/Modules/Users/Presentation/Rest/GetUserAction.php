@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 
@@ -15,7 +15,7 @@ use Kwai\Modules\Users\UseCases\GetUserCommand;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;

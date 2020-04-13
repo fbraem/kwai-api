@@ -29,7 +29,7 @@ class UserMigration extends AbstractMigration
             ->create()
         ;
 
-        $application = \Core\Clubman::getApplication();
+        $application = \Kwai\Core\Infrastructure\Clubman::getApplication();
         $settings = $application->getContainer()->get('settings');
         if ($this->getEnvironment() == 'test') {
             $data = [

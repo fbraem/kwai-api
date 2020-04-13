@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\ResourceResponse;
-use Core\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;

@@ -10,8 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 

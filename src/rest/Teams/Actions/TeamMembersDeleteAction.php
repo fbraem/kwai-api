@@ -11,7 +11,7 @@ use Domain\Team\TeamsTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Responses\ResourceResponse;
 
 //TODO: Remove sport dependency?
 use Judo\Domain\Member\MembersTable;

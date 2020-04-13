@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Validators;
+namespace Kwai\Core\Infrastructure\Validators;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
