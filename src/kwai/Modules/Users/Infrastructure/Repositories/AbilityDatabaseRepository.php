@@ -90,12 +90,13 @@ final class AbilityDatabaseRepository implements AbilityRepository
      */
     public function getByUser(Entity $user): array
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->join(
-                Tables::USER_ABILITIES,
-                on(Tables::USER_ABILITIES . '.ability_id', Tables::ABILITIES . '.id')
+                (string) Tables::USER_ABILITIES(),
+                on(Tables::USER_ABILITIES()->ability_id, Tables::ABILITIES()->id)
             )
-            ->where(field(Tables::USER_ABILITIES . '.user_id')->eq($user->id()))
+            ->where(field(Tables::USER_ABILITIES()->user_id)->eq($user->id()))
             ->compile()
         ;
         return $this->fetchAll($query);
@@ -117,7 +118,7 @@ final class AbilityDatabaseRepository implements AbilityRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $columnFilter = new ColumnFilter(Tables::ABILITIES . '_');
+        $columnFilter = Tables::ABILITIES()->createColumnFilter();
 
         $abilities = [];
         foreach ($rows as $row) {
