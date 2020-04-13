@@ -42,8 +42,7 @@ final class UserTransformerTest extends TestCase
             $data,
             [
                 'data' => [
-                    'id' => 1,
-                    'uuid' => strval($uuid),
+                    'id' => strval($uuid),
                     'email' => strval($email),
                     'remark' => 'test',
                     'created_at' => strval($traceableTime->getCreatedAt()),
