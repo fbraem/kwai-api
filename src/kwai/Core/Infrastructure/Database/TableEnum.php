@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Database;
 
 use Closure;
-use Kwai\Core\Infrastructure\Database\ColumnFilter;
 use MyCLabs\Enum\Enum;
 use function Latitude\QueryBuilder\alias;
 
