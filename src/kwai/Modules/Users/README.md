@@ -38,7 +38,7 @@ Invite user
 
 Confirm invitation
 ------------------
-:x: A new user must be able to confirm the invitation to create a new account.
+:heavy_check_mark: A new user must be able to confirm the invitation to create a new account.
 
 Approve user
 ------------
@@ -51,9 +51,9 @@ Revoke user
 
 Permissions
 -----------
-:x: It must be possible to give a user permissions to perform selected actions
+:heavy_check_mark: It must be possible to give a user permissions to perform selected actions
 on the system.
 
 Revoke permission
 -----------------
-:x: An administrator of the website must be able to revoke a permission from a user.
+:heavy_check_mark: An administrator of the website must be able to revoke a permission from a user.
