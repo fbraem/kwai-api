@@ -3,6 +3,8 @@
  * @package Kwai
  * @subpackage Mails
  */
+
+/* @noinspection PhpUnusedPrivateFieldInspection */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Mails\Infrastructure;
@@ -22,6 +24,6 @@ use function Latitude\QueryBuilder\alias;
  */
 class Tables extends TableEnum
 {
-    public const MAILS = 'mails';
-    public const RECIPIENTS = 'recipients';
+    private const MAILS = 'mails';
+    private const RECIPIENTS = 'recipients';
 }
