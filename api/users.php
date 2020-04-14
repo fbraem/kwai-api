@@ -1,7 +1,6 @@
 <?php
 require '../src/vendor/autoload.php';
 
-use Kwai\Core\Infrastructure\Clubman;
 use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
 use Kwai\Modules\Users\Presentation\Rest\BrowseRulesAction;
@@ -17,8 +16,9 @@ use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
 use Kwai\Modules\Users\Presentation\Rest\GetUserInvitationAction;
 use Kwai\Modules\Users\Presentation\Rest\UpdateAbilityAction;
 use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app = Clubman::getApplication();
+$app = createApplication();
 
 $app->group('/users', function (RouteCollectorProxy $group) {
     $uuid_regex = '{uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}+}';

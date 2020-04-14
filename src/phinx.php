@@ -3,10 +3,9 @@
  * Phinx migration configuration
  */
 
-use Kwai\Core\Infrastructure\Clubman;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 
-$application = Clubman::getApplication();
-$config = $application->getContainer()->get('settings');
+$config = (new Settings())();
 
 $environments = $config['database'];
 $environments['default_database'] = $config['default_database'];

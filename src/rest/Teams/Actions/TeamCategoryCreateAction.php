@@ -17,8 +17,8 @@ use Kwai\Core\Infrastructure\Validators\InputValidator;
 use Kwai\Core\Infrastructure\Validators\EntityExistValidator;
 use REST\Teams\TeamCategoryValidator;
 
-use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class TeamCategoryCreateAction
 {

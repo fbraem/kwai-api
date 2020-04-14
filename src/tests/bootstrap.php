@@ -1,15 +1,13 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php';
 
-use Kwai\Core\Infrastructure\Clubman;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-$application = Clubman::getApplication();
-$config = $application->getContainer()->get('settings');
+$settingsFn = require __DIR__ . '/../kwai/Core/Infrastructure/dependencies/settings.php';
+$config = $settingsFn();
 
 $pdo = new PDO(
     $config['database']['test']['dsn'],

@@ -12,8 +12,8 @@ use Domain\News\NewsStoriesTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class ReadStoryAction
 {

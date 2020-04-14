@@ -21,9 +21,9 @@ use Kwai\Core\Infrastructure\Validators\InputValidator;
 use Kwai\Core\Infrastructure\Validators\ValidationException;
 
 
-use Kwai\Core\Infrastructure\Responses\SimpleResponse;
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
-use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
 
 class CreateInvitationAction
 {

@@ -12,8 +12,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\TrainingParticipationsTransformer;
 
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
-use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class TrainingBrowseAction
 {

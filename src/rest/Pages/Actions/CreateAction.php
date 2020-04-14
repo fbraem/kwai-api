@@ -11,8 +11,8 @@ use Domain\Page\PageTransformer;
 use Domain\Page\PagesTable;
 use Domain\Content\ContentsTable;
 
-use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 use Respect\Validation\Validator as v;
 

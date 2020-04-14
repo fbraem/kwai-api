@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Person\PersonsTable;
 use Domain\Person\PersonTransformer;
 
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class BrowseAction
 {

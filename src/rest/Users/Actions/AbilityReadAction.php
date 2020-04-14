@@ -12,8 +12,8 @@ use Domain\User\AbilityTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
-use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class AbilityReadAction
 {

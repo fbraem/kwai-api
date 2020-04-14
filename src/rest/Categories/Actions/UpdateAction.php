@@ -17,9 +17,9 @@ use Kwai\Core\Infrastructure\Validators\InputValidator;
 
 use Respect\Validation\Validator as v;
 
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
-use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
-use Kwai\Core\Infrastructure\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class UpdateAction
 {

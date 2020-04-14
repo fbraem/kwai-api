@@ -17,7 +17,7 @@ use Domain\Person\CountriesTable;
 use Domain\Person\ContactsTable;
 use Domain\Person\PersonsTable;
 
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class UploadAction
 {

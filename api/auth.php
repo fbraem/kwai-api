@@ -1,10 +1,10 @@
 <?php
 require '../src/vendor/autoload.php';
 
-use Kwai\Core\Infrastructure\Clubman;
 use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app = Clubman::getApplication();
+$app = createApplication();
 
 $app->group('/auth', function (RouteCollectorProxy $group) {
     /*

@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Person\CountryTransformer;
 use Domain\Person\CountriesTable;
 
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class BrowseAction
 {

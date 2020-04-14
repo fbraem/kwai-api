@@ -14,8 +14,8 @@ use Domain\User\UsersTable;
 use Domain\User\AbilitiesTable;
 use Domain\User\AbilityTransformer;
 
-use Kwai\Core\Infrastructure\Responses\UnprocessableEntityResponse;
-use Kwai\Core\Infrastructure\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class UserDetachAbilityAction
 {

@@ -7,7 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\Rest;
 
-use Kwai\Core\Infrastructure\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -20,8 +20,8 @@ use Kwai\Modules\Users\UseCases\Logout;
 use Kwai\Modules\Users\UseCases\LogoutCommand;
 
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Responses\NotAuthorizedResponse;
-use Kwai\Core\Infrastructure\Responses\OkResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\OkResponse;
 
 use Firebase\JWT\JWT;
 

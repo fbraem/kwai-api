@@ -49,7 +49,10 @@
             "Kwai\\" : "./kwai",
             "Judo\\Domain\\" : "./sport/judo/domain",
             "Judo\\REST\\" : "./sport/judo/rest"
-        }
+        },
+        "files" : [
+          "kwai/Core/Infrastructure/Presentation/app.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
