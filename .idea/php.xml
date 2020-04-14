@@ -28,7 +28,6 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/src/vendor/firebase/php-jwt" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/config" />
