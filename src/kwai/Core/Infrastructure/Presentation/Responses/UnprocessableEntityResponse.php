@@ -1,14 +1,30 @@
 <?php
+/**
+ * @package Kwai
+ * @subpackage Core
+ */
+declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Presentation\Responses;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
+/**
+ * Class UnprocessableEntityResponse
+ *
+ * Creates a response with JSONAPI error structure.
+ * The status will be set to 422 and the content-type header to 'application/vnd.api+json'.
+ */
 class UnprocessableEntityResponse
 {
-    private $errors;
+    private array $errors;
 
-    public function __construct($errors)
+    /**
+     * UnprocessableEntityResponse constructor.
+     *
+     * @param array $errors
+     */
+    public function __construct(array $errors)
     {
         $this->errors = $errors;
     }

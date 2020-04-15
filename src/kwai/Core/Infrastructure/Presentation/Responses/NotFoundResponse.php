@@ -1,22 +1,21 @@
 <?php
+/**
+ * @package Kwai
+ * @subpackage Core
+ */
+declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Presentation\Responses;
 
-use Psr\Http\Message\ResponseInterface as Response;
-
-class NotFoundResponse
+/**
+ * Class NotFoundResponse
+ *
+ * Returns a response with status 404.
+ */
+class NotFoundResponse extends SimpleResponse
 {
-    private $status;
-
-    public function __construct($status)
+    public function __construct(string $message)
     {
-        $this->status = $status;
-    }
-
-    public function __invoke(Response $response) : Response
-    {
-        return $response
-            ->withStatus(404, $this->status);
-        ;
+        parent::__construct(404, $message);
     }
 }

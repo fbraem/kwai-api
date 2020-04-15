@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Kwai
+ * @subpackage Core
+ */
+declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Presentation\Responses;
 
@@ -8,13 +13,25 @@ use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 use League\Fractal\Resource\ResourceInterface as ResourceInterface;
 
+/**
+ * Class ResourceResponse
+ *
+ * Returns a response with the resource transformed to the JSONAPI format.
+ * The content-type header will be set to 'application/vnd.api+json'.
+ */
 class ResourceResponse
 {
-    private $resource;
+    private ResourceInterface $resource;
 
-    private $includes;
+    private string $includes;
 
-    public function __construct(ResourceInterface $resource, $includes = '')
+    /**
+     * ResourceResponse constructor.
+     *
+     * @param ResourceInterface $resource
+     * @param string            $includes
+     */
+    public function __construct(ResourceInterface $resource, string $includes = '')
     {
         $this->resource = $resource;
         $this->includes = $includes;
