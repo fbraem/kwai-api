@@ -1,13 +1,13 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
 
-$settingsFn = require __DIR__ . '/../kwai/Core/Infrastructure/dependencies/settings.php';
-$config = $settingsFn();
+$config = (new Settings())();
 
 $pdo = new PDO(
     $config['database']['test']['dsn'],

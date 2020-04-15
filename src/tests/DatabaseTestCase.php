@@ -5,6 +5,7 @@ namespace Tests;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -24,8 +25,7 @@ class DatabaseTestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
-        $settingsFn = require __DIR__ . '/../kwai/Core/Infrastructure/dependencies/settings.php';
-        $config = $settingsFn();
+        $config = (new Settings())();
 
         self::$db = new Connection(
             $config['database']['test']['dsn'],
