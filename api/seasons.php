@@ -1,26 +1,33 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
+use REST\Seasons\Actions\BrowseAction;
+use REST\Seasons\Actions\CreateAction;
+use REST\Seasons\Actions\ReadAction;
+use REST\Seasons\Actions\UpdateAction;
 use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app = \Kwai\Core\Infrastructure\Clubman::getApplication();
+$app = createApplication();
 
 $app->group('/seasons', function (RouteCollectorProxy $group) {
-    $group->get('', \REST\Seasons\Actions\BrowseAction::class)
+    $group->get('', BrowseAction::class)
         ->setName('seasons.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->get('/{id:[0-9]+}', \REST\Seasons\Actions\ReadAction::class)
+    $group->get('/{id:[0-9]+}', ReadAction::class)
         ->setName('seasons.read')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->post('', \REST\Seasons\Actions\CreateAction::class)
+    $group->post('', CreateAction::class)
         ->setName('seasons.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->patch('/{id:[0-9]+}', \REST\Seasons\Actions\UpdateAction::class)
+    $group->patch('/{id:[0-9]+}', UpdateAction::class)
         ->setName('seasons.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 

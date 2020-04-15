@@ -1,14 +1,18 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
+use REST\Persons\Actions\BrowseAction;
 use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app = \Kwai\Core\Infrastructure\Clubman::getApplication();
+$app = createApplication();
 
 $app->group('/persons', function (RouteCollectorProxy $group) {
-    $group->get('', \REST\Persons\Actions\BrowseAction::class)
+    $group->get('', BrowseAction::class)
         ->setName('persons.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 

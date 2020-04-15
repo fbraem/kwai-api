@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
 use Slim\Routing\RouteCollectorProxy;
@@ -20,10 +22,10 @@ $app->group('/auth', function (RouteCollectorProxy $group) {
     ;
     $group->post('/logout', Kwai\Modules\Users\Presentation\Rest\LogoutAction::class)
         ->setName('auth.logout')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     $group->get('/users', Kwai\Modules\Users\Presentation\Rest\UserAction::class)
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
         ->setName('auth.users')
     ;
 });

@@ -1,30 +1,39 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
+use REST\News\Actions\ArchiveAction;
+use REST\News\Actions\BrowseStoryAction;
+use REST\News\Actions\CreateStoryAction;
+use REST\News\Actions\DeleteStoryAction;
+use REST\News\Actions\ReadStoryAction;
+use REST\News\Actions\UpdateStoryAction;
 use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app = \Kwai\Core\Infrastructure\Clubman::getApplication();
+$app = createApplication();
 
 $app->group('/news', function (RouteCollectorProxy $group) {
-    $group->get('/stories', \REST\News\Actions\BrowseStoryAction::class)
+    $group->get('/stories', BrowseStoryAction::class)
         ->setName('news.browse')
     ;
-    $group->get('/stories/{id:[0-9]+}', \REST\News\Actions\ReadStoryAction::class)
+    $group->get('/stories/{id:[0-9]+}', ReadStoryAction::class)
         ->setName('news.read')
     ;
-    $group->post('/stories', \REST\News\Actions\CreateStoryAction::class)
+    $group->post('/stories', CreateStoryAction::class)
         ->setName('news.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->patch('/stories/{id:[0-9]+}', \REST\News\Actions\UpdateStoryAction::class)
+    $group->patch('/stories/{id:[0-9]+}', UpdateStoryAction::class)
         ->setName('news.update')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->delete('/stories/{id:[0-9]+}', \REST\News\Actions\DeleteStoryAction::class)
+    $group->delete('/stories/{id:[0-9]+}', DeleteStoryAction::class)
         ->setName('news.delete')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->get('/archive', \REST\News\Actions\ArchiveAction::class)
+    $group->get('/archive', ArchiveAction::class)
         ->setName('news.archive')
     ;
 });

@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
-use Kwai\Core\Infrastructure\Application;
+use function Kwai\Core\Infrastructure\createApplication;
 
 require '../src/vendor/autoload.php';
 
-$application = \Kwai\Core\Infrastructure\Clubman::getApplication();
+$application = createApplication();
 $application->run();

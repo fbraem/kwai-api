@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
 use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
@@ -26,62 +28,62 @@ $app->group('/users', function (RouteCollectorProxy $group) {
     // Get all users
     $group->get('', BrowseUsersAction::class)
         ->setName('users.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Get a user with the given uuid
     $group->get("/$uuid_regex", GetUserAction::class)
         ->setName('users.get')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Get the abilities of the user with the given uuid
     $group->get("/$uuid_regex/abilities", GetUserAbilitiesAction::class)
         ->setName('user.abilities.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Attach an ability to the user with the given uuid
     $group->patch("/$uuid_regex/abilities/{ability:[0-9]+}", AttachAbilityAction::class)
         ->setName('user.abilities.attach')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Detach an ability from the user with the given uuid
     $group->delete("/$uuid_regex/abilities/{ability:[0-9]+}", DetachAbilityAction::class)
         ->setName('user.abilities.detach')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Browse all abilities
     $group->get('/abilities', BrowseAbilitiesAction::class)
         ->setName('users.abilities.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Create a new ability
     $group->post('/abilities', CreateAbilityAction::class)
         ->setName('users.abilities.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Get an ability with the given id
     $group->get('/abilities/{id:[0-9]+}', GetAbilityAction::class)
         ->setName('users.abilities.read')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Update an ability with the given id
     $group->patch('/abilities/{id:[0-9]+}', UpdateAbilityAction::class)
         ->setName('users.abilities.update')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Browse rules
     $group->get('/rules', BrowseRulesAction::class)
         ->setName('users.rules.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Create User Invitation
     $group->post('/invitations', CreateUserInvitationAction::class)
         ->setName('users.invitations.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Browse all invitations
     $group->get('/invitations', BrowseUserInvitationsAction::class)
         ->setName('users.invitations.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     // Get an invitation
     $group->get("/invitations/$uuid_regex", GetUserInvitationAction::class)

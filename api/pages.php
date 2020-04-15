@@ -1,28 +1,36 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
+use REST\Pages\Actions\BrowseAction;
+use REST\Pages\Actions\CreateAction;
+use REST\Pages\Actions\DeleteAction;
+use REST\Pages\Actions\ReadAction;
+use REST\Pages\Actions\UpdateAction;
 use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app = \Kwai\Core\Infrastructure\Clubman::getApplication();
+$app = createApplication();
 
 $app->group('/pages', function (RouteCollectorProxy $group) {
-    $group->get('', \REST\Pages\Actions\BrowseAction::class)
+    $group->get('', BrowseAction::class)
         ->setName('pages.browse')
     ;
-    $group->get('/{id:[0-9]+}', \REST\Pages\Actions\ReadAction::class)
+    $group->get('/{id:[0-9]+}', ReadAction::class)
         ->setName('pages.read')
     ;
-    $group->post('', \REST\Pages\Actions\CreateAction::class)
+    $group->post('', CreateAction::class)
         ->setName('pages.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->patch('/{id:[0-9]+}', \REST\Pages\Actions\UpdateAction::class)
+    $group->patch('/{id:[0-9]+}', UpdateAction::class)
         ->setName('pages.update')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $group->delete('/{id:[0-9]+}', \REST\Pages\Actions\DeleteAction::class)
+    $group->delete('/{id:[0-9]+}', DeleteAction::class)
         ->setName('pages.delete')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 
