@@ -13,7 +13,7 @@ use League\Flysystem\Filesystem;
 /**
  * Class FileSystemDepedency
  */
-class FileSystemDepedency
+class FileSystemDepedency implements Dependency
 {
     public function __invoke(array $settings)
     {

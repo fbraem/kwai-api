@@ -12,7 +12,7 @@ use Kwai\Core\Infrastructure\Template\PlatesEngine;
 /**
  * Class TemplateDependency
  */
-class TemplateDependency
+class TemplateDependency implements Dependency
 {
     public function __invoke(array $settings)
     {

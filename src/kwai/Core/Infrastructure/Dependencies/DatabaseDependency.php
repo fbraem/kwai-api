@@ -13,7 +13,7 @@ use Kwai\Core\Infrastructure\Database\DatabaseException;
 /**
  * Class DatabaseDependency
  */
-class DatabaseDependency
+class DatabaseDependency implements Dependency
 {
     /**
      * Creates a database connection.

@@ -12,7 +12,7 @@ use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
 /**
  * Class MailerDependency
  */
-class MailerDependency
+class MailerDependency implements Dependency
 {
     public function __invoke(array $settings)
     {
