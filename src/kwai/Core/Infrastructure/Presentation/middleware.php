@@ -1,5 +1,8 @@
 <?php
 /**
+ * Returns a function that adds all middleware to the application.
+ * The function needs one argument: the Slim application.
+ *
  * @package Kwai
  * @subpackage Core
  */
@@ -29,7 +32,9 @@ return function (App $application) {
     $application->add(new JwtAuthentication([
         'secret' => $settings['security']['secret'],
         'algorithm' => [$settings['security']['algorithm']],
-        'rules' => [new AuthenticationRule()],
+        'rules' => [
+            new AuthenticationRule()
+        ],
         'error' => function (ResponseInterface $response, $arguments) {
             $data['status'] = 'error';
             $data['message'] = $arguments['message'];
