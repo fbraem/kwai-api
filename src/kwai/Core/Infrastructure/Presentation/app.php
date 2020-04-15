@@ -14,8 +14,15 @@ use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use League\Container\Container;
+use Slim\App;
 use Slim\Factory\AppFactory;
 
+/**
+ * Creates a Slim application.
+ *
+ * @param string $basePath
+ * @return App
+ */
 function createApplication(string $basePath = '/api')
 {
     $container = new Container();
@@ -34,6 +41,7 @@ function createApplication(string $basePath = '/api')
         ConnectionManager::setConfig('default', $dsnConfig);
     }
 
+    // Add all dependencies to the container
     $container
         ->add('pdo_db', new DatabaseDependency())
         ->addArgument($container->get('settings'))
@@ -57,6 +65,7 @@ function createApplication(string $basePath = '/api')
     $application = AppFactory::create();
     $application->setBasePath($basePath);
 
+    // Handle middleware
     $middlewareFn = require __DIR__ . '/middleware.php';
     $middlewareFn($application);
 
