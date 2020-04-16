@@ -21,5 +21,5 @@ use Kwai\Core\Infrastructure\Database\TableEnum;
 class Tables extends TableEnum
 {
     private const MAILS = 'mails';
-    private const RECIPIENTS = 'recipients';
+    private const RECIPIENTS = 'mail_recipients';
 }
