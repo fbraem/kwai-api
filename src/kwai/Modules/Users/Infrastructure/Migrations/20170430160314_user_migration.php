@@ -1,5 +1,6 @@
 <?php
 
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Phinx\Migration\AbstractMigration;
 
 /**
@@ -29,8 +30,7 @@ class UserMigration extends AbstractMigration
             ->create()
         ;
 
-        $application = \Kwai\Core\Infrastructure\Clubman::getApplication();
-        $settings = $application->getContainer()->get('settings');
+        $settings = (new Settings())();
         if ($this->getEnvironment() == 'test') {
             $data = [
                 [
