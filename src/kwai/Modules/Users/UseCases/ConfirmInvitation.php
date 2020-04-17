@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;

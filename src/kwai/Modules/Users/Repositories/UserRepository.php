@@ -7,9 +7,9 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;

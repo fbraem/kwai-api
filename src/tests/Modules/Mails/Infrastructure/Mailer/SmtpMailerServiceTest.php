@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Infstrastucture\Mailer;
 
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
 use PHPUnit\Framework\TestCase;

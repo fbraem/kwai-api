@@ -6,7 +6,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Repositories;
 
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Mails\Domain\Mail;
 

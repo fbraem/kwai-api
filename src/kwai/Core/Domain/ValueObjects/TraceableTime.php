@@ -2,9 +2,9 @@
 /**
  * TraceableTime class
  */
- declare(strict_types = 1);
+declare(strict_types = 1);
 
- namespace Kwai\Core\Domain;
+namespace Kwai\Core\Domain\ValueObjects;
 
 /**
   * Value object that handles the created_at and updated_at timestamps.

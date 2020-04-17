@@ -10,8 +10,8 @@ use DateTime;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\EmailAddress;
-use Kwai\Core\Domain\Timestamp;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;

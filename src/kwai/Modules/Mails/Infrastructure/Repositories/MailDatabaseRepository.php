@@ -10,7 +10,7 @@ namespace Kwai\Modules\Mails\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database;
 use Kwai\Modules\Mails\Domain\Mail;
 use Kwai\Modules\Mails\Infrastructure\Mappers\MailMapper;

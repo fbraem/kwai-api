@@ -8,7 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Domain;
 
 use InvalidArgumentException;
-use Kwai\Core\Domain\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 

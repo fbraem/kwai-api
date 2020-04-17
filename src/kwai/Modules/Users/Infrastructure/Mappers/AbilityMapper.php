@@ -8,8 +8,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\Timestamp;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\Ability;

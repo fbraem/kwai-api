@@ -7,10 +7,10 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\Timestamp;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;

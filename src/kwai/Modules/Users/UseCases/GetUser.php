@@ -9,7 +9,7 @@ namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Repositories\AbilityRepository;

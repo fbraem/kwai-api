@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\Presentation\Transformers;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Presentation\Transformers\RuleTransformer;
 use League\Fractal\Manager;

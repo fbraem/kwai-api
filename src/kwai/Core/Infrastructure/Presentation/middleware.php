@@ -8,7 +8,7 @@
  */
 declare(strict_types=1);
 
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;

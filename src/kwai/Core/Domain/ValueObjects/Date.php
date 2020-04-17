@@ -4,7 +4,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Core\Domain;
+namespace Kwai\Core\Domain\ValueObjects;
 
 use Carbon\CarbonImmutable;
 

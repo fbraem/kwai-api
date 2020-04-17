@@ -8,7 +8,7 @@ namespace Tests\Core\Domain;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 
 final class UniqueIdTest extends TestCase
 {

@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database\DatabaseException;

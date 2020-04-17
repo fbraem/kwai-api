@@ -9,7 +9,7 @@ namespace Tests\Modules\Mails\Domain;
 
 use PHPUnit\Framework\TestCase;
 
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 
 final class AddressTest extends TestCase

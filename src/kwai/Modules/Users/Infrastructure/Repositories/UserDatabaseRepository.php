@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\Timestamp;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;

@@ -6,10 +6,10 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Users\Presentation\Transformers;
 
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
 use League\Fractal\Manager;

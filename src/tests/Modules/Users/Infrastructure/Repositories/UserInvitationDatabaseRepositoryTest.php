@@ -8,12 +8,12 @@ namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
 use Exception;
-use Kwai\Core\Domain\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\Timestamp;
-use Kwai\Core\Domain\TraceableTime;
-use Kwai\Core\Domain\UniqueId;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;

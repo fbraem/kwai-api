@@ -7,8 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
-use Kwai\Core\Domain\Timestamp;
-use Kwai\Core\Domain\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
