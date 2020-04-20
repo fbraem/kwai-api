@@ -26,7 +26,7 @@ final class AbilityDatabaseRepositoryTest extends DatabaseTestCase
         $this->repo = new AbilityDatabaseRepository(self::$db);
     }
 
-    public function testCreate(): Entity
+    public function testCreate(): ?Entity
     {
         try {
             $ability = $this->repo->create(new Ability((object) [
@@ -46,8 +46,12 @@ final class AbilityDatabaseRepositoryTest extends DatabaseTestCase
      * @param Entity $entity
      * @throws RepositoryException
      */
-    public function testGetAbilityById(Entity $entity)
+    public function testGetAbilityById(?Entity $entity)
     {
+        if ($entity == null) {
+            return;
+        }
+
         try {
             $ability = $this->repo->getById($entity->id());
             $this->assertInstanceOf(
