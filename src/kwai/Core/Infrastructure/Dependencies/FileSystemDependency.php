@@ -11,9 +11,9 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
 /**
- * Class FileSystemDepedency
+ * Class FileSystemDependency
  */
-class FileSystemDepedency implements Dependency
+class FileSystemDependency implements Dependency
 {
     public function __invoke(array $settings)
     {

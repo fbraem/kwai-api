@@ -10,7 +10,7 @@ namespace Kwai\Core\Infrastructure;
 use Cake\Datasource\ConnectionManager;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
-use Kwai\Core\Infrastructure\Dependencies\FileSystemDepedency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
@@ -49,7 +49,7 @@ function createApplication(string $basePath = '/api')
     ;
 
     $container
-        ->add('filesystem', new FileSystemDepedency())
+        ->add('filesystem', new FileSystemDependency())
         ->addArgument($container->get('settings'))
     ;
 
