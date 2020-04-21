@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure;
 
 use Cake\Datasource\ConnectionManager;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDepedency;
 use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
@@ -59,6 +60,11 @@ function createApplication(string $basePath = '/api')
 
     $container
         ->add('mailer', new MailerDependency())
+        ->addArgument($container->get('settings'))
+    ;
+
+    $container
+        ->add('converter', new ConvertDependency())
         ->addArgument($container->get('settings'))
     ;
 
