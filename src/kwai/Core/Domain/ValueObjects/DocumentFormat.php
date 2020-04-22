@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Kwai\Modules\Core\Domain\ValueObjects;
+namespace Kwai\Core\Domain\ValueObjects;
 
 use MyCLabs\Enum\Enum;
 
