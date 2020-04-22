@@ -13,6 +13,8 @@ use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * Class AuthorMapper
+ *
+ * Mapper for the Author entity
  */
 final class AuthorMapper
 {
