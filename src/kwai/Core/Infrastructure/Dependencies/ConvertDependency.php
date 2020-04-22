@@ -9,7 +9,7 @@ namespace Kwai\Core\Infrastructure\Dependencies;
 
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Converter\MarkdownConverter;
-use Kwai\Modules\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 
 /**
  * Class ConvertDependency
