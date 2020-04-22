@@ -52,7 +52,7 @@ class Promotion
     /**
      * Returns the end date of the promotion
      */
-    public function getEndDate(): Timestamp
+    public function getEndDate(): ?Timestamp
     {
         return $this->endDate;
     }
