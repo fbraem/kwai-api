@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Core\Domain\ValueObjects;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Modules\Users\Domain\User;
 
 /**
@@ -73,5 +72,53 @@ class Text
         $this->summary = $summary;
         $this->content = $content;
         $this->author = $author;
+    }
+
+    /**
+     * Return the locale
+     */
+    public function getLocale(): Locale
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Return the document format
+     */
+    public function getFormat(): DocumentFormat
+    {
+        return $this->format;
+    }
+
+    /**
+     * Return the title
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * Return the summary
+     */
+    public function getSummary(): string
+    {
+        return $this->summary;
+    }
+
+    /**
+     * Return the content
+     */
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    /**
+     * Return the author
+     */
+    public function getAuthor(): Entity
+    {
+        return $this->author;
     }
 }
