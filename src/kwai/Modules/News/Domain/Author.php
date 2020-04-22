@@ -31,4 +31,12 @@ class Author implements DomainEntity
     {
         $this->name = $props->name;
     }
+
+    /**
+     * Get the username
+     */
+    public function getName(): Username
+    {
+        return $this->name;
+    }
 }
