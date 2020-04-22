@@ -16,6 +16,9 @@ use Kwai\Core\Domain\DomainEntity;
  */
 class Category implements DomainEntity
 {
+    /**
+     * The name of the category
+     */
     private string $name;
 
     /**
@@ -26,5 +29,13 @@ class Category implements DomainEntity
     public function __construct(object $props)
     {
         $this->name = $props->name;
+    }
+
+    /**
+     * Get the name of the category
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 }
