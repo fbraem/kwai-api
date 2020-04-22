@@ -58,6 +58,11 @@ class Story implements DomainEntity
      */
     private array $images;
 
+    /**
+     * Story constructor.
+     *
+     * @param object $props
+     */
     public function __construct(object $props)
     {
         $this->enabled = $props->enabled;
@@ -70,8 +75,102 @@ class Story implements DomainEntity
         $this->contents = $props->contents ?? [];
     }
 
+    /**
+     * Attach images
+     *
+     * @param array $images
+     */
     public function attachImages(array $images)
     {
         $this->images = $images;
     }
+
+    /**
+     * Add content
+     *
+     * @param Text $content
+     */
+    public function addContent(Text $content)
+    {
+        $this->contents[] = $content;
+    }
+
+    /**
+     * Is this story enabled?
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Return the promotion
+     */
+    public function getPromotion(): Promotion
+    {
+        return $this->promotion;
+    }
+
+    /**
+     * Return the end date
+     */
+    public function getEndDate(): ?Timestamp
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * Return the remark
+     */
+    public function getRemark(): ?string
+    {
+        return $this->remark;
+    }
+
+    /**
+     * Return the traceable time
+     */
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
+    }
+
+    /**
+     * Return the category
+     *
+     * @return Entity<Category>
+     */
+    public function getCategory(): Entity
+    {
+        return $this->category;
+    }
+
+    /**
+     * Return the content
+     *
+     * @return Text[]
+     */
+    public function getContents(): array
+    {
+        return $this->contents;
+    }
+
+    /**
+     * Return the publish time
+     */
+    public function getPublishTime(): Timestamp
+    {
+        return $this->publishTime;
+    }
+
+    /**
+     * Return the associated images
+     *
+     * @return string[]
+     */
+    public function getImages(): array
+    {
+        return $this->images;
+    }
+
 }

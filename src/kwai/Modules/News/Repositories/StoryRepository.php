@@ -26,4 +26,12 @@ interface StoryRepository
      * @throws StoryNotFoundException
      */
     public function getById(int $id): Entity;
+
+    /**
+     * Get all stories
+     *
+     * @return Entity<Story>[]
+     * @throws RepositoryException
+     */
+    public function getAll() : array;
 }

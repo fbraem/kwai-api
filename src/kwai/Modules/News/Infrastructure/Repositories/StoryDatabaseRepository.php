@@ -16,6 +16,7 @@ use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\StoryRepository;
 use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
@@ -36,18 +37,53 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
         ;
 
         try {
-            $story = $this->db->execute($query)->fetch();
+            $row = $this->db->execute($query)->fetch();
         } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        if ($story) {
-            $alias = Tables::STORIES()->getAlias('contents');
-            $story->{$alias} = $this->getContents([$id]);
+        if ($row) {
+            $story = Tables::STORIES()->createColumnFilter()->filter($row);
+            $story->category = Tables::CATEGORIES()->createColumnFilter()->filter($row);
+            $story->contents = $this->getContents([$story->id]);
             return StoryMapper::toDomain(
-                Tables::STORIES()->createColumnFilter()->filter($story)
+                $story
             );
         }
         throw new StoryNotFoundException($id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAll(): array
+    {
+        $query = $this->createBaseQuery()
+            ->compile()
+        ;
+
+        try {
+            $rows = $this->db->execute($query)->fetchAll();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $idAlias = Tables::STORIES()->getAlias('id');
+        $ids = array_map(fn($row) => (int) $row->{$idAlias}, $rows);
+        $contents = $this->getContents($ids);
+
+        $storyColumnFilter = Tables::STORIES()->createColumnFilter();
+        $categoryColumnFilter = Tables::CATEGORIES()->createColumnFilter();
+        $stories = [];
+        foreach ($rows as $row) {
+            $story = $storyColumnFilter->filter($row);
+            $story->category = $categoryColumnFilter->filter($row);
+            $story->contents = $contents[(string) $story->id];
+            $stories[$story->id] = StoryMapper::toDomain(
+                $story
+            );
+        }
+
+        return $stories;
     }
 
     /**
@@ -58,6 +94,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
     private function createBaseQuery(): SelectQuery
     {
         $aliasFn = Tables::STORIES()->getAliasFn();
+        /** @noinspection PhpUndefinedFieldInspection */
         return $this->db->createQueryFactory()
             ->select(
                 $aliasFn('id'),
@@ -69,9 +106,15 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
                 $aliasFn('end_date'),
                 $aliasFn('remark'),
                 $aliasFn('created_at'),
-                $aliasFn('updated_at')
+                $aliasFn('updated_at'),
+                Tables::CATEGORIES()->getAliasFn()('id'),
+                Tables::CATEGORIES()->getAliasFn()('name')
             )
             ->from((string) Tables::STORIES())
+            ->join(
+                (string) Tables::CATEGORIES(),
+                on(Tables::CATEGORIES()->id, Tables::STORIES()->category_id)
+            )
         ;
     }
 
@@ -88,7 +131,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->db->createQueryFactory()
             ->select(
-                $aliasFn('news_id'),
+                alias(Tables::CONTENTS()->news_id, 'id'),
                 $aliasFn('locale'),
                 $aliasFn('format'),
                 $aliasFn('title'),
@@ -109,7 +152,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
                     Tables::AUTHORS()->id
                 )
             )
-            ->where(field(Tables::CONTENTS()->news_id)->in($stories))
+            ->where(field(Tables::CONTENTS()->news_id)->in(...$stories))
             ->compile()
         ;
 
@@ -127,10 +170,10 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
         foreach ($rows as $row) {
             $content = $contentFilter->filter($row);
             $content->author = $authorFilter->filter($row);
-            if (! isset($result[$row->news_id])) {
-                $result[$row->news_id] = [];
+            if (! isset($result[$row->id])) {
+                $result[$row->id] = [];
             }
-            $result[$row->news_id][] = $content;
+            $result[$row->id][] = $content;
         }
 
         return $result;
