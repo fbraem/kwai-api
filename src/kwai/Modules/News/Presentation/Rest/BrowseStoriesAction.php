@@ -10,7 +10,7 @@ namespace Kwai\Modules\News\Presentation\Rest;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
@@ -39,7 +39,7 @@ class BrowseStoriesAction extends Action
                 new StoryDatabaseRepository($db),
                 new StoryImageRepository($filesystem)
             ))(new BrowseStoriesCommand());
-        } catch (RepositoryException $e) {
+        } catch (QueryException $e) {
             var_dump($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')

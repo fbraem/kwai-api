@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 
@@ -22,16 +22,15 @@ interface StoryRepository
      *
      * @param int $id
      * @return Entity<Story>
-     * @throws RepositoryException
+     * @throws QueryException
      * @throws StoryNotFoundException
      */
     public function getById(int $id): Entity;
 
     /**
-     * Get all stories
+     * Creates a query
      *
-     * @return Entity<Story>[]
-     * @throws RepositoryException
+     * @return StoryQuery
      */
-    public function getAll() : array;
+    public function createQuery(): StoryQuery;
 }

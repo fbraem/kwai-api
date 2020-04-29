@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\UseCases;
 
+use Kwai\Core\Domain\Entities;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
+use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Repositories\StoryRepository;
@@ -42,17 +44,20 @@ class BrowseStories
      * Browse stories
      *
      * @param BrowseStoriesCommand $command
-     * @return Entity<Story>[]
-     * @throws RepositoryException
+     * @return Entities
+     * @throws QueryException
      */
-    public function __invoke(BrowseStoriesCommand $command): array
+    public function __invoke(BrowseStoriesCommand $command): Entities
     {
-        $stories = $this->repo->getAll();
+        $query = $this->repo->createQuery();
+
+        $count = $query->count();
+
+        $stories = $query->execute();
         foreach ($stories as $story) {
             $images = $this->imageRepo->getImages($story->id());
-            /** @noinspection PhpUndefinedMethodInspection */
             $story->attachImages($images);
         }
-        return $stories;
+        return new Entities($count, $stories);
     }
 }
