@@ -86,6 +86,7 @@ class StoryTransformer extends Fractal\TransformerAbstract
             'enabled' => strval($story->isEnabled()),
             'remark' => $story->getRemark(),
             'created_at' => strval($traceableTime->getCreatedAt()),
+            'publish_date' => strval($story->getPublishTime()),
             'promoted' => $story->getPromotion()->isEnabled(),
             'promotion_end_date' => strval($story->getPromotion()->getEndDate()),
             'contents' => [],
