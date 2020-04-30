@@ -12,7 +12,7 @@ use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\func;
-use function Latitude\QueryBuilder\param;
+use function Latitude\QueryBuilder\literal;
 
 /**
  * Class DatabaseQuery
@@ -67,7 +67,7 @@ abstract class DatabaseQuery implements Query
         // Instead of trying to count a column, we just
         // count the number '0'
         $this->query->columns(
-            alias(func('COUNT', param('0')), 'c')
+            alias(func('COUNT', literal('0')), 'c')
         );
 
         $compiledQuery = $this->query->compile();
@@ -93,6 +93,7 @@ abstract class DatabaseQuery implements Query
             ... $this->getColumns()
         );
         $compiledQuery = $this->query->compile();
+        var_dump($compiledQuery->sql());
         try {
             $rows = $this->db->execute(
                 $compiledQuery
