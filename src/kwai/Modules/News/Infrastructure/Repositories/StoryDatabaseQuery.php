@@ -17,7 +17,10 @@ use Kwai\Modules\News\Repositories\StoryQuery;
 use function Latitude\QueryBuilder\criteria;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
+use function Latitude\QueryBuilder\group;
+use function Latitude\QueryBuilder\literal;
 use function Latitude\QueryBuilder\on;
+use function Latitude\QueryBuilder\param;
 
 /**
  * Class StoryQuery
@@ -54,30 +57,40 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
      */
     public function filterPublishDate(int $year, ?int $month = null): void
     {
-        $this->query->andWhere(
-            criteria(
-                "%s = %d",
-                func(
-                    'YEAR',
-                    Tables::STORIES()->publish_date
-                ),
-                $year
-            )
+        $criteria = criteria(
+            "%s = %d",
+            func(
+                'YEAR',
+                Tables::STORIES()->publish_date
+            ),
+            literal($year)
         );
         if ($month) {
-            $this->query->andWhere(
+            $criteria = $criteria->and(
                 criteria(
                     "%s = %d",
-                    'MONTH',
-                    Tables::STORIES()->publish_date
+                    func(
+                        'MONTH',
+                        Tables::STORIES()->publish_date
+                    ),
+                    literal($month)
                 )
             );
         }
+        $this->query->andWhere(group($criteria));
     }
 
+    /**
+     * @inheritDoc
+     */
     public function filterPromoted(): void
     {
-        // TODO: Implement filterPromoted() method.
+        $criteria = field(Tables::STORIES()->promoted)->gt(0)
+            ->and(group(
+                field(Tables::STORIES()->promoted_end_date)->isNull()
+                    ->or(field(Tables::STORIES()->promoted_end_date)->gt(func('CURRENT_DATE')))
+            ));
+        $this->query->andWhere(group($criteria));
     }
 
     /**
@@ -87,6 +100,9 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     public function execute(?int $limit = null, ?int $offset = null): array
     {
         $rows = parent::execute($limit, $offset);
+        if (count($rows) == 0) {
+            return [];
+        }
 
         // Get all ids of the stories
         $idAlias = Tables::STORIES()->getAlias('id');
@@ -132,5 +148,10 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             Tables::CATEGORIES()->getAliasFn()('id'),
             Tables::CATEGORIES()->getAliasFn()('name')
         ];
+    }
+
+    public function filterCategory(int $id): void
+    {
+        $this->query->andWhere(group(field(Tables::CATEGORIES()->id)->eq($id)));
     }
 }

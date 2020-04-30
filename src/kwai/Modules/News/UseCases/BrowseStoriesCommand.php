@@ -14,4 +14,11 @@ namespace Kwai\Modules\News\UseCases;
  */
 class BrowseStoriesCommand
 {
+    public ?int $limit = null;
+    public ?int $offset = null;
+    public bool $enabled = true;
+    public ?int $publishYear = null;
+    public ?int $publishMonth = null;
+    public ?int $category = null;
+    public bool $promoted = false;
 }

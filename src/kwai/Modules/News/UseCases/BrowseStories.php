@@ -51,9 +51,19 @@ class BrowseStories
     {
         $query = $this->repo->createQuery();
 
+        if (isset($command->publishYear)) {
+            $query->filterPublishDate($command->publishYear, $command->publishMonth);
+        }
+        if ($command->promoted) {
+            $query->filterPromoted();
+        }
+        if ($command->category) {
+            $query->filterCategory($command->category);
+        }
+
         $count = $query->count();
 
-        $stories = $query->execute();
+        $stories = $query->execute($command->limit, $command->offset);
         foreach ($stories as $story) {
             $images = $this->imageRepo->getImages($story->id());
             $story->attachImages($images);

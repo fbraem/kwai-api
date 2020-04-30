@@ -34,11 +34,24 @@ class BrowseStoriesAction extends Action
         $db = $this->getContainerEntry('pdo_db');
         $filesystem = $this->getContainerEntry('filesystem');
 
+        $command = new BrowseStoriesCommand();
+        $parameters = $request->getAttribute('parameters');
+        if (isset($parameters['filter']['year'])) {
+            $command->publishYear = (int) $parameters['filter']['year'];
+        }
+        if (isset($parameters['filter']['month'])) {
+            $command->publishMonth = (int) $parameters['filter']['month'];
+        }
+        $command->promoted = isset($parameters['filter']['promoted']);
+        if (isset($parameters['filter']['category'])) {
+            $command->category = (int) $parameters['filter']['category'];
+        }
+
         try {
             $stories = (new BrowseStories(
                 new StoryDatabaseRepository($db),
                 new StoryImageRepository($filesystem)
-            ))(new BrowseStoriesCommand());
+            ))($command);
         } catch (QueryException $e) {
             var_dump($e);
             return (
