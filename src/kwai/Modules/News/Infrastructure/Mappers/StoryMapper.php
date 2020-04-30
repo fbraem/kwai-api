@@ -30,7 +30,7 @@ class StoryMapper
             new Story((object) [
                 'enabled' => $raw->enabled == '1' ?? false,
                 'promotion' => new Promotion(
-                    $raw->promoted == '0' ?? false,
+                    (int) $raw->promoted ?? 0,
                     isset($raw->promoted_end_date)
                         ? Timestamp::createFromString(
                             $raw->promoted_end_date,

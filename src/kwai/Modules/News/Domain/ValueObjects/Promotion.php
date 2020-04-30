@@ -18,9 +18,10 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 class Promotion
 {
     /**
-     * Is this promotion active?
+     * When this priority > 0, the promotion is active. The value can be used
+     * to order the stories.
      */
-    private bool $enabled;
+    private int $priority = 0;
 
     /**
      * When does the promotion end?
@@ -30,14 +31,14 @@ class Promotion
     /**
      * Promotion constructor.
      *
-     * @param bool           $enabled
+     * @param int            $priority
      * @param Timestamp|null $endDate
      */
     public function __construct(
-        bool $enabled = false,
+        int $priority = 0,
         Timestamp $endDate = null
     ) {
-        $this->enabled = $enabled;
+        $this->priority = $priority;
         $this->endDate = $endDate;
     }
 
@@ -46,7 +47,7 @@ class Promotion
      */
     public function isEnabled(): bool
     {
-        return $this->enabled;
+        return $this->priority > 0;
     }
 
     /**
@@ -58,11 +59,19 @@ class Promotion
     }
 
     /**
+     * Get the priority
+     */
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    /**
      * Is this promotion active?
      */
     public function isActive()
     {
-        if ($this->enabled) {
+        if ($this->priority > 0) {
             if ($this->endDate == null) {
                 return true;
             }
