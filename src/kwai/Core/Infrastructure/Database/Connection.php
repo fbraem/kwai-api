@@ -17,6 +17,7 @@ use Latitude\QueryBuilder\Engine\MySqlEngine;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 /**
  * A class that represents a database connection
@@ -29,18 +30,24 @@ final class Connection
      */
     private PDO $pdo;
 
+    private ?LoggerInterface $logger;
+
     /**
      * Constructor.
-     * @param string $dsn        A DSN connection.
-     * @param string $user       A username
-     * @param string $password   A password
+     *
+     * @param string               $dsn      A DSN connection.
+     * @param string               $user     A username
+     * @param string               $password A password
+     * @param LoggerInterface|null $logger
      * @throws DatabaseException Thrown when connection failed
      */
     public function __construct(
         string $dsn,
         string $user = '',
-        string $password = ''
+        string $password = '',
+        ?LoggerInterface $logger = null
     ) {
+        $this->logger = $logger;
         try {
             $this->pdo = new PDO(
                 $dsn,
@@ -106,6 +113,9 @@ final class Connection
      */
     public function execute(Query $query): PDOStatement
     {
+        if ($this->logger) {
+            $this->logger->debug($query->sql());
+        }
         try {
             $stmt = $this->pdo->prepare($query->sql());
             $stmt->execute($query->params());
