@@ -18,6 +18,15 @@ use Kwai\Modules\News\Domain\Story;
 interface StoryRepository
 {
     /**
+     * Get an overview with the number of news stories for year/month.
+     * The array contains an object with year, month, count properties.
+     *
+     * @throws QueryException
+     * @return array
+     */
+    public function getArchive(): array;
+
+    /**
      * Get the story with the given id
      *
      * @param int $id

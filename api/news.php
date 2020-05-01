@@ -4,7 +4,7 @@ declare(strict_types=1);
 require '../src/vendor/autoload.php';
 
 use Kwai\Modules\News\Presentation\Rest\BrowseStoriesAction;
-use REST\News\Actions\ArchiveAction;
+use Kwai\Modules\News\Presentation\Rest\GetArchiveAction;
 use REST\News\Actions\CreateStoryAction;
 use REST\News\Actions\DeleteStoryAction;
 use REST\News\Actions\ReadStoryAction;
@@ -33,7 +33,7 @@ $app->group('/news', function (RouteCollectorProxy $group) {
         ->setName('news.delete')
         ->setArgument('auth', 'true')
     ;
-    $group->get('/archive', ArchiveAction::class)
+    $group->get('/archive', GetArchiveAction::class)
         ->setName('news.archive')
     ;
 });
