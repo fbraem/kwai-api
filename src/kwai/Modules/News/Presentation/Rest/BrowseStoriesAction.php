@@ -36,6 +36,8 @@ class BrowseStoriesAction extends Action
 
         $command = new BrowseStoriesCommand();
         $parameters = $request->getAttribute('parameters');
+        $command->limit = $parameters['page']['limit'] ?? 10;
+        $command->offset = $parameters['page']['offset'] ?? 0;
         if (isset($parameters['filter']['year'])) {
             $command->publishYear = (int) $parameters['filter']['year'];
         }
@@ -59,11 +61,18 @@ class BrowseStoriesAction extends Action
             )($response);
         }
 
+        $resource = StoryTransformer::createForCollection(
+            $stories,
+            $this->getContainerEntry('converter')
+        );
+        $resource->setMeta([
+            'limit' => $command->limit,
+            'offset' => $command->offset,
+            'count' => $stories->getCount()
+        ]);
+
         return (new ResourceResponse(
-            StoryTransformer::createForCollection(
-                $stories,
-                $this->getContainerEntry('converter')
-            )
+            $resource
         ))($response);
     }
 }
