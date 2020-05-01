@@ -55,9 +55,8 @@ class BrowseStoriesAction extends Action
                 new StoryImageRepository($filesystem)
             ))($command);
         } catch (QueryException $e) {
-            var_dump($e);
             return (
-                new SimpleResponse(500, 'A repository exception occurred.')
+                new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         }
 
