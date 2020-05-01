@@ -114,7 +114,7 @@ final class Connection
     public function execute(Query $query): PDOStatement
     {
         if ($this->logger) {
-            $this->logger->debug($query->sql());
+            $this->logger->debug($query->sql(), $query->params());
         }
         try {
             $stmt = $this->pdo->prepare($query->sql());
