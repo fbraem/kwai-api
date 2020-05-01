@@ -93,7 +93,6 @@ abstract class DatabaseQuery implements Query
             ... $this->getColumns()
         );
         $compiledQuery = $this->query->compile();
-        var_dump($compiledQuery->sql());
         try {
             $rows = $this->db->execute(
                 $compiledQuery
