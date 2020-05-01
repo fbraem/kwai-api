@@ -23,4 +23,11 @@ interface ContentQuery extends Query
      * @param int[] $ids
      */
     public function filterIds(array $ids): void;
+
+    /**
+     * Filter all news content written by this user.
+     *
+     * @param int $id
+     */
+    public function filterUser(int $id): void;
 }

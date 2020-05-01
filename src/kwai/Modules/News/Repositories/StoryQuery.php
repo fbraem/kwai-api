@@ -44,4 +44,17 @@ interface StoryQuery extends Query
      * @param int $id
      */
     public function filterCategory(int $id): void;
+
+    /**
+     * Only select news stories that are enabled
+     * and don't show news stories which are expired.
+     */
+    public function filterVisible(): void;
+
+    /**
+     * Filter on the user. Only news written by the given user will be shown.
+     *
+     * @param int $id
+     */
+    public function filterUser(int $id): void;
 }

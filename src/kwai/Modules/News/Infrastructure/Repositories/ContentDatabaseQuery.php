@@ -94,4 +94,13 @@ class ContentDatabaseQuery extends DatabaseQuery implements ContentQuery
             $aliasAuthorFn('last_name')
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function filterUser(int $id): void
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(field(Tables::CONTENTS()->user_id)->eq($id));
+    }
 }

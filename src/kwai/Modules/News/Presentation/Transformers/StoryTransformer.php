@@ -83,12 +83,17 @@ class StoryTransformer extends Fractal\TransformerAbstract
         $traceableTime = $story->getTraceableTime();
         $result = [
             'id' => $story->id(),
-            'enabled' => strval($story->isEnabled()),
+            'enabled' => (string) $story->isEnabled(),
             'remark' => $story->getRemark(),
-            'created_at' => strval($traceableTime->getCreatedAt()),
-            'publish_date' => strval($story->getPublishTime()),
+            'created_at' => (string) $traceableTime->getCreatedAt(),
+            'updated_at' => $traceableTime->isUpdated()
+                ? (string) $traceableTime->getUpdatedAt() : null,
+            'publish_date' => (string) $story->getPublishTime(),
+            'timezone' => $story->getPublishTime()->getTimezone(),
             'promoted' => $story->getPromotion()->getPriority(),
-            'promotion_end_date' => strval($story->getPromotion()->getEndDate()),
+            'promotion_end_date' =>
+                $story->getPromotion()->getEndDate() ?
+                (string) $story->getPromotion()->getEndDate() : null,
             'contents' => [],
             'images' => $story->getImages()
         ];

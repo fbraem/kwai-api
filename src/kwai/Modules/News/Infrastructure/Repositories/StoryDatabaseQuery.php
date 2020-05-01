@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
@@ -20,7 +21,6 @@ use function Latitude\QueryBuilder\func;
 use function Latitude\QueryBuilder\group;
 use function Latitude\QueryBuilder\literal;
 use function Latitude\QueryBuilder\on;
-use function Latitude\QueryBuilder\param;
 
 /**
  * Class StoryQuery
@@ -29,6 +29,11 @@ use function Latitude\QueryBuilder\param;
  */
 class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
 {
+    /**
+     * Used to filter the contents on the user.
+     */
+    private ?int $user = null;
+
     /**
      * @inheritDoc
      */
@@ -85,10 +90,11 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
      */
     public function filterPromoted(): void
     {
+        $now = Timestamp::createNow();
         $criteria = field(Tables::STORIES()->promoted)->gt(0)
             ->and(group(
                 field(Tables::STORIES()->promoted_end_date)->isNull()
-                    ->or(field(Tables::STORIES()->promoted_end_date)->gt(func('CURRENT_DATE')))
+                    ->or(field(Tables::STORIES()->promoted_end_date)->gt((string) $now))
             ));
         $this->query->andWhere(group($criteria));
     }
@@ -111,6 +117,9 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         // Get all content for these news stories
         $contentQuery = new ContentDatabaseQuery($this->db);
         $contentQuery->filterIds($ids);
+        if ($this->user) {
+            $contentQuery->filterUser($this->user);
+        }
         $contents = $contentQuery->execute();
 
         $storyColumnFilter = Tables::STORIES()->createColumnFilter();
@@ -119,10 +128,13 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         foreach ($rows as $row) {
             $story = $storyColumnFilter->filter($row);
             $story->category = $categoryColumnFilter->filter($row);
-            $story->contents = $contents[(string) $story->id];
-            $stories[$story->id] = StoryMapper::toDomain(
-                $story
-            );
+            // Skip stories without content
+            if (isset($contents[(string) $story->id])) {
+                $story->contents = $contents[(string)$story->id];
+                $stories[$story->id] = StoryMapper::toDomain(
+                    $story
+                );
+            }
         }
 
         return $stories;
@@ -150,8 +162,37 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function filterCategory(int $id): void
     {
-        $this->query->andWhere(group(field(Tables::CATEGORIES()->id)->eq($id)));
+        $this->query->andWhere(group(
+            field(Tables::CATEGORIES()->id)->eq($id)
+        ));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function filterVisible(): void
+    {
+        $now = Timestamp::createNow();
+        $this->query->andWhere(group(
+            field(Tables::STORIES()->enabled)->eq(true)
+            ->or(field(Tables::STORIES()->publish_date)->lte((string) $now))
+            ->or(group(
+                field(Tables::STORIES()->end_date)->isNotNull()
+                ->and(field(Tables::STORIES()->end_date)->gt((string) $now))
+            ))
+        ));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function filterUser(int $id): void
+    {
+        $this->user = $id;
     }
 }

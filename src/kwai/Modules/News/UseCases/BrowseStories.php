@@ -8,11 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\UseCases;
 
 use Kwai\Core\Domain\Entities;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\QueryException;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Repositories\StoryRepository;
 
 /**
@@ -59,6 +56,9 @@ class BrowseStories
         }
         if ($command->category) {
             $query->filterCategory($command->category);
+        }
+        if ($command->enabled) {
+            $query->filterVisible();
         }
 
         $count = $query->count();
