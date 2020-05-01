@@ -99,7 +99,6 @@
       <path value="$PROJECT_DIR$/src/vendor/doctrine/instantiator" />
       <path value="$PROJECT_DIR$/src/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/src/vendor/league/plates" />
-      <path value="$PROJECT_DIR$/src/vendor/league/commonmark-ext-table" />
       <path value="$PROJECT_DIR$/src/vendor/ralouphie/getallheaders" />
       <path value="$PROJECT_DIR$/src/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/src/vendor/phpmd/phpmd" />
@@ -115,6 +114,7 @@
       <path value="$PROJECT_DIR$/src/vendor/league/uri" />
       <path value="$PROJECT_DIR$/src/vendor/nette/utils" />
       <path value="$PROJECT_DIR$/src/vendor/nette/schema" />
+      <path value="$PROJECT_DIR$/src/vendor/monolog/monolog" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

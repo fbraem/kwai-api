@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Converter;
 
 use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment;
-use League\CommonMark\Ext\Table\TableExtension;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\MarkdownConverterInterface;
 
 /**
  * Class MarkdownConverter
@@ -22,7 +22,7 @@ class MarkdownConverter implements Converter
     /**
      * The PHP league commonmark converter
      */
-    private ConverterInterface $converter;
+    private MarkdownConverterInterface $converter;
 
     /**
      * MarkdownConverter constructor.

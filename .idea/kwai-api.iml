@@ -35,7 +35,6 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/hamcrest/hamcrest-php" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/latitude/latitude" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/commonmark" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/commonmark-ext-table" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/container" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/csv" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/flysystem" />
@@ -44,6 +43,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/uri" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/uri-interfaces" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/mockery/mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/mtdowling/jmespath.php" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/myclabs/php-enum" />
