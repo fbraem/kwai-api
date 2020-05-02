@@ -42,4 +42,12 @@ interface StoryRepository
      * @return StoryQuery
      */
     public function createQuery(): StoryQuery;
+
+    /**
+     * Saves a new story
+     * @param Story $story
+     * @return Entity
+     * @throws QueryException
+     */
+    public function create(Story $story): Entity;
 }
