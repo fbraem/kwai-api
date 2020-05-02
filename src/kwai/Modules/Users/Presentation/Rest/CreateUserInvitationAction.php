@@ -79,7 +79,7 @@ class CreateUserInvitationAction extends Action
         $command->expiration = self::EXPIRE_IN_DAYS;
         $from = $this->getContainerEntry('settings')['mail']['from'];
         if (is_array($from)) {
-            $command->sender_mail = array_key_first($from);
+            $command->sender_mail = (string) array_key_first($from);
             $command->sender_name = $from[$command->sender_mail];
         } else {
             $command->sender_mail = $from;
