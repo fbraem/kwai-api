@@ -67,4 +67,33 @@ class StoryMapper
             ])
         );
     }
+
+    /**
+     * Returns a data array from a Story object.
+     *
+     * @param Story $story
+     * @return array
+     */
+    public static function toPersistence(Story $story): array
+    {
+        $updated_at = $story->getTraceableTime()->isUpdated()
+            ? (string) $story->getTraceableTime()->getUpdatedAt()
+            : null;
+
+        return [
+            'enabled' => $story->isEnabled(),
+            'promoted' => $story->getPromotion()->getPriority(),
+            'promoted_end_date' => $story->getPromotion()->getEndDate()
+                ? (string) $story->getPromotion()->getEndDate()
+                : null,
+            'publish_date'=> $story->getPublishTime(),
+            'timezone' => $story->getPublishTime()->getTimezone(),
+            'end_date' => $story->getEndDate()
+                ? (string) $story->getEndDate()
+                : null,
+            'remark' => $story->getRemark(),
+            'created_at'=> $story->getTraceableTime()->getCreatedAt(),
+            'updated_at'=> $updated_at
+        ];
+    }
 }
