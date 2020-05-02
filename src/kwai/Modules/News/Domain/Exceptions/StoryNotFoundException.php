@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Kwai
+ * @subpackage News
  */
 declare(strict_types=1);
 
