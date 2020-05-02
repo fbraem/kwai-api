@@ -13,6 +13,8 @@ use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
+use Kwai\Modules\News\Domain\Story;
+use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\StoryRepository;
 use function Latitude\QueryBuilder\alias;
@@ -74,5 +76,64 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
             throw new QueryException($e->getMessage(), $e);
         }
         return $rows;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function create(Story $story): Entity
+    {
+        $data = StoryMapper::toPersistence($story);
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::STORIES())
+            ->columns(
+                ... array_keys($data)
+            )
+            ->values(
+                ... array_values($data)
+            )
+            ->compile()
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (DatabaseException $e) {
+            throw new QueryException($query->sql(), $e);
+        }
+
+        $storyId = $this->db->lastInsertId();
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::CONTENTS())
+            ->columns(
+                'news_id',
+                'locale',
+                'format',
+                'title',
+                'content',
+                'summary',
+                'user_id'
+            )
+         ;
+        foreach ($story->getContents() as $content) {
+            $query->values(
+                $storyId,
+                (string) $content->getLocale(),
+                (string) $content->getFormat(),
+                $content->getTitle(),
+                $content->getContent(),
+                $content->getSummary(),
+                $content->getAuthor()->id()
+            );
+        }
+        $compiledQuery = $query->compile();
+        try {
+            $this->db->execute($compiledQuery);
+        } catch (DatabaseException $e) {
+            throw new QueryException($compiledQuery->sql(), $e);
+        }
+
+        return new Entity($storyId, $story);
     }
 }
