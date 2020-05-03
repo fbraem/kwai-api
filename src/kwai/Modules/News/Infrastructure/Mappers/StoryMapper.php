@@ -91,6 +91,7 @@ class StoryMapper
             'end_date' => $story->getEndDate()
                 ? (string) $story->getEndDate()
                 : null,
+            'category_id' => $story->getCategory()->id(),
             'remark' => $story->getRemark(),
             'created_at'=> $story->getTraceableTime()->getCreatedAt(),
             'updated_at'=> $updated_at
