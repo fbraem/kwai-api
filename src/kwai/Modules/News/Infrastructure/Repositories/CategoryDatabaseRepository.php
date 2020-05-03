@@ -52,6 +52,8 @@ class CategoryDatabaseRepository extends DatabaseRepository implements CategoryR
             throw new CategoryNotFoundException($id);
         }
 
-        return CategoryMapper::toDomain($row);
+        return CategoryMapper::toDomain(
+            Tables::CATEGORIES()->createColumnFilter()->filter($row)
+        );
     }
 }

@@ -53,6 +53,8 @@ class AuthorDatabaseRepository extends DatabaseRepository implements AuthorRepos
             throw new AuthorNotFoundException($id);
         }
 
-        return AuthorMapper::toDomain($row);
+        return AuthorMapper::toDomain(
+            Tables::AUTHORS()->createColumnFilter()->filter($row)
+        );
     }
 }
