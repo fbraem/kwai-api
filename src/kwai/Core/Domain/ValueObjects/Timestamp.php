@@ -21,9 +21,12 @@ final class Timestamp
     /**
      * Private constructor. Use one of the create methods to create an instance
      * of this class.
+     *
+     * @param CarbonImmutable $datetime
      */
-    private function __construct()
+    private function __construct(CarbonImmutable $datetime)
     {
+        $this->datetime = $datetime;
     }
 
     /**
@@ -105,8 +108,7 @@ final class Timestamp
         int $sec = 0,
         string $timezone = self::TIMEZONE
     ): self {
-        $object = new self();
-        $object->datetime = CarbonImmutable::create(
+        return new self(CarbonImmutable::create(
             $year,
             $month,
             $day,
@@ -114,8 +116,7 @@ final class Timestamp
             $minute,
             $sec,
             $timezone
-        );
-        return $object;
+        ));
     }
 
     /**
@@ -127,8 +128,7 @@ final class Timestamp
      */
     public static function createFromObject(object $datetimeObject): self
     {
-        $object = new self();
-        $object->datetime = CarbonImmutable::create(
+        return new self(CarbonImmutable::create(
             $datetimeObject->year ?? null,
             $datetimeObject->month ?? 1,
             $datetimeObject->day ?? 1,
@@ -136,8 +136,7 @@ final class Timestamp
             $datetimeObject->minute ?? 0,
             $datetimeObject->sec ?? 0,
             $datetimeObject->timezone ?? self::TIMEZONE
-        );
-        return $object;
+        ));
     }
 
     /**
@@ -148,9 +147,7 @@ final class Timestamp
      */
     public static function createNow($timezone = self::TIMEZONE): self
     {
-        $object = new self();
-        $object->datetime = CarbonImmutable::now($timezone);
-        return $object;
+        return new self(CarbonImmutable::now($timezone));
     }
 
     /**
@@ -164,13 +161,11 @@ final class Timestamp
         string $str,
         string $timezone = self::TIMEZONE
     ): self {
-        $object = new self();
-        $object->datetime = CarbonImmutable::createFromFormat(
+        return new self(CarbonImmutable::createFromFormat(
             'Y-m-d H:i:s',
             $str,
             $timezone
-        );
-        return $object;
+        ));
     }
 
     /**
@@ -180,8 +175,6 @@ final class Timestamp
      */
     public static function createFromDateTime(DateTime $time)
     {
-        $object = new self();
-        $object->datetime = CarbonImmutable::instance($time);
-        return $object;
+        return new self(CarbonImmutable::instance($time));
     }
 }
