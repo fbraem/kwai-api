@@ -25,7 +25,6 @@
         "tuupola/slim-jwt-auth": "^3.4",
         "slim/psr7": "^0.6.0",
         "league/container": "^3.3",
-        "latitude/latitude": "^4.0",
         "myclabs/php-enum": "^1.7",
         "swiftmailer/swiftmailer": "v6.2.3",
         "league/uri": "6.2.0",
@@ -33,7 +32,8 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
         "ext-json": "*",
-        "monolog/monolog": "2.0.2"
+        "monolog/monolog": "2.0.2",
+        "latitude/latitude": "^4.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",
