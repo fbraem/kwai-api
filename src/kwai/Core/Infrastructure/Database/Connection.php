@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Latitude\QueryBuilder\Engine\SqliteEngine;
 use Latitude\QueryBuilder\QueryFactory;
 use Latitude\QueryBuilder\Query;
 
@@ -101,6 +102,8 @@ final class Connection
         $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver == 'mysql') {
             return new QueryFactory(new MySqlEngine());
+        } elseif ($driver == 'sqlite') {
+            return new QueryFactory(new SqliteEngine());
         }
         return new QueryFactory(new CommonEngine());
     }
