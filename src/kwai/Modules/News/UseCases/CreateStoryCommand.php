@@ -42,7 +42,7 @@ class CreateStoryCommand
     /**
      * When does the promotion end?
      */
-    public ?string $promotion_end_date;
+    public ?string $promotion_end_date = null;
 
     /**
      * Is this story enabled?
@@ -52,7 +52,7 @@ class CreateStoryCommand
     /**
      * A remark
      */
-    public ?string $remark;
+    public ?string $remark = null;
 
     /**
      * The content of the story.
