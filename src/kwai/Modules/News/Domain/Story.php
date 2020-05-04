@@ -72,7 +72,7 @@ class Story implements DomainEntity
         $this->remark = $props->remark ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
         $this->category = $props->category;
-        $this->contents = $props->contents ?? [];
+        $this->contents = $props->contents;
     }
 
     /**
@@ -172,5 +172,4 @@ class Story implements DomainEntity
     {
         return $this->images;
     }
-
 }
