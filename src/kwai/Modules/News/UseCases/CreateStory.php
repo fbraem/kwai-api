@@ -95,7 +95,7 @@ class CreateStory
                     ) : null,
                 'remark' => $command->remark,
                 'category' => $category,
-                'content' => $contents
+                'contents' => $contents
             ]
         ));
     }
