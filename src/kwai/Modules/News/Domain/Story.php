@@ -56,7 +56,7 @@ class Story implements DomainEntity
     /**
      * @var string[]
      */
-    private array $images;
+    private array $images = [];
 
     /**
      * Story constructor.
