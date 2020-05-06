@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Presentation\Rest;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
@@ -15,6 +17,7 @@ use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
+use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\Content;
 use Kwai\Modules\News\UseCases\CreateStory;
 use Kwai\Modules\News\UseCases\CreateStoryCommand;
@@ -49,7 +52,7 @@ class CreateStoryAction extends Action
                         'format' => Expect::string('md'),
                         'summary' => Expect::string()->required(),
                         'content' => Expect::string()
-                    ]))
+                    ]))->required()
                 ]),
                 'relationships' => Expect::structure([
                     'category' => Expect::structure([
@@ -108,7 +111,7 @@ class CreateStoryAction extends Action
 
         $user = $request->getAttribute('kwai.user');
         foreach ($command->contents as $content) {
-            $content->author = $user->id;
+            $content->author = $user->id();
         }
 
         $database = $this->getContainerEntry('pdo_db');
@@ -117,14 +120,27 @@ class CreateStoryAction extends Action
         $authorRepo = new AuthorDatabaseRepository($database);
 
         try {
-            (new CreateStory(
+            $story = (new CreateStory(
                 $storyRepo,
                 $categoryRepo,
                 $authorRepo
             ))($command);
         } catch (RepositoryException $e) {
+            return (new SimpleResponse(
+                500,
+                'A repository exception occurred'
+            ))($response);
         } catch (AuthorNotFoundException $e) {
+            return (new NotFoundResponse('Author not found'))($response);
         } catch (CategoryNotFoundException $e) {
+            return (new NotFoundResponse('Category not found'))($response);
         }
+
+        return (new ResourceResponse(
+            StoryTransformer::createForItem(
+                $story,
+                $this->getContainerEntry('converter')
+            )
+        ))($response);
     }
 }
