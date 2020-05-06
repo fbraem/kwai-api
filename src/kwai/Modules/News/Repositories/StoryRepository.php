@@ -50,4 +50,12 @@ interface StoryRepository
      * @throws RepositoryException
      */
     public function create(Story $story): Entity;
+
+    /**
+     * Updates a story
+     *
+     * @param Entity<Story> $story
+     * @throws RepositoryException
+     */
+    public function update(Entity $story): void;
 }

@@ -139,4 +139,46 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
 
         return new Entity($storyId, $story);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function update(Entity $story): void
+    {
+        $query = $this->db->createQueryFactory()
+            ->update((string) Tables::STORIES())
+            ->set(StoryMapper::toPersistence($story->domain()))
+            ->where(field('id')->eq($story->id()))
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        foreach ($story->getContents() as $content) {
+            $query = $this->db->createQueryFactory()
+                ->update((string) Tables::CONTENTS())
+                ->set([
+                    'format' => $content->getFormat(),
+                    'title' => $content->getTitle(),
+                    'content' => $content->getContent(),
+                    'summary' => $content->getSummary(),
+                    'user_id' => $content->getAuthor()->id(),
+                    'updated_at' => (string) Timestamp::createNow()
+                ])
+                ->where(
+                    field('news_id')->eq($story->id())
+                    ->and(field('locale')->eq($content->getLocale()))
+                )
+            ;
+            try {
+                $this->db->execute($query);
+            } catch (QueryException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+        }
+    }
 }
