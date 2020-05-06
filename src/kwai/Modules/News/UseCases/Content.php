@@ -42,5 +42,5 @@ class Content
     /**
      * The id of the author of the content
      */
-    public string $author;
+    public int $author;
 }
