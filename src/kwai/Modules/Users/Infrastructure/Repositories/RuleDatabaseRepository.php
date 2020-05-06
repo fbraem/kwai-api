@@ -10,12 +10,14 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Rule;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\RuleRepository;
 use Latitude\QueryBuilder\Query;
+use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
@@ -37,8 +39,7 @@ class RuleDatabaseRepository extends DatabaseRepository implements RuleRepositor
                 field(Tables::RULE_SUBJECTS()->getColumn('name'))->eq($subject)
             );
         }
-        $query = $select->compile();
-        return $this->execute($query);
+        return $this->execute($select);
     }
 
     /**
@@ -95,7 +96,6 @@ class RuleDatabaseRepository extends DatabaseRepository implements RuleRepositor
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->where(field(Tables::RULES()->id)->in(...$ids))
-            ->compile()
         ;
         return $this->execute($query);
     }
@@ -103,15 +103,15 @@ class RuleDatabaseRepository extends DatabaseRepository implements RuleRepositor
     /**
      * Execute the query and return an array of Rule entities.
      *
-     * @param Query $query
+     * @param AbstractQuery $query
      * @return Entity<Rule>[]
      * @throws RepositoryException
      */
-    private function execute(Query $query): array
+    private function execute(AbstractQuery $query): array
     {
         try {
             $stmt = $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         $rows = $stmt->fetchAll();

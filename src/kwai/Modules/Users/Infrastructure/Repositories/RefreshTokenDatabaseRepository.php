@@ -12,6 +12,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
@@ -83,12 +84,11 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
                 )
             )
             ->where(field(Tables::REFRESH_TOKENS()->identifier)->eq(strval($identifier)))
-            ->compile()
         ;
 
         try {
             $row = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -116,11 +116,10 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
             ->insert((string) Tables::REFRESH_TOKENS())
             ->columns(... array_keys($data))
             ->values(... array_values($data))
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -142,11 +141,10 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
         $query = $this->db->createQueryFactory()
             ->update((string) Tables::REFRESH_TOKENS(), $data)
             ->where(field('id')->eq($token->id()))
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }

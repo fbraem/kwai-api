@@ -12,6 +12,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\User;
@@ -40,12 +41,11 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
     {
         $query = $this->createBaseQuery()
             ->where(field('identifier')->eq(strval($identifier)))
-            ->compile()
         ;
 
         try {
             $row = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($row) {
@@ -71,12 +71,11 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
     {
         $query = $this->createBaseQuery()
             ->where(field('user_id')->eq($user->id()))
-            ->compile()
         ;
 
         try {
             $rows = $this->db->execute($query)->fetchAll();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -108,11 +107,10 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
             ->values(
                 ... array_values($data)
             )
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -134,11 +132,10 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
         $query = $this->db->createQueryFactory()
             ->update((string) Tables::ACCESS_TOKENS(), $data)
             ->where(field('id')->eq($token->id()))
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }

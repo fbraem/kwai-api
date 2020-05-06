@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
@@ -45,12 +45,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         $query = $this->createBaseQuery()
             ->where(field('id')->eq($id))
-            ->compile()
         ;
 
         try {
             $user = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -70,12 +69,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         $query = $this->createBaseQuery()
             ->where(field('uuid')->eq($uid))
-            ->compile()
         ;
 
         try {
             $user = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($user) {
@@ -94,12 +92,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         $query = $this->createBaseQuery()
             ->where(field('email')->eq($email))
-            ->compile()
         ;
 
         try {
             $user = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($user) {
@@ -118,12 +115,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         $query = $this->createBaseQuery()
             ->where(field('email')->eq($email))
-            ->compile()
         ;
 
         try {
             $user = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($user) {
@@ -149,10 +145,10 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             )
             ->from((string) Tables::USERS())
             ->where(field('email')->eq(strval($email)))
-            ->compile();
+        ;
         try {
             $count = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         return $count->c > 0;
@@ -185,12 +181,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
                 )
             )
             ->where(field(Tables::ACCESS_TOKENS()->identifier)->eq(strval($token)))
-            ->compile()
         ;
 
         try {
             $data = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($data) {
@@ -214,10 +209,10 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         $query = $this->db->createQueryFactory()
             ->update((string) Tables::USERS(), $data)
             ->where(field('id')->eq($account->id()))
-            ->compile();
+        ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -237,10 +232,10 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             ->values(
                 ... array_values($data)
             )
-            ->compile();
+        ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         return new Entity(
@@ -280,10 +275,10 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
      */
     public function getAll(): array
     {
-        $query = $this->createBaseQuery()->compile();
+        $query = $this->createBaseQuery();
         try {
             $rows = $this->db->execute($query)->fetchAll();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -313,11 +308,10 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
                 strval(Timestamp::createNow()),
                 null
             )
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         /** @noinspection PhpUndefinedMethodInspection */
@@ -334,11 +328,10 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             ->delete((string) Tables::USER_ABILITIES())
             ->where(field('user_id')->eq($user->id()))
             ->andWhere(field('ability_id')->eq($ability->id()))
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         /** @noinspection PhpUndefinedMethodInspection */

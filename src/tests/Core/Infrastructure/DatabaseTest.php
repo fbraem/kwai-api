@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace Tests\Core\Domain\Infrastructure;
 
+use Kwai\Core\Infrastructure\Database\QueryException;
 use PHPUnit\Framework\TestCase;
 
 use Kwai\Core\Infrastructure\Database;
@@ -27,7 +28,7 @@ final class DatabaseTest extends TestCase
     public function testDatabaseException(): void
     {
         $this->expectException(Database\DatabaseException::class);
-        $db = new Database\Connection('sqlite');
+        new Database\Connection('sqlite');
     }
 
     public function testDatabaseQueryFactory(): void
@@ -47,24 +48,25 @@ final class DatabaseTest extends TestCase
         $query = $qf
             ->select('name', 'type')
             ->from('sqlite_master')
-            ->compile()
         ;
-        $stmt = $db->execute($query);
-        $result = $stmt->fetchAll();
-        $this->assertIsArray($result);
+        try {
+            $stmt = $db->execute($query);
+            $result = $stmt->fetchAll();
+            $this->assertIsArray($result);
+        } catch (QueryException $e) {
+        }
     }
 
     public function testDatabaseQueryException(): void
     {
-        $this->expectException(Database\DatabaseException::class);
+        $this->expectException(QueryException::class);
 
         $db = new Database\Connection(self::DB_MEMORY);
         $qf = $db->createQueryFactory();
         $query = $qf
             ->select()
             ->from('')
-            ->compile()
         ;
-        $stmt = $db->execute($query);
+        $db->execute($query);
     }
 }

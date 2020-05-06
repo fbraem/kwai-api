@@ -10,8 +10,8 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Rule;
@@ -20,7 +20,7 @@ use Kwai\Modules\Users\Infrastructure\Mappers\AbilityMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
-use Latitude\QueryBuilder\Query;
+use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
@@ -44,12 +44,11 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->where(field(Tables::ABILITIES()->id)->eq($id))
-            ->compile()
         ;
 
         try {
             $ability = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($ability) {
@@ -82,7 +81,6 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
                 on(Tables::USER_ABILITIES()->ability_id, Tables::ABILITIES()->id)
             )
             ->where(field(Tables::USER_ABILITIES()->user_id)->eq($user->id()))
-            ->compile()
         ;
         return $this->fetchAll($query);
     }
@@ -91,15 +89,15 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
      * Fetch all abilities with their rules.
      * The id of the ability is used as key of the returned array.
      *
-     * @param Query $query
+     * @param AbstractQuery $query
      * @return Entity<Ability>[]
      * @throws RepositoryException
      */
-    private function fetchAll(Query $query): array
+    private function fetchAll(AbstractQuery $query): array
     {
         try {
             $rows = $this->db->execute($query)->fetchAll();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -181,11 +179,10 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
                 )
             )
             ->where(field('ability_id')->in(... $abilities))
-            ->compile()
         ;
         try {
             $stmt = $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         $rows = $stmt->fetchAll();
@@ -208,7 +205,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
      */
     public function getAll(): array
     {
-        $query = $this->createBaseQuery()->compile();
+        $query = $this->createBaseQuery();
         return $this->fetchAll($query);
     }
 
@@ -227,12 +224,11 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             ->values(
                 ...array_values($data)
             )
-            ->compile()
         ;
 
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -271,15 +267,14 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             );
         }
         try {
-            $this->db->execute($query->compile());
-        } catch (DatabaseException $e) {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
 
     /**
      * @inheritDoc
-     * @noinspection PhpUndefinedMethodInspection
      */
     public function deleteRules(Entity $ability, array $rules)
     {
@@ -293,12 +288,11 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             ->delete((string) Tables::ABILITY_RULES())
             ->where(field('ability_id')->eq($ability->id()))
             ->andWhere(field('rule_id')->in(...$ruleIds))
-            ->compile()
         ;
 
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -312,11 +306,10 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             ->update((string) Tables::ABILITIES())
             ->set(AbilityMapper::toPersistence($ability->domain()))
             ->where(field('id')->eq($ability->id()))
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
