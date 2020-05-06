@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Tests\Modules\News\UseCases;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Author;
 use Kwai\Modules\News\Domain\Category;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
@@ -70,7 +70,7 @@ class CreateStoryTest extends DatabaseTestCase
                 Entity::class,
                 $story
             );
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             self::assertTrue(false, (string) $e);
         } catch (AuthorNotFoundException $e) {
             self::assertTrue(false, (string) $e);

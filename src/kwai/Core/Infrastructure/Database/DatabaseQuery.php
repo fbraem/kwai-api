@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Database;
 
 use Kwai\Core\Infrastructure\Repositories\Query;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\func;
@@ -70,15 +69,10 @@ abstract class DatabaseQuery implements Query
             alias(func('COUNT', literal('0')), 'c')
         );
 
-        $compiledQuery = $this->query->compile();
-        try {
-            $row = $this->db->execute(
-                $compiledQuery
-            )->fetch();
-            return (int) $row->c;
-        } catch (DatabaseException $e) {
-            throw new QueryException($compiledQuery->sql(), $e);
-        }
+        $row = $this->db->execute(
+            $this->query
+        )->fetch();
+        return (int) $row->c;
     }
 
     /**
@@ -92,14 +86,7 @@ abstract class DatabaseQuery implements Query
         $this->query->columns(
             ... $this->getColumns()
         );
-        $compiledQuery = $this->query->compile();
-        try {
-            $rows = $this->db->execute(
-                $compiledQuery
-            )->fetchAll();
-        } catch (DatabaseException $e) {
-            throw new QueryException($compiledQuery->sql(), $e);
-        }
-        return $rows;
+
+        return $this->db->execute($this->query)->fetchAll();
     }
 }

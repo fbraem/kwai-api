@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Core\Infrastructure\Repositories;
+namespace Kwai\Core\Infrastructure\Database;
 
 use Exception;
 use Throwable;

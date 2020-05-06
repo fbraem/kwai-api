@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Mails\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Mails\Domain\Recipient;
 
 /**
@@ -20,6 +22,8 @@ interface RecipientRepository
      * Get the recipient with the given id
      * @param int $id
      * @return Entity<Recipient>
+     * @throws RepositoryException
+     * @throws NotFoundException
      */
     public function getById(int $id): Entity;
 
@@ -27,6 +31,7 @@ interface RecipientRepository
      * Get all recipients for the given mails
      * @param int[] $mailIds
      * @return Entity<Recipient>[]
+     * @throws RepositoryException
      */
     public function getForMails(array $mailIds): array;
 
@@ -37,6 +42,7 @@ interface RecipientRepository
      * @param Recipient[] $recipients
      * @return Entity[]
      * @phpstan-return Entity<Recipient>[]
+     * @throws RepositoryException
      */
     public function create(Entity $mail, array $recipients): array;
 }

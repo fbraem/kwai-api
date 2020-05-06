@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\News\UseCases;
 
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\GetArchive;
 use Kwai\Modules\News\UseCases\GetArchiveCommand;
@@ -23,7 +23,7 @@ class GetArchiveTest extends DatabaseTestCase
                 new StoryDatabaseRepository(self::$db)
             ))($command);
             self::assertGreaterThan(0, count($archive), 'No archive found!');
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             self::assertTrue(false, (string) $e);
         }
     }

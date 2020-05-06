@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Tests\Modules\News\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
 use Kwai\Modules\News\Repositories\CategoryRepository;
@@ -31,7 +31,7 @@ class CategoryDatabaseRepositoryTest extends DatabaseTestCase
                 Entity::class,
                 $category
             );
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             $this->assertTrue(false, (string) $e);
         } catch (CategoryNotFoundException $e) {
             $this->assertTrue(false, (string) $e);

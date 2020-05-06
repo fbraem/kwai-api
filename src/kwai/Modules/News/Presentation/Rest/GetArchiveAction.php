@@ -10,7 +10,7 @@ namespace Kwai\Modules\News\Presentation\Rest;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\JSONResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\GetArchive;
 use Kwai\Modules\News\UseCases\GetArchiveCommand;
@@ -33,7 +33,7 @@ class GetArchiveAction extends Action
             $archive = (new GetArchive(
                 new StoryDatabaseRepository($db)
             ))($command);
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             return (
             new SimpleResponse(500, 'A query exception occurred.')
             )($response);

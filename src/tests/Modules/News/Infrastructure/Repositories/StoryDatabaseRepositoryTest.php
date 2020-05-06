@@ -12,7 +12,8 @@ use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
@@ -69,7 +70,7 @@ class StoryDatabaseRepositoryTest extends DatabaseTestCase
                 $story
             );
             return $story;
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             $this->assertTrue(false, (string) $e);
         } catch (CategoryNotFoundException $e) {
             $this->assertTrue(false, (string) $e);
@@ -98,7 +99,7 @@ class StoryDatabaseRepositoryTest extends DatabaseTestCase
             );
         } catch (StoryNotFoundException $e) {
             $this->assertTrue(false, (string) $e);
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             $this->assertTrue(false, (string) $e);
         }
     }

@@ -9,7 +9,7 @@ namespace Kwai\Modules\News\UseCases;
 
 use Kwai\Core\Domain\Entities;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\News\Repositories\StoryRepository;
 
 /**

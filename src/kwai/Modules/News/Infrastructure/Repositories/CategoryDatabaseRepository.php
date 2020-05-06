@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Mappers\CategoryMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
@@ -39,13 +39,12 @@ class CategoryDatabaseRepository extends DatabaseRepository implements CategoryR
             ->where(field(Tables::CATEGORIES()->id)->eq($id))
         ;
 
-        $compiledQuery = $query->compile();
         try {
             $row = $this->db->execute(
-                $compiledQuery
+                $query
             )->fetch();
-        } catch (DatabaseException $e) {
-            throw new QueryException($compiledQuery->sql(), $e);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
         }
 
         if (!$row) {

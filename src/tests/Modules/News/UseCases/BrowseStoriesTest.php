@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Tests\Modules\News\UseCases;
 
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;

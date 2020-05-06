@@ -9,9 +9,9 @@ namespace Kwai\Modules\News\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
@@ -34,7 +34,11 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
         $query = $this->createQuery();
         $query->filterId($id);
 
-        $entities = $query->execute();
+        try {
+            $entities = $query->execute();
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if (count($entities) == 1) {
             return $entities[$id];
         }
@@ -71,9 +75,9 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
         $query->orderBy('year', 'DESC');
         $query->orderBy('month', 'DESC');
         try {
-            $rows = $this->db->execute($query->compile())->fetchAll();
-        } catch (DatabaseException $e) {
-            throw new QueryException($e->getMessage(), $e);
+            $rows = $this->db->execute($query)->fetchAll();
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
         }
         return $rows;
     }
@@ -93,13 +97,12 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
             ->values(
                 ... array_values($data)
             )
-            ->compile()
         ;
 
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
-            throw new QueryException($query->sql(), $e);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
         }
 
         $storyId = $this->db->lastInsertId();
@@ -127,11 +130,11 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
                 $content->getAuthor()->id()
             );
         }
-        $compiledQuery = $query->compile();
+
         try {
-            $this->db->execute($compiledQuery);
-        } catch (DatabaseException $e) {
-            throw new QueryException($compiledQuery->sql(), $e);
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
         }
 
         return new Entity($storyId, $story);

@@ -9,7 +9,7 @@ namespace Tests\Modules\News\UseCases;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\GetStory;
@@ -37,7 +37,7 @@ class GetStoryTest extends DatabaseTestCase
                 Entity::class,
                 $story
             );
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             self::assertTrue(false, (string) $e);
         } catch (StoryNotFoundException $e) {
             self::assertTrue(false, (string) $e);

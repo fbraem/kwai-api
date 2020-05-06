@@ -9,7 +9,7 @@ namespace Kwai\Modules\News\Presentation\Rest;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
@@ -122,7 +122,7 @@ class CreateStoryAction extends Action
                 $categoryRepo,
                 $authorRepo
             ))($command);
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
         } catch (AuthorNotFoundException $e) {
         } catch (CategoryNotFoundException $e) {
         }

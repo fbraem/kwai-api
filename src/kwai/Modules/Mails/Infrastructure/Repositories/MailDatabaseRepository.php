@@ -12,6 +12,8 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Mails\Domain\Mail;
 use Kwai\Modules\Mails\Infrastructure\Mappers\MailMapper;
 use Kwai\Modules\Mails\Infrastructure\Tables;
@@ -30,18 +32,19 @@ final class MailDatabaseRepository extends Database\DatabaseRepository implement
 {
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
-     * @throws NotFoundException
      */
     public function getById(int $id) : Entity
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->where(field(Tables::MAILS()->id)->eq(strval($id)))
-            ->compile()
         ;
 
-        $row = $this->db->execute($query)->fetch();
+        try {
+            $row = $this->db->execute($query)->fetch();
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($row) {
             $mailRow = Tables::MAILS()->createColumnFilter()->filter($row);
             $mailRow->user = UsersTables::USERS()->createColumnFilter()->filter($row);
@@ -52,18 +55,19 @@ final class MailDatabaseRepository extends Database\DatabaseRepository implement
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
-     * @throws NotFoundException
      */
     public function getByUUID(UniqueId $uid) : Entity
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->where(field(Tables::MAILS()->uuid)->eq(strval($uid)))
-            ->compile()
         ;
 
-        $row = $this->db->execute($query)->fetch();
+        try {
+            $row = $this->db->execute($query)->fetch();
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($row) {
             $mailRow = Tables::MAILS()->createColumnFilter()->filter($row);
             $mailRow->user = UsersTables::USERS()->createColumnFilter()->filter($row);
@@ -74,7 +78,6 @@ final class MailDatabaseRepository extends Database\DatabaseRepository implement
 
     /**
      * @inheritdoc
-     * @throws Database\DatabaseException
      */
     public function create(Mail $mail): Entity
     {
@@ -88,9 +91,12 @@ final class MailDatabaseRepository extends Database\DatabaseRepository implement
             ->values(
                 ... array_values($data)
             )
-            ->compile()
         ;
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         return new Entity(
             $this->db->lastInsertId(),
             $mail

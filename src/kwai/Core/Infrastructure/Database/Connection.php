@@ -10,8 +10,8 @@ declare(strict_types = 1);
 namespace Kwai\Core\Infrastructure\Database;
 
 use Latitude\QueryBuilder\Engine\SqliteEngine;
+use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\QueryFactory;
-use Latitude\QueryBuilder\Query;
 
 use Latitude\QueryBuilder\Engine\CommonEngine;
 use Latitude\QueryBuilder\Engine\MySqlEngine;
@@ -109,22 +109,24 @@ final class Connection
     }
 
     /**
-     * Execute the query and returns a PDOStatement on success.
-     * @param  Query         $query The query to execute
-     * @return PDOStatement         The executed statement
-     * @throws DatabaseException    Thrown when a PDOException occurred
+     * Build the query and execute. On success returns a PDOStatement.
+     *
+     * @param AbstractQuery $query The query to execute
+     * @return PDOStatement        The executed statement
+     * @throws QueryException
      */
-    public function execute(Query $query): PDOStatement
+    public function execute(AbstractQuery $query): PDOStatement
     {
+        $compiledQuery = $query->compile();
         if ($this->logger) {
-            $this->logger->debug($query->sql(), $query->params());
+            $this->logger->debug($compiledQuery->sql(), $compiledQuery->params());
         }
         try {
-            $stmt = $this->pdo->prepare($query->sql());
-            $stmt->execute($query->params());
+            $stmt = $this->pdo->prepare($compiledQuery->sql());
+            $stmt->execute($compiledQuery->params());
             return $stmt;
         } catch (PDOException $e) {
-            throw new DatabaseException($e, $query->sql());
+            throw new QueryException($compiledQuery->sql(), $e);
         }
     }
 

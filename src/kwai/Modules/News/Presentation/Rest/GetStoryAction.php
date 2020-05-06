@@ -11,7 +11,6 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
@@ -42,7 +41,7 @@ class GetStoryAction extends Action
                 new StoryDatabaseRepository($database),
                 new StoryImageRepository($filesystem)
             ))($command);
-        } catch (QueryException $e) {
+        } catch (RepositoryException $e) {
             return (new SimpleResponse(
                 500,
                 'A repository exception occurred'

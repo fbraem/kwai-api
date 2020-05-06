@@ -11,7 +11,7 @@ use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
@@ -50,7 +50,7 @@ class CreateStory
 
     /**
      * @param CreateStoryCommand $command
-     * @throws QueryException
+     * @throws RepositoryException
      * @throws AuthorNotFoundException
      * @throws CategoryNotFoundException
      */

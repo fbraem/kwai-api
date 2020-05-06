@@ -10,6 +10,8 @@ namespace Kwai\Modules\Mails\Infrastructure\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Database;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Mails\Infrastructure\Mappers\RecipientMapper;
 use Kwai\Modules\Mails\Infrastructure\Tables;
 use Kwai\Modules\Mails\Repositories\RecipientRepository;
@@ -24,16 +26,17 @@ class RecipientDatabaseRepository extends Database\DatabaseRepository implements
 {
     /**
      * @inheritDoc
-     * @throws Database\DatabaseException
-     * @throws NotFoundException
      */
     public function getById(int $id): Entity
     {
         $query = $this->createBaseQuery()
             ->where(field('id')->eq(strval($id)))
-            ->compile()
         ;
-        $row = $this->db->execute($query)->fetch();
+        try {
+            $row = $this->db->execute($query)->fetch();
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         if ($row) {
             return RecipientMapper::toDomain(Tables::RECIPIENTS()->createColumnFilter()->filter($row));
         }
@@ -42,16 +45,18 @@ class RecipientDatabaseRepository extends Database\DatabaseRepository implements
 
     /**
      * @inheritDoc
-     * @throws Database\DatabaseException
      */
     public function getForMails(array $mailIds): array
     {
         $query = $this->createBaseQuery()
             ->where(field('mail_id')->eq(strval($mailIds)))
-            ->compile()
         ;
 
-        $rows = $this->db->execute($query)->fetchAll();
+        try {
+            $rows = $this->db->execute($query)->fetchAll();
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         $columnFilter = Tables::RECIPIENTS()->createColumnFilter();
         return array_map(
@@ -62,7 +67,6 @@ class RecipientDatabaseRepository extends Database\DatabaseRepository implements
 
     /**
      * @inheritDoc
-     * @throws Database\DatabaseException
      */
     public function create(Entity $mail, array $recipients): array
     {
@@ -79,9 +83,12 @@ class RecipientDatabaseRepository extends Database\DatabaseRepository implements
                     $mail->id(),
                     ... array_values($data)
                 )
-                ->compile()
             ;
-            $this->db->execute($query);
+            try {
+                $this->db->execute($query);
+            } catch (QueryException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
             $result[] = new Entity(
                 $this->db->lastInsertId(),
                 $recipient

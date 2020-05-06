@@ -9,7 +9,6 @@ namespace Kwai\Modules\News\UseCases;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
@@ -46,7 +45,7 @@ class GetStory
      * @param GetStoryCommand $command
      * @return Entity<Story>
      * @throws StoryNotFoundException
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function __invoke(GetStoryCommand $command): Entity
     {

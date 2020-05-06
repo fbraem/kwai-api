@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Repositories;
 
+use Kwai\Core\Infrastructure\Database\QueryException;
+
 /**
  * Interface Query
  *

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\UseCases;
 
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Repositories\StoryRepository;
 
 /**
@@ -33,7 +33,7 @@ class GetArchive
     /**
      * @param GetArchiveCommand $command
      * @return array
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function __invoke(GetArchiveCommand $command)
     {

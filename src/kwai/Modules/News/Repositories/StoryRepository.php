@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Repositories;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Repositories\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 
@@ -21,7 +21,7 @@ interface StoryRepository
      * Get an overview with the number of news stories for year/month.
      * The array contains an object with year, month, count properties.
      *
-     * @throws QueryException
+     * @throws RepositoryException
      * @return array
      */
     public function getArchive(): array;
@@ -31,7 +31,7 @@ interface StoryRepository
      *
      * @param int $id
      * @return Entity<Story>
-     * @throws QueryException
+     * @throws RepositoryException
      * @throws StoryNotFoundException
      */
     public function getById(int $id): Entity;
@@ -47,7 +47,7 @@ interface StoryRepository
      * Saves a new story
      * @param Story $story
      * @return Entity
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function create(Story $story): Entity;
 }
