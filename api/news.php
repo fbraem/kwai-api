@@ -4,10 +4,10 @@ declare(strict_types=1);
 require '../src/vendor/autoload.php';
 
 use Kwai\Modules\News\Presentation\Rest\BrowseStoriesAction;
+use Kwai\Modules\News\Presentation\Rest\CreateStoryAction;
 use Kwai\Modules\News\Presentation\Rest\GetArchiveAction;
-use REST\News\Actions\CreateStoryAction;
+use Kwai\Modules\News\Presentation\Rest\GetStoryAction;
 use REST\News\Actions\DeleteStoryAction;
-use REST\News\Actions\ReadStoryAction;
 use REST\News\Actions\UpdateStoryAction;
 use Slim\Routing\RouteCollectorProxy;
 use function Kwai\Core\Infrastructure\createApplication;
@@ -18,7 +18,7 @@ $app->group('/news', function (RouteCollectorProxy $group) {
     $group->get('/stories', BrowseStoriesAction::class)
         ->setName('news.browse')
     ;
-    $group->get('/stories/{id:[0-9]+}', ReadStoryAction::class)
+    $group->get('/stories/{id:[0-9]+}', GetStoryAction::class)
         ->setName('news.read')
     ;
     $group->post('/stories', CreateStoryAction::class)
