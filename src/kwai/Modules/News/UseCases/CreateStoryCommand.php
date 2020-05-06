@@ -17,7 +17,7 @@ class CreateStoryCommand
     /**
      * The id of the category for this story.
      */
-    public string $category;
+    public int $category;
 
     /**
      * The publication date

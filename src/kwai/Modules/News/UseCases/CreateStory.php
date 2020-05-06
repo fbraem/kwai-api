@@ -56,11 +56,11 @@ class CreateStory
      */
     public function __invoke(CreateStoryCommand $command)
     {
-        $category = $this->categoryRepo->getById((int) $command->category);
+        $category = $this->categoryRepo->getById($command->category);
 
         $contents = [];
         foreach ($command->contents as $text) {
-            $author = $this->authorRepo->getById((int) $text->author);
+            $author = $this->authorRepo->getById($text->author);
             $contents[] = new Text(
                 new Locale($text->locale),
                 new DocumentFormat($text->format),

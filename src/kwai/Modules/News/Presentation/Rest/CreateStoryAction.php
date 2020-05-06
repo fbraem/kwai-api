@@ -78,7 +78,7 @@ class CreateStoryAction extends Action
 
         $command = new CreateStoryCommand();
         $command->enabled = $normalized->data->attributes->enabled;
-        $command->category = $normalized->data->relationships->category->data->id;
+        $command->category = (int) $normalized->data->relationships->category->data->id;
         $command->promoted = $normalized->data->attributes->promoted;
         $command->promotion_end_date = $normalized->data->attributes->promotion_end_date ?? null;
         $command->end_date = $normalized->data->attributes->end_date ?? null;
