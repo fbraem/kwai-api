@@ -5,17 +5,19 @@ The following use cases must be implemented for the news module:
 
 Create News
 -----------
-:x: An author can create a new story. A new story is not published yet.
+:heavy_check_mark: An author can create a new story.
 
 Update News
 -----------
 :x: An author can update its own stories.  
-:x: An editor can update any story.
+:heavy_check_mark: An editor can update any story.
+> Currently an author can edit any story
 
 Remove News
 -----------
 :x: An author can remove its own stories.  
-:x: An editor can remove any story.
+:heavy_check_mark: An editor can remove any story.
+> Currently an author can delete any story
 
 Publish News
 ------------
