@@ -58,4 +58,12 @@ interface StoryRepository
      * @throws RepositoryException
      */
     public function update(Entity $story): void;
+
+    /**
+     * Remove a story
+     *
+     * @param Entity $story
+     * @throws RepositoryException
+     */
+    public function remove(Entity $story);
 }

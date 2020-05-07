@@ -20,4 +20,11 @@ interface ImageRepository
      * @return array
      */
     public function getImages(int $id): array;
+
+    /**
+     * Remove all images for the entity with the given id
+     *
+     * @param int $id
+     */
+    public function removeImages(int $id): void;
 }

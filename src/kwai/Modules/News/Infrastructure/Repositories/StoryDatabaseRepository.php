@@ -181,4 +181,32 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
             }
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function remove(Entity $story)
+    {
+        $query = $this->db->createQueryFactory()
+            ->delete((string) Tables::CONTENTS())
+            ->where(field('news_id')->eq($story->id()))
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $query = $this->db->createQueryFactory()
+            ->delete((string) Tables::STORIES())
+            ->where(field('id')->eq($story->id()))
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+    }
 }

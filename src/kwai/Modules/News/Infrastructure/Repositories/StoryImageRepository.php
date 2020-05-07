@@ -28,17 +28,33 @@ class StoryImageRepository implements ImageRepository
     }
 
     /**
+     * Return the path for the given id
+     *
+     * @param int $id
+     * @return string
+     */
+    private static function getPath(int $id)
+    {
+        return "images/news/$id";
+    }
+
+    /**
      * @inheritDoc
      */
     public function getImages(int $id): array
     {
         $result = [];
-        $images = $this->filesystem->listContents("images/news/$id");
+        $images = $this->filesystem->listContents(self::getPath($id));
         if (count($images) > 0) {
             foreach ($images as $image) {
                 $result[$image['filename']] = '/files/' . $image['path'];
             }
         }
         return $result;
+    }
+
+    public function removeImages(int $id): void
+    {
+        $this->filesystem->deleteDir(self::getPath($id));
     }
 }

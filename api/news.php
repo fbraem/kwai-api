@@ -5,10 +5,10 @@ require '../src/vendor/autoload.php';
 
 use Kwai\Modules\News\Presentation\Rest\BrowseStoriesAction;
 use Kwai\Modules\News\Presentation\Rest\CreateStoryAction;
+use Kwai\Modules\News\Presentation\Rest\DeleteStoryAction;
 use Kwai\Modules\News\Presentation\Rest\GetArchiveAction;
 use Kwai\Modules\News\Presentation\Rest\GetStoryAction;
 use Kwai\Modules\News\Presentation\Rest\UpdateStoryAction;
-use REST\News\Actions\DeleteStoryAction;
 use Slim\Routing\RouteCollectorProxy;
 use function Kwai\Core\Infrastructure\createApplication;
 
