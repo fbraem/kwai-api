@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\News\Presentation\Rest;
+namespace Kwai\Applications\Author\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
@@ -14,14 +14,13 @@ use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
-use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\Content;
-use Kwai\Modules\News\UseCases\UpdateStory;
-use Kwai\Modules\News\UseCases\UpdateStoryCommand;
+use Kwai\Modules\News\UseCases\CreateStory;
+use Kwai\Modules\News\UseCases\CreateStoryCommand;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
@@ -30,9 +29,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Class UpdateStoryAction
+ * Class CreateStoryAction
  */
-class UpdateStoryAction extends Action
+class CreateStoryAction extends Action
 {
     private function createSchema(): Structure
     {
@@ -73,11 +72,11 @@ class UpdateStoryAction extends Action
         return $processor->process($this->createSchema(), $data);
     }
 
-    private function createCommand($data): UpdateStoryCommand
+    private function createCommand($data): CreateStoryCommand
     {
         $normalized = $this->processInput($data);
 
-        $command = new UpdateStoryCommand();
+        $command = new CreateStoryCommand();
         $command->enabled = $normalized->data->attributes->enabled;
         $command->category = (int) $normalized->data->relationships->category->data->id;
         $command->promoted = $normalized->data->attributes->promoted;
@@ -110,8 +109,6 @@ class UpdateStoryAction extends Action
             return (new SimpleResponse(422, $ve->getMessage()))($response);
         }
 
-        $command->id = (int) $args['id'];
-
         $user = $request->getAttribute('kwai.user');
         foreach ($command->contents as $content) {
             $content->author = $user->id();
@@ -123,7 +120,7 @@ class UpdateStoryAction extends Action
         $authorRepo = new AuthorDatabaseRepository($database);
 
         try {
-            $story = (new UpdateStory(
+            $story = (new CreateStory(
                 $storyRepo,
                 $categoryRepo,
                 $authorRepo
@@ -137,8 +134,6 @@ class UpdateStoryAction extends Action
             return (new NotFoundResponse('Author not found'))($response);
         } catch (CategoryNotFoundException $e) {
             return (new NotFoundResponse('Category not found'))($response);
-        } catch (StoryNotFoundException $e) {
-            return (new NotFoundResponse('Story not found'))($response);
         }
 
         return (new ResourceResponse(

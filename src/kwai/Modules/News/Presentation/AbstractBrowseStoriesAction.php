@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\News\Presentation\Rest;
+namespace Kwai\Modules\News\Presentation;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -24,8 +24,25 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  *
  * Action to browse all news stories
  */
-class BrowseStoriesAction extends Action
+class AbstractBrowseStoriesAction extends Action
 {
+    /**
+     * Create the default command for the use case Browse Stories.
+     *
+     * @param Request $request
+     * @param array   $args
+     * @return BrowseStoriesCommand
+     * @noinspection PhpUnusedParameterInspection
+     */
+    protected function createCommand(Request $request, array $args): BrowseStoriesCommand
+    {
+        $command = new BrowseStoriesCommand();
+        $parameters = $request->getAttribute('parameters');
+        $command->limit = $parameters['page']['limit'] ?? 10;
+        $command->offset = $parameters['page']['offset'] ?? 0;
+        return $command;
+    }
+
     /**
      * @inheritDoc
      */
@@ -34,20 +51,7 @@ class BrowseStoriesAction extends Action
         $db = $this->getContainerEntry('pdo_db');
         $filesystem = $this->getContainerEntry('filesystem');
 
-        $command = new BrowseStoriesCommand();
-        $parameters = $request->getAttribute('parameters');
-        $command->limit = $parameters['page']['limit'] ?? 10;
-        $command->offset = $parameters['page']['offset'] ?? 0;
-        if (isset($parameters['filter']['year'])) {
-            $command->publishYear = (int) $parameters['filter']['year'];
-        }
-        if (isset($parameters['filter']['month'])) {
-            $command->publishMonth = (int) $parameters['filter']['month'];
-        }
-        $command->promoted = isset($parameters['filter']['promoted']);
-        if (isset($parameters['filter']['category'])) {
-            $command->category = (int) $parameters['filter']['category'];
-        }
+        $command = $this->createCommand($request, $args);
 
         try {
             $stories = (new BrowseStories(

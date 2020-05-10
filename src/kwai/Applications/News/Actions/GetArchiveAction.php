@@ -1,11 +1,11 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Applications
+ * @subpackage News
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\News\Presentation\Rest;
+namespace Kwai\Applications\News\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\JSONResponse;

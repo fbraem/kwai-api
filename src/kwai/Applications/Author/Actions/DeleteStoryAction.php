@@ -1,44 +1,44 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Kwai
+ * @subpackage News
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\News\Presentation\Rest;
+namespace Kwai\Applications\Author\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\OkResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
-use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
-use Kwai\Modules\News\UseCases\GetStory;
-use Kwai\Modules\News\UseCases\GetStoryCommand;
+use Kwai\Modules\News\UseCases\DeleteStory;
+use Kwai\Modules\News\UseCases\DeleteStoryCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Class GetStoryAction
+ * Class DeleteStoryAction
+ *
+ * Action to delete a story.
  */
-class GetStoryAction extends Action
+class DeleteStoryAction extends Action
 {
-
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $command = new GetStoryCommand();
+        $command = new DeleteStoryCommand();
         $command->id = (int) $args['id'];
 
         $database = $this->getContainerEntry('pdo_db');
         $filesystem = $this->getContainerEntry('filesystem');
         try {
-            $story = (new GetStory(
+            (new DeleteStory(
                 new StoryDatabaseRepository($database),
                 new StoryImageRepository($filesystem)
             ))($command);
@@ -52,11 +52,6 @@ class GetStoryAction extends Action
             return (new NotFoundResponse('Story not found'))($response);
         }
 
-        return (new ResourceResponse(
-            StoryTransformer::createForItem(
-                $story,
-                $this->getContainerEntry('converter')
-            )
-        ))($response);
+        return (new OKResponse())($response);
     }
 }
