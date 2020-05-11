@@ -23,6 +23,7 @@
     RewriteRule ^trainings(/.*)?$ /api/trainings.php?$1 [QSA,L]
     RewriteRule ^users(/.*)?$ /api/users.php?$1 [QSA,L]
     RewriteRule ^site(/.*)?$ /api/site.php?$1 [QSA,L]
+    RewriteRule ^author(/.*)?$ /api/author.php?$1 [QSA,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
 </IfModule>
