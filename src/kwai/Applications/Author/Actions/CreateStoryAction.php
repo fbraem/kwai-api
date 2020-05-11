@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Author\Actions;
 
-use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -18,12 +17,8 @@ use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
-use Kwai\Modules\News\UseCases\Content;
 use Kwai\Modules\News\UseCases\CreateStory;
 use Kwai\Modules\News\UseCases\CreateStoryCommand;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
-use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
