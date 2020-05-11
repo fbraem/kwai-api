@@ -22,9 +22,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Class BrowseStoriesAction
  *
- * Action to browse all news stories
+ * Base action class to browse all news stories
  */
-class AbstractBrowseStoriesAction extends Action
+abstract class AbstractBrowseStoriesAction extends Action
 {
     /**
      * Create the default command for the use case Browse Stories.
