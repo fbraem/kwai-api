@@ -20,10 +20,7 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
 {
     protected function createCommand(Request $request, array $args): BrowseStoriesCommand
     {
-        $command = new BrowseStoriesCommand();
-        $parameters = $request->getAttribute('parameters');
-        $command->limit = $parameters['page']['limit'] ?? 10;
-        $command->offset = $parameters['page']['offset'] ?? 0;
+        $command = parent::createCommand($request, $args);
 
         // Only get the promoted stories
         $command->promoted = true;
