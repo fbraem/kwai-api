@@ -31,71 +31,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Class CreateStoryAction
  */
-class CreateStoryAction extends Action
+class CreateStoryAction extends SaveStoryAction
 {
-    private function createSchema(): Structure
+    protected function createCommand(): CreateStoryCommand
     {
-        return Expect::structure([
-            'data' => Expect::structure([
-                'type' => Expect::string(),
-                'attributes' => Expect::Structure([
-                    'enabled' => Expect::bool(false),
-                    'publish_date' => Expect::string()->required(),
-                    'timezone' => Expect::string()->required(),
-                    'end_date' => Expect::string(),
-                    'promoted' => Expect::int(0),
-                    'promotion_end_date' => Expect::string(),
-                    'remark' => Expect::string(),
-                    'contents' => Expect::arrayOf(Expect::structure([
-                        'title' => Expect::string()->required(),
-                        'locale' => Expect::string('nl'),
-                        'format' => Expect::string('md'),
-                        'summary' => Expect::string()->required(),
-                        'content' => Expect::string()
-                    ]))->required()
-                ]),
-                'relationships' => Expect::structure([
-                    'category' => Expect::structure([
-                        'data' => Expect::structure([
-                            'type' => Expect::string(),
-                            'id' => Expect::string()
-                        ])
-                    ])->required()
-                ])
-            ])
-        ]);
-    }
-
-    private function processInput($data)
-    {
-        $processor = new Processor();
-        return $processor->process($this->createSchema(), $data);
-    }
-
-    private function createCommand($data): CreateStoryCommand
-    {
-        $normalized = $this->processInput($data);
-
-        $command = new CreateStoryCommand();
-        $command->enabled = $normalized->data->attributes->enabled;
-        $command->category = (int) $normalized->data->relationships->category->data->id;
-        $command->promoted = $normalized->data->attributes->promoted;
-        $command->promotion_end_date = $normalized->data->attributes->promotion_end_date ?? null;
-        $command->end_date = $normalized->data->attributes->end_date ?? null;
-        $command->publish_date = $normalized->data->attributes->publish_date;
-        $command->timezone = $normalized->data->attributes->timezone;
-        $command->remark = $normalized->data->attributes->remark ?? null;
-        foreach ($normalized->data->attributes->contents as $content) {
-            $c = new Content();
-            $c->content = $content->content;
-            $c->format = $content->format;
-            $c->locale = $content->locale;
-            $c->summary = $content->summary;
-            $c->title = $content->title;
-            $command->contents[] = $c;
-        }
-
-        return $command;
+        return new CreateStoryCommand();
     }
 
     /**
@@ -104,7 +44,7 @@ class CreateStoryAction extends Action
     public function __invoke(Request $request, Response $response, array $args)
     {
         try {
-            $command = $this->createCommand($request->getParsedBody());
+            $command = $this->processInput($request->getParsedBody());
         } catch (ValidationException $ve) {
             return (new SimpleResponse(422, $ve->getMessage()))($response);
         }
