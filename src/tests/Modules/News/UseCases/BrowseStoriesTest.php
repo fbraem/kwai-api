@@ -28,6 +28,9 @@ class BrowseStoriesTest extends DatabaseTestCase
                     {
                         return [];
                     }
+                    public function removeImages(int $id): void
+                    {
+                    }
                 }
             ))($command);
             self::assertGreaterThan(0, $stories->getCount(), 'No stories found!');

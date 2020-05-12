@@ -31,6 +31,10 @@ class GetStoryTest extends DatabaseTestCase
                     {
                         return [];
                     }
+
+                    public function removeImages(int $id): void
+                    {
+                    }
                 }
             ))($command);
             $this->assertInstanceOf(
