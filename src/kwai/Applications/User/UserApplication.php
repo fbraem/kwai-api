@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Applications\User;
 
 use Kwai\Applications\Application;
+use Kwai\Applications\User\Actions\ConfirmInvitationAction;
 use Kwai\Applications\User\Actions\GetUserAction;
 use Kwai\Applications\User\Actions\LoginAction;
 use Kwai\Applications\User\Actions\LogoutAction;
@@ -47,6 +48,9 @@ class UserApplication extends Application
         $group->get("/$uuid_regex", GetUserAction::class)
             ->setName('user.get')
             ->setArgument('auth', 'true')
+        ;
+        $group->post("/invitations/$uuid_regex", ConfirmInvitationAction::class)
+            ->setName('users.invitations.confirm')
         ;
     }
 }
