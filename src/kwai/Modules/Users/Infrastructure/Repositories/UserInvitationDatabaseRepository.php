@@ -7,12 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
@@ -40,12 +40,11 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->where(field(Tables::USER_INVITATIONS()->uuid)->eq(strval($uuid)))
-            ->compile()
         ;
 
         try {
             $row = $this->db->execute($query)->fetch();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
         if ($row) {
@@ -79,11 +78,10 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
             ->values(
                 ... array_values($data)
             )
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -104,11 +102,10 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
         $query = $this->db->createQueryFactory()
             ->update((string) Tables::USER_INVITATIONS(), $data)
             ->where(field('id')->eq($invitation->id()))
-            ->compile()
         ;
         try {
             $this->db->execute($query);
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -165,12 +162,11 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->createBaseQuery()
             ->where(field(Tables::USER_INVITATIONS()->email)->eq(strval($email)))
-            ->compile()
         ;
 
         try {
             $rows = $this->db->execute($query)->fetchAll();
-        } catch (DatabaseException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
