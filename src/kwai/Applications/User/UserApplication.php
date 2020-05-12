@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Application
+ * @subpackage User
  */
 declare(strict_types=1);
 
