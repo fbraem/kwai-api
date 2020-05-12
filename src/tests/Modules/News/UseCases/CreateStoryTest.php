@@ -28,7 +28,7 @@ class CreateStoryTest extends DatabaseTestCase
     {
         $command = new CreateStoryCommand();
         try {
-            $command->category = '1';
+            $command->category = 1;
             $command->timezone = 'Europe/Brussels';
             $command->publish_date = '2020-05-01 09:00:00';
             $command->promoted = 1;
@@ -39,7 +39,7 @@ class CreateStoryTest extends DatabaseTestCase
             $content->locale = 'nl';
             $content->summary = 'This is a test';
             $content->title = 'Test';
-            $content->author = '1';
+            $content->author = 1;
             $command->contents = [];
             $command->contents[] = $content;
 
