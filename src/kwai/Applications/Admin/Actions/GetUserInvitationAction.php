@@ -1,33 +1,31 @@
 <?php
+/**
+ * @package Applications
+ * @subpackage Admin
+ */
 declare(strict_types = 1);
 
-namespace Kwai\Modules\Users\Presentation\Rest;
+namespace Kwai\Applications\Admin\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
-
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\UseCases\GetUser;
-use Kwai\Modules\Users\UseCases\GetUserCommand;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
-
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
-
+use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\UseCases\GetUserInvitation;
+use Kwai\Modules\Users\UseCases\GetUserInvitationCommand;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Class GetUserAction
+ * Class GetUserInvitationAction
  *
- * Action to get a user with the given unique id.
- * When include parameter has an element "abilities", the abilities of the user
- * are also returned.
+ * Action to get a user invitation with the given unique id.
  */
-class GetUserAction extends Action
+class GetUserInvitationAction extends Action
 {
     /**
      * @param Request $request
@@ -38,17 +36,13 @@ class GetUserAction extends Action
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $command = new GetUserCommand();
+        $command = new GetUserInvitationCommand();
         $command->uuid = $args['uuid'];
-
-        $parameters = $request->getAttribute('parameters');
-        $command->withAbilities = in_array('abilities', $parameters['include']);
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $user = (new GetUser(
-                new UserDatabaseRepository($database),
-                new AbilityDatabaseRepository($database)
+            $user = (new GetUserInvitation(
+                new UserInvitationDatabaseRepository($database)
             ))($command);
         } catch (NotFoundException $e) {
             return (new NotFoundResponse('User not found'))($response);
@@ -61,8 +55,7 @@ class GetUserAction extends Action
         return (new ResourceResponse(
             UserTransformer::createForItem(
                 $user
-            ),
-            $command->withAbilities ? 'abilities' : ''
+            )
         ))($response);
     }
 }

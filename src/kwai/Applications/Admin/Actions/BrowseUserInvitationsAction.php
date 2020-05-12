@@ -1,40 +1,40 @@
 <?php
 /**
- * @package Kwai
- * @subpackage Users
+ * @package Applications
+ * @subpackage Admin
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Users\Presentation\Rest;
+namespace Kwai\Applications\Admin\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
-use Kwai\Modules\Users\UseCases\BrowseAbilities;
-use Kwai\Modules\Users\UseCases\BrowseAbilitiesCommand;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
+use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
+use Kwai\Modules\Users\UseCases\BrowseUserInvitations;
+use Kwai\Modules\Users\UseCases\BrowseUserInvitationsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class BrowseUsersAction
  *
- * Action to browse all users
+ * Action to browse all user invitations
  */
-class BrowseAbilitiesAction extends Action
+class BrowseUserInvitationsAction extends Action
 {
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $repo = new AbilityDatabaseRepository($this->getContainerEntry('pdo_db'));
+        $repo = new UserInvitationDatabaseRepository($this->getContainerEntry('pdo_db'));
         try {
-            $users = (new BrowseAbilities($repo))(new BrowseAbilitiesCommand());
+            $invitations = (new BrowseUserInvitations($repo))(new BrowseUserInvitationsCommand());
             return (new ResourceResponse(
-                AbilityTransformer::createForCollection($users)
+                UserInvitationTransformer::createForCollection($invitations)
             ))($response);
         } catch (RepositoryException $e) {
             return (

@@ -1,28 +1,37 @@
 <?php
+/**
+ * @package Applications
+ * @subpackage Admin
+ */
 declare(strict_types = 1);
 
-namespace Kwai\Modules\Users\Presentation\Rest;
+namespace Kwai\Applications\Admin\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
+
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
-use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
-use Kwai\Modules\Users\UseCases\GetAbility;
-use Kwai\Modules\Users\UseCases\GetAbilityCommand;
-use Psr\Http\Message\ResponseInterface as Response;
+use Kwai\Modules\Users\UseCases\GetUser;
+use Kwai\Modules\Users\UseCases\GetUserCommand;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+
+use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 
 /**
- * Class GetAbilityAction
+ * Class GetUserAction
  *
- * Action to get an ability with the given id.
+ * Action to get a user with the given unique id.
+ * When include parameter has an element "abilities", the abilities of the user
+ * are also returned.
  */
-class GetAbilityAction extends Action
+class GetUserAction extends Action
 {
     /**
      * @param Request $request
@@ -33,16 +42,20 @@ class GetAbilityAction extends Action
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $command = new GetAbilityCommand();
-        $command->id = intval($args['id']);
+        $command = new GetUserCommand();
+        $command->uuid = $args['uuid'];
+
+        $parameters = $request->getAttribute('parameters');
+        $command->withAbilities = in_array('abilities', $parameters['include']);
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $ability = (new GetAbility(
+            $user = (new GetUser(
+                new UserDatabaseRepository($database),
                 new AbilityDatabaseRepository($database)
             ))($command);
         } catch (NotFoundException $e) {
-            return (new NotFoundResponse('Ability not found'))($response);
+            return (new NotFoundResponse('User not found'))($response);
         } catch (RepositoryException $e) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
@@ -50,9 +63,10 @@ class GetAbilityAction extends Action
         }
 
         return (new ResourceResponse(
-            AbilityTransformer::createForItem(
-                $ability
-            )
+            UserTransformer::createForItem(
+                $user
+            ),
+            $command->withAbilities ? 'abilities' : ''
         ))($response);
     }
 }
