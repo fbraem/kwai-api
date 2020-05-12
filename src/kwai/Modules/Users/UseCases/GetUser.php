@@ -47,7 +47,8 @@ class GetUser
         if ($command->withAbilities) {
             $abilities = $this->abilityRepo->getByUser($user);
             foreach ($abilities as $ability) {
-                $user->domain()->addAbility($ability);
+                /** @noinspection PhpUndefinedMethodInspection */
+                $user->addAbility($ability);
             }
         }
         return $user;

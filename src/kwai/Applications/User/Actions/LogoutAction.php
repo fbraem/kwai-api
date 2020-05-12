@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Applications
  * @subpackage User
  */
 declare(strict_types = 1);
 
-namespace Kwai\Modules\Users\Presentation\Rest;
+namespace Kwai\Applications\User\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
