@@ -13,7 +13,7 @@ $environments['default_database'] = $config['default_database'];
 return [
     'paths' => [
         'migrations' => [
-            __DIR__ . '/kwai/Core/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Applications/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Users/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Mails/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/News/Infrastructure/Migrations',
