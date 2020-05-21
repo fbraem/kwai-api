@@ -10,11 +10,11 @@ namespace Tests\Modules\News\UseCases;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Author;
-use Kwai\Modules\News\Domain\Category;
+use Kwai\Modules\News\Domain\Application;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
-use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
+use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\Content;
 use Kwai\Modules\News\UseCases\CreateStory;
@@ -28,7 +28,7 @@ class CreateStoryTest extends DatabaseTestCase
     {
         $command = new CreateStoryCommand();
         try {
-            $command->category = 1;
+            $command->application = 1;
             $command->timezone = 'Europe/Brussels';
             $command->publish_date = '2020-05-01 09:00:00';
             $command->promoted = 1;
@@ -45,10 +45,10 @@ class CreateStoryTest extends DatabaseTestCase
 
             $story = (new CreateStory(
                 new StoryDatabaseRepository(self::$db),
-                new class(self::$db) extends CategoryDatabaseRepository {
+                new class(self::$db) extends ApplicationDatabaseRepository {
                     public function getById(int $id): Entity
                     {
-                        return new Entity(1, new Category(
+                        return new Entity(1, new Application(
                             (object) [
                                 'name' => 'Unit Test'
                             ]

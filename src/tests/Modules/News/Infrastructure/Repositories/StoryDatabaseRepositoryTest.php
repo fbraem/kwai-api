@@ -20,23 +20,23 @@ use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
-use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
+use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Repositories\AuthorRepository;
-use Kwai\Modules\News\Repositories\CategoryRepository;
+use Kwai\Modules\News\Repositories\ApplicationRepository;
 use Kwai\Modules\News\Repositories\StoryRepository;
 use Tests\DatabaseTestCase;
 
 class StoryDatabaseRepositoryTest extends DatabaseTestCase
 {
     private StoryRepository $repo;
-    private CategoryRepository $categoryRepo;
+    private ApplicationRepository $appRepo;
     private AuthorRepository $authorRepo;
 
     public function setUp(): void
     {
         $this->repo = new StoryDatabaseRepository(self::$db);
-        $this->categoryRepo = new CategoryDatabaseRepository(self::$db);
+        $this->appRepo = new ApplicationDatabaseRepository(self::$db);
         $this->authorRepo = new AuthorDatabaseRepository(self::$db);
     }
 
@@ -52,7 +52,7 @@ class StoryDatabaseRepositoryTest extends DatabaseTestCase
                     'enabled' => true,
                     'promotion' => new Promotion(1),
                     'publishTime' => Timestamp::createNow('Europe/Brussels'),
-                    'category' => $this->categoryRepo->getById(1),
+                    'category' => $this->appRepo->getById(1),
                     'contents'=> [
                         new Text(
                             new Locale('nl'),

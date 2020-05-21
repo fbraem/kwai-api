@@ -16,14 +16,14 @@ use Kwai\Core\Infrastructure\Database\TableEnum;
  *
  * This class defines all table names for the News module.
  * @method static Tables AUTHORS()
- * @method static Tables CATEGORIES()
+ * @method static Tables APPLICATIONS()
  * @method static Tables STORIES()
  * @method static Tables CONTENTS()
  */
 class Tables extends TableEnum
 {
     private const AUTHORS = 'users';
-    private const CATEGORIES = 'categories';
+    private const APPLICATIONS = 'applications';
     private const STORIES = 'news_stories';
     private const CONTENTS = 'news_contents_2';
 }

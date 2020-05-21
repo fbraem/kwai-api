@@ -19,6 +19,6 @@ class BrowseStoriesCommand
     public bool $enabled = true;
     public ?int $publishYear = null;
     public ?int $publishMonth = null;
-    public ?int $category = null;
+    public ?int $application = null;
     public bool $promoted = false;
 }

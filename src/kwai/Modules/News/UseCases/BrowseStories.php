@@ -54,8 +54,8 @@ class BrowseStories
         if ($command->promoted) {
             $query->filterPromoted();
         }
-        if ($command->category) {
-            $query->filterCategory($command->category);
+        if ($command->application) {
+            $query->filterApplication($command->application);
         }
         if ($command->enabled) {
             $query->filterVisible();

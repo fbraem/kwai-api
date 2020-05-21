@@ -39,11 +39,11 @@ interface StoryQuery extends Query
     public function filterPromoted(): void;
 
     /**
-     * Add a filter on the category.
+     * Add a filter on the application.
      *
      * @param int $id
      */
-    public function filterCategory(int $id): void;
+    public function filterApplication(int $id): void;
 
     /**
      * Only select news stories that are enabled

@@ -15,7 +15,7 @@ use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
-use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
+use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\UpdateStory;
@@ -57,7 +57,7 @@ class UpdateStoryAction extends SaveStoryAction
 
         $database = $this->getContainerEntry('pdo_db');
         $storyRepo = new StoryDatabaseRepository($database);
-        $categoryRepo = new CategoryDatabaseRepository($database);
+        $categoryRepo = new ApplicationDatabaseRepository($database);
         $authorRepo = new AuthorDatabaseRepository($database);
 
         try {
@@ -74,7 +74,7 @@ class UpdateStoryAction extends SaveStoryAction
         } catch (AuthorNotFoundException $e) {
             return (new NotFoundResponse('Author not found'))($response);
         } catch (CategoryNotFoundException $e) {
-            return (new NotFoundResponse('Category not found'))($response);
+            return (new NotFoundResponse('Application not found'))($response);
         } catch (StoryNotFoundException $e) {
             return (new NotFoundResponse('Story not found'))($response);
         }

@@ -19,7 +19,7 @@ use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 use Kwai\Modules\News\Repositories\AuthorRepository;
-use Kwai\Modules\News\Repositories\CategoryRepository;
+use Kwai\Modules\News\Repositories\ApplicationRepository;
 use Kwai\Modules\News\Repositories\StoryRepository;
 
 /**
@@ -30,23 +30,23 @@ use Kwai\Modules\News\Repositories\StoryRepository;
 class UpdateStory
 {
     private StoryRepository $storyRepo;
-    private CategoryRepository $categoryRepo;
+    private ApplicationRepository $appRepo;
     private AuthorRepository $authorRepo;
 
     /**
      * CreateStory constructor.
      *
-     * @param StoryRepository    $storyRepo
-     * @param CategoryRepository $categoryRepo
-     * @param AuthorRepository   $authorRepo
+     * @param StoryRepository       $storyRepo
+     * @param ApplicationRepository $appRepo
+     * @param AuthorRepository      $authorRepo
      */
     public function __construct(
         StoryRepository $storyRepo,
-        CategoryRepository $categoryRepo,
+        ApplicationRepository $appRepo,
         AuthorRepository $authorRepo
     ) {
         $this->storyRepo = $storyRepo;
-        $this->categoryRepo = $categoryRepo;
+        $this->appRepo = $appRepo;
         $this->authorRepo = $authorRepo;
     }
 
@@ -61,7 +61,7 @@ class UpdateStory
     public function __invoke(UpdateStoryCommand $command)
     {
         $story = $this->storyRepo->getById($command->id);
-        $category = $this->categoryRepo->getById($command->category);
+        $app = $this->appRepo->getById($command->application);
 
         $contents = [];
         foreach ($command->contents as $text) {
@@ -105,7 +105,7 @@ class UpdateStory
                             $command->timezone
                         ) : null,
                     'remark' => $command->remark,
-                    'category' => $category,
+                    'application' => $app,
                     'contents' => $contents,
                     'traceableTime' => $traceableTime
                 ]

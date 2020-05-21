@@ -55,7 +55,7 @@ class StoryMapper
                         ? Timestamp::createFromString($raw->updated_at)
                         : null
                 ),
-                'category' => CategoryMapper::toDomain($raw->category),
+                'application' => ApplicationMapper::toDomain($raw->category),
                 'contents' => array_map(fn($c) => new Text(
                     new Locale($c->locale),
                     new DocumentFormat($c->format),
@@ -91,7 +91,7 @@ class StoryMapper
             'end_date' => $story->getEndDate()
                 ? (string) $story->getEndDate()
                 : null,
-            'category_id' => $story->getCategory()->id(),
+            'application_id' => $story->getApplication()->id(),
             'remark' => $story->getRemark(),
             'created_at'=> $story->getTraceableTime()->getCreatedAt(),
             'updated_at'=> $updated_at

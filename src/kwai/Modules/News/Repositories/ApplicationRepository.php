@@ -14,7 +14,7 @@ use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 /**
  * Interface CategoryRepository
  */
-interface CategoryRepository
+interface ApplicationRepository
 {
     /**
      * @param int $id

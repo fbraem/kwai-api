@@ -20,9 +20,9 @@ class UpdateStoryCommand
     public int $id;
 
     /**
-     * The id of the category for this story.
+     * The id of the application for this story.
      */
-    public int $category;
+    public int $application;
 
     /**
      * The publication date

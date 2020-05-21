@@ -12,22 +12,22 @@ use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
-use Kwai\Modules\News\Infrastructure\Mappers\CategoryMapper;
+use Kwai\Modules\News\Infrastructure\Mappers\ApplicationMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
-use Kwai\Modules\News\Repositories\CategoryRepository;
+use Kwai\Modules\News\Repositories\ApplicationRepository;
 use function Latitude\QueryBuilder\field;
 
 /**
  * Class CategoryDatabaseRepository
  */
-class CategoryDatabaseRepository extends DatabaseRepository implements CategoryRepository
+class ApplicationDatabaseRepository extends DatabaseRepository implements ApplicationRepository
 {
     /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
     {
-        $aliasFn = Tables::CATEGORIES()->getAliasFn();
+        $aliasFn = Tables::APPLICATIONS()->getAliasFn();
 
         /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->db->createQueryFactory()
@@ -35,8 +35,8 @@ class CategoryDatabaseRepository extends DatabaseRepository implements CategoryR
                 $aliasFn('id'),
                 $aliasFn('name')
             )
-            ->from((string) Tables::CATEGORIES())
-            ->where(field(Tables::CATEGORIES()->id)->eq($id))
+            ->from((string) Tables::APPLICATIONS())
+            ->where(field(Tables::APPLICATIONS()->id)->eq($id))
         ;
 
         try {
@@ -51,8 +51,8 @@ class CategoryDatabaseRepository extends DatabaseRepository implements CategoryR
             throw new CategoryNotFoundException($id);
         }
 
-        return CategoryMapper::toDomain(
-            Tables::CATEGORIES()->createColumnFilter()->filter($row)
+        return ApplicationMapper::toDomain(
+            Tables::APPLICATIONS()->createColumnFilter()->filter($row)
         );
     }
 }

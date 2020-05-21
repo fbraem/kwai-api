@@ -58,7 +58,7 @@ class StoryTransformer extends Fractal\TransformerAbstract
      * @var string[]
      */
     protected $defaultIncludes = [
-        'category'
+        'application'
     ];
 
     /**
@@ -117,9 +117,9 @@ class StoryTransformer extends Fractal\TransformerAbstract
      * @param Entity<Story> $story
      * @return Fractal\Resource\Item
      */
-    public function includeCategory(Entity $story): Fractal\Resource\Item
+    public function includeApplication(Entity $story): Fractal\Resource\Item
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        return CategoryTransformer::createForItem($story->getCategory());
+        return ApplicationTransformer::createForItem($story->getApplication());
     }
 }

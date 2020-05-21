@@ -44,9 +44,9 @@ class Story implements DomainEntity
     private TraceableTime $traceableTime;
 
     /**
-     * @var Entity<Category>
+     * @var Entity<Application>
      */
-    private Entity $category;
+    private Entity $application;
 
     /**
      * @var Text[]
@@ -71,7 +71,7 @@ class Story implements DomainEntity
         $this->endDate = $props->endDate ?? null;
         $this->remark = $props->remark ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->category = $props->category;
+        $this->application = $props->application;
         $this->contents = $props->contents;
     }
 
@@ -138,11 +138,11 @@ class Story implements DomainEntity
     /**
      * Return the category
      *
-     * @return Entity<Category>
+     * @return Entity<Application>
      */
-    public function getCategory(): Entity
+    public function getApplication(): Entity
     {
-        return $this->category;
+        return $this->application;
     }
 
     /**

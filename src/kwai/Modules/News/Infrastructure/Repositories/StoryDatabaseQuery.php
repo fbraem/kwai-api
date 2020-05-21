@@ -42,8 +42,8 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         $this->query
             ->from((string) Tables::STORIES())
             ->join(
-                (string) Tables::CATEGORIES(),
-                on(Tables::CATEGORIES()->id, Tables::STORIES()->category_id)
+                (string) Tables::APPLICATIONS(),
+                on(Tables::APPLICATIONS()->id, Tables::STORIES()->application_id)
             );
     }
 
@@ -123,7 +123,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         $contents = $contentQuery->execute();
 
         $storyColumnFilter = Tables::STORIES()->createColumnFilter();
-        $categoryColumnFilter = Tables::CATEGORIES()->createColumnFilter();
+        $categoryColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
         $stories = [];
         foreach ($rows as $row) {
             $story = $storyColumnFilter->filter($row);
@@ -157,18 +157,18 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             $aliasFn('remark'),
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
-            Tables::CATEGORIES()->getAliasFn()('id'),
-            Tables::CATEGORIES()->getAliasFn()('name')
+            Tables::APPLICATIONS()->getAliasFn()('id'),
+            Tables::APPLICATIONS()->getAliasFn()('name')
         ];
     }
 
     /**
      * @inheritDoc
      */
-    public function filterCategory(int $id): void
+    public function filterApplication(int $id): void
     {
         $this->query->andWhere(group(
-            field(Tables::CATEGORIES()->id)->eq($id)
+            field(Tables::APPLICATIONS()->id)->eq($id)
         ));
     }
 

@@ -14,7 +14,7 @@ use Kwai\Core\Domain\DomainEntity;
  *
  * A news category
  */
-class Category implements DomainEntity
+class Application implements DomainEntity
 {
     /**
      * The name of the category

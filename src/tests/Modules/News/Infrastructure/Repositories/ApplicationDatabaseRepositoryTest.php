@@ -10,17 +10,17 @@ namespace Tests\Modules\News\Infrastructure\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
-use Kwai\Modules\News\Infrastructure\Repositories\CategoryDatabaseRepository;
-use Kwai\Modules\News\Repositories\CategoryRepository;
+use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
+use Kwai\Modules\News\Repositories\ApplicationRepository;
 use Tests\DatabaseTestCase;
 
-class CategoryDatabaseRepositoryTest extends DatabaseTestCase
+class ApplicationDatabaseRepositoryTest extends DatabaseTestCase
 {
-    private CategoryRepository $repo;
+    private ApplicationRepository $repo;
 
     public function setUp(): void
     {
-        $this->repo = new CategoryDatabaseRepository(self::$db);
+        $this->repo = new ApplicationDatabaseRepository(self::$db);
     }
 
     public function testGetById()
