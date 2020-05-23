@@ -38,8 +38,8 @@ abstract class AbstractBrowseStoriesAction extends Action
     {
         $command = new BrowseStoriesCommand();
         $parameters = $request->getAttribute('parameters');
-        $command->limit = (int) $parameters['page']['limit'] ?? 10;
-        $command->offset = (int) $parameters['page']['offset'] ?? 0;
+        $command->limit = (int) ($parameters['page']['limit'] ?? 10);
+        $command->offset = (int) ($parameters['page']['offset'] ?? 0);
         return $command;
     }
 
