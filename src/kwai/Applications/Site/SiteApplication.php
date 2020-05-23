@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Kwai\Applications\Site;
 
 use Kwai\Applications\Application;
+use Kwai\Applications\Site\Actions\BrowseApplicationAction;
 use Kwai\Applications\Site\Actions\BrowseStoriesAction;
+use Kwai\Applications\Site\Actions\GetApplicationAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Slim\Routing\RouteCollectorProxy;
@@ -27,6 +29,9 @@ class SiteApplication extends Application
     {
         $group->get('/stories', BrowseStoriesAction::class)
             ->setName('site.news.browse')
+        ;
+        $group->get('/applications', BrowseApplicationAction::class)
+            ->setName('site.applications.browse')
         ;
     }
 

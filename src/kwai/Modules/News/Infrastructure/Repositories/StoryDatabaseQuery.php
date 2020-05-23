@@ -123,11 +123,11 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         $contents = $contentQuery->execute();
 
         $storyColumnFilter = Tables::STORIES()->createColumnFilter();
-        $categoryColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
+        $applicationColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
         $stories = [];
         foreach ($rows as $row) {
             $story = $storyColumnFilter->filter($row);
-            $story->category = $categoryColumnFilter->filter($row);
+            $story->category = $applicationColumnFilter->filter($row);
             // Skip stories without content
             if (isset($contents[(string) $story->id])) {
                 $story->contents = $contents[(string)$story->id];
