@@ -9,7 +9,7 @@ namespace Kwai\Modules\News\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
+use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 
 /**
  * Interface CategoryRepository
@@ -19,7 +19,7 @@ interface ApplicationRepository
     /**
      * @param int $id
      * @return Entity
-     * @throws CategoryNotFoundException
+     * @throws ApplicationNotFoundException
      * @throws RepositoryException
      */
     public function getById(int $id): Entity;
