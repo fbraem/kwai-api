@@ -49,7 +49,7 @@ class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
         $aliasFn = Tables::APPLICATIONS()->getAliasFn();
         return [
             $aliasFn('id'),
-            $aliasFn('name'),
+            $aliasFn('title'),
             $aliasFn('description'),
             $aliasFn('remark'),
             $aliasFn('created_at'),

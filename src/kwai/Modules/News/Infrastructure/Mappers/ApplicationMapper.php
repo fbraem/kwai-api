@@ -22,7 +22,7 @@ class ApplicationMapper
         return new Entity(
             (int) $raw->id,
             new Application((object)[
-                'name' => $raw->name
+                'title' => $raw->title
             ])
         );
     }

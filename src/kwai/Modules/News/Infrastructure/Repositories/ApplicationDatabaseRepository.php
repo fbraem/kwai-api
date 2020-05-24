@@ -11,7 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
+use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Infrastructure\Mappers\ApplicationMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\ApplicationRepository;
@@ -33,7 +33,7 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
         $query = $this->db->createQueryFactory()
             ->select(
                 $aliasFn('id'),
-                $aliasFn('name')
+                $aliasFn('title')
             )
             ->from((string) Tables::APPLICATIONS())
             ->where(field(Tables::APPLICATIONS()->id)->eq($id))
@@ -48,7 +48,7 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
         }
 
         if (!$row) {
-            throw new CategoryNotFoundException($id);
+            throw new ApplicationNotFoundException($id);
         }
 
         return ApplicationMapper::toDomain(

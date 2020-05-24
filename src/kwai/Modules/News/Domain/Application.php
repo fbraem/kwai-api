@@ -10,32 +10,32 @@ namespace Kwai\Modules\News\Domain;
 use Kwai\Core\Domain\DomainEntity;
 
 /**
- * Class Category
+ * Class Application
  *
- * A news category
+ * Application associated with a news story
  */
 class Application implements DomainEntity
 {
     /**
-     * The name of the category
+     * The title of the application
      */
-    private string $name;
+    private string $title;
 
     /**
-     * Category constructor.
+     * Application constructor.
      *
      * @param object $props
      */
     public function __construct(object $props)
     {
-        $this->name = $props->name;
+        $this->title = $props->title;
     }
 
     /**
-     * Get the name of the category
+     * Get the name of the application
      */
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 }

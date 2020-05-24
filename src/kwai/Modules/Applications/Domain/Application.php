@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Applications\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 
 /**
@@ -16,7 +15,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
  */
 class Application implements DomainEntity
 {
-    private string $name;
+    private string $title;
 
     private string $description;
 
@@ -36,7 +35,7 @@ class Application implements DomainEntity
 
     public function __construct(object $props)
     {
-        $this->name = $props->name;
+        $this->title = $props->title;
         $this->description = $props->description;
         $this->shortDescription = $props->shortDescription;
         $this->remark = $props->remark ?? null;
@@ -50,9 +49,9 @@ class Application implements DomainEntity
     /**
      * @return string
      */
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**

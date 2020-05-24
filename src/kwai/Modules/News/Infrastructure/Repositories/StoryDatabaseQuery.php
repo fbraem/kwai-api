@@ -158,7 +158,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
             Tables::APPLICATIONS()->getAliasFn()('id'),
-            Tables::APPLICATIONS()->getAliasFn()('name')
+            Tables::APPLICATIONS()->getAliasFn()('title')
         ];
     }
 
