@@ -38,6 +38,7 @@ class ApplicationMapper
                 'canHaveNews' => $raw->news == '1' ?? false,
                 'canHavePages' => $raw->pages == '1' ?? false,
                 'canHaveEvents' => $raw->events == '1' ?? false,
+                'weight' => (int) $raw->weight ?? 0
             ])
         );
     }

@@ -41,6 +41,7 @@ class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
     {
         $this->query
             ->from((string) Tables::APPLICATIONS())
+            ->orderBy(Tables::APPLICATIONS()->getColumn('weight'), 'DESC')
         ;
     }
 
@@ -55,6 +56,7 @@ class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
             $aliasFn('short_description'),
+            $aliasFn('weight'),
             $aliasFn('name'),
             $aliasFn('news'),
             $aliasFn('pages'),

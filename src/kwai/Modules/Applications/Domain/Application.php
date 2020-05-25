@@ -33,6 +33,8 @@ class Application implements DomainEntity
 
     private bool $canHaveEvents;
 
+    private int $weight;
+
     public function __construct(object $props)
     {
         $this->title = $props->title;
@@ -44,6 +46,7 @@ class Application implements DomainEntity
         $this->canHaveNews = $props->canHaveNews ?? true;
         $this->canHavePages = $props->canHavePages ?? true;
         $this->canHaveEvents = $props->canHaveEvents ?? true;
+        $this->weight = $props->weight ?? 0;
     }
 
     /**
@@ -116,5 +119,10 @@ class Application implements DomainEntity
     public function canHaveEvents(): bool
     {
         return $this->canHaveEvents;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->weight;
     }
 }
