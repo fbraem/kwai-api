@@ -17,6 +17,7 @@ class ApplicationMigration extends AbstractMigration
             ->addColumn('events', 'boolean', ['default' => true])
             ->removeColumn('user_id')
             ->renameColumn('name', 'title')
+            ->renameColumn('app', 'name')
             ->save()
         ;
     }
@@ -28,6 +29,7 @@ class ApplicationMigration extends AbstractMigration
             ->removeColumn('news')
             ->removeColumn('pages')
             ->removeColumn('events')
+            ->renameColumn('name', 'app')
             ->renameColumn('title', 'name')
             ->addColumn('user_id', 'integer')
             ->save()

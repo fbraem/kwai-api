@@ -55,7 +55,7 @@ class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
             $aliasFn('short_description'),
-            $aliasFn('app'),
+            $aliasFn('name'),
             $aliasFn('news'),
             $aliasFn('pages'),
             $aliasFn('events')

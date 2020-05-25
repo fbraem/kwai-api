@@ -25,7 +25,7 @@ class Application implements DomainEntity
 
     private TraceableTime $traceableTime;
 
-    private string $application;
+    private string $name;
 
     private bool $canHaveNews;
 
@@ -40,7 +40,7 @@ class Application implements DomainEntity
         $this->shortDescription = $props->shortDescription;
         $this->remark = $props->remark ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->application = $props->application;
+        $this->name = $props->name;
         $this->canHaveNews = $props->canHaveNews ?? true;
         $this->canHavePages = $props->canHavePages ?? true;
         $this->canHaveEvents = $props->canHaveEvents ?? true;
@@ -89,9 +89,9 @@ class Application implements DomainEntity
     /**
      * @return string
      */
-    public function getApplication(): string
+    public function getName(): string
     {
-        return $this->application;
+        return $this->name;
     }
 
     /**

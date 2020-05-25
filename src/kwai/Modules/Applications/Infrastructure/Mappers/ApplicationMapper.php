@@ -28,7 +28,7 @@ class ApplicationMapper
                 'description' => $raw->description,
                 'shortDescription' => $raw->short_description,
                 'remark' => $raw->remark ?? null,
-                'application' => $raw->app,
+                'name' => $raw->name,
                 'traceableTime' => new TraceableTime(
                     Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at)
