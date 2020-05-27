@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Applications\UseCases;
 
-use Kwai\Core\Domain\Entities;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
 use Tightenco\Collect\Support\Collection;
@@ -33,7 +32,7 @@ class BrowseApplication
 
     /**
      * @param BrowseApplicationCommand $command
-     * @return array
+     * @return array (int, Collection)
      * @throws QueryException
      */
     public function __invoke(BrowseApplicationCommand $command): array
