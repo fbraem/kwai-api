@@ -32,7 +32,7 @@ class BrowseApplicationAction extends Action
         $database = $this->getContainerEntry('pdo_db');
 
         try {
-            $applications = (new BrowseApplication(
+            [$count, $applications] = (new BrowseApplication(
                 new ApplicationDatabaseRepository($database)
             ))($command);
         } catch (QueryException $e) {
@@ -48,7 +48,7 @@ class BrowseApplicationAction extends Action
         $resource->setMeta([
             'limit' => 0,
             'offset' => 0,
-            'count' => $applications->getCount()
+            'count' => $count
         ]);
         return (new ResourceResponse(
             $resource

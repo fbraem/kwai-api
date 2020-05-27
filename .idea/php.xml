@@ -115,6 +115,8 @@
       <path value="$PROJECT_DIR$/src/vendor/nette/utils" />
       <path value="$PROJECT_DIR$/src/vendor/nette/schema" />
       <path value="$PROJECT_DIR$/src/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/src/vendor/tightenco/collect" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

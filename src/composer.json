@@ -33,7 +33,8 @@
         "ext-mbstring": "*",
         "ext-json": "*",
         "monolog/monolog": "2.0.2",
-        "latitude/latitude": "^4.1"
+        "latitude/latitude": "^4.1",
+        "tightenco/collect": "v7.12.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",

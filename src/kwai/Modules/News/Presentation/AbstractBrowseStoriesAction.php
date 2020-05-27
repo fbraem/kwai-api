@@ -54,7 +54,7 @@ abstract class AbstractBrowseStoriesAction extends Action
         $command = $this->createCommand($request, $args);
 
         try {
-            $stories = (new BrowseStories(
+            [$count, $stories] = (new BrowseStories(
                 new StoryDatabaseRepository($db),
                 new StoryImageRepository($filesystem)
             ))($command);
@@ -71,7 +71,7 @@ abstract class AbstractBrowseStoriesAction extends Action
         $resource->setMeta([
             'limit' => $command->limit,
             'offset' => $command->offset,
-            'count' => $stories->getCount()
+            'count' => $count
         ]);
 
         return (new ResourceResponse(

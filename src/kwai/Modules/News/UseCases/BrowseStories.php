@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\UseCases;
 
-use Kwai\Core\Domain\Entities;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\News\Repositories\StoryRepository;
+use Tightenco\Collect\Support\Collection;
 
 /**
  * Class BrowseStories
@@ -41,10 +41,10 @@ class BrowseStories
      * Browse stories
      *
      * @param BrowseStoriesCommand $command
-     * @return Entities
+     * @return array
      * @throws QueryException
      */
-    public function __invoke(BrowseStoriesCommand $command): Entities
+    public function __invoke(BrowseStoriesCommand $command): array
     {
         $query = $this->repo->createQuery();
 
@@ -68,6 +68,6 @@ class BrowseStories
             $images = $this->imageRepo->getImages($story->id());
             $story->attachImages($images);
         }
-        return new Entities($count, $stories);
+        return [$count, new Collection($stories)];
     }
 }

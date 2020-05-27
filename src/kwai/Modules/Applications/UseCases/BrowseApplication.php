@@ -10,6 +10,7 @@ namespace Kwai\Modules\Applications\UseCases;
 use Kwai\Core\Domain\Entities;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
+use Tightenco\Collect\Support\Collection;
 
 /**
  * Class BrowseApplication
@@ -32,15 +33,18 @@ class BrowseApplication
 
     /**
      * @param BrowseApplicationCommand $command
-     * @return Entities
+     * @return array
      * @throws QueryException
      */
-    public function __invoke(BrowseApplicationCommand $command)
+    public function __invoke(BrowseApplicationCommand $command): array
     {
         $query = $this->repo->createQuery();
         if ($command->app) {
             $query->filterApplication($command->app);
         }
-        return new Entities($query->count(), $query->execute());
+        return [
+            $query->count(),
+            new Collection($query->execute())
+        ];
     }
 }
