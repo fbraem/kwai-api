@@ -30,7 +30,9 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/facade/ignition-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/fig/http-message-util" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/filp/whoops" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/firebase/php-jwt" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/hamcrest/hamcrest-php" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/latitude/latitude" />
@@ -51,8 +53,10 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/nette/schema" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/nette/utils" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/nikic/fast-route" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/nunomaduro/collision" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pdepend/pdepend" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpdocumentor/reflection-common" />
@@ -63,6 +67,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpstan/phpstan" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-code-coverage" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-file-iterator" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-invoker" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-text-template" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-timer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-token-stream" />
@@ -79,6 +84,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/ramsey/uuid" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/respect/validation" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/robmorgan/phinx" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/sebastian/code-unit" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/sebastian/code-unit-reverse-lookup" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/sebastian/comparator" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/sebastian/diff" />
@@ -107,6 +113,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/var-dumper" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tightenco/collect" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/callable-handler" />
