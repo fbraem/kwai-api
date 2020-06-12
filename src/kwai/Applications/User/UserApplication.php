@@ -45,7 +45,7 @@ class UserApplication extends Application
         $group->post('/access_token', RefreshTokenAction::class)
             ->setName('user.access_token')
         ;
-        $group->get("/$uuid_regex", GetUserAction::class)
+        $group->get('', GetUserAction::class)
             ->setName('user.get')
             ->setArgument('auth', 'true')
         ;
