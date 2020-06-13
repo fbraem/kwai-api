@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Site;
+namespace Kwai\Applications\Club;
 
 use Kwai\Applications\Application;
 use Kwai\Applications\Site\Actions\BrowseStoriesAction;
@@ -19,19 +19,22 @@ use Slim\Routing\RouteCollectorProxy;
  */
 class ClubApplication extends Application
 {
+    const APP = 'club';
+
     public function __construct()
     {
-        parent::__construct('club');
+        parent::__construct(self::APP);
     }
 
     public function createRoutes(RouteCollectorProxy $group): void
     {
         $group->get('/stories', BrowseStoriesAction::class)
-            ->setName('club.news.browse')
+            ->setName(self::APP . '.news.browse')
+            ->setArgument('application', self::APP)
         ;
         $group->get('/applications', GetApplicationWithNameAction::class)
-            ->setName('club.applications.get')
-            ->setArgument('application', 'club')
+            ->setName(self::APP . '.applications.get')
+            ->setArgument('application', self::APP)
         ;
     }
 
