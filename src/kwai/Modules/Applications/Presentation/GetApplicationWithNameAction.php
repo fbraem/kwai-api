@@ -45,7 +45,7 @@ class GetApplicationWithNameAction extends Action
             ))($response);
         }
 
-        if ($count() == 0) {
+        if ($count == 0) {
             return (new NotFoundResponse('Application not found'))($response);
         }
 
