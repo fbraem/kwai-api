@@ -11,6 +11,7 @@ use Cake\Datasource\ConnectionManager;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Dependency;
+use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
@@ -119,6 +120,7 @@ abstract class Application
     protected function addDependencies(): void
     {
         $this->addDependency('pdo_db', new DatabaseDependency());
+        $this->addDependency('logger', new LoggerDependency());
     }
 
     /**
