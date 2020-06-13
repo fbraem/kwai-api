@@ -33,7 +33,7 @@ class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::APPLICATIONS()->app)->eq($application)
+            field(Tables::APPLICATIONS()->name)->eq($application)
         );
     }
 
