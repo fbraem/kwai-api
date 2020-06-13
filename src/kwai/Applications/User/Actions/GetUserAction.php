@@ -61,7 +61,8 @@ class GetUserAction extends Action
         return (new ResourceResponse(
             UserTransformer::createForItem(
                 $user
-            )
+            ),
+            'abilities'
         ))($response);
     }
 }
