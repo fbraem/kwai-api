@@ -54,7 +54,6 @@ final class Logout
         ;
 
         // Revoke the old refreshtoken
-        $refreshToken->getAccessToken()->revoke();
         $refreshToken->revoke();
         $this->refreshTokenRepo->update($refreshToken);
 
