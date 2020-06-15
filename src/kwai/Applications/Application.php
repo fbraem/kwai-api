@@ -23,6 +23,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Slim\App;
+use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Slim\Routing\RouteContext;
@@ -192,7 +193,21 @@ abstract class Application
      */
     public function run(): void
     {
-        $this->app->addRoutingMiddleware();
-        $this->app->run();
+        $app = $this->app;
+        $app->addRoutingMiddleware();
+
+        $errorMiddleware = $app->addErrorMiddleware(
+            true,
+            true,
+            true,
+            $this->container->get('logger')
+        );
+
+        $errorMiddleware->setErrorHandler(
+            HttpNotFoundException::class,
+            fn() => $app->getResponseFactory()->createResponse(404,'URL not found')
+        );
+
+        $app->run();
     }
 }
