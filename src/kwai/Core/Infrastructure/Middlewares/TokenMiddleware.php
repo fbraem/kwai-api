@@ -22,7 +22,7 @@ use Tuupola\Middleware\JwtAuthentication\RuleInterface;
  * Class TokenMiddleware
  * A wrapper around JwtAuthentication middleware.
  */
-class TokenMiddleware implements \Psr\Http\Server\MiddlewareInterface
+class TokenMiddleware implements MiddlewareInterface
 {
     private MiddlewareInterface $jwtMiddleware;
 
