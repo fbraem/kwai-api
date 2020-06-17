@@ -1,11 +1,11 @@
 <?php
 /**
  * @package Applications
- * @subpackage News
+ * @subpackage Portal
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Site\Actions;
+namespace Kwai\Applications\Portal\Actions;
 
 use Kwai\Modules\News\Presentation\AbstractBrowseStoriesAction;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Class BrowseStoriesAction
  *
- * Browse news stories. The site application will only get the promoted news stories.
+ * Browse news stories. The portal application will only get the promoted news stories.
  */
 class BrowseStoriesAction extends AbstractBrowseStoriesAction
 {

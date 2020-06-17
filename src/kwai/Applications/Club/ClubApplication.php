@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Applications\Club;
 
 use Kwai\Applications\Application;
-use Kwai\Applications\Site\Actions\BrowseStoriesAction;
+use Kwai\Applications\Portal\Actions\BrowseStoriesAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Modules\Applications\Presentation\GetApplicationWithNameAction;

@@ -1,37 +1,37 @@
 <?php
 /**
  * @package Applications
- * @subpackage Site
+ * @subpackage Portal
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Site;
+namespace Kwai\Applications\Portal;
 
 use Kwai\Applications\Application;
-use Kwai\Applications\Site\Actions\BrowseApplicationAction;
-use Kwai\Applications\Site\Actions\BrowseStoriesAction;
-use Kwai\Applications\Site\Actions\GetApplicationAction;
+use Kwai\Applications\Portal\Actions\BrowseApplicationAction;
+use Kwai\Applications\Portal\Actions\BrowseStoriesAction;
+use Kwai\Applications\Portal\Actions\GetApplicationAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
- * Class SiteApplication
+ * Class PortalApplication
  */
-class SiteApplication extends Application
+class PortalApplication extends Application
 {
     public function __construct()
     {
-        parent::__construct('site');
+        parent::__construct('portal');
     }
 
     public function createRoutes(RouteCollectorProxy $group): void
     {
         $group->get('/stories', BrowseStoriesAction::class)
-            ->setName('site.news.browse')
+            ->setName('portal.news.browse')
         ;
         $group->get('/applications', BrowseApplicationAction::class)
-            ->setName('site.applications.browse')
+            ->setName('portal.applications.browse')
         ;
     }
 

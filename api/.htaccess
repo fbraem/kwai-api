@@ -20,7 +20,7 @@
     RewriteRule ^teams(/.*)?$ /api/teams.php?$1 [QSA,L]
     RewriteRule ^events(/.*)?$ /api/events.php?$1 [QSA,L]
     RewriteRule ^trainings(/.*)?$ /api/trainings.php?$1 [QSA,L]
-    RewriteRule ^site(/.*)?$ /api/site.php?$1 [QSA,L]
+    RewriteRule ^portal(/.*)?$ /api/portal.php?$1 [QSA,L]
     RewriteRule ^author(/.*)?$ /api/author.php?$1 [QSA,L]
     RewriteRule ^admin(/.*)?$ /api/admin.php?$1 [QSA,L]
     RewriteRule ^user(/.*)?$ /api/user.php?$1 [QSA,L]

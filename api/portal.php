@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 require '../src/vendor/autoload.php';
 
-use Kwai\Applications\Site\SiteApplication;
+use Kwai\Applications\Portal\PortalApplication;
 
-$app = new SiteApplication();
+$app = new PortalApplication();
 $app->run();

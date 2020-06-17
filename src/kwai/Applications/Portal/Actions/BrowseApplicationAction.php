@@ -1,11 +1,11 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Applications
+ * @subpackage Portal
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Site\Actions;
+namespace Kwai\Applications\Portal\Actions;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Action;
