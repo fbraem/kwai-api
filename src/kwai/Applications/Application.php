@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Applications;
 
 use Cake\Datasource\ConnectionManager;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Dependency;
 use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
@@ -16,19 +15,14 @@ use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\TokenMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use League\Container\Container;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Slim\App;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
-use Slim\Routing\RouteContext;
-use Tuupola\Middleware\JwtAuthentication;
-use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 
 /**
  * Class Application
@@ -145,42 +139,7 @@ abstract class Application
         $this->addMiddleware(new TransactionMiddleware($container));
         $this->addMiddleware(new LogActionMiddleware($container));
         $this->addMiddleware(new JsonBodyParserMiddleware());
-
-        $settings = $container->get('settings');
-        $this->addMiddleware(new JwtAuthentication([
-            'secret' => $settings['security']['secret'],
-            'algorithm' => [$settings['security']['algorithm']],
-            'rules' => [
-                // When the route contains the argument auth with the value true,
-                // this middleware must run!
-                new class implements RuleInterface {
-                    public function __invoke(ServerRequestInterface $request)
-                    {
-                        $routeContext = RouteContext::fromRequest($request);
-                        $route = $routeContext->getRoute();
-
-                        return !empty($route) && $route->getArgument('auth', 'false') === 'true';
-                    }
-                }
-            ],
-            'error' => function (ResponseInterface $response, $arguments) {
-                $data['status'] = 'error';
-                $data['message'] = $arguments['message'];
-                return $response
-                    ->withHeader('Content-Type', 'application/json')
-                    ->getBody()->write(
-                        json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
-                    );
-            },
-            'before' => function (ServerRequestInterface $request, $arguments) use ($container) {
-                $uuid = new UniqueId($arguments['decoded']['sub']);
-                $userRepo = new UserDatabaseRepository($container->get('pdo_db'));
-                return $request->withAttribute(
-                    'kwai.user',
-                    $userRepo->getByUUID($uuid)
-                );
-            }
-        ]));
+        $this->addMiddleware(new TokenMiddleware($container));
     }
 
     /**
