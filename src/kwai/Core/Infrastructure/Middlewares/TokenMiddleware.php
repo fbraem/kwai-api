@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Kwai
+ * @subpackage Core
  */
 declare(strict_types=1);
 
