@@ -47,6 +47,9 @@ class ApplicationTransformer extends Fractal\TransformerAbstract
             'description'=> $app->getDescription(),
             'remark' => $app->getRemark(),
             'weight' => $app->getWeight(),
+            'news' => $app->canHaveNews(),
+            'pages' => $app->canHavePages(),
+            'events' => $app->canHaveEvents(),
             'created_at' => (string) $traceableTime->getCreatedAt(),
             'updated_at' => $traceableTime->isUpdated()
                 ? (string) $traceableTime->getUpdatedAt() : null,
