@@ -45,6 +45,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
                 (string) Tables::APPLICATIONS(),
                 on(Tables::APPLICATIONS()->id, Tables::STORIES()->application_id)
             );
+        $this->query->orderBy(Tables::STORIES()->publish_date, 'DESC');
     }
 
     /**
@@ -97,6 +98,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
                     ->or(field(Tables::STORIES()->promoted_end_date)->gt((string) $now))
             ));
         $this->query->andWhere(group($criteria));
+        $this->query->orderBy(Tables::STORIES()->promoted, 'DESC');
     }
 
     /**
