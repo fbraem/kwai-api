@@ -99,7 +99,8 @@ class StoryTransformer extends Fractal\TransformerAbstract
         ];
         foreach ($story->getContents() as $content) {
             $converter = $this->converterFactory->createConverter((string) $content->getFormat());
-            $result['contents'][(string) $content->getLocale()] = [
+            $result['contents'][] = [
+                'locale' => $content->getLocale(),
                 'title' => $content->getTitle(),
                 'summary' => $content->getSummary(),
                 'content' => $content->getContent(),
