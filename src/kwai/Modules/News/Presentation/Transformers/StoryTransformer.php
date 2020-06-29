@@ -90,7 +90,7 @@ class StoryTransformer extends Fractal\TransformerAbstract
                 ? (string) $traceableTime->getUpdatedAt() : null,
             'publish_date' => (string) $story->getPublishTime(),
             'timezone' => $story->getPublishTime()->getTimezone(),
-            'promoted' => $story->getPromotion()->getPriority(),
+            'promotion' => $story->getPromotion()->getPriority(),
             'promotion_end_date' =>
                 $story->getPromotion()->getEndDate() ?
                 (string) $story->getPromotion()->getEndDate() : null,
