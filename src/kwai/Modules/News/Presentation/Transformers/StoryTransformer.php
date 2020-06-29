@@ -83,7 +83,7 @@ class StoryTransformer extends Fractal\TransformerAbstract
         $traceableTime = $story->getTraceableTime();
         $result = [
             'id' => $story->id(),
-            'enabled' => (string) $story->isEnabled(),
+            'enabled' => $story->isEnabled(),
             'remark' => $story->getRemark(),
             'created_at' => (string) $traceableTime->getCreatedAt(),
             'updated_at' => $traceableTime->isUpdated()
