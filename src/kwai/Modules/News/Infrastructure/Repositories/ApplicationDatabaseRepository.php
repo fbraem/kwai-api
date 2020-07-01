@@ -11,7 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Infrastructure\Mappers\ApplicationMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\ApplicationRepository;

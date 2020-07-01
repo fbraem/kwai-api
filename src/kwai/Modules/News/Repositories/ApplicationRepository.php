@@ -9,7 +9,7 @@ namespace Kwai\Modules\News\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 
 /**
  * Interface CategoryRepository
