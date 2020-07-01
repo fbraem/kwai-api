@@ -32,12 +32,13 @@ abstract class SaveStoryAction extends Action
         return Expect::structure([
             'data' => Expect::structure([
                 'type' => Expect::string(),
+                'id' => Expect::string(null),
                 'attributes' => Expect::Structure([
                     'enabled' => Expect::bool(false),
                     'publish_date' => Expect::string()->required(),
                     'timezone' => Expect::string()->required(),
                     'end_date' => Expect::string(),
-                    'promoted' => Expect::int(0),
+                    'promotion' => Expect::int(0),
                     'promotion_end_date' => Expect::string(),
                     'remark' => Expect::string(),
                     'contents' => Expect::arrayOf(Expect::structure([
@@ -49,7 +50,7 @@ abstract class SaveStoryAction extends Action
                     ]))->required()
                 ]),
                 'relationships' => Expect::structure([
-                    'category' => Expect::structure([
+                    'application' => Expect::structure([
                         'data' => Expect::structure([
                             'type' => Expect::string(),
                             'id' => Expect::string()
