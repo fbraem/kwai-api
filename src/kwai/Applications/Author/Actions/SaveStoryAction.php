@@ -37,10 +37,10 @@ abstract class SaveStoryAction extends Action
                     'enabled' => Expect::bool(false),
                     'publish_date' => Expect::string()->required(),
                     'timezone' => Expect::string()->required(),
-                    'end_date' => Expect::string(),
+                    'end_date' => Expect::string()->nullable(),
                     'promotion' => Expect::int(0),
-                    'promotion_end_date' => Expect::string(),
-                    'remark' => Expect::string(),
+                    'promotion_end_date' => Expect::string()->nullable(),
+                    'remark' => Expect::string()->nullable(),
                     'contents' => Expect::arrayOf(Expect::structure([
                         'title' => Expect::string()->required(),
                         'locale' => Expect::string('nl'),
@@ -82,8 +82,8 @@ abstract class SaveStoryAction extends Action
         $command = $this->createCommand();
 
         $command->enabled = $normalized->data->attributes->enabled;
-        $command->category = (int) $normalized->data->relationships->category->data->id;
-        $command->promoted = $normalized->data->attributes->promoted;
+        $command->application = (int) $normalized->data->relationships->application->data->id;
+        $command->promotion = $normalized->data->attributes->promotion;
         $command->promotion_end_date = $normalized->data->attributes->promotion_end_date ?? null;
         $command->end_date = $normalized->data->attributes->end_date ?? null;
         $command->publish_date = $normalized->data->attributes->publish_date;
