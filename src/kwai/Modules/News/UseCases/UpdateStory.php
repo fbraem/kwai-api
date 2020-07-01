@@ -13,6 +13,7 @@ use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
@@ -54,9 +55,9 @@ class UpdateStory
      * @param UpdateStoryCommand $command
      * @return Entity
      * @throws AuthorNotFoundException
-     * @throws CategoryNotFoundException
      * @throws RepositoryException
      * @throws StoryNotFoundException
+     * @throws ApplicationNotFoundException
      */
     public function __invoke(UpdateStoryCommand $command)
     {
