@@ -7,13 +7,14 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\UseCases;
 
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 use Kwai\Modules\News\Repositories\AuthorRepository;
@@ -52,9 +53,10 @@ class CreateStory
      * @param CreateStoryCommand $command
      * @throws RepositoryException
      * @throws AuthorNotFoundException
-     * @throws CategoryNotFoundException
+     * @throws ApplicationNotFoundException
+     * @return Entity<Story>
      */
-    public function __invoke(CreateStoryCommand $command)
+    public function __invoke(CreateStoryCommand $command): Entity
     {
         $app = $this->appRepo->getById($command->application);
 
@@ -72,7 +74,7 @@ class CreateStory
         }
 
         $promotion = new Promotion(
-            $command->promoted,
+            $command->promotion,
             $command->promotion_end_date
                 ? Timestamp::createFromString(
                     $command->promotion_end_date,

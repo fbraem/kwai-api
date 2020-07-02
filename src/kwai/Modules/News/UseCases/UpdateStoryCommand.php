@@ -42,7 +42,7 @@ class UpdateStoryCommand
     /**
      * Is this story promoted? 0 means no, > 0 means the priority.
      */
-    public int $promoted = 0;
+    public int $promotion = 0;
 
     /**
      * When does the promotion end?

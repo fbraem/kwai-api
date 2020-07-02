@@ -92,13 +92,13 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     public function filterPromoted(): void
     {
         $now = Timestamp::createNow();
-        $criteria = field(Tables::STORIES()->promoted)->gt(0)
+        $criteria = field(Tables::STORIES()->promotion)->gt(0)
             ->and(group(
-                field(Tables::STORIES()->promoted_end_date)->isNull()
-                    ->or(field(Tables::STORIES()->promoted_end_date)->gt((string) $now))
+                field(Tables::STORIES()->promotion_end_date)->isNull()
+                    ->or(field(Tables::STORIES()->promotion_end_date)->gt((string) $now))
             ));
         $this->query->andWhere(group($criteria));
-        $this->query->orderBy(Tables::STORIES()->promoted, 'DESC');
+        $this->query->orderBy(Tables::STORIES()->promotion, 'DESC');
     }
 
     /**
@@ -151,8 +151,8 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         return [
             $aliasFn('id'),
             $aliasFn('enabled'),
-            $aliasFn('promoted'),
-            $aliasFn('promoted_end_date'),
+            $aliasFn('promotion'),
+            $aliasFn('promotion_end_date'),
             $aliasFn('publish_date'),
             $aliasFn('timezone'),
             $aliasFn('end_date'),

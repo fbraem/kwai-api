@@ -78,7 +78,7 @@ class UpdateStory
         }
 
         $promotion = new Promotion(
-            $command->promoted,
+            $command->promotion,
             $command->promotion_end_date
                 ? Timestamp::createFromString(
                     $command->promotion_end_date,

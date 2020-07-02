@@ -12,8 +12,8 @@ class NewsMergeContentMigration extends AbstractMigration
     public function up()
     {
         $this->table('news_stories')
-            ->renameColumn('featured', 'promoted')
-            ->renameColumn('featured_end_date', 'promoted_end_date')
+            ->renameColumn('featured', 'promotion')
+            ->renameColumn('featured_end_date', 'promotion_end_date')
             ->save()
         ;
         $this->table('news_contents_2', ['id' => false, 'primary_key' => ['news_id', 'locale']])
@@ -73,8 +73,8 @@ class NewsMergeContentMigration extends AbstractMigration
     public function down()
     {
         $this->table('news_stories')
-            ->renameColumn('promoted', 'featured')
-            ->renameColumn('promoted_end_date', 'featured_end_date')
+            ->renameColumn('promotion', 'featured')
+            ->renameColumn('promotion_end_date', 'featured_end_date')
             ->save()
         ;
 

@@ -46,7 +46,7 @@ interface StoryRepository
     /**
      * Saves a new story
      * @param Story $story
-     * @return Entity
+     * @return Entity<Story>
      * @throws RepositoryException
      */
     public function create(Story $story): Entity;
