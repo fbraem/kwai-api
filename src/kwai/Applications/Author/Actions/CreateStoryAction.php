@@ -11,8 +11,8 @@ use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
@@ -67,7 +67,7 @@ class CreateStoryAction extends SaveStoryAction
             ))($response);
         } catch (AuthorNotFoundException $e) {
             return (new NotFoundResponse('Author not found'))($response);
-        } catch (CategoryNotFoundException $e) {
+        } catch (ApplicationNotFoundException $e) {
             return (new NotFoundResponse('Application not found'))($response);
         }
 
