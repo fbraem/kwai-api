@@ -35,8 +35,8 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
             $command->publishMonth = (int) $parameters['filter']['month'];
         }
         $command->promoted = isset($parameters['filter']['promoted']);
-        if (isset($parameters['filter']['category'])) {
-            $command->category = (int) $parameters['filter']['category'];
+        if (isset($parameters['filter']['application'])) {
+            $command->application = (int) $parameters['filter']['application'];
         }
         return $command;
     }
