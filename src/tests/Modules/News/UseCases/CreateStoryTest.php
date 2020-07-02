@@ -11,8 +11,8 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Author;
 use Kwai\Modules\News\Domain\Application;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
@@ -31,7 +31,7 @@ class CreateStoryTest extends DatabaseTestCase
             $command->application = 1;
             $command->timezone = 'Europe/Brussels';
             $command->publish_date = '2020-05-01 09:00:00';
-            $command->promoted = 1;
+            $command->promotion = 1;
 
             $content = new Content();
             $content->content = 'This is a test from CreateStoryTest';
@@ -74,7 +74,7 @@ class CreateStoryTest extends DatabaseTestCase
             self::assertTrue(false, (string) $e);
         } catch (AuthorNotFoundException $e) {
             self::assertTrue(false, (string) $e);
-        } catch (CategoryNotFoundException $e) {
+        } catch (ApplicationNotFoundException $e) {
             self::assertTrue(false, (string) $e);
         }
     }
