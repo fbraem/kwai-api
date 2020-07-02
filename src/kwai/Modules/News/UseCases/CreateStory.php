@@ -12,6 +12,7 @@ use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
@@ -31,6 +32,7 @@ class CreateStory
     private StoryRepository $storyRepo;
     private ApplicationRepository $appRepo;
     private AuthorRepository $authorRepo;
+    private ImageRepository $imageRepo;
 
     /**
      * CreateStory constructor.
@@ -38,15 +40,18 @@ class CreateStory
      * @param StoryRepository       $storyRepo
      * @param ApplicationRepository $appRepo
      * @param AuthorRepository      $authorRepo
+     * @param ImageRepository       $imageRepo
      */
     public function __construct(
         StoryRepository $storyRepo,
         ApplicationRepository $appRepo,
-        AuthorRepository $authorRepo
+        AuthorRepository $authorRepo,
+        ImageRepository $imageRepo
     ) {
         $this->storyRepo = $storyRepo;
         $this->appRepo = $appRepo;
         $this->authorRepo = $authorRepo;
+        $this->imageRepo = $imageRepo;
     }
 
     /**
@@ -82,7 +87,7 @@ class CreateStory
                 ) : null
         );
 
-        return $this->storyRepo->create(new Story(
+        $story = $this->storyRepo->create(new Story(
             (object) [
                 'enabled' => $command->enabled,
                 'promotion' => $promotion,
@@ -100,5 +105,11 @@ class CreateStory
                 'contents' => $contents
             ]
         ));
+
+        $images = $this->imageRepo->getImages($story->id());
+        /** @noinspection PhpUndefinedMethodInspection */
+        $story->attachImages($images);
+
+        return $story;
     }
 }

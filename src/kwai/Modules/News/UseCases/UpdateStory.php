@@ -12,10 +12,10 @@ use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
@@ -33,6 +33,7 @@ class UpdateStory
     private StoryRepository $storyRepo;
     private ApplicationRepository $appRepo;
     private AuthorRepository $authorRepo;
+    private ImageRepository $imageRepo;
 
     /**
      * CreateStory constructor.
@@ -40,15 +41,18 @@ class UpdateStory
      * @param StoryRepository       $storyRepo
      * @param ApplicationRepository $appRepo
      * @param AuthorRepository      $authorRepo
+     * @param ImageRepository       $imageRepo
      */
     public function __construct(
         StoryRepository $storyRepo,
         ApplicationRepository $appRepo,
-        AuthorRepository $authorRepo
+        AuthorRepository $authorRepo,
+        ImageRepository $imageRepo
     ) {
         $this->storyRepo = $storyRepo;
         $this->appRepo = $appRepo;
         $this->authorRepo = $authorRepo;
+        $this->imageRepo = $imageRepo;
     }
 
     /**
@@ -113,6 +117,10 @@ class UpdateStory
             )
         );
         $this->storyRepo->update($story);
+
+        $images = $this->imageRepo->getImages($story->id());
+        /** @noinspection PhpUndefinedMethodInspection */
+        $story->attachImages($images);
 
         return $story;
     }

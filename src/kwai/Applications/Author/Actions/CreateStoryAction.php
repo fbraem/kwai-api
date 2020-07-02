@@ -16,6 +16,7 @@ use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
+use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\CreateStory;
 use Kwai\Modules\News\UseCases\CreateStoryCommand;
@@ -54,11 +55,15 @@ class CreateStoryAction extends SaveStoryAction
         $categoryRepo = new ApplicationDatabaseRepository($database);
         $authorRepo = new AuthorDatabaseRepository($database);
 
+        $filesystem = $this->getContainerEntry('filesystem');
+        $imageRepo = new StoryImageRepository($filesystem);
+
         try {
             $story = (new CreateStory(
                 $storyRepo,
                 $categoryRepo,
-                $authorRepo
+                $authorRepo,
+                $imageRepo
             ))($command);
         } catch (RepositoryException $e) {
             return (new SimpleResponse(
