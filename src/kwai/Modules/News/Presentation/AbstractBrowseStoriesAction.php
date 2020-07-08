@@ -40,6 +40,9 @@ abstract class AbstractBrowseStoriesAction extends Action
         $parameters = $request->getAttribute('parameters');
         $command->limit = (int) ($parameters['page']['limit'] ?? 10);
         $command->offset = (int) ($parameters['page']['offset'] ?? 0);
+        if (isset($parameters['filter']['application'])) {
+            $command->application = (int) $parameters['filter']['application'];
+        }
         return $command;
     }
 
