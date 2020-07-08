@@ -29,7 +29,8 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
     protected function createCommand(Request $request, array $args): BrowseStoriesCommand
     {
         $command = parent::createCommand($request, $args);
-        $command->enabled = false;
+        $parameters = $request->getAttribute('parameters');
+        $command->enabled = (bool) $parameters['filter']['enabled'] ?? false;
         return $command;
     }
 }
