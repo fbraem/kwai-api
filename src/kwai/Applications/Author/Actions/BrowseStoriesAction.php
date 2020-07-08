@@ -30,7 +30,7 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
     {
         $command = parent::createCommand($request, $args);
         $parameters = $request->getAttribute('parameters');
-        $command->enabled = (bool) $parameters['filter']['enabled'] ?? false;
+        $command->enabled = (bool) ($parameters['filter']['enabled'] ?? false);
         return $command;
     }
 }
