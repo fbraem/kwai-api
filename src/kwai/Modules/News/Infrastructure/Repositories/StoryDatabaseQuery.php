@@ -182,7 +182,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         $now = Timestamp::createNow();
         $this->query->andWhere(group(
             field(Tables::STORIES()->enabled)->eq(true)
-            ->or(field(Tables::STORIES()->publish_date)->lte((string) $now))
+            ->and(field(Tables::STORIES()->publish_date)->lte((string) $now))
             ->or(group(
                 field(Tables::STORIES()->end_date)->isNotNull()
                 ->and(field(Tables::STORIES()->end_date)->gt((string) $now))
