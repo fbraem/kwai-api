@@ -55,7 +55,7 @@ class StoryMapper
                         ? Timestamp::createFromString($raw->updated_at)
                         : null
                 ),
-                'application' => ApplicationMapper::toDomain($raw->category),
+                'application' => ApplicationMapper::toDomain($raw->application),
                 'contents' => array_map(fn($c) => new Text(
                     new Locale($c->locale),
                     new DocumentFormat($c->format),

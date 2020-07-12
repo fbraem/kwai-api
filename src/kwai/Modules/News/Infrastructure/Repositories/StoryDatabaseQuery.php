@@ -129,7 +129,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         $stories = [];
         foreach ($rows as $row) {
             $story = $storyColumnFilter->filter($row);
-            $story->category = $applicationColumnFilter->filter($row);
+            $story->application = $applicationColumnFilter->filter($row);
             // Skip stories without content
             if (isset($contents[(string) $story->id])) {
                 $story->contents = $contents[(string)$story->id];
