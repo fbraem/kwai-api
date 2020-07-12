@@ -124,6 +124,9 @@
       <path value="$PROJECT_DIR$/src/vendor/sebastian/code-unit" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest" />
+      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-init" />
+      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-coverage" />
+      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

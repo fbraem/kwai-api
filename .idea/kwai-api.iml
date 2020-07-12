@@ -57,6 +57,9 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pdepend/pdepend" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin-coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin-init" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpdocumentor/reflection-common" />
