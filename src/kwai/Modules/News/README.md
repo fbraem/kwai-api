@@ -3,6 +3,15 @@ News
 
 The following use cases must be implemented for the news module:
 
+Browse News
+-----------
+:heavy_check_mark: It must be possible to only get the promoted news stories.
+It must also be possible to browse stories specific for an application.
+
+Archive
+----------
+:heavy_check_mark: It must be possible to get a list with the number of stories published in a year/month. 
+
 Create News
 -----------
 :heavy_check_mark: An author can create a new story.
