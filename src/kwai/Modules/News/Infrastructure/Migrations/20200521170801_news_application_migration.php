@@ -7,8 +7,6 @@ use Phinx\Migration\AbstractMigration;
  */
 class NewsApplicationMigration extends AbstractMigration
 {
-    const SUBJECT_NAME = 'news';
-
     public function up()
     {
         $this->table('news_stories')

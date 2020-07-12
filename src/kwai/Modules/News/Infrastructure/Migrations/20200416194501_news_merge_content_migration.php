@@ -3,12 +3,11 @@
 use Phinx\Migration\AbstractMigration;
 
 /**
- * Add news rules
+ * 1. Rename feature into promotion
+ * 2. Move news contents to a separate table
  */
 class NewsMergeContentMigration extends AbstractMigration
 {
-    const SUBJECT_NAME = 'news';
-
     public function up()
     {
         $this->table('news_stories')
