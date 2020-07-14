@@ -66,6 +66,22 @@ final class Connection
     }
 
     /**
+     * Change the fetch mode to array. Default is Object.
+     */
+    public function asArray(): void
+    {
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Change the fetch mode to object.
+     */
+    public function asObject(): void
+    {
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+    }
+
+    /**
      * Begins a transaction
      * @return bool
      * @throws DatabaseException
@@ -128,6 +144,15 @@ final class Connection
         } catch (PDOException $e) {
             throw new QueryException($compiledQuery->sql(), $e);
         }
+    }
+
+    /**
+     * Get the internal PDO connection handle.
+     * @return PDO
+     */
+    public function getPDO(): PDO
+    {
+        return $this->pdo;
     }
 
     /**
