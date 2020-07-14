@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 
@@ -44,6 +45,12 @@ class Page implements DomainEntity
     private ?string $remark;
 
     /**
+     * The associated application.
+     * @var Entity<Application>
+     */
+    private Entity $application;
+
+    /**
      * When is this page created/updated?
      */
     private TraceableTime $traceableTime;
@@ -60,6 +67,7 @@ class Page implements DomainEntity
         $this->images = $props->images ?? [];
         $this->priority = $props->priority ?? 0;
         $this->remark = $props->remark ?? null;
+        $this->application = $props->application;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
     }
 
@@ -125,6 +133,16 @@ class Page implements DomainEntity
     public function getRemark(): ?string
     {
         return $this->remark;
+    }
+
+    /**
+     * Return the associated application
+     *
+     * @return Entity<Application>
+     */
+    public function getApplication(): Entity
+    {
+        return $this->application;
     }
 
     /**
