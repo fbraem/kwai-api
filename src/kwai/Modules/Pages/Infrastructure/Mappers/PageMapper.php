@@ -58,7 +58,17 @@ class PageMapper
      */
     public static function toPersistence(Page $page): array
     {
+        $updated_at = $page->getTraceableTime()->isUpdated()
+            ? (string) $page->getTraceableTime()->getUpdatedAt()
+            : null;
+
         return [
+            'enabled' => $page->isEnabled(),
+            'priority' => $page->getPriority(),
+            'remark' => $page->getRemark(),
+            'application_id' => $page->getApplication()->id(),
+            'created_at' => $page->getTraceableTime()->getCreatedAt(),
+            'updated_at' => $updated_at
         ];
     }
 }
