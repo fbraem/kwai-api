@@ -1,32 +1,30 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Tests\Context;
 
-$config = (new Settings())();
+$db = Context::withDatabase();
+if ($db) {
+    // Migrate the database, if needed.
+    // phinx needs a database fetch mode FETCH_ASSOC
+    $db->asArray();
 
-$pdo = new PDO(
-    $config['database']['test']['dsn'],
-    $config['database']['test']['user'],
-    $config['database']['test']['pass'],
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_PERSISTENT => true, // BEST OPTION
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]
-);
+    $configArray = require(__DIR__ . '/../phinx.php');
+    $configArray['environments']['test'] = [
+        'connection' => $db->getPDO()
+    ];
+    $manager = new Manager(
+        new Config($configArray),
+        new StringInput(' '),
+        new NullOutput()
+    );
+    $manager->migrate('test');
 
-$configArray = require(__DIR__ . '/../phinx.php');
-$configArray['environments']['test'] = [
-    'connection' => $pdo
-];
-$manager = new Manager(
-    new Config($configArray),
-    new StringInput(' '),
-    new NullOutput()
-);
-$manager->migrate('test');
+    // Reset the fetch mode for our tests
+    $db->asObject();
+}
