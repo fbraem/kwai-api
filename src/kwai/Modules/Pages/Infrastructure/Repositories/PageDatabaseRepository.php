@@ -13,6 +13,8 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
+use Kwai\Modules\Pages\Infrastructure\Mappers\PageMapper;
+use Kwai\Modules\Pages\Infrastructure\Tables;
 use Kwai\Modules\Pages\Repositories\PageQuery;
 use Kwai\Modules\Pages\Repositories\PageRepository;
 
@@ -54,7 +56,57 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
      */
     public function create(Page $page): Entity
     {
-        // TODO: Implement create() method.
+        $data = PageMapper::toPersistence($page);
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::PAGES())
+            ->columns(
+                ... array_keys($data)
+            )
+            ->values(
+                ... array_values($data)
+            )
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $pageId = $this->db->lastInsertId();
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::CONTENTS())
+            ->columns(
+                'page_id',
+                'locale',
+                'format',
+                'title',
+                'content',
+                'summary',
+                'user_id'
+            )
+        ;
+        foreach ($page->getContents() as $content) {
+            $query->values(
+                $pageId,
+                (string) $content->getLocale(),
+                (string) $content->getFormat(),
+                $content->getTitle(),
+                $content->getContent(),
+                $content->getSummary(),
+                $content->getAuthor()->id()
+            );
+        }
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        return new Entity($pageId, $page);
     }
 
     /**
