@@ -32,18 +32,20 @@ class UserMigration extends AbstractMigration
 
         $settings = (new Settings())();
         if ($this->getEnvironment() == 'test') {
+            $password = 'hajime';
             $data = [
                 [
                     'email' => 'test@kwai.com',
-                    'password' => password_hash('hajime', PASSWORD_DEFAULT),
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
                     'remark' => 'Root User'
                 ]
             ];
         } else {
+            $password = $this->randomPassword();
             $data = [
                 [
                     'email' => $settings['website']['email'],
-                    'password' => password_hash($this->randomPassword(), PASSWORD_DEFAULT),
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
                     'remark' => 'Root User'
                 ]
             ];
@@ -53,7 +55,7 @@ class UserMigration extends AbstractMigration
         echo 'Root User', PHP_EOL;
         echo '---------', PHP_EOL;
         echo 'Email: ', $data[0]['email'], PHP_EOL;
-        echo 'Password: ', $data[0]['password'], PHP_EOL;
+        echo 'Password: ', $password, PHP_EOL;
     }
 
     public function down()
