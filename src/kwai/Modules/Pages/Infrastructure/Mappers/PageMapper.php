@@ -30,7 +30,7 @@ class PageMapper
             new Page((object)[
                 'enabled' => $raw->enabled == '1' ?? false,
                 'remark' => $raw->remark ?? null,
-                'priority' => $raw->priority ?? 0,
+                'priority' => (int) $raw->priority ?? 0,
                 'traceableTime' => new TraceableTime(
                     Timestamp::createFromString($raw->created_at),
                     isset($raw->updated_at)
