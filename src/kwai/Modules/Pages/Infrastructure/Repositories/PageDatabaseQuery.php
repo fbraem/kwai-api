@@ -23,6 +23,11 @@ use function Latitude\QueryBuilder\on;
  */
 class PageDatabaseQuery extends DatabaseQuery implements PageQuery
 {
+    /**
+     * Used to filter the contents of the user.
+     */
+    private ?int $user = null;
+
     protected function initQuery(): void
     {
         $this->query
@@ -68,6 +73,14 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
     /**
      * @inheritDoc
      */
+    public function filterUser(int $id): void
+    {
+        $this->user = $id;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function execute(?int $limit = null, ?int $offset = null)
     {
         $rows = parent::execute($limit, $offset);
@@ -94,7 +107,7 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
             $page = $pageColumnFilter->filter($row);
             $page->application = $applicationColumnFilter->filter($row);
             // Skip stories without content
-            if (isset($contents[(string) $story->id])) {
+            if (isset($contents[(string) $page->id])) {
                 $page->contents = $contents[(string) $page->id];
                 $pages[$page->id] = PageMapper::toDomain(
                     $page

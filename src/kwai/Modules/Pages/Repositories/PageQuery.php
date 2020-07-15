@@ -34,4 +34,11 @@ interface PageQuery extends Query
      * Add a filter to query only the enabled pages.
      */
     public function filterVisible(): void;
+
+    /**
+     * Filter the pages only for this user.
+     *
+     * @param int $id
+     */
+    public function filterUser(int $id): void;
 }
