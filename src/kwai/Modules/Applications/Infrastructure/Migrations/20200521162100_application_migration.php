@@ -21,6 +21,22 @@ class ApplicationMigration extends AbstractMigration
             ->renameColumn('app', 'name')
             ->save()
         ;
+
+        if ($this->getEnvironment() == 'test') {
+            $data = [
+                [
+                    'title' => 'Test Application',
+                    'description' => 'This application is used when running tests',
+                    'short_description' => 'The test environment',
+                    'name' => 'test',
+                    'news' => true,
+                    'pages' => true,
+                    'events' => true,
+                    'weight' => 1
+                ]
+            ];
+            $this->table('applications')->insert($data)->save();
+        }
     }
 
     public function down()
