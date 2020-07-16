@@ -14,8 +14,8 @@ namespace Kwai\Modules\Pages\UseCases;
  */
 class BrowsePagesCommand
 {
-    private ?int $limit = null;
-    private ?int $offset = null;
-    private ?int $application = null;
-    private bool $enabled = true;
+    public ?int $limit = null;
+    public ?int $offset = null;
+    public ?int $application = null;
+    public bool $enabled = true;
 }
