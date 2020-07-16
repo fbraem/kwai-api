@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUndefinedMethodInspection */
 /**
  * Test PageDatabaseRepository
  */
@@ -39,6 +40,13 @@ beforeAll(function () use ($context) {
 });
 
 it('can create a new page', function () use ($context) {
+    if (! isset($context->author)) {
+        assertTrue(false, 'No author');
+    }
+    if (! isset($context->application)) {
+        assertTrue(false, 'No application');
+    }
+
     $repo = new PageDatabaseRepository($context->db);
     $page = $repo->create(new Page((object) [
         'enabled' => true,
@@ -53,7 +61,8 @@ it('can create a new page', function () use ($context) {
             ),
         ],
         'images' => [],
-        'priority' => 0
+        'priority' => 0,
+        'application' => $context->application
     ]));
     $context->pageId = $page->id();
     assertInstanceOf(Entity::class, $page);
@@ -74,11 +83,58 @@ it('can find a page for a given id', function () use ($context) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can update a page');
+it('can update a page', function () use ($context) {
+    $repo = new PageDatabaseRepository($context->db);
+    try {
+        $oldPage = $repo->getById($context->pageId);
+        /** @var Text $oldText */
+        $oldText = $oldPage->getContents()[0];
+        $newText = new Text(
+            $oldText->getLocale(),
+            $oldText->getFormat(),
+            'Test Update',
+            $oldText->getSummary(),
+            $oldText->getContent(),
+            $oldText->getAuthor()
+        );
+        $page = new Entity(
+            $oldPage->id(),
+            new Page((object) [
+                'enabled' => $oldPage->isEnabled(),
+                'contents' => [
+                    $newText
+                ],
+                'images' => $oldPage->getImages(),
+                'priority' => $oldPage->getPriority(),
+                'application' => $oldPage->getApplication()
+            ])
+        );
+        $repo->update($page);
+        $newPage = $repo->getById($context->pageId);
+        assertEquals('Test Update', $newPage->getContents()[0]->getTitle());
+    } catch (PageNotFoundException $nfe) {
+        assertTrue(false, 'Page not found');
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can delete a page', function () use ($context) {
+    $repo = new PageDatabaseRepository($context->db);
+    try {
+        $page = $repo->getById($context->pageId);
+        $repo->remove($page);
+        assertTrue(true, 'It works');
+    } catch (PageNotFoundException $nfe) {
+        assertTrue(false, 'Page not found');
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
 test('getById throws a page not found exception', function () use ($context) {
     $repo = new PageDatabaseRepository($context->db);
-    $repo->getById(10000000);
+    $repo->getById($context->pageId);
 })
     ->throws(PageNotFoundException::class)
     ->skip(!Context::hasDatabase(), 'No database available')
