@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -17,6 +18,7 @@ use Kwai\Modules\Pages\Infrastructure\Mappers\PageMapper;
 use Kwai\Modules\Pages\Infrastructure\Tables;
 use Kwai\Modules\Pages\Repositories\PageQuery;
 use Kwai\Modules\Pages\Repositories\PageRepository;
+use function Latitude\QueryBuilder\field;
 
 /**
  * Class PageDatabaseRepository
@@ -114,7 +116,41 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
      */
     public function update(Entity $page): void
     {
-        // TODO: Implement update() method.
+        $query = $this->db->createQueryFactory()
+            ->update((string) Tables::PAGES())
+            ->set(PageMapper::toPersistence($page->domain()))
+            ->where(field('id')->eq($page->id()))
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        foreach ($page->getContents() as $content) {
+            $query = $this->db->createQueryFactory()
+                ->update((string) Tables::CONTENTS())
+                ->set([
+                    'format' => $content->getFormat(),
+                    'title' => $content->getTitle(),
+                    'content' => $content->getContent(),
+                    'summary' => $content->getSummary(),
+                    'user_id' => $content->getAuthor()->id(),
+                    'updated_at' => (string) Timestamp::createNow()
+                ])
+                ->where(
+                    field('page_id')->eq($page->id())
+                        ->and(field('locale')->eq($content->getLocale()))
+                )
+            ;
+            try {
+                $this->db->execute($query);
+            } catch (QueryException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+        }
     }
 
     /**
@@ -122,6 +158,26 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
      */
     public function remove(Entity $page): void
     {
-        // TODO: Implement remove() method.
+        $query = $this->db->createQueryFactory()
+            ->delete((string) Tables::CONTENTS())
+            ->where(field('page_id')->eq($page->id()))
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $query = $this->db->createQueryFactory()
+            ->delete((string) Tables::PAGES())
+            ->where(field('id')->eq($page->id()))
+        ;
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 }
