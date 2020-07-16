@@ -69,7 +69,7 @@ class BrowsePages
      * @param ImageRepository $imageRepo
      * @return BrowsePages
      */
-    public static function create(PageRepository $repo, ImageRepository $imageRepo)
+    public static function create(PageRepository $repo, ImageRepository $imageRepo): self
     {
         return new self(
             $repo,
