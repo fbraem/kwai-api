@@ -124,7 +124,7 @@ it('can delete a page', function () use ($context) {
     try {
         $page = $repo->getById($context->pageId);
         $repo->remove($page);
-        assertTrue(true, 'It works');
+        test()->expectNotToPerformAssertions();
     } catch (PageNotFoundException $nfe) {
         assertTrue(false, 'Page not found');
     }
