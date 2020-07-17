@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Applications\Club;
 
 use Kwai\Applications\Application;
-use Kwai\Applications\Portal\Actions\BrowseStoriesAction;
+use Kwai\Applications\Club\Actions\BrowsePagesAction;
+use Kwai\Applications\Club\Actions\BrowseStoriesAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
-use Kwai\Modules\Applications\Presentation\GetApplicationWithNameAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -32,8 +32,8 @@ class ClubApplication extends Application
             ->setName(self::APP . '.news.browse')
             ->setArgument('application', self::APP)
         ;
-        $group->get('/applications', GetApplicationWithNameAction::class)
-            ->setName(self::APP . '.applications.get')
+        $group->get('/pages', BrowsePagesAction::class)
+            ->setName(self::APP . '.pages.browse')
             ->setArgument('application', self::APP)
         ;
     }
