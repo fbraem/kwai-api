@@ -41,9 +41,9 @@ interface StoryQuery extends Query
     /**
      * Add a filter on the application.
      *
-     * @param int $id
+     * @param int|string $appNameOrId
      */
-    public function filterApplication(int $id): void;
+    public function filterApplication($appNameOrId): void;
 
     /**
      * Only select news stories that are enabled

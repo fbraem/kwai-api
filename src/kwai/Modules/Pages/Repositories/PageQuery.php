@@ -26,9 +26,9 @@ interface PageQuery extends Query
     /**
      * Add a filter on the application
      *
-     * @param int $id
+     * @param string|int $nameOrId
      */
-    public function filterApplication(int $id): void;
+    public function filterApplication($nameOrId): void;
 
     /**
      * Add a filter to query only the enabled pages.

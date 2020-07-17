@@ -167,11 +167,17 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     /**
      * @inheritDoc
      */
-    public function filterApplication(int $id): void
+    public function filterApplication($appNameOrId): void
     {
-        $this->query->andWhere(group(
-            field(Tables::APPLICATIONS()->id)->eq($id)
-        ));
+        if (is_string($appNameOrId)) {
+            $this->query->andWhere(group(
+                field(Tables::APPLICATIONS()->name)->eq($appNameOrId)
+            ));
+        } else {
+            $this->query->andWhere(group(
+                field(Tables::APPLICATIONS()->id)->eq($appNameOrId)
+            ));
+        }
     }
 
     /**

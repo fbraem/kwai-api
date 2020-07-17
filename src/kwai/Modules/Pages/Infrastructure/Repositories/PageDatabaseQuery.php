@@ -53,11 +53,17 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
     /**
      * @inheritDoc
      */
-    public function filterApplication(int $id): void
+    public function filterApplication($nameOrId): void
     {
-        $this->query->andWhere(group(
-            field(Tables::APPLICATIONS()->id)->eq($id)
-        ));
+        if (is_string($nameOrId)) {
+            $this->query->andWhere(group(
+                field(Tables::APPLICATIONS()->name)->eq($nameOrId)
+            ));
+        } else {
+            $this->query->andWhere(group(
+                field(Tables::APPLICATIONS()->id)->eq($nameOrId)
+            ));
+        }
     }
 
     /**

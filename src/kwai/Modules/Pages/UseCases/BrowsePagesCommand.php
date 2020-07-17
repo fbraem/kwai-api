@@ -16,6 +16,9 @@ class BrowsePagesCommand
 {
     public ?int $limit = null;
     public ?int $offset = null;
-    public ?int $application = null;
+    /**
+     * @var int|string|null
+     */
+    public $application = null;
     public bool $enabled = true;
 }
