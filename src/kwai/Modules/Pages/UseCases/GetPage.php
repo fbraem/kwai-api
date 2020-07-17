@@ -45,7 +45,7 @@ class GetPage
      * @throws RepositoryException
      * @throws PageNotFoundException
      */
-    public function __invoke($command): Entity
+    public function __invoke(GetPageCommand $command): Entity
     {
         $page = $this->repo->getById($command->id);
         $images = $this->imageRepo->getImages($command->id);
