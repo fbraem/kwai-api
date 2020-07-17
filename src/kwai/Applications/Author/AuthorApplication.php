@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Applications\Author;
 
 use Kwai\Applications\Application;
+use Kwai\Applications\Author\Actions\BrowsePagesAction;
 use Kwai\Applications\Author\Actions\BrowseStoriesAction;
 use Kwai\Applications\Author\Actions\CreateStoryAction;
 use Kwai\Applications\Author\Actions\DeleteStoryAction;
@@ -52,6 +53,10 @@ class AuthorApplication extends Application
         ;
         $group->delete('/stories/{id:[0-9]+}', DeleteStoryAction::class)
             ->setName('author.news.delete')
+            ->setArgument('auth', 'true')
+        ;
+        $group->get('/pages', BrowsePagesAction::class)
+            ->setName('author.pages.browse')
             ->setArgument('auth', 'true')
         ;
     }
