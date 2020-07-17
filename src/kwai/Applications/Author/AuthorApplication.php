@@ -12,6 +12,7 @@ use Kwai\Applications\Author\Actions\BrowsePagesAction;
 use Kwai\Applications\Author\Actions\BrowseStoriesAction;
 use Kwai\Applications\Author\Actions\CreateStoryAction;
 use Kwai\Applications\Author\Actions\DeleteStoryAction;
+use Kwai\Applications\Author\Actions\GetPageAction;
 use Kwai\Applications\Author\Actions\UpdateStoryAction;
 use Kwai\Applications\News\Actions\GetStoryAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
@@ -57,6 +58,10 @@ class AuthorApplication extends Application
         ;
         $group->get('/pages', BrowsePagesAction::class)
             ->setName('author.pages.browse')
+            ->setArgument('auth', 'true')
+        ;
+        $group->get('/pages/{id:[0-9]+}', GetPageAction::class)
+            ->setName('author.pages.read')
             ->setArgument('auth', 'true')
         ;
     }
