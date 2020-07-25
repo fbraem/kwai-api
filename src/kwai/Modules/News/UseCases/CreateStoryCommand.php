@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\UseCases;
 
+use Kwai\Core\UseCases\Content;
+
 /**
  * Class CreateStoryCommand
  *

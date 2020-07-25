@@ -1,16 +1,17 @@
 <?php
 /**
- * @package Kwai
- * @subpackage News
+ * @package Core
+ * @subpackage UseCases
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\News\UseCases;
+namespace Kwai\Core\UseCases;
 
 /**
  * Class Content
  *
- * Defines the content structure for stories.
+ * Helper class for commands that uses the Text value object like
+ * news stories, pages, ...
  */
 class Content
 {
