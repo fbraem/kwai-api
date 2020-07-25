@@ -112,7 +112,7 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
         foreach ($rows as $row) {
             $page = $pageColumnFilter->filter($row);
             $page->application = $applicationColumnFilter->filter($row);
-            // Skip stories without content
+            // Skip pages without content
             if (isset($contents[(string) $page->id])) {
                 $page->contents = $contents[(string) $page->id];
                 $pages[$page->id] = PageMapper::toDomain(
