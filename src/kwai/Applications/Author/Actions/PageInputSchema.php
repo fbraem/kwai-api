@@ -63,7 +63,7 @@ class PageInputSchema implements InputSchema
      */
     public function process($normalized)
     {
-        $command = $this->create() ? new CreatePageCommand() : new UpdatePageCommand();
+        $command = $this->create ? new CreatePageCommand() : new UpdatePageCommand();
         $command->enabled = $normalized->data->attributes->enabled;
         $command->application = (int) $normalized->data->relationships->application->data->id;
         $command->priority = $normalized->data->attributes->priority;

@@ -10,9 +10,11 @@ namespace Kwai\Applications\Author;
 use Kwai\Applications\Application;
 use Kwai\Applications\Author\Actions\BrowsePagesAction;
 use Kwai\Applications\Author\Actions\BrowseStoriesAction;
+use Kwai\Applications\Author\Actions\CreatePageAction;
 use Kwai\Applications\Author\Actions\CreateStoryAction;
 use Kwai\Applications\Author\Actions\DeleteStoryAction;
 use Kwai\Applications\Author\Actions\GetPageAction;
+use Kwai\Applications\Author\Actions\UpdatePageAction;
 use Kwai\Applications\Author\Actions\UpdateStoryAction;
 use Kwai\Applications\News\Actions\GetStoryAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
@@ -62,6 +64,14 @@ class AuthorApplication extends Application
         ;
         $group->get('/pages/{id:[0-9]+}', GetPageAction::class)
             ->setName('author.pages.read')
+            ->setArgument('auth', 'true')
+        ;
+        $group->post('/pages', CreatePageAction::class)
+            ->setName('author.pages.create')
+            ->setArgument('auth', 'true')
+        ;
+        $group->patch('/pages/{id:[0-9]+}', UpdatePageAction::class)
+            ->setName('author.pages.update')
             ->setArgument('auth', 'true')
         ;
     }
