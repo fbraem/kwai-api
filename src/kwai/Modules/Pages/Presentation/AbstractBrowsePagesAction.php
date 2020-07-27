@@ -43,6 +43,16 @@ abstract class AbstractBrowsePagesAction extends Action
         if (isset($parameters['filter']['application'])) {
             $command->application = (int) $parameters['filter']['application'];
         }
+        $sort = $parameters['sort'] ?? [];
+        if (in_array('application', $sort)) {
+            $command->sort = BrowsePagesCommand::SORT_APPLICATION;
+        } elseif (in_array('priority', $sort)) {
+            $command->sort = BrowsePagesCommand::SORT_PRIORITY;
+        } elseif (in_array('date', $sort)) {
+            $command->sort = BrowsePagesCommand::SORT_CREATION_DATE;
+        } else {
+            $command->sort = BrowsePagesCommand::SORT_PRIORITY;
+        }
         return $command;
     }
 

@@ -37,7 +37,6 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
                 on(Tables::APPLICATIONS()->id, Tables::PAGES()->application_id)
             )
         ;
-        $this->query->orderBy(Tables::PAGES()->priority, 'DESC');
     }
 
     /**
@@ -124,6 +123,9 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
         return $pages;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getColumns(): array
     {
         $aliasFn = Tables::PAGES()->getAliasFn();
@@ -137,5 +139,29 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
             Tables::APPLICATIONS()->getAliasFn()('id'),
             Tables::APPLICATIONS()->getAliasFn()('title')
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function orderByPriority(): void
+    {
+        $this->query->orderBy(Tables::PAGES()->priority, 'DESC');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function orderByApplication(): void
+    {
+        $this->query->orderBy(Tables::APPLICATIONS()->title);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function orderByCreationDate(): void
+    {
+        $this->query->orderBy(Tables::PAGES()->created_at, 'DESC');
     }
 }

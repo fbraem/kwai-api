@@ -21,4 +21,14 @@ class BrowsePagesCommand
      */
     public $application = null;
     public bool $enabled = true;
+
+    const SORT_NONE = 0;
+    const SORT_PRIORITY = 1;
+    const SORT_APPLICATION = 2;
+    const SORT_CREATION_DATE = 3;
+
+    /**
+     * @var int
+     */
+    public int $sort = self::SORT_NONE;
 }

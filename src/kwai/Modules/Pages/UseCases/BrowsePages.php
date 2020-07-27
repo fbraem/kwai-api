@@ -52,6 +52,18 @@ class BrowsePages
             $query->filterApplication($command->application);
         }
 
+        switch ($command->sort) {
+            case BrowsePagesCommand::SORT_PRIORITY:
+                $query->orderByPriority();
+                break;
+            case BrowsePagesCommand::SORT_APPLICATION:
+                $query->orderByApplication();
+                break;
+            case BrowsePagesCommand::SORT_CREATION_DATE:
+                $query->orderByCreationDate();
+                break;
+        }
+
         $count = $query->count();
 
         $pages = $query->execute($command->limit, $command->offset);

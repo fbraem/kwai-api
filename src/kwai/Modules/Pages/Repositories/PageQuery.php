@@ -41,4 +41,19 @@ interface PageQuery extends Query
      * @param int $id
      */
     public function filterUser(int $id): void;
+
+    /**
+     * Order by priority
+     */
+    public function orderByPriority(): void;
+
+    /**
+     * Order by application title
+     */
+    public function orderByApplication(): void;
+
+    /**
+     * Order by creation date
+     */
+    public function orderByCreationDate(): void;
 }
