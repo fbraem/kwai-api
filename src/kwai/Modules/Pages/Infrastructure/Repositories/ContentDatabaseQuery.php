@@ -27,7 +27,7 @@ class ContentDatabaseQuery extends DatabaseQuery implements ContentQuery
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query
             ->from((string) Tables::CONTENTS())
-            ->join(
+            ->leftJoin(
                 (string) Tables::AUTHORS(),
                 on(
                     Tables::CONTENTS()->user_id,
