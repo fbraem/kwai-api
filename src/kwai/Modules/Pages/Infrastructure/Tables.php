@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure;
 
+use Kwai\Core\Infrastructure\Database\TableEnum;
 
 /**
  * Class Tables
@@ -18,7 +19,7 @@ namespace Kwai\Modules\Pages\Infrastructure;
  * @method static Tables CONTENTS()
  * @method static Tables PAGES()
  */
-class Tables extends \Kwai\Core\Infrastructure\Database\TableEnum
+class Tables extends TableEnum
 {
     private const AUTHORS = 'users';
     private const APPLICATIONS = 'applications';
