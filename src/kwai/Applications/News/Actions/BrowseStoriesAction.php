@@ -27,6 +27,8 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
      */
     protected function createCommand(Request $request, array $args): BrowseStoriesCommand
     {
+        $parameters = $request->getAttribute('parameters');
+
         $command = parent::createCommand($request, $args);
         if (isset($parameters['filter']['year'])) {
             $command->publishYear = (int) $parameters['filter']['year'];
