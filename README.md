@@ -6,7 +6,9 @@ other sports.
 
 The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwai-ui) repository.
 
-> Although there is still a lot to do, kwai is already used in production for our club. Be aware that until there is no official release, a lot can change!
+> Kwai is a greenfield project. As long as there is no official release,
+> everything can change. Although there is still a lot to do, kwai is already used in production for
+> our club but that is no guarantee that it will work for you...
 
 [Jetbrains](https://www.jetbrains.com/?from=kwai-api) allows Kwai-api to use phpstorm for development!
 
