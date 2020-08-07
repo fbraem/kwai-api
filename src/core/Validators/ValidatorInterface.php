@@ -1,6 +1,6 @@
 <?php
 
-namespace Kwai\Core\Infrastructure\Validators;
+namespace Core\Validators;
 
 interface ValidatorInterface
 {

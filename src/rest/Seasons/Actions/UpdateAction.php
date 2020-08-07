@@ -14,8 +14,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Respect\Validation\Validator as v;
 
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Core\Validators\InputValidator;
 use REST\Seasons\SeasonValidator;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
