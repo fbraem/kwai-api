@@ -2,6 +2,9 @@
 
 namespace REST\Teams\Actions;
 
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,10 +14,6 @@ use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 
 use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
-use Kwai\Core\Infrastructure\Validators\EntityExistValidator;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
