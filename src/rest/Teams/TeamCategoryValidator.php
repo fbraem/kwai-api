@@ -1,10 +1,10 @@
 <?php
 namespace REST\Teams;
 
-use Kwai\Core\Infrastructure\Validators\ValidatorInterface;
-use Kwai\Core\Infrastructure\Validators\ValidationException;
+use Core\Validators\ValidationException;
+use Core\Validators\ValidatorInterface;
 
-class TeamCategoryValidator implements \Kwai\Core\Infrastructure\Validators\ValidatorInterface
+class TeamCategoryValidator implements ValidatorInterface
 {
     public function validate($data)
     {
