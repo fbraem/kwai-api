@@ -62,7 +62,7 @@ class CoachUpdateAction
                 $coach->remark = $attributes['remark'];
             }
 
-            $coach->user = $request->getAttribute('clubman.user');
+            $coach->user_id = $request->getAttribute('kwai.user')->id();
 
             $coachesTable->save($coach);
 

@@ -34,7 +34,6 @@ class CoachCreateAction
         try {
             (new InputValidator(
                 [
-                    'data.attributes.diploma' => [ v::length(1, 255), true ],
                     'data.attributes.active' => [ v::boolType(), true ],
                 ]
             ))->validate($data);
@@ -58,12 +57,12 @@ class CoachCreateAction
 
             $coach = $coachesTable->newEntity();
             $coach->diploma = $attributes['diploma'];
-            $coach->description = $attributes['description'];
+            $coach->description = $attributes['description'] ?? '';
             $coach->member = $member;
             $coach->active = $attributes['active'] ?? true;
             $coach->remark = $attributes['remark'];
 
-            $coach->user = $request->getAttribute('clubman.user');
+            $coach->user_id = $request->getAttribute('kwai.user')->id();
 
             $coachesTable->save($coach);
 
