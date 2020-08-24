@@ -2,6 +2,10 @@
 
 namespace REST\Trainings\Actions;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,10 +15,6 @@ use Domain\Training\CoachesTable;
 use Domain\Training\CoachTransformer;
 
 use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
-use Kwai\Core\Infrastructure\Validators\EntityExistValidator;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
