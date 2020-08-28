@@ -2,21 +2,18 @@
 
 namespace REST\Users\Actions;
 
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
-use PHPMailer\PHPMailer\Exception;
 
 use Domain\User\UsersTable;
 use Domain\User\UserTransformer;
 use Domain\User\UserInvitationsTable;
 
 use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;

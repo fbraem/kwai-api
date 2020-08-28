@@ -2,24 +2,18 @@
 
 namespace REST\Users\Actions;
 
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
-use Cake\Datasource\Exception\RecordNotFoundException;
-
-use PHPMailer\PHPMailer\Exception;
 
 use Domain\User\UserInvitationsTable;
 use Domain\User\UserInvitationTransformer;
 use Domain\User\UsersTable;
 
 use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\InputValidator;
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-
 
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -59,7 +53,7 @@ class CreateInvitationAction
             $invitationsTable = UserInvitationsTable::getTableFromRegistry();
             $invitation = $invitationsTable->newEntity();
             $invitation->email = $attributes['email'];
-            $invitation->token = bin2hex(random_bytes(16));
+            $invitation->token = bin2hex(\random_bytes(16));
             if ($attributes['expired_at']) {
                 $invitation->expired_at = $attributes['expired_at'];
                 $invitation->expired_at_timezone = $attributes['expired_at_timezone'] ?? date_default_timezone_get();
@@ -94,7 +88,7 @@ class CreateInvitationAction
                 if (!$mail->send()) {
                     return (new SimpleResponse(500, $mail->ErrorInfo))($response);
                 };
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return (new SimpleResponse(500, $e->getMessage()))($response);
             }
 

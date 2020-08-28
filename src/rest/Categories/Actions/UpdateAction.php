@@ -2,6 +2,8 @@
 
 namespace REST\Categories\Actions;
 
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,9 +13,6 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
 
 use Respect\Validation\Validator as v;
 

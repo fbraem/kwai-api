@@ -14,13 +14,6 @@ use Domain\Training\TrainingTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
-use Kwai\Core\Infrastructure\Validators\EntityExistValidator;
-
-use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 

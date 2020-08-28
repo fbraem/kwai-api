@@ -2,6 +2,8 @@
 
 namespace REST\Categories\Actions;
 
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -13,9 +15,6 @@ use Domain\Category\CategoriesTable;
 use Domain\Category\CategoryTransformer;
 
 use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;

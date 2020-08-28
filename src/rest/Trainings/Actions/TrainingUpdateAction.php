@@ -2,6 +2,8 @@
 
 namespace REST\Trainings\Actions;
 
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -15,10 +17,6 @@ use Domain\Training\TrainingTransformer;
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Respect\Validation\Validator as v;
-
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
-use Kwai\Core\Infrastructure\Validators\EntityExistValidator;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;

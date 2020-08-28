@@ -2,8 +2,8 @@
 
 namespace REST\Events;
 
+use Core\Validators\InputValidator;
 use Respect\Validation\Validator as v;
-use Kwai\Core\Infrastructure\Validators\InputValidator;
 
 class EventInputValidator extends InputValidator
 {

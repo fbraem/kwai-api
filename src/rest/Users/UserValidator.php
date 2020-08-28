@@ -2,12 +2,13 @@
 
 namespace REST\Users;
 
+use Core\Validators\InputValidator;
 use Zend\Validator\ValidatorChain;
 use Zend\Validator\EmailAddress;
 use Zend\Validator\NotEmpty;
 use Zend\Validator\StringLength;
 
-class UserValidator extends \Kwai\Core\Infrastructure\Validators\InputValidator
+class UserValidator extends InputValidator
 {
     public function __construct()
     {
