@@ -1,10 +1,9 @@
 <?php
 namespace REST\Trainings;
 
-use Kwai\Core\Infrastructure\Validators\ValidatorInterface;
-use Kwai\Core\Infrastructure\Validators\ValidationException;
-
 use Carbon\Carbon;
+use Core\Validators\ValidationException;
+use Core\Validators\ValidatorInterface;
 
 class TrainingValidator implements ValidatorInterface
 {
