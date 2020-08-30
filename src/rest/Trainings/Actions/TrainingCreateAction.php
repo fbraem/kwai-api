@@ -118,13 +118,13 @@ class TrainingCreateAction
         $content->locale = $attributes['event']['contents'][0]['locale'] ?? 'nl';
         $content->format = $attributes['event']['contents'][0]['format'] ?? 'md';
         $content->summary = $attributes['event']['contents'][0]['summary'];
-        $content->user = $request->getAttribute('clubman.user');
+        $content->user_id = $request->getAttribute('kwai.user')->id();
         $event->start_date = $attributes['event']['start_date'];
         $event->end_date = $attributes['event']['end_date'];
         $event->time_zone = $attributes['event']['time_zone'];
         $event->active = $attributes['event']['active'] ?? true;
         $event->remark = $attributes['event']['remark'] ?? null;
-        $event->user = $request->getAttribute('clubman.user');
+        $event->user_id = $request->getAttribute('kwai.user')->id();
         $training->season = $season;
         $training->definition = $def;
         $training->teams = $teams;
@@ -137,12 +137,27 @@ class TrainingCreateAction
             $coach->_joinData = new Entity([
                 'coach_type' => 0,
                 'present' => false,
-                'user' => $request->getAttribute('clubman.user')
+                'user_id' => $request->getAttribute('kwai.user')->id()
             ], [
                 'markNew' => true
             ]);
             $trainingsTable->Coaches->link($training, [$coach]);
         }
+
+        $training = $trainingsTable->get($training->id, [
+            'contain' => [
+                'TrainingDefinition',
+                'Season',
+                'Coaches',
+                'Coaches.Member',
+                'Coaches.Member.Person',
+                'Members',
+                'Members.Person',
+                'Teams',
+                'Event',
+                'Event.Contents'
+            ]
+        ]);
 
         return $training;
     }
