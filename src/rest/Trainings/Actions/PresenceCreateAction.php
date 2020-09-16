@@ -55,7 +55,7 @@ class PresenceCreateAction
                             ]
                         ]
                     );
-                    $remarks[$item['id']] = $item['attributes']['remark'];
+                    $remarks[$item['id']] = $item['attributes']['remark'] ?? null;
                 }
             } catch (RecordNotFoundException $rnfe) {
                 $response = (new NotFoundResponse(_("Member doesn't exist")))($response);
