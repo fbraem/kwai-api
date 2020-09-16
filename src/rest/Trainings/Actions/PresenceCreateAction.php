@@ -90,7 +90,7 @@ class PresenceCreateAction
                     } else {
                         $member->_joinData = new Entity([
                             'remark' => $remarks[$member->id],
-                            'user' => $request->getAttribute('clubman.user')
+                            'user_id' => $request->getAttribute('kwai.user')->id()
                         ], [
                             'markNew' => true
                         ]);
