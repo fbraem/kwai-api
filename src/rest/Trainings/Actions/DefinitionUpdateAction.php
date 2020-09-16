@@ -118,7 +118,7 @@ class DefinitionUpdateAction
             if (isset($attributes['remark'])) {
                 $def->remark = $attributes['remark'];
             }
-            $def->user = $request->getAttribute('clubman.user');
+            $def->user_id = $request->getAttribute('kwai.user')->id();
 
             (new \REST\Trainings\DefinitionValidator())->validate($def);
 
