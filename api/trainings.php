@@ -71,18 +71,6 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
         ->setName('trainings.update')
         ->setArgument('auth', 'true')
     ;
-    /*
-        $group->get('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachBrowseAction::class)
-            ->setName('trainings.training.coaches.browse')
-            ->setArgument('auth', true)
-        ;
-    */
-    /*
-        $group->post('/{id:[0-9]+}/coaches', \REST\Trainings\Actions\TrainingCoachCreateAction::class)
-            ->setName('trainings.training.coaches.create')
-            ->setArgument('auth', true)
-        ;
-    */
     $group->post('/{id:[0-9]+}/presences', PresenceCreateAction::class)
         ->setName('trainings.training.presences.create')
         ->setArgument('auth', 'true')
