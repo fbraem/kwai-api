@@ -105,6 +105,16 @@ class PresenceCreateAction
                 }
             }
 
+            $training = $table->get(
+                $args['id'],
+                [
+                    'contain' => [
+                        'Members',
+                        'Members.Person',
+                    ]
+                ]
+            );
+
             $response = (new ResourceResponse(
                 TrainingTransformer::createForItem(
                     $training
