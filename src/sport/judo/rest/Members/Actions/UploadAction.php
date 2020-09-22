@@ -1,7 +1,10 @@
 <?php
+/** @noinspection SpellCheckingInspection */
 
 namespace Judo\REST\Members\Actions;
 
+use Carbon\Carbon;
+use League\Csv\Statement;
 use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -21,11 +24,21 @@ use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class UploadAction
 {
-    private $countries = [
-        'Belgie' => 'BEL',
-        'Thailand' => 'THA',
-        'Nederland' => 'NLD'
-    ];
+    const VERGUNNING = 0;
+    const VOORNAAM = 1;
+    const ACHTERNAAM = 2;
+    const GESLACHT = 3;
+    const GEBOORTEDATUM = 4;
+    const STRAATNUMMER = 5;
+    const POSTNUMMER = 6;
+    const GEMEENTE = 7;
+    const LAND = 8;
+    const NATIONALITEIT = 9;
+    const TEL_1 = 10;
+    const TEL_2 = 11;
+    const EMAIL = 12;
+    const VERVALDAG = 16;
+    const GRAAD = 33;
 
     public function __construct(ContainerInterface $container)
     {
@@ -35,14 +48,7 @@ class UploadAction
     public function __invoke(Request $request, Response $response, $args)
     {
         $countriesTable = CountriesTable::getTableFromRegistry();
-        $countriesTable->find()->where(['iso_3' => array_values($this->countries)]);
-        $result = $countriesTable->find()->all();
-        foreach ($result as $country) {
-            $countryName = array_search($country->iso_3, $this->countries);
-            if ($countryName !== false) {
-                $this->countries[$countryName] = $country;
-            }
-        }
+        $countries = $countriesTable->find()->all();
 
         $files = $request->getUploadedFiles();
         if (!isset($files['csv'])) {
@@ -50,11 +56,11 @@ class UploadAction
         }
 
         $reader = Reader::createFromPath($files['csv']->getStream()->getMetadata('uri'));
-        $reader->setDelimiter(';');
-        $reader->setHeaderOffset(0);
+        $reader->setDelimiter("\t");
 
-        $members = [];
-        $records = $reader->getRecords();
+        // Skip the first line, because that's a header we can't use...
+        $stmt = (new Statement())->offset(1);
+        $records = $stmt->process($reader);
 
         $membersTable = MembersTable::getTableFromRegistry();
         $contactsTable = ContactsTable::getTableFromRegistry();
@@ -63,7 +69,7 @@ class UploadAction
         $memberImportsTable = MemberImportsTable::getTableFromRegistry();
         $memberImport = $memberImportsTable->newEntity();
         $memberImport->filename = $files['csv']->getClientFilename();
-        $memberImport->user = $request->getAttribute('clubman.user');
+        $memberImport->user_id = $request->getAttribute('kwai.user')->id();
         $memberImportsTable->save($memberImport);
 
         $members = $membersTable
@@ -73,36 +79,15 @@ class UploadAction
             ->toArray();
 
         foreach ($records as $offset => $record) {
-            $member = $members[$record['Vergunning']];
+            $member = $members[$record[self::VERGUNNING]] ?? null;
             if (!$member) {
                 $member = $membersTable->newEntity();
-                $members[$record['Vergunning']] = $member;
+                $members[$record[self::VERGUNNING]] = $member;
             }
 
-            $city = null;
-            $postal_code = null;
-            if (strstr($record['Gemeente'], PHP_EOL)) {
-                // A country in the second line
-                $parts = explode(PHP_EOL, $record['Gemeente']);
-                $city = $parts[0];
-                $country = $this->countries[$parts[1]] ?? null;
-                // At the moment only support for Nederland
-                if ($parts[1] == 'Nederland') {
-                    $parts = explode(' ', $city, 3);
-                    if (count($parts) == 2) {
-                        $postal_code = $parts[0];
-                        $city = $parts[1];
-                    } else {
-                        $postal_code = $parts[0] . ' ' . $parts[1];
-                        $city = $parts[2];
-                    }
-                }
-            } else {
-                $country = $this->countries['Belgie'];
-                $parts = explode(' ', $record['Gemeente'], 2);
-                $postal_code = $parts[0];
-                $city = $parts[1];
-            }
+            $city = $record[self::GEMEENTE];
+            $postal_code = $record[self::POSTNUMMER];
+            $country = $countries->firstMatch(['iso_2' => $record[self::LAND]]);
 
             if ($member) {
                 $person = $member->person;
@@ -122,10 +107,10 @@ class UploadAction
                 $contact = $person->contact;
             }
 
-            $contact->email = $record['Email'];
-            $contact->tel = $record['Tel'];
-            $contact->mobile = $record['Gsm'];
-            $contact->address = $record['Straat'];
+            $contact->email = $record[self::EMAIL];
+            $contact->tel = $record[self::TEL_1];
+            $contact->mobile = $record[self::TEL_2];
+            $contact->address = $record[self::STRAATNUMMER];
             $contact->postal_code = $postal_code;
             $contact->city = $city;
             $contact->county = null;
@@ -133,24 +118,24 @@ class UploadAction
             $contact->remark = 'Imported';
             $contactsTable->save($contact);
 
-            $person->firstname = utf8_encode($record['Voornaam']);
-            $person->lastname = utf8_encode($record['Naam']);
-            $person->birthdate = \Carbon\Carbon::createFromFormat(
-                'd/m/Y',
-                $record['Geb Datum']
+            $person->firstname = utf8_encode($record[self::VOORNAAM]);
+            $person->lastname = utf8_encode($record[self::ACHTERNAAM]);
+            $person->birthdate = Carbon::createFromFormat(
+                'Y-m-d',
+                $record[self::GEBOORTEDATUM]
             );
-            $person->gender = $record['Geslacht'] == 'M' ? 1 : 2;
-            $person->nationality = $this->countries[$record['Nation.']] ?? null;
+            $person->gender = $record[self::GESLACHT] == 'M' ? 1 : 2;
+            $person->nationality = $countries->firstMatch(['iso_2' => $record[self::NATIONALITEIT]]);
             $personsTable->save($person);
 
             if (!$member) {
                 $member = $membersTable->newEntity();
                 $member->competition = false;
             }
-            $member->license = $record['Vergunning'];
-            $member->license_end_date = \Carbon\Carbon::createFromFormat(
-                'd/m/Y',
-                $record['Geldig Tot']
+            $member->license = $record[self::VERGUNNING];
+            $member->license_end_date = Carbon::createFromFormat(
+                'Y-m-d',
+                $record[self::VERVALDAG]
             );
             $member->import_id = $memberImport->id;
 
