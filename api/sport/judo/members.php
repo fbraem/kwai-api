@@ -13,19 +13,19 @@ $app = createApplication('/api/sport/judo');
 $app->group('/members', function (RouteCollectorProxy $group) {
     $group->get('', BrowseAction::class)
         ->setName('sport.judo.members.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     $group->get('/{id:[0-9]+}', ReadAction::class)
         ->setName('sport.judo.members')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     $group->post('/upload', UploadAction::class)
         ->setName('sport.judo.members.upload')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
     $group->get('/{id:[0-9]+}/trainings', TrainingBrowseAction::class)
         ->setName('sport.judo.members.trainings')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 
