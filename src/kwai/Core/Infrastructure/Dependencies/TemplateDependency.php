@@ -22,6 +22,6 @@ class TemplateDependency implements Dependency
                 'email' => $settings['website']['email'],
             ]
         ];
-        return new PlatesEngine(__DIR__ . '/../../../../../templates', $variables);
+        return new PlatesEngine(__DIR__ . '/../../../../templates', $variables);
     }
 }
