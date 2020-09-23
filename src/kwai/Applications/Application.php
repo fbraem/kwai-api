@@ -69,7 +69,9 @@ abstract class Application
         }
 
         $this->app = AppFactory::create();
-        $this->app->setBasePath($basePath);
+        if (isset($basePath)) {
+            $this->app->setBasePath($basePath);
+        }
 
         $this->addMiddlewares();
 
