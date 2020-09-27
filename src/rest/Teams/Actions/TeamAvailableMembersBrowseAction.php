@@ -62,9 +62,9 @@ class TeamAvailableMembersBrowseAction
 
         $query->where([$membersTable->getAlias() . '.id NOT IN' => $members]);
 
-        if ($team->team_type) {
-            if ($team->team_type->gender) {
-                $query->where(['Person.gender' => $team->team_type->gender]);
+        if ($team->team_category) {
+            if ($team->team_category->gender) {
+                $query->where(['Person.gender' => $team->team_category->gender]);
             }
             // When the team is attached to a season, the age of a member is
             // calculated on the end date of the season.
@@ -74,14 +74,14 @@ class TeamAvailableMembersBrowseAction
                     'Person.birthdate' => 'identifier',
                     $team->season->end_date
                 ]);
-                if ($team->team_type->start_age) {
+                if ($team->team_category->start_age) {
                     $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
-                        return $exp->gte($diff, $team->team_type->start_age);
+                        return $exp->gte($diff, $team->team_category->start_age);
                     });
                 }
-                if ($team->team_type->end_age) {
+                if ($team->team_category->end_age) {
                     $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
-                        return $exp->lte($diff, $team->team_type->end_age);
+                        return $exp->lte($diff, $team->team_category->end_age);
                     });
                 }
             } else {
@@ -91,14 +91,14 @@ class TeamAvailableMembersBrowseAction
                     'Person.birthdate' => 'identifier',
                     \Carbon\Carbon::now()->endOfYear()
                 ]);
-                if ($team->team_type->start_age) {
+                if ($team->team_category->start_age) {
                     $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
-                        return $exp->gte($diff, $team->team_type->start_age);
+                        return $exp->gte($diff, $team->team_category->start_age);
                     });
                 }
-                if ($team->team_type->end_age) {
+                if ($team->team_category->end_age) {
                     $query->where(function (QueryExpression $exp, Query $q) use ($team, $diff) {
-                        return $exp->lte($diff, $team->team_type->end_age);
+                        return $exp->lte($diff, $team->team_category->end_age);
                     });
                 }
             }
