@@ -31,8 +31,6 @@
       <path value="$PROJECT_DIR$/src/vendor/firebase/php-jwt" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/config" />
-      <path value="$PROJECT_DIR$/src/vendor/phpunit/php-token-stream" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/contracts" />
       <path value="$PROJECT_DIR$/src/vendor/phpunit/php-text-template" />
       <path value="$PROJECT_DIR$/src/vendor/phpunit/php-timer" />
       <path value="$PROJECT_DIR$/src/vendor/phpunit/php-file-iterator" />
@@ -52,7 +50,6 @@
       <path value="$PROJECT_DIR$/src/vendor/cakephp/datasource" />
       <path value="$PROJECT_DIR$/src/vendor/psr/container" />
       <path value="$PROJECT_DIR$/src/vendor/cakephp/collection" />
-      <path value="$PROJECT_DIR$/src/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/src/vendor/cakephp/database" />
       <path value="$PROJECT_DIR$/src/vendor/psr/simple-cache" />
       <path value="$PROJECT_DIR$/src/vendor/cakephp/core" />
@@ -127,6 +124,20 @@
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-init" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-coverage" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php70" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/src/vendor/neomerx/cors-psr7" />
+      <path value="$PROJECT_DIR$/src/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/src/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/src/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/src/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/src/vendor/tuupola/cors-middleware" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
