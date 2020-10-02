@@ -7,12 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Server\MiddlewareInterface;
 
-use Domain\User\UserLogsTable;
-
-use Cake\Datasource\Exception\RecordNotFoundException;
-
-use League\OAuth2\Server\Exception\OAuthServerException;
-
 /**
  * Middleware that is responsible for logging the action
  */
@@ -31,9 +25,11 @@ class LogActionMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         $response = $handler->handle($request);
 
+        //TODO: Remove CakePHP dependency, for now, we disable this...
+/*
         $route = $request->getAttribute('route');
         if (! empty($route)) {
-            $user = $request->getAttribute('clubman.user');
+            $user = $request->getAttribute('kwai.user');
             if ($user) {
                 $logsTable = UserLogsTable::getTableFromRegistry();
                 $log = $logsTable->newEntity();
@@ -44,7 +40,7 @@ class LogActionMiddleware implements MiddlewareInterface
                 $logsTable->save($log);
             }
         }
-
+*/
         return $response;
     }
 }
