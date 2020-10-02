@@ -37,7 +37,7 @@ class TokenMiddleware implements MiddlewareInterface
                 // When the route contains the argument auth with the value true,
                 // this middleware must run!
                 new class implements RuleInterface {
-                    public function __invoke(ServerRequestInterface $request)
+                    public function __invoke(ServerRequestInterface $request): bool
                     {
                         $routeContext = RouteContext::fromRequest($request);
                         $route = $routeContext->getRoute();
