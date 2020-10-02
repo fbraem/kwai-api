@@ -23,6 +23,7 @@
         "cakephp/chronos": "1.2.8",
         "ramsey/uuid": "^3.9",
         "tuupola/slim-jwt-auth": "^3.4",
+        "tuupola/cors-middleware": "^1.2",
         "slim/psr7": "^0.6.0",
         "league/container": "^3.3",
         "myclabs/php-enum": "^1.7",
