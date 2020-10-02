@@ -10,21 +10,7 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^categories(/.*)?$ /api/categories.php?$1 [QSA,L]
-    RewriteRule ^countries(/.*)?$ /api/countries.php?$1 [QSA,L]
-    RewriteRule ^news(/.*)?$ /api/news.php?$1 [QSA,L]
-    RewriteRule ^pages(/.*)?$ /api/pages.php?$1 [QSA,L]
-    RewriteRule ^persons(/.*)?$ /api/persons.php?$1 [QSA,L]
-    RewriteRule ^seasons(/.*)?$ /api/seasons.php?$1 [QSA,L]
-    RewriteRule ^team_categories(/.*)?$ /api/team_categories.php?$1 [QSA,L]
-    RewriteRule ^teams(/.*)?$ /api/teams.php?$1 [QSA,L]
-    RewriteRule ^events(/.*)?$ /api/events.php?$1 [QSA,L]
-    RewriteRule ^trainings(/.*)?$ /api/trainings.php?$1 [QSA,L]
-    RewriteRule ^portal(/.*)?$ /api/portal.php?$1 [QSA,L]
-    RewriteRule ^author(/.*)?$ /api/author.php?$1 [QSA,L]
-    RewriteRule ^admin(/.*)?$ /api/admin.php?$1 [QSA,L]
-    RewriteRule ^user(/.*)?$ /api/user.php?$1 [QSA,L]
-    RewriteRule ^club(/.*)?$ /api/club.php?$1 [QSA,L]
+    RewriteRule ^([^/]*)(.*)?$ /api/$1.php?$2 [QSA,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
 </IfModule>
