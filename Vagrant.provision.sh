@@ -37,7 +37,6 @@ VIRTUAL_HOST=$(cat <<EOF
 EOF
 )
 echo "${VIRTUAL_HOST}" > /etc/apache2/sites-enabled/000-default.conf
-service apache2 restart
 
 # MySQL
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $KWAI_DATABASE_PASSWORD"
@@ -60,6 +59,16 @@ if ! [ -L /var/www/kwai_api ]; then
   rm -rf /var/www/kwai_api
   ln -fs /vagrant/ /var/www/kwai_api
 fi
+
+# PHPMyAdmin
+add-apt-repository -y ppa:nijel/phpmyadmin
+apt-get update
+debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2"
+debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install no"
+apt-get -yq install phpmyadmin
+
+# Everything installed, restart apache
+service apache2 restart
 
 # Run the database migration
 /vagrant/src/vendor/bin/phinx migrate -c /vagrant/src/phinx.php
