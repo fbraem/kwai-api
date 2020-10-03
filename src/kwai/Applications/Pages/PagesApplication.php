@@ -12,6 +12,7 @@ use Kwai\Applications\Pages\Actions\BrowsePagesAction;
 use Kwai\Applications\Pages\Actions\GetPageAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -34,12 +35,31 @@ class PagesApplication extends Application
      */
     public function createRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('', BrowsePagesAction::class)
-            ->setName('pages.browse')
-        ;
-        $group->get('/{id:[0-9]+}', GetPageAction::class)
-            ->setName('pages.get')
-        ;
+        $group->group(
+            '',
+            function (RouteCollectorProxy $pagesGroup) {
+                $pagesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $pagesGroup
+                    ->get('', BrowsePagesAction::class)
+                    ->setName('pages.browse')
+                ;
+            }
+        );
+
+        $group->group(
+            '/{id:[0-9]+}',
+            function (RouteCollectorProxy $pageGroup) {
+                $pageGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $pageGroup
+                    ->get('', GetPageAction::class)
+                    ->setName('pages.get')
+                ;
+            }
+        );
     }
 
     public function addDependencies(): void

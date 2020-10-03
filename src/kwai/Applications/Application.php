@@ -23,6 +23,7 @@ use Slim\App;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
+use Tuupola\Middleware\CorsMiddleware;
 
 /**
  * Class Application
@@ -136,6 +137,19 @@ abstract class Application
     protected function addMiddlewares(): void
     {
         $container = $this->container;
+
+        $settings = $container->get('settings');
+        if (isset($settings['cors'])) {
+            $this->addMiddleware(new CorsMiddleware([
+                'origin' => $settings['cors']['origin'] ?? '[*]',
+                'methods' =>
+                    $settings['cors']['method']
+                        ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+                'credentials' => true,
+                'headers.allow' => ['Accept', 'Content-Type', 'Authorization'],
+                'cache' => 0
+            ]));
+        }
 
         $this->addMiddleware(new ParametersMiddleware());
         $this->addMiddleware(new TransactionMiddleware($container));

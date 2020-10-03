@@ -19,6 +19,7 @@ use Kwai\Applications\Author\Actions\UpdateStoryAction;
 use Kwai\Applications\News\Actions\GetStoryAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -38,42 +39,86 @@ class AuthorApplication extends Application
      */
     public function createRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('/stories', BrowseStoriesAction::class)
-            ->setName('author.news.browse')
-            ->setArgument('auth', 'true')
-        ;
-        $group->get('/stories/{id:[0-9]+}', GetStoryAction::class)
-            ->setName('author.news.read')
-            ->setArgument('auth', 'true')
-        ;
-        $group->post('/stories', CreateStoryAction::class)
-            ->setName('author.news.create')
-            ->setArgument('auth', 'true')
-        ;
-        $group->patch('/stories/{id:[0-9]+}', UpdateStoryAction::class)
-            ->setName('author.news.update')
-            ->setArgument('auth', 'true')
-        ;
-        $group->delete('/stories/{id:[0-9]+}', DeleteStoryAction::class)
-            ->setName('author.news.delete')
-            ->setArgument('auth', 'true')
-        ;
-        $group->get('/pages', BrowsePagesAction::class)
-            ->setName('author.pages.browse')
-            ->setArgument('auth', 'true')
-        ;
-        $group->get('/pages/{id:[0-9]+}', GetPageAction::class)
-            ->setName('author.pages.read')
-            ->setArgument('auth', 'true')
-        ;
-        $group->post('/pages', CreatePageAction::class)
-            ->setName('author.pages.create')
-            ->setArgument('auth', 'true')
-        ;
-        $group->patch('/pages/{id:[0-9]+}', UpdatePageAction::class)
-            ->setName('author.pages.update')
-            ->setArgument('auth', 'true')
-        ;
+        $group->group(
+            '/stories',
+            function (RouteCollectorProxy $storiesGroup) {
+                $storiesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $storiesGroup
+                    ->get('', BrowseStoriesAction::class)
+                    ->setName('author.news.browse')
+                    ->setArgument('auth', 'true')
+                ;
+                $storiesGroup
+                    ->post('', CreateStoryAction::class)
+                    ->setName('author.news.create')
+                    ->setArgument('auth', 'true')
+                ;
+            }
+        );
+
+        $group->group(
+            '/stories/{id:[0-9]+}',
+            function (RouteCollectorProxy $storyGroup) {
+                $storyGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $storyGroup
+                    ->get('', GetStoryAction::class)
+                    ->setName('author.news.read')
+                    ->setArgument('auth', 'true')
+                ;
+                $storyGroup
+                    ->patch('', UpdateStoryAction::class)
+                    ->setName('author.news.update')
+                    ->setArgument('auth', 'true')
+                ;
+                $storyGroup
+                    ->delete('', DeleteStoryAction::class)
+                    ->setName('author.news.delete')
+                    ->setArgument('auth', 'true')
+                ;
+            }
+        );
+
+        $group->group(
+            '/pages',
+            function (RouteCollectorProxy $pagesGroup) {
+                $pagesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $pagesGroup
+                    ->get('', BrowsePagesAction::class)
+                    ->setName('author.pages.browse')
+                    ->setArgument('auth', 'true')
+                ;
+                $pagesGroup
+                    ->post('', CreatePageAction::class)
+                    ->setName('author.pages.create')
+                    ->setArgument('auth', 'true')
+                ;
+            }
+        );
+
+        $group->group(
+            '/pages/{id:[0-9]+}',
+            function (RouteCollectorProxy $pageGroup) {
+                $pageGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $pageGroup
+                    ->get('', GetPageAction::class)
+                    ->setName('author.pages.read')
+                    ->setArgument('auth', 'true')
+                ;
+                $pageGroup
+                    ->patch('', UpdatePageAction::class)
+                    ->setName('author.pages.update')
+                    ->setArgument('auth', 'true')
+                ;
+            }
+        );
     }
 
     public function addDependencies(): void

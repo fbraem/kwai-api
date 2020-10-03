@@ -13,6 +13,7 @@ use Kwai\Applications\Portal\Actions\BrowseStoriesAction;
 use Kwai\Applications\Portal\Actions\GetApplicationAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -27,12 +28,31 @@ class PortalApplication extends Application
 
     public function createRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('/stories', BrowseStoriesAction::class)
-            ->setName('portal.news.browse')
-        ;
-        $group->get('/applications', BrowseApplicationAction::class)
-            ->setName('portal.applications.browse')
-        ;
+        $url = '/stories';
+        $group->group(
+            '/stories',
+            function (RouteCollectorProxy $storiesGroup) {
+                $storiesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $storiesGroup->get('', BrowseStoriesAction::class)
+                    ->setName('portal.news.browse')
+                ;
+            }
+        );
+
+        $group->group(
+            '/applications',
+            function (RouteCollectorProxy $applicationsGroup) {
+                $applicationsGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $applicationsGroup
+                    ->get('', BrowseApplicationAction::class)
+                    ->setName('portal.applications.browse')
+                ;
+            }
+        );
     }
 
     public function addDependencies(): void

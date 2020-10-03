@@ -12,6 +12,7 @@ use Kwai\Applications\Club\Actions\BrowsePagesAction;
 use Kwai\Applications\Club\Actions\BrowseStoriesAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -28,14 +29,33 @@ class ClubApplication extends Application
 
     public function createRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('/stories', BrowseStoriesAction::class)
-            ->setName(self::APP . '.news.browse')
-            ->setArgument('application', self::APP)
-        ;
-        $group->get('/pages', BrowsePagesAction::class)
-            ->setName(self::APP . '.pages.browse')
-            ->setArgument('application', self::APP)
-        ;
+        $group->group(
+            '/stories',
+            function (RouteCollectorProxy $storiesGroup) {
+                $storiesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $storiesGroup
+                    ->get('', BrowseStoriesAction::class)
+                    ->setName(self::APP . '.news.browse')
+                    ->setArgument('application', self::APP)
+                ;
+            }
+        );
+
+        $group->group(
+            '/pages',
+            function (RouteCollectorProxy $pagesGroup) {
+                $pagesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $pagesGroup
+                    ->get('', BrowsePagesAction::class)
+                    ->setName(self::APP . '.pages.browse')
+                    ->setArgument('application', self::APP)
+                ;
+            }
+        );
     }
 
     public function addDependencies(): void

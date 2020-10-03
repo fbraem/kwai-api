@@ -13,6 +13,7 @@ use Kwai\Applications\News\Actions\GetArchiveAction;
 use Kwai\Applications\News\Actions\GetStoryAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -41,14 +42,43 @@ class NewsApplication extends Application
      */
     public function createRoutes(RouteCollectorProxy $group): void
     {
-        $group->get('/stories', BrowseStoriesAction::class)
-            ->setName('news.browse')
-        ;
-        $group->get('/stories/{id:[0-9]+}', GetStoryAction::class)
-            ->setName('news.read')
-        ;
-        $group->get('/archive', GetArchiveAction::class)
-            ->setName('news.archive')
-        ;
+        $group->group(
+            '/stories',
+            function (RouteCollectorProxy $storiesGroup) {
+                $storiesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $storiesGroup
+                    ->get('', BrowseStoriesAction::class)
+                    ->setName('news.browse')
+                ;
+            }
+        );
+
+        $group->group(
+            '/stories/{id:[0-9]+}',
+            function (RouteCollectorProxy $storyGroup) {
+                $storyGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $storyGroup
+                    ->get('', GetStoryAction::class)
+                    ->setName('news.read')
+                ;
+            }
+        );
+
+        $group->group(
+            '/archive',
+            function (RouteCollectorProxy $archiveGroup) {
+                $archiveGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $archiveGroup
+                    ->get('', GetArchiveAction::class)
+                    ->setName('news.archive')
+                ;
+            }
+        );
     }
 }
