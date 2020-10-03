@@ -61,8 +61,9 @@ if ! [ -L /var/www/kwai_api ]; then
 fi
 
 # PHPMyAdmin
-add-apt-repository -y ppa:nijel/phpmyadmin
+add-apt-repository -y ppa:phpmyadmin/ppa
 apt-get update
+apt-get upgrade
 debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2"
 debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install no"
 apt-get -yq install phpmyadmin
