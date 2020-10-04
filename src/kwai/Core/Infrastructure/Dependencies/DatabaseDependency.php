@@ -27,12 +27,12 @@ class DatabaseDependency implements Dependency
     public function __invoke(array $settings)
     {
         $logger = new Logger('kwai-db');
-        if (isset($settings['logger'])) {
-            if (isset($settings['logger']['file'])) {
+        if (isset($settings['logger']['database'])) {
+            if (isset($settings['logger']['database']['file'])) {
                 $logger->pushHandler(
                     new StreamHandler(
-                        $settings['logger']['file'],
-                        $settings['logger']['level'] ?? Logger::DEBUG
+                        $settings['logger']['database']['file'],
+                        $settings['logger']['database']['level'] ?? Logger::DEBUG
                     )
                 );
             }
