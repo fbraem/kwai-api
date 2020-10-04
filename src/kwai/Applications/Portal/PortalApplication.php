@@ -28,7 +28,6 @@ class PortalApplication extends Application
 
     public function createRoutes(RouteCollectorProxy $group): void
     {
-        $url = '/stories';
         $group->group(
             '/stories',
             function (RouteCollectorProxy $storiesGroup) {
