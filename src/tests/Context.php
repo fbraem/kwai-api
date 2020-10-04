@@ -25,12 +25,12 @@ class Context
             $config = (new Settings())();
             // TODO: see if we can use DatabaseDependency here ...
             $logger = new Logger('kwai-db');
-            if (isset($config['logger'])) {
-                if (isset($config['logger']['file'])) {
+            if (isset($config['logger']['database'])) {
+                if (isset($config['logger']['database']['file'])) {
                     $logger->pushHandler(
                         new StreamHandler(
-                            $config['logger']['file'],
-                            $config['logger']['level'] ?? Logger::DEBUG
+                            $config['logger']['database']['file'],
+                            $config['logger']['database']['level'] ?? Logger::DEBUG
                         )
                     );
                 }
