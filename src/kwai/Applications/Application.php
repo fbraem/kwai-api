@@ -18,11 +18,14 @@ use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TokenMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
 use League\Container\Container;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
+use Throwable;
 use Tuupola\Middleware\CorsMiddleware;
 
 /**
@@ -141,12 +144,12 @@ abstract class Application
         $settings = $container->get('settings');
         if (isset($settings['cors'])) {
             $this->addMiddleware(new CorsMiddleware([
-                'origin' => $settings['cors']['origin'] ?? '[*]',
+                'origin' => $settings['cors']['origin'] ?? '*',
                 'methods' =>
                     $settings['cors']['method']
                         ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
                 'credentials' => true,
-                'headers.allow' => ['Accept', 'Content-Type', 'Authorization'],
+                'headers.allow' => ['Accept', 'Accept-Language', 'Content-Type', 'Authorization'],
                 'cache' => 0
             ]));
         }
@@ -171,17 +174,48 @@ abstract class Application
         $app = $this->app;
         $app->addRoutingMiddleware();
 
+        $logger = $this->container->get('logger');
         $errorMiddleware = $app->addErrorMiddleware(
+            false,
             true,
             true,
-            true,
-            $this->container->get('logger')
+            $logger
         );
 
         $errorMiddleware->setErrorHandler(
             HttpNotFoundException::class,
             fn() => $app->getResponseFactory()->createResponse(404,'URL not found')
         );
+
+        $customErrorHandler = function (
+            ServerRequestInterface $request,
+            Throwable $exception,
+            bool $displayErrorDetails,
+            bool $logErrors,
+            bool $logErrorDetails,
+            ?LoggerInterface $logger = null
+        ) use ($app) {
+            // Logger is always null, so get it from the container
+            // see: https://github.com/slimphp/Slim/issues/2943
+            $logger = $app->getContainer()->get('logger');
+            if ($logger) {
+                $logger->error(
+                    $exception->getFile() .
+                    '(' . $exception->getLine() . '): ' .
+                    $exception->getMessage()
+                );
+            }
+
+            $payload = ['error' => $exception->getMessage()];
+
+            $response = $app->getResponseFactory()->createResponse(500, 'Unknown error occurred');
+            $response->getBody()->write(
+                json_encode($payload, JSON_UNESCAPED_UNICODE)
+            );
+
+            return $response;
+        };
+        $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
 
         $app->run();
     }
