@@ -56,7 +56,10 @@ class UpdatePageAction extends Action
         $authorRepo = new AuthorDatabaseRepository($database);
 
         $filesystem = $this->getContainerEntry('filesystem');
-        $imageRepo = new PageImageRepository($filesystem);
+        $imageRepo = new PageImageRepository(
+            $filesystem,
+            $this->getContainerEntry('settings')['files']['url']
+        );
 
         try {
             $page = UpdatePage::create(

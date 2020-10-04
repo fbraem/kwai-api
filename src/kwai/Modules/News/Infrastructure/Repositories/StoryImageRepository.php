@@ -17,14 +17,18 @@ class StoryImageRepository implements ImageRepository
 {
     private Filesystem $filesystem;
 
+    private string $baseUrlPath;
+
     /**
      * StoryImageRepository constructor.
      *
      * @param Filesystem $filesystem
+     * @param string     $baseUrlPath
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, string $baseUrlPath = '')
     {
         $this->filesystem = $filesystem;
+        $this->baseUrlPath = $baseUrlPath;
     }
 
     /**
@@ -47,7 +51,7 @@ class StoryImageRepository implements ImageRepository
         $images = $this->filesystem->listContents(self::getPath($id));
         if (count($images) > 0) {
             foreach ($images as $image) {
-                $result[$image['filename']] = '/files/' . $image['path'];
+                $result[$image['filename']] = $this->baseUrlPath . '/' . $image['path'];
             }
         }
         return $result;

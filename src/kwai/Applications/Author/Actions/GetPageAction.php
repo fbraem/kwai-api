@@ -39,7 +39,10 @@ class GetPageAction extends \Kwai\Core\Infrastructure\Presentation\Action
         try {
             $page = GetPage::create(
                 new PageDatabaseRepository($database),
-                new PageImageRepository($filesystem)
+                new PageImageRepository(
+                    $filesystem,
+                    $this->getContainerEntry('settings')['files']['url']
+                )
             )($command);
         } catch (RepositoryException $e) {
             return (new SimpleResponse(

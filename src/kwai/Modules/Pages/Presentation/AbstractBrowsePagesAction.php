@@ -69,7 +69,10 @@ abstract class AbstractBrowsePagesAction extends Action
         try {
             [$count, $pages] = BrowsePages::create(
                 new PageDatabaseRepository($db),
-                new PageImageRepository($filesystem)
+                new PageImageRepository(
+                    $filesystem,
+                    $this->getContainerEntry('settings')['files']['url']
+                )
             )($command);
         } catch (QueryException $e) {
             return (

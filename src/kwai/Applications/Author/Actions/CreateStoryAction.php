@@ -56,7 +56,10 @@ class CreateStoryAction extends SaveStoryAction
         $authorRepo = new AuthorDatabaseRepository($database);
 
         $filesystem = $this->getContainerEntry('filesystem');
-        $imageRepo = new StoryImageRepository($filesystem);
+        $imageRepo = new StoryImageRepository(
+            $filesystem,
+            $this->getContainerEntry('settings')['files']['url']
+        );
 
         try {
             $story = (new CreateStory(

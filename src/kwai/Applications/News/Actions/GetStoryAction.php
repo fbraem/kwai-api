@@ -40,7 +40,10 @@ class GetStoryAction extends Action
         try {
             $story = (new GetStory(
                 new StoryDatabaseRepository($database),
-                new StoryImageRepository($filesystem)
+                new StoryImageRepository(
+                    $filesystem,
+                    $this->getContainerEntry('settings')['files']['url']
+                )
             ))($command);
         } catch (RepositoryException $e) {
             return (new SimpleResponse(

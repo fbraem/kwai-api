@@ -17,7 +17,7 @@ class FileSystemDependency implements Dependency
 {
     public function __invoke(array $settings)
     {
-        $flyAdapter = new Local($settings['files']);
+        $flyAdapter = new Local($settings['files']['local']);
         return new Filesystem($flyAdapter);
     }
 }

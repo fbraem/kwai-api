@@ -47,7 +47,10 @@ class FacebookApplication extends Application
             try {
                 $story = (new GetStory(
                     new StoryDatabaseRepository($this->get('pdo_db')),
-                    new StoryImageRepository($this->get('filesystem'))
+                    new StoryImageRepository(
+                        $this->get('filesystem'),
+                        $this->get('settings')['files']['url']
+                    )
                 ))($command);
             } catch (StoryNotFoundException $exception) {
                 return (new NotFoundResponse('Story not found'))($response);

@@ -59,7 +59,10 @@ abstract class AbstractBrowseStoriesAction extends Action
         try {
             [$count, $stories] = (new BrowseStories(
                 new StoryDatabaseRepository($db),
-                new StoryImageRepository($filesystem)
+                new StoryImageRepository(
+                    $filesystem,
+                    $this->getContainerEntry('settings')['files']['url']
+                )
             ))($command);
         } catch (QueryException $e) {
             return (

@@ -40,7 +40,10 @@ class GetPageAction extends Action
         try {
             $page = GetPage::create(
                 new PageDatabaseRepository($database),
-                new PageImageRepository($filesystem)
+                new PageImageRepository(
+                    $filesystem,
+                    $this->getContainerEntry('settings')['files']['url']
+                )
             )($command);
         } catch (RepositoryException $e) {
             return (
