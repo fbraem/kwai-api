@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5105df74ab5b18a2fbafb54365131ce9",
+    "content-hash": "35c9941c6e27efd0482b4b75a2b41c19",
     "packages": [
         {
             "name": "aura/intl",
@@ -5346,38 +5346,31 @@
         },
         {
             "name": "pestphp/pest",
-            "version": "v0.2.3",
+            "version": "v0.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "1241e929b1441097c9be2467d2a75c6d2b3e0a84"
+                "reference": "049ce1845e119c12f888cedfb7b558b75f06598f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/1241e929b1441097c9be2467d2a75c6d2b3e0a84",
-                "reference": "1241e929b1441097c9be2467d2a75c6d2b3e0a84",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/049ce1845e119c12f888cedfb7b558b75f06598f",
+                "reference": "049ce1845e119c12f888cedfb7b558b75f06598f",
                 "shasum": ""
             },
             "require": {
-                "nunomaduro/collision": "^5.0.0-BETA3",
-                "pestphp/pest-plugin": "^0.2",
-                "pestphp/pest-plugin-coverage": "^0.2",
-                "pestphp/pest-plugin-init": "^0.2",
-                "php": "^7.3",
-                "phpunit/phpunit": "^9.1.4",
-                "sebastian/environment": "^5.1"
+                "nunomaduro/collision": "^5.0",
+                "pestphp/pest-plugin": "^0.3",
+                "pestphp/pest-plugin-coverage": "^0.3",
+                "pestphp/pest-plugin-init": "^0.3",
+                "php": "^7.3 || ^8.0",
+                "phpunit/phpunit": ">= 9.3.7 <= 9.4.0"
             },
             "require-dev": {
-                "ergebnis/phpstan-rules": "^0.15.0",
-                "friendsofphp/php-cs-fixer": "^2.16.3",
                 "illuminate/console": "^7.16.1",
                 "illuminate/support": "^7.16.1",
-                "mockery/mockery": "^1.4.0",
-                "phpstan/phpstan": "^0.12.30",
-                "phpstan/phpstan-strict-rules": "^0.12.2",
-                "rector/rector": "^0.7.37",
-                "symfony/var-dumper": "^5.1.2",
-                "thecodingmachine/phpstan-strict-rules": "^0.12.0"
+                "mockery/mockery": "^1.4.1",
+                "pestphp/pest-dev-tools": "dev-master"
             },
             "bin": [
                 "bin/pest"
@@ -5385,7 +5378,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-master": "0.4.x-dev"
                 },
                 "pest": {
                     "plugins": [
@@ -5404,8 +5397,7 @@
                 },
                 "files": [
                     "src/globals.php",
-                    "src/Pest.php",
-                    "compiled/globals.php"
+                    "src/Pest.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -5427,38 +5419,52 @@
                 "testing",
                 "unit"
             ],
-            "time": "2020-07-01T18:26:18+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/nunomaduro",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-10-03T11:27:01+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
-            "version": "v0.2.1",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest-plugin.git",
-                "reference": "99d21abb7b1a44aa26c2416ca729d2a989ee2850"
+                "reference": "635f8c33a3eed910ac3cd5cb02a7163c5c70c033"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin/zipball/99d21abb7b1a44aa26c2416ca729d2a989ee2850",
-                "reference": "99d21abb7b1a44aa26c2416ca729d2a989ee2850",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin/zipball/635f8c33a3eed910ac3cd5cb02a7163c5c70c033",
+                "reference": "635f8c33a3eed910ac3cd5cb02a7163c5c70c033",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.1||^2.0",
-                "php": "^7.3"
+                "composer-plugin-api": "^1.1 || ^2.0",
+                "php": "^7.3 || ^8.0"
             },
             "conflict": {
-                "pestphp/pest": "<0.2"
+                "pestphp/pest": "<0.3"
             },
             "require-dev": {
                 "composer/composer": "^1.10",
-                "pestphp/pest": "^0.2",
+                "pestphp/pest": "^0.3",
                 "pestphp/pest-dev-tools": "dev-master"
             },
             "type": "composer-plugin",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-master": "0.4.x-dev"
                 },
                 "class": "Pest\\Plugin\\Manager"
             },
@@ -5482,37 +5488,52 @@
                 "testing",
                 "unit"
             ],
-            "time": "2020-06-16T18:07:24+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/nunomaduro",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-08-25T20:53:40+00:00"
         },
         {
             "name": "pestphp/pest-plugin-coverage",
-            "version": "v0.2.1",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest-plugin-coverage.git",
-                "reference": "aa60bfd07ecfb63d191e70867432892068755426"
+                "reference": "f209bb62728841f21f267759a374d66172a162ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin-coverage/zipball/aa60bfd07ecfb63d191e70867432892068755426",
-                "reference": "aa60bfd07ecfb63d191e70867432892068755426",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin-coverage/zipball/f209bb62728841f21f267759a374d66172a162ea",
+                "reference": "f209bb62728841f21f267759a374d66172a162ea",
                 "shasum": ""
             },
             "require": {
-                "pestphp/pest-plugin": "^0.2",
-                "php": "^7.3"
+                "pestphp/pest-plugin": "^0.3",
+                "php": "^7.3 || ^8.0",
+                "sebastian/environment": "^5.1.2"
             },
             "conflict": {
-                "pestphp/pest": "<0.2"
+                "pestphp/pest": "<0.3"
             },
             "require-dev": {
-                "pestphp/pest": "^0.2",
+                "pestphp/pest": "^0.3",
                 "pestphp/pest-dev-tools": "dev-master"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-master": "0.3.x-dev"
                 },
                 "pest": {
                     "plugins": [
@@ -5554,37 +5575,37 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-07-18T19:16:10+00:00"
+            "time": "2020-08-25T20:42:46+00:00"
         },
         {
             "name": "pestphp/pest-plugin-init",
-            "version": "v0.2.3",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest-plugin-init.git",
-                "reference": "718771dbfcc5bb8ceca238c4754dbc7bfdcb1b09"
+                "reference": "7406643b47835b6c6da709b11da89b0844b8d163"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin-init/zipball/718771dbfcc5bb8ceca238c4754dbc7bfdcb1b09",
-                "reference": "718771dbfcc5bb8ceca238c4754dbc7bfdcb1b09",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin-init/zipball/7406643b47835b6c6da709b11da89b0844b8d163",
+                "reference": "7406643b47835b6c6da709b11da89b0844b8d163",
                 "shasum": ""
             },
             "require": {
-                "pestphp/pest-plugin": "^0.2",
-                "php": "^7.3"
+                "pestphp/pest-plugin": "^0.3",
+                "php": "^7.3 || ^8.0"
             },
             "conflict": {
-                "pestphp/pest": "<0.2.3"
+                "pestphp/pest": "<0.3"
             },
             "require-dev": {
-                "pestphp/pest": "^0.2",
+                "pestphp/pest": "^0.3",
                 "pestphp/pest-dev-tools": "dev-master"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-master": "0.4.x-dev"
                 },
                 "pest": {
                     "plugins": [
@@ -5612,7 +5633,21 @@
                 "testing",
                 "unit"
             ],
-            "time": "2020-07-01T18:35:16+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/nunomaduro",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/nunomaduro",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2020-09-27T12:48:43+00:00"
         },
         {
             "name": "phar-io/manifest",
