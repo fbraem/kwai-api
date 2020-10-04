@@ -27,9 +27,8 @@ it('can process data', function () {
     ];
     /* @var CreatePageCommand $result */
     $result = InputSchemaProcessor::create($schema)->process($data);
-    assertInstanceOf(CreatePageCommand::class, $result);
-    assertEquals($result->priority, 1);
-    assertCount(1, $result->contents);
+    expect($result->priority)->toBe(1);
+    expect($result->contents)->toBeArray()->toHaveCount(1);
 });
 
 it('fails with invalid data', function () {
@@ -52,7 +51,7 @@ it('fails with invalid data', function () {
         ]
     ];
     InputSchemaProcessor::create($schema)->process($data);
-})->expectException(ValidationException::class);
+})->throws(ValidationException::class);
 
 it('fails with missing data', function () {
     $schema = new PageInputSchema(true);
@@ -73,4 +72,4 @@ it('fails with missing data', function () {
         ]
     ];
     InputSchemaProcessor::create($schema)->process($data);
-})->expectException(ValidationException::class);
+})->throws(ValidationException::class);
