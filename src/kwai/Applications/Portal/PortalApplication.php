@@ -34,7 +34,8 @@ class PortalApplication extends Application
                 $storiesGroup
                     ->options('', PreflightAction::class)
                 ;
-                $storiesGroup->get('', BrowseStoriesAction::class)
+                $storiesGroup
+                    ->get('', BrowseStoriesAction::class)
                     ->setName('portal.news.browse')
                 ;
             }
