@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Tests\Core\Domain;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 
 it('can create an email address', function () {
