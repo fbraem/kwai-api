@@ -8,7 +8,6 @@ namespace Tests\Core\Domain;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use PHPUnit\Framework\TestCase;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
 it('can create a current timestamp', function () {
