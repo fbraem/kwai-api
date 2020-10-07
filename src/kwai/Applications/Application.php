@@ -141,24 +141,24 @@ abstract class Application
     {
         $container = $this->container;
 
+        $this->addMiddleware(new ParametersMiddleware());
+        $this->addMiddleware(new TransactionMiddleware($container));
+        $this->addMiddleware(new LogActionMiddleware($container));
+        $this->addMiddleware(new JsonBodyParserMiddleware());
+        $this->addMiddleware(new TokenMiddleware($container));
+
         $settings = $container->get('settings');
         if (isset($settings['cors'])) {
             $this->addMiddleware(new CorsMiddleware([
                 'origin' => $settings['cors']['origin'] ?? '*',
                 'methods' =>
                     $settings['cors']['method']
-                        ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+                    ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
                 'credentials' => true,
                 'headers.allow' => ['Accept', 'Accept-Language', 'Content-Type', 'Authorization'],
                 'cache' => 0
             ]));
         }
-
-        $this->addMiddleware(new ParametersMiddleware());
-        $this->addMiddleware(new TransactionMiddleware($container));
-        $this->addMiddleware(new LogActionMiddleware($container));
-        $this->addMiddleware(new JsonBodyParserMiddleware());
-        $this->addMiddleware(new TokenMiddleware($container));
     }
 
     /**
