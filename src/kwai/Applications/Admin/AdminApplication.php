@@ -9,20 +9,20 @@ namespace Kwai\Applications\Admin;
 
 use Kwai\Applications\Application;
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
-use Kwai\Modules\Users\Presentation\Rest\AttachAbilityAction;
-use Kwai\Modules\Users\Presentation\Rest\BrowseAbilitiesAction;
-use Kwai\Modules\Users\Presentation\Rest\BrowseRulesAction;
-use Kwai\Modules\Users\Presentation\Rest\BrowseUserInvitationsAction;
-use Kwai\Modules\Users\Presentation\Rest\BrowseUsersAction;
-use Kwai\Modules\Users\Presentation\Rest\ConfirmInvitationAction;
-use Kwai\Modules\Users\Presentation\Rest\CreateAbilityAction;
-use Kwai\Modules\Users\Presentation\Rest\CreateUserInvitationAction;
-use Kwai\Modules\Users\Presentation\Rest\DetachAbilityAction;
-use Kwai\Modules\Users\Presentation\Rest\GetAbilityAction;
-use Kwai\Modules\Users\Presentation\Rest\GetUserAbilitiesAction;
-use Kwai\Modules\Users\Presentation\Rest\GetUserAction;
-use Kwai\Modules\Users\Presentation\Rest\GetUserInvitationAction;
-use Kwai\Modules\Users\Presentation\Rest\UpdateAbilityAction;
+use Kwai\Applications\Admin\Actions\AttachAbilityAction;
+use Kwai\Applications\Admin\Actions\BrowseAbilitiesAction;
+use Kwai\Applications\Admin\Actions\BrowseRulesAction;
+use Kwai\Applications\Admin\Actions\BrowseUserInvitationsAction;
+use Kwai\Applications\Admin\Actions\BrowseUsersAction;
+// use Kwai\Applications\Admin\Actions\ConfirmInvitationAction;
+use Kwai\Applications\Admin\Actions\CreateAbilityAction;
+use Kwai\Applications\Admin\Actions\CreateUserInvitationAction;
+use Kwai\Applications\Admin\Actions\DetachAbilityAction;
+use Kwai\Applications\Admin\Actions\GetAbilityAction;
+use Kwai\Applications\Admin\Actions\GetUserAbilitiesAction;
+use Kwai\Applications\Admin\Actions\GetUserAction;
+use Kwai\Applications\Admin\Actions\GetUserInvitationAction;
+use Kwai\Applications\Admin\Actions\UpdateAbilityAction;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
