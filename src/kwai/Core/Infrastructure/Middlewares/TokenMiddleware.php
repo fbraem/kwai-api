@@ -31,6 +31,8 @@ class TokenMiddleware implements MiddlewareInterface
         $settings = $container->get('settings');
 
         $this->jwtMiddleware = new JwtAuthentication([
+            'secure' => true,
+            'relaxed' => $settings['security']['relaxed'] ?? [],
             'secret' => $settings['security']['secret'],
             'algorithm' => [$settings['security']['algorithm']],
             'rules' => [
@@ -46,14 +48,17 @@ class TokenMiddleware implements MiddlewareInterface
                     }
                 }
             ],
-            'error' => function (ResponseInterface $response, $arguments) {
+            'error' => function (ResponseInterface $response, $arguments) use ($settings) {
                 $data['status'] = 'error';
                 $data['message'] = $arguments['message'];
                 return $response
                     ->withHeader('Content-Type', 'application/json')
+                    // ->withHeader('Access-Control-Allow-Credentials', 'true')
+                    // ->withHeader('Access-Control-Allow-Origin', $settings['cors']['origin'])
                     ->getBody()->write(
                         json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
-                    );
+                    )
+                ;
             },
             'before' => function (ServerRequestInterface $request, $arguments) use ($container) {
                 $uuid = new UniqueId($arguments['decoded']['sub']);
