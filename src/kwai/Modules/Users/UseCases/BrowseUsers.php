@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\UseCases;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserRepository;
+use Tightenco\Collect\Support\Collection;
 
 /**
  * Class BrowseUsers
@@ -26,7 +27,8 @@ class BrowseUsers
     }
 
     /**
-     * Browse all users and returns a list
+     * Browse all users and returns a tuple with two values:
+     * The real count of users and a collection with users.
      *
      * @param BrowseUsersCommand $command
      * @return Entity[]
@@ -34,6 +36,9 @@ class BrowseUsers
      */
     public function __invoke(BrowseUsersCommand $command): array
     {
-        return $this->userRepo->getAll();
+        $all = $this->userRepo->getAll();
+        return [
+            count($all), new Collection($all)
+        ];
     }
 }

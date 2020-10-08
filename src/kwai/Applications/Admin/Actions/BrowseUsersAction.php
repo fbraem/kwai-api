@@ -32,10 +32,14 @@ class BrowseUsersAction extends Action
     {
         $repo = new UserDatabaseRepository($this->getContainerEntry('pdo_db'));
         try {
-            $users = (new BrowseUsers($repo))(new BrowseUsersCommand());
-            return (new ResourceResponse(
-                UserTransformer::createForCollection($users)
-            ))($response);
+            [$count, $users ] = (new BrowseUsers($repo))(
+                new BrowseUsersCommand()
+            );
+
+            $resource = UserTransformer::createForCollection($users);
+            $resource->setMeta(['count' => $count]);
+
+            return (new ResourceResponse($resource))($response);
         } catch (RepositoryException $e) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
