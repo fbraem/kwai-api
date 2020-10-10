@@ -204,6 +204,9 @@ abstract class Application
                     '(' . $exception->getLine() . '): ' .
                     $exception->getMessage()
                 );
+                $logger->info(
+                    $exception->getTraceAsString()
+                );
             }
 
             $payload = ['error' => $exception->getMessage()];

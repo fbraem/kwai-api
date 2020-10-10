@@ -19,9 +19,9 @@ class AuthorNotFoundException extends Exception
     /**
      * AuthorNotFoundException constructor.
      *
-     * @param int $id
+     * @param int|string $id
      */
-    public function __construct(int $id)
+    public function __construct($id)
     {
         parent::__construct('Author not found');
         $this->id = $id;

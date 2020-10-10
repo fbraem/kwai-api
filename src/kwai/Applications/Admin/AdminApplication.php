@@ -7,7 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Admin;
 
+use Kwai\Applications\Admin\Actions\BrowsePagesAction;
+use Kwai\Applications\Admin\Actions\BrowseStoriesAction;
 use Kwai\Applications\Application;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Kwai\Applications\Admin\Actions\AttachAbilityAction;
 use Kwai\Applications\Admin\Actions\BrowseAbilitiesAction;
@@ -36,6 +40,14 @@ class AdminApplication extends Application
     public function __construct()
     {
         parent::__construct('admin');
+    }
+
+    public function addDependencies(): void
+    {
+        parent::addDependencies();
+
+        $this->addDependency('filesystem', new FileSystemDependency());
+        $this->addDependency('converter', new ConvertDependency());
     }
 
     public function createRoutes(RouteCollectorProxy $group): void
@@ -199,6 +211,36 @@ class AdminApplication extends Application
                 $invitationGroup
                     ->post('', ConfirmInvitationAction::class)
                     ->setName('users.invitations.confirm')
+                ;
+            }
+        );
+
+        // Get the news stories of the user with the given uuid
+        $group->group(
+            "/$uuid_regex/news",
+            function (RouteCollectorProxy $userNewsGroup) {
+                $userNewsGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $userNewsGroup
+                    ->get('', BrowseStoriesAction::class)
+                    ->setName('user.news.browse')
+                    ->setArgument('auth', 'true')
+                ;
+            }
+        );
+
+        // Get the page of the user with the given uuid
+        $group->group(
+            "/$uuid_regex/pages",
+            function (RouteCollectorProxy $userPagesGroup) {
+                $userPagesGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $userPagesGroup
+                    ->get('', BrowsePagesAction::class)
+                    ->setName('user.pages.browse')
+                    ->setArgument('auth', 'true')
                 ;
             }
         );

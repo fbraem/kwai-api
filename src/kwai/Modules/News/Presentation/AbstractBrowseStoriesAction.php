@@ -11,6 +11,8 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
@@ -18,6 +20,7 @@ use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LogLevel;
 
 /**
  * Class BrowseStoriesAction
@@ -59,14 +62,21 @@ abstract class AbstractBrowseStoriesAction extends Action
         try {
             [$count, $stories] = (new BrowseStories(
                 new StoryDatabaseRepository($db),
+                new AuthorDatabaseRepository($db),
                 new StoryImageRepository(
                     $filesystem,
                     $this->getContainerEntry('settings')['files']['url']
                 )
             ))($command);
         } catch (QueryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A query exception occurred.')
+            )($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 
