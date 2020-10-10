@@ -23,6 +23,7 @@ use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Psr\Log\LogLevel;
 
 /**
  * Class GetUserAction
@@ -57,6 +58,7 @@ class GetUserAction extends Action
         } catch (NotFoundException $e) {
             return (new NotFoundResponse('User not found'))($response);
         } catch (RepositoryException $e) {
+            $this->log(LogLevel::ERROR, strval($e));
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
