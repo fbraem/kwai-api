@@ -11,6 +11,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * Class Action
@@ -57,6 +58,16 @@ abstract class Action
         if ($logger) {
             $logger->log($level, $message);
         }
+    }
+
+    /**
+     * Logs an exception with level ERROR
+     *
+     * @param $exception
+     */
+    public function logException($exception)
+    {
+        $this->log(LogLevel::ERROR, strval($exception));
     }
 
     /**
