@@ -10,6 +10,7 @@ namespace Kwai\Core\Infrastructure\Presentation;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Action
@@ -40,6 +41,22 @@ abstract class Action
     public function getContainerEntry(string $key)
     {
         return $this->container->get($key);
+    }
+
+    /**
+     * Log the message (when there is a logger configured). The logger must
+     * implement PSR-3 standard.
+     *
+     * @param string $level
+     * @param string $message
+     */
+    public function log(string $level, string $message)
+    {
+        /** @var LoggerInterface $logger */
+        $logger = $this->getContainerEntry('logger');
+        if ($logger) {
+            $logger->log($level, $message);
+        }
     }
 
     /**
