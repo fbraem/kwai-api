@@ -100,6 +100,9 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+        if (count($rows) === 0) {
+            return [];
+        }
 
         $columnFilter = Tables::ABILITIES()->createColumnFilter();
 
