@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
+use Kwai\Modules\Pages\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\UseCases\BrowsePages;
 use Kwai\Modules\Pages\UseCases\BrowsePagesCommand;
@@ -20,6 +21,7 @@ it('can browse pages', function () use ($context) {
     try {
         BrowsePages::create(
             new PageDatabaseRepository($context->db),
+            new AuthorDatabaseRepository($context->db),
             new class implements ImageRepository {
                 public function getImages(int $id): array
                 {

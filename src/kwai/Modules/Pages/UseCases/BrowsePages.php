@@ -7,8 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\UseCases;
 
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
+use Kwai\Modules\Pages\Repositories\AuthorRepository;
 use Kwai\Modules\Pages\Repositories\PageRepository;
 use Tightenco\Collect\Support\Collection;
 
@@ -21,17 +25,24 @@ class BrowsePages
 {
     private PageRepository $repo;
 
+    private AuthorRepository $authorRepo;
+
     private ImageRepository $imageRepo;
 
     /**
      * BrowsePages constructor.
      *
-     * @param PageRepository  $repo
-     * @param ImageRepository $imageRepo
+     * @param PageRepository   $repo
+     * @param AuthorRepository $authorRepo
+     * @param ImageRepository  $imageRepo
      */
-    private function __construct(PageRepository $repo, ImageRepository $imageRepo)
-    {
+    private function __construct(
+        PageRepository $repo,
+        AuthorRepository $authorRepo,
+        ImageRepository $imageRepo
+    ) {
         $this->repo = $repo;
+        $this->authorRepo = $authorRepo;
         $this->imageRepo = $imageRepo;
     }
 
@@ -39,6 +50,8 @@ class BrowsePages
      * @param BrowsePagesCommand $command
      * @return array
      * @throws QueryException
+     * @throws RepositoryException
+     * @throws AuthorNotFoundException
      */
     public function __invoke(BrowsePagesCommand $command): array
     {
@@ -64,6 +77,13 @@ class BrowsePages
                 break;
         }
 
+        if ($command->userUid) {
+            $user = $this->authorRepo
+                ->getByUniqueId(new UniqueId($command->userUid))
+            ;
+            $query->filterUser($user->id());
+        }
+
         $count = $query->count();
 
         $pages = $query->execute($command->limit, $command->offset);
@@ -77,14 +97,19 @@ class BrowsePages
     /**
      * Factory method to create this use case.
      *
-     * @param PageRepository  $repo
-     * @param ImageRepository $imageRepo
+     * @param PageRepository   $repo
+     * @param AuthorRepository $authorRepo
+     * @param ImageRepository  $imageRepo
      * @return BrowsePages
      */
-    public static function create(PageRepository $repo, ImageRepository $imageRepo): self
-    {
+    public static function create(
+        PageRepository $repo,
+        AuthorRepository $authorRepo,
+        ImageRepository $imageRepo
+    ): self {
         return new self(
             $repo,
+            $authorRepo,
             $imageRepo
         );
     }

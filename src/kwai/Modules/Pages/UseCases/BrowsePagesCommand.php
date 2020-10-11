@@ -31,4 +31,6 @@ class BrowsePagesCommand
      * @var int
      */
     public int $sort = self::SORT_NONE;
+
+    public ?string $userUid = null;
 }

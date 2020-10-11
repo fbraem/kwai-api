@@ -8,9 +8,13 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Presentation;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
+use Kwai\Modules\Pages\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageImageRepository;
 use Kwai\Modules\Pages\Presentation\Transformers\PageTransformer;
@@ -69,14 +73,25 @@ abstract class AbstractBrowsePagesAction extends Action
         try {
             [$count, $pages] = BrowsePages::create(
                 new PageDatabaseRepository($db),
+                new AuthorDatabaseRepository($db),
                 new PageImageRepository(
                     $filesystem,
                     $this->getContainerEntry('settings')['files']['url']
                 )
             )($command);
         } catch (QueryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A query exception occurred.')
+            )($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
+            )($response);
+        } catch (AuthorNotFoundException $e) {
+            return (
+                new NotFoundResponse('Author not found')
             )($response);
         }
 

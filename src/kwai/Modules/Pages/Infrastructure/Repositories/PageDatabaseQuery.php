@@ -23,11 +23,6 @@ use function Latitude\QueryBuilder\on;
  */
 class PageDatabaseQuery extends DatabaseQuery implements PageQuery
 {
-    /**
-     * Used to filter the contents of the user.
-     */
-    private ?int $user = null;
-
     protected function initQuery(): void
     {
         $this->query
@@ -35,6 +30,14 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
             ->join(
                 (string) Tables::APPLICATIONS(),
                 on(Tables::APPLICATIONS()->id, Tables::PAGES()->application_id)
+            )
+            ->join(
+                (string) Tables::CONTENTS(),
+                on(Tables::CONTENTS()->page_id, Tables::PAGES()->id)
+            )
+            ->join(
+                (string) Tables::AUTHORS(),
+                on(Tables::AUTHORS()->id, Tables::CONTENTS()->user_id)
             )
         ;
     }
@@ -80,7 +83,9 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
      */
     public function filterUser(int $id): void
     {
-        $this->user = $id;
+        $this->query->andWhere(group(
+            field(Tables::CONTENTS()->user_id)->eq($id)
+        ));
     }
 
     /**
@@ -88,36 +93,28 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
      */
     public function execute(?int $limit = null, ?int $offset = null)
     {
+        // TODO: For now the relation page -> content is 1 on 1. In the future
+        // TODO: it will be possible to translate a page, which will result in
+        // TODO: 1 on many.
         $rows = parent::execute($limit, $offset);
         if (count($rows) == 0) {
             return [];
         }
 
-        // Get all ids of the pages
-        $idAlias = Tables::PAGES()->getAlias('id');
-        $ids = array_map(fn($row) => (int) $row->{$idAlias}, $rows);
-
-        // Get all content for these pages
-        $contentQuery = new ContentDatabaseQuery($this->db);
-        $contentQuery->filterIds($ids);
-        if ($this->user) {
-            $contentQuery->filterUser($this->user);
-        }
-        $contents = $contentQuery->execute();
-
         $pageColumnFilter = Tables::PAGES()->createColumnFilter();
         $applicationColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
+        $contentColumnFilter = Tables::CONTENTS()->createColumnFilter();
+        $authorColumnFilter = Tables::AUTHORS()->createColumnFilter();
+
         $pages = [];
         foreach ($rows as $row) {
             $page = $pageColumnFilter->filter($row);
             $page->application = $applicationColumnFilter->filter($row);
-            // Skip pages without content
-            if (isset($contents[(string) $page->id])) {
-                $page->contents = $contents[(string) $page->id];
-                $pages[$page->id] = PageMapper::toDomain(
-                    $page
-                );
-            }
+            $page->contents = [
+                $contentColumnFilter->filter($row)
+            ];
+            $page->contents[0]->author = $authorColumnFilter->filter($row);
+            $pages[$page->id] = PageMapper::toDomain($page);
         }
 
         return $pages;
@@ -129,6 +126,8 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
     protected function getColumns(): array
     {
         $aliasFn = Tables::PAGES()->getAliasFn();
+        $aliasContentFn = Tables::CONTENTS()->getAliasFn();
+        $aliasAuthorFn = Tables::AUTHORS()->getAliasFn();
         return [
             $aliasFn('id'),
             $aliasFn('enabled'),
@@ -137,7 +136,17 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
             Tables::APPLICATIONS()->getAliasFn()('id'),
-            Tables::APPLICATIONS()->getAliasFn()('title')
+            Tables::APPLICATIONS()->getAliasFn()('title'),
+            $aliasContentFn('locale'),
+            $aliasContentFn('format'),
+            $aliasContentFn('title'),
+            $aliasContentFn('content'),
+            $aliasContentFn('summary'),
+            $aliasContentFn('created_at'),
+            $aliasContentFn('updated_at'),
+            $aliasAuthorFn('id'),
+            $aliasAuthorFn('first_name'),
+            $aliasAuthorFn('last_name')
         ];
     }
 
