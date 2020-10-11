@@ -9,6 +9,8 @@ namespace Tests\Modules\News\UseCases;
 
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
@@ -23,6 +25,7 @@ class BrowseStoriesTest extends DatabaseTestCase
         try {
             $stories = (new BrowseStories(
                 new StoryDatabaseRepository(self::$db),
+                new AuthorDatabaseRepository(self::$db),
                 new class implements ImageRepository {
                     public function getImages(int $id): array
                     {
@@ -35,6 +38,8 @@ class BrowseStoriesTest extends DatabaseTestCase
             ))($command);
             self::assertGreaterThan(0, $stories->getCount(), 'No stories found!');
         } catch (QueryException $e) {
+            self::assertTrue(false, (string) $e);
+        } catch (RepositoryException $e) {
             self::assertTrue(false, (string) $e);
         }
     }
