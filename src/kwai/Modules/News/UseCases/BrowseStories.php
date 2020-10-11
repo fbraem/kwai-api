@@ -53,6 +53,7 @@ class BrowseStories
      * @return array
      * @throws QueryException
      * @throws RepositoryException
+     * @throws AuthorNotFoundException
      */
     public function __invoke(BrowseStoriesCommand $command): array
     {
@@ -71,14 +72,12 @@ class BrowseStories
             $query->filterVisible();
         }
 
-        if ($command->userUuid) {
-            try {
-                $user = $this
-                    ->authorRepo
-                    ->getByUniqueId(new UniqueId($command->userUuid));
-                $query->filterUser($user->id());
-            } catch (AuthorNotFoundException $e) {
-            }
+        if ($command->userUid) {
+            $user = $this
+                ->authorRepo
+                ->getByUniqueId(new UniqueId($command->userUid))
+            ;
+            $query->filterUser($user->id());
         }
         $count = $query->count();
 

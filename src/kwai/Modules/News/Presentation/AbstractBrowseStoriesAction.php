@@ -8,10 +8,12 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Presentation;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
@@ -77,6 +79,10 @@ abstract class AbstractBrowseStoriesAction extends Action
             $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
+            )($response);
+        } catch (AuthorNotFoundException $e) {
+            return (
+                new NotFoundResponse('Author not found')
             )($response);
         }
 

@@ -24,5 +24,5 @@ class BrowseStoriesCommand
      */
     public $application = null;
     public bool $promoted = false;
-    public ?string $userUuid = null;
+    public ?string $userUid = null;
 }

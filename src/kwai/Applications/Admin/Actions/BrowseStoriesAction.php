@@ -29,7 +29,7 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
     protected function createCommand(Request $request, array $args): BrowseStoriesCommand
     {
         $command = parent::createCommand($request, $args);
-        $command->userUuid = $args['uuid'];
+        $command->userUid = $args['uuid'];
         return $command;
     }
 }

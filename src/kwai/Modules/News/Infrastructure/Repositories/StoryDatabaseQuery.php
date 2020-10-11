@@ -30,11 +30,6 @@ use function Latitude\QueryBuilder\on;
 class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
 {
     /**
-     * Used to filter the contents on the user.
-     */
-    private ?int $user = null;
-
-    /**
      * @inheritDoc
      */
     protected function initQuery(): void
@@ -44,7 +39,16 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             ->join(
                 (string) Tables::APPLICATIONS(),
                 on(Tables::APPLICATIONS()->id, Tables::STORIES()->application_id)
-            );
+            )
+            ->join(
+                (string) Tables::CONTENTS(),
+                on(Tables::CONTENTS()->news_id, Tables::STORIES()->id)
+            )
+            ->join(
+                (string) Tables::AUTHORS(),
+                on(Tables::AUTHORS()->id, Tables::CONTENTS()->user_id)
+            )
+        ;
         $this->query->orderBy(Tables::STORIES()->publish_date, 'DESC');
     }
 
@@ -107,36 +111,28 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
      */
     public function execute(?int $limit = null, ?int $offset = null): array
     {
+        // TODO: For now the relation news -> content is 1 on 1. In the future
+        // TODO: it will be possible to translate a story, which will result in
+        // TODO: 1 on many.
         $rows = parent::execute($limit, $offset);
         if (count($rows) == 0) {
             return [];
         }
 
-        // Get all ids of the stories
-        $idAlias = Tables::STORIES()->getAlias('id');
-        $ids = array_map(fn($row) => (int) $row->{$idAlias}, $rows);
-
-        // Get all content for these news stories
-        $contentQuery = new ContentDatabaseQuery($this->db);
-        $contentQuery->filterIds($ids);
-        if ($this->user) {
-            $contentQuery->filterUser($this->user);
-        }
-        $contents = $contentQuery->execute();
-
         $storyColumnFilter = Tables::STORIES()->createColumnFilter();
         $applicationColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
+        $contentColumnFilter = Tables::CONTENTS()->createColumnFilter();
+        $authorColumnFilter = Tables::AUTHORS()->createColumnFilter();
+
         $stories = [];
         foreach ($rows as $row) {
             $story = $storyColumnFilter->filter($row);
             $story->application = $applicationColumnFilter->filter($row);
-            // Skip stories without content
-            if (isset($contents[(string) $story->id])) {
-                $story->contents = $contents[(string)$story->id];
-                $stories[$story->id] = StoryMapper::toDomain(
-                    $story
-                );
-            }
+            $story->contents = [
+                $contentColumnFilter->filter($row)
+            ];
+            $story->contents[0]->author = $authorColumnFilter->filter($row);
+            $stories[$story->id] = StoryMapper::toDomain($story);
         }
 
         return $stories;
@@ -148,6 +144,8 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     protected function getColumns(): array
     {
         $aliasFn = Tables::STORIES()->getAliasFn();
+        $aliasContentFn = Tables::CONTENTS()->getAliasFn();
+        $aliasAuthorFn = Tables::AUTHORS()->getAliasFn();
         return [
             $aliasFn('id'),
             $aliasFn('enabled'),
@@ -160,7 +158,17 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
             Tables::APPLICATIONS()->getAliasFn()('id'),
-            Tables::APPLICATIONS()->getAliasFn()('title')
+            Tables::APPLICATIONS()->getAliasFn()('title'),
+            $aliasContentFn('locale'),
+            $aliasContentFn('format'),
+            $aliasContentFn('title'),
+            $aliasContentFn('content'),
+            $aliasContentFn('summary'),
+            $aliasContentFn('created_at'),
+            $aliasContentFn('updated_at'),
+            $aliasAuthorFn('id'),
+            $aliasAuthorFn('first_name'),
+            $aliasAuthorFn('last_name')
         ];
     }
 
@@ -201,6 +209,8 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
      */
     public function filterUser(int $id): void
     {
-        $this->user = $id;
+        $this->query->andWhere(group(
+            field(Tables::CONTENTS()->user_id)->eq($id)
+        ));
     }
 }
