@@ -41,6 +41,7 @@ class UpdateAbilityAction extends Action
     {
         return Expect::structure([
             'data' => Expect::structure([
+                'id' => Expect::string(),
                 'type' => Expect::string(),
                 'attributes' => Expect::structure([
                     'name' => Expect::string()->required(),
@@ -52,7 +53,7 @@ class UpdateAbilityAction extends Action
                             Expect::structure([
                                 'type' => Expect::string(),
                                 'id' => Expect::string()
-                                ])
+                            ])
                         )
                     ])
                 ])
