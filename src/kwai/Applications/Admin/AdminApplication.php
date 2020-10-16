@@ -12,6 +12,8 @@ use Kwai\Applications\Admin\Actions\BrowseStoriesAction;
 use Kwai\Applications\Application;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
+use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Kwai\Applications\Admin\Actions\AttachAbilityAction;
 use Kwai\Applications\Admin\Actions\BrowseAbilitiesAction;
@@ -48,6 +50,8 @@ class AdminApplication extends Application
 
         $this->addDependency('filesystem', new FileSystemDependency());
         $this->addDependency('converter', new ConvertDependency());
+        $this->addDependency('template', new TemplateDependency());
+        $this->addDependency('mailer', new MailerDependency());
     }
 
     public function createRoutes(RouteCollectorProxy $group): void
