@@ -2,7 +2,7 @@
     Beste <?= $this->e($name) ?>,<br />
     <br />
     Je werd uitgenodigd om lid te worden van onze website!<br /><br />
-    Klik op deze <a href="<?= $this->e($website['url']) ?>">link</a> om deze uitnodiging
+    Klik op deze <a href="<?= $this->e($website['url']) ?>#/users/invite/<?= $this->e($uuid) ?>">link</a> om deze uitnodiging
     te activeren.
 </p>
 <p>
