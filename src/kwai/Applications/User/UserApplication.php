@@ -10,6 +10,7 @@ namespace Kwai\Applications\User;
 use Kwai\Applications\Application;
 use Kwai\Applications\User\Actions\ConfirmInvitationAction;
 use Kwai\Applications\User\Actions\GetUserAction;
+use Kwai\Applications\User\Actions\GetUserInvitationAction;
 use Kwai\Applications\User\Actions\LoginAction;
 use Kwai\Applications\User\Actions\LogoutAction;
 use Kwai\Applications\User\Actions\RefreshTokenAction;
@@ -94,6 +95,10 @@ class UserApplication extends Application
             function (RouteCollectorProxy $invitationGroup) {
                 $invitationGroup
                     ->options('', PreflightAction::class)
+                ;
+                $invitationGroup
+                    ->get('', GetUserInvitationAction::class)
+                    ->setName('users.invitations.token')
                 ;
                 $invitationGroup
                     ->post('', ConfirmInvitationAction::class)

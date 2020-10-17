@@ -210,12 +210,16 @@ class AdminApplication extends Application
                 $invitationGroup
                     ->get('', GetUserInvitationAction::class)
                     ->setName('users.invitations.token')
+                    ->setArgument('auth', 'true')
                 ;
                 // Confirm an invitation
+/*
                 $invitationGroup
                     ->post('', ConfirmInvitationAction::class)
                     ->setName('users.invitations.confirm')
+                    ->setArgument('auth', 'true')
                 ;
+*/
             }
         );
 
