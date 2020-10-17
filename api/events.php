@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require '../src/vendor/autoload.php';
 
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use REST\Events\Actions\EventBrowseAction;
 use REST\Events\Actions\EventCreateAction;
 use REST\Events\Actions\EventReadAction;
@@ -13,9 +14,11 @@ use function Kwai\Core\Infrastructure\createApplication;
 $app = createApplication();
 
 $app->group('/events', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
     $group->get('', EventBrowseAction::class)
         ->setName('events.browse')
     ;
+    $group->options('/{id:[0-9]+}', PreflightAction::class);
     $group->get('/{id:[0-9]+}', EventReadAction::class)
         ->setName('events.read')
     ;

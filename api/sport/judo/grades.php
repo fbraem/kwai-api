@@ -9,6 +9,7 @@ $app = createApplication('/api/sport/judo');
 
 
 $app->group('/grades', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
     $group->get('', BrowseAction::class)
         ->setName('sport.judo.grades.browse')
     ;

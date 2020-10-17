@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require '../src/vendor/autoload.php';
 
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use REST\Trainings\Actions\CoachBrowseAction;
 use REST\Trainings\Actions\CoachCreateAction;
 use REST\Trainings\Actions\CoachDeleteAction;
@@ -23,9 +24,11 @@ use function Kwai\Core\Infrastructure\createApplication;
 $app = createApplication();
 
 $app->group('/trainings', function (RouteCollectorProxy $group) {
+    $group->options('/definitions', PreflightAction::class);
     $group->get('/definitions', DefinitionBrowseAction::class)
         ->setName('trainings.definitions.browse')
     ;
+    $group->options('/definitions/{id:[0-9]+}', PreflightAction::class);
     $group->get('/definitions/{id:[0-9]+}', DefinitionReadAction::class)
         ->setName('trainings.definitions.read')
     ;
@@ -38,12 +41,14 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
         ->setArgument('auth', 'true')
     ;
 
+    $group->options('/coaches/{id:[0-9]+}', PreflightAction::class);
     $group->get('/coaches', CoachBrowseAction::class)
         ->setName('trainings.coaches.browse')
     ;
     $group->get('/coaches/{id:[0-9]+}', CoachReadAction::class)
         ->setName('trainings.coaches.read')
     ;
+    $group->options('/coaches', PreflightAction::class);
     $group->post('/coaches', CoachCreateAction::class)
         ->setName('trainings.coaches.create')
         ->setArgument('auth', 'true')
@@ -57,9 +62,11 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
         ->setArgument('auth', 'true')
     ;
 
+    $group->options('', PreflightAction::class);
     $group->get('', TrainingBrowseAction::class)
         ->setName('trainings.browse')
     ;
+    $group->options('/{id:[0-9]+}', PreflightAction::class);
     $group->get('/{id:[0-9]+}', TrainingReadAction::class)
         ->setName('trainings.read')
     ;
@@ -71,6 +78,7 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
         ->setName('trainings.update')
         ->setArgument('auth', 'true')
     ;
+    $group->options('/{id:[0-9]+}/presences', PreflightAction::class);
     $group->post('/{id:[0-9]+}/presences', PresenceCreateAction::class)
         ->setName('trainings.training.presences.create')
         ->setArgument('auth', 'true')
