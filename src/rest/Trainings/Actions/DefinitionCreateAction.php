@@ -72,7 +72,7 @@ class DefinitionCreateAction
             $def->active = $attributes['active'] ?? true;
             $def->location = $attributes['location'] ?? null;
             $def->remark = $attributes['remark'] ?? null;
-            $def->user = $request->getAttribute('clubman.user');
+            $def->user = $request->getAttribute('kwai.user')->id();
 
             (new \REST\Trainings\DefinitionValidator())->validate($def);
 
