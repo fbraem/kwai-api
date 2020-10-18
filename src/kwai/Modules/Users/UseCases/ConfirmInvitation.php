@@ -75,9 +75,14 @@ final class ConfirmInvitation
             throw new UnprocessableException('User invitation is already confirmed');
         }
 
+        $email = new EmailAddress($command->email);
+        if ($this->userRepo->existsWithEmail($email)) {
+            throw new UnprocessableException('Email is already used');
+        }
+
         $user = new User((object)[
             'uuid' => new UniqueId(),
-            'emailAddress' => $invitation->getEmailAddress(),
+            'emailAddress' => $email,
             'username' => new Username($command->firstName, $command->lastName)
         ]);
 

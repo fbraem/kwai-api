@@ -32,9 +32,13 @@ final class ConfirmInvitationCommand
      */
     public string $lastName;
 
-
     /**
      * The password
      */
     public string $password;
+
+    /**
+     * The email of the new user
+     */
+    public string $email;
 }

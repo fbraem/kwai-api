@@ -46,6 +46,7 @@ class ConfirmInvitationAction extends Action
                     'remark' => Expect::string(),
                     'first_name' => Expect::string()->required(),
                     'last_name' => Expect::string()->required(),
+                    'email' => Expect::string()->required(),
                     'password' => Expect::string()->required()
                 ])
             ])
@@ -57,6 +58,7 @@ class ConfirmInvitationAction extends Action
         $command = new ConfirmInvitationCommand();
         $command->firstName = $normalized->data->attributes->first_name;
         $command->lastName = $normalized->data->attributes->last_name;
+        $command->email = $normalized->data->attributes->email;
         $command->remark = $normalized->data->attributes->remark ?? null;
         $command->password = $normalized->data->attributes->password;
 
