@@ -50,10 +50,12 @@ sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysq
 service mysql restart
 
 # Install PHP
-apt-get install -y php7.4 php-mysql libapache2-mod-php
+apt-get install -y php7.4 php-mysql libapache2-mod-php php-intl
 
 php -v
 a2enmod php7.4
+
+phpenmod intl
 
 if ! [ -L /var/www/kwai_api ]; then
   rm -rf /var/www/kwai_api
