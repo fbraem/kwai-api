@@ -46,7 +46,6 @@ $app->group('/teams', function (RouteCollectorProxy $group) {
         ->setName('teams.available_members.browse')
         ->setArgument('auth', 'true')
     ;
-    $group->options('/{id:[0-9]+}/members', PreflightAction::class);
     $group->post('/{id:[0-9]+}/members', TeamMembersAddAction::class)
         ->setName('teams.members.add')
         ->setArgument('auth', 'true')
