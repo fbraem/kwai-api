@@ -50,7 +50,8 @@ class ApplicationTransformer extends Fractal\TransformerAbstract
     {
         return [
             'id' => $application->id(),
-            'title' => $application->getTitle()
+            'title' => $application->getTitle(),
+            'name' => $application->getName()
         ];
     }
 }

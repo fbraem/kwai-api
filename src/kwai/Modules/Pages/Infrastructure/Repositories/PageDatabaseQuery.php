@@ -137,6 +137,7 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
             $aliasFn('updated_at'),
             Tables::APPLICATIONS()->getAliasFn()('id'),
             Tables::APPLICATIONS()->getAliasFn()('title'),
+            Tables::APPLICATIONS()->getAliasFn()('name'),
             $aliasContentFn('locale'),
             $aliasContentFn('format'),
             $aliasContentFn('title'),

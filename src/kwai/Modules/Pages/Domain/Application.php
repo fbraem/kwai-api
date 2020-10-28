@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage Domain
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -19,7 +19,12 @@ class Application implements DomainEntity
     /**
      * The title of the application.
      */
-    private String $title;
+    private string $title;
+
+    /**
+     * The name of the application
+     */
+    private string $name;
 
     /**
      * Application constructor.
@@ -29,6 +34,7 @@ class Application implements DomainEntity
     public function __construct(object $props)
     {
         $this->title = $props->title;
+        $this->name = $props->name;
     }
 
     /**
@@ -38,4 +44,14 @@ class Application implements DomainEntity
     {
         return $this->title;
     }
+
+    /**
+     * Get the name of the application.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
 }
