@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Applications\Author\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Action;
-use Kwai\Modules\News\UseCases\Content;
+use Kwai\Core\UseCases\Content;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
