@@ -211,6 +211,8 @@ abstract class Application
 
             $payload = ['error' => $exception->getMessage()];
 
+            // TODO: There are no CORS headers set on failure...
+            // See: https://github.com/slimphp/Slim/issues/2999
             $response = $app->getResponseFactory()->createResponse(500, 'Unknown error occurred');
             $response->getBody()->write(
                 json_encode($payload, JSON_UNESCAPED_UNICODE)
