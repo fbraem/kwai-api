@@ -33,7 +33,8 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
         $query = $this->db->createQueryFactory()
             ->select(
                 $aliasFn('id'),
-                $aliasFn('title')
+                $aliasFn('title'),
+                $aliasFn('name')
             )
             ->from((string) Tables::APPLICATIONS())
             ->where(field(Tables::APPLICATIONS()->id)->eq($id))
