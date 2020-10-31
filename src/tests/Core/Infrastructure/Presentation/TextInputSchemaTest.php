@@ -18,7 +18,7 @@ it('can process a text', function () {
             'content' => 'This is the content of the test'
         ]
     );
-    assertEquals($content->title, 'Test');
+    expect($content->title)->toBe('Test');
 });
 
 it('can set a default format', function () {
@@ -34,7 +34,7 @@ it('can set a default format', function () {
         ]
     );
     $content = $schema->process($normalized);
-    assertEquals($content->format, 'md');
+    expect($content->format)->toBe('md');
 });
 
 it('throws an exception when required value is missing', function () {
