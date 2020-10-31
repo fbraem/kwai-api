@@ -6,67 +6,51 @@ declare(strict_types=1);
 
 namespace Tests\Core\Domain\Infrastructure;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\QueryException;
-use PHPUnit\Framework\TestCase;
-
-use Kwai\Core\Infrastructure\Database;
 
 use Latitude\QueryBuilder\QueryFactory;
 
-final class DatabaseTest extends TestCase
-{
-    private const DB_MEMORY = 'sqlite::memory:';
+const DB_MEMORY = 'sqlite::memory:';
 
-    public function testDatabase(): void
-    {
-        $this->assertInstanceOf(
-            Database\Connection::class,
-            new Database\Connection(self::DB_MEMORY)
-        );
+it('can instantiate a database', function () {
+    $db = new Connection(DB_MEMORY);
+    expect($db)->toBeInstanceOf(Connection::class);
+});
+
+it('throws an exception for an invalid connection', function () {
+    new Connection('sqlite');
+})->throws(DatabaseException::class);
+
+it('can create a QueryFactory', function () {
+    $db = new Connection(DB_MEMORY);
+    $qf = $db->createQueryFactory();
+    expect($qf)->toBeInstanceOf(QueryFactory::class);
+});
+
+it('can execute a query', function () {
+    $db = new Connection(DB_MEMORY);
+    $qf = $db->createQueryFactory();
+    $query = $qf
+        ->select('name', 'type')
+        ->from('sqlite_master')
+    ;
+    try {
+        $stmt = $db->execute($query);
+        $result = $stmt->fetchAll();
+        expect($result)->toBeArray();
+    } catch (QueryException $e) {
     }
+});
 
-    public function testDatabaseException(): void
-    {
-        $this->expectException(Database\DatabaseException::class);
-        new Database\Connection('sqlite');
-    }
-
-    public function testDatabaseQueryFactory(): void
-    {
-        $db = new Database\Connection(self::DB_MEMORY);
-        $qf = $db->createQueryFactory();
-        $this->assertInstanceOf(
-            QueryFactory::class,
-            $qf
-        );
-    }
-
-    public function testDatabaseQuery(): void
-    {
-        $db = new Database\Connection(self::DB_MEMORY);
-        $qf = $db->createQueryFactory();
-        $query = $qf
-            ->select('name', 'type')
-            ->from('sqlite_master')
-        ;
-        try {
-            $stmt = $db->execute($query);
-            $result = $stmt->fetchAll();
-            $this->assertIsArray($result);
-        } catch (QueryException $e) {
-        }
-    }
-
-    public function testDatabaseQueryException(): void
-    {
-        $this->expectException(QueryException::class);
-
-        $db = new Database\Connection(self::DB_MEMORY);
-        $qf = $db->createQueryFactory();
-        $query = $qf
-            ->select()
-            ->from('')
-        ;
-        $db->execute($query);
-    }
-}
+it('throws an exception for an invalid query', function () {
+    $db = new Connection(DB_MEMORY);
+    $qf = $db->createQueryFactory();
+    $query = $qf
+        ->select()
+        ->from('')
+    ;
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $db->execute($query);
+})->throws(QueryException::class);
