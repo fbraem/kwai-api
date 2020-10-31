@@ -1,8 +1,4 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\News\UseCases;
