@@ -115,7 +115,7 @@ final class Connection
      */
     public function createQueryFactory(): QueryFactory
     {
-        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driver = $this->getDriver();
         if ($driver == 'mysql') {
             return new QueryFactory(new MySqlEngine());
         } elseif ($driver == 'sqlite') {
@@ -153,6 +153,14 @@ final class Connection
     public function getPDO(): PDO
     {
         return $this->pdo;
+    }
+
+    /**
+     * Get the driver name
+     */
+    public function getDriver(): string
+    {
+        return $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 
     /**
