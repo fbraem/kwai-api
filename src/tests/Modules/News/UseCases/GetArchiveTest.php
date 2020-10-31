@@ -11,20 +11,24 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\GetArchive;
 use Kwai\Modules\News\UseCases\GetArchiveCommand;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-class GetArchiveTest extends DatabaseTestCase
-{
-    public function testGetArchive(): void
-    {
-        $command = new GetArchiveCommand();
-        try {
-            $archive = (new GetArchive(
-                new StoryDatabaseRepository(self::$db)
-            ))($command);
-            self::assertGreaterThan(0, count($archive), 'No archive found!');
-        } catch (RepositoryException $e) {
-            self::assertTrue(false, (string) $e);
-        }
+$context = Context::createContext();
+
+it('can get an story archive', function () use ($context) {
+    $command = new GetArchiveCommand();
+    try {
+        $archive = (new GetArchive(
+            new StoryDatabaseRepository($context->db)
+        ))($command);
+
+        expect($archive)
+            ->toBeGreaterThan(0)
+        ;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
-}
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip($context->db->getDriver() == 'sqlite', 'sqlite does not support YEAR function')
+;
