@@ -1,7 +1,4 @@
 <?php
-/**
- * Testcase for SmtpMailerService
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Infstrastucture\Mailer;
@@ -9,42 +6,34 @@ namespace Tests\Modules\Mails\Infstrastucture\Mailer;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
-use PHPUnit\Framework\TestCase;
 
 use Kwai\Modules\Mails\Infrastructure\Mailer\SimpleMessage;
 use Kwai\Modules\Mails\Infrastructure\Mailer\MailerException;
 
-/**
- * @group mail
- */
-final class SmtpMailerServiceTest extends TestCase
-{
-    public function testSimpleMail()
-    {
-        $mailer = (new MailerServiceFactory())->create(
-            $_ENV['smtp']
-        );
+it('can send a mail', function () {
+    $mailer = (new MailerServiceFactory())->create(
+        $_ENV['smtp']
+    );
 
-        $result = $mailer->send(
-            new SimpleMessage('Hello', 'World'),
-            new Address(new EmailAddress($_ENV['from'])),
-            ['franky.braem@gmail.com' => 'Franky Braem']
-        );
-        $this->assertGreaterThan(0, $result, 'No mails send');
-    }
+    $result = $mailer->send(
+        new SimpleMessage('Hello', 'World'),
+        new Address(new EmailAddress($_ENV['from'])),
+        ['jigoro.kano@kwai.com' => 'Jigoro Kano']
 
-    public function testSimpleNoRecipients()
-    {
-        $this->expectException(MailerException::class);
+    );
+    expect($result)
+        ->toBe(1)
+    ;
+});
 
-        $mailer = (new MailerServiceFactory())->create(
-            $_ENV['smtp']
-        );
+it('fails when no recipient is set', function () {
+    $mailer = (new MailerServiceFactory())->create(
+        $_ENV['smtp']
+    );
 
-        $mailer->send(
-            new SimpleMessage('Hello', 'World'),
-            new Address(new EmailAddress($_ENV['from'])),
-            []
-        );
-    }
-}
+    $mailer->send(
+        new SimpleMessage('Hello', 'World'),
+        new Address(new EmailAddress($_ENV['from'])),
+        []
+    );
+})->throws(MailerException::class);

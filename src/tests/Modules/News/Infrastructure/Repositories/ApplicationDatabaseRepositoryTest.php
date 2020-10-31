@@ -9,32 +9,26 @@ namespace Tests\Modules\News\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
+use Kwai\Modules\News\Domain\Application;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\News\Repositories\ApplicationRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-class ApplicationDatabaseRepositoryTest extends DatabaseTestCase
-{
-    private ApplicationRepository $repo;
+$context = Context::createContext();
 
-    public function setUp(): void
-    {
-        $this->repo = new ApplicationDatabaseRepository(self::$db);
+it('can retrieve an application by id', function () use ($context) {
+    $repo = new ApplicationDatabaseRepository($context->db);
+    try {
+        $application = $repo->getById(1);
+        expect($application)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($application->domain())
+            ->toBeInstanceOf(Application::class)
+        ;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (ApplicationNotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
     }
-
-    public function testGetById()
-    {
-        try {
-            $category = $this->repo->getById(1);
-            $this->assertInstanceOf(
-                Entity::class,
-                $category
-            );
-        } catch (RepositoryException $e) {
-            $this->assertTrue(false, (string) $e);
-        } catch (CategoryNotFoundException $e) {
-            $this->assertTrue(false, (string) $e);
-        }
-    }
-}
+});

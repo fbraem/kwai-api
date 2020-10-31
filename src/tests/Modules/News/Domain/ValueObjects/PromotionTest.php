@@ -10,38 +10,52 @@ namespace Tests\Modules\News\Domain\ValueObjects;
 use Carbon\Carbon;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
-use PHPUnit\Framework\TestCase;
 
-class PromotionTest extends TestCase
-{
-    public function testIsEnabled()
-    {
-        $promotion = new Promotion();
-        self::assertFalse($promotion->isEnabled(), 'Promotion should not be enabled by default');
+it('can check if a promotion is enabled', function () {
+    $promotion = new Promotion();
+    expect($promotion->isEnabled())
+        ->toBe(false)
+    ;
 
-        $promotion = new Promotion(1);
-        self::assertTrue($promotion->isEnabled(), 'Promotion should be enabled');
+    $promotion = new Promotion(1);
+    expect($promotion->isEnabled())
+        ->toBe(true)
+    ;
 
-        $promotion = new Promotion(1, Timestamp::createNow());
-        self::assertTrue($promotion->isEnabled(), 'Promotion should be enabled');
-    }
+    $promotion = new Promotion(1, Timestamp::createNow());
+    expect($promotion->isEnabled())
+        ->toBe(true)
+    ;
+});
 
-    public function testIsActive()
-    {
-        $promotion = new Promotion();
-        self::assertFalse($promotion->isActive(), 'Promotion should not be active by default');
+it('can check if a promotion is active', function () {
+    $promotion = new Promotion();
+    expect($promotion->isActive())
+        ->toBe(false)
+    ;
 
-        $promotion = new Promotion(1);
-        self::assertTrue($promotion->isActive(), 'Promotion should be active');
+    $promotion = new Promotion(1);
+    expect($promotion->isActive())
+        ->toBe(true)
+    ;
 
-        $timeStamp = Carbon::now();
-        $timeStamp->subDays(7);
-        $promotion = new Promotion(1, Timestamp::createFromString($timeStamp->toDateTimeString()));
-        self::assertFalse($promotion->isActive(), 'Promotion should not be active');
+    $timeStamp = Carbon::now();
+    $timeStamp->subDays(7);
+    $promotion = new Promotion(
+        1,
+        Timestamp::createFromString($timeStamp->toDateTimeString())
+    );
+    expect($promotion->isActive())
+        ->toBe(false)
+    ;
 
-        $timeStamp = Carbon::now();
-        $timeStamp->addDays(7);
-        $promotion = new Promotion(1, Timestamp::createFromString($timeStamp->toDateTimeString()));
-        self::assertTrue($promotion->isActive(), 'Promotion should be active');
-    }
-}
+    $timeStamp = Carbon::now();
+    $timeStamp->addDays(7);
+    $promotion = new Promotion(
+        1,
+        Timestamp::createFromString($timeStamp->toDateTimeString())
+    );
+    expect($promotion->isActive())
+        ->toBe(true)
+    ;
+});

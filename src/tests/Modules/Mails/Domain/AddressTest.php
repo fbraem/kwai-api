@@ -1,38 +1,32 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Domain;
 
-use PHPUnit\Framework\TestCase;
-
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 
-final class AddressTest extends TestCase
-{
-    public function testAddressWithEmail(): void
-    {
-        $address = new Address(new EmailAddress('test@kwai.com'));
-        $this->assertInstanceOf(
-            Address::class,
-            $address
-        );
-        $this->assertEquals('test@kwai.com', $address->getEmail());
-        $this->assertEquals('', $address->getName());
-    }
+it('can create an address without a name', function () {
+    $address = new Address(
+        new EmailAddress('test@kwai.com')
+    );
+    expect($address)
+        ->toBeInstanceOf(Address::class);
+    expect(strval($address->getEmail()))
+        ->toBe('test@kwai.com');
+    expect($address->getName())
+        ->toBe('');
+});
 
-    public function testAddressWithEmailAndName(): void
-    {
-        $address = new Address(new EmailAddress('test@kwai.com'), 'Test');
-        $this->assertInstanceOf(
-            Address::class,
-            $address
-        );
-        $this->assertEquals('test@kwai.com', $address->getEmail());
-        $this->assertEquals('Test', $address->getName());
-    }
-}
+it('can create an address with an email and name', function () {
+    $address = new Address(
+        new EmailAddress('test@kwai.com'),
+        'Test'
+    );
+    expect($address)
+        ->toBeInstanceOf(Address::class);
+    expect(strval($address->getEmail()))
+        ->toBe('test@kwai.com');
+    expect($address->getName())
+        ->toBe('Test');
+});

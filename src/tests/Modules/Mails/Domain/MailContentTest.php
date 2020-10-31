@@ -1,40 +1,32 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Domain;
 
 use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
-use PHPUnit\Framework\TestCase;
 
-final class MailContentTest extends TestCase
-{
-    public function testMailContentWithHtml(): void
-    {
-        $mailContent = new MailContent('Test', 'TEST', '<b>TEST</b>');
-        $this->assertInstanceOf(
-            MailContent::class,
-            $mailContent
-        );
-        $this->assertEquals('Test', $mailContent->getSubject());
-        $this->assertEquals('<b>TEST</b>', $mailContent->getHtml());
-        $this->assertEquals('TEST', $mailContent->getText());
-        $this->assertTrue($mailContent->hasHtml());
-    }
+it('can create an email with HTML', function () {
+    $mailContent = new MailContent('Test', 'TEST', '<b>TEST</b>');
+    expect($mailContent)
+        ->toBeInstanceOf(MailContent::class);
+    expect($mailContent->getSubject())
+        ->toBe('Test');
+    expect($mailContent->getHtml())
+        ->toBe('<b>TEST</b>');
+    expect($mailContent->getText())
+        ->toBe('TEST');
+    expect($mailContent->hasHtml())
+        ->toBe(true);
+});
 
-    public function testMailContentWithoutHtml(): void
-    {
-        $mailContent = new MailContent('Test', 'TEST');
-        $this->assertInstanceOf(
-            MailContent::class,
-            $mailContent
-        );
-        $this->assertEquals('Test', $mailContent->getSubject());
-        $this->assertEquals('', $mailContent->getHtml());
-        $this->assertEquals('TEST', $mailContent->getText());
-        $this->assertFalse($mailContent->hasHtml());
-    }
-}
+it('can create an email without HTML', function () {
+    $mailContent = new MailContent('Test', 'TEST');
+    expect($mailContent)
+        ->toBeInstanceOf(MailContent::class);
+    expect($mailContent->getSubject())
+        ->toBe('Test');
+    expect($mailContent->getText())
+        ->toBe('TEST');
+    expect($mailContent->hasHtml())
+        ->toBe(false);
+});

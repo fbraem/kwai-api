@@ -14,109 +14,125 @@ use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Domain\Exceptions\CategoryNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
-use Kwai\Modules\News\Repositories\AuthorRepository;
-use Kwai\Modules\News\Repositories\ApplicationRepository;
-use Kwai\Modules\News\Repositories\StoryRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-class StoryDatabaseRepositoryTest extends DatabaseTestCase
-{
-    private StoryRepository $repo;
-    private ApplicationRepository $appRepo;
-    private AuthorRepository $authorRepo;
+$context = Context::createContext();
 
-    public function setUp(): void
-    {
-        $this->repo = new StoryDatabaseRepository(self::$db);
-        $this->appRepo = new ApplicationDatabaseRepository(self::$db);
-        $this->authorRepo = new AuthorDatabaseRepository(self::$db);
-    }
-
-    /**
-     * @return Entity<Story>|null
-     */
-    public function testCreate(): ?Entity
-    {
-        // This test will create a promoted story.
+beforeAll(function () use ($context) {
+    if (Context::hasDatabase()) {
         try {
-            $story = $this->repo->create(new Story(
-                (object)[
-                    'enabled' => true,
-                    'promotion' => new Promotion(1),
-                    'publishTime' => Timestamp::createNow('Europe/Brussels'),
-                    'category' => $this->appRepo->getById(1),
-                    'contents'=> [
-                        new Text(
-                            new Locale('nl'),
-                            new DocumentFormat('md'),
-                            'Unit Test',
-                            'Summary for Unit Test',
-                            'Content for **Unit** Test',
-                            $this->authorRepo->getById(1)
-                        )
-                    ]
-                ]
-            ));
-            $this->assertInstanceOf(
-                Entity::class,
-                $story
-            );
-            return $story;
-        } catch (RepositoryException $e) {
-            $this->assertTrue(false, (string) $e);
-        } catch (CategoryNotFoundException $e) {
-            $this->assertTrue(false, (string) $e);
+            $context->author = (new AuthorDatabaseRepository($context->db))->getById(1);
         } catch (AuthorNotFoundException $e) {
-            $this->assertTrue(false, (string) $e);
+        } catch (RepositoryException $e) {
         }
-        return null;
-    }
 
-    /**
-     * @depends testCreate
-     * @param Entity|null $lastCreated
-     */
-    public function testGetById(?Entity $lastCreated)
-    {
+        try {
+            $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
+        } catch (ApplicationNotFoundException $e) {
+        } catch (RepositoryException $e) {
+        }
+    }
+});
+
+it('can create a story', function () use ($context) {
+    // This test will create a promoted story.
+    if (! isset($context->author)) {
+        $this->assertTrue(false, 'No author');
+    }
+    if (! isset($context->application)) {
+        $this->assertTrue(false, 'No application');
+    }
+    $repo = new StoryDatabaseRepository($context->db);
+    try {
+        $story = $repo->create(new Story(
+            (object)[
+                'enabled' => true,
+                'promotion' => new Promotion(1),
+                'publishTime' => Timestamp::createNow('Europe/Brussels'),
+                'application' => $context->application,
+                'contents'=> [
+                    new Text(
+                        new Locale('nl'),
+                        new DocumentFormat('md'),
+                        'Unit Test',
+                        'Summary for Unit Test',
+                        'Content for **Unit** Test',
+                        $context->author
+                    )
+                ]
+            ]
+        ));
+        expect($story)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($story->domain())
+            ->toBeInstanceOf(Story::class)
+        ;
+        return $story;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (ApplicationNotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (AuthorNotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    }
+    return null;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it(
+    'can retrieve a story',
+    function (Entity $lastCreated) use ($context) {
         // Skip test if testCreate failed.
         if ($lastCreated == null) {
             return;
         }
 
+        $repo = new StoryDatabaseRepository($context->db);
         try {
-            $story = $this->repo->getById($lastCreated->id());
-            $this->assertInstanceOf(
-                Entity::class,
-                $story
-            );
+            $story = $repo->getById($lastCreated->id());
+            expect($story)
+                ->toBeInstanceOf(Entity::class)
+            ;
+            expect($story->domain())
+                ->toBeInstanceOf(Story::class)
+            ;
         } catch (StoryNotFoundException $e) {
             $this->assertTrue(false, (string) $e);
         } catch (RepositoryException $e) {
             $this->assertTrue(false, (string) $e);
         }
     }
+)
+    ->depends('it it can create a story')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    public function testQuery()
-    {
-        $query = $this->repo->createQuery();
-        $query->filterPromoted();
-        try {
-            $stories = $query->execute();
-            $this->assertGreaterThan(
-                0,
-                count($stories),
-                'At least one story must be found'
-            );
-        } catch (QueryException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
+it('can query stories', function () use ($context) {
+    $repo = new StoryDatabaseRepository($context->db);
+    $query = $repo->createQuery();
+    $query->filterPromoted();
+    try {
+        $stories = $query->execute();
+        expect($stories)
+            ->toBeArray()
+        ;
+        expect(count($stories))
+            ->toBeGreaterThan(0)
+        ;
+    } catch (QueryException $e) {
+        $this->assertTrue(false, $e->getMessage());
     }
-}
+})
+    ->depends('it it can create a story')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

@@ -1,37 +1,26 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Applications\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Applications\Domain\Application;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\Applications\Repositories\ApplicationRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-class ApplicationDatabaseRepositoryTest extends DatabaseTestCase
-{
-    private ApplicationRepository $repo;
+$context = Context::createContext();
 
-    public function setUp(): void
-    {
-        $this->repo = new ApplicationDatabaseRepository(self::$db);
+it('can retrieve an application', function () use ($context) {
+    $repo = new ApplicationDatabaseRepository($context->db);
+    try {
+        $application = $repo->getById(1);
+        expect($application)->toBeInstanceOf(Entity::class);
+        expect($application->domain())->toBeInstanceOf(Application::class);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, strval($e));
+    } catch (ApplicationNotFoundException $e) {
+        $this->assertTrue(false, strval($e));
     }
-
-    public function testGetById(): void
-    {
-        try {
-            $application = $this->repo->getById(1);
-            $this->assertInstanceOf(Entity::class, $application);
-        } catch (RepositoryException $e) {
-            $this->assertTrue(false, strval($e));
-        } catch (ApplicationNotFoundException $e) {
-            $this->assertTrue(false, strval($e));
-        }
-    }
-}
+});
