@@ -1,8 +1,4 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\News\UseCases;
@@ -14,37 +10,36 @@ use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\GetStory;
 use Kwai\Modules\News\UseCases\GetStoryCommand;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-class GetStoryTest extends DatabaseTestCase
-{
-    public function testGet()
-    {
-        $command = new GetStoryCommand();
-        $command->id = 1;
+$context = Context::createContext();
 
-        try {
-            $story = (new GetStory(
-                new StoryDatabaseRepository(self::$db),
-                new class implements ImageRepository {
-                    public function getImages(int $id): array
-                    {
-                        return [];
-                    }
+it('can get a story', function () use ($context) {
+    $command = new GetStoryCommand();
+    $command->id = 1;
 
-                    public function removeImages(int $id): void
-                    {
-                    }
+    try {
+        $story = (new GetStory(
+            new StoryDatabaseRepository($context->db),
+            new class implements ImageRepository {
+                public function getImages(int $id): array
+                {
+                    return [];
                 }
-            ))($command);
-            $this->assertInstanceOf(
-                Entity::class,
-                $story
-            );
-        } catch (RepositoryException $e) {
-            self::assertTrue(false, (string) $e);
-        } catch (StoryNotFoundException $e) {
-            self::assertTrue(false, (string) $e);
-        }
+
+                public function removeImages(int $id): void
+                {
+                }
+            }
+        ))($command);
+        expect($story)
+            ->toBeInstanceOf(Entity::class)
+        ;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (StoryNotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
     }
-}
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
