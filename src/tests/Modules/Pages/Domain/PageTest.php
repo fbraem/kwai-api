@@ -15,9 +15,13 @@ it(
     'can add content to a page',
     function () {
         $page = new Page((object)[
-            'application' => new Entity(1, new Application((object)[
-                'title' => 'Test'
-            ]))
+            'application' => new Entity(
+                1,
+                new Application((object)[
+                    'title' => 'Test',
+                    'name' => 'test'
+                ])
+            )
         ]);
         $page->addContent(new Text(
             new Locale('nl'),
@@ -25,12 +29,19 @@ it(
             'Test',
             'Test Summary',
             'Test Content',
-            new Entity(1, new Author((object)[
-                'name' => new Username(
-                    'Jigoro',
-                    'Kono'
-                )]))
+            new Entity(
+                1,
+                new Author((object)[
+                    'name' => new Username(
+                        'Jigoro',
+                        'Kono'
+                    )
+                ])
+            )
         ));
-        assertEquals(1, count($page->getContents()));
+
+        expect($page->getContents())
+            ->toHaveCount(1)
+        ;
     }
 );

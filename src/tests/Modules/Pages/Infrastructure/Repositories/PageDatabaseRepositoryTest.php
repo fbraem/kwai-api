@@ -9,6 +9,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
@@ -31,42 +32,52 @@ beforeAll(function () use ($context) {
         try {
             $context->author = (new AuthorDatabaseRepository($context->db))->getById(1);
         } catch (AuthorNotFoundException $e) {
+        } catch (RepositoryException $e) {
         }
         try {
             $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
         } catch (ApplicationNotFoundException $e) {
+        } catch (RepositoryException $e) {
         }
     }
 });
 
 it('can create a new page', function () use ($context) {
     if (! isset($context->author)) {
-        assertTrue(false, 'No author');
+        $this->assertTrue(false, 'No author');
     }
     if (! isset($context->application)) {
-        assertTrue(false, 'No application');
+        $this->assertTrue(false, 'No application');
     }
 
     $repo = new PageDatabaseRepository($context->db);
-    $page = $repo->create(new Page((object) [
-        'enabled' => true,
-        'contents' => [
-            new Text(
-                new Locale('nl'),
-                new DocumentFormat('md'),
-                'Test Page',
-                'This is a test summary',
-                'This is the content',
-                $context->author
-            ),
-        ],
-        'images' => [],
-        'priority' => 0,
-        'application' => $context->application
-    ]));
-    $context->pageId = $page->id();
-    assertInstanceOf(Entity::class, $page);
-    assertInstanceOf(Page::class, $page->domain());
+    try {
+        $page = $repo->create(new Page((object)[
+            'enabled' => true,
+            'contents' => [
+                new Text(
+                    new Locale('nl'),
+                    new DocumentFormat('md'),
+                    'Test Page',
+                    'This is a test summary',
+                    'This is the content',
+                    $context->author
+                ),
+            ],
+            'images' => [],
+            'priority' => 0,
+            'application' => $context->application
+        ]));
+        $context->pageId = $page->id();
+        expect($page)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($page->domain())
+            ->toBeInstanceOf(Page::class)
+        ;
+    } catch (Exception $e) {
+        $this->assertTrue(false, (string) $e);
+    }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
@@ -75,12 +86,20 @@ it('can find a page for a given id', function () use ($context) {
     $repo = new PageDatabaseRepository($context->db);
     try {
         $page = $repo->getById($context->pageId);
-        assertInstanceOf(Entity::class, $page);
+        expect($page)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($page->domain())
+            ->toBeInstanceOf(Page::class)
+        ;
     } catch (PageNotFoundException $nfe) {
-        assertTrue(false, 'Page not found');
+        $this->assertTrue(false, 'Page not found');
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it it can create a new page')
 ;
 
 it('can update a page', function () use ($context) {
@@ -111,12 +130,17 @@ it('can update a page', function () use ($context) {
         );
         $repo->update($page);
         $newPage = $repo->getById($context->pageId);
-        assertEquals('Test Update', $newPage->getContents()[0]->getTitle());
+        expect($newPage->getContents()[0]->getTitle())
+            ->toBe('Test Update')
+        ;
     } catch (PageNotFoundException $nfe) {
-        assertTrue(false, 'Page not found');
+        $this->assertTrue(false, 'Page not found');
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it it can create a new page')
 ;
 
 it('can delete a page', function () use ($context) {
@@ -124,18 +148,27 @@ it('can delete a page', function () use ($context) {
     try {
         $page = $repo->getById($context->pageId);
         $repo->remove($page);
-        test()->expectNotToPerformAssertions();
+        $this->expectNotToPerformAssertions();
     } catch (PageNotFoundException $nfe) {
-        assertTrue(false, 'Page not found');
+        $this->assertTrue(false, 'Page not found');
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it it can create a new page')
 ;
 
 test('getById throws a page not found exception', function () use ($context) {
     $repo = new PageDatabaseRepository($context->db);
-    $repo->getById($context->pageId);
+    try {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $repo->getById($context->pageId);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
+    }
 })
     ->throws(PageNotFoundException::class)
+    ->depends('it it can delete a page')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
