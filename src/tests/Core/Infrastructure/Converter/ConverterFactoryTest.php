@@ -1,8 +1,4 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Core\Infrastructure\Converter;
@@ -12,28 +8,17 @@ use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Converter\MarkdownConverter;
 use PHPUnit\Framework\TestCase;
 
-class ConverterFactoryTest extends TestCase
-{
-    public function testCreateConverter(): Converter
-    {
-        $factory = new ConverterFactory();
-        $factory->register('md', MarkdownConverter::class);
-        $converter = $factory->createConverter('md');
-        $this->assertInstanceOf(
-            MarkdownConverter::class,
-            $converter,
-            'This must be a markdown converter'
-        );
-        return $converter;
-    }
+it('can create a converter', function () {
+    $factory = new ConverterFactory();
+    $factory->register('md', MarkdownConverter::class);
+    $converter = $factory->createConverter('md');
+    expect($converter)->toBeInstanceOf(MarkdownConverter::class);
+    return $converter;
+});
 
-    /**
-    /* @depends testCreateConverter
-     * @param Converter $converter
-     */
-    public function testConvert(Converter $converter)
-    {
-        $html = $converter->convert('**TEST**');
-        $this->assertEquals('<p><strong>TEST</strong></p>', $html, 'Invalid HTML generated');
-    }
-}
+// TODO: https://github.com/pestphp/pest/issues/213
+// "it" must repeated in the depends method
+it('can convert markdown', function ($converter) {
+    $html = $converter->convert('**TEST**');
+    expect($html)->toBe('<p><strong>TEST</strong></p>');
+})->depends('it it can create a converter');

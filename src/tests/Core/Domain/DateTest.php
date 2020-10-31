@@ -6,40 +6,24 @@ declare(strict_types=1);
 
 namespace Tests\Core\Domain;
 
-use PHPUnit\Framework\TestCase;
 use Kwai\Core\Domain\ValueObjects\Date;
 
-final class DateTest extends TestCase
-{
-    public function testCreateValidDate(): void
-    {
-        $this->assertInstanceOf(
-            Date::class,
-            Date::createFromDate()
-        );
-    }
+it('can create a valid date', function () {
+    $date = Date::createFromDate();
+    expect($date)->toBeInstanceOf(Date::class);
+});
 
-    public function testCreateStartOfYear(): void
-    {
-        $this->assertEquals(
-            strval(Date::createFromDate(2019)),
-            '2019-01-01'
-        );
-    }
+it('can create a date for the first day of the year', function () {
+    $date = Date::createFromDate(2019);
+    expect(strval($date))->toBe('2019-01-01');
+});
 
-    public function testCreateStartOfMonth(): void
-    {
-        $this->assertEquals(
-            strval(Date::createFromDate(2019, 2)),
-            '2019-02-01'
-        );
-    }
+it('can create a date for the first day of a month', function () {
+    $date = Date::createFromDate(2019, 2);
+    expect(strval($date))->toBe('2019-02-01');
+});
 
-    public function testCreateDate(): void
-    {
-        $this->assertEquals(
-            strval(Date::createFromDate(2019, 2, 28)),
-            '2019-02-28'
-        );
-    }
-}
+it('can create a date', function () {
+    $date = Date::createFromDate(2019, 2, 1);
+    expect(strval($date))->toBe('2019-02-01');
+});

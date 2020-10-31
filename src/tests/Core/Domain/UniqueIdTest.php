@@ -7,29 +7,17 @@ declare(strict_types=1);
 namespace Tests\Core\Domain;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 
-final class UniqueIdTest extends TestCase
-{
-    public function testCreateNewUniqueId(): void
-    {
-        $this->assertInstanceOf(
-            UniqueId::class,
-            new UniqueId()
-        );
-    }
+it('can create a unique id', function () {
+    $uuid = new UniqueId();
+    expect($uuid)->toBeInstanceOf(UniqueId::class);
+});
 
-    public function testInvalidUniqueId(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new UniqueId('invalid');
-    }
+it('throws an exception for an invalid uuid', function () {
+    new UniqueId('invalid');
+})->throws(InvalidArgumentException::class);
 
-    public function testInvalidVersion(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        // A UUID1 is passed
-        new UniqueId('e4eaaaf2-d142-11e1-b3e4-080027620cdd');
-    }
-}
+it('throws an exception for an invalid version', function () {
+    new UniqueId('e4eaaaf2-d142-11e1-b3e4-080027620cdd');
+})->throws(InvalidArgumentException::class);
