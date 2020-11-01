@@ -11,82 +11,90 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
-use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Users\Repositories\AccessTokenRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-/**
- * @group DB
- */
-final class AccessTokenDatabaseRepositoryTest extends DatabaseTestCase
-{
-    /**
-     * @var Entity<User>
-     */
-    private Entity $user;
+$context = Context::createContext();
 
-    private AccessTokenRepository $repo;
-
-    public function setup() : void
-    {
-        $this->repo = new AccessTokenDatabaseRepository(self::$db);
-        $userRepo = new UserDatabaseRepository(self::$db);
-        try {
-            $this->user = $userRepo->getAccount(new EmailAddress($_ENV['user']));
-        } catch (NotFoundException $e) {
-            echo $e->getMessage(), PHP_EOL;
-        }
-    }
-
-    public function testCreateAccessToken()
-    {
-        $future = new DateTime('now +2 hours');
-        $tokenIdentifier = new TokenIdentifier();
-        $accessToken = new AccessToken((object) [
-            'identifier' => $tokenIdentifier,
-            'expiration' => Timestamp::createFromDateTime($future),
-            'account' => $this->user
-        ]);
-        $entity = $this->repo->create($accessToken);
-        $this->assertInstanceOf(
-            Entity::class,
-            $entity
+beforeAll(function () use ($context) {
+    $userRepo = new UserDatabaseRepository($context->db);
+    try {
+        $context->user = $userRepo->getAccount(
+            new EmailAddress($_ENV['user'])
         );
-        return $tokenIdentifier;
+    } catch (NotFoundException $e) {
+        echo $e->getMessage(), PHP_EOL;
+    } catch (RepositoryException $e) {
+        echo $e->getMessage(), PHP_EOL;
     }
+});
 
-    /**
-     * @depends testCreateAccessToken
-     */
-    public function testGetTokensForUser(): void
-    {
-        $accessTokens = $this->repo->getTokensForUser($this->user);
+it('can create an accesstoken', function () use ($context) {
+    if (!isset($context->user)) {
+        return null;
+    }
+    $future = new DateTime('now +2 hours');
+    $tokenIdentifier = new TokenIdentifier();
+    $accessToken = new AccessToken((object) [
+        'identifier' => $tokenIdentifier,
+        'expiration' => Timestamp::createFromDateTime($future),
+        'account' => $context->user
+    ]);
+    $repo = new AccessTokenDatabaseRepository($context->db);
+    try {
+        $entity = $repo->create($accessToken);
+        expect($entity)
+            ->toBeInstanceOf(Entity::class)
+        ;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
+    }
+    return $tokenIdentifier;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can get an accesstoken for a user', function () use ($context) {
+    if (!isset($context->user)) {
+        return null;
+    }
+    $repo = new AccessTokenDatabaseRepository($context->db);
+    try {
+        $accessTokens = $repo->getTokensForUser($context->user);
+        expect($accessTokens)
+            ->toBeArray()
+        ;
         $this->assertContainsOnlyInstancesOf(
             Entity::class,
             $accessTokens
         );
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    /**
-     * @depends testCreateAccessToken
-     * @param TokenIdentifier $tokenIdentifier
-     */
-    public function testGetByTokenIdentifier(TokenIdentifier $tokenIdentifier): void
-    {
-        try {
-            $accessToken = $this->repo->getByTokenIdentifier(
-                $tokenIdentifier
-            );
-            $this->assertInstanceOf(
-                Entity::class,
-                $accessToken
-            );
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
+it('can get an accesstoken with an identifier', function ($tokenIdentifier) use ($context) {
+    $repo = new AccessTokenDatabaseRepository($context->db);
+    try {
+        $accessToken = $repo->getByTokenIdentifier($tokenIdentifier);
+        expect($accessToken)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($accessToken->domain())
+            ->toBeInstanceOf(AccessToken::class)
+        ;
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
-}
+})
+    ->depends('it it can create an accesstoken')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

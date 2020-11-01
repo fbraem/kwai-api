@@ -1,7 +1,4 @@
 <?php
-/**
- * Testcase for Date
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Users\Infrastructure\Repositories;
@@ -9,120 +6,142 @@ namespace Tests\Modules\Users\Infrastructure\Repositories;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Users\Repositories\UserRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-/**
- * @group DB
- */
-final class UserDatabaseRepositoryTest extends DatabaseTestCase
-{
-    private UserRepository $repo;
+$context = Context::createContext();
 
-    public function setup(): void
-    {
-        $this->repo = new UserDatabaseRepository(self::$db);
+it('can get a user with email', function () use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+    try {
+        $user = $repo->getByEmail(new EmailAddress('test@kwai.com'));
+        expect($user)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($user->domain())
+            ->toBeInstanceOf(User::class)
+        ;
+        return $user;
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
+    return null;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    /**
-     * @return Entity<User>
-     */
-    public function testGetByEmail(): Entity
-    {
-        try {
-            $user = $this->repo->getByEmail(new EmailAddress('test@kwai.com'));
-            $this->assertInstanceOf(
-                Entity::class,
-                $user
-            );
-            return $user;
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        return null;
+it('can check if a user with email exists', function () use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+    try {
+        $exist = $repo->existsWithEmail(
+            new EmailAddress('test@kwai.com')
+        );
+        expect($exist)
+            ->toBe(true)
+        ;
+        $exist = $repo->existsWithEmail(
+            new EmailAddress('test@example.com')
+        );
+        expect($exist)
+            ->toBe(false)
+        ;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    public function testExistsWithEmail(): void
-    {
-        $exist = $this->repo->existsWithEmail(new EmailAddress('test@kwai.com'));
-        $this->assertTrue($exist);
+it('can get a user with the given id', function ($user) use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+    try {
+        $entity = $repo->getById($user->id());
+        $this->assertInstanceOf(
+            Entity::class,
+            $entity
+        );
+        expect($entity)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($entity->domain())
+            ->toBeInstanceOf(User::class)
+        ;
+        /* @noinspection PhpUndefinedMethodInspection */
+        return $entity->getUuid();
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
+    return null;
+})
+    ->depends('it it can get a user with email')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    public function testNotExistsWithEmail(): void
-    {
-        $exist = $this->repo->existsWithEmail(new EmailAddress('test@example.com'));
-        $this->assertFalse($exist);
+it('can get a user with the given uuid', function ($uuid) use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+    try {
+        $user = $repo->getByUuid($uuid);
+        expect($user)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($user->domain())
+            ->toBeInstanceOf(User::class)
+        ;
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
+})
+    ->depends('it it can get a user with the given id')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    /**
-     * @depends testGetByEmail
-     * @param Entity $user
-     * @return UniqueId
-     */
-    public function testGetById(Entity $user): UniqueId
-    {
-        try {
-            $entity = $this->repo->getById($user->id());
-            $this->assertInstanceOf(
-                Entity::class,
-                $entity
-            );
-            /* @noinspection PhpUndefinedMethodInspection */
-            return $entity->getUuid();
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        return null;
+it('throws a not found exception when user doesnot exist', function () use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+    try {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $repo->getById(10000);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->throws(NotFoundException::class)
+;
 
-    /**
-     * @depends testGetById
-     * @param UniqueId $uuid
-     */
-    public function testGetByUuid(UniqueId $uuid): void
-    {
-        try {
-            $user = $this->repo->getByUuid($uuid);
-            $this->assertInstanceOf(
-                Entity::class,
-                $user
-            );
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-    }
-
-    /** @noinspection PhpUnhandledExceptionInspection */
-    public function testGetByIdNotFound(): void
-    {
-        $this->expectException(NotFoundException::class);
-        $this->repo->getById(10000);
-    }
-
-    /**
-     * @depends testGetByEmail
-     * @param Entity<User> $user
-     */
-    public function testGetByAccessToken(Entity $user): void
-    {
-        $accessTokenRepo = new AccessTokenDatabaseRepository(self::$db);
+it('can get a user with an accesstoken', function ($user) use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+    $accessTokenRepo = new AccessTokenDatabaseRepository($context->db);
+    try {
         $accessTokens = $accessTokenRepo->getTokensForUser($user);
         if (count($accessTokens) > 0) {
             try {
-                $user = $this->repo->getByAccessToken(
+                /** @noinspection PhpUndefinedMethodInspection */
+                $user = $repo->getByAccessToken(
                     $accessTokens[0]->getIdentifier()
                 );
-                $this->assertInstanceOf(
-                    Entity::class,
-                    $user
-                );
+                expect($user)
+                    ->toBeInstanceOf(Entity::class)
+                ;
+                expect($user->domain())
+                    ->toBeInstanceOf(User::class)
+                ;
             } catch (NotFoundException $e) {
-                $this->assertTrue(false, $e->getMessage());
+                $this->assertTrue(false, (string)$e);
             }
         }
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string)$e);
     }
-}
+})
+    ->depends('it it can get a user with email')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

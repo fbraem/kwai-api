@@ -11,55 +11,56 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\Repositories\AbilityRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-/**
- * @group DB
- */
-final class AbilityDatabaseRepositoryTest extends DatabaseTestCase
-{
-    private AbilityRepository $repo;
+$context = Context::createContext();
 
-    public function setup(): void
-    {
-        $this->repo = new AbilityDatabaseRepository(self::$db);
+it('can create an ability', function () use ($context) {
+    $repo = new AbilityDatabaseRepository($context->db);
+    try {
+        $ability = $repo->create(new Ability((object) [
+            'name' => 'Test',
+            'remark' => 'Test Ability'
+        ]));
+        expect($ability)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($ability->domain())
+            ->toBeInstanceOf(Ability::class)
+        ;
+        return $ability;
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, strval($e));
+    }
+    return null;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can retrieve an ability', function ($ability) use ($context) {
+    if ($ability == null) {
+        return;
     }
 
-    public function testCreate(): ?Entity
-    {
-        try {
-            $ability = $this->repo->create(new Ability((object) [
-                'name' => 'Test',
-                'remark' => 'Test Ability'
-            ]));
-            $this->assertInstanceOf(Entity::class, $ability);
-            return $ability;
-        } catch (RepositoryException $e) {
-            $this->assertTrue(false, strval($e));
-        }
-        return null;
+    $repo = new AbilityDatabaseRepository($context->db);
+    try {
+        $ability = $repo->getById($ability->id());
+        $this->assertInstanceOf(
+            Entity::class,
+            $ability
+        );
+        expect($ability)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($ability->domain())
+            ->toBeInstanceOf(Ability::class)
+        ;
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, $e->getMessage());
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, $e->getMessage());
     }
-
-    /**
-     * @depends testCreate
-     * @param Entity $entity
-     * @throws RepositoryException
-     */
-    public function testGetAbilityById(?Entity $entity)
-    {
-        if ($entity == null) {
-            return;
-        }
-
-        try {
-            $ability = $this->repo->getById($entity->id());
-            $this->assertInstanceOf(
-                Entity::class,
-                $ability
-            );
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-    }
-}
+})
+    ->depends('it it can create an ability')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

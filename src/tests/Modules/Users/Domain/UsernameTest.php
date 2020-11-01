@@ -4,19 +4,17 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\Domain;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Username;
-use PHPUnit\Framework\TestCase;
 
-final class UsernameTest extends TestCase
-{
-    public function testToString(): void
-    {
-        $username = new Username('Jigoro', 'Kano');
-        $this->assertEquals('Jigoro Kano', strval($username));
-    }
+it('can create a username', function () {
+    $username = new Username('Jigoro', 'Kano');
+    expect(strval($username))
+        ->toBe('Jigoro Kano')
+    ;
+});
 
-    public function testEmpty(): void
-    {
-        $username = new Username();
-        $this->assertEquals('', strval($username));
-    }
-}
+it('can create an empty username', function () {
+    $username = new Username();
+    expect(strval($username))
+        ->toBe('')
+    ;
+});
