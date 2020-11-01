@@ -94,6 +94,11 @@ On shared hosting:
 
 Running Tests
 =============
-Run the following command from the `src\tests` directory:
 
-    ../vendor/bin/phpunit --testdox
+A testing environment is easily set up with [vagrant](https://www.vagrantup.com).
+Kwai uses [pest](https://pestphp.com/) to run tests:
+
+    vagrant up
+    vagrant ssh KWAI_API
+    cd /vagrant/src
+    ./vendor/bin/pest
