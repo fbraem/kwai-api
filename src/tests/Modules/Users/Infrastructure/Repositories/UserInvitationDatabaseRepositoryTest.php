@@ -1,7 +1,4 @@
 <?php
-/**
- * Testcase for Date
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Users\Infrastructure\Repositories;
@@ -15,69 +12,64 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Repositories\UserInvitationRepository;
-use Kwai\Modules\Users\Repositories\UserRepository;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-/**
- * @group DB
- */
-final class UserInvitationDatabaseRepositoryTest extends DatabaseTestCase
-{
-    private UserRepository $userRepo;
+$context = Context::createContext();
 
-    private UserInvitationRepository $repo;
+it('can create an invitation', function () use ($context) {
+    $repo = new UserInvitationDatabaseRepository($context->db);
+    $userRepo = new UserDatabaseRepository($context->db);
 
-    public function setup(): void
-    {
-        $this->repo = new UserInvitationDatabaseRepository(self::$db);
-        $this->userRepo = new UserDatabaseRepository(self::$db);
+    try {
+        $user = $userRepo->getByEmail(new EmailAddress('test@kwai.com'));
+        $invitation = new UserInvitation((object) [
+            'uuid' => new UniqueId(),
+            'emailAddress' => new EmailAddress('invite@kwai.com'),
+            'traceableTime' => new TraceableTime(),
+            'expiration' => Timestamp::createFromDateTime(new DateTime("now +14 days")),
+            'name' => 'Jigoro Kano',
+            'creator' => $user
+        ]);
+        $invitation = $repo->create($invitation);
+        expect($invitation)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($invitation->domain())
+            ->toBeInstanceOf(UserInvitation::class)
+        ;
+        $this->assertInstanceOf(Entity::class, $invitation);
+        return $invitation;
+    } catch (DatabaseException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (Exception $e) {
+        $this->assertTrue(false, (string) $e);
     }
+    return null;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-    /**
-     * @return Entity<UserInvitation>
-     */
-    public function testCreate(): Entity
-    {
-        try {
-            $user = $this->userRepo->getByEmail(new EmailAddress('test@kwai.com'));
-            $invitation = new UserInvitation((object) [
-                'uuid' => new UniqueId(),
-                'emailAddress' => new EmailAddress('invite@kwai.com'),
-                'traceableTime' => new TraceableTime(),
-                'expiration' => Timestamp::createFromDateTime(new DateTime("now +14 days")),
-                'name' => 'Jigoro Kano',
-                'creator' => $user
-            ]);
-            $invitation = $this->repo->create($invitation);
-            $this->assertInstanceOf(Entity::class, $invitation);
-            return $invitation;
-        } catch (DatabaseException $e) {
-            $this->assertTrue(false, strval($e));
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-        return null;
+it('can get an invitation using an email', function () use ($context) {
+    $repo = new UserInvitationDatabaseRepository($context->db);
+    try {
+        $invitations = $repo->getByEmail(new EmailAddress('invite@kwai.com'));
+        expect($invitations)
+            ->toBeArray()
+        ;
+        $this->assertContainsOnlyInstancesOf(
+            Entity::class,
+            $invitations
+        );
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
-
-    /**
-     * @depends testCreate
-     */
-    public function testGetByEmail(): void
-    {
-        try {
-            $invitations = $this->repo->getByEmail(new EmailAddress('invite@kwai.com'));
-            $this->assertContainsOnlyInstancesOf(
-                Entity::class,
-                $invitations
-            );
-        } catch (DatabaseException $e) {
-            $this->assertTrue(false, 'DatabaseException occurred: ' . $e->getMessage());
-        }
-    }
-}
+})
+    ->depends('it it can create an invitation')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

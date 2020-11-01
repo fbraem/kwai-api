@@ -17,59 +17,56 @@ use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-/**
- * @group DB
- */
-final class AuthenticateUserTest extends DatabaseTestCase
-{
-    public function testAuthenticate(): void
-    {
-        $command = new AuthenticateUserCommand();
-        $command->email = $_ENV['user'];
-        $command->password = $_ENV['password'];
+$context = Context::createContext();
 
-        try {
-            $refreshToken = (new AuthenticateUser(
-                new UserDatabaseRepository(self::$db),
-                new AccessTokenDatabaseRepository(self::$db),
-                new RefreshTokenDatabaseRepository(self::$db)
-            ))($command);
-            $this->assertInstanceOf(
-                Entity::class,
-                $refreshToken
-            );
-            $this->assertInstanceOf(
-                RefreshToken::class,
-                $refreshToken->domain()
-            );
-        } catch (NotFoundException $e) {
-            self::assertTrue(true, strval($e));
-        } catch (AuthenticationException $e) {
-            self::assertTrue(true, strval($e));
-        } catch (RepositoryException $e) {
-            self::assertTrue(true, strval($e));
-        }
-    }
+it('can authenticate a user', function () use ($context) {
+    $command = new AuthenticateUserCommand();
+    $command->email = $_ENV['user'];
+    $command->password = $_ENV['password'];
 
-    /** @noinspection PhpUnhandledExceptionInspection */
-    public function testAuthenticateFailure(): void
-    {
-        $this->expectException(AuthenticationException::class);
-
-        $command = new AuthenticateUserCommand();
-        $command->email = $_ENV['user'];
-        $command->password = 'invalid';
-
+    try {
         $refreshToken = (new AuthenticateUser(
-            new UserDatabaseRepository(self::$db),
-            new AccessTokenDatabaseRepository(self::$db),
-            new RefreshTokenDatabaseRepository(self::$db)
+            new UserDatabaseRepository($context->db),
+            new AccessTokenDatabaseRepository($context->db),
+            new RefreshTokenDatabaseRepository($context->db)
         ))($command);
-        $this->assertInstanceOf(
-            RefreshToken::class,
-            $refreshToken->domain()
-        );
+        expect($refreshToken)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($refreshToken->domain())
+            ->toBeInstanceOf(RefreshToken::class)
+        ;
+    } catch (NotFoundException $e) {
+        $this->assertTrue(true, (string) $e);
+    } catch (AuthenticationException $e) {
+        $this->assertTrue(true, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(true, (string) $e);
     }
-}
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can handle a wrong authentication', function () use ($context) {
+    $command = new AuthenticateUserCommand();
+    $command->email = $_ENV['user'];
+    $command->password = 'invalid';
+
+    try {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        (new AuthenticateUser(
+            new UserDatabaseRepository($context->db),
+            new AccessTokenDatabaseRepository($context->db),
+            new RefreshTokenDatabaseRepository($context->db)
+        ))($command);
+    } catch (NotFoundException $e) {
+        $this->assertTrue(true, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(true, (string) $e);
+    }
+})
+    ->throws(AuthenticationException::class)
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

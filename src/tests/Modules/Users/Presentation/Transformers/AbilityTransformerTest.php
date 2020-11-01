@@ -12,43 +12,37 @@ use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
-use PHPUnit\Framework\TestCase;
 
-final class AbilityTransformerTest extends TestCase
-{
-    public function testTransform()
-    {
-        $name = 'test';
-        $remark = 'test';
-        $traceableTime = new TraceableTime();
-        $ability = new Ability((object)[
-            'name' => $name,
-            'remark' => $remark,
-            'traceableTime' => $traceableTime,
-            'rules' => []
-        ]);
-        $entity = new Entity(1, $ability);
+it('can transform an ability', function () {
+    $name = 'test';
+    $remark = 'test';
+    $traceableTime = new TraceableTime();
+    $ability = new Ability((object)[
+        'name' => $name,
+        'remark' => $remark,
+        'traceableTime' => $traceableTime,
+        'rules' => []
+    ]);
+    $entity = new Entity(1, $ability);
 
-        $fractal = new Manager();
-        $fractal->setSerializer(new DataArraySerializer());
-        $data = $fractal
-            ->createData(AbilityTransformer::createForItem($entity))
-            ->toArray();
+    $fractal = new Manager();
+    $fractal->setSerializer(new DataArraySerializer());
+    $data = $fractal
+        ->createData(AbilityTransformer::createForItem($entity))
+        ->toArray();
 
-        $this->assertEquals(
-            $data,
-            [
-                'data' => [
-                    'id' => 1,
-                    'name' => $name,
-                    'remark' => $remark,
-                    'created_at' => strval($traceableTime->getCreatedAt()),
-                    'updated_at' => null,
-                    'rules' => [
-                        'data' => []
-                    ]
+    expect($data)
+        ->toBe([
+            'data' => [
+                'id' => 1,
+                'name' => $name,
+                'remark' => $remark,
+                'created_at' => strval($traceableTime->getCreatedAt()),
+                'updated_at' => null,
+                'rules' => [
+                    'data' => []
                 ]
             ]
-        );
-    }
-}
+        ])
+    ;
+});
