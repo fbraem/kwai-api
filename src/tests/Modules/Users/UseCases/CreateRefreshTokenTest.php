@@ -1,7 +1,4 @@
 <?php
-/**
- * Testcase for CreateRefreshToken
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Users\UseCases;
@@ -18,52 +15,47 @@ use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Kwai\Modules\Users\UseCases\CreateRefreshToken;
 use Kwai\Modules\Users\UseCases\CreateRefreshTokenCommand;
-use Tests\DatabaseTestCase;
+use Tests\Context;
 
-/**
- * @group DB
- */
-final class CreateRefreshTokenTest extends DatabaseTestCase
-{
-    public function testAuthenticate(): void
-    {
-        $command = new AuthenticateUserCommand();
-        $command->email = $_ENV['user'];
-        $command->password = $_ENV['password'];
+$context = Context::createContext();
 
-        $refreshTokenRepo = new RefreshTokenDatabaseRepository(self::$db);
-        $accessTokenRepo = new AccessTokenDatabaseRepository(self::$db);
+it('can create a refreshtoken', function () use ($context) {
+    $command = new AuthenticateUserCommand();
+    $command->email = $_ENV['user'];
+    $command->password = $_ENV['password'];
 
-        try {
-            $refreshToken = (new AuthenticateUser(
-                new UserDatabaseRepository(self::$db),
-                $accessTokenRepo,
-                $refreshTokenRepo
-            ))($command);
+    $refreshTokenRepo = new RefreshTokenDatabaseRepository($context->db);
+    $accessTokenRepo = new AccessTokenDatabaseRepository($context->db);
 
-            $command = new CreateRefreshTokenCommand();
-            /** @noinspection PhpUndefinedMethodInspection */
-            $command->identifier = strval($refreshToken->getIdentifier());
+    try {
+        $refreshToken = (new AuthenticateUser(
+            new UserDatabaseRepository($context->db),
+            $accessTokenRepo,
+            $refreshTokenRepo
+        ))($command);
 
-            $refreshToken = (new CreateRefreshToken(
-                $refreshTokenRepo,
-                $accessTokenRepo
-            ))($command);
+        $command = new CreateRefreshTokenCommand();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $command->identifier = strval($refreshToken->getIdentifier());
 
-            $this->assertInstanceOf(
-                Entity::class,
-                $refreshToken
-            );
-            $this->assertInstanceOf(
-                RefreshToken::class,
-                $refreshToken->domain()
-            );
-        } catch (NotFoundException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        } catch (AuthenticationException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        } catch (RepositoryException $e) {
-            self::assertTrue(false, strval($e));
-        }
+        $refreshToken = (new CreateRefreshToken(
+            $refreshTokenRepo,
+            $accessTokenRepo
+        ))($command);
+
+        expect($refreshToken)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($refreshToken->domain())
+            ->toBeInstanceOf(RefreshToken::class)
+        ;
+    } catch (NotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (AuthenticationException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
     }
-}
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;

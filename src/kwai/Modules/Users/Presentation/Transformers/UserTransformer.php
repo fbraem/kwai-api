@@ -70,7 +70,7 @@ class UserTransformer extends Fractal\TransformerAbstract
     {
         $traceableTime = $user->getTraceableTime();
         $result = [
-            'id' => $user->getUuid(),
+            'id' => strval($user->getUuid()),
             'email' => strval($user->getEmailAddress()),
             'username' => strval($user->getUsername()),
             'remark' => $user->getRemark(),
