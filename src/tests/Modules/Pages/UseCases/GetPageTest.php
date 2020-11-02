@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\UseCases\GetPage;
@@ -32,9 +35,16 @@ it('can get a page', function () use ($context) {
                 }
             }
         )($command);
-        assertInstanceOf(Page::class, $page->domain());
-    } catch (QueryException $qe) {
-        assertTrue(false, (string) $qe);
+        expect($page)
+            ->toBeInstanceOf(Entity::class);
+        expect($page->domain())
+            ->toBeInstanceOf(Page::class);
+    } catch (QueryException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (RepositoryException $e) {
+        $this->assertTrue(false, (string) $e);
+    } catch (PageNotFoundException $e) {
+        $this->assertTrue(false, (string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
