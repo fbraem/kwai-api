@@ -130,7 +130,6 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/deprecation-contracts" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/service-contracts" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php70" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/src/vendor/neomerx/cors-psr7" />
       <path value="$PROJECT_DIR$/src/vendor/sebastian/complexity" />
@@ -138,6 +137,11 @@
       <path value="$PROJECT_DIR$/src/vendor/sebastian/lines-of-code" />
       <path value="$PROJECT_DIR$/src/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/src/vendor/tuupola/cors-middleware" />
+      <path value="$PROJECT_DIR$/src/vendor/markbaker/complex" />
+      <path value="$PROJECT_DIR$/src/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/src/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/src/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/http-client" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

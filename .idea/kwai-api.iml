@@ -44,6 +44,9 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/plates" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/uri" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/maennchen/zipstream-php" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/markbaker/matrix" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/mockery/mockery" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/mtdowling/jmespath.php" />
@@ -68,6 +71,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpdocumentor/type-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpmd/phpmd" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpoffice/phpspreadsheet" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpstan/phpstan" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-code-coverage" />
@@ -77,6 +81,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/php-timer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpunit/phpunit" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/http-client" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/http-server-handler" />
@@ -117,7 +122,6 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-intl-idn" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php70" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php72" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php80" />
