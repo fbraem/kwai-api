@@ -18,6 +18,7 @@ use REST\Trainings\Actions\TrainingBrowseAction;
 use REST\Trainings\Actions\TrainingCreateAction;
 use REST\Trainings\Actions\TrainingReadAction;
 use REST\Trainings\Actions\TrainingUpdateAction;
+use REST\Trainings\Actions\UploadPresencesAction;
 use Slim\Routing\RouteCollectorProxy;
 use function Kwai\Core\Infrastructure\createApplication;
 
@@ -77,6 +78,11 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
     $group->patch('/{id:[0-9]+}', TrainingUpdateAction::class)
         ->setName('trainings.update')
         ->setArgument('auth', 'true')
+    ;
+    $group->options('/{id:[0-9]+}/presences/upload', PreflightAction::class);
+    $group->post('/{id:[0-9]+}/presences/upload', UploadPresencesAction::class)
+        ->setName('trainings.presences')
+        /* ->setArgument('auth', 'true') */
     ;
     $group->options('/{id:[0-9]+}/presences', PreflightAction::class);
     $group->post('/{id:[0-9]+}/presences', PresenceCreateAction::class)
