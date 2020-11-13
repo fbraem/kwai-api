@@ -10,20 +10,9 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^auth(/.*)?$ /api/auth.php?$1 [QSA,L]
-    RewriteRule ^categories(/.*)?$ /api/categories.php?$1 [QSA,L]
-    RewriteRule ^countries(/.*)?$ /api/countries.php?$1 [QSA,L]
-    RewriteRule ^news(/.*)?$ /api/news.php?$1 [QSA,L]
-    RewriteRule ^pages(/.*)?$ /api/pages.php?$1 [QSA,L]
-    RewriteRule ^persons(/.*)?$ /api/persons.php?$1 [QSA,L]
-    RewriteRule ^seasons(/.*)?$ /api/seasons.php?$1 [QSA,L]
-    RewriteRule ^team_categories(/.*)?$ /api/team_categories.php?$1 [QSA,L]
-    RewriteRule ^teams(/.*)?$ /api/teams.php?$1 [QSA,L]
-    RewriteRule ^events(/.*)?$ /api/events.php?$1 [QSA,L]
-    RewriteRule ^trainings(/.*)?$ /api/trainings.php?$1 [QSA,L]
-    RewriteRule ^users(/.*)?$ /api/users.php?$1 [QSA,L]
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^([^/]*)(.*)?$ /api/$1.php?$2 [QSA,L]
 
-    RewriteCond %{REQUEST_FILENAME} !-f
 </IfModule>
 
 <FilesMatch "config\.php">

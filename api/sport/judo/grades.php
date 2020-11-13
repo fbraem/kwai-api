@@ -1,10 +1,16 @@
 <?php
 require '../../../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Judo\REST\Grades\Actions\BrowseAction;
+use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app->group('/grades', function () {
-    $this->get('', \Judo\REST\Grades\Actions\BrowseAction::class)
+$app = createApplication('/api/sport/judo');
+
+
+$app->group('/grades', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
+    $group->get('', BrowseAction::class)
         ->setName('sport.judo.grades.browse')
     ;
 });

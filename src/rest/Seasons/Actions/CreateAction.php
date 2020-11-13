@@ -2,7 +2,7 @@
 
 namespace REST\Seasons\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,8 +16,8 @@ use Core\Validators\ValidationException;
 use Core\Validators\InputValidator;
 use REST\Seasons\SeasonValidator;
 
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class CreateAction
 {

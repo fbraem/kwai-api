@@ -2,7 +2,9 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,13 +18,9 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
-use Core\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class TrainingUpdateAction
 {
@@ -75,6 +73,7 @@ class TrainingUpdateAction
                     $training->season_id = null;
                     $training->season = null;
                 }
+                $training->setDirty('season', true);
             }
 
             $coaches = (new EntityExistValidator(
@@ -115,7 +114,7 @@ class TrainingUpdateAction
             if (isset($attributes['event']['contents'][0]['summary'])) {
                 $training->event->contents[0]->summary = $attributes['event']['contents'][0]['summary'];
             }
-            $training->event->contents[0]->user = $request->getAttribute('clubman.user');
+            $training->event->contents[0]->user_id = $request->getAttribute('kwai.user')->id();
 
             if (isset($attributes['event']['start_date'])) {
                 $training->event->start_date = $attributes['event']['start_date'];
@@ -138,13 +137,14 @@ class TrainingUpdateAction
 
             $training->event->setDirty('contents', true);
             $training->setDirty('event', true);
-            $training->event->user = $request->getAttribute('clubman.user');
+            $training->event->user_id = $request->getAttribute('kwai.user')->id();
 
             (new \REST\Trainings\TrainingValidator())->validate($training);
 
             $table->save($training, [
                 'associated' => [
-                    'Event.Contents'
+                    'Event.Contents',
+                    'Season'
                 ]
             ]);
 
@@ -199,7 +199,7 @@ class TrainingUpdateAction
                         $coach->_joinData = new Entity([
                             'coach_type' => 0,
                             'present' => false,
-                            'user' => $request->getAttribute('clubman.user')
+                            'user_id' => $request->getAttribute('kwai.user')->id()
                         ], [
                             'markNew' => true
                         ]);
@@ -215,6 +215,21 @@ class TrainingUpdateAction
             if (! empty($route)) {
                 $route->setArgument('id', $training->id);
             }
+
+            $training = $table->get($training->id, [
+                'contain' => [
+                    'TrainingDefinition',
+                    'Season',
+                    'Coaches',
+                    'Coaches.Member',
+                    'Coaches.Member.Person',
+                    'Members',
+                    'Members.Person',
+                    'Teams',
+                    'Event',
+                    'Event.Contents'
+                ]
+            ]);
 
             $response = (new ResourceResponse(
                 TrainingTransformer::createForItem($training)

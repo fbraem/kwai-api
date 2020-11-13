@@ -2,7 +2,7 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -14,15 +14,8 @@ use Domain\Training\TrainingTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Respect\Validation\Validator as v;
-
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
-use Core\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class PresenceCreateAction
 {
@@ -62,7 +55,7 @@ class PresenceCreateAction
                             ]
                         ]
                     );
-                    $remarks[$item['id']] = $item['attributes']['remark'];
+                    $remarks[$item['id']] = $item['attributes']['remark'] ?? null;
                 }
             } catch (RecordNotFoundException $rnfe) {
                 $response = (new NotFoundResponse(_("Member doesn't exist")))($response);
@@ -97,7 +90,7 @@ class PresenceCreateAction
                     } else {
                         $member->_joinData = new Entity([
                             'remark' => $remarks[$member->id],
-                            'user' => $request->getAttribute('clubman.user')
+                            'user_id' => $request->getAttribute('kwai.user')->id()
                         ], [
                             'markNew' => true
                         ]);
@@ -111,6 +104,16 @@ class PresenceCreateAction
                     $table->Members->link($training, $presences);
                 }
             }
+
+            $training = $table->get(
+                $args['id'],
+                [
+                    'contain' => [
+                        'Members',
+                        'Members.Person',
+                    ]
+                ]
+            );
 
             $response = (new ResourceResponse(
                 TrainingTransformer::createForItem(

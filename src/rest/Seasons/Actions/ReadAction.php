@@ -2,7 +2,7 @@
 
 namespace REST\Seasons\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,8 +12,8 @@ use Domain\Game\SeasonTransformer;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Core\Responses\ResourceResponse;
-use Core\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class ReadAction
 {

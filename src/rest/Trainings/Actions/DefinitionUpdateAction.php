@@ -2,7 +2,11 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,13 +16,9 @@ use Domain\Training\DefinitionTransformer;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
-use Core\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 
 class DefinitionUpdateAction
 {
@@ -118,7 +118,7 @@ class DefinitionUpdateAction
             if (isset($attributes['remark'])) {
                 $def->remark = $attributes['remark'];
             }
-            $def->user = $request->getAttribute('clubman.user');
+            $def->user_id = $request->getAttribute('kwai.user')->id();
 
             (new \REST\Trainings\DefinitionValidator())->validate($def);
 

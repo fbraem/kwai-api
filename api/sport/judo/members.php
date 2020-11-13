@@ -1,24 +1,36 @@
 <?php
 require '../../../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Judo\REST\Members\Actions\BrowseAction;
+use Judo\REST\Members\Actions\ReadAction;
+use Judo\REST\Members\Actions\TrainingBrowseAction;
+use Judo\REST\Members\Actions\UploadAction;
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
+use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app->group('/members', function () {
-    $this->get('', \Judo\REST\Members\Actions\BrowseAction::class)
+$app = createApplication('/api/sport/judo');
+
+$app->group('/members', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
+    $group->get('', BrowseAction::class)
         ->setName('sport.judo.members.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->get('/{id:[0-9]+}', \Judo\REST\Members\Actions\ReadAction::class)
+    $group->options('/{id:[0-9]+}', PreflightAction::class);
+    $group->get('/{id:[0-9]+}', ReadAction::class)
         ->setName('sport.judo.members')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->post('/upload', \Judo\REST\Members\Actions\UploadAction::class)
+    $group->options('/upload', PreflightAction::class);
+    $group->post('/upload', UploadAction::class)
         ->setName('sport.judo.members.upload')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->get('/{id:[0-9]+}/trainings', \Judo\REST\Members\Actions\TrainingBrowseAction::class)
+    $group->options('/{id:[0-9]+}/trainings', PreflightAction::class);
+    $group->get('/{id:[0-9]+}/trainings', TrainingBrowseAction::class)
         ->setName('sport.judo.members.trainings')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 

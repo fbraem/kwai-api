@@ -2,7 +2,7 @@
 
 namespace REST\Teams\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,8 +10,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Domain\Team\TeamsTable;
 use Domain\Team\TeamTransformer;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 

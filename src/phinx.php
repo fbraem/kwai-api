@@ -2,8 +2,10 @@
 /**
  * Phinx migration configuration
  */
-$application = \Core\Clubman::getApplication();
-$config = $application->getContainer()['settings'];
+
+use Kwai\Core\Infrastructure\Dependencies\Settings;
+
+$config = (new Settings())();
 
 $environments = $config['database'];
 $environments['default_database'] = $config['default_database'];
@@ -11,12 +13,12 @@ $environments['default_database'] = $config['default_database'];
 return [
     'paths' => [
         'migrations' => [
-            __DIR__ . '/domain/User/migrations',
-            __DIR__ . '/domain/Category/migrations',
-            __DIR__ . '/domain/News/migrations',
-            __DIR__ . '/domain/Auth/migrations',
+            __DIR__ . '/kwai/Modules/Applications/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Users/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Mails/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/News/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Pages/Infrastructure/Migrations',
             __DIR__ . '/domain/Content/migrations',
-            __DIR__ . '/domain/Page/migrations',
             __DIR__ . '/domain/Person/migrations',
             __DIR__ . '/domain/Game/migrations',
             __DIR__ . '/domain/Team/migrations',

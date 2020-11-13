@@ -2,8 +2,8 @@
 
 namespace REST\Events;
 
-use Respect\Validation\Validator as v;
 use Core\Validators\InputValidator;
+use Respect\Validation\Validator as v;
 
 class EventInputValidator extends InputValidator
 {

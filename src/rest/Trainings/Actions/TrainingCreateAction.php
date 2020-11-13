@@ -2,7 +2,10 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -16,13 +19,10 @@ use Domain\Training\TrainingTransformer;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
 use REST\Trainings\TrainingValidator;
 
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class TrainingCreateAction
 {
@@ -118,13 +118,13 @@ class TrainingCreateAction
         $content->locale = $attributes['event']['contents'][0]['locale'] ?? 'nl';
         $content->format = $attributes['event']['contents'][0]['format'] ?? 'md';
         $content->summary = $attributes['event']['contents'][0]['summary'];
-        $content->user = $request->getAttribute('clubman.user');
+        $content->user_id = $request->getAttribute('kwai.user')->id();
         $event->start_date = $attributes['event']['start_date'];
         $event->end_date = $attributes['event']['end_date'];
         $event->time_zone = $attributes['event']['time_zone'];
         $event->active = $attributes['event']['active'] ?? true;
         $event->remark = $attributes['event']['remark'] ?? null;
-        $event->user = $request->getAttribute('clubman.user');
+        $event->user_id = $request->getAttribute('kwai.user')->id();
         $training->season = $season;
         $training->definition = $def;
         $training->teams = $teams;
@@ -137,12 +137,27 @@ class TrainingCreateAction
             $coach->_joinData = new Entity([
                 'coach_type' => 0,
                 'present' => false,
-                'user' => $request->getAttribute('clubman.user')
+                'user_id' => $request->getAttribute('kwai.user')->id()
             ], [
                 'markNew' => true
             ]);
             $trainingsTable->Coaches->link($training, [$coach]);
         }
+
+        $training = $trainingsTable->get($training->id, [
+            'contain' => [
+                'TrainingDefinition',
+                'Season',
+                'Coaches',
+                'Coaches.Member',
+                'Coaches.Member.Person',
+                'Members',
+                'Members.Person',
+                'Teams',
+                'Event',
+                'Event.Contents'
+            ]
+        ]);
 
         return $training;
     }

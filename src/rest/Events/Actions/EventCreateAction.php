@@ -2,24 +2,23 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Domain\Event\EventsTable;
+use Domain\Event\EventTransformer;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 use \Cake\ORM\Entity;
 
-use Domain\Training\EventsTable;
-use Domain\Training\EventTransformer;
-
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use REST\Events\EventValidator;
 
 class EventCreateAction
 {
@@ -43,7 +42,7 @@ class EventCreateAction
                 'data.attributes.location' => [ v::length(1, 255), true ]
             ]
         ));
-        $this->eventValidator = new \REST\Trainings\EventValidator();
+        $this->eventValidator = new EventValidator();
     }
 
     public function __invoke(Request $request, Response $response, $args)

@@ -2,7 +2,10 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,12 +15,8 @@ use Domain\Training\DefinitionTransformer;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class DefinitionCreateAction
 {
@@ -73,7 +72,7 @@ class DefinitionCreateAction
             $def->active = $attributes['active'] ?? true;
             $def->location = $attributes['location'] ?? null;
             $def->remark = $attributes['remark'] ?? null;
-            $def->user = $request->getAttribute('clubman.user');
+            $def->user = $request->getAttribute('kwai.user')->id();
 
             (new \REST\Trainings\DefinitionValidator())->validate($def);
 

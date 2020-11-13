@@ -2,7 +2,7 @@
 
 namespace REST\Teams\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -11,7 +11,7 @@ use Domain\Team\TeamsTable;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 //TODO: Remove sport dependency?
 use Judo\Domain\Member\MembersTable;

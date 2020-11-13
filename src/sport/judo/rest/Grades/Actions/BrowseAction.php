@@ -2,7 +2,7 @@
 
 namespace Judo\REST\Grades\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -21,7 +21,7 @@ class BrowseAction
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        return (new \Core\Responses\ResourceResponse(
+        return (new \Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse(
             GradeTransformer::createForCollection(
                 GradesTable::getTableFromRegistry()->find()->all()
             )

@@ -2,7 +2,11 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,12 +16,8 @@ use Domain\Training\CoachTransformer;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class CoachUpdateAction
 {
@@ -62,7 +62,7 @@ class CoachUpdateAction
                 $coach->remark = $attributes['remark'];
             }
 
-            $coach->user = $request->getAttribute('clubman.user');
+            $coach->user_id = $request->getAttribute('kwai.user')->id();
 
             $coachesTable->save($coach);
 

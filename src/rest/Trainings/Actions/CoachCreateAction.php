@@ -2,7 +2,10 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,12 +15,8 @@ use Domain\Training\CoachTransformer;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class CoachCreateAction
 {
@@ -35,7 +34,6 @@ class CoachCreateAction
         try {
             (new InputValidator(
                 [
-                    'data.attributes.diploma' => [ v::length(1, 255), true ],
                     'data.attributes.active' => [ v::boolType(), true ],
                 ]
             ))->validate($data);
@@ -59,12 +57,12 @@ class CoachCreateAction
 
             $coach = $coachesTable->newEntity();
             $coach->diploma = $attributes['diploma'];
-            $coach->description = $attributes['description'];
+            $coach->description = $attributes['description'] ?? '';
             $coach->member = $member;
             $coach->active = $attributes['active'] ?? true;
             $coach->remark = $attributes['remark'];
 
-            $coach->user = $request->getAttribute('clubman.user');
+            $coach->user_id = $request->getAttribute('kwai.user')->id();
 
             $coachesTable->save($coach);
 

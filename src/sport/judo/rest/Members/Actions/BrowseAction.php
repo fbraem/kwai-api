@@ -2,7 +2,7 @@
 
 namespace Judo\REST\Members\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Judo\Domain\Member\MembersTable;
 use Judo\Domain\Member\MemberTransformer;
 
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class BrowseAction
 {

@@ -6,6 +6,14 @@ other sports.
 
 The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwai-ui) repository.
 
+> Kwai is a greenfield project. As long as there is no official release,
+> everything can change. Although there is still a lot to do, kwai is already used in production for
+> our club but that is no guarantee that it will work for you...
+
+[Jetbrains](https://www.jetbrains.com/?from=kwai-api) allows Kwai-api to use phpstorm for development!
+
+<img alt="jetbrains" src="jetbrains.png" width="200px" />
+
 API
 ===
 Kwai-api is the REST api for Kwai. It's written in PHP and it tries to follow the [JSONAPI](http://jsonapi.org) standard.
@@ -17,8 +25,6 @@ Currently the following api's are already available:
 - members
 - teams
 - trainings
-
-Although there is still a lot to do, kwai is already used in production for our club.
 
 TODO
 ====
@@ -85,3 +91,14 @@ When the configuration is finished, run the database migrations from the `src` d
 On shared hosting:
 
     php ./vendor/robmorgan/phinx/phinx.php migrate -c phinx.php
+
+Running Tests
+=============
+
+A testing environment is easily set up with [vagrant](https://www.vagrantup.com).
+Kwai uses [pest](https://pestphp.com/) to run tests:
+
+    vagrant up
+    vagrant ssh KWAI_API
+    cd /vagrant/src
+    ./vendor/bin/pest

@@ -2,7 +2,9 @@
 
 namespace REST\Categories\Actions;
 
-use Interop\Container\ContainerInterface;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -14,11 +16,8 @@ use Domain\Category\CategoryTransformer;
 
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-
-use \Core\Responses\ResourceResponse;
-use \Core\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
 
 class CreateAction
 {

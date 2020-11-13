@@ -2,23 +2,22 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Core\Validators\EntityExistValidator;
+use Core\Validators\InputValidator;
+use Core\Validators\ValidationException;
+use Domain\Event\EventsTable;
+use Domain\Event\EventTransformer;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Domain\Training\EventsTable;
-use Domain\Training\EventCoachesTable;
-use Domain\Training\EventTransformer;
-
 use Respect\Validation\Validator as v;
 
-use Core\Validators\ValidationException;
-use Core\Validators\InputValidator;
-use Core\Validators\EntityExistValidator;
-
-use Core\Responses\UnprocessableEntityResponse;
-use Core\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\UnprocessableEntityResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 
 class EventCoachCreateAction
 {

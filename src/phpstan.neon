@@ -1,0 +1,12 @@
+parameters:
+    level: 2
+    paths:
+        - kwai
+    excludes_analyse:
+        - kwai/Modules/Users/Infrastructure/Migrations/*
+        - kwai/Modules/Mails/Infrastructure/Migrations/*
+services:
+-
+    class: App\PHPStan\EntityClassReflectionExtension
+    tags:
+        - phpstan.broker.methodsClassReflectionExtension

@@ -1,7 +1,7 @@
 <?php
 namespace REST\Teams\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -33,7 +33,7 @@ class TeamMembersBrowseAction
             );
 
             //TODO: Remove sport dependency?
-            return (new \Core\ResourceResponse(
+            return (new \Kwai\Core\Infrastructure\ResourceResponse(
                 MemberTransformer::createForCollection($team->members)
             ))($response);
         } catch (RecordNotFoundException $rnfe) {

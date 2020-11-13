@@ -1,12 +1,20 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
+use REST\Persons\Actions\BrowseAction;
+use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app->group('/persons', function () {
-    $this->get('', \REST\Persons\Actions\BrowseAction::class)
+$app = createApplication();
+
+$app->group('/persons', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
+    $group->get('', BrowseAction::class)
         ->setName('persons.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 

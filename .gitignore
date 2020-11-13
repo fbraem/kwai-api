@@ -1,1 +1,5 @@
 *.key
+/docs/
+/.phpunit.result.cache
+kwai.development.yaml
+/.vagrant

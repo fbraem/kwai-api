@@ -1,24 +1,36 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
+use REST\Teams\Actions\TeamCategoryBrowseAction;
+use REST\Teams\Actions\TeamCategoryCreateAction;
+use REST\Teams\Actions\TeamCategoryReadAction;
+use REST\Teams\Actions\TeamCategoryUpdateAction;
+use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app->group('/team_categories', function () {
-    $this->get('', \REST\Teams\Actions\TeamCategoryBrowseAction::class)
+$app = createApplication();
+
+$app->group('/team_categories', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
+    $group->get('', TeamCategoryBrowseAction::class)
         ->setName('team_categories.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->get('/{id:[0-9]+}', \REST\Teams\Actions\TeamCategoryReadAction::class)
+    $group->options('/{id:[0-9]+}', PreflightAction::class);
+    $group->get('/{id:[0-9]+}', TeamCategoryReadAction::class)
         ->setName('team_categories.read')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->post('', \REST\Teams\Actions\TeamCategoryCreateAction::class)
+    $group->post('', TeamCategoryCreateAction::class)
         ->setName('team_categories.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->patch('/{id:[0-9]+}', \REST\Teams\Actions\TeamCategoryUpdateAction::class)
+    $group->patch('/{id:[0-9]+}', TeamCategoryUpdateAction::class)
         ->setName('team_categories.update')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 

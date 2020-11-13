@@ -1,10 +1,10 @@
 <?php
 namespace REST\Teams;
 
-use Core\Validators\ValidatorInterface;
 use Core\Validators\ValidationException;
+use Core\Validators\ValidatorInterface;
 
-class TeamCategoryValidator implements \Core\Validators\ValidatorInterface
+class TeamCategoryValidator implements ValidatorInterface
 {
     public function validate($data)
     {

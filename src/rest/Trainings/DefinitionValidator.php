@@ -1,10 +1,9 @@
 <?php
 namespace REST\Trainings;
 
-use Core\Validators\ValidatorInterface;
-use Core\Validators\ValidationException;
-
 use Carbon\Carbon;
+use Core\Validators\ValidationException;
+use Core\Validators\ValidatorInterface;
 
 class DefinitionValidator implements ValidatorInterface
 {

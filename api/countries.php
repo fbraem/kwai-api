@@ -1,10 +1,18 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
+use REST\Countries\Actions\BrowseAction;
+use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app->group('/countries', function () {
-    $this->get('', \REST\Countries\Actions\BrowseAction::class)
+$app = createApplication();
+
+$app->options('/countries', PreflightAction::class);
+$app->group('/countries', function (RouteCollectorProxy $group) {
+    $group->get('', BrowseAction::class)
         ->setName('countries.browse')
     ;
 });

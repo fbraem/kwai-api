@@ -1,24 +1,36 @@
 <?php
+declare(strict_types=1);
+
 require '../src/vendor/autoload.php';
 
-$app = \Core\Clubman::getApplication();
+use Kwai\Core\Infrastructure\Presentation\PreflightAction;
+use REST\Seasons\Actions\BrowseAction;
+use REST\Seasons\Actions\CreateAction;
+use REST\Seasons\Actions\ReadAction;
+use REST\Seasons\Actions\UpdateAction;
+use Slim\Routing\RouteCollectorProxy;
+use function Kwai\Core\Infrastructure\createApplication;
 
-$app->group('/seasons', function () {
-    $this->get('', \REST\Seasons\Actions\BrowseAction::class)
+$app = createApplication();
+
+$app->group('/seasons', function (RouteCollectorProxy $group) {
+    $group->options('', PreflightAction::class);
+    $group->get('', BrowseAction::class)
         ->setName('seasons.browse')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->get('/{id:[0-9]+}', \REST\Seasons\Actions\ReadAction::class)
+    $group->options('/{id:[0-9]+}', PreflightAction::class);
+    $group->get('/{id:[0-9]+}', ReadAction::class)
         ->setName('seasons.read')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->post('', \REST\Seasons\Actions\CreateAction::class)
+    $group->post('', CreateAction::class)
         ->setName('seasons.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
-    $this->patch('/{id:[0-9]+}', \REST\Seasons\Actions\UpdateAction::class)
+    $group->patch('/{id:[0-9]+}', UpdateAction::class)
         ->setName('seasons.create')
-        ->setArgument('auth', true)
+        ->setArgument('auth', 'true')
     ;
 });
 

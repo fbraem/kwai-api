@@ -2,7 +2,7 @@
 
 namespace REST\Trainings\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,8 +12,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Domain\Training\CoachesTable;
 use Domain\Training\CoachTransformer;
 
-use Core\Responses\NotFoundResponse;
-use Core\Responses\OkResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\OkResponse;
 
 class CoachDeleteAction
 {

@@ -2,7 +2,7 @@
 
 namespace REST\Categories\Actions;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -29,7 +29,7 @@ class BrowseAction
             $query->where(['app' => $parameters['filter']['app']]);
         }
 
-        return (new \Core\Responses\ResourceResponse(
+        return (new \Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse(
             CategoryTransformer::createForCollection(
                 $query->all(),
                 $this->container->get('filesystem')
