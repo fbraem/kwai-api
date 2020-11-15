@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Core\Domain\ValueObjects;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Users\Domain\User;
 
 /**
  * Class Text
@@ -44,7 +43,7 @@ class Text
 
     /**
      * The author of the text.
-     * @var Entity<User>
+     * @var Entity
      */
     private Entity $author;
 
