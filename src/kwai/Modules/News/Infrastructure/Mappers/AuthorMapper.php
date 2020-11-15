@@ -18,6 +18,10 @@ use Kwai\Modules\Users\Domain\ValueObjects\Username;
  */
 final class AuthorMapper
 {
+    /**
+     * @param object $raw
+     * @return Entity<Author>
+     */
     public static function toDomain(object $raw): Entity
     {
         return new Entity(
