@@ -9,6 +9,8 @@ namespace Kwai\Core\Domain\ValueObjects;
 
 /**
  * Class Event
+ *
+ * Value object for an event
  */
 class Event
 {
@@ -54,27 +56,27 @@ class Event
      * @param Timestamp   $startDate
      * @param Timestamp   $endDate
      * @param Location    $location
-     * @param string|null $remark
      * @param Text[]      $text
      * @param bool        $active
      * @param bool        $cancelled
+     * @param string|null $remark
      */
     public function __construct(
         Timestamp $startDate,
         Timestamp $endDate,
         Location $location,
-        ?string $remark,
-        array $text,
+        array $text = [],
         bool $active = true,
-        bool $cancelled = false
+        bool $cancelled = false,
+        ?string $remark = null
     ) {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->location = $location;
+        $this->text = $text;
         $this->active = $active;
         $this->cancelled = $cancelled;
-        $this->location = $location;
         $this->remark = $remark;
-        $this->text = $text;
     }
 
     public function getStartDate(): Timestamp
@@ -115,8 +117,21 @@ class Event
         return $this->text;
     }
 
+    /**
+     * Cancel the event
+     */
     public function cancel(): void
     {
         $this->cancelled = true;
+    }
+
+    /**
+     * Add text content to the event.
+     *
+     * @param Text $text
+     */
+    public function addText(Text $text)
+    {
+        $this->text[] = $text;
     }
 }
