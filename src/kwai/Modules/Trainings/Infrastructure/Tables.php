@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure;
 
+use Kwai\Core\Infrastructure\Database\TableEnum;
+
 /**
  * Class Tables
  *
@@ -21,7 +23,7 @@ namespace Kwai\Modules\Trainings\Infrastructure;
  * @method static Tables TRAINING_TEAMS()
  * @method static Tables USERS()
  */
-class Tables
+class Tables extends TableEnum
 {
     private const COACHES = 'coaches';
     private const MEMBERS = 'sport_judo_members';
