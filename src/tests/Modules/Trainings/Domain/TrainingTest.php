@@ -9,19 +9,15 @@ use Kwai\Core\Domain\ValueObjects\Gender;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Trainings\Domain\Coach;
-use Kwai\Modules\Trainings\Domain\Creator;
 use Kwai\Modules\Trainings\Domain\Member;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
+use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
-$creator = new Entity(
-    1,
-    new Creator((object)[
-        'name' => 'Jigoro Kano'
-    ])
-);
+$creator = new Creator(1, 'Jigoro Kano');
 
-it('can construct a training', function ($creator) {
+it('can construct a training', function () use ($creator) {
     $training = new Training(
         (object)[
             'event' => new Event(
@@ -40,9 +36,9 @@ it('can construct a training', function ($creator) {
     expect($training->getEvent()->isCancelled())
         ->toBe(false)
     ;
-})->with([$creator]);
+});
 
-it('can appoint a coach to a training', function ($creator) {
+it('can appoint/release a coach to a training', function () use ($creator) {
     $training = new Training(
         (object)[
             'event' => new Event(
@@ -82,4 +78,45 @@ it('can appoint a coach to a training', function ($creator) {
         ->toBeArray()
         ->toHaveCount(1)
     ;
-})->with([$creator]);
+    $training->releaseCoach($coach);
+    expect($training->getCoaches())
+        ->toBeArray()
+        ->toHaveCount(0)
+    ;
+});
+
+it('can manager a presence', function () use ($creator) {
+    $training = new Training(
+        (object)[
+            'event' => new Event(
+                Timestamp::createNow(),
+                Timestamp::createNow(),
+                new Location('Tokyo'),
+                []
+            ),
+            'creator' => $creator
+        ]
+    );
+    $member = new Entity(
+        1,
+        new Member((object) [
+            'license' => '',
+            'licenseEndDate' => Date::createFromDate(2020),
+            'firstName' => '',
+            'lastName' => '',
+            'gender' => Gender::MALE(),
+            'birthDate' => Date::createFromDate(1860, 12, 10)
+        ])
+    );
+    $training->registerPresence(new Presence(
+        $member,
+        $creator
+    ));
+    expect($training->getPresences())
+        ->toBeArray()
+        ->toHaveCount(1);
+    $training->unregisterPresence($member);
+    expect($training->getPresences())
+        ->toBeArray()
+        ->toHaveCount(0);
+});
