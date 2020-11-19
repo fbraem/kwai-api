@@ -12,6 +12,8 @@ use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
+use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
 /**
@@ -27,21 +29,27 @@ class Training implements DomainEntity
     private TraceableTime $traceableTime;
 
     /**
-     * The event of this training
+     * The event for the training
      */
     private Event $event;
 
     /**
-     * The user who created this training.
-     * @var Entity<Creator>
+     * The user who created the training.
      */
-    private Entity $creator;
+    private Creator $creator;
 
     /**
-     * The coaches appointed for this training.
+     * The coaches appointed for the training.
      * @var TrainingCoach[]
      */
     private array $coaches;
+
+    /**
+     * List of members that were present on the training.
+     *
+     * @var Presence[]
+     */
+    private array $presences;
 
     /**
      * A remark
@@ -78,9 +86,9 @@ class Training implements DomainEntity
     }
 
     /**
-     * @return Entity<Creator>
+     * @return Creator
      */
-    public function getCreator(): Entity
+    public function getCreator(): Creator
     {
         return $this->creator;
     }
@@ -110,12 +118,12 @@ class Training implements DomainEntity
     /**
      * Remove a coach from the training.
      *
-     * @param TrainingCoach $coach
+     * @param Entity<Coach> $coach
      */
-    public function releaseCoach(TrainingCoach $coach)
+    public function releaseCoach(Entity $coach)
     {
-        if (isset($this->coaches[$coach->getCoach()->id()])) {
-            unset($this->coaches[$coach->getCoach()->id()]);
+        if (isset($this->coaches[$coach->id()])) {
+            unset($this->coaches[$coach->id()]);
         }
     }
 
@@ -127,5 +135,40 @@ class Training implements DomainEntity
     public function getCoaches(): array
     {
         return $this->coaches;
+    }
+
+    /**
+     * Register a member as present on the training.
+     *
+     * @param Presence $presence
+     */
+    public function registerPresence(Presence $presence)
+    {
+        if (isset($this->presences[$presence->getMember()->id()])) {
+            throw new InvalidArgumentException('Member was already registered');
+        }
+        $this->presences[$presence->getMember()->id()] = $presence;
+    }
+
+    /**
+     * Unregister a member as present on the training.
+     *
+     * @param Entity $member
+     */
+    public function unregisterPresence(Entity $member)
+    {
+        if (isset($this->presences[$member->id()])) {
+            unset($this->presences[$member->id()]);
+        }
+    }
+
+    /**
+     * Get all presences.
+     *
+     * @return Presence[]
+     */
+    public function getPresences(): array
+    {
+        return $this->presences;
     }
 }
