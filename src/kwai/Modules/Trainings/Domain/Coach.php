@@ -10,6 +10,7 @@ namespace Kwai\Modules\Trainings\Domain;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 
 /**
  * Class Coach
@@ -45,9 +46,10 @@ class Coach implements DomainEntity
 
     /**
      * The user who created this coach.
-     * @var Entity<Creator>
+     *
+     * @var Creator
      */
-    private Entity $creator;
+    private Creator $creator;
 
     /**
      * A coach is also a member
@@ -112,9 +114,9 @@ class Coach implements DomainEntity
     }
 
     /**
-     * @return Entity
+     * @return Creator
      */
-    public function getCreator(): Entity
+    public function getCreator(): Creator
     {
         return $this->creator;
     }
