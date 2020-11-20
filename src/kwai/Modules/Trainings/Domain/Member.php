@@ -10,6 +10,7 @@ namespace Kwai\Modules\Trainings\Domain;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Domain\ValueObjects\Gender;
+use Kwai\Core\Domain\ValueObjects\Name;
 
 /**
  * Class Member
@@ -22,9 +23,7 @@ class Member implements DomainEntity
 
     private Date $licenseEndDate;
 
-    private string $firstName;
-
-    private string $lastName;
+    private Name $name;
 
     private Gender $gender;
 
@@ -39,8 +38,7 @@ class Member implements DomainEntity
     {
         $this->license = $props->license;
         $this->licenseEndDate = $props->licenseEndDate;
-        $this->firstName = $props->firstName;
-        $this->lastName = $props->lastName;
+        $this->name = $props->name;
         $this->gender = $props->gender;
         $this->birthDate = $props->birthDate;
     }
@@ -62,19 +60,11 @@ class Member implements DomainEntity
     }
 
     /**
-     * @return string
+     * @return Name
      */
-    public function getFirstName(): string
+    public function getName(): Name
     {
-        return $this->firstName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return $this->lastName;
+        return $this->name;
     }
 
     /**
