@@ -10,7 +10,8 @@ class TrainingEventsMigration extends AbstractMigration
 {
     public function up()
     {
-/*
+        // Dates are set to 1900-01-01 to avoid the 0000-00-00 problem
+        // for existing rows
         $this->table('trainings', ['signed' => false])
             ->addColumn('start_date', 'datetime', ['default' => '1900-01-01'])
             ->addColumn('end_date', 'datetime', ['default' => '1900-01-01'])
@@ -31,7 +32,6 @@ class TrainingEventsMigration extends AbstractMigration
             ->addTimestamps()
             ->create()
         ;
-*/
 
         $eventsQuery = $this->getQueryBuilder();
         $eventsQuery->select([
@@ -130,6 +130,7 @@ class TrainingEventsMigration extends AbstractMigration
             ->removeColumn('active')
             ->removeColumn('cancelled')
             ->removeColumn('location')
+            ->addColumn('event_id', 'integer', ['null' => true])
             ->update()
         ;
     }
