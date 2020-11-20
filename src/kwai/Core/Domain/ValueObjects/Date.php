@@ -80,4 +80,21 @@ final class Date
     {
         return new Date(CarbonImmutable::today()->addDays($days));
     }
+
+    /**
+     * Creates a date from a string.
+     *
+     * @param string $str
+     * @param string $format
+     * @return Date
+     */
+    public static function createFromString(
+        string $str,
+        string $format = 'Y-m-d'
+    ): self {
+        return new self(CarbonImmutable::createFromFormat(
+            $format,
+            $str
+        ));
+    }
 }
