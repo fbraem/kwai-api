@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Domain\ValueObjects;
 
+use Kwai\Core\Domain\ValueObjects\Name;
+
 /**
  * Class Creator
  *
@@ -16,15 +18,15 @@ class Creator
 {
     private int $id;
 
-    private string $name;
+    private Name $name;
 
     /**
      * Creator constructor.
      *
      * @param int    $id
-     * @param string $name
+     * @param Name $name
      */
-    public function __construct(int $id, string $name)
+    public function __construct(int $id, Name $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -41,7 +43,7 @@ class Creator
     /**
      * Returns the name
      */
-    public function getName(): string
+    public function getName(): Name
     {
         return $this->name;
     }
