@@ -46,12 +46,13 @@ final class Timestamp
      * Returns a formatted timestamp.
      *
      * When format is null, toDateTimeString will be used.
+     *
      * @see https://carbon.nesbot.com/docs/#api-formatting String Formatting.
      *
-     * @param string $format The format to use
+     * @param string|null $format The format to use
      * @return string A formatted timestamp
      */
-    public function format($format = null): string
+    public function format(?string $format = null): string
     {
         if ($format) {
             return $this->datetime->format($format);
@@ -90,17 +91,17 @@ final class Timestamp
     /**
      * Creates a new Timestamp object.
      *
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     * @param int $hour
-     * @param int $minute
-     * @param int $sec
-     * @param string $timezone The timezone to use. Default is UTC.
+     * @param int|null $year
+     * @param int      $month
+     * @param int      $day
+     * @param int      $hour
+     * @param int      $minute
+     * @param int      $sec
+     * @param string   $timezone The timezone to use. Default is UTC.
      * @return Timestamp
      */
     public static function create(
-        int $year = null,
+        ?int $year = null,
         int $month = 1,
         int $day = 1,
         int $hour = 0,
