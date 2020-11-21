@@ -27,7 +27,7 @@ class Coach implements DomainEntity
     /**
      * The diploma of the coach
      */
-    private string $diploma;
+    private ?string $diploma;
 
     /**
      * Is this coach still active?
@@ -65,7 +65,7 @@ class Coach implements DomainEntity
     public function __construct(object $props)
     {
         $this->description = $props->description;
-        $this->diploma = $props->diploma;
+        $this->diploma = $props->diploma ?? null;
         $this->active = $props->active;
         $this->remark = $props->remark ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
@@ -82,9 +82,9 @@ class Coach implements DomainEntity
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getDiploma(): string
+    public function getDiploma(): ?string
     {
         return $this->diploma;
     }
