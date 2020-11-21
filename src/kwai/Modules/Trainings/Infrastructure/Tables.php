@@ -19,6 +19,7 @@ use Kwai\Core\Infrastructure\Database\TableEnum;
  * @method static Tables PERSONS()
  * @method static Tables TEAMS()
  * @method static Tables TRAININGS()
+ * @method static Tables TRAINING_CONTENTS()
  * @method static Tables TRAINING_DEFINITIONS()
  * @method static Tables TRAINING_PRESENCES()
  * @method static Tables TRAINING_TEAMS()
