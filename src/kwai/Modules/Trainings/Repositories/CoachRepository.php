@@ -26,4 +26,11 @@ interface CoachRepository
      * @return Entity<Coach>
      */
     public function getById(int $id): Entity;
+
+    /**
+     * Creates a query
+     *
+     * @return CoachQuery
+     */
+    public function createQuery(): CoachQuery;
 }
