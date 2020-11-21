@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\UseCases;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -77,7 +79,13 @@ class CreatePage
                 $text->title,
                 $text->summary,
                 $text->content,
-                $author
+                new Creator(
+                    $author->id(),
+                    new Name(
+                        $author->first_name ?? null,
+                        $author->last_name ?? null
+                    )
+                )
             );
         }
 

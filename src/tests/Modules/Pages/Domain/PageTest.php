@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Modules\Pages\Domain\Application;
-use Kwai\Modules\Pages\Domain\Author;
 use Kwai\Modules\Pages\Domain\Page;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 it(
     'can add content to a page',
@@ -29,14 +29,12 @@ it(
             'Test',
             'Test Summary',
             'Test Content',
-            new Entity(
+            new Creator(
                 1,
-                new Author((object)[
-                    'name' => new Username(
-                        'Jigoro',
-                        'Kono'
-                    )
-                ])
+                new Name(
+                    'Jigoro',
+                    'Kono'
+                )
             )
         ));
 

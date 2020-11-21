@@ -43,9 +43,8 @@ class Text
 
     /**
      * The author of the text.
-     * @var Entity
      */
-    private Entity $author;
+    private Creator $author;
 
     /**
      * Text constructor.
@@ -55,7 +54,7 @@ class Text
      * @param string         $title
      * @param string         $summary
      * @param string|null    $content
-     * @param Entity         $author
+     * @param Creator        $author
      */
     public function __construct(
         Locale $locale,
@@ -63,7 +62,7 @@ class Text
         string $title,
         string $summary,
         ?string $content,
-        Entity $author
+        Creator $author
     ) {
         $this->locale = $locale;
         $this->format = $format;
@@ -116,7 +115,7 @@ class Text
     /**
      * Return the author
      */
-    public function getAuthor(): Entity
+    public function getAuthor(): Creator
     {
         return $this->author;
     }

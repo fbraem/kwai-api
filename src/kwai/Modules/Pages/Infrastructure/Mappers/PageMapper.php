@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -44,7 +46,13 @@ class PageMapper
                     $c->title,
                     $c->summary,
                     $c->content,
-                    AuthorMapper::toDomain($c->author)
+                    new Creator(
+                        (int) $c->author->id,
+                        new Name(
+                            $c->author->first_name ?? null,
+                            $c->author->last_name ?? null
+                        )
+                    )
                 ), $raw->contents)
             ])
         );

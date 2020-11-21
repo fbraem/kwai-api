@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace Tests\Modules\News\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -19,7 +21,6 @@ use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
-use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Tests\Context;
@@ -28,11 +29,13 @@ $context = Context::createContext();
 
 beforeAll(function () use ($context) {
     if (Context::hasDatabase()) {
-        try {
-            $context->author = (new AuthorDatabaseRepository($context->db))->getById(1);
-        } catch (AuthorNotFoundException $e) {
-        } catch (RepositoryException $e) {
-        }
+        $context->author = new Creator(
+            1,
+            new Name(
+                'Jigoro',
+                'Kano'
+            )
+        );
 
         try {
             $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
@@ -44,9 +47,6 @@ beforeAll(function () use ($context) {
 
 it('can create a story', function () use ($context) {
     // This test will create a promoted story.
-    if (! isset($context->author)) {
-        $this->assertTrue(false, 'No author');
-    }
     if (! isset($context->application)) {
         $this->assertTrue(false, 'No application');
     }

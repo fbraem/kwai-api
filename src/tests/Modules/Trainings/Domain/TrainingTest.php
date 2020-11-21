@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\Gender;
@@ -12,7 +13,6 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Member;
 use Kwai\Modules\Trainings\Domain\Training;
-use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\Locale;
@@ -17,7 +18,6 @@ use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Training;
-use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingDefinition;
 
 /**
@@ -46,7 +46,13 @@ class TrainingMapper
                         $t->title,
                         $t->summary,
                         $t->content,
-                        null, //new Creator()
+                        new Creator(
+                            $t->author->id,
+                            new Name(
+                                $t->author->first_name,
+                                $t->author->last_name
+                            )
+                        )
                     ), $raw->contents)
                 ),
                 'creator' => new Creator(

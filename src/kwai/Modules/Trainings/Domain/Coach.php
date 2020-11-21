@@ -9,8 +9,8 @@ namespace Kwai\Modules\Trainings\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 
 /**
  * Class Coach

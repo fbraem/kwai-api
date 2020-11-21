@@ -1,21 +1,20 @@
-<?php
-/** @noinspection PhpUndefinedMethodInspection */
+<?php /** @noinspection PhpUndefinedMethodInspection */
 /**
  * Test PageDatabaseRepository
  */
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
-use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\Pages\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Tests\Context;
 
@@ -29,11 +28,13 @@ $context = Context::createContext();
 
 beforeAll(function () use ($context) {
     if (Context::hasDatabase()) {
-        try {
-            $context->author = (new AuthorDatabaseRepository($context->db))->getById(1);
-        } catch (AuthorNotFoundException $e) {
-        } catch (RepositoryException $e) {
-        }
+        $context->author = new Creator(
+            1,
+            new Name(
+                'Jigoro',
+                'Kano'
+            )
+        );
         try {
             $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
         } catch (ApplicationNotFoundException $e) {

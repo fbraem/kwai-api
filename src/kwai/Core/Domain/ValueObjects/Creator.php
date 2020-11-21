@@ -1,13 +1,11 @@
 <?php
 /**
- * @package Modules
- * @subpackage Trainings
+ * @package Core
+ * @subpackage Domain
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Domain\ValueObjects;
-
-use Kwai\Core\Domain\ValueObjects\Name;
+namespace Kwai\Core\Domain\ValueObjects;
 
 /**
  * Class Creator

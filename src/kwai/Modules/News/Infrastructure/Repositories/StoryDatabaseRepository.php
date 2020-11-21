@@ -127,7 +127,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
                 $content->getTitle(),
                 $content->getContent(),
                 $content->getSummary(),
-                $content->getAuthor()->id()
+                $content->getAuthor()->getId()
             );
         }
 
@@ -166,7 +166,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
                     'title' => $content->getTitle(),
                     'content' => $content->getContent(),
                     'summary' => $content->getSummary(),
-                    'user_id' => $content->getAuthor()->id(),
+                    'user_id' => $content->getAuthor()->getId(),
                     'updated_at' => (string) Timestamp::createNow()
                 ])
                 ->where(

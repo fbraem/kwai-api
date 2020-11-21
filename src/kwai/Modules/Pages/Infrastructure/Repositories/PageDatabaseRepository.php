@@ -98,7 +98,7 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
                 $content->getTitle(),
                 $content->getContent(),
                 $content->getSummary(),
-                $content->getAuthor()->id()
+                $content->getAuthor()->getId()
             );
         }
 
@@ -137,7 +137,7 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
                     'title' => $content->getTitle(),
                     'content' => $content->getContent(),
                     'summary' => $content->getSummary(),
-                    'user_id' => $content->getAuthor()->id(),
+                    'user_id' => $content->getAuthor()->getId(),
                     'updated_at' => (string) Timestamp::createNow()
                 ])
                 ->where(

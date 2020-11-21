@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Coach;
-use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 
 /**
  * Class CoachMapper

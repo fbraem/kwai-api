@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
-use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Tests\Context;
 
