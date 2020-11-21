@@ -12,6 +12,7 @@ use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
+use Kwai\Modules\Trainings\Repositories\CoachQuery;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
 
 /**
@@ -21,10 +22,14 @@ use Kwai\Modules\Trainings\Repositories\CoachRepository;
  */
 class CoachDatabaseRepository extends DatabaseRepository implements CoachRepository
 {
-    private function createQuery()
+    /**
+     * @inheritDoc
+     */
+    public function createQuery(): CoachQuery
     {
         return new CoachDatabaseQuery($this->db);
     }
+
     /**
      * @inheritDoc
      */
