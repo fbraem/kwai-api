@@ -37,7 +37,7 @@ class Event
     /**
      * The location of the event.
      */
-    private Location $location;
+    private ?Location $location;
 
     /**
      * A remark
@@ -53,18 +53,18 @@ class Event
     /**
      * Event constructor.
      *
-     * @param Timestamp   $startDate
-     * @param Timestamp   $endDate
-     * @param Location    $location
-     * @param Text[]      $text
-     * @param bool        $active
-     * @param bool        $cancelled
-     * @param string|null $remark
+     * @param Timestamp     $startDate
+     * @param Timestamp     $endDate
+     * @param Location|null $location
+     * @param Text[]        $text
+     * @param bool          $active
+     * @param bool          $cancelled
+     * @param string|null   $remark
      */
     public function __construct(
         Timestamp $startDate,
         Timestamp $endDate,
-        Location $location,
+        ?Location $location,
         array $text = [],
         bool $active = true,
         bool $cancelled = false,
