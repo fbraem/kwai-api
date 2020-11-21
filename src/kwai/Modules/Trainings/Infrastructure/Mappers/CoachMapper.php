@@ -14,6 +14,9 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 
+/**
+ * Class CoachMapper
+ */
 class CoachMapper
 {
     /**
