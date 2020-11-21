@@ -67,7 +67,7 @@ class UserRulesMigration extends AbstractMigration
             ->addColumn('name', 'string')
             ->addColumn('remark', 'text', ['null' => true])
             ->addTimestamps()
-            ->create();
+            ->create()
         ;
 
         $this->table('ability_rules', ['id' => false, 'primary_key' => ['ability_id' , 'rule_id']])
