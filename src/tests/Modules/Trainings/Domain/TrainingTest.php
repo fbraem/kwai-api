@@ -7,6 +7,7 @@ use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\Gender;
 use Kwai\Core\Domain\ValueObjects\Location;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Member;
@@ -15,7 +16,10 @@ use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
-$creator = new Creator(1, 'Jigoro Kano');
+$creator = new Creator(
+    1,
+    new Name('Jigoro', 'Kano')
+);
 
 it('can construct a training', function () use ($creator) {
     $training = new Training(
@@ -55,8 +59,7 @@ it('can appoint/release a coach to a training', function () use ($creator) {
         new Member((object) [
             'license' => '',
             'licenseEndDate' => Date::createFromDate(2020),
-            'firstName' => '',
-            'lastName' => '',
+            'name' => new Name(),
             'gender' => Gender::MALE(),
             'birthDate' => Date::createFromDate(1860, 12, 10)
         ])
@@ -102,8 +105,7 @@ it('can manager a presence', function () use ($creator) {
         new Member((object) [
             'license' => '',
             'licenseEndDate' => Date::createFromDate(2020),
-            'firstName' => '',
-            'lastName' => '',
+            'name' => new Name(),
             'gender' => Gender::MALE(),
             'birthDate' => Date::createFromDate(1860, 12, 10)
         ])
