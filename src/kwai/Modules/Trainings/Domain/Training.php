@@ -15,6 +15,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Creator;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
+use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingDefinition;
 
 /**
  * Class Training
@@ -42,19 +43,31 @@ class Training implements DomainEntity
      * The coaches appointed for the training.
      * @var TrainingCoach[]
      */
-    private array $coaches;
+    private array $coaches = [];
+
+    /**
+     * The teams assigned to this training.
+     * @var Entity<Team>[]
+     */
+    private array $teams = [];
 
     /**
      * List of members that were present on the training.
      *
      * @var Presence[]
      */
-    private array $presences;
+    private array $presences = [];
 
     /**
      * A remark
      */
     private ?string $remark;
+
+    /**
+     * The training definition that is used to create this training (if any).
+     * @var TrainingDefinition|null
+     */
+    private ?TrainingDefinition $definition;
 
     /**
      * Training constructor.
@@ -66,6 +79,7 @@ class Training implements DomainEntity
         $this->event = $props->event;
         $this->creator = $props->creator;
         $this->remark = $props->remark ?? null;
+        $this->definition = $props->definition ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
     }
 
@@ -170,5 +184,35 @@ class Training implements DomainEntity
     public function getPresences(): array
     {
         return $this->presences;
+    }
+
+    /**
+     * Get the associated teams
+     *
+     * @return Entity<Team>[]
+     */
+    public function getTeams(): array
+    {
+        return $this->teams;
+    }
+
+    /**
+     * Add a team to this training
+     *
+     * @param Entity $team
+     */
+    public function addTeam(Entity $team)
+    {
+        $this->teams[$team->id()] = $team;
+    }
+
+    /**
+     * Returns the definition that was used to create this training (if any).
+     *
+     * @return TrainingDefinition|null
+     */
+    public function getDefinition(): ?TrainingDefinition
+    {
+        return $this->definition;
     }
 }
