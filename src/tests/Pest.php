@@ -14,9 +14,7 @@ if ($db) {
     $db->asArray();
 
     $configArray = require(__DIR__ . '/../phinx.php');
-    $configArray['environments']['test'] = [
-        'connection' => $db->getPDO()
-    ];
+    $configArray['environments']['test']['connection'] = $db->getPDO();
     $manager = new Manager(
         new Config($configArray),
         new StringInput(' '),
