@@ -55,13 +55,6 @@ class TrainingMapper
                         )
                     ), $raw->contents)
                 ),
-                'creator' => new Creator(
-                    $raw->creator->id,
-                    new Name(
-                        $raw->creator->first_name,
-                        $raw->creator->last_name
-                    )
-                ),
                 'remark' => $raw->remark,
                 'definition' => isset($raw->definition)
                     ? new TrainingDefinition(
