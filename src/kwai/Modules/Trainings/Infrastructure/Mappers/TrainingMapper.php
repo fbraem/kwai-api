@@ -47,10 +47,10 @@ class TrainingMapper
                         $t->summary,
                         $t->content,
                         new Creator(
-                            $t->author->id,
+                            (int) $t->creator->id,
                             new Name(
-                                $t->author->first_name,
-                                $t->author->last_name
+                                $t->creator->first_name,
+                                $t->creator->last_name
                             )
                         )
                     ), $raw->contents)
