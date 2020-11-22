@@ -30,15 +30,22 @@ abstract class DatabaseQuery implements Query
      */
     protected SelectQuery $query;
 
+    private string $countColumn;
+
     /**
      * DatabaseQuery constructor.
      *
-     * @param Connection  $db
+     * Set count column when joins are used that result in multiple rows
+     * with the same id. This will result in a count(distinct(column)) query.
+     *
+     * @param Connection $db
+     * @param string     $countColumn
      */
-    public function __construct(Connection $db)
+    public function __construct(Connection $db, string $countColumn = '0')
     {
         $this->db = $db;
         $this->query = $this->db->createQueryFactory()->select();
+        $this->countColumn = $countColumn;
         $this->initQuery();
     }
 
@@ -65,9 +72,21 @@ abstract class DatabaseQuery implements Query
 
         // Instead of trying to count a column, we just
         // count the number '0'
-        $this->query->columns(
-            alias(func('COUNT', literal('0')), 'c')
-        );
+        if ($this->countColumn == '0') {
+            $this->query->columns(
+                alias(func('COUNT', literal('0')), 'c')
+            );
+        } else {
+            $this->query->columns(
+                alias(
+                    func(
+                        'COUNT',
+                        func('distinct', $this->countColumn)
+                    ),
+                    'c'
+                )
+            );
+        }
 
         $row = $this->db->execute(
             $this->query

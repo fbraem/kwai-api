@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
@@ -19,6 +20,14 @@ use function Latitude\QueryBuilder\on;
  */
 class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            Tables::TRAININGS()->getColumn('id')
+        );
+    }
+
     /**
      * @inheritDoc
      * @noinspection PhpUndefinedFieldInspection
