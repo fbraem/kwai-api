@@ -10,7 +10,6 @@ namespace Kwai\Modules\Trainings\Domain;
 use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
@@ -33,11 +32,6 @@ class Training implements DomainEntity
      * The event for the training
      */
     private Event $event;
-
-    /**
-     * The user who created the training.
-     */
-    private Creator $creator;
 
     /**
      * The coaches appointed for the training.
@@ -77,7 +71,6 @@ class Training implements DomainEntity
     public function __construct(object $props)
     {
         $this->event = $props->event;
-        $this->creator = $props->creator;
         $this->remark = $props->remark ?? null;
         $this->definition = $props->definition ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
@@ -97,14 +90,6 @@ class Training implements DomainEntity
     public function getEvent(): Event
     {
         return $this->event;
-    }
-
-    /**
-     * @return Creator
-     */
-    public function getCreator(): Creator
-    {
-        return $this->creator;
     }
 
     /**
