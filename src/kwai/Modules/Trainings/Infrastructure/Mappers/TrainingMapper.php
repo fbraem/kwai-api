@@ -55,7 +55,7 @@ class TrainingMapper
                         )
                     ), $raw->contents)
                 ),
-                'remark' => $raw->remark,
+                'remark' => $raw->remark ?? null,
                 'definition' => isset($raw->definition)
                     ? new TrainingDefinition(
                         (int) $raw->definition->id,
