@@ -88,7 +88,7 @@ it('can appoint/release a coach to a training', function () use ($creator) {
     ;
 });
 
-it('can manager a presence', function () use ($creator) {
+it('can manage a presence', function () use ($creator) {
     $training = new Training(
         (object)[
             'event' => new Event(
