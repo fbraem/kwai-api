@@ -23,10 +23,6 @@ it('can get a coach', function () use ($context) {
         expect($coach->domain())
             ->toBeInstanceOf(Coach::class)
         ;
-        /** @noinspection PhpUndefinedMethodInspection */
-        expect($coach->getCreator())
-            ->toBeInstanceOf(Creator::class)
-        ;
     } catch (CoachNotFoundException $e) {
         $this->assertTrue(false, (string) $e);
     } catch (RepositoryException $e) {

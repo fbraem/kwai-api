@@ -20,42 +20,14 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 class Coach implements DomainEntity
 {
     /**
-     * A description
+     * The firstname of the coach
      */
-    private string $description;
+    private string $firstname;
 
     /**
-     * The diploma of the coach
+     * The lastname of the coach
      */
-    private ?string $diploma;
-
-    /**
-     * Is this coach still active?
-     */
-    private bool $active;
-
-    /**
-     * A remark
-     */
-    private ?string $remark;
-
-    /**
-     * The create/update timestamps
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The user who created this coach.
-     *
-     * @var Creator
-     */
-    private Creator $creator;
-
-    /**
-     * A coach is also a member
-     * @var Entity<Member>
-     */
-    private Entity $member;
+    private string $lastname;
 
     /**
      * Coach constructor.
@@ -64,68 +36,23 @@ class Coach implements DomainEntity
      */
     public function __construct(object $props)
     {
-        $this->description = $props->description;
-        $this->diploma = $props->diploma ?? null;
-        $this->active = $props->active;
-        $this->remark = $props->remark ?? null;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->creator = $props->creator;
-        $this->member = $props->member;
+        $this->firstname = $props->firstname;
+        $this->lastname = $props->lastname;
     }
 
     /**
-     * @return string
+     * Get the firstname of the coach
      */
-    public function getDescription(): string
+    public function getFirstname(): string
     {
-        return $this->description;
+        return $this->firstname;
     }
 
     /**
-     * @return ?string
+     * Get the lastname of the coach
      */
-    public function getDiploma(): ?string
+    public function getLastname(): string
     {
-        return $this->diploma;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getRemark(): ?string
-    {
-        return $this->remark;
-    }
-
-    /**
-     * @return TraceableTime
-     */
-    public function getTraceableTime(): TraceableTime
-    {
-        return $this->traceableTime;
-    }
-
-    /**
-     * @return Creator
-     */
-    public function getCreator(): Creator
-    {
-        return $this->creator;
-    }
-
-    /**
-     * @return Entity
-     */
-    public function getMember(): Entity
-    {
-        return $this->member;
+        return $this->lastname;
     }
 }

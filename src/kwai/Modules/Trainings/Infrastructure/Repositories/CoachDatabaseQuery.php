@@ -59,30 +59,12 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     protected function getColumns(): array
     {
         $coachAliasFn = Tables::COACHES()->getAliasFn();
-        $memberAlias = Tables::MEMBERS()->getAliasFn();
         $personAlias = Tables::PERSONS()->getAliasFn();
-        $userAlias = Tables::USERS()->getAliasFn();
 
         return [
             $coachAliasFn('id'),
-            $coachAliasFn('description'),
-            $coachAliasFn('diploma'),
-            $coachAliasFn('active'),
-            $coachAliasFn('remark'),
-            $coachAliasFn('created_at'),
-            $coachAliasFn('updated_at'),
-            $memberAlias('id'),
-            $memberAlias('license'),
-            $memberAlias('license_end_date'),
-            $memberAlias('remark'),
             $personAlias('lastname'),
-            $personAlias('firstname'),
-            $personAlias('gender'),
-            $personAlias('birthdate'),
-            $personAlias('firstname'),
-            $userAlias('id'),
-            $userAlias('first_name'),
-            $userAlias('last_name')
+            $personAlias('firstname')
         ];
     }
 
@@ -108,17 +90,14 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
         }
 
         $coachColumnFilter = Tables::COACHES()->createColumnFilter();
-        $memberColumnFilter = Tables::MEMBERS()->createColumnFilter();
         $personColumnFilter = Tables::PERSONS()->createColumnFilter();
-        $userColumnFilter = Tables::USERS()->createColumnFilter();
 
         $coaches = [];
         foreach ($rows as $row) {
             $coach = $coachColumnFilter->filter($row);
-            $member = $memberColumnFilter->filter($row);
             $person = $personColumnFilter->filter($row);
-            $coach->member = (object)array_merge((array)$member, (array)$person);
-            $coach->creator = $userColumnFilter->filter($row);
+            $coach->firstname = $person->firstname;
+            $coach->lastname = $person->lastname;
 
             $coaches[$coach->id] = CoachMapper::toDomain($coach);
         }
