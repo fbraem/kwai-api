@@ -116,7 +116,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $trainingIdColumn = Tables::TRAININGS()->getAlias('id');
         $definitionIdColumn = Tables::TRAINING_DEFINITIONS()->getAlias('id');
         foreach ($rows as $row) {
-            if (isset($trainings[$row->$trainingIdColumn])) {
+            if (array_key_exists($row->$trainingIdColumn, $trainings)) {
                 $training = $trainings[$row->$trainingIdColumn];
             } else {
                 $training = $trainingColumnFilter->filter($row);
@@ -129,6 +129,13 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $content = $contentColumnFilter->filter($row);
             $content->creator = $creatorColumnFilter->filter($row);
             $training->contents[] = $content;
+        }
+
+        $trainingCoachQuery = new TrainingCoachDatabaseQuery($this->db);
+        $trainingCoachQuery->filterOnTrainings(array_keys($trainings));
+        $trainingCoaches = $trainingCoachQuery->execute();
+        foreach ($trainingCoaches as $trainingId => $trainingCoach) {
+            $trainings[$trainingId]->coaches = $trainingCoach;
         }
 
         $result = [];
