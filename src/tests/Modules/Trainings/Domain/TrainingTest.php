@@ -54,28 +54,15 @@ it('can appoint/release a coach to a training', function () use ($creator) {
             'creator' => $creator
         ]
     );
-    $member = new Entity(
-        1,
-        new Member((object) [
-            'license' => '',
-            'licenseEndDate' => Date::createFromDate(2020),
-            'name' => new Name(),
-            'gender' => Gender::MALE(),
-            'birthDate' => Date::createFromDate(1860, 12, 10)
-        ])
-    );
     $coach = new Entity(
         1,
         new Coach((object)[
-            'description' => '',
-            'diploma' => '',
-            'active' => true,
-            'creator' => $creator,
-            'member' => $member
+            'firstname' => 'Jigoro',
+            'lastname' => 'Kano'
         ])
     );
     $training->appointCoach(
-        new TrainingCoach($coach, false, false, false, $creator)
+        new TrainingCoach($coach, false, false, false)
     );
     expect($training->getCoaches())
         ->toBeArray()
