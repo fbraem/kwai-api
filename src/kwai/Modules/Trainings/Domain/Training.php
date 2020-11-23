@@ -74,6 +74,7 @@ class Training implements DomainEntity
         $this->remark = $props->remark ?? null;
         $this->definition = $props->definition ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
+        $this->coaches = $props->coaches ?? [];
     }
 
     /**
