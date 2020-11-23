@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Domain\ValueObjects;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Modules\Trainings\Domain\Coach;
 
 /**
@@ -31,8 +30,6 @@ class TrainingCoach
 
     private ?string $remark;
 
-    private Creator $creator;
-
     /**
      * TrainingCoach constructor.
      *
@@ -40,7 +37,6 @@ class TrainingCoach
      * @param bool    $head
      * @param bool    $present
      * @param bool    $payed
-     * @param Creator $creator
      * @param ?string $remark
      */
     public function __construct(
@@ -48,7 +44,6 @@ class TrainingCoach
         bool $head,
         bool $present,
         bool $payed,
-        Creator $creator,
         string $remark = null
     ) {
         $this->coach = $coach;
@@ -56,7 +51,6 @@ class TrainingCoach
         $this->present = $present;
         $this->payed = $payed;
         $this->remark = $remark;
-        $this->creator = $creator;
     }
 
     /**
@@ -97,13 +91,5 @@ class TrainingCoach
     public function getRemark(): ?string
     {
         return $this->remark;
-    }
-
-    /**
-     * @return Creator
-     */
-    public function getCreator(): Creator
-    {
-        return $this->creator;
     }
 }
