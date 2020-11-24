@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
@@ -100,10 +101,9 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
     public function execute(?int $limit = null, ?int $offset = null)
     {
-        $rows = parent::execute($limit, $offset);
-        if (count($rows) === 0) {
-            return [];
-        }
+        $rows = LazyCollection::make(
+            parent::walk($limit, $offset)
+        );
 
         $trainingColumnFilter = Tables::TRAININGS()->createColumnFilter();
         $definitionColumnFilter = Tables::TRAINING_DEFINITIONS()->createColumnFilter();
@@ -115,6 +115,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $trainings = [];
         $trainingIdColumn = Tables::TRAININGS()->getAlias('id');
         $definitionIdColumn = Tables::TRAINING_DEFINITIONS()->getAlias('id');
+
         foreach ($rows as $row) {
             if (array_key_exists($row->$trainingIdColumn, $trainings)) {
                 $training = $trainings[$row->$trainingIdColumn];
