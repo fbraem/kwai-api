@@ -10,7 +10,7 @@ namespace Kwai\Modules\Users\UseCases;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserRepository;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class BrowseUsers

@@ -14,7 +14,7 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Repositories\AuthorRepository;
 use Kwai\Modules\News\Repositories\StoryRepository;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class BrowseStories

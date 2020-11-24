@@ -35,6 +35,9 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/filp/whoops" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/firebase/php-jwt" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/hamcrest/hamcrest-php" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/illuminate/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/illuminate/contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/illuminate/macroable" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/latitude/latitude" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/commonmark" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/league/container" />
@@ -129,10 +132,8 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/translation-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/var-dumper" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/theseer/tokenizer" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/tightenco/collect" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/callable-handler" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/cors-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/http-factory" />

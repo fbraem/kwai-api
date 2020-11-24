@@ -12,7 +12,7 @@ use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
 use Tests\Context;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 $context = Context::createContext();
 

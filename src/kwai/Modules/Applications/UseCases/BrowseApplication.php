@@ -9,7 +9,7 @@ namespace Kwai\Modules\Applications\UseCases;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class BrowseApplication

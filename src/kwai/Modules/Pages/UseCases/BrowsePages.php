@@ -14,7 +14,7 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\Pages\Repositories\AuthorRepository;
 use Kwai\Modules\Pages\Repositories\PageRepository;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class BrowsePages

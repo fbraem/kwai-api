@@ -112,8 +112,6 @@
       <path value="$PROJECT_DIR$/src/vendor/nette/utils" />
       <path value="$PROJECT_DIR$/src/vendor/nette/schema" />
       <path value="$PROJECT_DIR$/src/vendor/monolog/monolog" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/var-dumper" />
-      <path value="$PROJECT_DIR$/src/vendor/tightenco/collect" />
       <path value="$PROJECT_DIR$/src/vendor/facade/ignition-contracts" />
       <path value="$PROJECT_DIR$/src/vendor/filp/whoops" />
       <path value="$PROJECT_DIR$/src/vendor/nunomaduro/collision" />
@@ -142,6 +140,9 @@
       <path value="$PROJECT_DIR$/src/vendor/phpoffice/phpspreadsheet" />
       <path value="$PROJECT_DIR$/src/vendor/maennchen/zipstream-php" />
       <path value="$PROJECT_DIR$/src/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/src/vendor/illuminate/macroable" />
+      <path value="$PROJECT_DIR$/src/vendor/illuminate/contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/illuminate/collections" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
