@@ -9,10 +9,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Generator;
 use Latitude\QueryBuilder\Engine\SqliteEngine;
 use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\QueryFactory;
-
 use Latitude\QueryBuilder\Engine\CommonEngine;
 use Latitude\QueryBuilder\Engine\MySqlEngine;
 use PDO;
@@ -143,6 +143,31 @@ final class Connection
             return $stmt;
         } catch (PDOException $e) {
             throw new QueryException($compiledQuery->sql(), $e);
+        }
+    }
+
+    /**
+     * Run a select statement and returns a generator.
+     *
+     * @param AbstractQuery $query
+     * @return Generator
+     * @throws QueryException
+     */
+    public function walk(AbstractQuery $query)
+    {
+        $compiledQuery = $query->compile();
+        if ($this->logger) {
+            $this->logger->debug($compiledQuery->sql(), $compiledQuery->params());
+        }
+        try {
+            $stmt = $this->pdo->prepare($compiledQuery->sql());
+            $stmt->execute($compiledQuery->params());
+        } catch (PDOException $e) {
+            throw new QueryException($compiledQuery->sql(), $e);
+        }
+
+        while ($record = $stmt->fetch()) {
+            yield($record);
         }
     }
 
