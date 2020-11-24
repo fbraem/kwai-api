@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Generator;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
@@ -95,6 +96,7 @@ abstract class DatabaseQuery implements Query
     }
 
     /**
+     * Default implementation: return all records.
      * @inheritDoc
      */
     public function execute(?int $limit = null, ?int $offset = null)
@@ -107,5 +109,26 @@ abstract class DatabaseQuery implements Query
         );
 
         return $this->db->execute($this->query)->fetchAll();
+    }
+
+    /**
+     * Does the same as execute, except it allows to lazy load the
+     * records.
+     *
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Generator
+     * @throws QueryException
+     */
+    protected function walk(?int $limit = null, ?int $offset = null)
+    {
+        $this->query->limit($limit);
+        $this->query->offset($offset);
+
+        $this->query->columns(
+            ... $this->getColumns()
+        );
+
+        return $this->db->walk($this->query);
     }
 }
