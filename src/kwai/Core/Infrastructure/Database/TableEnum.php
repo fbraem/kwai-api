@@ -61,7 +61,7 @@ class TableEnum extends Enum
      *
      * @return string
      */
-    private function getAliasPrefix(): string
+    public function getAliasPrefix(): string
     {
         return $this->getValue() . '_';
     }
