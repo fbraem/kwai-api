@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Date;
@@ -28,7 +29,7 @@ it('can construct a training', function () use ($creator) {
                 Timestamp::createNow(),
                 Timestamp::createNow(),
                 new Location('Tokyo'),
-                []
+                new Collection()
             ),
             'creator' => $creator,
             'remark' => 'Test Training'
@@ -49,7 +50,7 @@ it('can appoint/release a coach to a training', function () use ($creator) {
                 Timestamp::createNow(),
                 Timestamp::createNow(),
                 new Location('Tokyo'),
-                []
+                new Collection()
             ),
             'creator' => $creator
         ]
@@ -82,7 +83,7 @@ it('can manage a presence', function () use ($creator) {
                 Timestamp::createNow(),
                 Timestamp::createNow(),
                 new Location('Tokyo'),
-                []
+                new Collection()
             ),
             'creator' => $creator
         ]

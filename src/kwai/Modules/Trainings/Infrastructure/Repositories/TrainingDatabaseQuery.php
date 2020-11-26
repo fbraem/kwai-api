@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
+use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
@@ -64,7 +66,6 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
         return [
             $trainingAliasFn('id'),
-            $trainingAliasFn('definition_id'),
             $trainingAliasFn('created_at'),
             $trainingAliasFn('updated_at'),
             $trainingAliasFn('start_date'),
@@ -101,47 +102,49 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
     public function execute(?int $limit = null, ?int $offset = null)
     {
+        $this->db->asArray();
         $rows = LazyCollection::make(
             parent::walk($limit, $offset)
         );
+        $this->db->asObject();
 
-        $trainingColumnFilter = Tables::TRAININGS()->createColumnFilter();
-        $definitionColumnFilter = Tables::TRAINING_DEFINITIONS()->createColumnFilter();
-        $contentColumnFilter = Tables::TRAINING_CONTENTS()->createColumnFilter();
-        $creatorColumnFilter = Tables::USERS()->createColumnFilter();
-
-        // Build the training object. There can be multiple rows for one
-        // training (when there are multiple text content rows).
-        $trainings = [];
-        $trainingIdColumn = Tables::TRAININGS()->getAlias('id');
-        $definitionIdColumn = Tables::TRAINING_DEFINITIONS()->getAlias('id');
-
+        $trainings = new Collection();
+        $filters = new Collection([
+            Tables::TRAININGS()->getAliasPrefix(),
+            Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
+            Tables::TRAINING_CONTENTS()->getAliasPrefix(),
+            Tables::USERS()->getAliasPrefix()
+        ]);
         foreach ($rows as $row) {
-            if (array_key_exists($row->$trainingIdColumn, $trainings)) {
-                $training = $trainings[$row->$trainingIdColumn];
-            } else {
-                $training = $trainingColumnFilter->filter($row);
-                if (isset($row->$definitionIdColumn)) {
-                    $training->definition = $definitionColumnFilter->filter($row);
+            $rowCollection = new ColumnCollection($row);
+            [
+                $training,
+                $definition,
+                $content,
+                $user
+            ] = $rowCollection->filter($filters);
+
+            if (!$trainings->has($training['id'])) {
+                $trainings->put($training['id'], $training);
+                if ($definition['id']) {
+                    $training->put('definition', $definition);
                 }
-                $training->contents = [];
-                $trainings[$training->id] = $training;
+                $training->put('contents', new Collection());
             }
-            $content = $contentColumnFilter->filter($row);
-            $content->creator = $creatorColumnFilter->filter($row);
-            $training->contents[] = $content;
+            $content['creator'] = $user;
+            $trainings[$training['id']]['contents']->push($content);
         }
 
         $trainingCoachQuery = new TrainingCoachDatabaseQuery($this->db);
-        $trainingCoachQuery->filterOnTrainings(array_keys($trainings));
+        $trainingCoachQuery->filterOnTrainings($trainings->keys()->toArray());
         $trainingCoaches = $trainingCoachQuery->execute();
         foreach ($trainingCoaches as $trainingId => $trainingCoach) {
-            $trainings[$trainingId]->coaches = $trainingCoach;
+            $trainings[$trainingId]->put('coaches', $trainingCoach);
         }
 
         $result = [];
         foreach ($trainings as $training) {
-            $result[$training->id] = TrainingMapper::toDomain($training);
+            $result[$training['id']] = TrainingMapper::toDomain($training);
         }
 
         return $result;

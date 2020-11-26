@@ -1,13 +1,16 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Trainings
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
+use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
@@ -79,18 +82,26 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
 
     public function execute(?int $limit = null, ?int $offset = null)
     {
-        $trainingCoachColumnFilter = Tables::TRAINING_COACHES()->createColumnFilter();
-        $personColumnFilter = Tables::PERSONS()->createColumnFilter();
+        $this->db->asArray();
+        $rows = LazyCollection::make(
+            parent::walk($limit, $offset)
+        );
+        $this->db->asObject();
 
-        $trainings = [];
-        $rows = parent::execute($limit, $offset);
+        $prefixes = new Collection([
+            Tables::TRAINING_COACHES()->getAliasPrefix(),
+            Tables::PERSONS()->getAliasPrefix()
+        ]);
+
+        $trainings = new Collection();
         foreach ($rows as $row) {
-            $trainingCoach = $trainingCoachColumnFilter->filter($row);
-            $trainingCoach->person = $personColumnFilter->filter($row);
-            if (isset($trainings[$trainingCoach->training_id])) {
-                $trainings[$trainingCoach->training_id] = [];
+            $columns = new ColumnCollection($row);
+            [ $trainingCoach, $person ] = $columns->filter($prefixes);
+            $trainingCoach['person'] = $person;
+            if (!$trainings->has($trainingCoach['training_id'])) {
+                $trainings->put($trainingCoach['training_id'], new Collection());
             }
-            $trainings[$trainingCoach->training_id][] = $trainingCoach;
+            $trainings[$trainingCoach['training_id']]->push($trainingCoach);
         }
 
         return $trainings;

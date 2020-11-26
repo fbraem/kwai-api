@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
@@ -28,44 +29,44 @@ class TrainingMapper
     /**
      * Maps a table record to the Training domain entity.
      *
-     * @param object $raw
+     * @param Collection $data
      * @return Entity<Training>
      */
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Entity
     {
         return new Entity(
-            (int) $raw->id,
+            (int) $data['id'],
             new Training((object)[
                 'event' => new Event(
-                    Timestamp::createFromString($raw->start_date, $raw->time_zone),
-                    Timestamp::createFromString($raw->end_date, $raw->time_zone),
-                    isset($raw->location) ? new Location($raw->location) : null,
-                    array_map(fn($t) => new Text(
-                        new Locale($t->locale),
-                        new DocumentFormat($t->format),
-                        $t->title,
-                        $t->summary,
-                        $t->content,
+                    Timestamp::createFromString($data['start_date'], $data['time_zone']),
+                    Timestamp::createFromString($data['end_date'], $data['time_zone']),
+                    $data->get('location', null),
+                    $data['contents']->map(fn(Collection $t) => new Text(
+                        new Locale($t['locale']),
+                        new DocumentFormat($t['format']),
+                        $t['title'],
+                        $t['summary'],
+                        $t['content'],
                         new Creator(
-                            (int) $t->creator->id,
+                            (int) $t['creator']['id'],
                             new Name(
-                                $t->creator->first_name,
-                                $t->creator->last_name
+                                $t['creator']['first_name'],
+                                $t['creator']['last_name']
                             )
                         )
-                    ), $raw->contents)
+                    ))
                 ),
-                'remark' => $raw->remark ?? null,
-                'definition' => isset($raw->definition)
+                'remark' => $data->get('remark', null),
+                'definition' => $data->has('definition')
                     ? new TrainingDefinition(
-                        (int) $raw->definition->id,
-                        $raw->definition->name
+                        (int) $data['definition']['id'],
+                        $data['definition']['name']
                     )
                     : null,
                 'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at)
-                        ? Timestamp::createFromString($raw->updated_at)
+                    Timestamp::createFromString($data['created_at']),
+                    $data->has('updated_at')
+                        ? Timestamp::createFromString($data['updated_at'])
                         : null
                 ),
             ])

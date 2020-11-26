@@ -10,6 +10,7 @@ declare(strict_types = 1);
 namespace Kwai\Core\Infrastructure\Database;
 
 use Generator;
+use Illuminate\Support\Collection;
 use Latitude\QueryBuilder\Engine\SqliteEngine;
 use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\QueryFactory;
@@ -167,7 +168,11 @@ final class Connection
         }
 
         while ($record = $stmt->fetch()) {
-            yield($record);
+            if (is_array($record)) {
+                yield(new Collection($record));
+            } else {
+                yield($record);
+            }
         }
     }
 

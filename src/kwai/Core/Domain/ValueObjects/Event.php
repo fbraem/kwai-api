@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Domain\ValueObjects;
 
+use Illuminate\Support\Collection;
+
 /**
  * Class Event
  *
@@ -46,26 +48,27 @@ class Event
 
     /**
      * Text information for the event.
-     * @var Text[]
+     *
+     * @var Collection
      */
-    private array $text;
+    private Collection $text;
 
     /**
      * Event constructor.
      *
-     * @param Timestamp     $startDate
-     * @param Timestamp     $endDate
-     * @param Location|null $location
-     * @param Text[]        $text
-     * @param bool          $active
-     * @param bool          $cancelled
-     * @param string|null   $remark
+     * @param Timestamp       $startDate
+     * @param Timestamp       $endDate
+     * @param Location|null   $location
+     * @param Collection|null $text
+     * @param bool            $active
+     * @param bool            $cancelled
+     * @param string|null     $remark
      */
     public function __construct(
         Timestamp $startDate,
         Timestamp $endDate,
         ?Location $location,
-        array $text = [],
+        ?Collection $text,
         bool $active = true,
         bool $cancelled = false,
         ?string $remark = null
@@ -73,7 +76,7 @@ class Event
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->location = $location;
-        $this->text = $text;
+        $this->text = $text ?? new Collection();
         $this->active = $active;
         $this->cancelled = $cancelled;
         $this->remark = $remark;
@@ -110,9 +113,9 @@ class Event
     }
 
     /**
-     * @return Text[]
+     * @return Collection
      */
-    public function getText(): array
+    public function getText(): Collection
     {
         return $this->text;
     }
@@ -132,6 +135,6 @@ class Event
      */
     public function addText(Text $text)
     {
-        $this->text[] = $text;
+        $this->text->push($text);
     }
 }
