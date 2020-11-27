@@ -8,9 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Creator;
-use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Core\Domain\ValueObjects\Name;
 
 /**
  * Class Coach
@@ -20,14 +18,9 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 class Coach implements DomainEntity
 {
     /**
-     * The firstname of the coach
+     * The name of the coach
      */
-    private string $firstname;
-
-    /**
-     * The lastname of the coach
-     */
-    private string $lastname;
+    private Name $name;
 
     /**
      * Coach constructor.
@@ -36,23 +29,14 @@ class Coach implements DomainEntity
      */
     public function __construct(object $props)
     {
-        $this->firstname = $props->firstname;
-        $this->lastname = $props->lastname;
+        $this->name = $props->name;
     }
 
     /**
-     * Get the firstname of the coach
+     * Get the name of the coach
      */
-    public function getFirstname(): string
+    public function getName(): Name
     {
-        return $this->firstname;
-    }
-
-    /**
-     * Get the lastname of the coach
-     */
-    public function getLastname(): string
-    {
-        return $this->lastname;
+        return $this->name;
     }
 }

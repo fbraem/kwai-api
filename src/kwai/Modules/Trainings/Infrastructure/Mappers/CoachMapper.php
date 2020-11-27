@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Modules\Trainings\Domain\Coach;
 
 /**
@@ -26,8 +27,7 @@ class CoachMapper
         return new Entity(
             (int) $raw->id,
             new Coach((object) [
-                'firstname' => $raw->firstname,
-                'lastname' => $raw->lastname
+                'name' => new Name($raw->firstname, $raw->lastname)
             ])
         );
     }

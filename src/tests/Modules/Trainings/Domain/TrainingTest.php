@@ -58,8 +58,7 @@ it('can appoint/release a coach to a training', function () use ($creator) {
     $coach = new Entity(
         1,
         new Coach((object)[
-            'firstname' => 'Jigoro',
-            'lastname' => 'Kano'
+            'name' => new Name('Jigoro', 'Kano')
         ])
     );
     $training->appointCoach(
