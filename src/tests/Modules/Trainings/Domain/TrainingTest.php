@@ -66,13 +66,15 @@ it('can appoint/release a coach to a training', function () use ($creator) {
         new TrainingCoach($coach, false, false, false)
     );
     expect($training->getCoaches())
-        ->toBeArray()
-        ->toHaveCount(1)
+        ->toBeInstanceOf(Collection::class)
+        ->and($training->getCoaches()->count())
+        ->toBe(1)
     ;
     $training->releaseCoach($coach);
     expect($training->getCoaches())
-        ->toBeArray()
-        ->toHaveCount(0)
+        ->toBeInstanceOf(Collection::class)
+        ->and($training->getCoaches()->count())
+        ->toBe(0)
     ;
 });
 
@@ -103,10 +105,14 @@ it('can manage a presence', function () use ($creator) {
         $creator
     ));
     expect($training->getPresences())
-        ->toBeArray()
-        ->toHaveCount(1);
+        ->toBeInstanceOf(Collection::class)
+        ->and($training->getPresences()->count())
+        ->toBe(1)
+    ;
     $training->unregisterPresence($member);
     expect($training->getPresences())
-        ->toBeArray()
-        ->toHaveCount(0);
+        ->toBeInstanceOf(Collection::class)
+        ->and($training->getPresences()->count())
+        ->toBe(0)
+    ;
 });

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Domain;
 
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
@@ -35,22 +36,18 @@ class Training implements DomainEntity
 
     /**
      * The coaches appointed for the training.
-     * @var TrainingCoach[]
      */
-    private array $coaches = [];
+    private Collection $coaches;
 
     /**
      * The teams assigned to this training.
-     * @var Entity<Team>[]
      */
-    private array $teams = [];
+    private Collection $teams;
 
     /**
      * List of members that were present on the training.
-     *
-     * @var Presence[]
      */
-    private array $presences = [];
+    private Collection $presences;
 
     /**
      * A remark
@@ -74,7 +71,9 @@ class Training implements DomainEntity
         $this->remark = $props->remark ?? null;
         $this->definition = $props->definition ?? null;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->coaches = $props->coaches ?? [];
+        $this->coaches = $props->coaches ?? new Collection();
+        $this->teams = $props->teams ?? new Collection();
+        $this->presences = $props->presences ?? new Collection();
     }
 
     /**
@@ -130,11 +129,12 @@ class Training implements DomainEntity
     /**
      * Get all coaches appointed to the training.
      *
-     * @return TrainingCoach[]
+     * @note The returned value is a copy of the collection to protect for
+     *       immutability.
      */
-    public function getCoaches(): array
+    public function getCoaches(): Collection
     {
-        return $this->coaches;
+        return $this->coaches->collect();
     }
 
     /**
@@ -165,21 +165,24 @@ class Training implements DomainEntity
     /**
      * Get all presences.
      *
-     * @return Presence[]
+     * @note The returned value is a copy of the collection to protect for
+     *       immutability.
+     * @return Collection|Presence[]
      */
-    public function getPresences(): array
+    public function getPresences(): Collection
     {
-        return $this->presences;
+        return $this->presences->collect();
     }
 
     /**
      * Get the associated teams
      *
-     * @return Entity<Team>[]
+     * @note The returned value is a copy of the collection to protect for
+     *       immutability.
      */
-    public function getTeams(): array
+    public function getTeams(): Collection
     {
-        return $this->teams;
+        return $this->teams->collect();
     }
 
     /**
