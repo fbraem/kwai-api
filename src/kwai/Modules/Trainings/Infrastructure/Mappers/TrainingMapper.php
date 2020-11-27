@@ -40,23 +40,24 @@ class TrainingMapper
                 'event' => new Event(
                     Timestamp::createFromString($data['start_date'], $data['time_zone']),
                     Timestamp::createFromString($data['end_date'], $data['time_zone']),
-                    $data->get('location') ? new Location($data->get('location')) : null,
+                    $data->has('location') ? new Location($data->get('location')) : null,
                     $data['contents']->map(fn(Collection $t) => new Text(
                         new Locale($t['locale']),
                         new DocumentFormat($t['format']),
                         $t['title'],
                         $t['summary'],
-                        $t['content'],
+                        $t->get('content'),
                         new Creator(
                             (int) $t['creator']['id'],
                             new Name(
-                                $t['creator']['first_name'],
-                                $t['creator']['last_name']
+                                $t['creator']->get('first_name'),
+                                $t['creator']->get('last_name')
                             )
                         )
                     ))
                 ),
                 'remark' => $data->get('remark', null),
+                'coaches' => $data->get('coaches'),
                 'definition' => $data->has('definition')
                     ? new TrainingDefinition(
                         (int) $data['definition']['id'],
@@ -65,7 +66,7 @@ class TrainingMapper
                     : null,
                 'traceableTime' => new TraceableTime(
                     Timestamp::createFromString($data['created_at']),
-                    $data->get('updated_at')
+                    $data->has('updated_at')
                         ? Timestamp::createFromString($data->get('updated_at'))
                         : null
                 ),
