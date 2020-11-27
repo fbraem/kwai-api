@@ -60,8 +60,10 @@ class ColumnCollection implements IteratorAggregate
                         });
 
                         // Put the value in the collection with the original
-                        // column name
-                        $result->get($pos)->put($originalColumn, $this->collection[$column]);
+                        // column name when it is not null.
+                        if ($this->collection[$column]) {
+                            $result->get($pos)->put($originalColumn, $this->collection[$column]);
+                        }
 
                         // We found the original column, skip the other filters
                         return false;
