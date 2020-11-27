@@ -36,16 +36,22 @@ class Training implements DomainEntity
 
     /**
      * The coaches appointed for the training.
+     *
+     * @var Collection|TrainingCoach[]
      */
     private Collection $coaches;
 
     /**
      * The teams assigned to this training.
+     *
+     * @var Collection|Team[]
      */
     private Collection $teams;
 
     /**
      * List of members that were present on the training.
+     *
+     * @var Collection|Presence[]
      */
     private Collection $presences;
 
@@ -131,6 +137,7 @@ class Training implements DomainEntity
      *
      * @note The returned value is a copy of the collection to protect for
      *       immutability.
+     * @return Collection|TrainingCoach[]
      */
     public function getCoaches(): Collection
     {
@@ -179,6 +186,7 @@ class Training implements DomainEntity
      *
      * @note The returned value is a copy of the collection to protect for
      *       immutability.
+     * @return Collection|Team[]
      */
     public function getTeams(): Collection
     {
