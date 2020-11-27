@@ -126,7 +126,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
             if (!$trainings->has($training['id'])) {
                 $trainings->put($training['id'], $training);
-                if ($definition['id']) {
+                if ($definition->has('id')) {
                     $training->put('definition', $definition);
                 }
                 $training->put('contents', new Collection());
