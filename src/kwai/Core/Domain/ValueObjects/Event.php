@@ -67,8 +67,8 @@ class Event
     public function __construct(
         Timestamp $startDate,
         Timestamp $endDate,
-        ?Location $location,
-        ?Collection $text,
+        ?Location $location = null,
+        ?Collection $text = null,
         bool $active = true,
         bool $cancelled = false,
         ?string $remark = null
@@ -102,7 +102,7 @@ class Event
         return $this->cancelled;
     }
 
-    public function getLocation(): Location
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
@@ -117,7 +117,7 @@ class Event
      */
     public function getText(): Collection
     {
-        return $this->text;
+        return $this->text->collect();
     }
 
     /**
