@@ -15,7 +15,11 @@ use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
+use function Latitude\QueryBuilder\criteria;
 use function Latitude\QueryBuilder\field;
+use function Latitude\QueryBuilder\func;
+use function Latitude\QueryBuilder\group;
+use function Latitude\QueryBuilder\literal;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -97,6 +101,35 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::TRAININGS()->id)->eq($id)
+        );
+    }
+
+    /**
+     * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
+     */
+    public function filterYearMonth(int $year, ?int $month = null): void
+    {
+        $criteria = criteria(
+            "%s = %d",
+            func(
+                'YEAR',
+                Tables::TRAININGS()->start_date
+            ),
+            literal($year)
+        );
+        if ($month) {
+            $criteria = criteria(
+                "%s = %d",
+                func(
+                    'MONTH',
+                    Tables::TRAININGS()->start_date
+                ),
+                literal($year)
+            );
+        }
+        $this->query->andWhere(
+            group($criteria)
         );
     }
 
