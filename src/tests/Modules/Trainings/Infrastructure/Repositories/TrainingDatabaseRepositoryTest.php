@@ -58,7 +58,7 @@ it('should throw a not found exception', function () use ($context) {
     $repo = new TrainingDatabaseRepository($context->db);
     try {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $training = $repo->getById(1000);
+        $repo->getById(1000);
     } catch (RepositoryException $e) {
         $this->fail((string) $e);
     }
