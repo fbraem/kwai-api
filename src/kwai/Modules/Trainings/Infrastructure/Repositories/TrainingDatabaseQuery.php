@@ -135,6 +135,10 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $trainings[$training['id']]['contents']->push($content);
         }
 
+        if ($rows->isEmpty()) {
+            return [];
+        }
+
         $trainingCoachQuery = new TrainingCoachDatabaseQuery($this->db);
         $trainingCoachQuery->filterOnTrainings($trainings->keys()->toArray());
         $trainingCoaches = $trainingCoachQuery->execute();
