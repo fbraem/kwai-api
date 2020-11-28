@@ -6,6 +6,8 @@
             "email": "franky.braem@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
       "php" : ">=7.4",
         "league/fractal": "0.18.*",
