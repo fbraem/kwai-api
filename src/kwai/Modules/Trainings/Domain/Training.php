@@ -212,4 +212,12 @@ class Training implements DomainEntity
     {
         return $this->definition;
     }
+
+    /**
+     * Is this training related to a TrainingDefinition?
+     */
+    public function hasDefinition(): bool
+    {
+        return $this->definition !== null;
+    }
 }
