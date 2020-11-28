@@ -26,6 +26,10 @@ it('can get a training', function () use ($context) {
         expect($training->getEvent())
             ->toBeInstanceOf(Event::class)
         ;
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($training->getCoaches()->count())
+            ->toBeGreaterThan(0)
+        ;
     } catch (TrainingNotFoundException $e) {
         $this->fail((string) $e);
     } catch (RepositoryException $e) {
@@ -48,4 +52,17 @@ it('can count all trainings', function () use ($context) {
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('should throw a not found exception', function () use ($context) {
+    $repo = new TrainingDatabaseRepository($context->db);
+    try {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $training = $repo->getById(1000);
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->throws(TrainingNotFoundException::class)
 ;
