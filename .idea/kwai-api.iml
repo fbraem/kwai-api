@@ -13,7 +13,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/core" isTestSource="false" packagePrefix="Core\" />
       <sourceFolder url="file://$MODULE_DIR$/src/sport/judo/rest" isTestSource="false" packagePrefix="Judo\REST\" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/aura/intl" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/bin" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/cakephp/cache" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/cakephp/chronos" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/cakephp/collection" />
