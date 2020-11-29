@@ -40,7 +40,8 @@ class TrainingEventsMigration extends AbstractMigration
             'events.time_zone',
             'events.active',
             'events.cancelled',
-            'events.location'
+            'events.location',
+            'training_id' => 't.id'
         ])
         ->from('events')
         ->join([
@@ -64,6 +65,7 @@ class TrainingEventsMigration extends AbstractMigration
                     'cancelled' => $event['cancelled'],
                     'location' => $event['location']
                 ])
+                ->where(['id' => $event['training_id']])
                 ->execute()
             ;
         }
