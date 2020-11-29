@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -65,4 +66,22 @@ it('should throw a not found exception', function () use ($context) {
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->throws(TrainingNotFoundException::class)
+;
+
+it('can filter trainings on year/month', function () use ($context) {
+    $repo = new TrainingDatabaseRepository($context->db);
+    try {
+        $query = $repo->createQuery();
+        $query->filterYearMonth(2020, 10);
+        $trainings = $query->execute();
+        expect($trainings)
+            ->toBeInstanceOf(Collection::class)
+            ->and($trainings->count())
+            ->toBeGreaterThan(0)
+        ;
+    } catch (QueryException $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
 ;
