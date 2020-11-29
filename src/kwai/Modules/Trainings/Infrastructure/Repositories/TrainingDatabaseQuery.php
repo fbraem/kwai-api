@@ -12,6 +12,7 @@ use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\ColumnCollection;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
@@ -125,7 +126,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
                     'MONTH',
                     Tables::TRAININGS()->start_date
                 ),
-                literal($year)
+                literal($month)
             );
         }
         $this->query->andWhere(
@@ -133,6 +134,12 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         );
     }
 
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection
+     * @throws QueryException
+     */
     public function execute(?int $limit = null, ?int $offset = null)
     {
         $this->db->asArray();
@@ -169,7 +176,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         }
 
         if ($rows->isEmpty()) {
-            return [];
+            return new Collection();
         }
 
         $trainingCoachQuery = new TrainingCoachDatabaseQuery($this->db);
@@ -179,9 +186,9 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $trainings[$trainingId]->put('coaches', $trainingCoach);
         }
 
-        $result = [];
+        $result = new Collection();
         foreach ($trainings as $training) {
-            $result[$training['id']] = TrainingMapper::toDomain($training);
+            $result->put($training['id'], TrainingMapper::toDomain($training));
         }
 
         return $result;
