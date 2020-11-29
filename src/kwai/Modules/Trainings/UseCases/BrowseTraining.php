@@ -49,6 +49,10 @@ class BrowseTraining
             $query->filterYearMonth($command->year, $command->month);
         }
 
+        if ($command->active) {
+            $query->filterActive();
+        }
+
         $count = $query->count();
         $trainings = $query->execute($command->limit, $command->offset);
 

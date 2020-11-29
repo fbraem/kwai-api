@@ -138,6 +138,17 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
     /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
+     */
+    public function filterActive(): void
+    {
+        $this->query->andWhere(
+            field(Tables::TRAININGS()->active)->eq(true)
+        );
+    }
+
+    /**
+     * @inheritDoc
      */
     public function filterCoach(Entity $coach): void
     {

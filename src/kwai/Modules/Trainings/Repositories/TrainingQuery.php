@@ -32,6 +32,11 @@ interface TrainingQuery extends Query
     public function filterYearMonth(int $year, ?int $month = null): void;
 
     /**
+     * Add a filter to only return the active trainings
+     */
+    public function filterActive(): void;
+
+    /**
      * Add a filter to only get trainings to which the coach is assigned.
      *
      * @param Entity<Coach> $coach

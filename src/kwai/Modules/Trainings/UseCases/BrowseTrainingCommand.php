@@ -19,4 +19,7 @@ class BrowseTrainingCommand
 
     public ?int $year = null;
     public ?int $month = null;
+
+    // By default, only the active trainings will be returned.
+    public bool $active = true;
 }
