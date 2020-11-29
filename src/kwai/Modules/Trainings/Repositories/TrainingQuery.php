@@ -10,6 +10,7 @@ namespace Kwai\Modules\Trainings\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\Team;
 
 /**
  * Class TrainingQuery
@@ -42,4 +43,12 @@ interface TrainingQuery extends Query
      * @param Entity<Coach> $coach
      */
     public function filterCoach(Entity $coach): void;
+
+    /**
+     * Add a filter to only get trainings for a specific team.
+     *
+     * @param Entity<Team> $team
+     */
+    public function filterTeam(Entity $team): void;
+
 }

@@ -172,6 +172,28 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     }
 
     /**
+     * @inheritDoc
+     */
+    public function filterTeam(Entity $team): void
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $innerSelect = $this->db->createQueryFactory()->select()
+            ->columns(
+                Tables::TRAINING_TEAMS()->training_id
+            )
+            ->from((string) Tables::TRAINING_TEAMS())
+            ->where(
+                field(Tables::TRAINING_TEAMS()->team_id)
+                    ->eq($team->id())
+            )
+        ;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $criteria = field(Tables::TRAININGS()->id)
+            ->in(express('%s', $innerSelect));
+        $this->query->andWhere(group($criteria));
+    }
+
+    /**
      * @param int|null $limit
      * @param int|null $offset
      * @return Collection

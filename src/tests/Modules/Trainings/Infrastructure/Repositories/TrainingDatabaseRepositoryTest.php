@@ -9,6 +9,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
+use Kwai\Modules\Trainings\Domain\Team;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Tests\Context;
@@ -98,6 +99,29 @@ it('can filter trainings for a coach', function () use ($context) {
                 new Coach((object) [
                     'name' => new Name('Jigoro', 'Kano')
                 ])
+            )
+        );
+        $trainings = $query->execute();
+        expect($trainings)
+            ->toBeInstanceOf(Collection::class)
+            ->and($trainings->count())
+            ->toBeGreaterThan(0)
+        ;
+    } catch (QueryException $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can filter trainings for a team', function () use ($context) {
+    $repo = new TrainingDatabaseRepository($context->db);
+    try {
+        $query = $repo->createQuery();
+        $query->filterTeam(
+            new Entity(
+                1,
+                new Team('U11')
             )
         );
         $trainings = $query->execute();
