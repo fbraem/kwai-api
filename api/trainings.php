@@ -82,7 +82,7 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
     $group->options('/{id:[0-9]+}/presences/upload', PreflightAction::class);
     $group->post('/{id:[0-9]+}/presences/upload', UploadPresencesAction::class)
         ->setName('trainings.presences')
-        /* ->setArgument('auth', 'true') */
+        ->setArgument('auth', 'true')
     ;
     $group->options('/{id:[0-9]+}/presences', PreflightAction::class);
     $group->post('/{id:[0-9]+}/presences', PresenceCreateAction::class)
