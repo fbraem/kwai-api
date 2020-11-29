@@ -4,8 +4,10 @@ declare(strict_types=1);
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Event;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
@@ -73,6 +75,31 @@ it('can filter trainings on year/month', function () use ($context) {
     try {
         $query = $repo->createQuery();
         $query->filterYearMonth(2020, 10);
+        $trainings = $query->execute();
+        expect($trainings)
+            ->toBeInstanceOf(Collection::class)
+            ->and($trainings->count())
+            ->toBeGreaterThan(0)
+        ;
+    } catch (QueryException $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can filter trainings for a coach', function () use ($context) {
+    $repo = new TrainingDatabaseRepository($context->db);
+    try {
+        $query = $repo->createQuery();
+        $query->filterCoach(
+            new Entity(
+                1,
+                new Coach((object) [
+                    'name' => new Name('Jigoro', 'Kano')
+                ])
+            )
+        );
         $trainings = $query->execute();
         expect($trainings)
             ->toBeInstanceOf(Collection::class)

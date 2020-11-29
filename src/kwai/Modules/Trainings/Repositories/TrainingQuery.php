@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Repositories;
 
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\Query;
+use Kwai\Modules\Trainings\Domain\Coach;
 
 /**
  * Class TrainingQuery
@@ -28,4 +30,11 @@ interface TrainingQuery extends Query
      * @param ?int $month
      */
     public function filterYearMonth(int $year, ?int $month = null): void;
+
+    /**
+     * Add a filter to only get trainings to which the coach is assigned.
+     *
+     * @param Entity<Coach> $coach
+     */
+    public function filterCoach(Entity $coach): void;
 }

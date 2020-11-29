@@ -9,6 +9,7 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\ColumnCollection;
@@ -17,6 +18,7 @@ use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
 use function Latitude\QueryBuilder\criteria;
+use function Latitude\QueryBuilder\express;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
 use function Latitude\QueryBuilder\group;
@@ -132,6 +134,28 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $this->query->andWhere(
             group($criteria)
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function filterCoach(Entity $coach): void
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $innerSelect = $this->db->createQueryFactory()->select()
+            ->columns(
+                Tables::TRAINING_COACHES()->training_id
+            )
+            ->from((string) Tables::TRAINING_COACHES())
+            ->where(
+                field(Tables::TRAINING_COACHES()->coach_id)
+                ->eq($coach->id())
+            )
+        ;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $criteria = field(Tables::TRAININGS()->id)
+            ->in(express('%s', $innerSelect));
+        $this->query->andWhere(group($criteria));
     }
 
     /**
