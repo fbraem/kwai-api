@@ -36,7 +36,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        if (count($entities) === 1) {
+        if ($entities->count() === 1) {
             return $entities[$id];
         }
 
