@@ -122,13 +122,15 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             literal($year)
         );
         if ($month) {
-            $criteria = criteria(
-                "%s = %d",
-                func(
-                    'MONTH',
-                    Tables::TRAININGS()->start_date
-                ),
-                literal($month)
+            $criteria = $criteria->and(
+                criteria(
+                    "%s = %d",
+                    func(
+                        'MONTH',
+                        Tables::TRAININGS()->start_date
+                    ),
+                    literal($month)
+                )
             );
         }
         $this->query->andWhere(
