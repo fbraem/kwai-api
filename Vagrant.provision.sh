@@ -50,10 +50,10 @@ sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysq
 service mysql restart
 
 # Install PHP
-apt-get install -y php7.4 php-mysql libapache2-mod-php php-intl
+apt-get install -y php8.0-common php8.0-cli php8.0-mysql libapache2-mod-php8.0 php8.0-intl php8.0-dom php8.0-gd php8.0-mbstring php8.0-zip php8.0-sqlite php8.0-xml
 
 php -v
-a2enmod php7.4
+a2enmod php8.0
 
 phpenmod intl
 
