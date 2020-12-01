@@ -71,6 +71,8 @@ then
     exit 1
 fi
 php composer-setup.php --quiet
+php -r "unlink('composer-setup.php');"
+mv composer.phar /usr/local/bin/composer
 
 # PHPMyAdmin
 PHPMYADMIN_VERSION=5.0.2
