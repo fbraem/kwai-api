@@ -50,10 +50,11 @@ sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysq
 service mysql restart
 
 # Install PHP
-apt-get install -y php8.0-common php8.0-cli php8.0-mysql libapache2-mod-php8.0 php8.0-intl php8.0-dom php8.0-gd php8.0-mbstring php8.0-zip php8.0-sqlite php8.0-xml
+PHP_VERSION=7.4
+apt-get install -y php${PHP_VERSION}-common php${PHP_VERSION}-cli php${PHP_VERSION}-mysql libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-intl php${PHP_VERSION}-dom php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-sqlite php${PHP_VERSION}-xml
 
 php -v
-a2enmod php8.0
+a2enmod php${PHP_VERSION}
 
 phpenmod intl
 
@@ -76,10 +77,10 @@ mv composer.phar /usr/local/bin/composer
 
 # PHPMyAdmin
 PHPMYADMIN_VERSION=5.0.2
-wget https://files.phpmyadmin.net/phpMyAdmin/$PHPMYADMIN_VERSION/phpMyAdmin-$PHPMYADMIN_VERSION-all-languages.zip -nv -O /var/tmp/phpmyadmin.zip
+wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip -nv -O /var/tmp/phpmyadmin.zip
 unzip -q /var/tmp/phpmyadmin.zip -d /var/tmp/phpmyadmin
 rm -Rf /var/www/phpmyadmin
-mv /var/tmp/phpmyadmin/phpMyAdmin-$PHPMYADMIN_VERSION-all-languages /var/www/phpmyadmin
+mv /var/tmp/phpmyadmin/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages /var/www/phpmyadmin
 mv /var/www/phpmyadmin/config.sample.inc.php /var/www/phpmyadmin/config.inc.php
 chown -R www-data:www-data /var/www/phpmyadmin
 rm /var/tmp/phpmyadmin.zip
