@@ -5,20 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Domain\ValueObjects;
+namespace Kwai\Modules\Trainings\Domain;
+
+use Kwai\Core\Domain\DomainEntity;
 
 /**
  * Class TrainingDefinition
  *
  * Value object for a TrainingDefinition entity.
  */
-class TrainingDefinition
+class TrainingDefinition implements DomainEntity
 {
-    /**
-     * The id of the definition
-     */
-    private int $id;
-
     /**
      * The name of the definition
      */
@@ -27,21 +24,11 @@ class TrainingDefinition
     /**
      * TrainingDefinition constructor.
      *
-     * @param int    $id
-     * @param string $name
+     * @param object $props
      */
-    public function __construct(int $id, string $name)
+    public function __construct(object $props)
     {
-        $this->id = $id;
-        $this->name = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
+        $this->name = $props->name;
     }
 
     /**

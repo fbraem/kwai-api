@@ -15,7 +15,6 @@ use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
-use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingDefinition;
 
 /**
  * Class Training
@@ -62,9 +61,9 @@ class Training implements DomainEntity
 
     /**
      * The training definition that is used to create this training (if any).
-     * @var TrainingDefinition|null
+     * @var Entity<TrainingDefinition>|null
      */
-    private ?TrainingDefinition $definition;
+    private ?Entity $definition;
 
     /**
      * Training constructor.
@@ -206,9 +205,9 @@ class Training implements DomainEntity
     /**
      * Returns the definition that was used to create this training (if any).
      *
-     * @return TrainingDefinition|null
+     * @return Entity<TrainingDefinition>|null
      */
-    public function getDefinition(): ?TrainingDefinition
+    public function getDefinition(): ?Entity
     {
         return $this->definition;
     }
