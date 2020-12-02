@@ -16,6 +16,7 @@ use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingDefinitionMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingDefinitionQuery;
 use function Latitude\QueryBuilder\field;
+use function Latitude\QueryBuilder\on;
 
 /**
  * Class TrainingDefinitionDatabaseQuery
@@ -33,13 +34,16 @@ class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingD
         );
         $this->db->asObject();
 
+        $filters = new Collection([
+            Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
+            Tables::USERS()->getAliasPrefix()
+        ]);
+
         $definitions = new Collection();
         foreach ($rows as $row) {
-            [ $definition ] = (new ColumnCollection($row))->filter(
-                new Collection([
-                    Tables::TRAINING_DEFINITIONS()->getAliasPrefix()
-                ])
-            );
+            [ $definition, $creator ] =
+                (new ColumnCollection($row))->filter($filters);
+            $definition->put('creator', $creator);
             $definitions->put(
                 $definition['id'],
                 TrainingDefinitionMapper::toDomain($definition)
@@ -64,8 +68,13 @@ class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingD
      */
     protected function initQuery(): void
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
             ->from((string) Tables::TRAINING_DEFINITIONS())
+            ->join(
+                (string) Tables::USERS(),
+                on(Tables::USERS()->id, Tables::TRAINING_DEFINITIONS()->user_id)
+            )
         ;
     }
 
@@ -75,6 +84,7 @@ class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingD
     protected function getColumns(): array
     {
         $definitionAliasFn = Tables::TRAINING_DEFINITIONS()->getAliasFn();
+        $creatorAliasFn = Tables::USERS()->getAliasFn();
 
         return [
             $definitionAliasFn('id'),
@@ -91,7 +101,10 @@ class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingD
             $definitionAliasFn('remark'),
             $definitionAliasFn('user_id'),
             $definitionAliasFn('created_at'),
-            $definitionAliasFn('updated_at')
+            $definitionAliasFn('updated_at'),
+            $creatorAliasFn('id'),
+            $creatorAliasFn('first_name'),
+            $creatorAliasFn('last_name')
         ];
     }
 }
