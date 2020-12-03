@@ -61,7 +61,6 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/nikic/fast-route" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/nunomaduro/collision" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pdepend/pdepend" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin" />
@@ -138,6 +137,8 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/slim-jwt-auth" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/brick/math" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/ramsey/collection" />
       <excludePattern pattern="phpstan.phar" />
     </content>
     <orderEntry type="inheritedJdk" />
