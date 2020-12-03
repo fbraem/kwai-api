@@ -82,11 +82,7 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
 
     public function execute(?int $limit = null, ?int $offset = null)
     {
-        $this->db->asArray();
-        $rows = LazyCollection::make(
-            parent::walk($limit, $offset)
-        );
-        $this->db->asObject();
+        $rows = parent::walk($limit, $offset);
 
         $prefixes = new Collection([
             Tables::TRAINING_COACHES()->getAliasPrefix(),

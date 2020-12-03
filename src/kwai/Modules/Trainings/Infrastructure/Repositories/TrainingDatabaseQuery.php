@@ -201,11 +201,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
      */
     public function execute(?int $limit = null, ?int $offset = null)
     {
-        $this->db->asArray();
-        $rows = LazyCollection::make(
-            parent::walk($limit, $offset)
-        );
-        $this->db->asObject();
+        $rows = parent::walk($limit, $offset);
 
         $trainings = new Collection();
         $filters = new Collection([

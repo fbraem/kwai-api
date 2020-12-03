@@ -27,11 +27,7 @@ class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingD
      */
     public function execute(?int $limit = null, ?int $offset = null)
     {
-        $this->db->asArray();
-        $rows = LazyCollection::make(
-            parent::walk($limit, $offset)
-        );
-        $this->db->asObject();
+        $rows = parent::walk($limit, $offset);
 
         $filters = new Collection([
             Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
