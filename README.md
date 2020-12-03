@@ -43,9 +43,16 @@ Installation
 
 Clone this repository and run `composer install` in the `src` as current directory. When all goes well, create a `config.php` in the `api` directory. This PHP file must return an array with some configuration:
 
+> For now we are using two types of database code: the CakePHP ORM and the
+> repository pattern with [Latitude](https://latitude.shadowhand.com/). That's
+> why there are two DSN properties in the configuration. In the long run
+> the repository code will be the only code left.
+
     return [
         'database' => [
             'development' => [
+                'cake_dsn' => 'mysql://',
+                'dsn' => 'mysql:',
                 'adapter' => 'mysql',
                 'host' => '',
                 'user' => '',
@@ -56,17 +63,19 @@ Clone this repository and run `composer install` in the `src` as current directo
             ]
         ],
         'default_database' => 'development',
-        'files' => '',
-        'oauth2' => [
-            'private_key' => 'file:///',
-            'public_key' => 'file:///',
-            'encryption_key' => '',
-            'client' => [
-                'name' => '',
-                'identifier' => '',
-                'secret' => '',
-                'redirect' => ''
+        'logger' => [
+            'kwai' => [
+                'file' => '/var/tmp/kwai.log',
+                'level' => Logger::DEBUG
+            ],
+            'database' => [
+                'file' => '/var/tmp/kwai_db.log',
+                'level' => Logger::DEBUG
             ]
+        ],
+        'files' => [
+            'local => '/var/www...',
+            'url => ''
         ],
         'mail' => [
             'host' => '',
@@ -79,10 +88,11 @@ Clone this repository and run `composer install` in the `src` as current directo
         'website' => [
             'url' => '',
             'email' => ''
+        ],
+        'cors' => [
+            'origin' => []
         ]
     ];
-
-Create a public and private key as explained on [league/oauth2-server](https://oauth2.thephpleague.com/installation/).
 
 When the configuration is finished, run the database migrations from the `src` directory:
 
@@ -96,6 +106,7 @@ Running Tests
 =============
 
 A testing environment is easily set up with [vagrant](https://www.vagrantup.com).
+Copy `kwai.dest.yaml` to `kwai.development.yaml` and fill in the properties.
 Kwai uses [pest](https://pestphp.com/) to run tests:
 
     vagrant up
