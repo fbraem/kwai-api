@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Database;
 
 use Generator;
+use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
@@ -117,11 +118,15 @@ abstract class DatabaseQuery implements Query
      *
      * @param int|null $limit
      * @param int|null $offset
-     * @return Generator
+     * @return LazyCollection
      * @throws QueryException
+     * @todo asArray/asObject call can be removed when all fetching records
+     *       as array is the default
      */
-    protected function walk(?int $limit = null, ?int $offset = null)
+    protected function walk(?int $limit = null, ?int $offset = null): LazyCollection
     {
+        $this->db->asArray();
+
         $this->query->limit($limit);
         $this->query->offset($offset);
 
@@ -129,6 +134,10 @@ abstract class DatabaseQuery implements Query
             ... $this->getColumns()
         );
 
-        return $this->db->walk($this->query);
+        $result = LazyCollection::make($this->db->walk($this->query));
+
+        $this->db->asObject();
+
+        return $result;
     }
 }
