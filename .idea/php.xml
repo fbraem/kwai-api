@@ -110,7 +110,6 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/src/vendor/phpspec/prophecy" />
-      <path value="$PROJECT_DIR$/src/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/src/vendor/league/container" />
       <path value="$PROJECT_DIR$/src/vendor/league/commonmark" />
       <path value="$PROJECT_DIR$/src/vendor/league/flysystem" />
@@ -143,6 +142,7 @@
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-coverage" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-init" />
+      <path value="$PROJECT_DIR$/src/vendor/phpstan/phpstan" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
