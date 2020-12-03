@@ -90,6 +90,6 @@ it('can retrieve a refreshtoken', function (TokenIdentifier $tokenIdentifier) us
         $this->assertTrue(false, (string) $e);
     }
 })
-    ->depends('it it can create a refreshtoken')
+    ->depends('it can create a refreshtoken')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

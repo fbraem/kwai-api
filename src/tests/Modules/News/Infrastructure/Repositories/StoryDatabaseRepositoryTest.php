@@ -113,7 +113,7 @@ it(
         }
     }
 )
-    ->depends('it it can create a story')
+    ->depends('it can create a story')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
@@ -133,6 +133,6 @@ it('can query stories', function () use ($context) {
         $this->assertTrue(false, $e->getMessage());
     }
 })
-    ->depends('it it can create a story')
+    ->depends('it can create a story')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

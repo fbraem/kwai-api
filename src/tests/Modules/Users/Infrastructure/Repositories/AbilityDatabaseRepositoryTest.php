@@ -61,6 +61,6 @@ it('can retrieve an ability', function ($ability) use ($context) {
         $this->assertTrue(false, $e->getMessage());
     }
 })
-    ->depends('it it can create an ability')
+    ->depends('it can create an ability')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

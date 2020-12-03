@@ -21,4 +21,4 @@ it('can verify a password', function ($hashedPassword) {
     expect($password->verify('hajime'))
         ->toBe(true);
 })
-    ->depends('it it can create a password from a string');
+    ->depends('it can create a password from a string');

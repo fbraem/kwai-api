@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingDefinitionMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingDefinitionQuery;

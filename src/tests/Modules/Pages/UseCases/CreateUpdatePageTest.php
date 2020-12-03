@@ -113,6 +113,6 @@ it('can update a page', function () use ($context) {
         $this->assertTrue(false, (string) $e);
     }
 })
-    ->depends('it it can create a page')
+    ->depends('it can create a page')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

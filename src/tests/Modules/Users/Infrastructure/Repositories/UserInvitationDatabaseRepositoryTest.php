@@ -70,6 +70,6 @@ it('can get an invitation using an email', function () use ($context) {
         $this->assertTrue(false, (string) $e);
     }
 })
-    ->depends('it it can create an invitation')
+    ->depends('it can create an invitation')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

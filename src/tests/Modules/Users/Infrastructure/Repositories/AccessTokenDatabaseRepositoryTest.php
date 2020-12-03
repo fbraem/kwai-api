@@ -95,6 +95,6 @@ it('can get an accesstoken with an identifier', function ($tokenIdentifier) use 
         $this->assertTrue(false, (string) $e);
     }
 })
-    ->depends('it it can create an accesstoken')
+    ->depends('it can create an accesstoken')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

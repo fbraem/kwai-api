@@ -100,7 +100,7 @@ it('can find a page for a given id', function () use ($context) {
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
-    ->depends('it it can create a new page')
+    ->depends('it can create a new page')
 ;
 
 it('can update a page', function () use ($context) {
@@ -141,7 +141,7 @@ it('can update a page', function () use ($context) {
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
-    ->depends('it it can create a new page')
+    ->depends('it can create a new page')
 ;
 
 it('can delete a page', function () use ($context) {
@@ -157,7 +157,7 @@ it('can delete a page', function () use ($context) {
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
-    ->depends('it it can create a new page')
+    ->depends('it can create a new page')
 ;
 
 test('getById throws a page not found exception', function () use ($context) {
@@ -170,6 +170,6 @@ test('getById throws a page not found exception', function () use ($context) {
     }
 })
     ->throws(PageNotFoundException::class)
-    ->depends('it it can delete a page')
+    ->depends('it can delete a page')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

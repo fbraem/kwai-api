@@ -21,4 +21,4 @@ it('can create a converter', function () {
 it('can convert markdown', function ($converter) {
     $html = $converter->convert('**TEST**');
     expect($html)->toBe('<p><strong>TEST</strong></p>');
-})->depends('it it can create a converter');
+})->depends('it can create a converter');

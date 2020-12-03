@@ -80,7 +80,7 @@ it('can get a user with the given id', function ($user) use ($context) {
     }
     return null;
 })
-    ->depends('it it can get a user with email')
+    ->depends('it can get a user with email')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
@@ -100,7 +100,7 @@ it('can get a user with the given uuid', function ($uuid) use ($context) {
         $this->assertTrue(false, (string) $e);
     }
 })
-    ->depends('it it can get a user with the given id')
+    ->depends('it can get a user with the given id')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
@@ -142,6 +142,6 @@ it('can get a user with an accesstoken', function ($user) use ($context) {
         $this->assertTrue(false, (string)$e);
     }
 })
-    ->depends('it it can get a user with email')
+    ->depends('it can get a user with email')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
