@@ -60,6 +60,17 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
     /**
      * @inheritDoc
      */
+    public function filterIds(Collection $ids): void
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            field(Tables::TRAINING_DEFINITIONS()->id)->in(...$ids->toArray())
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function initQuery(): void
     {
         /** @noinspection PhpUndefinedFieldInspection */

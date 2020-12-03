@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Repositories\Query;
 
 /**
@@ -22,4 +23,11 @@ interface DefinitionQuery extends Query
      * @param int $id
      */
     public function filterId(int $id): void;
+
+    /**
+     * Add a filter to select all definitions with the given ids
+     *
+     * @param Collection $ids
+     */
+    public function filterIds(Collection $ids): void;
 }
