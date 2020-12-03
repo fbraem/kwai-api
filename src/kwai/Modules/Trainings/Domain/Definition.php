@@ -15,11 +15,11 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 
 /**
- * Class TrainingDefinition
+ * Class Definition
  *
- * Value object for a TrainingDefinition entity.
+ * Value object for a Definition entity.
  */
-class TrainingDefinition implements DomainEntity
+class Definition implements DomainEntity
 {
     /**
      * The name of the definition
@@ -72,7 +72,7 @@ class TrainingDefinition implements DomainEntity
     private Creator $creator;
 
     /**
-     * TrainingDefinition constructor.
+     * Definition constructor.
      *
      * @param object $props
      */

@@ -10,11 +10,11 @@ namespace Kwai\Modules\Trainings\Repositories;
 use Kwai\Core\Infrastructure\Repositories\Query;
 
 /**
- * Interface TrainingDefinitionQuery
+ * Interface DefinitionQuery
  *
  * Interface for querying training definitions.
  */
-interface TrainingDefinitionQuery extends Query
+interface DefinitionQuery extends Query
 {
     /**
      * Add a filter for the given id

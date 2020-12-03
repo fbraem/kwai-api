@@ -16,24 +16,24 @@ use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Weekday;
-use Kwai\Modules\Trainings\Domain\TrainingDefinition;
+use Kwai\Modules\Trainings\Domain\Definition;
 
 /**
- * Class TrainingDefinitionMapper
+ * Class DefinitionMapper
  */
-class TrainingDefinitionMapper
+class DefinitionMapper
 {
     /**
      * Maps a table record to the Training domain entity.
      *
      * @param Collection $data
-     * @return Entity<TrainingDefinition>
+     * @return Entity<Definition>
      */
     public static function toDomain(Collection $data): Entity
     {
         return new Entity(
             (int)$data['id'],
-            new TrainingDefinition((object)[
+            new Definition((object)[
                 'name' => $data->get('name'),
                 'description' => $data->get('description'),
                 /* 'team' => new Team() */

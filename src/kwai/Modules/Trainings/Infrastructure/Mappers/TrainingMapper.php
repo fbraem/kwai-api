@@ -19,7 +19,7 @@ use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Training;
-use Kwai\Modules\Trainings\Domain\TrainingDefinition;
+use Kwai\Modules\Trainings\Domain\Definition;
 
 /**
  * Class TrainingMapper
@@ -61,7 +61,7 @@ class TrainingMapper
                 'definition' => $data->has('definition')
                     ? new Entity(
                         (int) $data['definition']['id'],
-                        new TrainingDefinition(
+                        new Definition(
                             (object) [ 'name' => $data['definition']['name'] ]
                         )
                     )

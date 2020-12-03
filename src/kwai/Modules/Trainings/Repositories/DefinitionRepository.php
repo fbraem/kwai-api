@@ -10,27 +10,27 @@ namespace Kwai\Modules\Trainings\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
-use Kwai\Modules\Trainings\Domain\TrainingDefinition;
+use Kwai\Modules\Trainings\Domain\Definition;
 
 /**
- * Interface TrainingDefinitionRepository
+ * Interface DefinitionRepository
  */
-interface TrainingDefinitionRepository
+interface DefinitionRepository
 {
     /**
      * Get the definition with the given id
      *
-     * @throws RepositoryException
-     * @throws TrainingDefinitionNotFoundException
      * @param int $id
-     * @return Entity<TrainingDefinition>
+     * @return Entity<Definition>
+     *@throws RepositoryException
+     * @throws TrainingDefinitionNotFoundException
      */
     public function getById(int $id): Entity;
 
     /**
      * Create a query
      *
-     * @return TrainingDefinitionQuery
+     * @return DefinitionQuery
      */
-    public function createQuery(): TrainingDefinitionQuery;
+    public function createQuery(): DefinitionQuery;
 }

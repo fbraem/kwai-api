@@ -61,7 +61,8 @@ class Training implements DomainEntity
 
     /**
      * The training definition that is used to create this training (if any).
-     * @var Entity<TrainingDefinition>|null
+     *
+     * @var Entity<Definition>|null
      */
     private ?Entity $definition;
 
@@ -205,7 +206,7 @@ class Training implements DomainEntity
     /**
      * Returns the definition that was used to create this training (if any).
      *
-     * @return Entity<TrainingDefinition>|null
+     * @return Entity<Definition>|null
      */
     public function getDefinition(): ?Entity
     {
@@ -213,7 +214,7 @@ class Training implements DomainEntity
     }
 
     /**
-     * Is this training related to a TrainingDefinition?
+     * Is this training related to a Definition?
      */
     public function hasDefinition(): bool
     {

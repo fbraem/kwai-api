@@ -12,13 +12,13 @@ use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
-use Kwai\Modules\Trainings\Repositories\TrainingDefinitionQuery;
-use Kwai\Modules\Trainings\Repositories\TrainingDefinitionRepository;
+use Kwai\Modules\Trainings\Repositories\DefinitionQuery;
+use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 
 /**
- * Class TrainingDefinitionDatabaseRepository
+ * Class DefinitionDatabaseRepository
  */
-class TrainingDefinitionDatabaseRepository extends DatabaseRepository implements TrainingDefinitionRepository
+class DefinitionDatabaseRepository extends DatabaseRepository implements DefinitionRepository
 {
     /**
      * @inheritDoc
@@ -44,8 +44,8 @@ class TrainingDefinitionDatabaseRepository extends DatabaseRepository implements
     /**
      * @inheritDoc
      */
-    public function createQuery(): TrainingDefinitionQuery
+    public function createQuery(): DefinitionQuery
     {
-        return new TrainingDefinitionDatabaseQuery($this->db);
+        return new DefinitionDatabaseQuery($this->db);
     }
 }

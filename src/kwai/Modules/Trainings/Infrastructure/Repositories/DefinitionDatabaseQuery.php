@@ -10,16 +10,16 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingDefinitionMapper;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\DefinitionMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
-use Kwai\Modules\Trainings\Repositories\TrainingDefinitionQuery;
+use Kwai\Modules\Trainings\Repositories\DefinitionQuery;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
- * Class TrainingDefinitionDatabaseQuery
+ * Class DefinitionDatabaseQuery
  */
-class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingDefinitionQuery
+class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
 {
     /**
      * @inheritDoc
@@ -40,7 +40,7 @@ class TrainingDefinitionDatabaseQuery extends DatabaseQuery implements TrainingD
             $definition->put('creator', $creator);
             $definitions->put(
                 $definition['id'],
-                TrainingDefinitionMapper::toDomain($definition)
+                DefinitionMapper::toDomain($definition)
             );
         }
         return $definitions;
