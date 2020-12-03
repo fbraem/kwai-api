@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
-use Generator;
 use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
