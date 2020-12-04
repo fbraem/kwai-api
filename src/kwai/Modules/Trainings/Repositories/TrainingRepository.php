@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
@@ -33,4 +35,16 @@ interface TrainingRepository
      * @return TrainingQuery
      */
     public function createQuery(): TrainingQuery;
+
+    /**
+     * Executes the query and returns a Collection with entities.
+     * For each record, the mapper will be called to create an entity.
+     *
+     * @param TrainingQuery $query
+     * @param int|null      $limit
+     * @param int|null      $offset
+     * @return Collection
+     * @throws QueryException
+     */
+    public function execute(TrainingQuery $query, ?int $limit, ?int $offset): Collection;
 }
