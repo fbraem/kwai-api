@@ -23,8 +23,8 @@ it('can transform a training', function () {
     $converterFactory->register('md', MarkdownConverter::class);
 
     $now = Timestamp::createNow();
-    $training = new Training((object) [
-        'event' => new Event(
+    $training = new Training(
+        event: new Event(
             $now,
             $now,
             null,
@@ -42,7 +42,7 @@ it('can transform a training', function () {
                 )
             ])
         )
-    ]);
+    );
     $entity = new Entity(1, $training);
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer());

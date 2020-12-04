@@ -24,16 +24,13 @@ $creator = new Creator(
 
 it('can construct a training', function () use ($creator) {
     $training = new Training(
-        (object)[
-            'event' => new Event(
-                Timestamp::createNow(),
-                Timestamp::createNow(),
-                new Location('Tokyo'),
-                new Collection()
-            ),
-            'creator' => $creator,
-            'remark' => 'Test Training'
-        ]
+        event: new Event(
+            Timestamp::createNow(),
+            Timestamp::createNow(),
+            new Location('Tokyo'),
+            new Collection()
+        ),
+        remark: 'Test Training'
     );
     expect($training->getRemark())
         ->toBe('Test Training')
@@ -45,15 +42,12 @@ it('can construct a training', function () use ($creator) {
 
 it('can appoint/release a coach to a training', function () use ($creator) {
     $training = new Training(
-        (object)[
-            'event' => new Event(
-                Timestamp::createNow(),
-                Timestamp::createNow(),
-                new Location('Tokyo'),
-                new Collection()
-            ),
-            'creator' => $creator
-        ]
+        event: new Event(
+            Timestamp::createNow(),
+            Timestamp::createNow(),
+            new Location('Tokyo'),
+            new Collection()
+        )
     );
     $coach = new Entity(
         1,
@@ -79,15 +73,12 @@ it('can appoint/release a coach to a training', function () use ($creator) {
 
 it('can manage a presence', function () use ($creator) {
     $training = new Training(
-        (object)[
-            'event' => new Event(
-                Timestamp::createNow(),
-                Timestamp::createNow(),
-                new Location('Tokyo'),
-                new Collection()
-            ),
-            'creator' => $creator
-        ]
+        event: new Event(
+            Timestamp::createNow(),
+            Timestamp::createNow(),
+            new Location('Tokyo'),
+            new Collection()
+        ),
     );
     $member = new Entity(
         1,

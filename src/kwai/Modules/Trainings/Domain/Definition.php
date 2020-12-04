@@ -11,7 +11,7 @@ use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
-use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 
 /**
@@ -22,72 +22,36 @@ use Kwai\Core\Domain\ValueObjects\Weekday;
 class Definition implements DomainEntity
 {
     /**
-     * The name of the definition
-     */
-    private string $name;
-
-    /**
-     * A description
-     */
-    private string $description;
-
-    /**
-     * A definition for a team?
-     */
-    private ?Team $team;
-
-    /**
-     * Weekday
-     */
-    private Weekday $weekday;
-
-    /**
-     * Starttime
-     */
-    private Time $start_time;
-
-    /**
-     * Endtime
-     */
-    private Time $end_time;
-
-    /**
-     * Is this definition active?
-     */
-    private bool $active;
-
-    /**
-     * The location of the training
-     */
-    private ?Location $location;
-
-    /**
-     * A remark
-     */
-    private ?string $remark;
-
-    /**
-     * Creator of the definition
-     */
-    private Creator $creator;
-
-    /**
      * Definition constructor.
      *
-     * @param object $props
+     * @param string             $name
+     * @param string             $description
+     * @param Weekday            $weekday
+     * @param Time               $start_time
+     * @param Time               $end_time
+     * @param Creator            $creator
+     * @param Team|null          $team
+     * @param bool               $active
+     * @param Location|null      $location
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
      */
-    public function __construct(object $props)
-    {
-        $this->name = $props->name;
-        $this->description = $props->description;
-        $this->team = $props->team ?? null;
-        $this->weekday = $props->weekday;
-        $this->start_time = $props->start_time;
-        $this->end_time = $props->end_time;
-        $this->active = $props->active ?? true;
-        $this->location = $props->location ?? null;
-        $this->remark = $props->remark ?? null;
-        $this->creator = $props->creator;
+    public function __construct(
+        private string $name,
+        private string $description,
+        private Weekday $weekday,
+        private Time $start_time,
+        private Time $end_time,
+        private Creator $creator,
+        private ?Team $team = null,
+        private bool $active = true,
+        private ?Location $location = null,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null
+    ) {
+        if ($this->traceableTime == null) {
+            $this->traceableTime = new TraceableTime();
+        }
     }
 
     /**

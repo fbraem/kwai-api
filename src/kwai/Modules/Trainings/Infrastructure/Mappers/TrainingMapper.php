@@ -36,43 +36,38 @@ class TrainingMapper
     {
         return new Entity(
             (int) $data['id'],
-            new Training((object)[
-                'event' => new Event(
-                    Timestamp::createFromString($data['start_date'], $data['time_zone']),
-                    Timestamp::createFromString($data['end_date'], $data['time_zone']),
-                    $data->has('location') ? new Location($data->get('location')) : null,
-                    $data['contents']->map(fn(Collection $t) => new Text(
-                        new Locale($t['locale']),
-                        new DocumentFormat($t['format']),
-                        $t['title'],
-                        $t['summary'],
-                        $t->get('content'),
-                        new Creator(
+            new Training(
+                event: new Event(
+                    startDate: Timestamp::createFromString($data['start_date'], $data['time_zone']),
+                    endDate: Timestamp::createFromString($data['end_date'], $data['time_zone']),
+                    location: $data->has('location') ? new Location($data->get('location')) : null,
+                    text: $data['contents']->map(fn(Collection $t) => new Text(
+                        locale: new Locale($t['locale']),
+                        format: new DocumentFormat($t['format']),
+                        title: $t['title'],
+                        summary: $t['summary'],
+                        content: $t->get('content'),
+                        author: new Creator(
                             (int) $t['creator']['id'],
                             new Name(
-                                $t['creator']->get('first_name'),
-                                $t['creator']->get('last_name')
+                                first_name: $t['creator']->get('first_name'),
+                                last_name: $t['creator']->get('last_name')
                             )
                         )
                     ))
                 ),
-                'remark' => $data->get('remark', null),
-                'coaches' => $data->get('coaches'),
-                'definition' => $data->has('definition')
-                    ? new Entity(
-                        (int) $data['definition']['id'],
-                        new Definition(
-                            (object) [ 'name' => $data['definition']['name'] ]
-                        )
-                    )
+                remark: $data->get('remark'),
+                coaches: $data->get('coaches'),
+                definition: $data->has('definition')
+                    ? DefinitionMapper::toDomain($data->get('definition'))
                     : null,
-                'traceableTime' => new TraceableTime(
+                traceableTime: new TraceableTime(
                     Timestamp::createFromString($data['created_at']),
                     $data->has('updated_at')
                         ? Timestamp::createFromString($data->get('updated_at'))
                         : null
-                ),
-            ])
+                )
+            )
         );
     }
 }

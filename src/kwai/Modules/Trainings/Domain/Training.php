@@ -35,22 +35,16 @@ class Training implements DomainEntity
 
     /**
      * The coaches appointed for the training.
-     *
-     * @var Collection|TrainingCoach[]
      */
     private Collection $coaches;
 
     /**
      * The teams assigned to this training.
-     *
-     * @var Collection|Team[]
      */
     private Collection $teams;
 
     /**
      * List of members that were present on the training.
-     *
-     * @var Collection|Presence[]
      */
     private Collection $presences;
 
@@ -69,17 +63,30 @@ class Training implements DomainEntity
     /**
      * Training constructor.
      *
-     * @param object $props
+     * @param Event              $event
+     * @param string|null        $remark
+     * @param Entity|null        $definition
+     * @param TraceableTime|null $traceableTime
+     * @param Collection|null    $coaches
+     * @param Collection|null    $teams
+     * @param Collection|null    $presences
      */
-    public function __construct(object $props)
-    {
-        $this->event = $props->event;
-        $this->remark = $props->remark ?? null;
-        $this->definition = $props->definition ?? null;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->coaches = $props->coaches ?? new Collection();
-        $this->teams = $props->teams ?? new Collection();
-        $this->presences = $props->presences ?? new Collection();
+    public function __construct(
+        Event $event,
+        ?string $remark = null,
+        ?Entity $definition = null,
+        ?TraceableTime $traceableTime = null,
+        ?Collection $coaches = null,
+        ?Collection $teams = null,
+        ?Collection $presences = null
+    ) {
+        $this->event = $event;
+        $this->remark = $remark;
+        $this->definition = $definition;
+        $this->traceableTime = $traceableTime ?? new TraceableTime();
+        $this->coaches = $coaches ?? new Collection();
+        $this->teams = $teams ?? new Collection();
+        $this->presences = $presences ?? new Collection();
     }
 
     /**
@@ -137,7 +144,7 @@ class Training implements DomainEntity
      *
      * @note The returned value is a copy of the collection to protect for
      *       immutability.
-     * @return Collection|TrainingCoach[]
+     * @return Collection
      */
     public function getCoaches(): Collection
     {
@@ -174,7 +181,7 @@ class Training implements DomainEntity
      *
      * @note The returned value is a copy of the collection to protect for
      *       immutability.
-     * @return Collection|Presence[]
+     * @return Collection
      */
     public function getPresences(): Collection
     {
@@ -186,7 +193,7 @@ class Training implements DomainEntity
      *
      * @note The returned value is a copy of the collection to protect for
      *       immutability.
-     * @return Collection|Team[]
+     * @return Collection
      */
     public function getTeams(): Collection
     {
