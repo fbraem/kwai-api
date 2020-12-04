@@ -13,7 +13,6 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
 use function Latitude\QueryBuilder\criteria;
