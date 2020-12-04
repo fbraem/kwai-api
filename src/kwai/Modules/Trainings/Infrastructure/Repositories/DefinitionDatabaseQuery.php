@@ -38,10 +38,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
             [ $definition, $creator ] =
                 (new ColumnCollection($row))->filter($filters);
             $definition->put('creator', $creator);
-            $definitions->put(
-                $definition['id'],
-                DefinitionMapper::toDomain($definition)
-            );
+            $definitions->put($definition['id'], $definition);
         }
         return $definitions;
     }
