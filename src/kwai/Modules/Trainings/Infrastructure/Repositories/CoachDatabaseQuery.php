@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
+use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
@@ -84,22 +86,22 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
      */
     public function execute(?int $limit = null, ?int $offset = null)
     {
-        $rows = parent::execute($limit, $offset);
-        if (count($rows) === 0) {
-            return [];
-        }
+        $rows = parent::walk($limit, $offset);
 
-        $coachColumnFilter = Tables::COACHES()->createColumnFilter();
-        $personColumnFilter = Tables::PERSONS()->createColumnFilter();
-
-        $coaches = [];
+        $coaches = new Collection();
+        $filters = new Collection([
+           Tables::COACHES()->getAliasPrefix(),
+           Tables::PERSONS()->getAliasPrefix()
+        ]);
         foreach ($rows as $row) {
-            $coach = $coachColumnFilter->filter($row);
-            $person = $personColumnFilter->filter($row);
-            $coach->firstname = $person->firstname;
-            $coach->lastname = $person->lastname;
+            $rowCollection = new ColumnCollection($row);
+            [
+                $coach,
+                $person
+            ] = $rowCollection->filter($filters);
 
-            $coaches[$coach->id] = CoachMapper::toDomain($coach);
+            $coach->merge($person);
+            $coaches->put($coach->get('id'), $coach);
         }
 
         return $coaches;

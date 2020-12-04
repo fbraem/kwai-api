@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -37,11 +38,11 @@ it('can get all active coaches', function () use ($context) {
     try {
         $query = $repo->createQuery();
         $query->filterActive(true);
-        $coaches = $query->execute();
+        $coaches = $repo->execute($query);
         expect($coaches)
-            ->toBeArray()
+            ->toBeInstanceOf(Collection::class)
         ;
-        $coach = current($coaches);
+        $coach = $coaches->first();
         expect($coach)
             ->toBeInstanceOf(Entity::class)
             ->and($coach->domain())

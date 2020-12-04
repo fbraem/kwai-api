@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachMapper;
 use Kwai\Modules\Trainings\Repositories\CoachQuery;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
 
@@ -39,7 +41,7 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
         $query->filterId($id);
 
         try {
-            $entities = $query->execute();
+            $entities = $this->execute($query);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
@@ -48,5 +50,17 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
             return $entities[$id];
         }
         throw new CoachNotFoundException($id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(CoachQuery $query, ?int $limit = null, ?int $offset = null): Collection
+    {
+        /* @var Collection $coaches */
+        $coaches = $query->execute($limit, $offset);
+        return $coaches->transform(
+            fn($item) => CoachMapper::toDomain($item)
+        );
     }
 }
