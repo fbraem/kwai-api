@@ -46,10 +46,6 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $this->query
            ->from((string) Tables::TRAININGS())
             ->leftJoin(
-                (string) Tables::TRAINING_DEFINITIONS(),
-                on(Tables::TRAININGS()->definition_id, Tables::TRAINING_DEFINITIONS()->id)
-            )
-            ->leftJoin(
                 (string) Tables::TRAINING_CONTENTS(),
                 on(Tables::TRAINING_CONTENTS()->training_id, Tables::TRAININGS()->id)
             )
@@ -66,12 +62,12 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     protected function getColumns(): array
     {
         $trainingAliasFn = Tables::TRAININGS()->getAliasFn();
-        $definitionAliasFn = Tables::TRAINING_DEFINITIONS()->getAliasFn();
         $contentAliasFn = Tables::TRAINING_CONTENTS()->getAliasFn();
         $creatorAliasFn = Tables::USERS()->getAliasFn();
 
         return [
             $trainingAliasFn('id'),
+            $trainingAliasFn('definition_id'),
             $trainingAliasFn('created_at'),
             $trainingAliasFn('updated_at'),
             $trainingAliasFn('start_date'),
@@ -80,8 +76,6 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $trainingAliasFn('active'),
             $trainingAliasFn('cancelled'),
             $trainingAliasFn('location'),
-            $definitionAliasFn('id'),
-            $definitionAliasFn('name'),
             $contentAliasFn('locale'),
             $contentAliasFn('format'),
             $contentAliasFn('title'),
@@ -205,7 +199,6 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $trainings = new Collection();
         $filters = new Collection([
             Tables::TRAININGS()->getAliasPrefix(),
-            Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
             Tables::TRAINING_CONTENTS()->getAliasPrefix(),
             Tables::USERS()->getAliasPrefix()
         ]);
@@ -213,16 +206,12 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $rowCollection = new ColumnCollection($row);
             [
                 $training,
-                $definition,
                 $content,
                 $user
             ] = $rowCollection->filter($filters);
 
             if (!$trainings->has($training['id'])) {
                 $trainings->put($training['id'], $training);
-                if ($definition->has('id')) {
-                    $training->put('definition', $definition);
-                }
                 $training->put('contents', new Collection());
             }
             $content['creator'] = $user;
@@ -233,6 +222,24 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             return new Collection();
         }
 
+        // Get all definitions, if available
+        $definitionIds = $trainings->pluck('definition_id')->filter();
+        if ($definitionIds->count() > 0) {
+            $definitionQuery = new DefinitionDatabaseQuery($this->db);
+            $definitionQuery->filterIds(
+                $trainings->pluck('definition_id')->filter()
+            );
+            $definitions = $definitionQuery->execute();
+            foreach ($trainings as $training) {
+                if ($training->has('definition_id')) {
+                    $training->put(
+                        'definition',
+                        $definitions->get($training->get('definition_id'))
+                    );
+                }
+            }
+        }
+
         $trainingCoachQuery = new TrainingCoachDatabaseQuery($this->db);
         $trainingCoachQuery->filterOnTrainings($trainings->keys()->toArray());
         $trainingCoaches = $trainingCoachQuery->execute();
@@ -240,11 +247,6 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $trainings[$trainingId]->put('coaches', $trainingCoach);
         }
 
-        $result = new Collection();
-        foreach ($trainings as $training) {
-            $result->put($training['id'], TrainingMapper::toDomain($training));
-        }
-
-        return $result;
+        return $trainings;
     }
 }
