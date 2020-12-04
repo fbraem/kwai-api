@@ -9,7 +9,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-      "php" : ">=7.4",
+      "php" : ">=8.0",
         "league/fractal": "0.18.*",
         "nesbot/carbon": "2.25.3",
         "mtdowling/jmespath.php": "^2.4",
