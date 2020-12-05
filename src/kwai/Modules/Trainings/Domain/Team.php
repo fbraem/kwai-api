@@ -17,21 +17,19 @@ use Kwai\Core\Domain\DomainEntity;
 class Team implements DomainEntity
 {
     /**
-     * The name of the team.
-     */
-    private string $name;
-
-    /**
      * Team constructor.
      *
      * @param string $name
      */
-    public function __construct(string $name)
-    {
+    public function __construct(
+        private string $name
+    ) {
         $this->name = $name;
     }
 
     /**
+     * Get the name of the team
+     *
      * @return string
      */
     public function getName(): string
