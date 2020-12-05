@@ -139,4 +139,14 @@ class Definition implements DomainEntity
     {
         return $this->creator;
     }
+
+    /**
+     * Get the traceable time
+     *
+     * @return TraceableTime|null
+     */
+    public function getTraceableTime(): ?TraceableTime
+    {
+        return $this->traceableTime;
+    }
 }
