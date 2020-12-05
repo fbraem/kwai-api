@@ -67,6 +67,23 @@ class Time
     }
 
     /**
+     * Is this time before the given time?
+     *
+     * @param Time $time
+     * @return bool
+     */
+    public function isBefore(Time $time): bool
+    {
+        if ($this->hour < $time->hour) {
+            return true;
+        }
+        if ($this->hour == $time->hour) {
+            return $this->minute < $time->minute;
+        }
+        return false;
+    }
+
+    /**
      * Create a Time object from a string
      *
      * @param string $time
@@ -82,6 +99,4 @@ class Time
             $time_zone
         );
     }
-
-
 }
