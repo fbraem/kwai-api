@@ -87,16 +87,16 @@ class Time
      * Create a Time object from a string
      *
      * @param string $time
-     * @param string $time_zone
+     * @param string $timezone
      * @return Time
      */
-    public static function createFromString(string $time, string $time_zone)
+    public static function createFromString(string $time, string $timezone)
     {
         [$hour, $minute] = explode(':', $time);
         return new self(
             (int) $hour,
             (int) $minute,
-            $time_zone
+            $timezone
         );
     }
 }
