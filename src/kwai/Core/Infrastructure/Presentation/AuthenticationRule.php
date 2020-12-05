@@ -25,7 +25,7 @@ class AuthenticationRule implements RuleInterface
      * @param  ServerRequestInterface $request
      * @return bool
      */
-    public function __invoke(ServerRequestInterface $request)
+    public function __invoke(ServerRequestInterface $request): bool
     {
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
