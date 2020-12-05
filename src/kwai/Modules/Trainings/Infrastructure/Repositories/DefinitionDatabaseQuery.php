@@ -29,14 +29,18 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
 
         $filters = new Collection([
             Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
+            Tables::TEAMS()->getAliasPrefix(),
             Tables::USERS()->getAliasPrefix()
         ]);
 
         $definitions = new Collection();
         foreach ($rows as $row) {
-            [ $definition, $creator ] =
+            [ $definition, $team, $creator ] =
                 (new ColumnCollection($row))->filter($filters);
             $definition->put('creator', $creator);
+            if ($team->has('id')) {
+                $definition->put('team', $team);
+            }
             $definitions->put($definition['id'], $definition);
         }
         return $definitions;
@@ -73,6 +77,10 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
         $this->query
             ->from((string) Tables::TRAINING_DEFINITIONS())
             ->join(
+                (string) Tables::TEAMS(),
+                on(Tables::TEAMS()->id, Tables::TRAINING_DEFINITIONS()->team_id)
+            )
+            ->join(
                 (string) Tables::USERS(),
                 on(Tables::USERS()->id, Tables::TRAINING_DEFINITIONS()->user_id)
             )
@@ -85,6 +93,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
     protected function getColumns(): array
     {
         $definitionAliasFn = Tables::TRAINING_DEFINITIONS()->getAliasFn();
+        $teamAliasFn = Tables::TEAMS()->getAliasFn();
         $creatorAliasFn = Tables::USERS()->getAliasFn();
 
         return [
@@ -103,6 +112,8 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
             $definitionAliasFn('user_id'),
             $definitionAliasFn('created_at'),
             $definitionAliasFn('updated_at'),
+            $teamAliasFn('id'),
+            $teamAliasFn('name'),
             $creatorAliasFn('id'),
             $creatorAliasFn('first_name'),
             $creatorAliasFn('last_name')

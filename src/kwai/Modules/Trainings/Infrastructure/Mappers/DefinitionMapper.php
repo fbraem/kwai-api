@@ -32,9 +32,9 @@ class DefinitionMapper
     public static function toDomain(Collection $data): Entity
     {
         $props = $data->only(['name', 'description']);
-        // TODO:
-        // if ($data->has('team')) {
-        // }
+        if ($data->has('team')) {
+            $props->put('team', TeamMapper::toDomain($data->get('team')));
+        }
         $props->put('weekday', new Weekday((int) $data['weekday']));
         $props->put('startTime', Time::createFromString(
             $data->get('start_time'),

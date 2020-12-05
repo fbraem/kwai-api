@@ -9,6 +9,7 @@ namespace Kwai\Modules\Trainings\Domain;
 
 use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
@@ -31,7 +32,7 @@ class Definition implements DomainEntity
      * @param Time               $startTime
      * @param Time               $endTime
      * @param Creator            $creator
-     * @param Team|null          $team
+     * @param Entity<Team>|null          $team
      * @param bool               $active
      * @param Location|null      $location
      * @param string|null        $remark
@@ -44,7 +45,7 @@ class Definition implements DomainEntity
         private Time $startTime,
         private Time $endTime,
         private Creator $creator,
-        private ?Team $team = null,
+        private ?Entity $team = null,
         private bool $active = true,
         private ?Location $location = null,
         private ?string $remark = null,
@@ -76,9 +77,9 @@ class Definition implements DomainEntity
     }
 
     /**
-     * @return Team|null
+     * @return Entity<Team>|null
      */
-    public function getTeam(): ?Team
+    public function getTeam(): ?Entity
     {
         return $this->team;
     }
