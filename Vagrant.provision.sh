@@ -76,7 +76,7 @@ php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer
 
 # PHPMyAdmin
-PHPMYADMIN_VERSION=5.0.2
+PHPMYADMIN_VERSION=5.0.4
 wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip -nv -O /var/tmp/phpmyadmin.zip
 unzip -q /var/tmp/phpmyadmin.zip -d /var/tmp/phpmyadmin
 rm -Rf /var/www/phpmyadmin
@@ -84,6 +84,7 @@ mv /var/tmp/phpmyadmin/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages /var/www/p
 mv /var/www/phpmyadmin/config.sample.inc.php /var/www/phpmyadmin/config.inc.php
 chown -R www-data:www-data /var/www/phpmyadmin
 rm /var/tmp/phpmyadmin.zip
+rm -r /var/tmp/phpmyadmin
 
 PHPMYADMIN_CONF=$(cat <<EOF
     <Directory /var/www/phpmyadmin>
