@@ -24,65 +24,25 @@ use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 class Training implements DomainEntity
 {
     /**
-     * The create/update timestamps
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The event for the training
-     */
-    private Event $event;
-
-    /**
-     * The coaches appointed for the training.
-     */
-    private Collection $coaches;
-
-    /**
-     * The teams assigned to this training.
-     */
-    private Collection $teams;
-
-    /**
-     * List of members that were present on the training.
-     */
-    private Collection $presences;
-
-    /**
-     * A remark
-     */
-    private ?string $remark;
-
-    /**
-     * The training definition that is used to create this training (if any).
-     *
-     * @var Entity<Definition>|null
-     */
-    private ?Entity $definition;
-
-    /**
      * Training constructor.
      *
      * @param Event              $event
      * @param string|null        $remark
-     * @param Entity|null        $definition
+     * @param Entity<Definition>|null        $definition
      * @param TraceableTime|null $traceableTime
      * @param Collection|null    $coaches
      * @param Collection|null    $teams
      * @param Collection|null    $presences
      */
     public function __construct(
-        Event $event,
-        ?string $remark = null,
-        ?Entity $definition = null,
-        ?TraceableTime $traceableTime = null,
-        ?Collection $coaches = null,
-        ?Collection $teams = null,
-        ?Collection $presences = null
+        private Event $event,
+        private ?string $remark = null,
+        private ?Entity $definition = null,
+        private ?TraceableTime $traceableTime = null,
+        private ?Collection $coaches = null,
+        private ?Collection $teams = null,
+        private ?Collection $presences = null
     ) {
-        $this->event = $event;
-        $this->remark = $remark;
-        $this->definition = $definition;
         $this->traceableTime = $traceableTime ?? new TraceableTime();
         $this->coaches = $coaches ?? new Collection();
         $this->teams = $teams ?? new Collection();
@@ -90,6 +50,8 @@ class Training implements DomainEntity
     }
 
     /**
+     * Get the create_at/update_at timestamps
+     *
      * @return TraceableTime
      */
     public function getTraceableTime(): TraceableTime
@@ -98,6 +60,8 @@ class Training implements DomainEntity
     }
 
     /**
+     * Get the event
+     *
      * @return Event
      */
     public function getEvent(): Event
@@ -106,6 +70,8 @@ class Training implements DomainEntity
     }
 
     /**
+     * Get the remark
+     *
      * @return string|null
      */
     public function getRemark(): ?string
