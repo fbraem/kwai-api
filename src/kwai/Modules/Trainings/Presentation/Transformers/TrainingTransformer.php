@@ -118,11 +118,10 @@ class TrainingTransformer extends Fractal\TransformerAbstract
      */
     public function transform(Entity $training): array
     {
-        /** @noinspection PhpUndefinedMethodInspection */
+        /* @var Training $training */
         $traceableTime = $training->getTraceableTime();
 
         /* @var Event $event */
-        /** @noinspection PhpUndefinedMethodInspection */
         $event = $training->getEvent();
         $result = [
             'id' => strval($training->id()),
