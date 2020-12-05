@@ -8,7 +8,6 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Definition;
-use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Tests\Context;
 
