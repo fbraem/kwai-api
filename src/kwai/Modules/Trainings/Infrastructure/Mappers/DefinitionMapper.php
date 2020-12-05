@@ -36,11 +36,11 @@ class DefinitionMapper
         // if ($data->has('team')) {
         // }
         $props->put('weekday', new Weekday((int) $data['weekday']));
-        $props->put('start_time', Time::createFromString(
+        $props->put('startTime', Time::createFromString(
             $data->get('start_time'),
             $data->get('time_zone')
         ));
-        $props->put('end_time', Time::createFromString(
+        $props->put('endTime', Time::createFromString(
             $data->get('end_time'),
             $data->get('time_zone')
         ));
