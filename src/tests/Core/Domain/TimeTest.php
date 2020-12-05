@@ -46,3 +46,10 @@ it('can check if a time is before another time', function () {
         ->toBe(false)
     ;
 });
+
+it('can format time', function () {
+    $time = new Time(20, 0, 'Europe/Brussels');
+    expect($time->format())
+        ->toBe('20:00')
+    ;
+});

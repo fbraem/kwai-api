@@ -99,4 +99,24 @@ class Time
             $timezone
         );
     }
+
+    /**
+     * Return the time formatted as HH:MM
+     *
+     * @return string
+     */
+    public function format(): string
+    {
+        return sprintf('%02d:%02d', $this->hour, $this->minute);
+    }
+
+    /**
+     * Returns a string representation.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->format();
+    }
 }
