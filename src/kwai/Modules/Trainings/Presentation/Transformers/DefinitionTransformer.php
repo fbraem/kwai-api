@@ -36,6 +36,7 @@ class DefinitionTransformer extends Fractal\TransformerAbstract
     ): Fractal\Resource\Item {
         return new Fractal\Resource\Item(
             $definition,
+            new self(),
             self::$type
         );
     }
@@ -51,6 +52,7 @@ class DefinitionTransformer extends Fractal\TransformerAbstract
     ): Fractal\Resource\Collection {
         return new Fractal\Resource\Collection(
             $definitions,
+            new self(),
             self::$type
         );
     }
