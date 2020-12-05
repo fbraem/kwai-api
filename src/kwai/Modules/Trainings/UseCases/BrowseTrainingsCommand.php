@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\UseCases;
 
 /**
- * Class BrowseTrainingCommand
+ * Class BrowseTrainingsCommand
  *
  * Command for the use case Browse Trainings
  */
-class BrowseTrainingCommand
+class BrowseTrainingsCommand
 {
     public ?int $limit = null;
     public ?int $offset = null;

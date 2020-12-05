@@ -11,16 +11,16 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Trainings\Repositories\TrainingRepository;
 
 /**
- * Class BrowseTraining
+ * Class BrowseTrainings
  *
  * Use case for browsing trainings
  */
-class BrowseTraining
+class BrowseTrainings
 {
     private TrainingRepository $repo;
 
     /**
-     * BrowseTraining constructor.
+     * BrowseTrainings constructor.
      *
      * @param TrainingRepository $repo
      */
@@ -37,11 +37,11 @@ class BrowseTraining
     /**
      * Browse trainings
      *
-     * @param BrowseTrainingCommand $command
+     * @param BrowseTrainingsCommand $command
      * @return array
      * @throws QueryException
      */
-    public function __invoke(BrowseTrainingCommand $command)
+    public function __invoke(BrowseTrainingsCommand $command)
     {
         $query = $this->repo->createQuery();
 

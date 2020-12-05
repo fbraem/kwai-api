@@ -13,8 +13,8 @@ use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Kwai\Modules\Trainings\Presentation\Transformers\TrainingTransformer;
-use Kwai\Modules\Trainings\UseCases\BrowseTraining;
-use Kwai\Modules\Trainings\UseCases\BrowseTrainingCommand;
+use Kwai\Modules\Trainings\UseCases\BrowseTrainings;
+use Kwai\Modules\Trainings\UseCases\BrowseTrainingsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -28,7 +28,7 @@ class BrowseTrainingsAction extends Action
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $command = new BrowseTrainingCommand();
+        $command = new BrowseTrainingsCommand();
 
         $parameters = $request->getAttribute('parameters');
         if (isset($parameters['filter']['year'])) {
@@ -46,7 +46,7 @@ class BrowseTrainingsAction extends Action
         $db = $this->getContainerEntry('pdo_db');
 
         try {
-            [$count, $trainings] = BrowseTraining::create(
+            [$count, $trainings] = BrowseTrainings::create(
                 new TrainingDatabaseRepository($db)
             )($command);
         } catch (QueryException $e) {
