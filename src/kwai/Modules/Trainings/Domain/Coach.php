@@ -18,18 +18,13 @@ use Kwai\Core\Domain\ValueObjects\Name;
 class Coach implements DomainEntity
 {
     /**
-     * The name of the coach
-     */
-    private Name $name;
-
-    /**
      * Coach constructor.
      *
-     * @param object $props
+     * @param Name $name
      */
-    public function __construct(object $props)
-    {
-        $this->name = $props->name;
+    public function __construct(
+        private Name $name
+    ) {
     }
 
     /**

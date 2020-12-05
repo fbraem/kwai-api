@@ -96,9 +96,9 @@ it('can filter trainings for a coach', function () use ($context) {
         $query->filterCoach(
             new Entity(
                 1,
-                new Coach((object) [
-                    'name' => new Name('Jigoro', 'Kano')
-                ])
+                new Coach(
+                    name: new Name('Jigoro', 'Kano')
+                )
             )
         );
         $trainings = $repo->execute($query);

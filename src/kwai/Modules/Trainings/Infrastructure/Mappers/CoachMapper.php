@@ -27,9 +27,12 @@ class CoachMapper
     {
         return new Entity(
             (int) $data->get('id'),
-            new Coach((object) [
-                'name' => new Name($data->get('firstname'), $data->get('lastname'))
-            ])
+            new Coach(
+                name: new Name(
+                    $data->get('firstname'),
+                    $data->get('lastname')
+                )
+            )
         );
     }
 }
