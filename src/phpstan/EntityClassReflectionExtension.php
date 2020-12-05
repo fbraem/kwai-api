@@ -2,6 +2,7 @@
 
 namespace App\PHPStan;
 
+use PHPStan\Broker\ClassNotFoundException;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
@@ -18,9 +19,11 @@ class EntityClassReflectionExtension implements MethodsClassReflectionExtension
     /**
      * Returns true when the class T (which is a domain class) has a method
      * with the given name.
-     * @param  ClassReflection $classReflection
-     * @param  string          $methodName
+     *
+     * @param ClassReflection $classReflection
+     * @param string          $methodName
      * @return bool
+     * @throws ClassNotFoundException
      */
     public function hasMethod(
         ClassReflection $classReflection,
@@ -37,9 +40,11 @@ class EntityClassReflectionExtension implements MethodsClassReflectionExtension
 
     /**
      * Returns the method from the type T.
-     * @param  ClassReflection  $classReflection
-     * @param  string           $methodName
+     *
+     * @param ClassReflection $classReflection
+     * @param string          $methodName
      * @return MethodReflection
+     * @throws ClassNotFoundException
      */
     public function getMethod(
         ClassReflection $classReflection,
@@ -65,8 +70,11 @@ class EntityClassReflectionExtension implements MethodsClassReflectionExtension
 
     /**
      * Find the method on the ObjectType of T.
-     * @param  ObjectType $type
-     * @param  string     $method
+     *
+     * @param ObjectType $type
+     * @param string     $method
+     * @return MethodReflection|null
+     * @throws ClassNotFoundException
      */
     private function findMethod(
         ObjectType $type,
