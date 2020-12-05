@@ -27,3 +27,22 @@ it('throws an exception for an invalid minute', function () {
 })
     ->throws(InvalidArgumentException::class)
 ;
+
+it('can check if a time is before another time', function () {
+    $startTime = new Time(20, 0, 'Europe/Brussels');
+    $endTime = new Time(21, 0, 'Europe/Brussels');
+    expect($startTime->isBefore($endTime))
+        ->toBe(true)
+    ;
+    expect($endTime->isBefore($startTime))
+        ->toBe(false)
+    ;
+
+    $endTime = new Time(20, 30, 'Europe/Brussels');
+    expect($startTime->isBefore($endTime))
+        ->toBe(true)
+    ;
+    expect($endTime->isBefore($startTime))
+        ->toBe(false)
+    ;
+});
