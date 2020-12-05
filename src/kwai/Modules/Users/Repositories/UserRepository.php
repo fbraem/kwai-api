@@ -67,7 +67,7 @@ interface UserRepository
      * @param EmailAddress $email
      * @throws NotFoundException
      * @throws RepositoryException
-     * @return Entity
+     * @return Entity<UserAccount>
      */
     public function getAccount(EmailAddress $email) : Entity;
 
