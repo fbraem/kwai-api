@@ -41,7 +41,7 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
         $query->filterId($id);
 
         try {
-            $entities = $this->execute($query);
+            $entities = $this->getAll($query);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
@@ -55,7 +55,7 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
     /**
      * @inheritDoc
      */
-    public function execute(CoachQuery $query, ?int $limit = null, ?int $offset = null): Collection
+    public function getAll(CoachQuery $query, ?int $limit = null, ?int $offset = null): Collection
     {
         /* @var Collection $coaches */
         $coaches = $query->execute($limit, $offset);

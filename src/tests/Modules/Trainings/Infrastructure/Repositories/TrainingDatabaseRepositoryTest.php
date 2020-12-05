@@ -76,7 +76,7 @@ it('can filter trainings on year/month', function () use ($context) {
     try {
         $query = $repo->createQuery();
         $query->filterYearMonth(2019, 8);
-        $trainings = $repo->execute($query);
+        $trainings = $repo->getAll($query);
         expect($trainings)
             ->toBeInstanceOf(Collection::class)
             ->and($trainings->count())
@@ -101,7 +101,7 @@ it('can filter trainings for a coach', function () use ($context) {
                 )
             )
         );
-        $trainings = $repo->execute($query);
+        $trainings = $repo->getAll($query);
         expect($trainings)
             ->toBeInstanceOf(Collection::class)
             ->and($trainings->count())
@@ -124,7 +124,7 @@ it('can filter trainings for a team', function () use ($context) {
                 new Team('U11')
             )
         );
-        $trainings = $repo->execute($query);
+        $trainings = $repo->getAll($query);
         expect($trainings)
             ->toBeInstanceOf(Collection::class)
             ->and($trainings->count())

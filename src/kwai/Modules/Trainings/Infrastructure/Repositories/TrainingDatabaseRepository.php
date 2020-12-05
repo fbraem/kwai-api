@@ -33,7 +33,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         $query->filterId($id);
 
         try {
-            $entities = $this->execute($query);
+            $entities = $this->getAll($query);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
@@ -56,7 +56,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * @inheritDoc
      */
-    public function execute(
+    public function getAll(
         TrainingQuery $query,
         ?int $limit = null,
         ?int $offset = null

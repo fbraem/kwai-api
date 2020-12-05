@@ -31,7 +31,7 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
         $query->filterId($id);
 
         try {
-            $entities = $this->execute($query);
+            $entities = $this->getAll($query);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
@@ -51,7 +51,7 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
         return new DefinitionDatabaseQuery($this->db);
     }
 
-    public function execute(DefinitionQuery $query, ?int $limit = null, ?int $offset = null): Collection
+    public function getAll(DefinitionQuery $query, ?int $limit = null, ?int $offset = null): Collection
     {
         /* @var Collection $definitions */
         $definitions = $query->execute($limit, $offset);

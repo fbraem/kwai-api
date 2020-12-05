@@ -36,7 +36,7 @@ it('can get all training definitions', function () use ($context) {
     $repo = new DefinitionDatabaseRepository($context->db);
     try {
         $query = $repo->createQuery();
-        $definitions = $repo->execute($query);
+        $definitions = $repo->getAll($query);
         expect($definitions)
             ->toBeInstanceOf(Collection::class)
         ;

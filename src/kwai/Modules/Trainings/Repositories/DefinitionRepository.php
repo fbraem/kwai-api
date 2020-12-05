@@ -46,5 +46,5 @@ interface DefinitionRepository
      * @return Collection
      * @throws QueryException
      */
-    public function execute(DefinitionQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(DefinitionQuery $query, ?int $limit, ?int $offset): Collection;
 }

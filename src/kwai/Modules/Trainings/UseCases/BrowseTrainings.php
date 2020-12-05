@@ -54,7 +54,7 @@ class BrowseTrainings
         }
 
         $count = $query->count();
-        $trainings = $this->repo->execute($query, $command->limit, $command->offset);
+        $trainings = $this->repo->getAll($query, $command->limit, $command->offset);
 
         return [
             $count, $trainings

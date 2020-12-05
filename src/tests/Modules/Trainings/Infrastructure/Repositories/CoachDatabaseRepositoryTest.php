@@ -38,7 +38,7 @@ it('can get all active coaches', function () use ($context) {
     try {
         $query = $repo->createQuery();
         $query->filterActive(true);
-        $coaches = $repo->execute($query);
+        $coaches = $repo->getAll($query);
         expect($coaches)
             ->toBeInstanceOf(Collection::class)
         ;

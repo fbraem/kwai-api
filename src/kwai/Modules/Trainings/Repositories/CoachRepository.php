@@ -46,5 +46,5 @@ interface CoachRepository
      * @return Collection
      * @throws QueryException
      */
-    public function execute(CoachQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(CoachQuery $query, ?int $limit, ?int $offset): Collection;
 }

@@ -50,7 +50,7 @@ class BrowseDefinitions
         $query = $this->repo->createQuery();
 
         $count = $query->count();
-        $definitions = $this->repo->execute(
+        $definitions = $this->repo->getAll(
             $query,
             $command->limit,
             $command->offset

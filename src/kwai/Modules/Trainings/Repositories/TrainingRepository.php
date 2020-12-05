@@ -46,5 +46,5 @@ interface TrainingRepository
      * @return Collection
      * @throws QueryException
      */
-    public function execute(TrainingQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(TrainingQuery $query, ?int $limit, ?int $offset): Collection;
 }
