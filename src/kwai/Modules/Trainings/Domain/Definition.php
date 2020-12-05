@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Domain;
 
+use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
@@ -27,8 +28,8 @@ class Definition implements DomainEntity
      * @param string             $name
      * @param string             $description
      * @param Weekday            $weekday
-     * @param Time               $start_time
-     * @param Time               $end_time
+     * @param Time               $startTime
+     * @param Time               $endTime
      * @param Creator            $creator
      * @param Team|null          $team
      * @param bool               $active
@@ -40,8 +41,8 @@ class Definition implements DomainEntity
         private string $name,
         private string $description,
         private Weekday $weekday,
-        private Time $start_time,
-        private Time $end_time,
+        private Time $startTime,
+        private Time $endTime,
         private Creator $creator,
         private ?Team $team = null,
         private bool $active = true,
@@ -51,6 +52,10 @@ class Definition implements DomainEntity
     ) {
         if ($this->traceableTime == null) {
             $this->traceableTime = new TraceableTime();
+        }
+
+        if (!$this->startTime->isBefore($this->endTime)) {
+            throw new InvalidArgumentException('startTime must be before endTime');
         }
     }
 
@@ -91,7 +96,7 @@ class Definition implements DomainEntity
      */
     public function getStartTime(): Time
     {
-        return $this->start_time;
+        return $this->startTime;
     }
 
     /**
@@ -99,7 +104,7 @@ class Definition implements DomainEntity
      */
     public function getEndTime(): Time
     {
-        return $this->end_time;
+        return $this->endTime;
     }
 
     /**
