@@ -26,3 +26,14 @@ it('can construct a definition', function () use ($creator) {
         ->toBe('We train each wednesday evening')
     ;
 });
+
+it('throws an exception when start is after end time', function () use ($creator) {
+    new Definition(
+        name: 'Wednesday Training',
+        description: 'We train each wednesday evening',
+        weekday: Weekday::WEDNESDAY(),
+        startTime: new Time(21, 0, 'Europe/Brussels'),
+        endTime: new Time(20, 0, 'Europe/Brussels'),
+        creator: $creator,
+    );
+})->throws(InvalidArgumentException::class);
