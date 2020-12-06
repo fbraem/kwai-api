@@ -16,7 +16,9 @@ The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwa
 
 API
 ===
-Kwai-api is the REST api for Kwai. It's written in PHP and it tries to follow the [JSONAPI](http://jsonapi.org) standard.
+Kwai-api is the REST api for Kwai. It's written in PHP.
+The [JSONAPI](http://jsonapi.org) standard will be followed as best as 
+possible: Links are not used and URL's are not always as defined.
 
 Currently the following api's are already available:
 
