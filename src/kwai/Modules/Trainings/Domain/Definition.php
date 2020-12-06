@@ -168,4 +168,14 @@ class Definition implements DomainEntity
     {
         return $this->traceableTime;
     }
+
+    /**
+     * Attach a team to this definition
+     *
+     * @param Entity<Team> $team
+     */
+    public function attachTeam(Entity $team): void
+    {
+        $this->team = $team;
+    }
 }
