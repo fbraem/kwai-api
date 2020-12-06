@@ -17,6 +17,7 @@ use Kwai\Core\Infrastructure\Database\TableEnum;
  * @method static Tables COACHES()
  * @method static Tables MEMBERS()
  * @method static Tables PERSONS()
+ * @method static Tables SEASONS()
  * @method static Tables TEAMS()
  * @method static Tables TRAININGS()
  * @method static Tables TRAINING_COACHES()
@@ -31,6 +32,7 @@ class Tables extends TableEnum
     private const COACHES = 'coaches';
     private const MEMBERS = 'sport_judo_members';
     private const PERSONS = 'persons';
+    private const SEASONS = 'seasons';
     private const TEAMS = 'teams';
     private const TRAININGS = 'trainings';
     private const TRAINING_COACHES = 'training_coaches';
