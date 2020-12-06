@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Kwai\Applications\Trainings;
 
 use Kwai\Applications\Application;
+use Kwai\Applications\Trainings\Actions\BrowseDefinitionsAction;
 use Kwai\Applications\Trainings\Actions\BrowseTrainingsAction;
+use Kwai\Applications\Trainings\Actions\GetDefinitionAction;
 use Kwai\Applications\Trainings\Actions\GetTrainingAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
@@ -33,11 +35,11 @@ class TrainingsApplication extends Application
     {
         $group->group(
             '',
-            function (RouteCollectorProxy $pagesGroup) {
-                $pagesGroup
+            function (RouteCollectorProxy $trainingsGroup) {
+                $trainingsGroup
                     ->options('', PreflightAction::class)
                 ;
-                $pagesGroup
+                $trainingsGroup
                     ->get('', BrowseTrainingsAction::class)
                     ->setName('trainings.browse')
                 ;
@@ -45,14 +47,40 @@ class TrainingsApplication extends Application
         );
         $group->group(
             '/{id:[0-9]+}',
-            function (RouteCollectorProxy $pageGroup) {
-                $pageGroup
+            function (RouteCollectorProxy $trainingGroup) {
+                $trainingGroup
                     ->options('', PreflightAction::class)
                 ;
-                $pageGroup
+                $trainingGroup
                     ->get('', GetTrainingAction::class)
                     ->setName('trainings.get')
                 ;
+            }
+        );
+        $group->group(
+            '/definitions',
+            function(RouteCollectorProxy $definitionGroup) {
+                $definitionGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $definitionGroup
+                    ->get('', BrowseDefinitionsAction::class)
+                    ->setName('trainings.definitions.browse')
+                ;
+
+            }
+        );
+        $group->group(
+            '/definitions/{id:[0-9]+}',
+            function(RouteCollectorProxy $definitionGroup) {
+                $definitionGroup
+                    ->options('', PreflightAction::class)
+                ;
+                $definitionGroup
+                    ->get('', GetDefinitionAction::class)
+                    ->setName('trainings.definitions.get')
+                ;
+
             }
         );
     }
