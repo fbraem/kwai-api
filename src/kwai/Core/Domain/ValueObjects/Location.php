@@ -25,4 +25,9 @@ class Location
     {
         $this->location = $location;
     }
+
+    public function __toString(): string
+    {
+        return $this->location;
+    }
 }
