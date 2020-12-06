@@ -57,7 +57,8 @@
             "Judo\\REST\\" : "./sport/judo/rest"
         },
         "files" : [
-          "kwai/Core/Infrastructure/Presentation/app.php"
+          "kwai/Core/Infrastructure/Presentation/app.php",
+          "kwai/macros.php"
         ]
     },
     "autoload-dev": {
