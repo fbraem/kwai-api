@@ -40,10 +40,11 @@ class GetDefinitionAction extends Action
                 new DefinitionDatabaseRepository($database)
             )($command);
         } catch (RepositoryException $re) {
+            $this->logException($re);
             return (
-            new SimpleResponse(500, 'A repository exception occurred.')
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (TrainingDefinitionNotFoundException $e) {
+        } catch (TrainingDefinitionNotFoundException) {
             return (new NotFoundResponse('Training definition not found'))($response);
         }
 

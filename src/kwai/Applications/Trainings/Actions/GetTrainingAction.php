@@ -40,10 +40,11 @@ class GetTrainingAction extends Action
                 new TrainingDatabaseRepository($database)
             )($command);
         } catch (RepositoryException $re) {
+            $this->logException($re);
             return (
-            new SimpleResponse(500, 'A repository exception occurred.')
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (TrainingNotFoundException $e) {
+        } catch (TrainingNotFoundException) {
             return (new NotFoundResponse('Training not found'))($response);
         }
 
