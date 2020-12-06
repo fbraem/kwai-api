@@ -32,7 +32,8 @@ class Definition implements DomainEntity
      * @param Time               $startTime
      * @param Time               $endTime
      * @param Creator            $creator
-     * @param Entity<Team>|null          $team
+     * @param Entity<Team>|null  $team
+     * @param Entity|null        $season
      * @param bool               $active
      * @param Location|null      $location
      * @param string|null        $remark
@@ -46,6 +47,7 @@ class Definition implements DomainEntity
         private Time $endTime,
         private Creator $creator,
         private ?Entity $team = null,
+        private ?Entity $season = null,
         private bool $active = true,
         private ?Location $location = null,
         private ?string $remark = null,
@@ -177,5 +179,15 @@ class Definition implements DomainEntity
     public function attachTeam(Entity $team): void
     {
         $this->team = $team;
+    }
+
+    /**
+     * Get the season, if any, that is attached to this definition
+     *
+     * @return Entity<Season>|null
+     */
+    public function getSeason(): ?Entity
+    {
+        return $this->season;
     }
 }

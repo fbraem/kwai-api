@@ -31,39 +31,36 @@ class DefinitionMapper
      */
     public static function toDomain(Collection $data): Entity
     {
-        $props = $data->only(['name', 'description']);
-        if ($data->has('team')) {
-            $props->put('team', TeamMapper::toDomain($data->get('team')));
-        }
-        $props->put('weekday', new Weekday((int) $data['weekday']));
-        $props->put('startTime', Time::createFromString(
-            $data->get('start_time'),
-            $data->get('time_zone')
-        ));
-        $props->put('endTime', Time::createFromString(
-            $data->get('end_time'),
-            $data->get('time_zone')
-        ));
-        $props->put('active', $data->get('active', '1') === '1');
-        if ($data->has('location')) {
-            $props->put(
-                'location',
-                new Location($data->get('location'))
-            );
-        }
-        $props->put('creator', new Creator(
-            id: (int) $data['creator']['id'],
-            name: new Name(
-                first_name: $data['creator']->get('first_name'),
-                last_name: $data['creator']->get('last_name')
-            )
-        ));
-        $props->put('traceableTime', new TraceableTime(
-            Timestamp::createFromString($data['created_at']),
-            $data->has('updated_at')
-                ? Timestamp::createFromString($data->get('updated_at'))
-                : null
-        ));
+        $props = $data->select(fn($item, $key) => match ($key) {
+            'name', 'description' => $item,
+            'season' => SeasonMapper::toDomain($item),
+            'weekday' => new Weekday((int) $item),
+            'start_time' => [
+                'startTime',
+                Time::createFromString($item, $data->get('time_zone'))
+            ],
+            'end_time' => [
+                'endTime',
+                Time::createFromString($item, $data->get('time_zone'))
+            ],
+            'team' => TeamMapper::toDomain($item),
+            'active' => $item === '1',
+            'location' => new Location($item),
+            'creator' => new Creator(
+                id: (int) $item->get('id'),
+                name: new Name(
+                    first_name: $item->get('first_name'),
+                    last_name: $item->get('last_name')
+                )
+            ),
+            'created_at' => ['traceableTime' => new TraceableTime(
+                Timestamp::createFromString($item),
+                $data->has('updated_at')
+                    ? Timestamp::createFromString($data->get('updated_at'))
+                    : null
+            )],
+            default => null
+        })->filter();
 
         return new Entity(
             (int) $data['id'],

@@ -61,20 +61,30 @@ class DefinitionTransformer extends Fractal\TransformerAbstract
      * Include season
      *
      * @param Entity<Definition> $definition
+     * @return Fractal\Resource\Item
      */
     public function includeSeason(Entity $definition)
     {
-        //TODO: return season
+        $season = $definition->getSeason();
+        if ($season) {
+            return SeasonTransformer::createForItem($season);
+        }
+        return null;
     }
 
     /**
      * Include team
      *
      * @param Entity<Definition> $definition
+     * @return Fractal\Resource\Item
      */
     public function includeTeam(Entity $definition)
     {
-        //TODO: return team
+        $team = $definition->getTeam();
+        if ($team) {
+            return TeamTransformer::createForItem($team);
+        }
+        return null;
     }
 
     /**

@@ -30,16 +30,20 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
         $filters = new Collection([
             Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
             Tables::TEAMS()->getAliasPrefix(),
+            Tables::SEASONS()->getAliasPrefix(),
             Tables::USERS()->getAliasPrefix()
         ]);
 
         $definitions = new Collection();
         foreach ($rows as $row) {
-            [ $definition, $team, $creator ] =
+            [ $definition, $team, $season, $creator ] =
                 (new ColumnCollection($row))->filter($filters);
             $definition->put('creator', $creator);
             if ($team->has('id')) {
                 $definition->put('team', $team);
+            }
+            if ($season->has('id')) {
+                $definition->put('season', $season);
             }
             $definitions->put($definition['id'], $definition);
         }
@@ -80,6 +84,10 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
                 (string) Tables::TEAMS(),
                 on(Tables::TEAMS()->id, Tables::TRAINING_DEFINITIONS()->team_id)
             )
+            ->leftJoin(
+                (string) Tables::SEASONS(),
+                on(Tables::SEASONS()->id, Tables::TRAINING_DEFINITIONS()->team_id)
+            )
             ->join(
                 (string) Tables::USERS(),
                 on(Tables::USERS()->id, Tables::TRAINING_DEFINITIONS()->user_id)
@@ -94,6 +102,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
     {
         $definitionAliasFn = Tables::TRAINING_DEFINITIONS()->getAliasFn();
         $teamAliasFn = Tables::TEAMS()->getAliasFn();
+        $seasonAliasFn = Tables::SEASONS()->getAliasFn();
         $creatorAliasFn = Tables::USERS()->getAliasFn();
 
         return [
@@ -114,6 +123,8 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
             $definitionAliasFn('updated_at'),
             $teamAliasFn('id'),
             $teamAliasFn('name'),
+            $seasonAliasFn('id'),
+            $seasonAliasFn('name'),
             $creatorAliasFn('id'),
             $creatorAliasFn('first_name'),
             $creatorAliasFn('last_name')
