@@ -12,7 +12,7 @@ use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Presentation\Transformers\DefinitionTransformer;
 use Kwai\Modules\Trainings\UseCases\GetDefinition;
@@ -44,7 +44,7 @@ class GetDefinitionAction extends Action
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (TrainingDefinitionNotFoundException) {
+        } catch (DefinitionNotFoundException) {
             return (new NotFoundResponse('Training definition not found'))($response);
         }
 

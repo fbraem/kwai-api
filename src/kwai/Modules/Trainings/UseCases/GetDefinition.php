@@ -10,7 +10,7 @@ namespace Kwai\Modules\Trainings\UseCases;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
-use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 
 /**
@@ -42,9 +42,9 @@ class GetDefinition
 
     /**
      * @param GetDefinitionCommand $command
-     * @throws RepositoryException
-     * @throws TrainingDefinitionNotFoundException
      * @return Entity<Definition>
+     *@throws DefinitionNotFoundException
+     * @throws RepositoryException
      */
     public function __invoke(GetDefinitionCommand $command)
     {

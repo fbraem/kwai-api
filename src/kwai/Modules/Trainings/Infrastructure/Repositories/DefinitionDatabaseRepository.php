@@ -12,7 +12,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\DefinitionMapper;
 use Kwai\Modules\Trainings\Repositories\DefinitionQuery;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
@@ -40,7 +40,7 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
             return $entities->get($id);
         }
 
-        throw new TrainingDefinitionNotFoundException($id);
+        throw new DefinitionNotFoundException($id);
     }
 
     /**

@@ -10,16 +10,16 @@ namespace Kwai\Modules\Trainings\Domain\Exceptions;
 use Exception;
 
 /**
- * Class TrainingDefinitionNotFoundException
+ * Class DefinitionNotFoundException
  *
  * Raised when a definition is not found.
  */
-class TrainingDefinitionNotFoundException extends Exception
+class DefinitionNotFoundException extends Exception
 {
     private int $id;
 
     /**
-     * TrainingDefinitionNotFoundException constructor.
+     * DefinitionNotFoundException constructor.
      *
      * @param int $id
      */

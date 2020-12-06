@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Tests\Context;
@@ -23,7 +23,7 @@ it('can get a training definition', function () use ($context) {
         expect($definition->domain())
             ->toBeInstanceOf(Definition::class)
         ;
-    } catch (TrainingDefinitionNotFoundException $e) {
+    } catch (DefinitionNotFoundException $e) {
         $this->assertTrue(false, (string) $e);
     } catch (RepositoryException $e) {
         $this->assertTrue(false, (string) $e);

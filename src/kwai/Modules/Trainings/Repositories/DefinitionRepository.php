@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\TrainingDefinitionNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Definition;
 
 /**
@@ -25,7 +25,7 @@ interface DefinitionRepository
      * @param int $id
      * @return Entity<Definition>
      *@throws RepositoryException
-     * @throws TrainingDefinitionNotFoundException
+     * @throws DefinitionNotFoundException
      */
     public function getById(int $id): Entity;
 
