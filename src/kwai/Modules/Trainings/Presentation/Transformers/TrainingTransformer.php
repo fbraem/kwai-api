@@ -96,18 +96,30 @@ class TrainingTransformer extends Fractal\TransformerAbstract
 
     /**
      * @param Entity<Training> $training
+     * @return Fractal\Resource\Collection|null
      */
     public function includeTeams(Entity $training)
     {
-        //TODO: return teams
+        /* @var Training $training */
+        $teams = $training->getTeams();
+        if ($teams->count() > 0) {
+            return TeamTransformer::createForCollection($teams);
+        }
+        return null;
     }
 
     /**
      * @param Entity<Training> $training
+     * @return Fractal\Resource\Collection|null
      */
     public function includeCoaches(Entity $training)
     {
-        //TODO: return coaches
+        /* @var Training $training */
+        $coaches = $training->getCoaches();
+        if ($coaches->count() > 0) {
+            return CoachTransformer::createForCollection($coaches);
+        }
+        return null;
     }
 
     /**
