@@ -7,31 +7,40 @@ declare(strict_types=1);
 use Illuminate\Support\Collection;
 
 /**
- * select will create a new collection by iterating over each element.
- * The callback receives item and key. The return value can be an array, a
- * value or null. When a value is returned, the original key will be used to
- * store the value in the new collection. When the callback returns an array,
- * the first element is used as key, the second element is the value. When null
- * is returned the item is discarded.
+ * transformWithKeys will create a new collection by iterating over each element
+ * and pass the value and key to the callback. The result of the callback will
+ * define what will happen.
+ * If the returned value is a boolean true, the original key and item will be
+ * added. When this value is a boolean false, the key and item will be ignored.
+ * When the returned value is an associated array, the first key and value
+ * will be added to the collection.
  *
- * One caveat: when the value is an array, you need to return
- * an array containing the original key and the original array as value.
+ * ```
+ * $col = new Collection(
+ *      'name' => 'Jigoro Kano',
+ *      'grade' => '12de DAN'
+ * );
+ * $newCol = $col->transformWithKeys(fn($item, $key) => match($key) {
+ *      'name' => ['NAME' => strtoupper($item)],
+ *      default => false
+ * });
+ * ```
+ *
+ * This code will give the following result:
+ * [ 'NAME' => 'JIGORO KANO' ]
  */
-Collection::macro('select', function(callable $callback) {
+Collection::macro('transformWithKeys', function(callable $callback) {
     $newCollection = new Collection();
     $this->each(function($item, $key) use ($callback, $newCollection) {
         $result = $callback($item, $key);
-        if (is_array($result)) {
+        if (is_bool($result)) {
+            if ($result) {
+                $newCollection->put($key, $item);
+            }
+        }
+        else if (is_array($result)) {
             $newKey = array_key_first($result);
-            if ($newKey === 0) {
-                $newCollection->put($result[0], $result[1]);
-            } else {
-                $newCollection->put($newKey, $result[$newKey]);
-            }
-        } else {
-            if ($result !== null) {
-                $newCollection->put($key, $result);
-            }
+            $newCollection->put($newKey, $result[$newKey]);
         }
     });
     return $newCollection;

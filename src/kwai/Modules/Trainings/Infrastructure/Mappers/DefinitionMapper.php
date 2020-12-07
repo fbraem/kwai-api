@@ -31,40 +31,40 @@ class DefinitionMapper
      */
     public static function toDomain(Collection $data): Entity
     {
-        $props = $data->select(fn($item, $key) => match ($key) {
-            'name', 'description' => $item,
-            'season' => SeasonMapper::toDomain($item),
-            'weekday' => new Weekday((int) $item),
+        $props = $data->transformWithKeys(fn($item, $key) => match ($key) {
+            'name', 'description' => true,
+            'season' => [ $key => SeasonMapper::toDomain($item) ],
+            'weekday' => [ $key => new Weekday((int) $item) ],
             'start_time' => [
-                'startTime',
+                'startTime' =>
                 Time::createFromString($item, $data->get('time_zone'))
             ],
             'end_time' => [
-                'endTime',
+                'endTime' =>
                 Time::createFromString($item, $data->get('time_zone'))
             ],
-            'team' => TeamMapper::toDomain($item),
-            'active' => $item === '1',
-            'location' => new Location($item),
-            'creator' => new Creator(
+            'team' => [ $key => TeamMapper::toDomain($item) ],
+            'active' => [ $key => $item === '1' ],
+            'location' => [ $key => new Location($item) ],
+            'creator' => [ $key => new Creator(
                 id: (int) $item->get('id'),
                 name: new Name(
                     first_name: $item->get('first_name'),
                     last_name: $item->get('last_name')
                 )
-            ),
+            )],
             'created_at' => ['traceableTime' => new TraceableTime(
                 Timestamp::createFromString($item),
                 $data->has('updated_at')
                     ? Timestamp::createFromString($data->get('updated_at'))
                     : null
             )],
-            default => null
-        })->filter();
+            default => false
+        });
 
         return new Entity(
             (int) $data['id'],
-            new Definition(... $props->toArray())
+            new Definition(... $props)
         );
     }
 }
