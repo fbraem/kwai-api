@@ -19,7 +19,6 @@ use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Training;
-use Kwai\Modules\Trainings\Domain\Definition;
 
 /**
  * Class TrainingMapper
@@ -34,10 +33,11 @@ class TrainingMapper
      */
     public static function toDomain(Collection $data): Entity
     {
-        return new Entity(
-            (int) $data['id'],
-            new Training(
-                event: new Event(
+        $props = $data->transformWithKeys(fn($item, $key) => match ($key) {
+            'teams', 'remark', 'coaches' => true,
+            'definition' => [ 'definition' => DefinitionMapper::toDomain($item) ],
+            'start_date' => [
+                'event' => new Event(
                     startDate: Timestamp::createFromString($data['start_date'], $data['time_zone']),
                     endDate: Timestamp::createFromString($data['end_date'], $data['time_zone']),
                     location: $data->has('location') ? new Location($data->get('location')) : null,
@@ -55,19 +55,19 @@ class TrainingMapper
                             )
                         )
                     ))
-                ),
-                remark: $data->get('remark'),
-                coaches: $data->get('coaches'),
-                definition: $data->has('definition')
-                    ? DefinitionMapper::toDomain($data->get('definition'))
-                    : null,
-                traceableTime: new TraceableTime(
-                    Timestamp::createFromString($data['created_at']),
-                    $data->has('updated_at')
-                        ? Timestamp::createFromString($data->get('updated_at'))
-                        : null
                 )
-            )
+            ],
+            'created_at' => ['traceableTime' => new TraceableTime(
+                Timestamp::createFromString($item),
+                $data->has('updated_at')
+                    ? Timestamp::createFromString($data->get('updated_at'))
+                    : null
+            )],
+            default => false
+        });
+        return new Entity(
+            (int) $data['id'],
+            new Training(... $props)
         );
     }
 }
