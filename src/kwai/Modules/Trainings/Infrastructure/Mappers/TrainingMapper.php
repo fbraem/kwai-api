@@ -34,7 +34,9 @@ class TrainingMapper
     public static function toDomain(Collection $data): Entity
     {
         $props = $data->transformWithKeys(fn($item, $key) => match ($key) {
-            'teams', 'remark', 'coaches' => true,
+            'remark' => true,
+            'teams' => [ 'teams' => $item->map(fn ($team, $key) => TeamMapper::toDomain($team)) ],
+            'coaches' => [ 'coaches' => $item->map(fn ($coach, $key) => CoachMapper::toDomain($coach)) ],
             'definition' => [ 'definition' => DefinitionMapper::toDomain($item) ],
             'start_date' => [
                 'event' => new Event(
