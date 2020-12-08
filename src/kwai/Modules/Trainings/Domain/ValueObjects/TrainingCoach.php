@@ -33,7 +33,7 @@ class TrainingCoach
     /**
      * TrainingCoach constructor.
      *
-     * @param Entity  $coach
+     * @param Entity<Coach>  $coach
      * @param bool    $head
      * @param bool    $present
      * @param bool    $payed
@@ -54,7 +54,7 @@ class TrainingCoach
     }
 
     /**
-     * @return Entity
+     * @return Entity<Coach>
      */
     public function getCoach(): Entity
     {
