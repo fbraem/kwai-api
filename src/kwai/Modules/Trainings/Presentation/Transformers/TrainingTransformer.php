@@ -80,10 +80,16 @@ class TrainingTransformer extends Fractal\TransformerAbstract
 
     /**
      * @param Entity<Training> $training
+     * @return Fractal\Resource\Item|null
      */
     public function includeDefinition(Entity $training)
     {
-        //TODO: return definition
+        /* @var Training $training */
+        $definition = $training->getDefinition();
+        if ($definition) {
+            return DefinitionTransformer::createForItem($definition);
+        }
+        return null;
     }
 
     /**
