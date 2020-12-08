@@ -50,7 +50,7 @@ class ColumnCollection implements IteratorAggregate
         return $this->collection->keys()->reduce(
             function ($result, $column) use ($prefixes) {
                 $prefixes->each(function ($prefix, $pos) use (&$result, $column) {
-                    if (strpos($column, $prefix) === 0) {
+                    if (str_starts_with($column, $prefix)) {
                         $originalColumn = substr($column, strlen($prefix));
 
                         // When there is no collection yet for the given position,
