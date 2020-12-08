@@ -92,13 +92,13 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
         foreach ($rows as $row) {
             $columns = new ColumnCollection($row);
             [ $trainingCoach, $person ] = $columns->filter($prefixes);
-            $trainingCoach['person'] = $person;
+            $trainingCoach->put('id', $trainingCoach->get('coach_id'));
+            $trainingCoach = $trainingCoach->merge($person);
             if (!$trainings->has($trainingCoach['training_id'])) {
                 $trainings->put($trainingCoach['training_id'], new Collection());
             }
             $trainings[$trainingCoach['training_id']]->push($trainingCoach);
         }
-
         return $trainings;
     }
 }
