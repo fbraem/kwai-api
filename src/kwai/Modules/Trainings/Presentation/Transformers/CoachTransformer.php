@@ -9,6 +9,7 @@ namespace Kwai\Modules\Trainings\Presentation\Transformers;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use League\Fractal;
 
 /**
@@ -21,11 +22,11 @@ class CoachTransformer extends Fractal\TransformerAbstract
     /**
      * Create a single resource of a Coach entity.
      *
-     * @param Entity<Coach> $coach
+     * @param Entity<Coach>|TrainingCoach $coach
      * @return Fractal\Resource\Item
      */
     public static function createForItem(
-        Entity $coach,
+        Entity|TrainingCoach $coach,
     ): Fractal\Resource\Item {
         return new Fractal\Resource\Item(
             $coach,
@@ -53,11 +54,20 @@ class CoachTransformer extends Fractal\TransformerAbstract
     /**
      * Transform a Team entity into an array
      *
-     * @param Entity<Coach> $coach
+     * @param Entity<Coach>|TrainingCoach $coach
      * @return array
      */
-    public function transform(Entity $coach): array
+    public function transform(Entity|TrainingCoach $coach): array
     {
+        if ($coach instanceof TrainingCoach) {
+            return [
+                'id' => $coach->getCoach()->id(),
+                'name' => (string) $coach->getCoach()->getName(),
+                'present' => $coach->isPresent(),
+                'payed' => $coach->isPayed(),
+                'head' => $coach->isHead()
+            ];
+        }
         return [
             'id' => (string) $coach->id(),
             'name' => (string) $coach->getName()
