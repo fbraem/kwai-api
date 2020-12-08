@@ -19,6 +19,7 @@ use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
 /**
  * Class TrainingMapper
@@ -36,7 +37,15 @@ class TrainingMapper
         $props = $data->transformWithKeys(fn($item, $key) => match ($key) {
             'remark' => true,
             'teams' => [ 'teams' => $item->map(fn ($team, $key) => TeamMapper::toDomain($team)) ],
-            'coaches' => [ 'coaches' => $item->map(fn ($coach, $key) => CoachMapper::toDomain($coach)) ],
+            'coaches' => [ 'coaches' => $item->map(fn ($coach, $key) =>
+                new TrainingCoach(
+                    coach: CoachMapper::toDomain($coach),
+                    head: $coach->get('head', false),
+                    present: $coach->get('present', false),
+                    payed: $coach->get('payed', false),
+                    remark: $coach->get('remark')
+                ))
+            ],
             'definition' => [ 'definition' => DefinitionMapper::toDomain($item) ],
             'start_date' => [
                 'event' => new Event(
