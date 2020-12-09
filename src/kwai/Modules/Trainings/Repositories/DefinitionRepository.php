@@ -47,4 +47,29 @@ interface DefinitionRepository
      * @throws QueryException
      */
     public function getAll(DefinitionQuery $query, ?int $limit, ?int $offset): Collection;
+
+    /**
+     * Save a new definition
+     *
+     * @param Definition $definition
+     * @return Entity<Definition>
+     * @throws RepositoryException
+     */
+    public function create(Definition $definition): Entity;
+
+    /**
+     * Updates a definition
+     *
+     * @param Entity<Definition> $definition
+     * @throws RepositoryException
+     */
+    public function update(Entity $definition): void;
+
+    /**
+     * Removes a definition
+     *
+     * @param Entity $definition
+     * @throws RepositoryException
+     */
+    public function remove(Entity $definition): void;
 }

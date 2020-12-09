@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
@@ -12,6 +16,66 @@ use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseReposit
 use Tests\Context;
 
 $context = Context::createContext();
+
+it('can create a definition', function () use ($context) {
+    $repo = new DefinitionDatabaseRepository($context->db);
+    $definition = new Definition(
+        name: 'Test',
+        description: 'Created while running unittest',
+        weekday: new Weekday(1),
+        startTime: new Time(19, 0, 'Europe/Brussels'),
+        endTime: new Time(20, 0, 'Europe/Brussels'),
+        creator: new Creator(
+            1, new Name('Jigoro', 'Kano')
+        )
+    );
+    try {
+        $entity = $repo->create($definition);
+        expect($entity)
+            ->toBeInstanceOf(Entity::class)
+            ->and($entity->id())
+            ->toBeInt()
+        ;
+        return $entity->id();
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can update a definition', function ($id) use ($context) {
+    $repo = new DefinitionDatabaseRepository($context->db);
+
+    try {
+        $definition = $repo->getById($id);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+
+    /* @var $definition Definition */
+    $traceableTime = $definition->getTraceableTime();
+    $traceableTime->markUpdated();
+
+    $newDefinition = new Entity($id, new Definition(
+        name: $definition->getName(),
+        description: 'Updated while running unittest',
+        weekday: $definition->getWeekDay(),
+        startTime: $definition->getStartTime(),
+        endTime: $definition->getEndTime(),
+        creator: $definition->getCreator(),
+        traceableTime: $traceableTime
+    ));
+    try {
+        $repo->update($newDefinition);
+        $this->expectNotToPerformAssertions();
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it can create a definition')
+;
 
 it('can get a training definition', function () use ($context) {
     $repo = new DefinitionDatabaseRepository($context->db);
