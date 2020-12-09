@@ -67,4 +67,30 @@ class DefinitionMapper
             new Definition(... $props)
         );
     }
+
+    /**
+     * Maps a Definition domain to the table record
+     *
+     * @param Definition $definition
+     * @return string[]
+     */
+    public static function toPersistence(Definition $definition)
+    {
+        return [
+            'name' => $definition->getName(),
+            'description' => $definition->getDescription(),
+            'season_id' => $definition->getSeason()?->id(),
+            'team_id' => $definition->getTeam()?->id(),
+            'weekday' => $definition->getWeekday(),
+            'start_time' => $definition->getStartTime(),
+            'end_time' => $definition->getEndTime(),
+            'time_zone' => $definition->getStartTime()->getTimezone(),
+            'active' => $definition->isActive(),
+            'location' => $definition->getLocation(),
+            'remark' => $definition->getRemark(),
+            'user_id' => $definition->getCreator()->getId(),
+            'created_at' => $definition->getTraceableTime()->getCreatedAt(),
+            'updated_at' => $definition->getTraceableTime()->getUpdatedAt(),
+        ];
+    }
 }
