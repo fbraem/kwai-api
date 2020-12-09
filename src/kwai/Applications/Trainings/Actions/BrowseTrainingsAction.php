@@ -64,7 +64,7 @@ class BrowseTrainingsAction extends Action
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (CoachNotFoundException $e) {
+        } catch (CoachNotFoundException) {
             return (new NotFoundResponse('Coach not found'))($response);
         }
 
