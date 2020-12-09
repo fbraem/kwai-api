@@ -9,8 +9,12 @@ namespace Kwai\Applications\Trainings\Actions;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
+use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Kwai\Modules\Trainings\Presentation\Transformers\TrainingTransformer;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainings;
@@ -47,13 +51,21 @@ class BrowseTrainingsAction extends Action
 
         try {
             [$count, $trainings] = BrowseTrainings::create(
-                new TrainingDatabaseRepository($db)
+                new TrainingDatabaseRepository($db),
+                new CoachDatabaseRepository($db)
             )($command);
         } catch (QueryException $e) {
             $this->logException($e);
             return (
                 new SimpleResponse(500, 'A query exception occurred.')
             )($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
+            )($response);
+        } catch (CoachNotFoundException $e) {
+            return (new NotFoundResponse('Coach not found'))($response);
         }
 
         $resource = TrainingTransformer::createForCollection(

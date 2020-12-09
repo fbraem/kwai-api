@@ -20,6 +20,12 @@ class BrowseTrainingsCommand
     public ?int $year = null;
     public ?int $month = null;
 
+    /**
+     * Get only trainings for this coach
+     * @var int|null
+     */
+    public ?int $coach = null;
+
     // By default, only the active trainings will be returned.
     public bool $active = true;
 }
