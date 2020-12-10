@@ -65,8 +65,9 @@ final class TraceableTime
     /**
      * Change the updateAt to the current timestamp
      */
-    public function markUpdated(): void
+    public function markUpdated(): TraceableTime
     {
         $this->updated_at = Timestamp::createNow();
+        return $this;
     }
 }
