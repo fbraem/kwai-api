@@ -26,7 +26,7 @@ it('can get a team', function () use ($context) {
 it('should throw a TeamNotFoundException', function () use ($context) {
     $repo = new TeamDatabaseRepository($context->db);
     /** @noinspection PhpUnhandledExceptionInspection */
-    $team = $repo->getById(0);
+    $repo->getById(0);
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->throws(TeamNotFoundException::class)
