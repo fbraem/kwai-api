@@ -118,6 +118,28 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
      */
     public function remove(Entity $definition): void
     {
-        // TODO: Implement remove() method.
+        $query = $this->db->createQueryFactory()
+            ->delete((string) Tables::TRAINING_DEFINITIONS())
+            ->where(field('id')->eq($definition->id()))
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        // Update all trainings that belonged to this definition.
+        $query = $this->db->createQueryFactory()
+            ->update((string) Tables::TRAININGS())
+            ->set(
+                ['definition_id' => null]
+            )
+            ->where(field('definition_id')->eq($definition->id()))
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 }
