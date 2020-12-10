@@ -54,8 +54,7 @@ it('can update a definition', function ($id) use ($context) {
     }
 
     /* @var $definition Definition */
-    $traceableTime = $definition->getTraceableTime();
-    $traceableTime->markUpdated();
+    $traceableTime = $definition->getTraceableTime()->markUpdated();
 
     $newDefinition = new Entity($id, new Definition(
         name: $definition->getName(),
@@ -72,6 +71,26 @@ it('can update a definition', function ($id) use ($context) {
     } catch (Exception $e) {
         $this->fail((string) $e);
     }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it can create a definition')
+;
+
+it('can delete a definition', function ($id) use ($context) {
+    $repo = new DefinitionDatabaseRepository($context->db);
+
+    try {
+        $definition = $repo->getById($id);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+
+    try {
+        $repo->remove($definition);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+    $this->expectNotToPerformAssertions();
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a definition')
