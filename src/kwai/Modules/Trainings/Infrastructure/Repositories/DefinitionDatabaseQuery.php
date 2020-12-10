@@ -80,7 +80,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query
             ->from((string) Tables::TRAINING_DEFINITIONS())
-            ->join(
+            ->leftJoin(
                 (string) Tables::TEAMS(),
                 on(Tables::TEAMS()->id, Tables::TRAINING_DEFINITIONS()->team_id)
             )
