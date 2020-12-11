@@ -37,4 +37,24 @@ class Name
             array_filter([$this->first_name, $this->last_name])
         );
     }
+
+    /**
+     * Get the firstname
+     *
+     * @return string|null
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->first_name;
+    }
+
+    /**
+     * Get the lastname
+     *
+     * @return string|null
+     */
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
 }

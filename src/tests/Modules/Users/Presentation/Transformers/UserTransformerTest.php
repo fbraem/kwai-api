@@ -8,6 +8,7 @@ namespace Tests\Modules\Users\Presentation\Transformers;
 
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Modules\Users\Domain\User;
@@ -24,6 +25,7 @@ it('can transform a user', function () {
         'uuid' => $uuid,
         'emailAddress' => $email,
         'remark' => $remark,
+        'username' => new Name('webmaster'),
         'traceableTime' => $traceableTime
     ]);
     $entity = new Entity(1, $user);
@@ -39,7 +41,7 @@ it('can transform a user', function () {
             'data' => [
                 'id' => strval($uuid),
                 'email' => strval($email),
-                'username' => '',
+                'username' => 'webmaster',
                 'remark' => 'test',
                 'created_at' => strval($traceableTime->getCreatedAt()),
                 'updated_at' => null

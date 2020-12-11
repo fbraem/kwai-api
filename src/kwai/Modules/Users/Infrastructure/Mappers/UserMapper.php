@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -15,7 +16,6 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * Mapper for the entity User
@@ -41,7 +41,7 @@ final class UserMapper
                         : null
                 ),
                 'remark' => $raw->remark,
-                'username' => new Username($raw->first_name ?? null, $raw->last_name ?? null)
+                'username' => new Name($raw->first_name, $raw->last_name)
             ])
         );
     }

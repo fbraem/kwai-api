@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
+use Kwai\Core\Domain\ValueObjects\Name;
 
 /**
  * Class Author
@@ -20,7 +20,7 @@ class Author implements DomainEntity
     /**
      * The name of the author.
      */
-    private Username $name;
+    private Name $name;
 
     /**
      * Author constructor.
@@ -35,7 +35,7 @@ class Author implements DomainEntity
     /**
      * Get the username
      */
-    public function getName(): Username
+    public function getName(): Name
     {
         return $this->name;
     }

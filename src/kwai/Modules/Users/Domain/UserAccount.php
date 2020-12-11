@@ -15,7 +15,6 @@ use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * User Account Entity. A user with account information like password,

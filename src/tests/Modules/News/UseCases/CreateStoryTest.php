@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Modules\News\UseCases;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\UseCases\Content;
@@ -17,7 +18,6 @@ use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\CreateStory;
 use Kwai\Modules\News\UseCases\CreateStoryCommand;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 use Tests\Context;
 
 $context = Context::createContext();
@@ -57,7 +57,7 @@ it('can create a story', function () use ($context) {
                 {
                     return new Entity(1, new Author(
                         (object) [
-                            'name' => new Username('Test', 'User')
+                            'name' => new Name('Test', 'User')
                         ]
                     ));
                 }

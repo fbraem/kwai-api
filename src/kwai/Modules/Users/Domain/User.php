@@ -10,9 +10,9 @@ namespace Kwai\Modules\Users\Domain;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * User Entity
@@ -42,7 +42,7 @@ class User implements DomainEntity
     /**
      * The username
      */
-    private ?Username $username;
+    private Name $username;
 
     /**
      * The abilities of the user.
@@ -60,7 +60,7 @@ class User implements DomainEntity
         $this->emailAddress = $props->emailAddress;
         $this->traceableTime = $props->traceableTime ?? new TraceableTime();
         $this->remark = $props->remark ?? null;
-        $this->username = $props->username ?? null;
+        $this->username = $props->username;
         $this->abilities = $props->abilities ?? [];
     }
 
@@ -111,9 +111,9 @@ class User implements DomainEntity
 
     /**
      * Get the username
-     * @return Username|null ?Username
+     * @return Name Username
      */
-    public function getUsername(): ?Username
+    public function getUsername(): Name
     {
         return $this->username;
     }

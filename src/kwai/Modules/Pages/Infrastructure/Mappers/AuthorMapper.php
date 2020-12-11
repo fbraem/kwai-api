@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Modules\Pages\Domain\Author;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * Class AuthorMapper
@@ -23,7 +23,7 @@ final class AuthorMapper
         return new Entity(
             (int) $raw->id,
             new Author((object)[
-                'name' => new Username($raw->first_name ?? null, $raw->last_name ?? null)
+                'name' => new Name($raw->first_name, $raw->last_name)
             ])
         );
     }

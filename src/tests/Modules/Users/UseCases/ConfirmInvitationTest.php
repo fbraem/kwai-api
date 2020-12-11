@@ -8,6 +8,7 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
@@ -15,7 +16,6 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\UseCases\ConfirmInvitation;
@@ -31,7 +31,7 @@ beforeAll(function () use ($context) {
         'emailAddress' => new EmailAddress('webmaster@kwai.com'),
         'traceableTime' => new TraceableTime(),
         'remark' => 'This is test admin user',
-        'username' => new Username('Webmaster')
+        'username' => new Name('Webmaster')
     ]));
 
     $context->userRepo = new class($context->db) extends UserDatabaseRepository {

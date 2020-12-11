@@ -12,12 +12,12 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
@@ -83,7 +83,7 @@ final class ConfirmInvitation
         $user = new User((object)[
             'uuid' => new UniqueId(),
             'emailAddress' => $email,
-            'username' => new Username($command->firstName, $command->lastName)
+            'username' => new Name($command->firstName, $command->lastName)
         ]);
 
         $account = new UserAccount((object) [
