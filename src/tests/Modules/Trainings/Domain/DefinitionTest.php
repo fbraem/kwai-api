@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Modules\Trainings\Domain\Definition;
 
@@ -18,8 +19,10 @@ it('can construct a definition', function () use ($creator) {
         name: 'Wednesday Training',
         description: 'We train each wednesday evening',
         weekday: Weekday::WEDNESDAY(),
-        startTime: new Time(20, 0, 'Europe/Brussels'),
-        endTime: new Time(21, 0, 'Europe/Brussels'),
+        period: new TimePeriod(
+            new Time(20, 0, 'Europe/Brussels'),
+            new Time(21, 0, 'Europe/Brussels')
+        ),
         creator: $creator,
     );
     expect($definition->getDescription())
@@ -32,8 +35,10 @@ it('throws an exception when start is after end time', function () use ($creator
         name: 'Wednesday Training',
         description: 'We train each wednesday evening',
         weekday: Weekday::WEDNESDAY(),
-        startTime: new Time(21, 0, 'Europe/Brussels'),
-        endTime: new Time(20, 0, 'Europe/Brussels'),
+        period: new TimePeriod(
+            new Time(21, 0, 'Europe/Brussels'),
+                new Time(20, 0, 'Europe/Brussels')
+        ),
         creator: $creator,
     );
 })->throws(InvalidArgumentException::class);

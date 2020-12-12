@@ -7,12 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Domain;
 
-use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
-use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 
@@ -29,8 +28,7 @@ class Definition implements DomainEntity
      * @param string             $name
      * @param string             $description
      * @param Weekday            $weekday
-     * @param Time               $startTime
-     * @param Time               $endTime
+     * @param TimePeriod         $period
      * @param Creator            $creator
      * @param Entity<Team>|null  $team
      * @param Entity|null        $season
@@ -43,8 +41,7 @@ class Definition implements DomainEntity
         private string $name,
         private string $description,
         private Weekday $weekday,
-        private Time $startTime,
-        private Time $endTime,
+        private TimePeriod $period,
         private Creator $creator,
         private ?Entity $team = null,
         private ?Entity $season = null,
@@ -55,10 +52,6 @@ class Definition implements DomainEntity
     ) {
         if ($this->traceableTime == null) {
             $this->traceableTime = new TraceableTime();
-        }
-
-        if (!$this->startTime->isBefore($this->endTime)) {
-            throw new InvalidArgumentException('startTime must be before endTime');
         }
     }
 
@@ -103,22 +96,13 @@ class Definition implements DomainEntity
     }
 
     /**
-     * Get the start time of this definition
-     * @return Time
-     */
-    public function getStartTime(): Time
-    {
-        return $this->startTime;
-    }
-
-    /**
-     * Get the end time of this definition
+     * Get the time period
      *
-     * @return Time
+     * @return TimePeriod
      */
-    public function getEndTime(): Time
+    public function getPeriod(): TimePeriod
     {
-        return $this->endTime;
+        return $this->period;
     }
 
     /**

@@ -11,6 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -111,8 +112,16 @@ class UpdateDefinition
                 name: $command->name,
                 description: $command->description,
                 weekday: new Weekday($command->weekday),
-                startTime: Time::createFromString($command->start_time, $command->time_zone),
-                endTime: Time::createFromString($command->end_time, $command->time_zone),
+                period: new TimePeriod(
+                    Time::createFromString(
+                        $command->start_time,
+                        $command->time_zone
+                    ),
+                    Time::createFromString(
+                        $command->end_time,
+                        $command->time_zone
+                    )
+                ),
                 active: $command->active,
                 team: $currentTeam,
                 season: $currentSeason,

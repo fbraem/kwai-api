@@ -7,6 +7,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -23,8 +24,10 @@ it('can create a definition', function () use ($context) {
         name: 'Test',
         description: 'Created while running unittest',
         weekday: new Weekday(1),
-        startTime: new Time(19, 0, 'Europe/Brussels'),
-        endTime: new Time(20, 0, 'Europe/Brussels'),
+        period: new TimePeriod(
+            new Time(19, 0, 'Europe/Brussels'),
+            new Time(20, 0, 'Europe/Brussels')
+        ),
         creator: new Creator(
             1, new Name('Jigoro', 'Kano')
         )
@@ -60,8 +63,7 @@ it('can update a definition', function ($id) use ($context) {
         name: $definition->getName(),
         description: 'Updated while running unittest',
         weekday: $definition->getWeekDay(),
-        startTime: $definition->getStartTime(),
-        endTime: $definition->getEndTime(),
+        period: $definition->getPeriod(),
         creator: $definition->getCreator(),
         traceableTime: $traceableTime
     ));

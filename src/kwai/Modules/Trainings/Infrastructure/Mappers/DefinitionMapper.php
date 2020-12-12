@@ -13,6 +13,7 @@ use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Weekday;
@@ -36,12 +37,10 @@ class DefinitionMapper
             'season' => [ $key => SeasonMapper::toDomain($item) ],
             'weekday' => [ $key => new Weekday((int) $item) ],
             'start_time' => [
-                'startTime' =>
-                Time::createFromString($item, $data->get('time_zone'))
-            ],
-            'end_time' => [
-                'endTime' =>
-                Time::createFromString($item, $data->get('time_zone'))
+                'period' => new TimePeriod(
+                    Time::createFromString($item, $data->get('time_zone')),
+                    Time::createFromString($item, $data->get('time_zone'))
+                )
             ],
             'team' => [ $key => TeamMapper::toDomain($item) ],
             'active' => [ $key => $item === '1' ],
@@ -82,9 +81,9 @@ class DefinitionMapper
             'season_id' => $definition->getSeason()?->id(),
             'team_id' => $definition->getTeam()?->id(),
             'weekday' => $definition->getWeekday(),
-            'start_time' => $definition->getStartTime(),
-            'end_time' => $definition->getEndTime(),
-            'time_zone' => $definition->getStartTime()->getTimezone(),
+            'start_time' => $definition->getPeriod()->getStart(),
+            'end_time' => $definition->getPeriod()->getEnd(),
+            'time_zone' => $definition->getPeriod()->getEnd()->getTimezone(),
             'active' => $definition->isActive(),
             'location' => $definition->getLocation(),
             'remark' => $definition->getRemark(),

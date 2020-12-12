@@ -6,6 +6,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Time;
+use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Presentation\Transformers\DefinitionTransformer;
@@ -20,8 +21,10 @@ it('can transform a definition', function () {
             1, new Name('Jigoro', 'Kano')
         ),
         weekday: Weekday::WEDNESDAY(),
-        startTime: new Time(20, 0, 'Europe/Brussels'),
-        endTime: new Time(21, 0, 'Europe Brussels')
+        period: new TimePeriod(
+            new Time(20, 0, 'Europe/Brussels'),
+            new Time(21, 0, 'Europe Brussels')
+        )
     );
     $entity = new Entity(1, $definition);
     $fractal = new Manager();
