@@ -9,7 +9,6 @@ namespace Kwai\Modules\Trainings\UseCases;
 
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
-use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 
 /**
