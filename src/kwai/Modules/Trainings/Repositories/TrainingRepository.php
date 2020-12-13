@@ -47,4 +47,13 @@ interface TrainingRepository
      * @throws QueryException
      */
     public function getAll(TrainingQuery $query, ?int $limit, ?int $offset): Collection;
+
+    /**
+     * Save a new training to the database.
+     *
+     * @param Training $training
+     * @return Entity<Training>
+     * @throws RepositoryException
+     */
+    public function create(Training $training): Entity;
 }

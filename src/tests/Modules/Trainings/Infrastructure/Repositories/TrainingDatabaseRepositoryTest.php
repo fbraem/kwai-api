@@ -3,8 +3,14 @@ declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
+use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Core\Domain\ValueObjects\Text;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Coach;
@@ -26,11 +32,10 @@ it('can get a training', function () use ($context) {
         expect($training->domain())
             ->toBeInstanceOf(Training::class)
         ;
-        /** @noinspection PhpUndefinedMethodInspection */
+        /* @var Training $training */
         expect($training->getEvent())
             ->toBeInstanceOf(Event::class)
         ;
-        /** @noinspection PhpUndefinedMethodInspection */
         expect($training->getCoaches()->count())
             ->toBeGreaterThan(0)
         ;
@@ -131,6 +136,45 @@ it('can filter trainings for a team', function () use ($context) {
             ->toBeGreaterThan(0)
         ;
     } catch (QueryException $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can create a training', function() use ($context) {
+    $repo = new TrainingDatabaseRepository($context->db);
+
+    $training = new Training(
+        event: new Event(
+            startDate: Timestamp::createFromString('2020-12-13 20:00:00'),
+            endDate: Timestamp::createFromString('2020-12-13 21:00:00'),
+            location: new Location('Sports hall of the club'),
+            text: new Collection([
+                new Text(
+                    locale: new Locale('en'),
+                    format: new DocumentFormat('md'),
+                    title: 'Training for competitors',
+                    summary: 'This is a training for competitive members only',
+                    content: null,
+                    author: new Creator(1, new Name('Jigoro', 'Kano'))
+                )
+            ]),
+            remark: 'This training is created from a unit test'
+        ),
+        remark: 'This training is created from a unit test',
+    );
+    $context->db->begin();
+    try {
+        $entity = $repo->create($training);
+        expect($entity)
+            ->toBeInstanceOf(Entity::class)
+            ->and($entity->domain())
+            ->toBeInstanceOf(Training::class)
+        ;
+        $context->db->commit();
+    } catch (Exception $e) {
+        $context->db->rollback();
         $this->fail((string) $e);
     }
 })
