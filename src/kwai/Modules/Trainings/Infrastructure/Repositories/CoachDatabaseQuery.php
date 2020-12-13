@@ -72,11 +72,11 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     /**
      * @inheritDoc
      */
-    public function filterId(int $id): void
+    public function filterId(int ...$ids): void
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::COACHES()->id)->eq($id)
+            field(Tables::COACHES()->id)->in(...$ids)
         );
     }
 

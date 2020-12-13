@@ -16,15 +16,12 @@ $context = Context::createContext();
 it('can get a coach', function () use ($context) {
     $repo = new CoachDatabaseRepository($context->db);
     try {
-        $coach = $repo->getById(1);
-        expect($coach)
+        $coaches = $repo->getById(1);
+        expect($coaches)
+            ->toBeInstanceOf(Collection::class)
+            ->and($coaches->first())
             ->toBeInstanceOf(Entity::class)
         ;
-        expect($coach->domain())
-            ->toBeInstanceOf(Coach::class)
-        ;
-    } catch (CoachNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
     } catch (RepositoryException $e) {
         $this->assertTrue(false, (string) $e);
     }

@@ -20,14 +20,13 @@ use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 interface CoachRepository
 {
     /**
-     * Get the coach with the given id.
+     * Get the coaches with the given ids.
      *
+     * @param int ...$id
+     * @return Collection
      * @throws RepositoryException
-     * @throws CoachNotFoundException
-     * @param int $id
-     * @return Entity<Coach>
      */
-    public function getById(int $id): Entity;
+    public function getById(int ...$id): Collection;
 
     /**
      * Creates a query

@@ -63,8 +63,11 @@ class BrowseTrainings
         }
 
         if ($command->coach) {
-            $coach = $this->coachRepo->getById($command->coach);
-            $query->filterCoach($coach);
+            $coaches = $this->coachRepo->getById($command->coach);
+            if ($coaches->count() == 0) {
+                throw new CoachNotFoundException($command->coach);
+            }
+            $query->filterCoach($coaches->first());
         }
 
         $count = $query->count();

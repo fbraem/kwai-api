@@ -17,11 +17,11 @@ use Kwai\Core\Infrastructure\Repositories\Query;
 interface CoachQuery extends Query
 {
     /**
-     * Add a filter for the given id
+     * Add a filter for the given ids
      *
-     * @param int $id
+     * @param int ...$id
      */
-    public function filterId(int $id): void;
+    public function filterId(int ...$id): void;
 
     /**
      * Add a filter for active/non-active coaches.

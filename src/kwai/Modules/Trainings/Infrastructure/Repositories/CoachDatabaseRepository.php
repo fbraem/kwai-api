@@ -35,21 +35,18 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
     /**
      * @inheritDoc
      */
-    public function getById(int $id): Entity
+    public function getById(int ...$ids): Collection
     {
         $query = $this->createQuery();
-        $query->filterId($id);
+        $query->filterId(...$ids);
 
         try {
-            $entities = $this->getAll($query);
+            $coaches = $this->getAll($query);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        if (count($entities) === 1) {
-            return $entities[$id];
-        }
-        throw new CoachNotFoundException($id);
+        return $coaches;
     }
 
     /**
@@ -59,8 +56,10 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
     {
         /* @var Collection $coaches */
         $coaches = $query->execute($limit, $offset);
-        return $coaches->transform(
-            fn($item) => CoachMapper::toDomain($item)
+        return $coaches->mapWithKeys(
+            fn($item) => [
+                $item['id'] => CoachMapper::toDomain($item)
+            ]
         );
     }
 }
