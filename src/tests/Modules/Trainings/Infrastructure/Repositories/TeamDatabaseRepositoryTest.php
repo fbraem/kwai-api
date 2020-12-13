@@ -12,24 +12,17 @@ $context = Context::createContext();
 it('can get a team', function () use ($context) {
     $repo = new TeamDatabaseRepository($context->db);
     try {
-        $team = $repo->getById(1);
+        $teams = $repo->getById(1);
     } catch (Exception $e) {
         $this->fail((string) $e);
     }
-    expect($team)
+    expect($teams)
+        ->toBeInstanceOf(Collection::class)
+        ->and($teams->first())
         ->toBeInstanceOf(Entity::class)
     ;
 })
     ->skip(!Context::hasDatabase(), 'No database available')
-;
-
-it('should throw a TeamNotFoundException', function () use ($context) {
-    $repo = new TeamDatabaseRepository($context->db);
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $repo->getById(0);
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-    ->throws(TeamNotFoundException::class)
 ;
 
 it('can get all teams', function () use ($context) {

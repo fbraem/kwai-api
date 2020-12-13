@@ -16,6 +16,7 @@ use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 use Kwai\Modules\Trainings\Repositories\SeasonRepository;
@@ -51,16 +52,24 @@ class CreateDefinition
      * @throws QueryException
      * @throws RepositoryException
      * @throws TeamNotFoundException
+     * @throws SeasonNotFoundException
      */
     public function __invoke(
         CreateDefinitionCommand $command,
         Creator $creator
     ): Entity {
-        $team = isset($command->team_id) ?
-            $this->teamRepo->getById($command->team_id) : null;
+        if (isset($command->team_id)) {
+            $teams = $this->teamRepo->getById($command->team_id);
+            if ($teams->isEmpty() == 0) {
+                throw new TeamNotFoundException($command->team_id);
+            }
+            $team = $teams->first();
+        } else {
+            $team = null;
+        }
 
         $season = isset($command->season_id) ?
-            $this->teamRepo->getById($command->season_id) : null;
+            $this->seasonRepo->getById($command->season_id) : null;
 
         $definition = new Definition(
             name: $command->name,

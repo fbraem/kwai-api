@@ -21,12 +21,12 @@ interface TeamRepository
     /**
      * Get the team with the given id.
      *
-     * @param int $id
-     * @return Entity<Team>
+     * @param int ...$ids
+     * @return Collection
      * @throws QueryException
      * @throws TeamNotFoundException
      */
-    public function getById(int $id): Entity;
+    public function getById(int ... $ids): Collection;
 
     /**
      * Get all teams
