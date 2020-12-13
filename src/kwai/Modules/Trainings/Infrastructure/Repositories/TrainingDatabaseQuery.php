@@ -44,7 +44,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     {
         $this->query
            ->from((string) Tables::TRAININGS())
-            ->leftJoin(
+            ->join(
                 (string) Tables::TRAINING_CONTENTS(),
                 on(Tables::TRAINING_CONTENTS()->training_id, Tables::TRAININGS()->id)
             )
