@@ -56,7 +56,13 @@ it('can appoint/release a coach to a training', function () use ($creator) {
         )
     );
     $training->appointCoach(
-        new TrainingCoach($coach, false, false, false)
+        new TrainingCoach(
+            coach: $coach,
+            head: false,
+            present: false,
+            payed: false,
+            creator: $creator
+        )
     );
     expect($training->getCoaches())
         ->toBeInstanceOf(Collection::class)
