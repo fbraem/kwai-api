@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Domain\ValueObjects;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Coach;
 
 /**
@@ -18,42 +20,33 @@ use Kwai\Modules\Trainings\Domain\Coach;
 class TrainingCoach
 {
     /**
-     * @var Entity<Coach>
-     */
-    private Entity $coach;
-
-    private bool $head;
-
-    private bool $present;
-
-    private bool $payed;
-
-    private ?string $remark;
-
-    /**
      * TrainingCoach constructor.
      *
-     * @param Entity<Coach>  $coach
-     * @param bool    $head
-     * @param bool    $present
-     * @param bool    $payed
-     * @param ?string $remark
+     * @param Entity<Coach>      $coach
+     * @param bool               $head
+     * @param bool               $present
+     * @param bool               $payed
+     * @param Creator            $creator
+     * @param ?string            $remark
+     * @param TraceableTime|null $traceableTime
      */
     public function __construct(
-        Entity $coach,
-        bool $head,
-        bool $present,
-        bool $payed,
-        string $remark = null
+        private Entity $coach,
+        private bool $head,
+        private bool $present,
+        private bool $payed,
+        private Creator $creator,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null
     ) {
-        $this->coach = $coach;
-        $this->head = $head;
-        $this->present = $present;
-        $this->payed = $payed;
-        $this->remark = $remark;
+        if ($this->traceableTime == null) {
+            $this->traceableTime = new TraceableTime();
+        }
     }
 
     /**
+     * The coach
+     *
      * @return Entity<Coach>
      */
     public function getCoach(): Entity
@@ -62,6 +55,8 @@ class TrainingCoach
     }
 
     /**
+     * Is the coach the head coach of this training?
+     *
      * @return bool
      */
     public function isHead(): bool
@@ -70,6 +65,8 @@ class TrainingCoach
     }
 
     /**
+     * Was the coach present at this training?
+     *
      * @return bool
      */
     public function isPresent(): bool
@@ -78,6 +75,8 @@ class TrainingCoach
     }
 
     /**
+     * Is the coach payed for this training?
+     *
      * @return bool
      */
     public function isPayed(): bool
@@ -86,10 +85,30 @@ class TrainingCoach
     }
 
     /**
+     * A remark
+     *
      * @return string|null
      */
     public function getRemark(): ?string
     {
         return $this->remark;
+    }
+
+    /**
+     * The user that changed or added this coach
+     *
+     * @return Creator
+     */
+    public function getCreator(): Creator
+    {
+        return $this->creator;
+    }
+
+    /**
+     * @return TraceableTime|null
+     */
+    public function getTraceableTime(): ?TraceableTime
+    {
+        return $this->traceableTime;
     }
 }

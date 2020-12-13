@@ -39,6 +39,10 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
                 (string) Tables::PERSONS(),
                 on(Tables::MEMBERS()->person_id, Tables::PERSONS()->id)
             )
+            ->join(
+                (string) Tables::USERS(),
+                on(Tables::USERS()->id, Tables::TRAINING_COACHES()->user_id)
+            )
             ->orderBy(Tables::TRAINING_COACHES()->getAlias('training_id'))
         ;
     }
@@ -50,6 +54,7 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
     {
         $trainingCoachAliasFn = Tables::TRAINING_COACHES()->getAliasFn();
         $personAliasFn = Tables::PERSONS()->getAliasFn();
+        $userAliasFn = Tables::USERS()->getAliasFn();
 
         return [
             $trainingCoachAliasFn('training_id'),
@@ -58,11 +63,13 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
             $trainingCoachAliasFn('present'),
             $trainingCoachAliasFn('payed'),
             $trainingCoachAliasFn('remark'),
-            $trainingCoachAliasFn('user_id'),
             $trainingCoachAliasFn('created_at'),
             $trainingCoachAliasFn('updated_at'),
             $personAliasFn('firstname'),
-            $personAliasFn('lastname')
+            $personAliasFn('lastname'),
+            $userAliasFn('id'),
+            $userAliasFn('first_name'),
+            $userAliasFn('last_name')
         ];
     }
 
@@ -85,15 +92,17 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
 
         $prefixes = new Collection([
             Tables::TRAINING_COACHES()->getAliasPrefix(),
-            Tables::PERSONS()->getAliasPrefix()
+            Tables::PERSONS()->getAliasPrefix(),
+            Tables::USERS()->getAliasPrefix()
         ]);
 
         $trainings = new Collection();
         foreach ($rows as $row) {
             $columns = new ColumnCollection($row);
-            [ $trainingCoach, $person ] = $columns->filter($prefixes);
+            [ $trainingCoach, $person, $creator ] = $columns->filter($prefixes);
             $trainingCoach->put('id', $trainingCoach->get('coach_id'));
             $trainingCoach = $trainingCoach->merge($person);
+            $trainingCoach->put('creator', $creator);
             if (!$trainings->has($trainingCoach['training_id'])) {
                 $trainings->put($trainingCoach['training_id'], new Collection());
             }
