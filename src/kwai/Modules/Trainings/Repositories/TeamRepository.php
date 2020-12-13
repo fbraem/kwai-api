@@ -8,10 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
-use Kwai\Modules\Trainings\Domain\Team;
 
 /**
  * Interface TeamRepository
