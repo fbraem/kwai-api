@@ -24,7 +24,7 @@ interface DefinitionRepository
      *
      * @param int $id
      * @return Entity<Definition>
-     *@throws RepositoryException
+     * @throws RepositoryException
      * @throws DefinitionNotFoundException
      */
     public function getById(int $id): Entity;
