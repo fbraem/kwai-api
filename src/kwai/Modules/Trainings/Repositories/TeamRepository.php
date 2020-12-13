@@ -24,7 +24,6 @@ interface TeamRepository
      * @param int ...$ids
      * @return Collection
      * @throws QueryException
-     * @throws TeamNotFoundException
      */
     public function getById(int ... $ids): Collection;
 
