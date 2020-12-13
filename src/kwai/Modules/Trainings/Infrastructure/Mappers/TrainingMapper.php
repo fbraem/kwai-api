@@ -18,7 +18,6 @@ use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Modules\Trainings\Domain\Team;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
@@ -97,6 +96,12 @@ class TrainingMapper
 
     /**
      * Maps a training to a table record
+     *
+     * This method will return an array with Collection objects for:
+     * 1. All training properties
+     * 2. All training event contents
+     * 3. All training coaches
+     * 4. All teams for this training
      *
      * @param Training $training
      * @return array<Collection>
