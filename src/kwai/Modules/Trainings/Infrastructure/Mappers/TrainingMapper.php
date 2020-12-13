@@ -18,6 +18,7 @@ use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Modules\Trainings\Domain\Team;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
@@ -40,10 +41,22 @@ class TrainingMapper
             'coaches' => [ 'coaches' => $item->map(fn ($coach, $key) =>
                 new TrainingCoach(
                     coach: CoachMapper::toDomain($coach),
-                    head: $coach->get('head', false),
+                    head: $coach->get('coach_type', 0) === 1,
                     present: $coach->get('present', false),
                     payed: $coach->get('payed', false),
-                    remark: $coach->get('remark')
+                    remark: $coach->get('remark'),
+                    creator: new Creator(
+                    (int) $coach->get('creator')['id'],
+                        new Name(
+                        $coach->get('creator')['first_name'],
+                        $coach->get('creator')['last_name'])
+                    ),
+                    traceableTime: new TraceableTime(
+                        Timestamp::createFromString($coach->get('created_at')),
+                        $coach->has('updated_at')
+                            ? Timestamp::createFromString($coach->get('updated_at'))
+                            : null
+                    )
                 ))
             ],
             'definition' => [ 'definition' => DefinitionMapper::toDomain($item) ],
@@ -80,5 +93,58 @@ class TrainingMapper
             (int) $data['id'],
             new Training(... $props)
         );
+    }
+
+    /**
+     * Maps a training to a table record
+     *
+     * @param Training $training
+     * @return array<Collection>
+     */
+    public static function toPersistence(Training $training): array
+    {
+        return [
+            collect([ // Training data
+                'definition_id' => $training->getDefinition()?->id(),
+                'start_date' => (string) $training->getEvent()->getStartDate(),
+                'end_date' => (string) $training->getEvent()->getEndDate(),
+                'time_zone' => $training->getEvent()->getStartDate()->getTimezone(),
+                'active' => $training->getEvent()->isActive(),
+                'cancelled' => $training->getEvent()->isCancelled(),
+                'location' => $training->getEvent()->getLocation()?->__toString(),
+                'created_at' => (string) $training->getTraceableTime()->getCreatedAt(),
+                'updated_at' => $training->getTraceableTime()->getUpdatedAt()?->__toString()
+            ]),
+            // Event content data
+            $training->getEvent()->getText()->map(fn (Text $text) =>
+                collect([
+                    'locale' => (string) $text->getLocale(),
+                    'format' => (string) $text->getFormat(),
+                    'title' => $text->getTitle(),
+                    'summary' => $text->getSummary(),
+                    'content' => $text->getContent(),
+                    'user_id' => $text->getAuthor()->getId()
+                ])
+            ),
+            // Coaches data
+            $training->getCoaches()->map(fn (TrainingCoach $coach) =>
+                collect([
+                    'coach_id' => $coach->getCoach()->id(),
+                    'coach_type' => $coach->isHead() ? 1 : 0,
+                    'present' => $coach->isPresent(),
+                    'payed' => $coach->isPayed(),
+                    'remark' => $coach->getRemark(),
+                    'user_id' => $coach->getCreator()->getId(),
+                    'created_at' => $coach->getTraceableTime()->getCreatedAt(),
+                    'updated_at' => $coach->getTraceableTime()->getUpdatedAt(),
+                ])
+            ),
+            // Teams data
+            $training->getTeams()->map(fn (Entity $team) =>
+                collect([
+                    'team_id' => $team->id()
+                ])
+            )
+        ];
     }
 }
