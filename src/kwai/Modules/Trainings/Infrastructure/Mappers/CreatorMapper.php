@@ -16,6 +16,12 @@ use Kwai\Core\Domain\ValueObjects\Name;
  */
 class CreatorMapper
 {
+    /**
+     * Maps a record to Creator value object
+     *
+     * @param Collection $data
+     * @return Creator
+     */
     public static function toDomain(Collection $data): Creator
     {
         return new Creator(
