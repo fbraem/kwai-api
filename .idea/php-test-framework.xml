@@ -5,7 +5,7 @@
       <tool tool_name="Pest">
         <settings>
           <configurations>
-            <local_configuration executable_path="$PROJECT_DIR$/src/vendor/pestphp/pest/bin/pest" />
+            <local_configuration configuration_file_path="$PROJECT_DIR$/src/tests/phpunit.xml" executable_path="$PROJECT_DIR$/src/vendor/pestphp/pest/bin/pest" use_configuration_file="true" />
           </configurations>
         </settings>
       </tool>
@@ -23,7 +23,8 @@
       <tool tool_name="Pest">
         <cache>
           <versions>
-            <info id="Local" version="" />
+            <info id="Local" version="Pest version cant be detected. Default PHP interpreter is not local" />
+            <info id="interpreter-8cb01efb-27f2-4a34-aab7-7253f82550cc" version="" />
           </versions>
         </cache>
       </tool>

@@ -114,4 +114,4 @@ Kwai uses [pest](https://pestphp.com/) to run tests:
     vagrant up
     vagrant ssh KWAI_API
     cd /vagrant/src
-    ./vendor/bin/pest
+    ./vendor/bin/pest -c ./tests/phpunit.xml
