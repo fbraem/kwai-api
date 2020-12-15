@@ -28,8 +28,8 @@ class TrainingCoachMapper
     {
         return new TrainingCoach(
             coach: new Entity(
-                (int) $data->get('id'),
-                CoachMapper::toDomain($data->get('coach'))
+                (int) $data->get('coach_id'),
+                CoachMapper::toDomain($data)
             ),
             head: $data->get('coach_type', 0) === 1,
             payed: $data->get('payed', '0') === '1',
