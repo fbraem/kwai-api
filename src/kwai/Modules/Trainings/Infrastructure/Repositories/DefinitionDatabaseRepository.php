@@ -62,7 +62,9 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
         /* @var Collection $definitions */
         $definitions = $query->execute($limit, $offset);
         return $definitions->mapWithKeys(
-            fn($item, $key) => [ $key => DefinitionMapper::toDomain($item) ]
+            fn($item, $key) => [
+                $key => new Entity((int) $key, DefinitionMapper::toDomain($item))
+            ]
         );
     }
 
@@ -72,14 +74,16 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     public function create(Definition $definition): Entity
     {
         $data = DefinitionMapper::toPersistence($definition);
+        $creator = $data->pull('creator');
+        $data->put('user_id', $creator->get('id'));
 
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::TRAINING_DEFINITIONS())
             ->columns(
-                ... array_keys($data)
+                ... $data->keys()
             )
             ->values(
-                ... array_values($data)
+                ... $data->values()
             )
         ;
 
@@ -100,9 +104,13 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
      */
     public function update(Entity $definition): void
     {
+        $data = DefinitionMapper::toPersistence($definition->domain());
+        $creator = $data->pull('creator');
+        $data->put('user_id', $creator->get('id'));
+
         $query = $this->db->createQueryFactory()
             ->update((string) Tables::TRAINING_DEFINITIONS())
-            ->set(DefinitionMapper::toPersistence($definition->domain()))
+            ->set($data->toArray())
             ->where(field('id')->eq($definition->id()))
         ;
 
