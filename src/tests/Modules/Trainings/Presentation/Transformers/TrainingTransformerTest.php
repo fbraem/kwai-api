@@ -25,23 +25,22 @@ it('can transform a training', function () {
     $now = Timestamp::createNow();
     $training = new Training(
         event: new Event(
-            $now,
-            $now,
-            null,
-            new Collection([
-                new Text(
-                    new Locale('nl'),
-                    new DocumentFormat('md'),
-                    'Test Training',
-                    'This is a test training',
-                    null,
-                    new Creator(
-                        1,
-                        new Name('Jigoro', 'Kano')
-                    )
+            startDate: $now,
+            endDate: $now
+        ),
+        text: new Collection([
+            new Text(
+                new Locale('nl'),
+                new DocumentFormat('md'),
+                'Test Training',
+                'This is a test training',
+                null,
+                new Creator(
+                    1,
+                    new Name('Jigoro', 'Kano')
                 )
-            ])
-        )
+            )
+        ])
     );
     $entity = new Entity(1, $training);
     $fractal = new Manager();
