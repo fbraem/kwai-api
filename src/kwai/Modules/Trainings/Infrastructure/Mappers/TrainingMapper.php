@@ -9,12 +9,6 @@ namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Creator;
-use Kwai\Core\Domain\ValueObjects\DocumentFormat;
-use Kwai\Core\Domain\ValueObjects\Event;
-use Kwai\Core\Domain\ValueObjects\Locale;
-use Kwai\Core\Domain\ValueObjects\Location;
-use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -34,11 +28,14 @@ class TrainingMapper
      */
     public static function toDomain(Collection $data): Training
     {
+        $definition = $data->get('definition');
+
         return new Training(
             event: EventMapper::toDomain($data),
             text: $data->get('contents')->map(fn ($text) => TextMapper::toDomain($text)),
-            definition: $data->has('definition')
-                ? new Entity((int) $data->get('definition')->get('id'), DefinitionMapper::toDomain($data)) : null,
+            definition: $definition
+                ? new Entity((int) $definition->get('id'),DefinitionMapper::toDomain($definition))
+                : null,
             teams: $data->get('teams')->map(fn ($team) => TeamMapper::toDomain($team)),
             coaches: $data->get('coaches')->map(fn ($coach) => TrainingCoachMapper::toDomain($coach)),
             remark: $data->get('remark'),
