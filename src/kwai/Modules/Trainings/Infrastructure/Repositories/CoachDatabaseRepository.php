@@ -12,7 +12,6 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachMapper;
 use Kwai\Modules\Trainings\Repositories\CoachQuery;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
@@ -58,7 +57,10 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
         $coaches = $query->execute($limit, $offset);
         return $coaches->mapWithKeys(
             fn($item) => [
-                $item['id'] => CoachMapper::toDomain($item)
+                $item['id'] => new Entity(
+                    (int) $item['id'],
+                    CoachMapper::toDomain($item)
+                )
             ]
         );
     }
