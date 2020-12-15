@@ -32,4 +32,18 @@ class CreatorMapper
             )
         );
     }
+
+    /**
+     * Maps a Creator value object to a Collection.
+     *
+     * @param Creator $creator
+     * @return Collection
+     */
+    public static function toPersistence(Creator $creator): Collection {
+        return collect([
+            'id' => $creator->getId(),
+            'first_name' => $creator->getName()->getFirstName(),
+            'last_name' => $creator->getName()->getLastName(),
+        ]);
+    }
 }
