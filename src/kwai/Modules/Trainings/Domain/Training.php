@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Event;
+use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
@@ -26,16 +27,18 @@ class Training implements DomainEntity
     /**
      * Training constructor.
      *
-     * @param Event              $event
-     * @param string|null        $remark
-     * @param Entity<Definition>|null        $definition
-     * @param TraceableTime|null $traceableTime
-     * @param Collection|null    $coaches
-     * @param Collection|null    $teams
-     * @param Collection|null    $presences
+     * @param Event                   $event
+     * @param Collection|null         $text
+     * @param string|null             $remark
+     * @param Entity<Definition>|null $definition
+     * @param TraceableTime|null      $traceableTime
+     * @param Collection|null         $coaches
+     * @param Collection|null         $teams
+     * @param Collection|null         $presences
      */
     public function __construct(
         private Event $event,
+        private ?Collection $text = null,
         private ?string $remark = null,
         private ?Entity $definition = null,
         private ?TraceableTime $traceableTime = null,
@@ -43,6 +46,7 @@ class Training implements DomainEntity
         private ?Collection $teams = null,
         private ?Collection $presences = null
     ) {
+        $this->text = $text ?? new Collection();
         $this->traceableTime = $traceableTime ?? new TraceableTime();
         $this->coaches = $coaches ?? new Collection();
         $this->teams = $teams ?? new Collection();
@@ -192,5 +196,25 @@ class Training implements DomainEntity
     public function hasDefinition(): bool
     {
         return $this->definition !== null;
+    }
+
+    /**
+     * Returns a copy of the associated text.
+     *
+     * @return Collection|null
+     */
+    public function getText(): ?Collection
+    {
+        return $this->text->collect();
+    }
+
+    /**
+     * Add text
+     *
+     * @param Text $text
+     */
+    public function addText(Text $text)
+    {
+        $this->text->put($text->getLocale(), $text);
     }
 }

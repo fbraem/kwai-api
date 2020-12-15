@@ -73,10 +73,10 @@ class CreateTraining
                 startDate: Timestamp::createFromString($command->start_date),
                 endDate: Timestamp::createFromString($command->end_date),
                 location: new Location($command->location),
-                text: $contents,
                 active: $command->active,
                 cancelled: $command->cancelled
             ),
+            text: $contents,
             traceableTime: new TraceableTime(),
             definition: $definition,
             coaches: $coaches,
