@@ -150,18 +150,17 @@ it('can create a training', function() use ($context) {
             startDate: Timestamp::createFromString('2020-12-13 20:00:00'),
             endDate: Timestamp::createFromString('2020-12-13 21:00:00'),
             location: new Location('Sports hall of the club'),
-            text: new Collection([
-                new Text(
-                    locale: new Locale('en'),
-                    format: new DocumentFormat('md'),
-                    title: 'Training for competitors',
-                    summary: 'This is a training for competitive members only',
-                    content: null,
-                    author: new Creator(1, new Name('Jigoro', 'Kano'))
-                )
-            ]),
-            remark: 'This training is created from a unit test'
         ),
+        text: new Collection([
+            new Text(
+                locale: new Locale('en'),
+                format: new DocumentFormat('md'),
+                title: 'Training for competitors',
+                summary: 'This is a training for competitive members only',
+                content: null,
+                author: new Creator(1, new Name('Jigoro', 'Kano'))
+            )
+        ]),
         remark: 'This training is created from a unit test',
     );
     $context->db->begin();
