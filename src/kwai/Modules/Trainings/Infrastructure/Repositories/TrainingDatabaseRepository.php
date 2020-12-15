@@ -68,7 +68,9 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         /* @var Collection $trainings */
         $trainings = $query->execute($limit, $offset);
         return $trainings->mapWithKeys(
-            fn($item, $key) => [ $key => TrainingMapper::toDomain($item) ]
+            fn($item, $key) => [
+                $key => new Entity((int) $key, TrainingMapper::toDomain($item))
+            ]
         );
     }
 
