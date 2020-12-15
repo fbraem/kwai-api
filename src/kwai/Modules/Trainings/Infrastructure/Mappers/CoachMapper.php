@@ -21,17 +21,14 @@ class CoachMapper
      * Maps a table record to the Coach domain entity.
      *
      * @param Collection $data
-     * @return Entity<Coach>
+     * @return Coach
      */
-    public static function toDomain(Collection $data): Entity
+    public static function toDomain(Collection $data): Coach
     {
-        return new Entity(
-            (int) $data->get('id'),
-            new Coach(
-                name: new Name(
-                    $data->get('firstname'),
-                    $data->get('lastname')
-                )
+        return new Coach(
+            name: new Name(
+                $data->get('firstname'),
+                $data->get('lastname')
             )
         );
     }
