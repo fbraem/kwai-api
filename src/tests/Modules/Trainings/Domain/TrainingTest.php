@@ -28,7 +28,6 @@ it('can construct a training', function () use ($creator) {
             Timestamp::createNow(),
             Timestamp::createNow(),
             new Location('Tokyo'),
-            new Collection()
         ),
         remark: 'Test Training'
     );
@@ -46,7 +45,6 @@ it('can appoint/release a coach to a training', function () use ($creator) {
             Timestamp::createNow(),
             Timestamp::createNow(),
             new Location('Tokyo'),
-            new Collection()
         )
     );
     $coach = new Entity(
@@ -83,7 +81,6 @@ it('can manage a presence', function () use ($creator) {
             Timestamp::createNow(),
             Timestamp::createNow(),
             new Location('Tokyo'),
-            new Collection()
         ),
     );
     $member = new Entity(
