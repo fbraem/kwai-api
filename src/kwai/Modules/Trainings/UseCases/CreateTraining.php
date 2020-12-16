@@ -33,12 +33,43 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  */
 class CreateTraining
 {
+    /**
+     * CreateTraining constructor.
+     *
+     * @param TrainingRepository   $trainingRepo
+     * @param DefinitionRepository $definitionRepository
+     * @param TeamRepository       $teamRepository
+     * @param CoachRepository      $coachRepository
+     */
     public function __construct(
         private TrainingRepository $trainingRepo,
         private DefinitionRepository $definitionRepository,
         private TeamRepository $teamRepository,
         private CoachRepository $coachRepository
     ) {
+    }
+
+    /**
+     * Factory method
+     *
+     * @param TrainingRepository   $trainingRepo
+     * @param DefinitionRepository $definitionRepository
+     * @param TeamRepository       $teamRepository
+     * @param CoachRepository      $coachRepository
+     * @return CreateTraining
+     */
+    public static function create(
+        TrainingRepository $trainingRepo,
+        DefinitionRepository $definitionRepository,
+        TeamRepository $teamRepository,
+        CoachRepository $coachRepository
+    ) {
+        return new self(
+            $trainingRepo,
+            $definitionRepository,
+            $teamRepository,
+            $coachRepository
+        );
     }
 
     /**
@@ -51,10 +82,20 @@ class CreateTraining
      */
     public function __invoke(CreateTrainingCommand $command, Creator $creator): Entity
     {
-        $definition = isset($command->definition_id) ?
-            $this->definitionRepository->getById($command->definition_id) : null;
-        $teams = $this->teamRepository->getById(...$command->teams);
-        $coaches = $this->coachRepository->getById(... $command->coaches);
+        $definition = isset($command->definition_id)
+            ? $this->definitionRepository->getById($command->definition_id)
+            : null
+        ;
+
+        $teams = count($command->teams) > 0
+            ? $this->teamRepository->getById(...$command->teams)
+            : new Collection()
+        ;
+
+        $coaches = count($command->coaches) > 0
+            ? $this->coachRepository->getById(... $command->coaches)
+            : new Collection()
+        ;
 
         $contents = new Collection();
         foreach($command->contents as $text) {
@@ -63,7 +104,7 @@ class CreateTraining
                 new DocumentFormat($text->format),
                 $text->title,
                 $text->summary,
-                $text->content,
+                $text->content ?? null,
                 $creator
             ));
         }
