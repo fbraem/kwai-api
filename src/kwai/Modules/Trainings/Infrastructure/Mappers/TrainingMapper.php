@@ -57,9 +57,8 @@ class TrainingMapper
      */
     public static function toPersistence(Training $training): Collection
     {
-        return collect([
+        $data = collect([
             'definition_id' => $training->getDefinition()?->id(),
-            ... EventMapper::toPersistence($training->getEvent()),
             'created_at' => (string) $training->getTraceableTime()->getCreatedAt(),
             'updated_at' => $training->getTraceableTime()->getUpdatedAt()?->__toString(),
             'remark' => $training->getRemark(),
@@ -71,9 +70,12 @@ class TrainingMapper
             ),
             'teams' =>  $training->getTeams()->map(fn (Entity $team) =>
                 collect([
-                    'team_id' => $team->id()
+                'team_id' => $team->id()
                 ])
             )
         ]);
+        return $data->merge(
+            EventMapper::toPersistence($training->getEvent())
+        );
     }
 }
