@@ -19,6 +19,7 @@ class TrainingEventsMigration extends AbstractMigration
             ->addColumn('active', 'boolean', ['default' => true])
             ->addColumn('cancelled', 'boolean', ['default' => false])
             ->addColumn('location', 'string', ['null' => true])
+            ->addColumn('remark', 'text', ['null' => true])
             ->update()
         ;
         $this->table('training_contents', ['id' => false, 'primary_key' => ['training_id', 'locale']])
@@ -132,6 +133,7 @@ class TrainingEventsMigration extends AbstractMigration
             ->removeColumn('active')
             ->removeColumn('cancelled')
             ->removeColumn('location')
+            ->removeColumn('remark')
             ->addColumn('event_id', 'integer', ['null' => true])
             ->update()
         ;
