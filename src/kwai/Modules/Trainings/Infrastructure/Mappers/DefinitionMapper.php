@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -31,7 +32,12 @@ class DefinitionMapper
         return new Definition(
             name: $data->get('name'),
             description: $data->get('description'),
-            season: $data->has('season') ? SeasonMapper::toDomain($data->get('season')) : null,
+            season: $data->has('season')
+                ? new Entity((int) $data->get('season')->get('id'), SeasonMapper::toDomain($data->get('season')))
+                : null,
+            team: $data->has('team')
+                ? new Entity((int) $data->get('team')->get('id'), TeamMapper::toDomain($data->get('team')))
+                : null,
             weekday: new Weekday((int) $data->get('weekday')),
             period: new TimePeriod(
                 start: Time::createFromString($data->get('start_time'), $data->get('time_zone')),
