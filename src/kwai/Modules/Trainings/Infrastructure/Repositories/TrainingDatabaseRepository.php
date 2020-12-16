@@ -9,13 +9,11 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException as TrainingNotFoundExceptionAlias;
+use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
-use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
@@ -46,7 +44,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
             return $entities[$id];
         }
 
-        throw new TrainingNotFoundExceptionAlias($id);
+        throw new TrainingNotFoundException($id);
     }
 
     /**
@@ -79,19 +77,17 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
      */
     public function create(Training $training): Entity
     {
-        /* @var Collection $trainingData */
-        /* @var Collection $contentData */
-        /* @var Collection $coachesData */
-        /* @var Collection $teamsData */
+        $data = TrainingMapper::toPersistence($training);
 
-        [ $trainingData, $contentData, $coachesData, $teamsData]
-            = TrainingMapper::toPersistence($training);
+        $contents = $data->pull('contents', new Collection());
+        $coaches = $data->pull('coaches', new Collection());
+        $teams = $data->pull('teams', new Collection());
 
         // Insert training
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::TRAININGS())
-            ->columns(...$trainingData->keys())
-            ->values(... $trainingData->values())
+            ->columns(...$data->keys())
+            ->values(... $data->values())
         ;
 
         try {
@@ -102,15 +98,15 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         $trainingId = $this->db->lastInsertId();
 
-        // Insert all event contents
-        $contentData->map(
+        // Insert all contents
+        $contents->map(
             fn ($item) => $item->put('training_id', $trainingId)
         );
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::TRAINING_CONTENTS())
-            ->columns(...$contentData->first()->keys())
+            ->columns(...$contents->first()->keys())
         ;
-        $contentData->each(
+        $contents->each(
             fn(Collection $text) => $query->values(...$text->values())
         );
 
@@ -121,15 +117,15 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         }
 
         // Insert all coaches
-        if ($coachesData->count() > 0) {
-            $coachesData->map(
+        if ($coaches->count() > 0) {
+            $coaches->map(
                 fn ($item) => $item->put('training_id', $trainingId)
             );
             $query = $this->db->createQueryFactory()
                 ->insert((string) Tables::TRAINING_COACHES())
-                ->columns(...$coachesData->first()->keys())
+                ->columns(...$coaches->first()->keys())
             ;
-            $coachesData->each(
+            $coaches->each(
                 fn(Collection $trainingCoach) => $query->values(...$trainingCoach->values())
             );
             try {
@@ -141,15 +137,15 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
 
         // Insert all teams
-        if ($teamsData->count() > 0) {
-            $teamsData->map(
+        if ($teams->count() > 0) {
+            $teams->map(
                 fn ($item) => $item->put('training_id', $trainingId)
             );
             $query = $this->db->createQueryFactory()
                 ->insert((string) Tables::TRAINING_TEAMS())
-                ->columns(...$teamsData->first()->keys())
+                ->columns(...$teams->first()->keys())
             ;
-            $teamsData->each(
+            $teams->each(
                 fn(Collection $team) => $query->values(...$team->values())
             );
             try {
