@@ -9,6 +9,7 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
@@ -51,6 +52,11 @@ class TeamDatabaseRepository extends DatabaseRepository implements TeamRepositor
         return $this->createTeamCollection($rows);
     }
 
+    /**
+     * Create the base query.
+     *
+     * @return SelectQuery
+     */
     private function createBaseQuery(): SelectQuery
     {
         return $this->db->createQueryFactory()
@@ -63,12 +69,16 @@ class TeamDatabaseRepository extends DatabaseRepository implements TeamRepositor
         ;
     }
 
-    private function createTeamCollection(LazyCollection $rows)
+    /**
+     * Create a collection with Team entities
+     *
+     * @param LazyCollection $rows
+     * @return Collection
+     */
+    private function createTeamCollection(LazyCollection $rows): Collection
     {
-        $teams = new Collection();
-        foreach($rows as $row) {
-            $teams->put($row['id'], TeamMapper::toDomain($row));
-        }
-        return $teams;
+        return $rows->mapWithKeys(fn ($data) => [
+            (int) $data->get('id') => new Entity((int) $data->get('id'), TeamMapper::toDomain($data))
+        ])->collect();
     }
 }
