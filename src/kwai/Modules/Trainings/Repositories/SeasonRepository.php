@@ -19,14 +19,13 @@ use Kwai\Modules\Trainings\Domain\Season;
 interface SeasonRepository
 {
     /**
-     * Get the season with the given id.
+     * Get the season with the given id(s).
      *
-     * @param int $id
-     * @return Entity<Season>
+     * @param int ...$id
+     * @return Collection
      * @throws QueryException
-     * @throws SeasonNotFoundException
      */
-    public function getById(int $id): Entity;
+    public function getById(int ...$id): Collection;
 
     /**
      * Get all seasons
