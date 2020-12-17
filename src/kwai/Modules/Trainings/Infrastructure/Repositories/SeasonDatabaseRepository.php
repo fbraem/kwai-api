@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\SeasonMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\SeasonRepository;
@@ -25,7 +24,7 @@ class SeasonDatabaseRepository extends DatabaseRepository implements SeasonRepos
     /**
      * @inheritDoc
      */
-    public function getById(int $id): Entity
+    public function getById(int ...$ids): Collection
     {
         $query = $this->db->createQueryFactory()
             ->select()
@@ -34,17 +33,14 @@ class SeasonDatabaseRepository extends DatabaseRepository implements SeasonRepos
                 'id',
                 'name'
             )
-            ->where(field('id')->eq($id))
+            ->where(field('id')->in(...$ids))
         ;
 
         $this->db->asArray();
-        $row = LazyCollection::make($this->db->walk($query));
+        $rows = LazyCollection::make($this->db->walk($query));
         $this->db->asObject();
-        if ($row->count() > 0) {
-            return SeasonMapper::toDomain($row->first());
-        }
 
-        throw new SeasonNotFoundException($id);
+        return $this->createSeasonCollection($rows);
     }
 
     /**
@@ -65,11 +61,19 @@ class SeasonDatabaseRepository extends DatabaseRepository implements SeasonRepos
         $rows = LazyCollection::make($this->db->walk($query));
         $this->db->asObject();
 
-        $teams = new Collection();
-        foreach($rows as $row) {
-            $teams->put($row['id'], SeasonMapper::toDomain($row));
-        }
+        return $this->createSeasonCollection($rows);
+    }
 
-        return $teams;
+    /**
+     * Create a collection with Season entities
+     *
+     * @param LazyCollection $rows
+     * @return Collection
+     */
+    private function createSeasonCollection(LazyCollection $rows): Collection
+    {
+        return $rows->mapWithKeys(fn ($data) => [
+            (int) $data->get('id') => new Entity((int) $data->get('id'), SeasonMapper::toDomain($data))
+        ])->collect();
     }
 }
