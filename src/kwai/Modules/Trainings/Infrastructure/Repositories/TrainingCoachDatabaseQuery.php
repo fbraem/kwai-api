@@ -106,7 +106,10 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
             if (!$trainings->has($trainingCoach['training_id'])) {
                 $trainings->put($trainingCoach['training_id'], new Collection());
             }
-            $trainings[$trainingCoach['training_id']]->push($trainingCoach);
+            $trainings[$trainingCoach['training_id']]->put(
+                $trainingCoach->get('id'),
+                $trainingCoach
+            );
         }
         return $trainings;
     }
