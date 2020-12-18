@@ -18,6 +18,8 @@ class CreateTrainingCommand
 
     public string $end_date;
 
+    public string $timezone;
+    
     public bool $active = true;
 
     public bool $cancelled = false;
