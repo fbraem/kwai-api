@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Coach;
-use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Tests\Context;
 
@@ -21,6 +21,10 @@ it('can get a coach', function () use ($context) {
             ->toBeInstanceOf(Collection::class)
             ->and($coaches->first())
             ->toBeInstanceOf(Entity::class)
+            ->and($coaches->first()->getName())
+            ->toBeInstanceOf(Name::class)
+            ->and($coaches->first()->getName()->getFirstName())
+            ->toBeString()
         ;
     } catch (RepositoryException $e) {
         $this->assertTrue(false, (string) $e);
