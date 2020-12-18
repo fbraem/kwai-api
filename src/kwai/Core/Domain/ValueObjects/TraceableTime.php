@@ -70,4 +70,20 @@ final class TraceableTime
         $this->updated_at = Timestamp::createNow();
         return $this;
     }
+
+    /**
+     * Create a copy from the given traceable time, and sets the updated_at
+     * value to the current timestamp. When from is null, a new instance
+     * will be returned.
+     *
+     * @param TraceableTime|null $from
+     * @return TraceableTime
+     */
+    public static function createFrom(?TraceableTime $from = null): self
+    {
+        if ($from) {
+            return new self($from->getCreatedAt(), Timestamp::createNow());
+        }
+        return new self();
+    }
 }
