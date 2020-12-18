@@ -99,8 +99,10 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
                 $person
             ] = $rowCollection->filter($filters);
 
-            $coach->merge($person);
-            $coaches->put($coach->get('id'), $coach);
+            $coaches->put(
+                $coach->get('id'),
+                $coach->merge($person)
+            );
         }
 
         return $coaches;
