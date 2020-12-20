@@ -5,19 +5,27 @@
  */
 declare(strict_types=1);
 
+
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Text;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamMapper;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TextMapper;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingCoachMapper;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
 use Kwai\Modules\Trainings\Repositories\TrainingRepository;
+use function Latitude\QueryBuilder\field;
 
 /**
  * Class TrainingDatabaseRepository
@@ -96,50 +104,22 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $trainingId = $this->db->lastInsertId();
-
+        $entity = new Entity(
+            $this->db->lastInsertId(),
+            $training
+        );
         // Insert all contents
-        $contents->map(
-            fn ($item) => $item->put('training_id', $trainingId)
-        );
-        $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::TRAINING_CONTENTS())
-            ->columns(...$contents->first()->keys())
-        ;
-        $contents->each(
-            fn(Collection $text) => $query->values(...$text->values())
-        );
-
-        try {
-            $this->db->execute($query);
-        } catch(QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
+        $this->insertContents($entity);
 
         // Insert all coaches
         if ($coaches->count() > 0) {
-            $coaches->map(
-                fn ($item) => $item->put('training_id', $trainingId)
-            );
-            $query = $this->db->createQueryFactory()
-                ->insert((string) Tables::TRAINING_COACHES())
-                ->columns(...$coaches->first()->keys())
-            ;
-            $coaches->each(
-                fn(Collection $trainingCoach) => $query->values(...$trainingCoach->values())
-            );
-            try {
-                $this->db->execute($query);
-            } catch(QueryException $e) {
-                throw new RepositoryException(__METHOD__, $e);
-            }
+            $this->insertCoaches($entity);
         }
-
 
         // Insert all teams
         if ($teams->count() > 0) {
             $teams->map(
-                fn ($item) => $item->put('training_id', $trainingId)
+                fn ($item) => $item->put('training_id', $entity->id())
             );
             $query = $this->db->createQueryFactory()
                 ->insert((string) Tables::TRAINING_TEAMS())
@@ -154,6 +134,200 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
                 throw new RepositoryException(__METHOD__, $e);
             }
         }
-        return new Entity($trainingId, $training);
+        return $entity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update(Entity $training): void
+    {
+        $data = TrainingMapper::toPersistence($training->domain());
+        // Forget the many-to-many relations
+        $data->forget(['contents', 'coaches', 'teams']);
+
+        $queryFactory = $this->db->createQueryFactory();
+
+        try {
+            $this->db->begin();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        // Update training
+        try {
+            $this->db->execute(
+                $queryFactory
+                    ->update((string) Tables::TRAININGS())
+                    ->set($data->toArray())
+                    ->where(field('id')->eq($training->id()))
+            );
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        // Update contents
+        // First delete all contents
+        try {
+            $this->db->execute(
+                $queryFactory
+                    ->delete((string) Tables::TRAINING_CONTENTS())
+                    ->where(
+                        field('training_id')->eq($training->id())
+                    )
+            );
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        // Next insert contents
+        $this->insertContents($training);
+
+        try {
+            $this->db->commit();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        // Update coaches
+        // First delete all coaches
+        try {
+            $this->db->execute(
+                $queryFactory
+                    ->delete((string) Tables::TRAINING_COACHES())
+                    ->where(
+                        field('training_id')->eq($training->id())
+                    )
+            );
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        // Next insert coaches
+        $this->insertCoaches($training);
+
+        // Update teams
+        // First delete all teams
+        try {
+            $this->db->execute(
+                $queryFactory
+                    ->delete((string) Tables::TRAINING_TEAMS())
+                    ->where(
+                        field('training_id')->eq($training->id())
+                    )
+            );
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        $this->insertTeams($training);
+    }
+
+    /**
+     * Insert contents of the training
+     *
+     * @param Entity $training
+     * @throws RepositoryException
+     */
+    private function insertContents(Entity $training)
+    {
+        /* @var Collection $contents */
+        $contents = $training->getText();
+        if ($contents->count() == 0) {
+            return;
+        }
+
+        $contents
+            ->transform(
+                fn(Text $text) => TextMapper::toPersistence($text)
+            )
+            ->map(
+                fn (Collection $item) => $item->put('training_id', $training->id())
+            )
+        ;
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::TRAINING_CONTENTS())
+            ->columns(...$contents->first()->keys())
+        ;
+        $contents->each(
+            fn(Collection $text) => $query->values(...$text->values())
+        );
+        try {
+            $this->db->execute($query);
+        } catch(QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+    }
+
+    /**
+     * Insert coaches of the training
+     *
+     * @param Entity $training
+     * @throws RepositoryException
+     */
+    private function insertCoaches(Entity $training)
+    {
+        /* @var Collection $coaches */
+        $coaches = $training->getCoaches();
+        if ($coaches->count() == 0) {
+            return;
+        }
+
+        $coaches
+            ->transform(
+            fn(TrainingCoach $coach) => TrainingCoachMapper::toPersistence($coach)
+            )
+            ->map(
+            fn (Collection $item) => $item->put('training_id', $training->id())
+            )
+        ;
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::TRAINING_COACHES())
+            ->columns(...$coaches->first()->keys())
+        ;
+        $coaches->each(
+            fn(Collection $coach) => $query->values(...$coach->values())
+        );
+        try {
+            $this->db->execute($query);
+        } catch(QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+    }
+
+    /**
+     * Insert teams
+     *
+     * @param Entity $training
+     * @throws RepositoryException
+     */
+    private function insertTeams(Entity $training)
+    {
+        /* @var Collection $teams */
+        $teams = $training->getTeams();
+        if ($teams->count() == 0) {
+            return;
+        }
+
+        $teams
+            ->transform(
+                fn(Entity $team) => collect(['team_id' => $team->id()])
+            )
+            ->map(
+                fn (Collection $item) => $item->put('training_id', $training->id())
+            )
+        ;
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::TRAINING_TEAMS())
+            ->columns(...$teams->first()->keys())
+        ;
+        $teams->each(
+            fn(Collection $team) => $query->values(...$team->values())
+        );
+        try {
+            $this->db->execute($query);
+        } catch(QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 }

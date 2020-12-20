@@ -56,4 +56,12 @@ interface TrainingRepository
      * @throws RepositoryException
      */
     public function create(Training $training): Entity;
+
+    /**
+     * Updates a training
+     *
+     * @param Entity $training
+     * @throws RepositoryException
+     */
+    public function update(Entity $training): void;
 }
