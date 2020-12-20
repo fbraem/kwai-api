@@ -121,8 +121,6 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     public function update(Entity $training): void
     {
         $data = TrainingMapper::toPersistence($training->domain());
-        // Forget the many-to-many relations
-        $data->forget(['contents', 'coaches', 'teams']);
 
         $queryFactory = $this->db->createQueryFactory();
 
