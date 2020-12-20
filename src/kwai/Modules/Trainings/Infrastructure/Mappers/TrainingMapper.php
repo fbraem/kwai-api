@@ -9,11 +9,9 @@ namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Trainings\Domain\Training;
-use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
 /**
  * Class TrainingMapper
@@ -62,17 +60,6 @@ class TrainingMapper
             'created_at' => (string) $training->getTraceableTime()->getCreatedAt(),
             'updated_at' => $training->getTraceableTime()->getUpdatedAt()?->__toString(),
             'remark' => $training->getRemark(),
-            'coaches' => $training->getCoaches()->map(
-                fn (TrainingCoach $coach) => TrainingCoachMapper::toPersistence($coach)
-            ),
-            'contents' => $training->getText()->map(
-                fn (Text $text) => TextMapper::toPersistence($text)
-            ),
-            'teams' =>  $training->getTeams()->map(fn (Entity $team) =>
-                collect([
-                'team_id' => $team->id()
-                ])
-            )
         ]);
         return $data->merge(
             EventMapper::toPersistence($training->getEvent())
