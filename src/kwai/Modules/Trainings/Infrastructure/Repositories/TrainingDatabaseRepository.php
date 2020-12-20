@@ -18,7 +18,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamMapper;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TextMapper;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingCoachMapper;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
@@ -87,10 +86,6 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     {
         $data = TrainingMapper::toPersistence($training);
 
-        $contents = $data->pull('contents', new Collection());
-        $coaches = $data->pull('coaches', new Collection());
-        $teams = $data->pull('teams', new Collection());
-
         // Insert training
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::TRAININGS())
@@ -112,28 +107,11 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         $this->insertContents($entity);
 
         // Insert all coaches
-        if ($coaches->count() > 0) {
-            $this->insertCoaches($entity);
-        }
+        $this->insertCoaches($entity);
 
         // Insert all teams
-        if ($teams->count() > 0) {
-            $teams->map(
-                fn ($item) => $item->put('training_id', $entity->id())
-            );
-            $query = $this->db->createQueryFactory()
-                ->insert((string) Tables::TRAINING_TEAMS())
-                ->columns(...$teams->first()->keys())
-            ;
-            $teams->each(
-                fn(Collection $team) => $query->values(...$team->values())
-            );
-            try {
-                $this->db->execute($query);
-            } catch(QueryException $e) {
-                throw new RepositoryException(__METHOD__, $e);
-            }
-        }
+        $this->insertTeams($entity);
+
         return $entity;
     }
 
