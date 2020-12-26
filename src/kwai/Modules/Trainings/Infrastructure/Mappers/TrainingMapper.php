@@ -34,7 +34,9 @@ class TrainingMapper
             definition: $definition
                 ? new Entity((int) $definition->get('id'),DefinitionMapper::toDomain($definition))
                 : null,
-            teams: $data->get('teams')->map(fn ($team) => TeamMapper::toDomain($team)),
+            teams: $data->get('teams')->map(
+                fn ($team) => new Entity((int) $team->get('id'), TeamMapper::toDomain($team))
+            ),
             coaches: $data->get('coaches')->map(fn ($coach) => TrainingCoachMapper::toDomain($coach)),
             remark: $data->get('remark'),
             presences: new Collection(),
