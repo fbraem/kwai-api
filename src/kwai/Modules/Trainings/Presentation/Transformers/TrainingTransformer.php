@@ -144,6 +144,7 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         $result = [
             'id' => strval($training->id()),
             'created_at' => strval($traceableTime->getCreatedAt()),
+            'remark' => $training->getRemark(),
             'event' => [
                 'start_date' => strval($event->getStartDate()),
                 'end_date' => strval($event->getEndDate()),
@@ -151,22 +152,20 @@ class TrainingTransformer extends Fractal\TransformerAbstract
                 'location' => $event->getLocation(),
                 'cancelled' => $event->isCancelled(),
                 'active' => $event->isActive(),
-                'remark' => $event->getRemark(),
-                'contents' => $event->getText()->map(function (Text $text) {
-                    $converter = $this
-                        ->converterFactory
-                        ->createConverter((string) $text->getFormat())
-                    ;
-                    return [
-                        'locale' => $text->getLocale(),
-                        'title' => $text->getTitle(),
-                        'summary' => $text->getSummary(),
-                        'content' => $text->getContent(),
-                        'html_summary' => $converter->convert($text->getSummary()),
-                        'html_content' => $converter->convert($text->getContent() ?? ''),
-                    ];
-                })->toArray()
-            ]
+            ],
+            'contents' => $training->getText()->map(function (Text $text) {
+                $converter = $this->converterFactory
+                    ->createConverter((string) $text->getFormat())
+                ;
+                return [
+                    'locale' => $text->getLocale(),
+                    'title' => $text->getTitle(),
+                    'summary' => $text->getSummary(),
+                    'content' => $text->getContent(),
+                    'html_summary' => $converter->convert($text->getSummary()),
+                    'html_content' => $converter->convert($text->getContent() ?? ''),
+                ];
+            })->toArray()
         ];
         $result['updated_at'] = $traceableTime->isUpdated()
             ? strval($traceableTime->getUpdatedAt())
