@@ -1,8 +1,14 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Applications\Trainings\TrainingsApplication;
+
 require '../src/vendor/autoload.php';
 
+$app = new TrainingsApplication();
+$app->run();
+
+/*
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use REST\Trainings\Actions\CoachBrowseAction;
 use REST\Trainings\Actions\CoachCreateAction;
@@ -92,3 +98,4 @@ $app->group('/trainings', function (RouteCollectorProxy $group) {
 });
 
 $app->run();
+*/
