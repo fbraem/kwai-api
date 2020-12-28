@@ -144,6 +144,15 @@
       <path value="$PROJECT_DIR$/src/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/src/vendor/brick/math" />
       <path value="$PROJECT_DIR$/src/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/src/vendor/relay/relay" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/src/vendor/nyholm/psr7" />
+      <path value="$PROJECT_DIR$/src/vendor/nyholm/psr7-server" />
+      <path value="$PROJECT_DIR$/src/vendor/laminas/laminas-zendframework-bridge" />
+      <path value="$PROJECT_DIR$/src/vendor/laminas/laminas-httphandlerrunner" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/psr-http-message-bridge" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/http-foundation" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

@@ -139,6 +139,15 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/ramsey/collection" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/relay/relay" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/php-http/message-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/nyholm/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/nyholm/psr7-server" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/laminas/laminas-zendframework-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/laminas/laminas-httphandlerrunner" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/routing" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/psr-http-message-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/http-foundation" />
       <excludePattern pattern="phpstan.phar" />
     </content>
     <orderEntry type="inheritedJdk" />
