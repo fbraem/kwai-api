@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
