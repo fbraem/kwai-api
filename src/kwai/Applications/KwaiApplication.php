@@ -80,7 +80,7 @@ abstract class KwaiApplication
         $this->addDependency('logger', new LoggerDependency());
     }
 
-    public function addMiddlewares(): void
+    public function addMiddlewares(ContainerInterface $container): void
     {
     }
 
@@ -115,7 +115,7 @@ abstract class KwaiApplication
             $this->addMiddleware(new JsonBodyParserMiddleware());
             $this->addMiddleware(new TokenMiddleware($this->container));
 
-            $this->addMiddlewares();
+            $this->addMiddlewares($this->container);
 
             $this->addMiddleware(new RequestHandlerMiddleware(
                 $this->container,
