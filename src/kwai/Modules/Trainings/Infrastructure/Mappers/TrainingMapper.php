@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
+use Kwai\Core\Infrastructure\Mappers\TextMapper;
 use Kwai\Modules\Trainings\Domain\Training;
 
 /**

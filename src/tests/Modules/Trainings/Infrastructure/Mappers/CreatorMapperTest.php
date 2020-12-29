@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\CreatorMapper;
+use Kwai\Core\Infrastructure\Mappers\CreatorMapper;
 
 it('can map a record to a Creator', function () {
    $record = collect([

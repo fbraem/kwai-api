@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
+namespace Kwai\Core\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Creator;

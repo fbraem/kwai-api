@@ -18,7 +18,7 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TextMapper;
+use Kwai\Core\Infrastructure\Mappers\TextMapper;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingCoachMapper;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
 use Kwai\Modules\Trainings\Infrastructure\Tables;

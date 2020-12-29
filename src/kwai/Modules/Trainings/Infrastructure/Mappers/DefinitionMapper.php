@@ -14,6 +14,7 @@ use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Weekday;
+use Kwai\Core\Infrastructure\Mappers\CreatorMapper;
 use Kwai\Modules\Trainings\Domain\Definition;
 
 /**
