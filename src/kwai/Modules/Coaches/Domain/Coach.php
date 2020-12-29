@@ -28,6 +28,9 @@ class Coach implements DomainEntity
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null
     ) {
+        if ($this->traceableTime === null) {
+            $this->traceableTime = new TraceableTime();
+        }
     }
 
     /**
@@ -73,9 +76,9 @@ class Coach implements DomainEntity
     /**
      * Get a remark
      *
-     * @return string
+     * @return string|null
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }
