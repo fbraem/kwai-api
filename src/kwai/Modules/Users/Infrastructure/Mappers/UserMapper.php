@@ -41,7 +41,8 @@ final class UserMapper
                         : null
                 ),
                 'remark' => $raw->remark,
-                'username' => new Name($raw->first_name, $raw->last_name)
+                'username' => new Name($raw->first_name, $raw->last_name),
+                'member' => $raw->member_id
             ])
         );
     }
@@ -67,6 +68,7 @@ final class UserMapper
             'first_name' => $user->getUsername()->getFirstName(),
             'last_name' => $user->getUsername()->getLastName(),
             'remark' => $user->getRemark(),
+            'member_id' => $user->getMember(),
             'created_at' => strval($user->getTraceableTime()->getCreatedAt()),
             'updated_at' => $updated_at ? strval($updated_at) : null
         ];

@@ -261,6 +261,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
                 $aliasFn('first_name'),
                 $aliasFn('last_name'),
                 $aliasFn('remark'),
+                $aliasFn('member_id'),
                 $aliasFn('uuid'),
                 $aliasFn('created_at'),
                 $aliasFn('updated_at')

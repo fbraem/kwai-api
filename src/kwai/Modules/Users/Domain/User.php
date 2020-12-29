@@ -51,6 +51,13 @@ class User implements DomainEntity
     private array $abilities;
 
     /**
+     * A member associated with this user.
+     *
+     * @var int|null
+     */
+    private ?int $member;
+
+    /**
      * Constructor.
      * @param  object $props User properties
      */
@@ -62,6 +69,7 @@ class User implements DomainEntity
         $this->remark = $props->remark ?? null;
         $this->username = $props->username;
         $this->abilities = $props->abilities ?? [];
+        $this->member = $props->member_id ?? null;
     }
 
     /**
@@ -147,5 +155,15 @@ class User implements DomainEntity
     public function removeAbility(Entity $ability)
     {
         unset($this->abilities[$ability->id()]);
+    }
+
+    /**
+     * Get the id of the associated member (if any)
+     *
+     * @return int|null
+     */
+    public function getMember(): ?int
+    {
+        return $this->member;
     }
 }
