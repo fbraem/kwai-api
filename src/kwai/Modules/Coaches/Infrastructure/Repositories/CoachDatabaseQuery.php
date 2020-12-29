@@ -23,12 +23,13 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     /**
      * @inheritDoc
      */
-    public function filterActive(bool $active): void
+    public function filterActive(bool $active): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::COACHES()->active)->eq($active)
         );
+        return $this;
     }
 
     /**
@@ -84,12 +85,13 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     /**
      * @inheritDoc
      */
-    public function filterIds(int ...$ids): void
+    public function filterIds(int ...$ids): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::COACHES()->id)->in(...$ids)
         );
+        return $this;
     }
 
     /**
@@ -124,11 +126,13 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
         return $coaches;
     }
 
-    public function filterMember(int $memberId): void
+    public function filterMember(int $memberId): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::COACHES()->member_id)->eq($memberId)
         );
+
+        return $this;
     }
 }
