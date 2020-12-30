@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Applications\UseCases;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
-use Illuminate\Support\Collection;
 
 /**
  * Class BrowseApplication
@@ -31,6 +31,17 @@ class BrowseApplication
     }
 
     /**
+     * Factory method
+     *
+     * @param ApplicationDatabaseRepository $repo
+     * @return static
+     */
+    public static function create(ApplicationDatabaseRepository $repo): self
+    {
+        return new self($repo);
+    }
+
+    /**
      * @param BrowseApplicationCommand $command
      * @return array (int, Collection)
      * @throws QueryException
@@ -41,9 +52,10 @@ class BrowseApplication
         if ($command->app) {
             $query->filterApplication($command->app);
         }
+
         return [
             $query->count(),
-            new Collection($query->execute())
+            $this->repo->getAll($query)
         ];
     }
 }
