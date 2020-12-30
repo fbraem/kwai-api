@@ -191,7 +191,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
      * @return Collection
      * @throws QueryException
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
