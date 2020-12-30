@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 
 /**
@@ -30,9 +31,9 @@ interface Query
      *
      * @param int|null $limit
      * @param int|null $offset
-     * @return mixed
+     * @return Collection
      * @throws QueryException
      * @todo Change return type into Collection
      */
-    public function execute(?int $limit = null, ?int $offset = null);
+    public function execute(?int $limit = null, ?int $offset = null): Collection;
 }
