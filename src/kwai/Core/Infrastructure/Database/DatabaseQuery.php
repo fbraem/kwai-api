@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
@@ -92,14 +93,14 @@ abstract class DatabaseQuery implements Query
         $row = $this->db->execute(
             $this->query
         )->fetch();
-        return (int) $row->c;
+        return (int) $row['c'];
     }
 
     /**
      * Default implementation: return all records.
      * @inheritDoc
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $this->query->limit($limit);
         $this->query->offset($offset);
@@ -108,7 +109,9 @@ abstract class DatabaseQuery implements Query
             ... $this->getColumns()
         );
 
-        return $this->db->execute($this->query)->fetchAll();
+        /** @noinspection PhpUndefinedMethodInspection */
+        return collect($this->db->execute($this->query)->fetchAll())
+            ->recursive();
     }
 
     /**
@@ -119,13 +122,9 @@ abstract class DatabaseQuery implements Query
      * @param int|null $offset
      * @return LazyCollection
      * @throws QueryException
-     * @todo asArray/asObject call can be removed when all fetching records
-     *       as array is the default
      */
     protected function walk(?int $limit = null, ?int $offset = null): LazyCollection
     {
-        $this->db->asArray();
-
         $this->query->limit($limit);
         $this->query->offset($offset);
 
@@ -133,10 +132,6 @@ abstract class DatabaseQuery implements Query
             ... $this->getColumns()
         );
 
-        $result = LazyCollection::make($this->db->walk($this->query));
-
-        $this->db->asObject();
-
-        return $result;
+        return LazyCollection::make($this->db->walk($this->query));
     }
 }
