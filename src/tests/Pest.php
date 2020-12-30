@@ -10,9 +10,6 @@ use Tests\Context;
 $db = Context::withDatabase();
 if ($db) {
     // Migrate the database, if needed.
-    // phinx needs a database fetch mode FETCH_ASSOC
-    $db->asArray();
-
     $configArray = require(__DIR__ . '/../phinx.php');
     $configArray['environments']['test']['connection'] = $db->getPDO();
     $manager = new Manager(
@@ -21,7 +18,4 @@ if ($db) {
         new NullOutput()
     );
     $manager->migrate('test');
-
-    // Reset the fetch mode for our tests
-    $db->asObject();
 }
