@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Kwai\Applications\Coach\CoachApplication;
+use Kwai\Applications\Coach\CoachesApplication;
 
 require '../src/vendor/autoload.php';
 
-$app = new CoachApplication();
+$app = new CoachesApplication();
 $app->run();
