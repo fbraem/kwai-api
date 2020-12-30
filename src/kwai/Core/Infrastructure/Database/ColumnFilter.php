@@ -10,6 +10,7 @@ namespace Kwai\Core\Infrastructure\Database;
 use stdClass;
 
 /**
+ * @deprecated
  * Class ColumnFilter
  */
 class ColumnFilter
