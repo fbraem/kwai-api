@@ -17,9 +17,11 @@ use Kwai\Core\Infrastructure\Database\TableEnum;
  * This class defines all table names for the Mails module.
  * @method static Tables MAILS()
  * @method static Tables RECIPIENTS()
+ * @method static Tables USERS()
  */
 class Tables extends TableEnum
 {
     private const MAILS = 'mails';
     private const RECIPIENTS = 'mail_recipients';
+    private const USERS = 'users';
 }
