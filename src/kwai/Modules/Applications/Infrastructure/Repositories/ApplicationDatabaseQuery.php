@@ -1,16 +1,14 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Applications
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Applications\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Applications\Domain\Application;
-use Kwai\Modules\Applications\Infrastructure\Mappers\ApplicationMapper;
 use Kwai\Modules\Applications\Infrastructure\Tables;
 use Kwai\Modules\Applications\Repositories\ApplicationQuery;
 use function Latitude\QueryBuilder\field;
@@ -21,20 +19,22 @@ use function Latitude\QueryBuilder\field;
 class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
 {
 
-    public function filterId(int $id): void
+    public function filterId(int $id): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::APPLICATIONS()->id)->eq($id)
         );
+        return $this;
     }
 
-    public function filterApplication(string $application)
+    public function filterApplication(string $application): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::APPLICATIONS()->name)->eq($application)
         );
+        return $this;
     }
 
     protected function initQuery(): void
@@ -66,22 +66,21 @@ class ApplicationDatabaseQuery extends DatabaseQuery implements ApplicationQuery
 
     /**
      * @inheritDoc
-     * @return Entity<Application>[]
      */
-    public function execute(?int $limit = null, ?int $offset = null): array
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
-        $rows = parent::execute($limit, $offset);
-        if (count($rows) == 0) {
-            return [];
-        }
+        $applications = new Collection();
 
-        $applicationColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
-        $idAlias = Tables::APPLICATIONS()->getAlias('id');
-        $applications = [];
-        foreach ($rows as $row) {
-            $applications[$row->{$idAlias}] = ApplicationMapper::toDomain(
-                $applicationColumnFilter->filter($row)
-            );
+        $rows = parent::execute($limit, $offset);
+        if ($rows->isNotEmpty()) {
+            $filters = new Collection([
+                Tables::APPLICATIONS()->getAliasPrefix()
+            ]);
+
+            foreach ($rows as $row) {
+                [ $application ] = $row->filterColumns($filters);
+                $applications->put($application->get('id'), $application);
+            }
         }
         return $applications;
     }
