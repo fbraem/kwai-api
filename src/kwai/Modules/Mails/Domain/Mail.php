@@ -7,15 +7,14 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Domain;
 
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
-
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
-use Kwai\Modules\Users\Domain\User;
 
 /**
  * Mail Entity
@@ -23,67 +22,32 @@ use Kwai\Modules\Users\Domain\User;
 class Mail implements DomainEntity
 {
     /**
-     * Tag of the email
-     */
-    private ?string $tag;
-
-    /**
-     * Uniqued ID for this mail
-     */
-    private UniqueId $uuid;
-
-    /**
-     * Sender
-     */
-    private Address $sender;
-
-    /**
-     * Content of the mail
-     */
-    private MailContent $content;
-
-    /**
-     * Time of sending
-     */
-    private ?Timestamp $sentTime;
-
-    /**
-     * Remark
-     */
-    private ?string $remark;
-
-    /**
-     * User that created this mail
-     * @var Entity<User>
-     */
-    private Entity $creator;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The recipients
-     * @var Entity<Recipient>[]
-     */
-    private array $recipients;
-
-    /**
      * Constructor
-     * @param object $props Mail properties
+     *
+     * @param string|null        $tag
+     * @param UniqueId           $uuid
+     * @param Address            $sender
+     * @param MailContent        $content
+     * @param Timestamp|null     $sentTime
+     * @param string|null        $remark
+     * @param Creator            $creator
+     * @param TraceableTime|null $traceableTime
+     * @param array              $recipients
      */
-    public function __construct(object $props)
-    {
-        $this->tag = $props->tag;
-        $this->uuid = $props->uuid;
-        $this->sender = $props->sender;
-        $this->content = $props->content;
-        $this->sentTime = $props->sentTime ?? null;
-        $this->remark = $props->remark ?? null;
-        $this->creator = $props->creator;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->recipients = $props->recipients ?? [];
+    public function __construct(
+        private UniqueId $uuid,
+        private Address $sender,
+        private MailContent $content,
+        private Creator $creator,
+        private ?Timestamp $sentTime = null,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null,
+        private ?string $tag = null,
+        private array $recipients = []
+    ) {
+        if ($traceableTime === null) {
+            $this->traceableTime = new TraceableTime();
+        }
     }
 
     /**
@@ -154,9 +118,8 @@ class Mail implements DomainEntity
 
     /**
      * Get the creator of this mail
-     * @phpstan-return Entity<User>
      */
-    public function getCreator(): Entity
+    public function getCreator(): Creator
     {
         return $this->creator;
     }
