@@ -12,26 +12,16 @@ namespace Kwai\Core\Domain\ValueObjects;
 final class TraceableTime
 {
     /**
-     * Time of creation
-     */
-    private Timestamp $created_at;
-
-    /**
-     * Time of last update
-     */
-    private ?Timestamp $updated_at;
-
-    /**
      * Constructor
      *
      * @param Timestamp|null $created_at The timestamp of creation
      * @param Timestamp|null $updated_at The timestamp of the last modification
      */
     public function __construct(
-        ?Timestamp $created_at = null,
-        ?Timestamp $updated_at = null
+        private ?Timestamp $created_at = null,
+        private ?Timestamp $updated_at = null
     ) {
-        $this->created_at = $created_at ?? Timestamp::createNow();
+        $this->created_at ??= Timestamp::createNow();
         $this->updated_at = $updated_at;
     }
 
