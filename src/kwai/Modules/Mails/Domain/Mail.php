@@ -45,9 +45,7 @@ class Mail implements DomainEntity
         private ?string $tag = null,
         private array $recipients = []
     ) {
-        if ($traceableTime === null) {
-            $this->traceableTime = new TraceableTime();
-        }
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
