@@ -1,7 +1,6 @@
 <?php
 /**
- * User Repository.
- * @package kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
