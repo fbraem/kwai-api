@@ -10,31 +10,19 @@ namespace Kwai\Modules\Mails\Domain\ValueObjects;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 
 /**
- * Address valueobject
+ * Address value object
  */
 final class Address
 {
-    /**
-     * The emailaddress
-     */
-    private EmailAddress $email;
-
-    /**
-     * The name of for the address
-     */
-    private string $name;
-
     /**
      * Address constructor.
      * @param EmailAddress $email
      * @param string $name
      */
     public function __construct(
-        EmailAddress $email,
-        string $name = ''
+        private EmailAddress $email,
+        private string $name = ''
     ) {
-        $this->email = $email;
-        $this->name = $name;
     }
 
     /**
