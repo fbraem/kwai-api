@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Applications\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Modules\Applications\Domain\Application;
@@ -19,27 +19,24 @@ use Kwai\Modules\Applications\Domain\Application;
  */
 class ApplicationMapper
 {
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Application
     {
-        return new Entity(
-            (int) $raw->id,
-            new Application((object)[
-                'title' => $raw->title,
-                'description' => $raw->description,
-                'shortDescription' => $raw->short_description,
-                'remark' => $raw->remark ?? null,
-                'name' => $raw->name,
-                'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at)
-                        ? Timestamp::createFromString($raw->updated_at)
-                        : null
-                ),
-                'canHaveNews' => $raw->news == '1' ?? false,
-                'canHavePages' => $raw->pages == '1' ?? false,
-                'canHaveEvents' => $raw->events == '1' ?? false,
-                'weight' => (int) $raw->weight ?? 0
-            ])
+        return new Application(
+            title: $data->get('title'),
+            description: $data->get('description'),
+            shortDescription: $data->get('short_description'),
+            remark: $data->get('remark'),
+            name: $data->get('name'),
+            traceableTime: new TraceableTime(
+            Timestamp::createFromString($data->get('created_at')),
+            $data->has('updated_at')
+                ? Timestamp::createFromString($data->get('updated_at'))
+                : null
+            ),
+            canHaveNews: $data->get('news', '0') === '1',
+            canHavePages: $data->get('pages', '0') === '1',
+            canHaveEvents: $data->get('events', '0') === '1',
+            weight: (int) $data->get('weight', 0)
         );
     }
 }
