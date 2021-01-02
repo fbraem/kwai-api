@@ -1,7 +1,6 @@
 <?php
 /**
- * Mail Repository.
- * @package kwai
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
