@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage News
  */
 declare(strict_types=1);
 
@@ -15,6 +15,7 @@ use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Infrastructure\Mappers\ApplicationMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\ApplicationRepository;
+use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\field;
 
 /**
@@ -27,23 +28,15 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
      */
     public function getById(int $id): Entity
     {
-        $aliasFn = Tables::APPLICATIONS()->getAliasFn();
-
         /** @noinspection PhpUndefinedFieldInspection */
-        $query = $this->db->createQueryFactory()
-            ->select(
-                $aliasFn('id'),
-                $aliasFn('title'),
-                $aliasFn('name')
-            )
-            ->from((string) Tables::APPLICATIONS())
+        $query = $this->createBaseQuery()
             ->where(field(Tables::APPLICATIONS()->id)->eq($id))
         ;
 
         try {
-            $row = $this->db->execute(
+            $row = collect($this->db->execute(
                 $query
-            )->fetch();
+            )->fetch());
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
@@ -52,8 +45,26 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
             throw new ApplicationNotFoundException($id);
         }
 
-        return ApplicationMapper::toDomain(
-            Tables::APPLICATIONS()->createColumnFilter()->filter($row)
+        return new Entity(
+            (int) $row->get('id'),
+            ApplicationMapper::toDomain($row)
         );
+    }
+
+    /**
+     * Create the base query
+     *
+     * @return SelectQuery
+     */
+    private function createBaseQuery(): SelectQuery
+    {
+        return $this->db->createQueryFactory()
+            ->select(
+                'id',
+                'title',
+                'name'
+            )
+            ->from((string) Tables::APPLICATIONS())
+        ;
     }
 }
