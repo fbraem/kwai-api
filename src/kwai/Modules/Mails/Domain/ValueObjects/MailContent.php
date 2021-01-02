@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
