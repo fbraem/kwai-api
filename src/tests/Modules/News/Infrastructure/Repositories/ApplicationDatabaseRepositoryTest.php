@@ -27,8 +27,8 @@ it('can retrieve an application by id', function () use ($context) {
             ->toBeInstanceOf(Application::class)
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (ApplicationNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 });
