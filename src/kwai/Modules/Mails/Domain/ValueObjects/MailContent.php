@@ -14,9 +14,9 @@ final class MailContent
 {
     /**
      * MailContent constructor.
-     * @param string $subject [description]
-     * @param string $text    [description]
-     * @param string $html    [description]
+     * @param string $subject Subject of the mail
+     * @param string $text    Text content of the mail
+     * @param string $html    HTML content of the mail
      */
     public function __construct(
         private string $subject,
