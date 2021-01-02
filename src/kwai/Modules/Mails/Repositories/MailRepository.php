@@ -1,6 +1,7 @@
 <?php
 /**
- * User Repository interface
+ * @package Modules
+ * @subpackage Mails
  */
 declare(strict_types = 1);
 
