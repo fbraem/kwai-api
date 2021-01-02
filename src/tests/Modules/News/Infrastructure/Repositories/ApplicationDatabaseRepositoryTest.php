@@ -31,4 +31,6 @@ it('can retrieve an application by id', function () use ($context) {
     } catch (ApplicationNotFoundException $e) {
         $this->fail((string) $e);
     }
-});
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
