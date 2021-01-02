@@ -14,7 +14,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
-use Kwai\Modules\Mails\Infrastructure\Repositories\RecipientDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\UseCases\InviteUser;
@@ -27,7 +26,6 @@ it('can invite a user', function () use ($context) {
     $invitationRepo = new UserInvitationDatabaseRepository($context->db);
     $userRepo = new UserDatabaseRepository($context->db);
     $mailRepo = new MailDatabaseRepository($context->db);
-    $recipientRepo = new RecipientDatabaseRepository($context->db);
     try {
         $user = $userRepo->getByEmail(
             new EmailAddress('test@kwai.com')
@@ -60,7 +58,6 @@ it('can invite a user', function () use ($context) {
             $invitationRepo,
             $userRepo,
             $mailRepo,
-            $recipientRepo,
             $template,
             $user
         ))($command);

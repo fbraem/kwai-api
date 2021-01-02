@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Mails\Infrastructure\Tables;
@@ -88,5 +89,43 @@ class MailDatabaseQuery extends DatabaseQuery implements MailQuery
             ->where(field(Tables::MAILS()->uuid)->eq((string) $uniqueId))
         ;
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(?int $limit = null, ?int $offset = null): Collection
+    {
+        $filters = collect([
+            Tables::MAILS()->getAliasPrefix(),
+            Tables::USERS()->getAliasPrefix()
+        ]);
+
+        $mails = new Collection();
+
+        $rows = parent::walk($limit, $offset);
+        foreach ($rows as $row) {
+            [ $mail, $user ] = $row->filterColumns($filters);
+            $mail->put('user', $user);
+            $mails->put($mail->get('id'), $mail);
+        }
+
+        if ($mails->isEmpty()) {
+            return new Collection();
+        }
+
+        // Get all recipients
+        $mailIds = $mails->keys();
+        $recipientQuery = new RecipientDatabaseQuery($this->db);
+        $recipientQuery->filterOnMails($mailIds);
+        $mailRecipients = $recipientQuery->execute();
+        $mails->each(
+            fn ($mail) => $mail->put(
+                'recipients',
+                $mailRecipients->get($mail->get('id'), new Collection())
+            )
+        );
+
+        return $mails;
     }
 }

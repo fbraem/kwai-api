@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 use DateTime;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
@@ -22,7 +23,6 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 use Kwai\Modules\Mails\Repositories\MailRepository;
-use Kwai\Modules\Mails\Repositories\RecipientRepository;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
@@ -61,11 +61,6 @@ final class InviteUser
     private MailRepository $mailRepo;
 
     /**
-     * Repository for recipients
-     */
-    private RecipientRepository $recipientRepo;
-
-    /**
      * Template for generating the invitation mail.
      */
     private MailTemplate $template;
@@ -74,24 +69,21 @@ final class InviteUser
      * Constructor.
      *
      * @param UserInvitationRepository $userInvitationRepo A user invitation repo
-     * @param UserRepository $userRepo A user repo
-     * @param MailRepository $mailRepo A mail repo
-     * @param RecipientRepository $recipientRepo A recipient repo
-     * @param MailTemplate $template A template to generate the mail body
-     * @param Entity<User> $user The user that will execute this use case
+     * @param UserRepository           $userRepo           A user repo
+     * @param MailRepository           $mailRepo           A mail repo
+     * @param MailTemplate             $template           A template to generate the mail body
+     * @param Entity<User>             $user               The user that will execute this use case
      */
     public function __construct(
         UserInvitationRepository $userInvitationRepo,
         UserRepository $userRepo,
         MailRepository $mailRepo,
-        RecipientRepository $recipientRepo,
         MailTemplate $template,
         Entity $user
     ) {
         $this->userInvitationRepo = $userInvitationRepo;
         $this->userRepo = $userRepo;
         $this->mailRepo = $mailRepo;
-        $this->recipientRepo = $recipientRepo;
         $this->template = $template;
         $this->user = $user;
     }
@@ -148,42 +140,32 @@ final class InviteUser
 
         /** @noinspection PhpUndefinedMethodInspection */
         $mail = new Mail(
-            (object) [
-                'tag' => 'user.invitation',
-                'uuid' =>  $invitation->getUniqueId(),
-                'sender' => new Address(
-                    new EmailAddress($command->sender_mail),
-                    $command->sender_name
-                ),
-                'content' => new MailContent(
-                    $this->template->getSubject(),
-                    $this->template->renderHtml($templateVars),
-                    $this->template->renderPlainText($templateVars)
-                ),
-                'creator' => $this->user
-            ]
-        );
-        $mailEntity = $this->mailRepo->create(
-            $mail
-        );
-
-        $recipients = $this->recipientRepo->create(
-            $mailEntity,
-            [
-            new Recipient(
-                (object) [
-                    'type' => RecipientType::TO(),
-                    'address' => new Address(
+            tag: 'user.invitation',
+            uuid: $invitation->getUniqueId(),
+            sender: new Address(
+                new EmailAddress($command->sender_mail),
+                $command->sender_name
+            ),
+            content: new MailContent(
+                $this->template->getSubject(),
+                $this->template->renderHtml($templateVars),
+                $this->template->renderPlainText($templateVars)
+            ),
+            creator: new Creator(
+                $this->user->id(),
+                $this->user->getUsername()
+            ),
+            recipients: collect([
+                new Recipient(
+                    type: RecipientType::TO(),
+                    address: new Address(
                         new EmailAddress($command->email),
                         $command->name
                     )
-                ]
-            )]
+                )
+            ])
         );
-        foreach ($recipients as $recipient) {
-            /** @noinspection PhpUndefinedMethodInspection */
-            $mailEntity->addRecipient($recipient);
-        }
+        $this->mailRepo->create($mail);
 
         return $invitation;
     }

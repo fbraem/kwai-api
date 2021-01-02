@@ -14,7 +14,6 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
-use Kwai\Modules\Mails\Infrastructure\Repositories\RecipientDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
@@ -99,7 +98,6 @@ class CreateUserInvitationAction extends Action
                 new UserInvitationDatabaseRepository($database),
                 new UserDatabaseRepository($database),
                 new MailDatabaseRepository($database),
-                new RecipientDatabaseRepository($database),
                 new MailTemplate(
                     'User Invitation',
                     $this->getContainerEntry('template')->createTemplate('User/invitation_html'),

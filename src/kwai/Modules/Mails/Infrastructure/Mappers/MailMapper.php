@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Mails\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -33,7 +34,7 @@ final class MailMapper
         return new Mail(
             tag: $data->get('tag'),
             uuid: new UniqueId($data->get('raw')),
-            sender: new Address($data->get('sender_email'), $data->get('sender_name', '')),
+            sender: new Address(new EmailAddress($data->get('sender_email')), $data->get('sender_name', '')),
             content: new MailContent($data->get('subject'), $data->get('text_body'), $data->get('html_body',  '')),
             sentTime: $data->has('sent_time') ? Timestamp::createFromString($data->get('sent_time')) : null,
             traceableTime: new TraceableTime(

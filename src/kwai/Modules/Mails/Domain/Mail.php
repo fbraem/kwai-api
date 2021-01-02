@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Domain;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
@@ -32,7 +33,7 @@ class Mail implements DomainEntity
      * @param string|null        $remark
      * @param Creator            $creator
      * @param TraceableTime|null $traceableTime
-     * @param array              $recipients
+     * @param Collection|null    $recipients
      */
     public function __construct(
         private UniqueId $uuid,
@@ -43,9 +44,10 @@ class Mail implements DomainEntity
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null,
         private ?string $tag = null,
-        private array $recipients = []
+        private ?Collection $recipients = null
     ) {
         $this->traceableTime ??= new TraceableTime();
+        $this->recipients ??= new Collection();
     }
 
     /**
@@ -132,10 +134,10 @@ class Mail implements DomainEntity
 
     /**
      * Get the recipients
-     * @return Recipient[]
+     * @return Collection
      */
-    public function getRecipients(): array
+    public function getRecipients(): Collection
     {
-        return $this->recipients;
+        return $this->recipients->collect();
     }
 }
