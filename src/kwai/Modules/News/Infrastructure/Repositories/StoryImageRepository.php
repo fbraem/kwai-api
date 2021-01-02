@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage News
  */
 declare(strict_types=1);
 
@@ -15,20 +15,16 @@ use League\Flysystem\Filesystem;
  */
 class StoryImageRepository implements ImageRepository
 {
-    private Filesystem $filesystem;
-
-    private string $baseUrlPath;
-
     /**
      * StoryImageRepository constructor.
      *
      * @param Filesystem $filesystem
      * @param string     $baseUrlPath
      */
-    public function __construct(Filesystem $filesystem, string $baseUrlPath = '')
-    {
-        $this->filesystem = $filesystem;
-        $this->baseUrlPath = $baseUrlPath;
+    public function __construct(
+        private Filesystem $filesystem,
+        private string $baseUrlPath = ''
+    ) {
     }
 
     /**
