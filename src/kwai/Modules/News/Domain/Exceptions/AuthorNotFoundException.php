@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -14,17 +14,14 @@ use Exception;
  */
 class AuthorNotFoundException extends Exception
 {
-    private int $id;
-
     /**
      * AuthorNotFoundException constructor.
      *
      * @param int|string $id
      */
-    public function __construct($id)
+    public function __construct(private int $id)
     {
         parent::__construct('Author not found');
-        $this->id = $id;
     }
 
     public function __toString()
