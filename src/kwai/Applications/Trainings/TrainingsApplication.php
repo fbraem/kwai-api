@@ -13,7 +13,6 @@ use Kwai\Applications\Trainings\Actions\BrowseTrainingsAction;
 use Kwai\Applications\Trainings\Actions\GetDefinitionAction;
 use Kwai\Applications\Trainings\Actions\GetTrainingAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
-use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Psr\Container\ContainerInterface;
 
@@ -29,23 +28,10 @@ class TrainingsApplication extends KwaiApplication
         $router = new Router();
 
         $router
-            ->options(
-                'trainings.browse.options',
-                '/trainings',
-                fn() => new PreflightAction()
-            )
             ->get(
                 'trainings.browse',
                 '/trainings',
                 fn(ContainerInterface $container) => new BrowseTrainingsAction($container)
-            )
-            ->options(
-                'trainings.get.options',
-                '/trainings/{id}',
-                fn() => new PreflightAction(),
-                    requirements: [
-                        'id' => '\d+'
-                    ]
             )
             ->get(
                 'trainings.get',
@@ -59,23 +45,10 @@ class TrainingsApplication extends KwaiApplication
 
         $definitionRouters = new Router();
         $definitionRouters
-            ->options(
-                'trainings.definitions.browse.options',
-                '/definitions',
-                fn() => new PreflightAction()
-            )
             ->get(
                 'trainings.definitions.browse',
                 '/definitions',
                 fn(ContainerInterface $container) => new BrowseDefinitionsAction($container)
-            )
-            ->options(
-                'trainings.definitions.get.options',
-                '/definitions/{id}',
-                fn() => new PreflightAction(),
-                requirements: [
-                    'id' => '\d+'
-                ]
             )
             ->get(
                 'trainings.definitions.get',
