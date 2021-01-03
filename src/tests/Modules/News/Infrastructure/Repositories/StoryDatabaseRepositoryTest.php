@@ -1,12 +1,9 @@
 <?php
-/**
- * @package
- * @subpackage
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\News\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
@@ -39,8 +36,8 @@ beforeAll(function () use ($context) {
 
         try {
             $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
-        } catch (ApplicationNotFoundException $e) {
-        } catch (RepositoryException $e) {
+        } catch (ApplicationNotFoundException) {
+        } catch (RepositoryException) {
         }
     }
 });
@@ -48,17 +45,16 @@ beforeAll(function () use ($context) {
 it('can create a story', function () use ($context) {
     // This test will create a promoted story.
     if (! isset($context->application)) {
-        $this->assertTrue(false, 'No application');
+        $this->fail('No application found');
     }
     $repo = new StoryDatabaseRepository($context->db);
     try {
         $story = $repo->create(new Story(
-            (object)[
-                'enabled' => true,
-                'promotion' => new Promotion(1),
-                'publishTime' => Timestamp::createNow('Europe/Brussels'),
-                'application' => $context->application,
-                'contents'=> [
+                enabled: true,
+                promotion: new Promotion(1),
+                publishTime: Timestamp::createNow('Europe/Brussels'),
+                application: $context->application,
+                contents: collect([
                     new Text(
                         new Locale('nl'),
                         new DocumentFormat('md'),
@@ -67,8 +63,7 @@ it('can create a story', function () use ($context) {
                         'Content for **Unit** Test',
                         $context->author
                     )
-                ]
-            ]
+                ])
         ));
         expect($story)
             ->toBeInstanceOf(Entity::class)
@@ -76,30 +71,22 @@ it('can create a story', function () use ($context) {
         expect($story->domain())
             ->toBeInstanceOf(Story::class)
         ;
-        return $story;
+        return $story->id();
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (ApplicationNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (AuthorNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
-    return null;
 })
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it(
-    'can retrieve a story',
-    function (Entity $lastCreated) use ($context) {
-        // Skip test if testCreate failed.
-        if ($lastCreated == null) {
-            return;
-        }
-
+it('can retrieve a story',function (int $id) use ($context) {
         $repo = new StoryDatabaseRepository($context->db);
         try {
-            $story = $repo->getById($lastCreated->id());
+            $story = $repo->getById($id);
             expect($story)
                 ->toBeInstanceOf(Entity::class)
             ;
@@ -107,9 +94,9 @@ it(
                 ->toBeInstanceOf(Story::class)
             ;
         } catch (StoryNotFoundException $e) {
-            $this->assertTrue(false, (string) $e);
+            $this->fail((string) $e);
         } catch (RepositoryException $e) {
-            $this->assertTrue(false, (string) $e);
+            $this->fail((string) $e);
         }
     }
 )
@@ -124,13 +111,13 @@ it('can query stories', function () use ($context) {
     try {
         $stories = $query->execute();
         expect($stories)
-            ->toBeArray()
+            ->toBeInstanceOf(Collection::class)
         ;
         expect(count($stories))
             ->toBeGreaterThan(0)
         ;
     } catch (QueryException $e) {
-        $this->assertTrue(false, $e->getMessage());
+        $this->fail((string) $e);
     }
 })
     ->depends('it can create a story')
