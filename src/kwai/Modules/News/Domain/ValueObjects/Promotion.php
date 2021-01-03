@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -18,28 +18,15 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 class Promotion
 {
     /**
-     * When this priority > 0, the promotion is active. The value can be used
-     * to order the stories.
-     */
-    private int $priority = 0;
-
-    /**
-     * When does the promotion end?
-     */
-    private ?Timestamp $endDate;
-
-    /**
      * Promotion constructor.
      *
      * @param int            $priority
      * @param Timestamp|null $endDate
      */
     public function __construct(
-        int $priority = 0,
-        Timestamp $endDate = null
+        private int $priority = 0,
+        private ?Timestamp $endDate = null
     ) {
-        $this->priority = $priority;
-        $this->endDate = $endDate;
     }
 
     /**

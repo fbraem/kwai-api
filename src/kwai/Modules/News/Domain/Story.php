@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Domain;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
@@ -20,67 +21,40 @@ use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 class Story implements DomainEntity
 {
     /**
-     * Is this story enabled?
-     */
-    private bool $enabled;
-
-    /**
-     * The promotion
-     */
-    private Promotion $promotion;
-
-    /**
-     * When will the story be published?
-     */
-    private Timestamp $publishTime;
-
-    /**
-     * When will the story be unpublished?
-     */
-    private ?Timestamp $endDate;
-
-    private ?string $remark;
-
-    private TraceableTime $traceableTime;
-
-    /**
-     * @var Entity<Application>
-     */
-    private Entity $application;
-
-    /**
-     * @var Text[]
-     */
-    private array $contents;
-
-    /**
-     * @var string[]
-     */
-    private array $images = [];
-
-    /**
      * Story constructor.
      *
-     * @param object $props
+     * @param Timestamp          $publishTime
+     * @param Entity             $application
+     * @param Collection         $contents
+     * @param Promotion|null     $promotion
+     * @param Collection|null    $images
+     * @param bool               $enabled
+     * @param Timestamp|null     $endDate
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
      */
-    public function __construct(object $props)
-    {
-        $this->enabled = $props->enabled;
-        $this->promotion = $props->promotion ?? new Promotion();
-        $this->publishTime = $props->publishTime;
-        $this->endDate = $props->endDate ?? null;
-        $this->remark = $props->remark ?? null;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->application = $props->application;
-        $this->contents = $props->contents;
+    public function __construct(
+        private Timestamp $publishTime,
+        private Entity $application,
+        private Collection $contents,
+        private ?Promotion $promotion = null,
+        private ?Collection $images = null,
+        private bool $enabled = false,
+        private ?Timestamp $endDate = null,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null,
+    ) {
+        $this->promotion ??= new Promotion();
+        $this->traceableTime ??= new TraceableTime();
+        $this->images ??= new Collection();
     }
 
     /**
      * Attach images
      *
-     * @param array $images
+     * @param Collection $images
      */
-    public function attachImages(array $images)
+    public function attachImages(Collection $images)
     {
         $this->images = $images;
     }
@@ -92,7 +66,7 @@ class Story implements DomainEntity
      */
     public function addContent(Text $content)
     {
-        $this->contents[] = $content;
+        $this->contents->add($content);
     }
 
     /**
@@ -148,11 +122,11 @@ class Story implements DomainEntity
     /**
      * Return the content
      *
-     * @return Text[]
+     * @return Collection
      */
-    public function getContents(): array
+    public function getContents(): Collection
     {
-        return $this->contents;
+        return $this->contents->collect();
     }
 
     /**
@@ -166,10 +140,10 @@ class Story implements DomainEntity
     /**
      * Return the associated images
      *
-     * @return string[]
+     * @return Collection
      */
-    public function getImages(): array
+    public function getImages(): Collection
     {
-        return $this->images;
+        return $this->images->collect();
     }
 }
