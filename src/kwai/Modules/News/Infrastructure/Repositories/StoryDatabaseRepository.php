@@ -1,21 +1,26 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Mappers\TextMapper;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
+use Kwai\Modules\News\Repositories\StoryQuery;
 use Kwai\Modules\News\Repositories\StoryRepository;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
@@ -31,16 +36,13 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery();
-        $query->filterId($id);
-
         try {
-            $entities = $query->execute();
+            $entities = $this->getAll($this->createQuery()->filterId($id));
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        if (count($entities) == 1) {
-            return $entities[$id];
+        if ($entities->count() === 1) {
+            return $entities->first();
         }
         throw new StoryNotFoundException($id);
     }
@@ -87,57 +89,47 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
      */
     public function create(Story $story): Entity
     {
-        $data = StoryMapper::toPersistence($story);
+        try {
+            $this->db->begin();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
+        $data = StoryMapper::toPersistence($story);
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::STORIES())
             ->columns(
-                ... array_keys($data)
+                ... $data->keys()
             )
             ->values(
-                ... array_values($data)
+                ... $data->values()
             )
         ;
 
         try {
             $this->db->execute($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        $storyId = $this->db->lastInsertId();
-
-        $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::CONTENTS())
-            ->columns(
-                'news_id',
-                'locale',
-                'format',
-                'title',
-                'content',
-                'summary',
-                'user_id'
-            )
-         ;
-        foreach ($story->getContents() as $content) {
-            $query->values(
-                $storyId,
-                (string) $content->getLocale(),
-                (string) $content->getFormat(),
-                $content->getTitle(),
-                $content->getContent(),
-                $content->getSummary(),
-                $content->getAuthor()->getId()
+            $entity = new Entity(
+                $this->db->lastInsertId(),
+                $story
             );
+
+            $this->insertContents($entity);
+        } catch (QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+            throw new RepositoryException(__METHOD__, $e);
         }
 
         try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
+            $this->db->commit();
+        } catch(DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return new Entity($storyId, $story);
+        return $entity;
     }
 
     /**
@@ -145,40 +137,48 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
      */
     public function update(Entity $story): void
     {
-        $query = $this->db->createQueryFactory()
-            ->update((string) Tables::STORIES())
-            ->set(StoryMapper::toPersistence($story->domain()))
-            ->where(field('id')->eq($story->id()))
-        ;
-
         try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
+            $this->db->begin();
+        } catch(DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
-        foreach ($story->getContents() as $content) {
-            $query = $this->db->createQueryFactory()
-                ->update((string) Tables::CONTENTS())
-                ->set([
-                    'format' => $content->getFormat(),
-                    'title' => $content->getTitle(),
-                    'content' => $content->getContent(),
-                    'summary' => $content->getSummary(),
-                    'user_id' => $content->getAuthor()->getId(),
-                    'updated_at' => (string) Timestamp::createNow()
-                ])
-                ->where(
-                    field('news_id')->eq($story->id())
-                    ->and(field('locale')->eq($content->getLocale()))
-                )
-            ;
+        try {
+            $data = StoryMapper::toPersistence($story->domain());
+            $queryFactory = $this->db->createQueryFactory();
+
+            $this->db->execute(
+                $queryFactory
+                    ->update((string)Tables::STORIES())
+                    ->set($data->toArray())
+                    ->where(field('id')->eq($story->id()))
+            );
+
+            // Update contents
+            // First delete all contents
+            $this->db->execute(
+                $queryFactory
+                    ->delete((string)Tables::CONTENTS())
+                    ->where(
+                        field('training_id')->eq($story->id())
+                    )
+            );
+
+            // Next insert contents again
+            $this->insertContents($story);
+        } catch(QueryException $qe) {
             try {
-                $this->db->execute($query);
-            } catch (QueryException $e) {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
                 throw new RepositoryException(__METHOD__, $e);
             }
+            throw new RepositoryException(__METHOD__, $qe);
+        }
+
+        try {
+            $this->db->commit();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
         }
     }
 
@@ -187,26 +187,89 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
      */
     public function remove(Entity $story)
     {
-        $query = $this->db->createQueryFactory()
-            ->delete((string) Tables::CONTENTS())
-            ->where(field('news_id')->eq($story->id()))
-        ;
-
         try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
+            $this->db->begin();
+        } catch(DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $query = $this->db->createQueryFactory()
-            ->delete((string) Tables::STORIES())
-            ->where(field('id')->eq($story->id()))
-        ;
+        $queryFactory = $this->db->createQueryFactory();
+        try {
+            $query = $queryFactory
+                ->delete((string) Tables::CONTENTS())
+                ->where(field('news_id')->eq($story->id()))
+            ;
+
+            try {
+                $this->db->execute($query);
+            } catch (QueryException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+
+            $query = $queryFactory
+                ->delete((string) Tables::STORIES())
+                ->where(field('id')->eq($story->id()))
+            ;
+
+            $this->db->execute($query);
+        } catch (QueryException $qe) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+            throw new RepositoryException(__METHOD__, $qe);
+        }
 
         try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
+            $this->db->commit();
+        } catch(DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+    }
+
+    /**
+     * @param Entity<Story> $story
+     * @throws QueryException
+     */
+    private function insertContents(Entity $story): void
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $contents = $story->getContents();
+        $contents
+            ->transform(
+                fn(Text $text) => TextMapper::toPersistence($text)
+            )
+            ->map(
+                fn(Collection $item) => $item->put('news_id', $story->id())
+            );
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string)Tables::CONTENTS())
+            ->columns(...$contents->first()->keys());
+        $contents->each(
+            fn(Collection $text) => $query->values(...$text->values())
+        );
+
+        $this->db->execute($query);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAll(
+        ?StoryQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null): Collection
+    {
+        $query ??= $this->createQuery();
+
+        /* @var Collection $stories */
+        $stories = $query->execute($limit, $offset);
+        return $stories->mapWithKeys(
+            fn($item, $key) => [
+                $key => new Entity((int) $key, StoryMapper::toDomain($item))
+            ]
+        );
     }
 }
