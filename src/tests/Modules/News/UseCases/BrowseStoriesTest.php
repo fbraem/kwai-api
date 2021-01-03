@@ -24,9 +24,9 @@ it('can browse stories', function () use ($context) {
             new StoryDatabaseRepository($context->db),
             new AuthorDatabaseRepository($context->db),
             new class implements ImageRepository {
-                public function getImages(int $id): array
+                public function getImages(int $id): Collection
                 {
-                    return [];
+                    return collect();
                 }
                 public function removeImages(int $id): void
                 {

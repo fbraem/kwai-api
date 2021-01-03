@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\News\UseCases;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -22,9 +23,9 @@ it('can get a story', function () use ($context) {
         $story = (new GetStory(
             new StoryDatabaseRepository($context->db),
             new class implements ImageRepository {
-                public function getImages(int $id): array
+                public function getImages(int $id): Collection
                 {
-                    return [];
+                    return collect();
                 }
 
                 public function removeImages(int $id): void
