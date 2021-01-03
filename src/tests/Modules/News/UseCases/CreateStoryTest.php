@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\News\UseCases;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
@@ -45,10 +46,8 @@ it('can create a story', function () use ($context) {
                 public function getById(int $id): Entity
                 {
                     return new Entity(1, new Application(
-                        (object) [
-                            'title' => 'Unit Test',
-                            'name' => 'unit_test'
-                        ]
+                        title: 'Unit Test',
+                            name: 'unit_test'
                     ));
                 }
             },
@@ -56,16 +55,14 @@ it('can create a story', function () use ($context) {
                 public function getById(int $id): Entity
                 {
                     return new Entity(1, new Author(
-                        (object) [
-                            'name' => new Name('Test', 'User')
-                        ]
+                        name: new Name('Test', 'User')
                     ));
                 }
             },
             new class implements ImageRepository {
-                public function getImages(int $id): array
+                public function getImages(int $id): Collection
                 {
-                    return [];
+                    return collect();
                 }
                 public function removeImages(int $id): void
                 {
@@ -81,7 +78,7 @@ it('can create a story', function () use ($context) {
         /** @noinspection PhpUndefinedMethodInspection */
         $contents = $story->getContents();
         expect($contents)
-            ->toBeArray()
+            ->toBeInstanceOf(Collection::class)
         ;
         expect($contents[0]->getTitle())
             ->toBe('Test')

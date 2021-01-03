@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\UseCases;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
@@ -67,10 +68,10 @@ class CreateStory
     {
         $app = $this->appRepo->getById($command->application);
 
-        $contents = [];
+        $contents = new Collection();
         foreach ($command->contents as $text) {
             $author = $this->authorRepo->getById($text->author);
-            $contents[] = new Text(
+            $contents->push(new Text(
                 new Locale($text->locale),
                 new DocumentFormat($text->format),
                 $text->title,
@@ -83,7 +84,7 @@ class CreateStory
                         $author->last_name ?? null
                     )
                 )
-            );
+            ));
         }
 
         $promotion = new Promotion(
@@ -96,22 +97,20 @@ class CreateStory
         );
 
         $story = $this->storyRepo->create(new Story(
-            (object) [
-                'enabled' => $command->enabled,
-                'promotion' => $promotion,
-                'publishTime' => Timestamp::createFromString(
+            enabled: $command->enabled,
+                promotion: $promotion,
+                publishTime: Timestamp::createFromString(
                     $command->publish_date,
                     $command->timezone
                 ),
-                'endDate' => $command->end_date
+                endDate: $command->end_date
                     ? Timestamp::createFromString(
                         $command->end_date,
                         $command->timezone
                     ) : null,
-                'remark' => $command->remark,
-                'application' => $app,
-                'contents' => $contents
-            ]
+                remark: $command->remark,
+                application: $app,
+                contents: $contents
         ));
 
         $images = $this->imageRepo->getImages($story->id());
