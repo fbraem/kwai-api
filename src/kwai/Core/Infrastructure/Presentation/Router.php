@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Presentation;
 
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -25,10 +27,28 @@ class Router
 
     /**
      * Router constructor.
+     *
+     * When autoPreflight is true (which is the default), an OPTIONS route will
+     * be automatically added for each route.
+     *
+     * @param bool $autoPreflight
      */
-    public function __construct()
+    public function __construct(
+        private bool $autoPreflight = true
+    )
     {
         $this->routes = new RouteCollection();
+    }
+
+    /**
+     * Factory method
+     *
+     * @param bool $autoPreflight
+     * @return static
+     */
+    public static function create(bool $autoPreflight = true): self
+    {
+        return new Router($autoPreflight);
     }
 
     /**
@@ -120,7 +140,10 @@ class Router
     }
 
     /**
-     * Add a OPTIONS route
+     * Add a OPTIONS route.
+     *
+     * Note: When autoPreflight is true, this route will be created
+     * automatically. So there is no need to call this method.
      *
      * @param string   $name
      * @param string   $path
@@ -220,6 +243,19 @@ class Router
      */
     private function add(string $name, string $method, string $path, callable $handler, array $extra, array $requirements)
     {
+        if ($this->autoPreflight) {
+            $this->routes->add(
+                $name . '.options',
+                new Route(
+                    path: $path,
+                    defaults: [
+                    '_action' => fn() => fn(Request $request, Response $response) => $response
+                ],
+                    methods: ['OPTIONS'],
+                    requirements: $requirements
+                )
+            );
+        }
         $this->routes->add(
             $name,
             new Route(
