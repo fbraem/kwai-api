@@ -84,6 +84,12 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
      */
     public function create(Training $training): Entity
     {
+        try {
+            $this->db->begin();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
         $data = TrainingMapper::toPersistence($training);
 
         // Insert training
@@ -95,22 +101,33 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         try {
             $this->db->execute($query);
+
+            $entity = new Entity(
+                $this->db->lastInsertId(),
+                $training
+            );
+            // Insert all contents
+            $this->insertContents($entity);
+
+            // Insert all coaches
+            $this->insertCoaches($entity);
+
+            // Insert all teams
+            $this->insertTeams($entity);
         } catch(QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $entity = new Entity(
-            $this->db->lastInsertId(),
-            $training
-        );
-        // Insert all contents
-        $this->insertContents($entity);
-
-        // Insert all coaches
-        $this->insertCoaches($entity);
-
-        // Insert all teams
-        $this->insertTeams($entity);
+        try {
+            $this->db->commit();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
 
         return $entity;
     }
@@ -120,15 +137,14 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
      */
     public function update(Entity $training): void
     {
-        $data = TrainingMapper::toPersistence($training->domain());
-
-        $queryFactory = $this->db->createQueryFactory();
-
         try {
             $this->db->begin();
         } catch(DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+
+        $data = TrainingMapper::toPersistence($training->domain());
+        $queryFactory = $this->db->createQueryFactory();
 
         // Update training
         try {
@@ -138,13 +154,9 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
                     ->set($data->toArray())
                     ->where(field('id')->eq($training->id()))
             );
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
 
-        // Update contents
-        // First delete all contents
-        try {
+            // Update contents
+            // First delete all contents
             $this->db->execute(
                 $queryFactory
                     ->delete((string) Tables::TRAINING_CONTENTS())
@@ -152,21 +164,12 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
                         field('training_id')->eq($training->id())
                     )
             );
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        // Next insert contents
-        $this->insertContents($training);
 
-        try {
-            $this->db->commit();
-        } catch(DatabaseException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
+            // Next insert contents
+            $this->insertContents($training);
 
-        // Update coaches
-        // First delete all coaches
-        try {
+            // Update coaches
+            // First delete all coaches
             $this->db->execute(
                 $queryFactory
                     ->delete((string) Tables::TRAINING_COACHES())
@@ -174,15 +177,12 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
                         field('training_id')->eq($training->id())
                     )
             );
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        // Next insert coaches
-        $this->insertCoaches($training);
 
-        // Update teams
-        // First delete all teams
-        try {
+            // Next insert coaches
+            $this->insertCoaches($training);
+
+            // Update teams
+            // First delete all teams
             $this->db->execute(
                 $queryFactory
                     ->delete((string) Tables::TRAINING_TEAMS())
@@ -190,10 +190,21 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
                         field('training_id')->eq($training->id())
                     )
             );
+            $this->insertTeams($training);
         } catch (QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
             throw new RepositoryException(__METHOD__, $e);
         }
-        $this->insertTeams($training);
+
+        try {
+            $this->db->commit();
+        } catch(DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 
     /**
@@ -205,6 +216,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     private function insertContents(Entity $training)
     {
         /* @var Collection $contents */
+        /** @noinspection PhpUndefinedMethodInspection */
         $contents = $training->getText();
         if ($contents->count() == 0) {
             return;
@@ -242,6 +254,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     private function insertCoaches(Entity $training)
     {
         /* @var Collection $coaches */
+        /** @noinspection PhpUndefinedMethodInspection */
         $coaches = $training->getCoaches();
         if ($coaches->count() == 0) {
             return;
@@ -279,6 +292,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     private function insertTeams(Entity $training)
     {
         /* @var Collection $teams */
+        /** @noinspection PhpUndefinedMethodInspection */
         $teams = $training->getTeams();
         if ($teams->count() == 0) {
             return;
