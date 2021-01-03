@@ -40,11 +40,11 @@ it('can browse stories', function () use ($context) {
             ->toBeInt()
         ;
     } catch (QueryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (AuthorNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')

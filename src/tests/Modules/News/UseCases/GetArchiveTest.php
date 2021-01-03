@@ -22,7 +22,7 @@ it('can get an story archive', function () use ($context) {
             ->toBeGreaterThan(0)
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')

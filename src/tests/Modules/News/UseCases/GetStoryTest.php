@@ -37,9 +37,9 @@ it('can get a story', function () use ($context) {
             ->toBeInstanceOf(Entity::class)
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (StoryNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
