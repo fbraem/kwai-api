@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -22,7 +22,6 @@ use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Log\LogLevel;
 
 /**
  * Class BrowseStoriesAction
@@ -80,7 +79,7 @@ abstract class AbstractBrowseStoriesAction extends Action
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (AuthorNotFoundException $e) {
+        } catch (AuthorNotFoundException) {
             return (
                 new NotFoundResponse('Author not found')
             )($response);
