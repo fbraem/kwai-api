@@ -249,8 +249,8 @@ class Router
                 new Route(
                     path: $path,
                     defaults: [
-                    '_action' => fn() => fn(Request $request, Response $response) => $response
-                ],
+                        '_action' => fn() => fn(Request $request, Response $response) => $response
+                    ],
                     methods: ['OPTIONS'],
                     requirements: $requirements
                 )
