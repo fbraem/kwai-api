@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use League\Flysystem\Filesystem;
 
@@ -41,16 +42,12 @@ class StoryImageRepository implements ImageRepository
     /**
      * @inheritDoc
      */
-    public function getImages(int $id): array
+    public function getImages(int $id): Collection
     {
-        $result = [];
-        $images = $this->filesystem->listContents(self::getPath($id));
-        if (count($images) > 0) {
-            foreach ($images as $image) {
-                $result[$image['filename']] = $this->baseUrlPath . '/' . $image['path'];
-            }
-        }
-        return $result;
+        $images = collect($this->filesystem->listContents(self::getPath($id)));
+        return $images->mapWithKeys(
+            fn($image) => [ $image['filename'] => $this->baseUrlPath . '/' . $image['path'] ]
+        );
     }
 
     public function removeImages(int $id): void
