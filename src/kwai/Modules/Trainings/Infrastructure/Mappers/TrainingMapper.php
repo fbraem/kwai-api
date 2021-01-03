@@ -33,7 +33,7 @@ class TrainingMapper
             event: EventMapper::toDomain($data),
             text: $data->get('contents')->map(fn ($text) => TextMapper::toDomain($text)),
             definition: $definition
-                ? new Entity((int) $definition->get('id'),DefinitionMapper::toDomain($definition))
+                ? new Entity((int) $definition->get('id'), DefinitionMapper::toDomain($definition))
                 : null,
             teams: $data->get('teams')->map(
                 fn ($team) => new Entity((int) $team->get('id'), TeamMapper::toDomain($team))
@@ -42,7 +42,7 @@ class TrainingMapper
             remark: $data->get('remark'),
             presences: new Collection(),
             traceableTime: new TraceableTime(
-                Timestamp::createFromString($data->get('created_at')),
+            Timestamp::createFromString($data->get('created_at')),
                 $data->has('updated_at')
                     ? Timestamp::createFromString($data->get('updated_at'))
                     : null
