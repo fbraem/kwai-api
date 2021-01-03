@@ -1,13 +1,13 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage News
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
 use Kwai\Modules\News\Domain\Application;
 
 /**
@@ -17,14 +17,11 @@ use Kwai\Modules\News\Domain\Application;
  */
 class ApplicationMapper
 {
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Application
     {
-        return new Entity(
-            (int) $raw->id,
-            new Application((object)[
-                'title' => $raw->title,
-                'name' => $raw->name
-            ])
+        return new Application(
+            title: $data->get('title'),
+            name: $data->get('name')
         );
     }
 }

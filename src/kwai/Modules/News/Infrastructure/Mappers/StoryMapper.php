@@ -1,20 +1,17 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Infrastructure\Mappers;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Creator;
-use Kwai\Core\Domain\ValueObjects\Locale;
-use Kwai\Core\Domain\ValueObjects\Name;
-use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Infrastructure\Mappers\TextMapper;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 
@@ -25,54 +22,41 @@ use Kwai\Modules\News\Domain\ValueObjects\Promotion;
  */
 class StoryMapper
 {
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Story
     {
-        return new Entity(
-            (int) $raw->id,
-            new Story((object) [
-                'enabled' => $raw->enabled == '1' ?? false,
-                'promotion' => new Promotion(
-                    (int) $raw->promotion ?? 0,
-                    isset($raw->promotion_end_date)
-                        ? Timestamp::createFromString(
-                            $raw->promotion_end_date,
-                            $raw->timezone
-                        )
-                        : null
-                ),
-                'publishTime' => Timestamp::createFromString(
-                    $raw->publish_date,
-                    $raw->timezone
-                ),
-                'endDate' => isset($raw->end_date)
+        return new Story(
+            enabled: $data->get('enabled', '0') === '1',
+            promotion: new Promotion(
+                (int) $data->get('promotion', 0),
+                $data->has('promotion_end_date')
                     ? Timestamp::createFromString(
-                        $raw->end_date,
-                        $raw->timezone
+                        $data->get('promotion_end_date'),
+                        $data->get('timezone')
+                    )
+                    : null
+            ),
+            publishTime: Timestamp::createFromString(
+                    $data->get('publish_date'),
+                    $data->get('timezone')
+            ),
+            endDate: $data->has('end_date')
+                    ? Timestamp::createFromString(
+                        $data->get('end_date'),
+                        $data->get('timezone')
                     )
                     : null,
-                'remark' => $raw->remark ?? null,
-                'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at)
-                        ? Timestamp::createFromString($raw->updated_at)
+            remark: $data->get('remark'),
+            traceableTime: new TraceableTime(
+                Timestamp::createFromString($data->get('created_at')),
+                    $data->has('updated_at')
+                        ? Timestamp::createFromString($data->get('updated_at'))
                         : null
-                ),
-                'application' => ApplicationMapper::toDomain($raw->application),
-                'contents' => array_map(fn($c) => new Text(
-                    new Locale($c->locale),
-                    new DocumentFormat($c->format),
-                    $c->title,
-                    $c->summary,
-                    $c->content,
-                    new Creator(
-                        (int) $c->author->id,
-                        new Name(
-                            $c->author->first_name ?? null,
-                            $c->author->last_name ?? null
-                        )
-                    )
-                ), $raw->contents)
-            ])
+            ),
+            application: new Entity(
+                (int) $data->get('application')->get('id'),
+                ApplicationMapper::toDomain($data->get('application'))
+            ),
+            contents: $data->get('contents')->map(fn ($text) => TextMapper::toDomain($text))
         );
     }
 
@@ -80,29 +64,21 @@ class StoryMapper
      * Returns a data array from a Story object.
      *
      * @param Story $story
-     * @return array
+     * @return Collection
      */
-    public static function toPersistence(Story $story): array
+    public static function toPersistence(Story $story): Collection
     {
-        $updated_at = $story->getTraceableTime()->isUpdated()
-            ? (string) $story->getTraceableTime()->getUpdatedAt()
-            : null;
-
-        return [
+        return collect([
             'enabled' => $story->isEnabled(),
             'promotion' => $story->getPromotion()->getPriority(),
-            'promotion_end_date' => $story->getPromotion()->getEndDate()
-                ? (string) $story->getPromotion()->getEndDate()
-                : null,
+            'promotion_end_date' => $story->getPromotion()->getEndDate()?->__toString(),
             'publish_date'=> $story->getPublishTime(),
             'timezone' => $story->getPublishTime()->getTimezone(),
-            'end_date' => $story->getEndDate()
-                ? (string) $story->getEndDate()
-                : null,
+            'end_date' => $story->getEndDate()?->__toString(),
             'application_id' => $story->getApplication()->id(),
             'remark' => $story->getRemark(),
             'created_at'=> $story->getTraceableTime()->getCreatedAt(),
-            'updated_at'=> $updated_at
-        ];
+            'updated_at'=> $story->getTraceableTime()->getUpdatedAt()?->__toString()
+        ]);
     }
 }
