@@ -14,7 +14,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Repositories\AuthorRepository;
 use Kwai\Modules\News\Repositories\StoryRepository;
-use Illuminate\Support\Collection;
 
 /**
  * Class BrowseStories
@@ -81,11 +80,11 @@ class BrowseStories
         }
         $count = $query->count();
 
-        $stories = $query->execute($command->limit, $command->offset);
-        foreach ($stories as $story) {
-            $images = $this->imageRepo->getImages($story->id());
-            $story->attachImages($images);
-        }
-        return [$count, new Collection($stories)];
+        $stories = $this->repo->getAll($query, $command->limit, $command->offset);
+        $stories->each(
+            fn ($story) => $story->attachImages($this->imageRepo->getImages($story->id()))
+        );
+
+        return [$count, $stories];
     }
 }
