@@ -15,14 +15,14 @@ namespace Kwai\Modules\Users\Domain\ValueObjects;
 final class TokenIdentifier
 {
     /**
-     * A unique bytestring in hex format.
-     * @var string
+     * TokenIdentifier constructor.
+     *
+     * @param string|null $bytes A unique byte string in hex format.
+     * @throws \Exception
      */
-    private $bytes;
-
-    public function __construct(string $hexBytes = null)
+    public function __construct(private ?string $bytes = null)
     {
-        $this->bytes = $hexBytes ?? \bin2hex(\random_bytes(40));
+        $this->bytes ??= \bin2hex(\random_bytes(40));
     }
 
     public function __toString(): string
