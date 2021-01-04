@@ -12,7 +12,6 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use TheSeer\Tokenizer\Token;
 
 /**
 * AccessToken entity
