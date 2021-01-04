@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
@@ -18,36 +19,22 @@ use Kwai\Core\Domain\Entity;
 class Ability implements DomainEntity
 {
     /**
-     * The name of the ability.
-     */
-    private string $name;
-
-    /**
-     * A remark
-     */
-    private ?string $remark;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The rules associated with this ability
-     * @var array Rule[]
-     */
-    private $rules;
-
-    /**
      * Constructor.
-     * @param  object $props Ability properties
+     *
+     * @param string             $name
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
+     * @param Collection|null    $rules
      */
-    public function __construct(object $props)
+    public function __construct(
+        private string $name,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null,
+        private ?Collection $rules = null
+    )
     {
-        $this->name = $props->name;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->remark = $props->remark;
-        $this->rules = $props->rules ?? [];
+        $this->traceableTime ??= new TraceableTime();
+        $this->rules ??= collect();
     }
 
     /**
@@ -91,10 +78,11 @@ class Ability implements DomainEntity
 
     /**
      * Get the associated rules
-     * @return Rule[]
+     *
+     * @return Collection
      */
-    public function getRules(): array
+    public function getRules(): Collection
     {
-        return $this->rules;
+        return $this->rules->collect();
     }
 }
