@@ -20,66 +20,31 @@ use Kwai\Core\Domain\Entity;
 class UserInvitation implements DomainEntity
 {
     /**
-     * A UUID of the invitation.
-     */
-    private UniqueId $uuid;
-
-    /**
-     * The email address of the invited user
-     */
-    private EmailAddress $emailAddress;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The timestamp when the invitation expires
-     */
-    private Timestamp $expiration;
-
-    /**
-     * A remark about the invitation
-     */
-    private string $remark;
-
-    /**
-     * The name of the invited user
-     */
-    private string $name;
-
-    /**
-     * The creator of the invitation.
-     * @var Entity<User>
-     */
-    private Entity $creator;
-
-    /**
-     * Is this invitation revoked?
-     */
-    private bool $revoked;
-
-    /**
-     * Timestamp of confirmation
-     */
-    private ?Timestamp $confirmation;
-
-    /**
      * Constructor.
-     * @param object $props User Invitation properties
+     *
+     * @param UniqueId           $uuid
+     * @param EmailAddress       $emailAddress
+     * @param Timestamp          $expiration
+     * @param string             $remark
+     * @param string             $name
+     * @param Entity             $creator
+     * @param bool               $revoked
+     * @param TraceableTime|null $traceableTime
+     * @param Timestamp|null     $confirmation
      */
-    public function __construct(object $props)
-    {
-        $this->uuid = $props->uuid;
-        $this->emailAddress = $props->emailAddress;
-        $this->traceableTime = $props->traceableTime;
-        $this->expiration = $props->expiration;
-        $this->remark = $props->remark ?? '';
-        $this->name = $props->name;
-        $this->creator = $props->creator;
-        $this->revoked = $props->revoked ?? false;
-        $this->confirmation = $props->confirmation ?? null;
+    public function __construct(
+        private UniqueId $uuid,
+        private EmailAddress $emailAddress,
+        private Timestamp $expiration,
+        private string $remark,
+        private string $name,
+        private Entity $creator,
+        private bool $revoked = false,
+        private ?TraceableTime $traceableTime = null,
+        private ?Timestamp $confirmation = null,
+    ) {
+        $this->remark ??= '';
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**

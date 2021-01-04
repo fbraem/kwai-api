@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
@@ -20,65 +21,37 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 class User implements DomainEntity
 {
     /**
-     * A UUID of the user.
-     */
-    private UniqueId $uuid;
-
-    /**
-     * The email address of the user
-     */
-    private EmailAddress $emailAddress;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * A remark about the user
-     */
-    private ?string $remark;
-
-    /**
-     * The username
-     */
-    private Name $username;
-
-    /**
-     * The abilities of the user.
-     * @var Ability[]
-     */
-    private array $abilities;
-
-    /**
-     * A member associated with this user.
-     *
-     * @var int|null
-     */
-    private ?int $member;
-
-    /**
      * Constructor.
-     * @param  object $props User properties
+     *
+     * @param UniqueId           $uuid
+     * @param EmailAddress       $emailAddress
+     * @param Name               $username
+     * @param Collection|null    $abilities
+     * @param string|null        $remark
+     * @param int|null           $member
+     * @param TraceableTime|null $traceableTime
      */
-    public function __construct(object $props)
-    {
-        $this->uuid = $props->uuid;
-        $this->emailAddress = $props->emailAddress;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->remark = $props->remark ?? null;
-        $this->username = $props->username;
-        $this->abilities = $props->abilities ?? [];
-        $this->member = $props->member_id ?? null;
+    public function __construct(
+        private UniqueId $uuid,
+        private EmailAddress $emailAddress,
+        private Name $username,
+        private ?Collection $abilities = null,
+        private ?string $remark = null,
+        private ?int $member = null,
+        private ?TraceableTime $traceableTime = null
+    ) {
+        $this->traceableTime ??= new TraceableTime();
+        $this->abilities ??= collect();
     }
 
     /**
      * Return the abilities of this user.
-     * @return Ability[]
+     *
+     * @return Collection
      */
-    public function getAbilities(): array
+    public function getAbilities(): Collection
     {
-        return $this->abilities;
+        return $this->abilities->collect();
     }
 
     /**
@@ -132,19 +105,17 @@ class User implements DomainEntity
      */
     public function addAbility(Entity $ability)
     {
-        $this->abilities[$ability->id()] = $ability;
+        $this->abilities->put($ability->id(), $ability);
     }
 
     /**
      * Set the abilities of the user
-     * @param array $abilities
+     *
+     * @param Collection $abilities
      */
-    public function setAbilities(array $abilities)
+    public function setAbilities(Collection $abilities)
     {
-        $this->abilities = [];
-        foreach ($abilities as $ability) {
-            $this->addAbility($ability);
-        }
+        $this->abilities = $abilities->collect();
     }
 
     /**
