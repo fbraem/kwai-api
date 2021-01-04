@@ -8,12 +8,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\User;
 
@@ -24,26 +24,24 @@ final class UserMapper
 {
     /**
      * Creates a User entity from a database row
-     * @param object $raw
-     * @return Entity
+     *
+     * @param Collection $data
+     * @return User
      */
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): User
     {
-        return new Entity(
-            (int) $raw->id,
-            new User((object)[
-                'uuid' => new UniqueId($raw->uuid),
-                'emailAddress' => new EmailAddress($raw->email),
-                'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at)
-                        ? Timestamp::createFromString($raw->updated_at)
-                        : null
-                ),
-                'remark' => $raw->remark,
-                'username' => new Name($raw->first_name, $raw->last_name),
-                'member' => $raw->member_id
-            ])
+        return new User(
+            uuid: new UniqueId($data->get('uuid')),
+            emailAddress: new EmailAddress($data->get('email')),
+            traceableTime: new TraceableTime(
+                Timestamp::createFromString($data->get('created_at')),
+                $data->has('updated_at')
+                    ? Timestamp::createFromString($data->get('updated_at'))
+                    : null
+            ),
+            remark: $data->get('remark'),
+            username: new Name($data->get('first_name'), $data->get('last_name')),
+            member: $data->get('member_id')
         );
     }
 

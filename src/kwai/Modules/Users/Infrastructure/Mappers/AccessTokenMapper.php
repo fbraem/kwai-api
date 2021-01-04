@@ -8,48 +8,37 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\Entity;
-
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 final class AccessTokenMapper
 {
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): AccessToken
     {
-        return new Entity(
-            (int) $raw->id,
-            new AccessToken((object)[
-                'identifier' => new TokenIdentifier($raw->identifier),
-                'expiration' => Timestamp::createFromString($raw->expiration),
-                'revoked' => ($raw->revoked ?? '0') == '1',
-                'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at) ? Timestamp::createFromString($raw->updated_at) : null
-                ),
-                'account' => UserAccountMapper::toDomain($raw->user)
-            ])
+        return new AccessToken(
+            identifier: new TokenIdentifier($data->get('identifier')),
+            expiration: Timestamp::createFromString($data->get('expiration')),
+            revoked: $data->get('revoked', '0') === '1',
+            traceableTime: new TraceableTime(
+                Timestamp::createFromString($data->get('created_at')),
+                $data->has('updated_at') ? Timestamp::createFromString($data->get('updated_at')) : null
+            ),
+            account: UserAccountMapper::toDomain($data->get('user'))
         );
     }
 
-    public static function toPersistence(AccessToken $accessToken): array
+    public static function toPersistence(AccessToken $accessToken): Collection
     {
-        if ($accessToken->getTraceableTime()->getUpdatedAt()) {
-            $updated_at = strval(
-                $accessToken->getTraceableTime()->getUpdatedAt()
-            );
-        } else {
-            $updated_at = null;
-        }
-        return [
+        return collect([
             'identifier' => strval($accessToken->getIdentifier()),
             'expiration' => strval($accessToken->getExpiration()),
             'revoked' => $accessToken->isRevoked() ? '1' : '0',
             'created_at' => strval($accessToken->getTraceableTime()->getCreatedAt()),
-            'updated_at' => $updated_at,
+            'updated_at' => $accessToken->getTraceableTime()->getUpdatedAt()?->__toString(),
             'user_id' => $accessToken->getUserAccount()->id()
-        ];
+        ]);
     }
 }

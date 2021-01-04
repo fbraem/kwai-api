@@ -7,11 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Mappers\CreatorMapper;
 use Kwai\Modules\Users\Domain\UserInvitation;
 
 /**
@@ -22,28 +23,26 @@ class UserInvitationMapper
 {
     /**
      * Create a UserInvitation entity from a database row
-     * @param object $raw
-     * @return Entity
+     *
+     * @param Collection $data
+     * @return UserInvitation
      */
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): UserInvitation
     {
-        return new Entity(
-            (int) $raw->id,
-            new UserInvitation((object) [
-                'uuid' => new UniqueId($raw->uuid),
-                'emailAddress' => new EmailAddress($raw->email),
-                'expiration' => Timestamp::createFromString($raw->expired_at, $raw->expired_at_timezone),
-                'name' => $raw->name,
-                'creator' => UserMapper::toDomain($raw->user),
-                'remark' => $raw->remark,
-                'confirmation' => $raw->confirmed_at ? Timestamp::createFromString($raw->confirmed_at) : null,
-                'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at)
-                        ? Timestamp::createFromString($raw->updated_at)
-                        : null
-                )
-            ])
+        return new UserInvitation(
+            uuid: new UniqueId($data->get('uuid')),
+            emailAddress: new EmailAddress($data->get('email')),
+            expiration: Timestamp::createFromString($data->get('expired_at'), $data->get('expired_at_timezone')),
+            name: $data->get('name'),
+            creator: CreatorMapper::toDomain($data->get('creator')),
+            remark: $data->get('remark'),
+            confirmation: $data->has('confirmed_at') ? Timestamp::createFromString($data->get('confirmed_at')) : null,
+            traceableTime: new TraceableTime(
+                Timestamp::createFromString($data->get('created_at')),
+                $data->has('updated_at')
+                    ? Timestamp::createFromString($data->get('updated_at'))
+                    : null
+            )
         );
     }
 
@@ -66,7 +65,7 @@ class UserInvitationMapper
             'expired_at_timezone' => strval($invitation->getExpiration()->getTimezone()),
             'confirmed_at' => $invitation->isConfirmed() ? strval($invitation->getConfirmation()) : null,
             'name' => $invitation->getName(),
-            'user_id' => $invitation->getCreator()->id(),
+            'creator' => CreatorMapper::toPersistence($invitation->getCreator()),
             'remark' => $invitation->getRemark(),
             'created_at' => strval($invitation->getTraceableTime()->getCreatedAt()),
             'updated_at' => $updated_at
