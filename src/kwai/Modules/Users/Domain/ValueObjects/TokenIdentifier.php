@@ -9,6 +9,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain\ValueObjects;
 
+use function bin2hex;
+use function random_bytes;
+
 /**
  * Value object for an token identifier.
  */
@@ -22,7 +25,7 @@ final class TokenIdentifier
      */
     public function __construct(private ?string $bytes = null)
     {
-        $this->bytes ??= \bin2hex(\random_bytes(40));
+        $this->bytes ??= bin2hex(random_bytes(40));
     }
 
     public function __toString(): string
