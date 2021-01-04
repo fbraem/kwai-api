@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings;
 
-use Kwai\Applications\KwaiApplication;
+use Kwai\Applications\Application;
 use Kwai\Applications\Trainings\Actions\BrowseDefinitionsAction;
 use Kwai\Applications\Trainings\Actions\BrowseTrainingsAction;
 use Kwai\Applications\Trainings\Actions\GetDefinitionAction;
@@ -21,7 +21,7 @@ use Psr\Container\ContainerInterface;
  *
  * Public application for trainings.
  */
-class TrainingsApplication extends KwaiApplication
+class TrainingsApplication extends Application
 {
     public function createRouter(): Router
     {

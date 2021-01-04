@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\News;
 
-use Kwai\Applications\KwaiApplication;
+use Kwai\Applications\Application;
 use Kwai\Applications\News\Actions\BrowseStoriesAction;
 use Kwai\Applications\News\Actions\GetArchiveAction;
 use Kwai\Applications\News\Actions\GetStoryAction;
@@ -19,7 +19,7 @@ use Psr\Container\ContainerInterface;
 /**
  * Class NewsApplication
  */
-class NewsApplication extends KwaiApplication
+class NewsApplication extends Application
 {
     public function addDependencies(): void
     {

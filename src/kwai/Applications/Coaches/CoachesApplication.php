@@ -9,7 +9,7 @@ namespace Kwai\Applications\Coaches;
 
 use Kwai\Applications\Coaches\Actions\BrowseCoachesAction;
 use Kwai\Applications\Coaches\Actions\GetCoachAction;
-use Kwai\Applications\KwaiApplication;
+use Kwai\Applications\Application;
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Psr\Container\ContainerInterface;
@@ -19,7 +19,7 @@ use Psr\Container\ContainerInterface;
  *
  * Application for a coach
  */
-class CoachesApplication extends KwaiApplication
+class CoachesApplication extends Application
 {
     public function createRouter(): Router
     {

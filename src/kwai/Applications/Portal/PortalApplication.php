@@ -7,52 +7,39 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Portal;
 
+use Kwai\Applications\Club\Actions\BrowsePagesAction;
 use Kwai\Applications\Application;
 use Kwai\Applications\Portal\Actions\BrowseApplicationAction;
 use Kwai\Applications\Portal\Actions\BrowseStoriesAction;
-use Kwai\Applications\Portal\Actions\GetApplicationAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
-use Kwai\Core\Infrastructure\Presentation\PreflightAction;
-use Slim\Routing\RouteCollectorProxy;
+use Kwai\Core\Infrastructure\Presentation\Router;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class PortalApplication
  */
 class PortalApplication extends Application
 {
-    public function __construct()
+    public function createRouter(): Router
     {
-        parent::__construct('portal');
-    }
-
-    public function createRoutes(RouteCollectorProxy $group): void
-    {
-        $group->group(
-            '/stories',
-            function (RouteCollectorProxy $storiesGroup) {
-                $storiesGroup
-                    ->options('', PreflightAction::class)
-                ;
-                $storiesGroup
-                    ->get('', BrowseStoriesAction::class)
-                    ->setName('portal.news.browse')
-                ;
-            }
-        );
-
-        $group->group(
-            '/applications',
-            function (RouteCollectorProxy $applicationsGroup) {
-                $applicationsGroup
-                    ->options('', PreflightAction::class)
-                ;
-                $applicationsGroup
-                    ->get('', BrowseApplicationAction::class)
-                    ->setName('portal.applications.browse')
-                ;
-            }
-        );
+        return Router::create()
+            ->get(
+                'portal.news.browse',
+                '/portal/stories',
+                fn(ContainerInterface $container) => new BrowseStoriesAction($container)
+            )
+            ->get(
+                'portal.pages.browse',
+                '/portal/pages',
+                fn(ContainerInterface $container) => new BrowsePagesAction($container)
+            )
+            ->get(
+                'portal.applications.browse',
+                '/portal/applications',
+                fn(ContainerInterface $container) => new BrowseApplicationAction($container)
+            )
+        ;
     }
 
     public function addDependencies(): void

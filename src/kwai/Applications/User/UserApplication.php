@@ -14,8 +14,8 @@ use Kwai\Applications\User\Actions\GetUserInvitationAction;
 use Kwai\Applications\User\Actions\LoginAction;
 use Kwai\Applications\User\Actions\LogoutAction;
 use Kwai\Applications\User\Actions\RefreshTokenAction;
-use Kwai\Core\Infrastructure\Presentation\PreflightAction;
-use Slim\Routing\RouteCollectorProxy;
+use Kwai\Core\Infrastructure\Presentation\Router;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class UserApplication
@@ -23,88 +23,55 @@ use Slim\Routing\RouteCollectorProxy;
 class UserApplication extends Application
 {
     /**
-     * UserApplication constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct('user');
-    }
-
-    /**
      * @inheritDoc
      */
-    public function createRoutes(RouteCollectorProxy $group): void
+    public function createRouter(): Router
     {
         $uuid_regex = Application::UUID_REGEX;
 
-        $group->group(
-            '/login',
-            function (RouteCollectorProxy $loginGroup) {
-                $loginGroup
-                    ->options('', PreflightAction::class)
-                    ;
-                $loginGroup
-                    ->post('', LoginAction::class)
-                    ->setName('user.login')
-                ;
-            }
-        );
-        $group->group(
-            '/logout',
-            function (RouteCollectorProxy $logoutGroup) {
-                $logoutGroup
-                    ->options('', PreflightAction::class)
-                ;
-                $logoutGroup
-                    ->post('', LogoutAction::class)
-                    ->setName('user.logout')
-                    ->setArgument('auth', 'true')
-                ;
-            }
-        );
-
-        $group->group(
-            '/access_token',
-            function (RouteCollectorProxy $accessTokenGroup) {
-                $accessTokenGroup
-                    ->options('', PreflightAction::class)
-                ;
-                $accessTokenGroup
-                    ->post('', RefreshTokenAction::class)
-                    ->setName('user.access_token')
-                ;
-            }
-        );
-
-        $group->group(
-            '',
-            function (RouteCollectorProxy $userGroup) {
-                $userGroup
-                    ->options('', PreflightAction::class)
-                ;
-                $userGroup
-                    ->get('', GetUserAction::class)
-                    ->setName('user.get')
-                    ->setArgument('auth', 'true')
-                ;
-            }
-        );
-
-        $group->group(
-            "/invitations/$uuid_regex",
-            function (RouteCollectorProxy $invitationGroup) {
-                $invitationGroup
-                    ->options('', PreflightAction::class)
-                ;
-                $invitationGroup
-                    ->get('', GetUserInvitationAction::class)
-                    ->setName('users.invitations.token')
-                ;
-                $invitationGroup
-                    ->post('', ConfirmInvitationAction::class)
-                    ->setName('users.invitations.confirm')
-                ;
-            }
-        );
+        return Router::create()
+            ->post(
+                'user.login',
+                '/user/login',
+                fn(ContainerInterface $container) => new LoginAction($container)
+            )
+            ->post(
+                'user.logout',
+                '/user/logout',
+                fn(ContainerInterface $container) => new LogoutAction($container),
+                [
+                    'auth' => true
+                ]
+            )
+            ->post(
+                'user.access_token',
+                '/user/access_token',
+                fn(ContainerInterface $container) => new RefreshTokenAction($container),
+            )
+            ->get(
+                'user.get',
+                '/user',
+                fn(ContainerInterface $container) => new GetUserAction($container),
+                [
+                    'auth' => true
+                ]
+            )
+            ->get(
+                'users.invitations.tokens',
+                '/user/invitations/{uuid}',
+                fn(ContainerInterface $container) => new GetUserInvitationAction($container),
+                requirements: [
+                    'uuid' => $uuid_regex
+                ]
+            )
+            ->post(
+                'users.invitations.confirm',
+                '/user/invitations/{uuid}',
+                fn(ContainerInterface $container) => new ConfirmInvitationAction($container),
+                requirements: [
+                    'uuid' => $uuid_regex
+                ]
+            )
+        ;
     }
 }

@@ -8,59 +8,49 @@ declare(strict_types=1);
 namespace Kwai\Applications;
 
 use Cake\Datasource\ConnectionManager;
+use Exception;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Dependency;
 use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Middlewares\ErrorMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\RequestHandlerMiddleware;
+use Kwai\Core\Infrastructure\Middlewares\RouteMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TokenMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
+use Kwai\Core\Infrastructure\Presentation\Router;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use League\Container\Container;
-use Psr\Http\Message\ServerRequestInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Log\LoggerInterface;
-use Slim\App;
-use Slim\Exception\HttpNotFoundException;
-use Slim\Factory\AppFactory;
-use Slim\Routing\RouteCollectorProxy;
-use Throwable;
-use Tuupola\Middleware\CorsMiddleware;
+use Relay\Relay;
 
 /**
- * Class Application
- *
- * Base class of all applications.
+ * Class KwaiApplication
  */
 abstract class Application
 {
-    private Container $container;
+    private ContainerInterface $container;
 
-    private string $name;
-
-    private string $path;
-
-    private App $app;
+    private array $middlewareQueue = [];
 
     public const UUID_REGEX = '{uuid:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}+}';
 
     /**
-     * Application constructor.
-     *
-     * @param string|array $name
-     * @param string|null  $basePath
+     * KwaiApplication Constructor
      */
-    public function __construct($name, ?string $basePath = '/api')
-    {
-        if (is_array($name)) {
-            $this->name = (string) array_key_first($name);
-            $this->path = $name[$this->name];
-        } else {
-            $this->name = $name;
-            $this->path = "/$name";
-        }
-        $this->createContainer();
+    public function __construct(
+    ) {
+        $this->container = new Container();
+        $this->container->defaultToShared();
+        $this->container->add('settings', new Settings());
+
+        $this->addDependencies();
 
         //TODO: this is the old CAKEPHP connection ... keep it here until it isn't used anymore.
         if (ConnectionManager::getConfig('default') == null) {
@@ -71,42 +61,10 @@ abstract class Application
             $dnsConfig['password'] = $dbConfig[$dbDefault]['pass'];
             ConnectionManager::setConfig('default', $dsnConfig);
         }
-
-        $this->app = AppFactory::create();
-        if (isset($basePath)) {
-            $this->app->setBasePath($basePath);
-        }
-
-        $this->addMiddlewares();
-
-        $me = $this;
-        $this->app->group(
-            $this->path,
-            function (RouteCollectorProxy $group) use ($me) {
-                $me->createRoutes($group);
-            }
-        );
     }
 
-    /**
-     * Create the DI container and add the dependencies
-     */
-    private function createContainer(): void
-    {
-        $this->container = new Container();
-        $this->container->defaultToShared();
-        AppFactory::setContainer($this->container);
+    abstract function createRouter(): Router;
 
-        $this->container->add('settings', new Settings());
-        $this->addDependencies();
-    }
-
-    /**
-     * Add a dependency to the container
-     *
-     * @param string     $name
-     * @param Dependency $dependency
-     */
     protected function addDependency(string $name, Dependency $dependency): void
     {
         $this->container
@@ -124,104 +82,76 @@ abstract class Application
         $this->addDependency('logger', new LoggerDependency());
     }
 
+    public function addMiddlewares(ContainerInterface $container): void
+    {
+    }
+
     /**
-     * Add the middleware
+     * Add a middleware to the queue
      *
      * @param MiddlewareInterface $middleware
      */
-    protected function addMiddleware(MiddlewareInterface $middleware): void
+    public function addMiddleware(MiddlewareInterface $middleware)
     {
-        $this->app->addMiddleware($middleware);
+        $this->middlewareQueue[] = $middleware;
     }
 
     /**
-     * Add all required middlewares
+     * @throws Exception
      */
-    protected function addMiddlewares(): void
+    public function run()
     {
-        $container = $this->container;
+        ob_start();
+        $level = ob_get_level();
 
-        $this->addMiddleware(new ParametersMiddleware());
-        $this->addMiddleware(new TransactionMiddleware($container));
-        $this->addMiddleware(new LogActionMiddleware($container));
-        $this->addMiddleware(new JsonBodyParserMiddleware());
-        $this->addMiddleware(new TokenMiddleware($container));
+        try {
+            $router = $this->createRouter();
 
-        $settings = $container->get('settings');
-        if (isset($settings['cors'])) {
-            $this->addMiddleware(new CorsMiddleware([
-                'origin' => $settings['cors']['origin'] ?? '*',
-                'methods' =>
-                    $settings['cors']['method']
-                    ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-                'credentials' => true,
-                'headers.allow' => ['Accept', 'Accept-Language', 'Content-Type', 'Authorization'],
-                'cache' => 0
-            ]));
-        }
-    }
+            $psr17Factory = new Psr17Factory();
 
-    /**
-     * @param RouteCollectorProxy $group
-     */
-    abstract public function createRoutes(RouteCollectorProxy $group): void;
+            $this->addMiddleware(new ErrorMiddleware($psr17Factory, $psr17Factory));
+            $this->addMiddleware(new RouteMiddleware($router,$psr17Factory));
+            $this->addMiddleware(new ParametersMiddleware());
+            $this->addMiddleware(new TransactionMiddleware($this->container));
+            $this->addMiddleware(new LogActionMiddleware($this->container));
+            $this->addMiddleware(new JsonBodyParserMiddleware());
+            $this->addMiddleware(new TokenMiddleware($this->container));
 
-    /**
-     * Run the application
-     */
-    public function run(): void
-    {
-        $app = $this->app;
-        $app->addRoutingMiddleware();
+            $this->addMiddlewares($this->container);
 
-        $logger = $this->container->get('logger');
-        $errorMiddleware = $app->addErrorMiddleware(
-            false,
-            true,
-            true,
-            $logger
-        );
+            $this->addMiddleware(new RequestHandlerMiddleware(
+                $this->container,
+                $psr17Factory->createResponse()
+            ));
 
-        $errorMiddleware->setErrorHandler(
-            HttpNotFoundException::class,
-            fn() => $app->getResponseFactory()->createResponse(404,'URL not found')
-        );
-
-        $customErrorHandler = function (
-            ServerRequestInterface $request,
-            Throwable $exception,
-            bool $displayErrorDetails,
-            bool $logErrors,
-            bool $logErrorDetails,
-            ?LoggerInterface $logger = null
-        ) use ($app) {
-            // Logger is always null, so get it from the container
-            // see: https://github.com/slimphp/Slim/issues/2943
-            $logger = $app->getContainer()->get('logger');
-            if ($logger) {
-                $logger->error(
-                    $exception->getFile() .
-                    '(' . $exception->getLine() . '): ' .
-                    $exception->getMessage()
-                );
-                $logger->info(
-                    $exception->getTraceAsString()
-                );
-            }
-
-            $payload = ['error' => $exception->getMessage()];
-
-            // TODO: There are no CORS headers set on failure...
-            // See: https://github.com/slimphp/Slim/issues/2999
-            $response = $app->getResponseFactory()->createResponse(500, 'Unknown error occurred');
-            $response->getBody()->write(
-                json_encode($payload, JSON_UNESCAPED_UNICODE)
+            $creator = new ServerRequestCreator(
+                $psr17Factory, // ServerRequestFactory
+                $psr17Factory, // UriFactory
+                $psr17Factory, // UploadedFileFactory
+                $psr17Factory  // StreamFactory
             );
 
-            return $response;
-        };
-        $errorMiddleware->setDefaultErrorHandler($customErrorHandler);
+            $serverRequest = $creator->fromGlobals();
 
-        $app->run();
+            $relay = new Relay($this->middlewareQueue);
+            $response = $relay->handle($serverRequest);
+
+            $captured = '';
+            while (ob_get_level() >= $level) {
+                $captured = PHP_EOL . ob_get_clean() . $captured;
+            }
+            $body = $response->getBody();
+            if ($captured !== '' && $body->isWritable()) {
+                $body->write($captured);
+            }
+
+            (new SapiEmitter())->emit($response);
+        } catch (Exception $e) {
+            while(ob_get_level() >= $level) {
+                ob_end_clean();
+            }
+            //TODO: Log instead of throwing
+            throw $e;
+        }
     }
 }
