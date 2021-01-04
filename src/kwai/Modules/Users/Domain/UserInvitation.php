@@ -7,12 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
 
 /**
  * UserInvitation Entity
@@ -27,7 +27,7 @@ class UserInvitation implements DomainEntity
      * @param Timestamp          $expiration
      * @param string             $remark
      * @param string             $name
-     * @param Entity             $creator
+     * @param Creator            $creator
      * @param bool               $revoked
      * @param TraceableTime|null $traceableTime
      * @param Timestamp|null     $confirmation
@@ -38,7 +38,7 @@ class UserInvitation implements DomainEntity
         private Timestamp $expiration,
         private string $remark,
         private string $name,
-        private Entity $creator,
+        private Creator $creator,
         private bool $revoked = false,
         private ?TraceableTime $traceableTime = null,
         private ?Timestamp $confirmation = null,
@@ -105,9 +105,10 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the user that created this invitation.
-     * @return Entity<User>
+     *
+     * @return Creator
      */
-    public function getCreator(): Entity
+    public function getCreator(): Creator
     {
         return $this->creator;
     }
