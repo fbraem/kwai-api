@@ -18,15 +18,14 @@ final class UserAccountMapper
 {
     /**
      * Maps the table row object to UserAccount entity.
-     * @param  object $raw
+     *
+     * @param Collection $data
      * @return UserAccount
      */
     public static function toDomain(Collection $data): UserAccount
     {
-        $user = $data->get('user');
-
         return new UserAccount(
-            user: new Entity($user->get('id'), UserMapper::toDomain($user)),
+            user: new Entity((int) $data->get('id'), UserMapper::toDomain($data)),
             lastLogin: $data->has('last_login')
                 ? Timestamp::createFromString($data->get('last_login'))
                 : null,
