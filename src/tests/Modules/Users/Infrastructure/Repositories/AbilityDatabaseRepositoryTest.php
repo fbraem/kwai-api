@@ -15,6 +15,22 @@ use Tests\Context;
 
 $context = Context::createContext();
 
+it('can get an ability', function () use ($context) {
+    $repo = new AbilityDatabaseRepository($context->db);
+
+    try {
+        $ability = $repo->getById(1);
+        expect($ability)
+            ->toBeInstanceOf(Entity::class)
+        ;
+    } catch (\Exception $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+/*
 it('can create an ability', function () use ($context) {
     $repo = new AbilityDatabaseRepository($context->db);
     try {
@@ -64,3 +80,4 @@ it('can retrieve an ability', function ($ability) use ($context) {
     ->depends('it can create an ability')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
+*/
