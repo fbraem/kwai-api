@@ -33,7 +33,6 @@ interface Query
      * @param int|null $offset
      * @return Collection
      * @throws QueryException
-     * @todo Change return type into Collection
      */
     public function execute(?int $limit = null, ?int $offset = null): Collection;
 }
