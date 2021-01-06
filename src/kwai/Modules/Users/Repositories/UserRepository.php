@@ -1,18 +1,20 @@
 <?php
 /**
- * User Repository interface
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
-use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
+use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 
@@ -25,41 +27,12 @@ interface UserRepository
      * Get the user with the given id.
      *
      * @param  int    $id
-     * @throws NotFoundException
+     * @throws UserNotFoundException
      * @throws RepositoryException
      * @return Entity<User>
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function getById(int $id) : Entity;
-
-    /**
-     * Get the user with the given uuid.
-     *
-     * @param  UniqueId $uid
-     * @throws NotFoundException
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function getByUUID(UniqueId $uid) : Entity;
-
-    /**
-     * Get the user with the given email address.
-     *
-     * @param  EmailAddress $email
-     * @throws NotFoundException
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function getByEmail(EmailAddress $email) : Entity;
-
-    /**
-     * Checks if a user with the given email address exists
-     *
-     * @param  EmailAddress $email
-     * @throws RepositoryException
-     * @return bool
-     */
-    public function existsWithEmail(EmailAddress $email) : bool;
 
     /**
      * Get the user account with the given email address.
@@ -74,29 +47,17 @@ interface UserRepository
     /**
      * Get all users.
      *
-     * @return Entity[]
-     * @throws RepositoryException
+     * @param UserQuery|null $query
+     * @param int|null       $limit
+     * @param int|null       $offset
+     * @return Collection
+     * @throws QueryException
      */
-    public function getAll(): array;
-
-    /**
-     * Get the user associated with the given token identifier
-     * (from an accesstoken).
-     *
-     * @param  TokenIdentifier $token
-     * @throws NotFoundException
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function getByAccessToken(TokenIdentifier $token) : Entity;
-
-    /**
-     * Update the login information.
-     *
-     * @param Entity<UserAccount> $account
-     * @throws RepositoryException
-     */
-    public function updateAccount(Entity $account): void;
+    public function getAll(
+        ?UserQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 
     /**
      * Create a new user account.
@@ -126,4 +87,20 @@ interface UserRepository
      * @return Entity<User>
      */
     public function removeAbility(Entity $user, Entity $ability): Entity;
+
+    /**
+     * Creates a UserQuery
+     *
+     * @return UserQuery
+     */
+    public function createQuery(): UserQuery;
+
+    /**
+     * Checks if a user with the given email already exists
+     *
+     * @param EmailAddress $email
+     * @throws RepositoryException
+     * @return bool
+     */
+    public function existsWithEmail(EmailAddress $email): bool;
 }
