@@ -40,6 +40,7 @@ interface UserAccountRepository
      * Create a user account.
      * @param UserAccount $account
      * @return Entity
+     * @throws RepositoryException
      */
     public function create(UserAccount $account): Entity;
 }
