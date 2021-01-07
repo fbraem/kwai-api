@@ -16,7 +16,6 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserQuery;
