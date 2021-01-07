@@ -15,7 +15,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Domain\UserAccount;
 
 /**
  * User repository interface
@@ -47,15 +46,6 @@ interface UserRepository
         ?int $limit = null,
         ?int $offset = null
     ): Collection;
-
-    /**
-     * Create a new user account.
-     *
-     * @param UserAccount $account
-     * @throws RepositoryException
-     * @return Entity
-     */
-    public function create(UserAccount $account): Entity;
 
     /**
      * Add the ability to the user.

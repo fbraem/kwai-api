@@ -9,7 +9,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
@@ -18,7 +17,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
-use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserQuery;
@@ -73,57 +71,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             ->where(field('email')->eq(strval($email)))
         ;
         try {
-            $count = $this->db->execute($query)->fetch();
+            $count = collect($this->db->execute($query)->fetch());
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        return $count->c > 0;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function updateAccount(Entity $account): void
-    {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $account->getUser()->getTraceableTime()->markUpdated();
-        $data = UserAccountMapper::toPersistence($account->domain());
-        $query = $this->db->createQueryFactory()
-            ->update((string) Tables::USERS(), $data)
-            ->where(field('id')->eq($account->id()))
-        ;
-        try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function create(UserAccount $account): Entity
-    {
-        $data = UserAccountMapper::toPersistence($account);
-
-        $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::USERS())
-            ->columns(
-                ... array_keys($data)
-            )
-            ->values(
-                ... array_values($data)
-            )
-        ;
-        try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        return new Entity(
-            $this->db->lastInsertId(),
-            $account
-        );
+        return $count->get('c') > 0;
     }
 
     /**
@@ -201,5 +153,4 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         return new UserDatabaseQuery($this->db);
     }
-
 }
