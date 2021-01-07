@@ -15,7 +15,9 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
+use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
+use function Latitude\QueryBuilder\field;
 
 /**
  * Class UserAccountDatabaseRepository
@@ -52,7 +54,17 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function update(Entity $account): void
     {
-        // TODO: Implement update() method.
+        $data = UserAccountMapper::toPersistence($account->domain());
+        $query = $this->db->createQueryFactory()
+            ->update((string) Tables::USERS())
+            ->set($data->toArray())
+            ->where(field('id')->eq($account->id()))
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 
     /**
@@ -60,6 +72,25 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function create(UserAccount $account): Entity
     {
-        // TODO: Implement create() method.
+        $data = UserAccountMapper::toPersistence($account);
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::USERS())
+            ->columns(
+                ... $data->keys()
+            )
+            ->values(
+                ... $data->values()
+            )
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        return new Entity(
+            $this->db->lastInsertId(),
+            $account
+        );
     }
 }
