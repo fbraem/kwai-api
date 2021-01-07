@@ -8,7 +8,6 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Infrastructure\Database\QueryException;
