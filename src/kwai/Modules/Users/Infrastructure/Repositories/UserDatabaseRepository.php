@@ -57,29 +57,6 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     }
 
     /**
-     * @inheritDoc
-     * @return Entity<User>
-     */
-    public function getAccount(EmailAddress $email): Entity
-    {
-        $query = $this->createBaseQuery()
-            ->where(field('email')->eq($email))
-        ;
-
-        try {
-            $user = $this->db->execute($query)->fetch();
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        if ($user) {
-            return UserAccountMapper::toDomain(
-                Tables::USERS()->createColumnFilter()->filter($user)
-            );
-        }
-        throw new NotFoundException('User');
-    }
-
-    /**
      * @inheritdoc
      */
     public function existsWithEmail(EmailAddress $email): bool

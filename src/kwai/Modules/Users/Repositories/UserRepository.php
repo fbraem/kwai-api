@@ -35,16 +35,6 @@ interface UserRepository
     public function getById(int $id) : Entity;
 
     /**
-     * Get the user account with the given email address.
-     *
-     * @param EmailAddress $email
-     * @throws NotFoundException
-     * @throws RepositoryException
-     * @return Entity<UserAccount>
-     */
-    public function getAccount(EmailAddress $email) : Entity;
-
-    /**
      * Get all users.
      *
      * @param UserQuery|null $query
