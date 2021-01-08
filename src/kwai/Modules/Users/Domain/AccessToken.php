@@ -30,8 +30,8 @@ class AccessToken implements DomainEntity
     public function __construct(
         private TokenIdentifier $identifier,
         private Timestamp $expiration,
-        private bool $revoked,
         private Entity $account,
+        private bool $revoked = false,
         private ?TraceableTime $traceableTime = null,
     )
     {
