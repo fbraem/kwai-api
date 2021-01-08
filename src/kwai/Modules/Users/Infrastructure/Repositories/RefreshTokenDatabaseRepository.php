@@ -8,12 +8,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenMapper;
@@ -87,21 +87,29 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
         ;
 
         try {
-            $row = $this->db->execute($query)->fetch();
+            $row = collect($this->db->execute($query)->fetch());
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        if ($row) {
-            $refreshTokenColumnFilter = Tables::REFRESH_TOKENS()->createColumnFilter();
-            $accessTokenColumnFilter = Tables::ACCESS_TOKENS()->createColumnFilter();
-            $userColumnFilter = Tables::USERS()->createColumnFilter();
-            $refreshTokenRow = $refreshTokenColumnFilter->filter($row);
-            $refreshTokenRow->accessToken = $accessTokenColumnFilter->filter($row);
-            $refreshTokenRow->accessToken->user = $userColumnFilter->filter($row);
-            return RefreshTokenMapper::toDomain($refreshTokenRow);
+        if ($row->isNotEmpty()) {
+            [
+                $refreshToken,
+                $accessToken,
+                $user
+            ] = $row->filterColumns(new Collection([
+                Tables::REFRESH_TOKENS()->getAliasPrefix(),
+                Tables::ACCESS_TOKENS()->getAliasPrefix(),
+                Tables::USERS()->getAliasPrefix()
+            ]));
+            $accessToken->put('user', $user);
+            $refreshToken->put('accessToken', $accessToken);
+            return new Entity(
+                (int) $refreshToken->get('id'),
+                RefreshTokenMapper::toDomain($refreshToken)
+            );
         }
-        throw new NotFoundException('RefreshToken');
+        throw new RefreshTokenNotFoundException($identifier);
     }
 
     /**
@@ -114,8 +122,8 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
 
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::REFRESH_TOKENS())
-            ->columns(... array_keys($data))
-            ->values(... array_values($data))
+            ->columns(... $data->keys())
+            ->values(... $data->values())
         ;
         try {
             $this->db->execute($query);
@@ -139,7 +147,7 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
 
         $data = RefreshTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::REFRESH_TOKENS(), $data)
+            ->update((string) Tables::REFRESH_TOKENS(), $data->toArray())
             ->where(field('id')->eq($token->id()))
         ;
         try {
