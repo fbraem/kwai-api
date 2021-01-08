@@ -1,7 +1,4 @@
 <?php
-/**
- * Testcase for Date
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Users\Infrastructure\Repositories;
