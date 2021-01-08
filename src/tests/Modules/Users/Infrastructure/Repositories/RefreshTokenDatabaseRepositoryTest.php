@@ -1,13 +1,11 @@
 <?php
-/**
- * Testcase for Date
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Exception;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
@@ -25,12 +23,15 @@ $context = Context::createContext();
 beforeAll(function () use ($context) {
     $userRepo = new UserDatabaseRepository($context->db);
     try {
-        $context->user = $userRepo->getAccount(
-            new EmailAddress($_ENV['user'])
-        );
-    } catch (NotFoundException $e) {
-        echo $e->getMessage(), PHP_EOL;
-    } catch (RepositoryException $e) {
+        $query = $userRepo
+            ->createQuery()
+            ->filterByEmail(new EmailAddress('jigoro.kano@kwai.com'))
+        ;
+        $users = $userRepo->getAll($query);
+        if ($users->isNotEmpty()) {
+            $context->user = $users->first();
+        }
+    } catch (QueryException $e) {
         echo $e->getMessage(), PHP_EOL;
     }
 });
@@ -43,19 +44,19 @@ it('can create a refreshtoken', function () use ($context) {
     $accessTokenRepo = new AccessTokenDatabaseRepository($context->db);
     $future = new DateTime('now +2 hours');
     $tokenIdentifier = new TokenIdentifier();
-    $accessToken = new AccessToken((object) [
-        'identifier' => $tokenIdentifier,
-        'expiration' => Timestamp::createFromDateTime($future),
-        'account' => $context->user
-    ]);
+    $accessToken = new AccessToken(
+        identifier: $tokenIdentifier,
+        expiration: Timestamp::createFromDateTime($future),
+        account: $context->user
+    );
     try {
         $accessTokenEntity = $accessTokenRepo->create($accessToken);
         $tokenIdentifier = new TokenIdentifier();
-        $refreshToken = new RefreshToken((object) [
-            'identifier' => $tokenIdentifier,
-            'expiration' => Timestamp::createFromDateTime($future),
-            'accessToken' => $accessTokenEntity
-        ]);
+        $refreshToken = new RefreshToken(
+            identifier: $tokenIdentifier,
+            expiration: Timestamp::createFromDateTime($future),
+            accessToken: $accessTokenEntity
+        );
         $entity = $repo->create($refreshToken);
         expect($entity)
             ->toBeInstanceOf(Entity::class)
@@ -64,7 +65,7 @@ it('can create a refreshtoken', function () use ($context) {
             ->toBeInstanceOf(RefreshToken::class)
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 
     return $tokenIdentifier;
@@ -84,10 +85,8 @@ it('can retrieve a refreshtoken', function (TokenIdentifier $tokenIdentifier) us
         expect($refreshToken->domain())
             ->toBeInstanceOf(RefreshToken::class)
         ;
-    } catch (NotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->depends('it can create a refreshtoken')
