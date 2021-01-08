@@ -13,7 +13,7 @@ use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 /**
  * Class RefreshTokenNotFoundException
  *
- * Raised when a user couldn't be found.
+ * Raised when a refreshtoken couldn't be found.
  */
 class RefreshTokenNotFoundException extends Exception
 {
