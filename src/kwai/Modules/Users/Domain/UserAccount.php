@@ -23,7 +23,7 @@ class UserAccount implements DomainEntity
     /**
      * Constructor.
      *
-     * @param Entity          $user
+     * @param User            $user
      * @param Password        $password
      * @param Timestamp|null  $lastLogin
      * @param Timestamp|null  $lastUnsuccessfulLogin
@@ -31,7 +31,7 @@ class UserAccount implements DomainEntity
      * @param Collection|null $abilities
      */
     public function __construct(
-        private Entity $user,
+        private User $user,
         private Password $password,
         private ?Timestamp $lastLogin = null,
         private ?Timestamp $lastUnsuccessfulLogin = null,
@@ -81,9 +81,9 @@ class UserAccount implements DomainEntity
     /**
      * Returns the user.
      *
-     * @return Entity
+     * @return User
      */
-    public function getUser(): Entity
+    public function getUser(): User
     {
         return $this->user;
     }
