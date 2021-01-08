@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 
@@ -25,7 +24,7 @@ final class UserAccountMapper
     public static function toDomain(Collection $data): UserAccount
     {
         return new UserAccount(
-            user: new Entity((int) $data->get('id'), UserMapper::toDomain($data)),
+            user: UserMapper::toDomain($data),
             lastLogin: $data->has('last_login')
                 ? Timestamp::createFromString($data->get('last_login'))
                 : null,
