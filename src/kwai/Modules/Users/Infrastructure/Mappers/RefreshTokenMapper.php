@@ -1,6 +1,6 @@
 <?php
 /**
- * @package kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -38,8 +38,8 @@ final class RefreshTokenMapper
                 $data->has('updated_at') ? Timestamp::createFromString($data->get('updated_at')) : null
             ),
             accessToken: new Entity(
-                $accessToken->get('id'),
-                AccessTokenMapper::toDomain($$accessToken)
+                (int) $accessToken->get('id'),
+                AccessTokenMapper::toDomain($accessToken)
             )
         );
     }
