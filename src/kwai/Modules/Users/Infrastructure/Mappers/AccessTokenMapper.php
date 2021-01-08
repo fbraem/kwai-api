@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\AccessToken;
@@ -26,7 +27,10 @@ final class AccessTokenMapper
                 Timestamp::createFromString($data->get('created_at')),
                 $data->has('updated_at') ? Timestamp::createFromString($data->get('updated_at')) : null
             ),
-            account: UserAccountMapper::toDomain($data->get('user'))
+            account: new Entity(
+                (int) $data->get('user')->get('id'),
+                UserAccountMapper::toDomain($data->get('user'))
+            )
         );
     }
 
