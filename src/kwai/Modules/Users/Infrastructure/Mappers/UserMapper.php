@@ -33,6 +33,9 @@ final class UserMapper
         return new User(
             uuid: new UniqueId($data->get('uuid')),
             emailAddress: new EmailAddress($data->get('email')),
+            abilities: $data->get('abilities')->map(
+                fn($ability) => AbilityMapper::toDomain($ability)
+            ),
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($data->get('created_at')),
                 $data->has('updated_at')
