@@ -5,13 +5,11 @@ namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
 use Exception;
+use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -25,15 +23,26 @@ it('can create an invitation', function () use ($context) {
     $userRepo = new UserDatabaseRepository($context->db);
 
     try {
-        $user = $userRepo->getByEmail(new EmailAddress('test@kwai.com'));
-        $invitation = new UserInvitation((object) [
-            'uuid' => new UniqueId(),
-            'emailAddress' => new EmailAddress('invite@kwai.com'),
-            'traceableTime' => new TraceableTime(),
-            'expiration' => Timestamp::createFromDateTime(new DateTime("now +14 days")),
-            'name' => 'Jigoro Kano',
-            'creator' => $user
-        ]);
+        $query = $userRepo
+            ->createQuery()
+            ->filterByEmail(
+                new EmailAddress('jigoro.kano@kwai.com')
+            );
+        $users = $userRepo->getAll($query, 1);
+        expect($users->isEmpty())
+            ->toBeFalse()
+        ;
+        $user = $users->first();
+
+        $invitation = new UserInvitation(
+            emailAddress: new EmailAddress('invite@kwai.com'),
+            expiration: Timestamp::createFromDateTime(new DateTime("now +14 days")),
+            name: 'Jigoro Kano',
+            creator: new Creator(
+                id: $user->id(),
+                name: $user->getUsername()
+            )
+        );
         $invitation = $repo->create($invitation);
         expect($invitation)
             ->toBeInstanceOf(Entity::class)
@@ -41,16 +50,10 @@ it('can create an invitation', function () use ($context) {
         expect($invitation->domain())
             ->toBeInstanceOf(UserInvitation::class)
         ;
-        $this->assertInstanceOf(Entity::class, $invitation);
         return $invitation;
-    } catch (DatabaseException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (NotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
     } catch (Exception $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
-    return null;
 })
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
@@ -58,18 +61,24 @@ it('can create an invitation', function () use ($context) {
 it('can get an invitation using an email', function () use ($context) {
     $repo = new UserInvitationDatabaseRepository($context->db);
     try {
-        $invitations = $repo->getByEmail(new EmailAddress('invite@kwai.com'));
-        expect($invitations)
-            ->toBeArray()
+        $query = $repo
+            ->createQuery()
+            ->filterByEmail(
+                new EmailAddress('invite@kwai.com')
+            )
         ;
-        $this->assertContainsOnlyInstancesOf(
-            Entity::class,
-            $invitations
-        );
+        $invitations = $repo->getAll($query);
+        expect($invitations)
+            ->toBeInstanceOf(Collection::class)
+            ->and($invitations->count())
+            ->toBeGreaterThan(0)
+            ->and($invitations->first())
+            ->toBeInstanceOf(Entity::class)
+        ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
-    ->depends('it can create an invitation')
+    // ->depends('it can create an invitation')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
