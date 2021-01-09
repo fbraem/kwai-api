@@ -22,28 +22,28 @@ class UserInvitation implements DomainEntity
     /**
      * Constructor.
      *
-     * @param UniqueId           $uuid
      * @param EmailAddress       $emailAddress
      * @param Timestamp          $expiration
-     * @param string             $remark
      * @param string             $name
      * @param Creator            $creator
+     * @param string             $remark
+     * @param UniqueId|null      $uuid
      * @param bool               $revoked
      * @param TraceableTime|null $traceableTime
      * @param Timestamp|null     $confirmation
      */
     public function __construct(
-        private UniqueId $uuid,
         private EmailAddress $emailAddress,
         private Timestamp $expiration,
-        private string $remark,
         private string $name,
         private Creator $creator,
+        private string $remark = '',
+        private ?UniqueId $uuid = null,
         private bool $revoked = false,
         private ?TraceableTime $traceableTime = null,
         private ?Timestamp $confirmation = null,
     ) {
-        $this->remark ??= '';
+        $this->uuid ??= new UniqueId();
         $this->traceableTime ??= new TraceableTime();
     }
 
