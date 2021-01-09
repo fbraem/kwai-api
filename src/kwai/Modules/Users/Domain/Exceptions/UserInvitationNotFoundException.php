@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Domain\Exceptions;
 
 use Exception;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 
 /**
  * Class UserInvitationNotFoundException
@@ -19,15 +20,15 @@ class UserInvitationNotFoundException extends Exception
     /**
      * UserInvitationNotFoundException constructor.
      *
-     * @param int $id
+     * @param UniqueId $uuid
      */
-    public function __construct(private int $id)
+    public function __construct(private UniqueId $uuid)
     {
         parent::__construct('User invitation not found');
     }
 
     public function __toString()
     {
-        return __CLASS__ . ': UserInvitation(' . $this->id . ') not found';
+        return __CLASS__ . ': UserInvitation(' . $this->uuid . ') not found';
     }
 }
