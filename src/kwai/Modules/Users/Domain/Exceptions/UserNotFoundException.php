@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Domain\Exceptions;
 
 use Exception;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 
 /**
  * Class UserNotFoundException
@@ -19,9 +20,9 @@ class UserNotFoundException extends Exception
     /**
      * UserNotFoundException constructor.
      *
-     * @param int $id
+     * @param int|UniqueId $id
      */
-    public function __construct(private int $id)
+    public function __construct(private int|UniqueId $id)
     {
         parent::__construct('User not found');
     }
