@@ -84,11 +84,8 @@ it('can get a user with the given id', function ($user) use ($context) {
 it('can get a user with the given uuid', function ($uuid) use ($context) {
     $repo = new UserDatabaseRepository($context->db);
     try {
-        $query = $repo->createQuery()->filterByUUID($uuid);
-        $users = $repo->getAll($query);
-        expect($users)
-            ->toBeInstanceOf(Collection::class)
-            ->and($users->first())
+        $user = $repo->getByUniqueId($uuid);
+        expect($user)
             ->toBeInstanceOf(Entity::class)
         ;
     } catch (Exception $e) {

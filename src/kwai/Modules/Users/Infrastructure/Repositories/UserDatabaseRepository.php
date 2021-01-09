@@ -11,11 +11,11 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserQuery;
@@ -35,18 +35,32 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
 {
     /**
      * @inheritDoc
-     * @return Entity<User>
      */
     public function getById(int $id): Entity
     {
         $query = $this->createQuery()->filterById($id);
 
         $entities = $this->getAll($query);
-        if ($entities->isNotEmpty()) {
-            return $entities->get($id);
+        if ($entities->isEmpty()) {
+            throw new UserNotFoundException($id);
         }
 
-        throw new UserNotFoundException($id);
+        return $entities->get($id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByUniqueId(UniqueId $uuid): Entity
+    {
+        $query = $this->createQuery()->filterByUUID($uuid);
+
+        $entities = $this->getAll($query);
+        if ($entities->isEmpty()) {
+            throw new UserNotFoundException($uuid);
+        }
+
+        return $entities->first();
     }
 
     /**
