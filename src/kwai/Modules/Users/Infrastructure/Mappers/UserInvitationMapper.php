@@ -1,6 +1,6 @@
 <?php
 /**
- * @package kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -35,6 +35,7 @@ class UserInvitationMapper
             expiration: Timestamp::createFromString($data->get('expired_at'), $data->get('expired_at_timezone')),
             name: $data->get('name'),
             creator: CreatorMapper::toDomain($data->get('creator')),
+            revoked: $data->get('revoked', '0') === '1',
             remark: $data->get('remark'),
             confirmation: $data->has('confirmed_at') ? Timestamp::createFromString($data->get('confirmed_at')) : null,
             traceableTime: new TraceableTime(
@@ -48,27 +49,23 @@ class UserInvitationMapper
 
     /**
      * Maps the UserInvitation to a table row
+     *
      * @param UserInvitation $invitation
-     * @return array
+     * @return Collection
      */
-    public static function toPersistence(UserInvitation $invitation): array
+    public static function toPersistence(UserInvitation $invitation): Collection
     {
-        if ($invitation->getTraceableTime()->isUpdated()) {
-            $updated_at = strval($invitation->getTraceableTime()->getUpdatedAt());
-        } else {
-            $updated_at = null;
-        }
-        return [
+        return collect([
             'uuid' => strval($invitation->getUniqueId()),
             'email' => strval($invitation->getEmailAddress()),
             'expired_at' => strval($invitation->getExpiration()),
             'expired_at_timezone' => strval($invitation->getExpiration()->getTimezone()),
             'confirmed_at' => $invitation->isConfirmed() ? strval($invitation->getConfirmation()) : null,
             'name' => $invitation->getName(),
-            'creator' => CreatorMapper::toPersistence($invitation->getCreator()),
+            'user_id' => $invitation->getCreator()->getId(),
             'remark' => $invitation->getRemark(),
             'created_at' => strval($invitation->getTraceableTime()->getCreatedAt()),
-            'updated_at' => $updated_at
-        ];
+            'updated_at' => $invitation->getTraceableTime()->getUpdatedAt()?->__toString()
+        ]);
     }
 }
