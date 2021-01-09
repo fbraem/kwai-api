@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
@@ -27,9 +28,18 @@ interface UserRepository
      * @throws UserNotFoundException
      * @throws RepositoryException
      * @return Entity<User>
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function getById(int $id) : Entity;
+
+    /**
+     * Get the user with the given unique id.
+     *
+     * @param UniqueId $uuid
+     * @return Entity<User>
+     * @throws UserNotFoundException
+     * @throws RepositoryException
+     */
+    public function getByUniqueId(UniqueId $uuid) : Entity;
 
     /**
      * Get all users.
