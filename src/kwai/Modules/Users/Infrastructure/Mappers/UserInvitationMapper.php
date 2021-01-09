@@ -62,6 +62,7 @@ class UserInvitationMapper
             'expired_at_timezone' => strval($invitation->getExpiration()->getTimezone()),
             'confirmed_at' => $invitation->isConfirmed() ? strval($invitation->getConfirmation()) : null,
             'name' => $invitation->getName(),
+            'revoked' => $invitation->isRevoked(),
             'user_id' => $invitation->getCreator()->getId(),
             'remark' => $invitation->getRemark(),
             'created_at' => strval($invitation->getTraceableTime()->getCreatedAt()),
