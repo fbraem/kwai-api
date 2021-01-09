@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
@@ -39,7 +38,7 @@ interface UserRepository
      * @param int|null       $limit
      * @param int|null       $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(
         ?UserQuery $query = null,

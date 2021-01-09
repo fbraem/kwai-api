@@ -41,15 +41,11 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         $query = $this->createQuery()->filterById($id);
 
-        try {
-            $entities = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
+        $entities = $this->getAll($query);
         if ($entities->isNotEmpty()) {
             return $entities->get($id);
         }
+
         throw new UserNotFoundException($id);
     }
 
@@ -86,8 +82,14 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         ?int $offset = null
     ): Collection {
         $query ??= $this->createQuery();
+
         /* @var Collection $users */
-        $users = $query->execute($limit, $offset);
+        try {
+            $users = $query->execute($limit, $offset);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
         return $users->mapWithKeys(
             fn($item, $key) => [
                 $key => new Entity((int) $key, UserMapper::toDomain($item))
