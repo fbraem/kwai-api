@@ -61,10 +61,6 @@ it('can get a user with the given id', function ($user) use ($context) {
     $repo = new UserDatabaseRepository($context->db);
     try {
         $entity = $repo->getById($user->id());
-        $this->assertInstanceOf(
-            Entity::class,
-            $entity
-        );
         expect($entity)
             ->toBeInstanceOf(Entity::class)
         ;
