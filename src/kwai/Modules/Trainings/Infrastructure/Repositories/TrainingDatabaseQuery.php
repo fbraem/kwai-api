@@ -257,10 +257,10 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $teamQuery->filterOnTrainings($trainingIds);
         $trainingTeams = $teamQuery->execute();
         foreach($trainingIds as $trainingId) {
-            $trainings[$trainingId]->put(
-                'teams',
-                $trainingTeams[$trainingId] ?? new Collection()
-            );
+            $trainings[$trainingId]
+                ->nest('teams')
+                ->push($trainingTeams[$trainingId])
+            ;
         }
 
         return $trainings;
