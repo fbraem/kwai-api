@@ -38,3 +38,18 @@ it('can filter columns', function () {
         ->toBe('12dan')
     ;
 });
+
+it('can create a nested collection', function() {
+    $rows = collect([]);
+    $rows
+        ->nest('row')
+        ->put('name', 'Jigoro')
+    ;
+    $rows
+        ->nest('row')
+        ->put('grade', '12dan')
+    ;
+    expect($rows->get('row'))
+        ->toBeInstanceOf(Collection::class)
+    ;
+});

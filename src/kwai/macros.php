@@ -37,10 +37,24 @@ Collection::macro('filterColumns', function(Collection $prefixes) {
     );
 });
 
+/**
+ * Creates a collection. Nested arrays will also be changed to Collections
+ */
 Collection::macro('recursive', function () {
     return $this->map(function ($value) {
         return is_array($value)
             ? (new static($value))->recursive()
             : $value;
     });
+});
+
+/**
+ * Gets an item collection for the given key. When the key doesn't exist
+ * a new Collection will be created.
+ */
+Collection::macro('nest', function($key) {
+    if (!$this->has($key)) {
+        $this->put($key, new Collection());
+    }
+    return $this->get($key);
 });
