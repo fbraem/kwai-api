@@ -67,6 +67,10 @@ it('can get a user with the given id', function ($user) use ($context) {
         expect($entity->domain())
             ->toBeInstanceOf(User::class)
         ;
+        /** @noinspection PhpUndefinedMethodInspection */
+        expect($entity->getAbilities())
+            ->toBeInstanceOf(Collection::class)
+        ;
         /* @noinspection PhpUndefinedMethodInspection */
         return $entity->getUuid();
     } catch (Exception $e) {
