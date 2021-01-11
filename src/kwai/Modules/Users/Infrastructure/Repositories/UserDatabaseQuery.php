@@ -98,11 +98,28 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
             Tables::USERS()->getAliasPrefix()
         ]);
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             [
                 $user
             ] = $row->filterColumns($filters);
             $users->put($user->get('id'), $user);
+        }
+
+        if ($rows->isEmpty()) {
+            return new Collection();
+        }
+
+        $userIds = $users->keys()->toArray();
+
+        // Get the abilities of all users
+        $abilityQuery = new UserAbilityDatabaseQuery($this->db);
+        $abilityQuery->filterByUser(...$userIds);
+        $abilities = $abilityQuery->execute();
+        foreach ($userIds as $userId) {
+            $users[$userId]->put(
+                'abilities',
+                $abilities->get($userId, new Collection())
+            );
         }
 
         return $users;
