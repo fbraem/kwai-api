@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -56,6 +57,12 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
     {
         $data = AbilityMapper::toPersistence($ability);
 
+        try {
+             $this->db->begin();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::ABILITIES())
             ->columns(
@@ -68,73 +75,63 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
 
         try {
             $this->db->execute($query);
+
+            $entity = new Entity(
+                $this->db->lastInsertId(),
+                $ability
+            );
+
+            $this->insertRules($entity);
         } catch (QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $entity = new Entity(
-            $this->db->lastInsertId(),
-            $ability
-        );
-
-        if (count($ability->getRules()) > 0) {
-            $this->addRules($entity, $ability->getRules());
+        try {
+             $this->db->commit();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
         }
 
         return $entity;
     }
 
     /**
-     * @inheritDoc
+     * Insert rules of the ability
+     *
+     * @param Entity $ability
+     * @throws QueryException
      */
-    public function addRules(Entity $ability, array $rules)
+    private function insertRules(Entity $ability)
     {
-        if (count($rules) == 0) {
+        /* @var Collection $rules */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $rules = $ability->getRules();
+        if ($rules->count() === 0) {
             return;
         }
 
-        $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::ABILITY_RULES())
-            ->columns(
-                'ability_id',
-                'rule_id'
+        $rules
+            ->transform(
+                fn (Entity $rule) => collect(['rule_id' => $rule->id()])
+            )
+            ->map(
+                fn (Collection $item) => $item->put('ability_id', $ability->id())
             )
         ;
-        foreach ($rules as $rule) {
-            $query->values(
-                $ability->id(),
-                $rule->id()
-            );
-        }
-        try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function deleteRules(Entity $ability, array $rules)
-    {
-        if (count($rules) == 0) {
-            return;
-        }
-
-        $ruleIds = array_map(fn($rule) => $rule->id(), $rules);
-
         $query = $this->db->createQueryFactory()
-            ->delete((string) Tables::ABILITY_RULES())
-            ->where(field('ability_id')->eq($ability->id()))
-            ->andWhere(field('rule_id')->in(...$ruleIds))
+            ->insert((string) Tables::ABILITY_RULES())
+            ->columns(...$rules->first()->keys())
         ;
+        $rules->each(
+            fn (Collection $rule) => $query->values(... $rule->values())
+        );
 
-        try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
+        $this->db->execute($query);
     }
 
     /**
@@ -142,14 +139,41 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
      */
     public function update(Entity $ability): void
     {
-        $query = $this->db->createQueryFactory()
+        try {
+            $this->db->begin();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $queryFactory = $this->db->createQueryFactory();
+        $query = $queryFactory
             ->update((string) Tables::ABILITIES())
-            ->set(AbilityMapper::toPersistence($ability->domain()))
+            ->set(AbilityMapper::toPersistence($ability->domain())->toArray())
             ->where(field('id')->eq($ability->id()))
         ;
         try {
             $this->db->execute($query);
+            // Update rules
+            // First delete all rules
+            $this->db->execute(
+                $queryFactory
+                  ->delete((string) Tables::ABILITY_RULES())
+                  ->where(field('ability_id')->eq($ability->id()))
+            );
+            // Insert the rules again
+            $this->insertRules($ability);
         } catch (QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        try {
+            $this->db->commit();
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
