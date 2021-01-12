@@ -245,7 +245,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $trainingCoachQuery = new TrainingCoachDatabaseQuery($this->db);
         $trainingCoachQuery->filterOnTrainings($trainingIds);
         $trainingCoaches = $trainingCoachQuery->execute();
-        foreach($trainingIds as $trainingId) {
+        foreach ($trainingIds as $trainingId) {
             $trainings[$trainingId]->put(
                 'coaches',
                 $trainingCoaches[$trainingId] ?? new Collection()
@@ -256,7 +256,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $teamQuery = new TrainingTeamDatabaseQuery($this->db);
         $teamQuery->filterOnTrainings($trainingIds);
         $trainingTeams = $teamQuery->execute();
-        foreach($trainingIds as $trainingId) {
+        foreach ($trainingIds as $trainingId) {
             $trainings[$trainingId]
                 ->put('teams', $trainingTeams[$trainingId] ?? new Collection())
             ;
