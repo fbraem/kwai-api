@@ -41,12 +41,16 @@ final class RuleMapper
 
     /**
      * Persist a Rule entity to a Database row object
+     *
      * @param Entity $rule
-     * @return object
+     * @return Collection
      */
-    public static function toPersistence(Entity $rule): object
+    public static function toPersistence(Entity $rule): Collection
     {
-        //TODO: implement
-        return (object)[];
+        return collect([
+            'name' => $rule->getName(),
+            'action' => $rule->getAction(),
+            'subject' => $rule->getSubject()
+        ]);
     }
 }
