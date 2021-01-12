@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AbilityQuery;
@@ -20,6 +21,12 @@ use function Latitude\QueryBuilder\on;
  */
 class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
 {
+    public function __construct(Connection $db)
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        parent::__construct($db, Tables::ABILITIES()->id);
+    }
+
     /**
      * @inheritDoc
      */
@@ -40,27 +47,28 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query
             ->from((string) Tables::ABILITIES())
-            ->join(
+            ->leftJoin(
                 (string) Tables::ABILITY_RULES(),
-                on(Tables::ABILITIES()->id,
-                Tables::ABILITY_RULES()->ability_id
+                on(
+                    Tables::ABILITIES()->id,
+                    Tables::ABILITY_RULES()->ability_id
                 )
             )
-            ->join(
+            ->leftJoin(
                 (string) Tables::RULES(),
                 on(
                     Tables::ABILITY_RULES()->rule_id,
                     Tables::RULES()->id
                 )
             )
-            ->join(
+            ->leftJoin(
                 (string) Tables::RULE_ACTIONS(),
                 on(
                     Tables::RULES()->action_id,
                     Tables::RULE_ACTIONS()->id
                 )
             )
-            ->join(
+            ->leftJoin(
                 (string) Tables::RULE_SUBJECTS(),
                 on(
                     Tables::RULES()->subject_id,
