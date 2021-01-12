@@ -15,6 +15,15 @@ use Kwai\Core\Domain\DomainEntity;
  */
 class Rule implements DomainEntity
 {
+    /**
+     * Rule constructor.
+     *
+     * @param string             $name
+     * @param string             $subject
+     * @param string             $action
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
+     */
     public function __construct(
         private string $name,
         private string $subject,
