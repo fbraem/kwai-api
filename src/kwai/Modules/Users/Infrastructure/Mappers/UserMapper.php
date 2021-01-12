@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
@@ -33,8 +34,8 @@ final class UserMapper
         return new User(
             uuid: new UniqueId($data->get('uuid')),
             emailAddress: new EmailAddress($data->get('email')),
-            abilities: $data->get('abilities')->map(
-                fn($ability) => AbilityMapper::toDomain($ability)
+            abilities: $data->get('abilities', new Collection())->map(
+                fn($ability) => new Entity((int) $ability->get('id'), AbilityMapper::toDomain($ability))
             ),
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($data->get('created_at')),
@@ -43,7 +44,10 @@ final class UserMapper
                     : null
             ),
             remark: $data->get('remark'),
-            username: new Name($data->get('first_name'), $data->get('last_name')),
+            username: new Name(
+            $data->get('first_name'),
+            $data->get('last_name')
+            ),
             member: $data->get('member_id')
         );
     }
