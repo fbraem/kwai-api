@@ -53,21 +53,14 @@ final class UserMapper
     }
 
     /**
-     * Returns a data array from a User domain object.
+     * Returns a data collection from a User domain object.
+     *
      * @param User $user
-     * @return array
+     * @return Collection
      */
-    public static function toPersistence(User $user): array
+    public static function toPersistence(User $user): Collection
     {
-        if ($user->getTraceableTime()->getUpdatedAt()) {
-            $updated_at = strval(
-                $user->getTraceableTime()->getUpdatedAt()
-            );
-        } else {
-            $updated_at = null;
-        }
-
-        return [
+        return collect([
             'uuid' => strval($user->getUuid()),
             'email' => strval($user->getEmailAddress()),
             'first_name' => $user->getUsername()->getFirstName(),
@@ -75,7 +68,7 @@ final class UserMapper
             'remark' => $user->getRemark(),
             'member_id' => $user->getMember(),
             'created_at' => strval($user->getTraceableTime()->getCreatedAt()),
-            'updated_at' => $updated_at ? strval($updated_at) : null
-        ];
+            'updated_at' => $user->getTraceableTime()->getUpdatedAt()?->__toString()
+        ]);
     }
 }
