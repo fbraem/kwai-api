@@ -62,7 +62,6 @@ class AttachAbilityToUser
     public function __invoke(AttachAbilityToUserCommand $command): Entity
     {
         $user = $this->userRepo->getByUniqueId(new UniqueId($command->uuid));
-        // Add it
         $ability = $this->abilityRepo->getById($command->abilityId);
         /** @noinspection PhpUndefinedMethodInspection */
         $user->addAbility($ability);
