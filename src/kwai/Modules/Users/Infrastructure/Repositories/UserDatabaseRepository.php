@@ -10,8 +10,8 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -111,54 +111,45 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         );
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function addAbility(Entity $user, Entity $ability): Entity
+    public function update(Entity $user): void
     {
-        $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::USER_ABILITIES())
-            ->columns(
-                'user_id',
-                'ability_id',
-                'created_at',
-                'updated_at'
-            )
-            ->values(
-                $user->id(),
-                $ability->id(),
-                strval(Timestamp::createNow()),
-                null
-            )
-        ;
         try {
-            $this->db->execute($query);
-        } catch (QueryException $e) {
+            $this->db->begin();
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        /** @noinspection PhpUndefinedMethodInspection */
-        $user->addAbility($ability);
-        return $user;
-    }
 
-    /**
-     * @inheritDoc
-     */
-    public function removeAbility(Entity $user, Entity $ability): Entity
-    {
-        $query = $this->db->createQueryFactory()
-            ->delete((string) Tables::USER_ABILITIES())
-            ->where(field('user_id')->eq($user->id()))
-            ->andWhere(field('ability_id')->eq($ability->id()))
+        $queryFactory = $this->db->createQueryFactory();
+        $query = $queryFactory
+            ->update((string) Tables::USERS())
+            ->set(UserMapper::toPersistence($user->domain())->toArray())
+            ->where(field('id')->eq($user->id()))
         ;
+
         try {
             $this->db->execute($query);
+            // Update abilities
+            // First delete all abilities
+            $this->db->execute(
+                $queryFactory
+                    ->delete((string) Tables::USER_ABILITIES())
+                ->where(field('user_id')->eq($user->id()))
+            );
+            $this->insertAbilities($user);
         } catch (QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
             throw new RepositoryException(__METHOD__, $e);
         }
-        /** @noinspection PhpUndefinedMethodInspection */
-        $user->removeAbility($ability);
-        return $user;
+
+        try {
+            $this->db->commit();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 
     /**
@@ -167,5 +158,40 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     public function createQuery(): UserQuery
     {
         return new UserDatabaseQuery($this->db);
+    }
+
+    /**
+     * Insert abilities of the user
+     *
+     * @param Entity $user
+     * @throws QueryException
+     */
+    private function insertAbilities(Entity $user)
+    {
+        /* @var Collection $abilities */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $abilities = $user->getAbilities();
+        if ($abilities->count() === 0) {
+            return;
+        }
+
+        $abilities
+            ->transform(
+                fn (Entity $ability) => collect(['ability_id' => $ability->id()])
+            )
+            ->map(
+                fn (Collection $item) => $item->put('user_id', $user->id())
+            )
+        ;
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::USER_ABILITIES())
+            ->columns(... $abilities->first()->keys())
+        ;
+        $abilities->each(
+            fn(Collection $ability) => $query->values(... $ability->values())
+        );
+
+        $this->db->execute($query);
     }
 }

@@ -12,7 +12,6 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 
@@ -57,26 +56,6 @@ interface UserRepository
     ): Collection;
 
     /**
-     * Add the ability to the user.
-     *
-     * @param Entity<Ability> $user
-     * @param Entity<Ability> $ability
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function addAbility(Entity $user, Entity $ability): Entity;
-
-    /**
-     * Remove the ability from the user.
-     *
-     * @param Entity<Ability> $user
-     * @param Entity<Ability> $ability
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function removeAbility(Entity $user, Entity $ability): Entity;
-
-    /**
      * Creates a UserQuery
      *
      * @return UserQuery
@@ -91,4 +70,12 @@ interface UserRepository
      * @return bool
      */
     public function existsWithEmail(EmailAddress $email): bool;
+
+    /**
+     * Update a user
+     *
+     * @param Entity $user
+     * @throws RepositoryException
+     */
+    public function update(Entity $user): void;
 }
