@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 
 interface RuleRepository
 {
@@ -19,7 +20,7 @@ interface RuleRepository
      *
      * @param int[] $ids
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getByIds(array $ids): Collection;
 
@@ -38,7 +39,7 @@ interface RuleRepository
      * @param int|null       $limit
      * @param int|null       $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(
         ?RuleQuery $query = null,
