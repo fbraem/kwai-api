@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -27,12 +27,6 @@ use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
  */
 final class AuthenticateUser
 {
-    private UserRepository $userRepo;
-
-    private AccessTokenRepository $accessTokenRepo;
-
-    private RefreshTokenRepository $refreshTokenRepo;
-
     /**
      * Constructor.
      * @param UserRepository $userRepo A user repository
@@ -40,13 +34,10 @@ final class AuthenticateUser
      * @param RefreshTokenRepository $refreshTokenRepo An refreshtoken repository
      */
     public function __construct(
-        UserRepository $userRepo,
-        AccessTokenRepository $accessTokenRepo,
-        RefreshTokenRepository $refreshTokenRepo
+        private UserRepository $userRepo,
+        private AccessTokenRepository $accessTokenRepo,
+        private RefreshTokenRepository $refreshTokenRepo
     ) {
-        $this->userRepo = $userRepo;
-        $this->accessTokenRepo = $accessTokenRepo;
-        $this->refreshTokenRepo = $refreshTokenRepo;
     }
 
     /**
