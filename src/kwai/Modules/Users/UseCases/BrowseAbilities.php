@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 
 /**
@@ -43,11 +42,16 @@ class BrowseAbilities
      * Get all abilities.
      *
      * @param BrowseAbilitiesCommand $command
-     * @return Entity<Ability>[]
+     * @return array
      * @throws RepositoryException
+     * @throws QueryException
      */
     public function __invoke(BrowseAbilitiesCommand $command): array
     {
-        return $this->repo->getAll();
+        $query = $this->repo->createQuery();
+        return [
+            $query->count(),
+            $this->repo->getAll($query)
+        ];
     }
 }
