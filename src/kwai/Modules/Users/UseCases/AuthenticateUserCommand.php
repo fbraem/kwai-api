@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -8,7 +8,9 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * AuthenticateUserCommand is a datatransferobject for AuthenicateUser usecase.
+ * AuthenticateUserCommand
+ *
+ * Command for the AuthenticateUser usecase.
  */
 final class AuthenticateUserCommand
 {
