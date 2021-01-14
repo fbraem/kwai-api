@@ -34,10 +34,30 @@ final class AuthenticateUser
      * @param RefreshTokenRepository $refreshTokenRepo
      */
     public function __construct(
-        private UserAccountRepository $userAccountRepo,
-        private AccessTokenRepository $accessTokenRepo,
-        private RefreshTokenRepository $refreshTokenRepo
+    private UserAccountRepository $userAccountRepo,
+    private AccessTokenRepository $accessTokenRepo,
+    private RefreshTokenRepository $refreshTokenRepo
     ) {
+    }
+
+    /**
+     * Factory method
+     *
+     * @param UserAccountRepository  $userAccountRepo
+     * @param AccessTokenRepository  $accessTokenRepository
+     * @param RefreshTokenRepository $refreshTokenRepository
+     * @return AuthenticateUser
+     */
+    public static function create(
+        UserAccountRepository $userAccountRepo,
+        AccessTokenRepository $accessTokenRepository,
+        RefreshTokenRepository $refreshTokenRepository
+    ) {
+        return new self(
+            $userAccountRepo,
+            $accessTokenRepository,
+            $refreshTokenRepository
+        );
     }
 
     /**
