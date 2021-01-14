@@ -177,7 +177,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
     /**
      * @inheritDoc
      */
-    private function createQuery(): AbilityQuery
+    public function createQuery(): AbilityQuery
     {
         return new AbilityDatabaseQuery($this->db);
     }
