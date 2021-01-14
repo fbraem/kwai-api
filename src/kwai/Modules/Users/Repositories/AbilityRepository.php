@@ -37,7 +37,7 @@ interface AbilityRepository
      * @param int|null          $limit
      * @param int|null          $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(
         ?AbilityQuery $query = null,
