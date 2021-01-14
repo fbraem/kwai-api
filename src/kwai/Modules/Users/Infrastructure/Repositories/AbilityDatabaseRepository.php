@@ -38,11 +38,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
     {
         $query = $this->createQuery()->filterById($id);
 
-        try {
-            $entities = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
+        $entities = $this->getAll($query);
         if ($entities->isNotEmpty()) {
             return $entities->get($id);
         }
@@ -196,7 +192,11 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
     ): Collection {
         $query ??= $this->createQuery();
         /* @var Collection $abilities */
-        $abilities = $query->execute($limit, $offset);
+        try {
+            $abilities = $query->execute($limit, $offset);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
         return $abilities->mapWithKeys(
             fn($item, $key) => [
                 $key => new Entity((int) $key, AbilityMapper::toDomain($item))
