@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 
 interface RuleRepository
