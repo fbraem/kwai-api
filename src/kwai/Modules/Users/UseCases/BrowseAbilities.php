@@ -19,16 +19,13 @@ use Kwai\Modules\Users\Repositories\AbilityRepository;
  */
 class BrowseAbilities
 {
-    private AbilityRepository $repo;
-
     /**
      * BrowseAbilities constructor.
      *
      * @param AbilityRepository $repo
      */
-    public function __construct(AbilityRepository $repo)
+    public function __construct(private AbilityRepository $repo)
     {
-        $this->repo = $repo;
     }
 
     /**
