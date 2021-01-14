@@ -9,7 +9,6 @@ namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
@@ -61,4 +60,11 @@ interface AbilityRepository
      * @throws RepositoryException
      */
     public function update(Entity $ability): void;
+
+    /**
+     * Factory method to create query
+     *
+     * @return AbilityQuery
+     */
+    public function createQuery(): AbilityQuery;
 }
