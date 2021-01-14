@@ -39,3 +39,10 @@ it('can create a date for the current a year', function () {
     ]);
     expect(strval($date))->toBe("$currentYear-01-31 00:00:00");
 });
+
+/*
+it('can convert to UTC', function () {
+    $now = Timestamp::createNow('Europe/Brussels');
+    $utc = $now->toUTC();
+});
+*/
