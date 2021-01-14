@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
@@ -29,6 +29,17 @@ class BrowseAbilities
     public function __construct(AbilityRepository $repo)
     {
         $this->repo = $repo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param AbilityRepository $repo
+     * @return static
+     */
+    public static function create(AbilityRepository $repo): self
+    {
+        return new self($repo);
     }
 
     /**
