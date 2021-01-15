@@ -79,6 +79,23 @@ it('can get an invitation using an email', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    // ->depends('it can create an invitation')
+    ->depends('it can create an invitation')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can browse invitations', function () use ($context) {
+    $repo = new UserInvitationDatabaseRepository($context->db);
+    $query = $repo
+        ->createQuery()
+        ->filterActive(Timestamp::createNow())
+    ;
+    try {
+        $invitations = $repo->getAll($query);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+    expect($invitations)
+        ->toBeInstanceOf(Collection::class);
+})
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
