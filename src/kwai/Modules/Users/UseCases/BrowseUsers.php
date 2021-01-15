@@ -1,13 +1,12 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use Illuminate\Support\Collection;
@@ -19,11 +18,24 @@ use Illuminate\Support\Collection;
  */
 class BrowseUsers
 {
-    private UserRepository $userRepo;
-
-    public function __construct(UserRepository $userRepo)
+    /**
+     * BrowseUsers constructor.
+     *
+     * @param UserRepository $userRepo
+     */
+    public function __construct(private UserRepository $userRepo)
     {
-        $this->userRepo = $userRepo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param UserRepository $userRepo
+     * @return BrowseUsers
+     */
+    public static function create(UserRepository $userRepo): BrowseUsers
+    {
+        return new self($userRepo);
     }
 
     /**
@@ -31,12 +43,15 @@ class BrowseUsers
      * The real count of users and a collection with users.
      *
      * @param BrowseUsersCommand $command
-     * @return Entity[]
+     * @return array
      * @throws RepositoryException
      */
     public function __invoke(BrowseUsersCommand $command): array
     {
-        $all = $this->userRepo->getAll();
+        $all = $this->userRepo->getAll(
+            limit: $command->limit,
+            offset: $command->offset
+        );
         return [
             count($all), new Collection($all)
         ];
