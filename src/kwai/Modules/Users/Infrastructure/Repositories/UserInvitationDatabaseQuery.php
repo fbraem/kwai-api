@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Users\Infrastructure\Tables;
@@ -29,12 +30,12 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->from((string) Tables::USER_INVITATIONS())
             ->join(
-            (string) Tables::USERS(),
-            on(
-                Tables::USER_INVITATIONS()->user_id,
-                Tables::USERS()->id
-            )
-        );
+                (string) Tables::USERS(),
+                on(
+                    Tables::USER_INVITATIONS()->user_id,
+                    Tables::USERS()->id
+                )
+            );
     }
 
     /**
@@ -83,6 +84,19 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::USER_INVITATIONS()->email)->eq($emailAddress)
+        );
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function filterActive(Timestamp $timestamp): UserInvitationQuery
+    {
+        $datetime = (string) $timestamp->toUTC();
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            field(Tables::USER_INVITATIONS()->expired_at)->gt($datetime)
         );
         return $this;
     }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\Query;
 
@@ -31,4 +32,17 @@ interface UserInvitationQuery extends Query
      * @return UserInvitationQuery
      */
     public function filterByEmail(EmailAddress $emailAddress): self;
+
+    /**
+     * Filter only the invitations that are still active (not expired)
+     * on the given date.
+     *
+     * @note The expiration date is stored as UTC, so don't forget to set
+     *       the timezone of the timestamp. The implementation of this query
+     *       should convert the date to UTC before applying the filter.
+     *
+     * @param Timestamp $timestamp
+     * @return UserInvitationQuery
+     */
+    public function filterActive(Timestamp $timestamp): self;
 }
