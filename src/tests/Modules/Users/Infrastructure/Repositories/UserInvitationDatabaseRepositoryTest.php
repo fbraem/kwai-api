@@ -35,9 +35,9 @@ it('can create an invitation', function () use ($context) {
         $user = $users->first();
 
         $invitation = new UserInvitation(
-            emailAddress: new EmailAddress('invite@kwai.com'),
+            emailAddress: new EmailAddress('gella.vandecaveye@kwai.com'),
             expiration: Timestamp::createFromDateTime(new DateTime("now +14 days")),
-            name: 'Jigoro Kano',
+            name: 'Gella Vandecaveye',
             creator: new Creator(
                 id: $user->id(),
                 name: $user->getUsername()
@@ -64,7 +64,7 @@ it('can get an invitation using an email', function () use ($context) {
         $query = $repo
             ->createQuery()
             ->filterByEmail(
-                new EmailAddress('invite@kwai.com')
+                new EmailAddress('gella.vandecaveye@kwai.com')
             )
         ;
         $invitations = $repo->getAll($query);
