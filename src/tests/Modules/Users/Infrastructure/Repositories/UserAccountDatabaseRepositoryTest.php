@@ -13,7 +13,7 @@ use Tests\Context;
 
 $context = Context::createContext();
 
-it('can create a user account', function() use ($context) {
+it('can create a user account', function () use ($context) {
     $repo = new UserAccountDatabaseRepository($context->db);
     try {
         $userAccount = $repo->create(
@@ -52,6 +52,28 @@ it('can get a user account', function () use ($context) {
         ;
     } catch (Exception $e) {
         $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can check if a user with email exists', function () use ($context) {
+    $repo = new UserAccountDatabaseRepository($context->db);
+    try {
+        $exist = $repo->existsWithEmail(
+            new EmailAddress('jigoro.kano@kwai.com')
+        );
+        expect($exist)
+            ->toBe(true)
+        ;
+        $exist = $repo->existsWithEmail(
+            new EmailAddress('test@example.com')
+        );
+        expect($exist)
+            ->toBe(false)
+        ;
+    } catch (Exception $e) {
+        $this->assertTrue(false, (string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')

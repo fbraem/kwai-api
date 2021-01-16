@@ -9,7 +9,6 @@ namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
@@ -61,15 +60,6 @@ interface UserRepository
      * @return UserQuery
      */
     public function createQuery(): UserQuery;
-
-    /**
-     * Checks if a user with the given email already exists
-     *
-     * @param EmailAddress $email
-     * @throws RepositoryException
-     * @return bool
-     */
-    public function existsWithEmail(EmailAddress $email): bool;
 
     /**
      * Update a user

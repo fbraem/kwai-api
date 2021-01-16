@@ -43,4 +43,13 @@ interface UserAccountRepository
      * @throws RepositoryException
      */
     public function create(UserAccount $account): Entity;
+
+    /**
+     * Checks if a user with the given email already exists
+     *
+     * @param EmailAddress $email
+     * @throws RepositoryException
+     * @return bool
+     */
+    public function existsWithEmail(EmailAddress $email): bool;
 }

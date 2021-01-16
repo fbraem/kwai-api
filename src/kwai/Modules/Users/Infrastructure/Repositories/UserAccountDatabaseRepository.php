@@ -17,7 +17,9 @@ use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
+use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
+use function Latitude\QueryBuilder\func;
 
 /**
  * Class UserAccountDatabaseRepository
@@ -92,5 +94,29 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
             $this->db->lastInsertId(),
             $account
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function existsWithEmail(EmailAddress $email): bool
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $query = $this->db->createQueryFactory()
+            ->select(
+                alias(
+                    func('COUNT', Tables::USERS()->id),
+                    'c'
+                )
+            )
+            ->from((string) Tables::USERS())
+            ->where(field('email')->eq(strval($email)))
+        ;
+        try {
+            $count = collect($this->db->execute($query)->fetch());
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+        return $count->get('c') > 0;
     }
 }

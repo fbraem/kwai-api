@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types=1);
@@ -9,7 +9,6 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
@@ -20,9 +19,7 @@ use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserQuery;
 use Kwai\Modules\Users\Repositories\UserRepository;
-use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\func;
 
 /**
  * Class UserDatabaseRepository
@@ -61,30 +58,6 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         }
 
         return $entities->first();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function existsWithEmail(EmailAddress $email): bool
-    {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $query = $this->db->createQueryFactory()
-            ->select(
-                alias(
-                    func('COUNT', Tables::USERS()->id),
-                    'c'
-                )
-            )
-            ->from((string) Tables::USERS())
-            ->where(field('email')->eq(strval($email)))
-        ;
-        try {
-            $count = collect($this->db->execute($query)->fetch());
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        return $count->get('c') > 0;
     }
 
     /**

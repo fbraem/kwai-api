@@ -35,28 +35,6 @@ it('can get a user with email', function () use ($context) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can check if a user with email exists', function () use ($context) {
-    $repo = new UserDatabaseRepository($context->db);
-    try {
-        $exist = $repo->existsWithEmail(
-            new EmailAddress('jigoro.kano@kwai.com')
-        );
-        expect($exist)
-            ->toBe(true)
-        ;
-        $exist = $repo->existsWithEmail(
-            new EmailAddress('test@example.com')
-        );
-        expect($exist)
-            ->toBe(false)
-        ;
-    } catch (Exception $e) {
-        $this->assertTrue(false, (string) $e);
-    }
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
-
 it('can get a user with the given id', function ($user) use ($context) {
     $repo = new UserDatabaseRepository($context->db);
     try {
