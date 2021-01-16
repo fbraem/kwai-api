@@ -7,10 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 
@@ -28,7 +26,6 @@ class UserAccount implements DomainEntity
      * @param Timestamp|null  $lastLogin
      * @param Timestamp|null  $lastUnsuccessfulLogin
      * @param bool            $revoked
-     * @param Collection|null $abilities
      */
     public function __construct(
         private User $user,
@@ -36,9 +33,7 @@ class UserAccount implements DomainEntity
         private ?Timestamp $lastLogin = null,
         private ?Timestamp $lastUnsuccessfulLogin = null,
         private bool $revoked = false,
-        private ?Collection $abilities = null
     ) {
-        $this->abilities ??= collect();
     }
 
     /**
@@ -66,16 +61,6 @@ class UserAccount implements DomainEntity
     public function isRevoked(): bool
     {
         return $this->revoked;
-    }
-
-    /**
-     * Return the abilities of this user.
-     *
-     * @return Collection
-     */
-    public function getAbilities(): Collection
-    {
-        return $this->abilities->collect();
     }
 
     /**
@@ -115,15 +100,6 @@ class UserAccount implements DomainEntity
     public function getLastUnsuccessfulLogin(): ?Timestamp
     {
         return $this->lastUnsuccessfulLogin;
-    }
-
-    /**
-     * Adds an ability to this user.
-     * @param Entity<Ability> $ability
-     */
-    public function addAbility(Entity $ability)
-    {
-        $this->abilities->push($ability);
     }
 
     public function getPassword(): Password
