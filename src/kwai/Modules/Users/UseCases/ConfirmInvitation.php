@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types=1);
@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\UseCases;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
-use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
@@ -29,26 +28,14 @@ use Kwai\Modules\Users\Repositories\UserRepository;
 final class ConfirmInvitation
 {
     /**
-     * The invitation repository
-     */
-    private UserInvitationRepository $invitationRepo;
-
-    /**
-     * The user repository
-     */
-    private UserRepository $userRepo;
-
-    /**
      * ConfirmInvitation constructor.
      * @param UserInvitationRepository $invitationRepo
      * @param UserRepository $userRepo
      */
     public function __construct(
-        UserInvitationRepository $invitationRepo,
-        UserRepository $userRepo
+        private UserInvitationRepository $invitationRepo,
+        private UserRepository $userRepo
     ) {
-        $this->invitationRepo = $invitationRepo;
-        $this->userRepo = $userRepo;
     }
 
     /**
