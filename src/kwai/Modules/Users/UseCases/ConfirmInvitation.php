@@ -39,6 +39,20 @@ final class ConfirmInvitation
     }
 
     /**
+     * Factory method
+     *
+     * @param UserInvitationRepository $invitationRepository
+     * @param UserRepository           $userRepository
+     * @return ConfirmInvitation
+     */
+    public static function create(
+        UserInvitationRepository $invitationRepository,
+        UserRepository $userRepository
+    ) {
+        return new self($invitationRepository, $userRepository);
+    }
+
+    /**
      * Create a new user account.
      * @param ConfirmInvitationCommand $command
      * @return Entity The new user account
