@@ -4,19 +4,19 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\UseCases;
 
 use DateTime;
+use Exception;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\UseCases\ConfirmInvitation;
 use Kwai\Modules\Users\UseCases\ConfirmInvitationCommand;
@@ -26,15 +26,12 @@ use Tests\Context;
 $context = Context::createContext();
 
 beforeAll(function () use ($context) {
-    $context->creator = new Entity(1, new User((object)[
-        'uuid' => new UniqueId(),
-        'emailAddress' => new EmailAddress('webmaster@kwai.com'),
-        'traceableTime' => new TraceableTime(),
-        'remark' => 'This is test admin user',
-        'username' => new Name('Webmaster')
-    ]));
+    $context->creator = new Creator(
+        id: 1,
+        name: new Name('Jigoro', 'Kano')
+    );
 
-    $context->userRepo = new class($context->db) extends UserDatabaseRepository {
+    $context->userAccountRepo = new class($context->db) extends UserAccountDatabaseRepository {
         public function create(UserAccount $account): Entity
         {
             return new Entity(1, $account);
@@ -44,26 +41,23 @@ beforeAll(function () use ($context) {
 
 it('can confirm an invitation', function () use ($context) {
     $userInvitationRepo = new class($context->db, $context->creator) extends UserInvitationDatabaseRepository {
-        private Entity $creator;
-
-        public function __construct(Connection $db, Entity $creator)
-        {
+        public function __construct(
+            Connection $db,
+            private Creator $creator
+        ) {
             parent::__construct($db);
-            $this->creator = $creator;
         }
 
         public function getByUniqueId(UniqueId $uuid): Entity
         {
-            return new Entity(1, new UserInvitation((object)[
-                'uuid' => new UniqueId(),
-                'emailAddress' => new EmailAddress('jigoro.kono@kwai.com'),
-                'name' => 'Jigoro Kono',
-                'creator' => $this->creator,
-                'remark' => 'This is a test invitation',
-                'confirmation' => null,
-                'traceableTime' => new TraceableTime(),
-                'expiration' => Timestamp::createFromDateTime(new DateTime('now +15 days'))
-            ]));
+            return new Entity(1, new UserInvitation(
+                uuid: new UniqueId(),
+                emailAddress: new EmailAddress('gella.vandecavye@kwai.com'),
+                name: 'Gella Vandecaveye',
+                creator: $this->creator,
+                remark: 'This is a test invitation',
+                expiration: Timestamp::createFromDateTime(new DateTime('now +15 days'))
+            ));
         }
         public function update(Entity $invitation): void
         {
@@ -72,27 +66,23 @@ it('can confirm an invitation', function () use ($context) {
     };
 
     $command = new ConfirmInvitationCommand();
-    $command->firstName = 'Jigoro';
-    $command->lastName = 'Kano';
+    $command->firstName = 'Gella';
+    $command->lastName = 'Vandecavye';
     $command->uuid = '';
     $command->remark = 'This is a user confirmed using a unit test';
     $command->password = 'Hajime';
-    $command->email = 'jigoro.kano@kwai.com';
+    $command->email = 'gella.vandecavye@kwai.com';
 
     try {
         $user = (new ConfirmInvitation(
             $userInvitationRepo,
-            $context->userRepo
+            $context->userAccountRepo
         ))($command);
         expect($user->domain())
             ->toBeInstanceOf(UserAccount::class)
         ;
-    } catch (NotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (UnprocessableException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
@@ -100,26 +90,24 @@ it('can confirm an invitation', function () use ($context) {
 
 it('can handle an expired invitation', function () use ($context) {
     $userInvitationRepo = new class($context->db, $context->creator) extends UserInvitationDatabaseRepository {
-        private Entity $creator;
-
-        public function __construct(Connection $db, Entity $creator)
-        {
+        public function __construct(
+            Connection $db,
+            private Creator $creator
+        ) {
             parent::__construct($db);
             $this->creator = $creator;
         }
 
         public function getByUniqueId(UniqueId $uuid): Entity
         {
-            return new Entity(1, new UserInvitation((object)[
-                'uuid' => new UniqueId(),
-                'emailAddress' => new EmailAddress('jigoro.kono@kwai.com'),
-                'name' => 'Jigoro Kono',
-                'creator' => $this->creator,
-                'remark' => 'This is a test invitation',
-                'confirmation' => null,
-                'traceableTime' => new TraceableTime(),
-                'expiration' => Timestamp::createFromDateTime(new DateTime('now -1 days'))
-            ]));
+            return new Entity(1, new UserInvitation(
+                uuid: new UniqueId(),
+                emailAddress: new EmailAddress('gella.vandecavye@kwai.com'),
+                name: 'Gella Vandecaveye',
+                creator: $this->creator,
+                remark: 'This is a test invitation',
+                expiration: Timestamp::createFromDateTime(new DateTime('now -1 days'))
+            ));
         }
         public function update(Entity $invitation): void
         {
@@ -128,23 +116,23 @@ it('can handle an expired invitation', function () use ($context) {
     };
 
     $command = new ConfirmInvitationCommand();
-    $command->firstName = 'Jigoro';
-    $command->lastName = 'Kano';
+    $command->firstName = 'Gella';
+    $command->lastName = 'Vandecaveye';
     $command->uuid = '';
     $command->remark = 'This is a user confirmed using a unit test';
     $command->password = 'Hajime';
-    $command->email = 'jigoro.kano@kwai.com';
+    $command->email = 'gella.vandecaveye@kwai.com';
 
     try {
         /** @noinspection PhpUnhandledExceptionInspection */
         (new ConfirmInvitation(
             $userInvitationRepo,
-            $context->userRepo
+            $context->userAccountRepo
         ))($command);
     } catch (NotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->throws(UnprocessableException::class)
