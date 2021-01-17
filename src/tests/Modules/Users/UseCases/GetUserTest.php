@@ -12,7 +12,7 @@ use Tests\Context;
 
 $context = Context::createContext();
 
-it('can get an ability', function () use ($context) {
+it('can get an user', function () use ($context) {
     $accountRepo = new UserAccountDatabaseRepository($context->db);
     try {
         $account = $accountRepo->get(new EmailAddress('jigoro.kano@kwai.com'));
