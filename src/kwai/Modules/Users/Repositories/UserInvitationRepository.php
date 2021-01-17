@@ -62,7 +62,7 @@ interface UserInvitationRepository
      * @return Collection
      */
     public function getAll(
-        ?UserInvitationQuery $query,
+        ?UserInvitationQuery $query = null,
         ?int $limit = null,
         ?int $offset = null
     ): Collection;

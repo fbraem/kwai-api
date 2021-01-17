@@ -106,7 +106,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     /**
      * @inheritDoc
      */
-    public function getAll(?UserInvitationQuery $query, ?int $limit = null, ?int $offset = null): Collection
+    public function getAll(?UserInvitationQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
     {
         $query ??= $this->createQuery();
 
