@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
