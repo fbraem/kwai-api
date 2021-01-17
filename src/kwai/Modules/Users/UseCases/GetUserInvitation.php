@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
@@ -11,6 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
@@ -21,11 +22,24 @@ use Kwai\Modules\Users\Repositories\UserInvitationRepository;
  */
 class GetUserInvitation
 {
-    private UserInvitationRepository $repo;
-
-    public function __construct(UserInvitationRepository $repo)
+    /**
+     * GetUserInvitation constructor.
+     *
+     * @param UserInvitationRepository $repo
+     */
+    public function __construct(private UserInvitationRepository $repo)
     {
-        $this->repo = $repo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param UserInvitationRepository $repo
+     * @return static
+     */
+    public static function create(UserInvitationRepository $repo): self
+    {
+        return new self($repo);
     }
 
     /**
@@ -33,8 +47,8 @@ class GetUserInvitation
      *
      * @param GetUserInvitationCommand $command
      * @return Entity<User>
-     * @throws NotFoundException
      * @throws RepositoryException
+     * @throws UserInvitationNotFoundException
      */
     public function __invoke(GetUserInvitationCommand $command): Entity
     {
