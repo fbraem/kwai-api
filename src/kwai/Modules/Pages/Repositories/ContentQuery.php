@@ -20,14 +20,16 @@ interface ContentQuery extends Query
     /**
      * Filter all page content for the given ids.
      *
-     * @param int[] $ids
+     * @param int ...$ids
+     * @return ContentQuery
      */
-    public function filterIds(array $ids): void;
+    public function filterIds(int ...$ids): self;
 
     /**
      * Filter all page content written by this user.
      *
      * @param int $id
+     * @return ContentQuery
      */
-    public function filterUser(int $id): void;
+    public function filterUser(int $id): self;
 }
