@@ -40,13 +40,13 @@ interface TrainingRepository
      * Executes the query and returns a Collection with entities.
      * For each record, the mapper will be called to create an entity.
      *
-     * @param TrainingQuery $query
-     * @param int|null      $limit
-     * @param int|null      $offset
+     * @param TrainingQuery|null $query
+     * @param int|null           $limit
+     * @param int|null           $offset
      * @return Collection
      * @throws QueryException
      */
-    public function getAll(TrainingQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(?TrainingQuery $query, ?int $limit, ?int $offset): Collection;
 
     /**
      * Save a new training to the database.

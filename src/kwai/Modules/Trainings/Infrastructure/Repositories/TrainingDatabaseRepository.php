@@ -66,10 +66,12 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
      * @inheritDoc
      */
     public function getAll(
-        TrainingQuery $query,
+        ?TrainingQuery $query = null,
         ?int $limit = null,
         ?int $offset = null
     ): Collection {
+        $query ??= $this->createQuery();
+
         /* @var Collection $trainings */
         $trainings = $query->execute($limit, $offset);
         return $trainings->mapWithKeys(

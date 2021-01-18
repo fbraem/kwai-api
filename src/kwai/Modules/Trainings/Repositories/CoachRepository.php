@@ -39,11 +39,11 @@ interface CoachRepository
      * Executes the query and returns a Collection with entities.
      * For each record, the mapper will be called to create an entity.
      *
-     * @param CoachQuery $query
-     * @param int|null   $limit
-     * @param int|null   $offset
+     * @param CoachQuery|null $query
+     * @param int|null        $limit
+     * @param int|null        $offset
      * @return Collection
      * @throws QueryException
      */
-    public function getAll(CoachQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(?CoachQuery $query = null, ?int $limit = null, ?int $offset = null): Collection;
 }

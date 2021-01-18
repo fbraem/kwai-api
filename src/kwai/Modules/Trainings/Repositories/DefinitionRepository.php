@@ -40,13 +40,13 @@ interface DefinitionRepository
      * Executes the query and returns a Collection with entities.
      * For each record, the mapper will be called to create an entity.
      *
-     * @param DefinitionQuery $query
-     * @param int|null        $limit
-     * @param int|null        $offset
+     * @param DefinitionQuery|null $query
+     * @param int|null             $limit
+     * @param int|null             $offset
      * @return Collection
      * @throws QueryException
      */
-    public function getAll(DefinitionQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(?DefinitionQuery $query = null, ?int $limit = null, ?int $offset = null): Collection;
 
     /**
      * Save a new definition

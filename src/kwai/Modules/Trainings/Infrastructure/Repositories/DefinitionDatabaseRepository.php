@@ -57,8 +57,10 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     /**
      * @inheritDoc
      */
-    public function getAll(DefinitionQuery $query, ?int $limit = null, ?int $offset = null): Collection
+    public function getAll(?DefinitionQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
     {
+        $query ??= $this->createQuery();
+
         /* @var Collection $definitions */
         $definitions = $query->execute($limit, $offset);
         return $definitions->mapWithKeys(
