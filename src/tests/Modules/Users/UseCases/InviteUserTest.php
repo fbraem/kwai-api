@@ -1,20 +1,17 @@
 <?php
-/**
- * Testcase for GetCurrentUser
- */
 declare(strict_types=1);
 
 namespace Tests\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\UseCases\InviteUser;
 use Kwai\Modules\Users\UseCases\InviteUserCommand;
@@ -24,26 +21,14 @@ $context = Context::createContext();
 
 it('can invite a user', function () use ($context) {
     $invitationRepo = new UserInvitationDatabaseRepository($context->db);
-    $userRepo = new UserDatabaseRepository($context->db);
     $mailRepo = new MailDatabaseRepository($context->db);
-    try {
-        $user = $userRepo->getByEmail(
-            new EmailAddress('test@kwai.com')
-        );
-    } catch (NotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
-    }
-    if (!isset($user)) {
-        return;
-    }
+    $accountRepo = new UserAccountDatabaseRepository($context->db);
 
     $command = new InviteUserCommand();
     $command->sender_mail = 'test@kwai.com';
     $command->sender_name = 'Webmaster';
-    $command->email = 'jigoro.kano@kwai.com';
-    $command->name = 'Jigoro Kano';
+    $command->email = 'ingrid.berghmans@kwai.com';
+    $command->name = 'Ingrid Berghmans';
     $command->expiration = 14;
 
     $engine = new PlatesEngine(__DIR__);
@@ -56,19 +41,18 @@ it('can invite a user', function () use ($context) {
     try {
         $invitation = (new InviteUser(
             $invitationRepo,
-            $userRepo,
+            $accountRepo,
             $mailRepo,
             $template,
-            $user
+            new Creator(1, new Name('Jigoro', 'Kano'))
         ))($command);
-        $this->assertInstanceOf(
-            Entity::class,
-            $invitation
-        );
+        expect($invitation)
+            ->toBeInstanceOf(Entity::class)
+        ;
     } catch (UnprocessableException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
