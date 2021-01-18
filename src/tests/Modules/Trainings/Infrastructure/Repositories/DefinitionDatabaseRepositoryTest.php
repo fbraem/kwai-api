@@ -29,7 +29,8 @@ it('can create a definition', function () use ($context) {
             new Time(20, 0, 'Europe/Brussels')
         ),
         creator: new Creator(
-            1, new Name('Jigoro', 'Kano')
+            1,
+            new Name('Jigoro', 'Kano')
         )
     );
     try {
