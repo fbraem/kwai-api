@@ -1,14 +1,14 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
@@ -19,31 +19,39 @@ use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
  */
 final class Logout
 {
-    private AccessTokenRepository $accessTokenRepo;
-
-    private RefreshTokenRepository $refreshTokenRepo;
-
     /**
      * Constructor.
      * @param RefreshTokenRepository $refreshTokenRepo An refreshtoken repository
      * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
      */
     public function __construct(
+        private RefreshTokenRepository $refreshTokenRepo,
+        private AccessTokenRepository $accessTokenRepo
+    ) {
+    }
+
+    /**
+     * Factory method
+     *
+     * @param RefreshTokenRepository $refreshTokenRepo
+     * @param AccessTokenRepository  $accessTokenRepo
+     * @return Logout
+     */
+    public static function create(
         RefreshTokenRepository $refreshTokenRepo,
         AccessTokenRepository $accessTokenRepo
-    ) {
-        $this->refreshTokenRepo = $refreshTokenRepo;
-        $this->accessTokenRepo = $accessTokenRepo;
+    ): self {
+        return new self($refreshTokenRepo, $accessTokenRepo);
     }
 
     /**
      * The refreshtoken and the associated accesstoken will be revoked.
      *
-     * @param  LogoutCommand $command
-     * @throws NotFoundException
-     *    Thrown when the refreshtoken can't be found
+     * @param LogoutCommand $command
      * @throws RepositoryException
-     * @noinspection PhpUndefinedMethodInspection*/
+     * @throws RefreshTokenNotFoundException
+     * @noinspection PhpUndefinedMethodInspection
+     */
     public function __invoke(LogoutCommand $command): void
     {
         $refreshToken = $this
