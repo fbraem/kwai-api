@@ -11,10 +11,10 @@ use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserAccountTransformer;
 use Kwai\Modules\Users\UseCases\ConfirmInvitation;
@@ -87,15 +87,16 @@ class ConfirmInvitationAction extends Action
             $database = $this->getContainerEntry('pdo_db');
             $userAccount = (new ConfirmInvitation(
                 new UserInvitationDatabaseRepository($database),
-                new UserDatabaseRepository($database)
+                new UserAccountDatabaseRepository($database)
             ))($command);
         } catch (UnprocessableException $e) {
             return (new SimpleResponse(422, $e->getMessage()))($response);
-        } catch (NotFoundException $e) {
+        } catch (UserInvitationNotFoundException) {
             return (new NotFoundResponse('User invitation does not exist'))($response);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
-            new SimpleResponse(500, 'A repository exception occurred.')
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 
