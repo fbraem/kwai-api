@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use function Latitude\QueryBuilder\field;
