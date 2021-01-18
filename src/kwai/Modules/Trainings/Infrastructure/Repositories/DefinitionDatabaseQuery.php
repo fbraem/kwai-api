@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\DefinitionQuery;
@@ -23,7 +22,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
     /**
      * @inheritDoc
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
@@ -37,7 +36,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
         $definitions = new Collection();
         foreach ($rows as $row) {
             [ $definition, $team, $season, $creator ] =
-                (new ColumnCollection($row))->filter($filters);
+                $row->filterColumns($filters);
             $definition->put('creator', $creator);
             if ($team->has('id')) {
                 $definition->put('team', $team);
@@ -53,23 +52,25 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
     /**
      * @inheritDoc
      */
-    public function filterId(int $id): void
+    public function filterId(int $id): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::TRAINING_DEFINITIONS()->id)->eq($id)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function filterIds(Collection $ids): void
+    public function filterIds(Collection $ids): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::TRAINING_DEFINITIONS()->id)->in(...$ids->toArray())
         );
+        return $this;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Trainings
  */
 declare(strict_types=1);
 
@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
@@ -91,19 +90,20 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     /**
      * @inheritDoc
      */
-    public function filterId(int $id): void
+    public function filterId(int $id): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::TRAININGS()->id)->eq($id)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
      * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterYearMonth(int $year, ?int $month = null): void
+    public function filterYearMonth(int $year, ?int $month = null): self
     {
         $criteria = criteria(
             "%s = %d",
@@ -128,23 +128,25 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $this->query->andWhere(
             group($criteria)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
      * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterActive(): void
+    public function filterActive(): self
     {
         $this->query->andWhere(
             field(Tables::TRAININGS()->active)->eq(true)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function filterCoach(Entity $coach): void
+    public function filterCoach(Entity $coach): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $innerSelect = $this->db->createQueryFactory()->select()
@@ -161,12 +163,13 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $criteria = field(Tables::TRAININGS()->id)
             ->in(express('%s', $innerSelect));
         $this->query->andWhere(group($criteria));
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function filterTeam(Entity $team): void
+    public function filterTeam(Entity $team): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $innerSelect = $this->db->createQueryFactory()->select()
@@ -183,6 +186,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $criteria = field(Tables::TRAININGS()->id)
             ->in(express('%s', $innerSelect));
         $this->query->andWhere(group($criteria));
+        return $this;
     }
 
     /**
@@ -202,12 +206,11 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             Tables::USERS()->getAliasPrefix()
         ]);
         foreach ($rows as $row) {
-            $rowCollection = new ColumnCollection($row);
             [
                 $training,
                 $content,
                 $user
-            ] = $rowCollection->filter($filters);
+            ] = $row->filterColumns($filters);
 
             if (!$trainings->has($training['id'])) {
                 $trainings->put($training['id'], $training);

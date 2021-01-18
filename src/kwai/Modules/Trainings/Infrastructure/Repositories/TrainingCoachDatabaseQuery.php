@@ -9,7 +9,6 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
@@ -77,16 +76,18 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
      * Get all coaches for the given trainings
      *
      * @param int[] $ids
+     * @return TrainingCoachDatabaseQuery
      */
-    public function filterOnTrainings(array $ids)
+    public function filterOnTrainings(array $ids): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::TRAINING_COACHES()->training_id)->in(...$ids)
         );
+        return $this;
     }
 
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
@@ -98,8 +99,7 @@ class TrainingCoachDatabaseQuery extends DatabaseQuery
 
         $trainings = new Collection();
         foreach ($rows as $row) {
-            $columns = new ColumnCollection($row);
-            [ $trainingCoach, $person, $creator ] = $columns->filter($prefixes);
+            [ $trainingCoach, $person, $creator ] = $row->filterColumns($prefixes);
             $trainingCoach->put('id', $trainingCoach->get('coach_id'));
             $trainingCoach = $trainingCoach->merge($person);
             $trainingCoach->put('creator', $creator);

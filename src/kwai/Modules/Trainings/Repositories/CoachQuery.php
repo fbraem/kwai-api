@@ -20,13 +20,15 @@ interface CoachQuery extends Query
      * Add a filter for the given ids
      *
      * @param int ...$id
+     * @return CoachQuery
      */
-    public function filterId(int ...$id): void;
+    public function filterId(int ...$id): self;
 
     /**
      * Add a filter for active/non-active coaches.
      *
      * @param bool $active
+     * @return CoachQuery
      */
-    public function filterActive(bool $active): void;
+    public function filterActive(bool $active): self;
 }

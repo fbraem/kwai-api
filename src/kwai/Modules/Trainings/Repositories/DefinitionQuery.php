@@ -21,13 +21,15 @@ interface DefinitionQuery extends Query
      * Add a filter for the given id
      *
      * @param int $id
+     * @return DefinitionQuery
      */
-    public function filterId(int $id): void;
+    public function filterId(int $id): self;
 
     /**
      * Add a filter to select all definitions with the given ids
      *
      * @param Collection $ids
+     * @return DefinitionQuery
      */
-    public function filterIds(Collection $ids): void;
+    public function filterIds(Collection $ids): self;
 }

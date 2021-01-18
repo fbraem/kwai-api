@@ -1,14 +1,13 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Trainings
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Infrastructure\Database\ColumnCollection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
 use Kwai\Modules\Trainings\Repositories\CoachQuery;
@@ -23,12 +22,13 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     /**
      * @inheritDoc
      */
-    public function filterActive(bool $active): void
+    public function filterActive(bool $active): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::COACHES()->active)->eq($active)
         );
+        return $this;
     }
 
     /**
@@ -72,18 +72,19 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     /**
      * @inheritDoc
      */
-    public function filterId(int ...$ids): void
+    public function filterId(int ...$ids): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::COACHES()->id)->in(...$ids)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
@@ -93,11 +94,10 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
            Tables::PERSONS()->getAliasPrefix()
         ]);
         foreach ($rows as $row) {
-            $rowCollection = new ColumnCollection($row);
             [
                 $coach,
                 $person
-            ] = $rowCollection->filter($filters);
+            ] = $row->filterColumns($filters);
 
             $coaches->put(
                 $coach->get('id'),

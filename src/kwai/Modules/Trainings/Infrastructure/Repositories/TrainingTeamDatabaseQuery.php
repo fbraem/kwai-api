@@ -58,7 +58,7 @@ class TrainingTeamDatabaseQuery extends DatabaseQuery
         ];
     }
 
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
@@ -69,8 +69,7 @@ class TrainingTeamDatabaseQuery extends DatabaseQuery
 
         $trainings = new Collection();
         foreach ($rows as $row) {
-            $columns = new ColumnCollection($row);
-            [ $training, $team ] = $columns->filter($prefixes);
+            [ $training, $team ] = $row->filterColumns($prefixes);
             if (!$trainings->has($training['training_id'])) {
                 $trainings->put($training['training_id'], new Collection());
             }

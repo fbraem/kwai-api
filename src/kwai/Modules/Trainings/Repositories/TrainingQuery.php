@@ -21,34 +21,40 @@ interface TrainingQuery extends Query
      * Add a filter for the given id
      *
      * @param int $id
+     * @return TrainingQuery
      */
-    public function filterId(int $id): void;
+    public function filterId(int $id): self;
 
     /**
      * Add a filter to get trainings for a given year/month.
      *
-     * @param int $year
+     * @param int  $year
      * @param ?int $month
+     * @return TrainingQuery
      */
-    public function filterYearMonth(int $year, ?int $month = null): void;
+    public function filterYearMonth(int $year, ?int $month = null): self;
 
     /**
      * Add a filter to only return the active trainings
+     *
+     * @return TrainingQuery
      */
-    public function filterActive(): void;
+    public function filterActive(): self;
 
     /**
      * Add a filter to only get trainings to which the coach is assigned.
      *
      * @param Entity<Coach> $coach
+     * @return TrainingQuery
      */
-    public function filterCoach(Entity $coach): void;
+    public function filterCoach(Entity $coach): self;
 
     /**
      * Add a filter to only get trainings for a specific team.
      *
      * @param Entity<Team> $team
+     * @return TrainingQuery
      */
-    public function filterTeam(Entity $team): void;
+    public function filterTeam(Entity $team): self;
 
 }
