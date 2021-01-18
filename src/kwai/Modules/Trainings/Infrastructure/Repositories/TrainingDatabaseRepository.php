@@ -71,8 +71,6 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         ?int $offset = null
     ): Collection {
         $query ??= $this->createQuery();
-
-        /* @var Collection $trainings */
         $trainings = $query->execute($limit, $offset);
         return $trainings->mapWithKeys(
             fn($item, $key) => [
