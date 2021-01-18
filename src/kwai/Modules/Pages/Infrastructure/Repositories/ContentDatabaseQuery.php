@@ -1,12 +1,13 @@
 <?php
 /**
- * @package Pages
- * @subpackage Infrastructure
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Pages\Infrastructure\Tables;
 use Kwai\Modules\Pages\Repositories\ContentQuery;
@@ -40,32 +41,36 @@ class ContentDatabaseQuery extends DatabaseQuery implements ContentQuery
     /**
      * @inheritDoc
      */
-    public function filterIds(array $ids): void
+    public function filterIds(int ...$ids): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->where(
             field(Tables::CONTENTS()->page_id)->in(...$ids)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
      * @return object[]
      */
-    public function execute(?int $limit = null, ?int $offset = null): array
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
-        $rows = parent::execute($limit, $offset);
-        $contentFilter = Tables::CONTENTS()->createColumnFilter();
-        $authorFilter = Tables::AUTHORS()->createColumnFilter();
+        $prefixes = [
+            Tables::CONTENTS()->getAliasPrefix(),
+            Tables::AUTHORS()->getAliasPrefix()
+        ];
 
-        $result = [];
+        $rows = parent::walk($limit, $offset);
+
+        $result = new Collection();
         foreach ($rows as $row) {
-            $content = $contentFilter->filter($row);
-            $content->author = $authorFilter->filter($row);
-            if (! isset($result[$row->id])) {
-                $result[$row->id] = [];
+            [ $content, $author ] = $row->filterColumns($prefixes);
+            $content->put('author', $author);
+            if (!$result->has($content->get('id'))) {
+                $result->put($content->get('id'), new Collection());
             }
-            $result[$row->id][] = $content;
+            $result->get($row->id)->push($content);
         }
         return $result;
     }
@@ -98,9 +103,10 @@ class ContentDatabaseQuery extends DatabaseQuery implements ContentQuery
     /**
      * @inheritDoc
      */
-    public function filterUser(int $id): void
+    public function filterUser(int $id): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(field(Tables::CONTENTS()->user_id)->eq($id));
+        return $this;
     }
 }
