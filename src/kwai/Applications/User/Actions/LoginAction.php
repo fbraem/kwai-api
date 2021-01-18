@@ -10,13 +10,13 @@ namespace Kwai\Applications\User\Actions;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
+use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Nette\Schema\Expect;
@@ -74,19 +74,19 @@ class LoginAction extends Action
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $refreshToken = (new AuthenticateUser(
-                new UserDatabaseRepository($database),
+            $refreshToken = AuthenticateUser::create(
+                new UserAccountDatabaseRepository($database),
                 new AccessTokenDatabaseRepository($database),
                 new RefreshTokenDatabaseRepository($database)
-            ))($command);
-        } catch (NotFoundException $nfe) {
-            return (new NotAuthorizedResponse('Unknown user'))($response);
+            )($command);
         } catch (AuthenticationException $ae) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);
         } catch (RepositoryException $e) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
+        } catch (UserAccountNotFoundException $e) {
+            return (new NotAuthorizedResponse('Unknown user'))($response);
         }
 
         $secret = $this->getContainerEntry('settings')['security']['secret'];

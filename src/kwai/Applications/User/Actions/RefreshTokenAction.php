@@ -14,6 +14,7 @@ use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
+use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
 use Kwai\Modules\Users\UseCases\CreateRefreshToken;
@@ -55,18 +56,18 @@ class RefreshTokenAction extends Action
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $refreshToken = (new CreateRefreshToken(
+            $refreshToken = CreateRefreshToken::create(
                 new RefreshTokenDatabaseRepository($database),
                 new AccessTokenDatabaseRepository($database)
-            ))($command);
-        } catch (NotFoundException $nfe) {
-            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
+            )($command);
         } catch (AuthenticationException $ae) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);
         } catch (RepositoryException $e) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
+        } catch (RefreshTokenNotFoundException $e) {
+            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         }
 
         /** @noinspection PhpUndefinedMethodInspection */

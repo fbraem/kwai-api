@@ -9,20 +9,16 @@ namespace Kwai\Applications\User\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
-
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
 use Kwai\Modules\Users\UseCases\Logout;
 use Kwai\Modules\Users\UseCases\LogoutCommand;
-
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\OkResponse;
-
 use Firebase\JWT\JWT;
 
 /**
@@ -60,16 +56,16 @@ class LogoutAction extends Action
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            (new Logout(
+            Logout::create(
                 new RefreshTokenDatabaseRepository($database),
                 new AccessTokenDatabaseRepository($database)
-            ))($command);
-        } catch (NotFoundException $nfe) {
-            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
+            )($command);
         } catch (RepositoryException $e) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
+        } catch (RefreshTokenNotFoundException $e) {
+            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         }
 
         return (new OkResponse())($response);
