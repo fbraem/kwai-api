@@ -45,10 +45,11 @@ class GetUserInvitationAction extends Action
                 new UserInvitationDatabaseRepository($database)
             )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (UserInvitationNotFoundException $e) {
+        } catch (UserInvitationNotFoundException) {
             return (new NotFoundResponse('User not found'))($response);
         }
 

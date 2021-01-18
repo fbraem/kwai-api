@@ -79,13 +79,14 @@ class LoginAction extends Action
                 new AccessTokenDatabaseRepository($database),
                 new RefreshTokenDatabaseRepository($database)
             )($command);
-        } catch (AuthenticationException $ae) {
+        } catch (AuthenticationException) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (UserAccountNotFoundException $e) {
+        } catch (UserAccountNotFoundException) {
             return (new NotAuthorizedResponse('Unknown user'))($response);
         }
 

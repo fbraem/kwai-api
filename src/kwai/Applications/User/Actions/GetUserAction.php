@@ -46,6 +46,7 @@ class GetUserAction extends Action
                 new UserDatabaseRepository($database)
             )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
