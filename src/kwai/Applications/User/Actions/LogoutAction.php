@@ -61,10 +61,11 @@ class LogoutAction extends Action
                 new AccessTokenDatabaseRepository($database)
             )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (RefreshTokenNotFoundException $e) {
+        } catch (RefreshTokenNotFoundException) {
             return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         }
 
