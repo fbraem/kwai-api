@@ -37,6 +37,11 @@ class CreateRefreshToken
     ) {
     }
 
+    public static function create(RefreshTokenRepository $refreshTokenRepo, AccessTokenRepository $accessTokenRepo)
+    {
+        return new self($refreshTokenRepo, $accessTokenRepo);
+    }
+
     /**
      * Create a new refresh- and accesstoken using the old refresh token.
      * The refreshtoken must be valid and the user is checked. On succes, a new
