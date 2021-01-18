@@ -37,7 +37,7 @@ it('can browse trainings', function () use ($context) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can browse trainings for a given year/month', function () use ($context) {
+it('can browse trainings for a given year and month', function () use ($context) {
     $repo = new TrainingDatabaseRepository($context->db);
     $coachRepo = new CoachDatabaseRepository($context->db);
     $command = new BrowseTrainingsCommand();

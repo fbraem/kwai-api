@@ -76,7 +76,7 @@ it('should throw a not found exception', function () use ($context) {
     ->throws(TrainingNotFoundException::class)
 ;
 
-it('can filter trainings on year/month', function () use ($context) {
+it('can filter trainings on year and month', function () use ($context) {
     $repo = new TrainingDatabaseRepository($context->db);
     try {
         $query = $repo->createQuery();
@@ -87,7 +87,7 @@ it('can filter trainings on year/month', function () use ($context) {
             ->and($trainings->count())
             ->toBeGreaterThan(0)
         ;
-    } catch (QueryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
@@ -142,7 +142,7 @@ it('can filter trainings for a team', function () use ($context) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can create a training', function() use ($context) {
+it('can create a training', function () use ($context) {
     $repo = new TrainingDatabaseRepository($context->db);
 
     $training = new Training(
@@ -163,7 +163,6 @@ it('can create a training', function() use ($context) {
         ]),
         remark: 'This training is created from a unit test',
     );
-    $context->db->begin();
     try {
         $entity = $repo->create($training);
         expect($entity)
@@ -171,9 +170,7 @@ it('can create a training', function() use ($context) {
             ->and($entity->domain())
             ->toBeInstanceOf(Training::class)
         ;
-        $context->db->commit();
     } catch (Exception $e) {
-        $context->db->rollback();
         $this->fail((string) $e);
     }
 })
