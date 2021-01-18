@@ -26,7 +26,7 @@ class UserInvitation implements DomainEntity
      * @param Timestamp          $expiration
      * @param string             $name
      * @param Creator            $creator
-     * @param string             $remark
+     * @param string|null        $remark
      * @param UniqueId|null      $uuid
      * @param bool               $revoked
      * @param TraceableTime|null $traceableTime
@@ -37,7 +37,7 @@ class UserInvitation implements DomainEntity
         private Timestamp $expiration,
         private string $name,
         private Creator $creator,
-        private string $remark = '',
+        private ?string $remark = null,
         private ?UniqueId $uuid = null,
         private bool $revoked = false,
         private ?TraceableTime $traceableTime = null,
@@ -82,7 +82,7 @@ class UserInvitation implements DomainEntity
     /**
      * Get the remark
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }
