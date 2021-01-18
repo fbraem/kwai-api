@@ -17,12 +17,12 @@ it('can transform an ability', function () {
     $name = 'test';
     $remark = 'test';
     $traceableTime = new TraceableTime();
-    $ability = new Ability((object)[
-        'name' => $name,
-        'remark' => $remark,
-        'traceableTime' => $traceableTime,
-        'rules' => []
-    ]);
+    $ability = new Ability(
+        name: $name,
+        remark: $remark,
+        traceableTime: $traceableTime,
+        rules: collect([])
+    );
     $entity = new Entity(1, $ability);
 
     $fractal = new Manager();

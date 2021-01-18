@@ -21,13 +21,13 @@ it('can transform a user', function () {
     $email = new EmailAddress('test@kwai.com');
     $remark = 'test';
     $traceableTime = new TraceableTime();
-    $user = new User((object)[
-        'uuid' => $uuid,
-        'emailAddress' => $email,
-        'remark' => $remark,
-        'username' => new Name('webmaster'),
-        'traceableTime' => $traceableTime
-    ]);
+    $user = new User(
+        uuid: $uuid,
+        emailAddress: $email,
+        remark: $remark,
+        username: new Name('webmaster'),
+        traceableTime: $traceableTime
+    );
     $entity = new Entity(1, $user);
 
     $fractal = new Manager();

@@ -20,13 +20,11 @@ it('can transform a rule', function () {
     $subject = 'team';
     $traceableTime = new TraceableTime();
     $rule = new Rule(
-        (object) compact([
-            'name',
-            'remark',
-            'action',
-            'subject',
-            'traceableTime'
-        ])
+        name: $name,
+        remark: $remark,
+        action: $action,
+        subject: $subject,
+        traceableTime: $traceableTime
     );
     $entity = new Entity(1, $rule);
 
