@@ -17,16 +17,13 @@ use Kwai\Core\Domain\ValueObjects\Name;
  */
 class Author implements DomainEntity
 {
-    private Name $name;
-
     /**
      * Author constructor.
      *
      * @param object $props
      */
-    public function __construct(object $props)
+    public function __construct(private Name $name)
     {
-        $this->name = $props->name;
     }
 
     /**

@@ -11,35 +11,32 @@ use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Modules\Pages\Domain\Application;
 use Kwai\Modules\Pages\Domain\Page;
 
-it(
-    'can add content to a page',
-    function () {
-        $page = new Page((object)[
-            'application' => new Entity(
-                1,
-                new Application((object)[
-                    'title' => 'Test',
-                    'name' => 'test'
-                ])
+it('can add content to a page', function () {
+    $page = new Page(
+        application: new Entity(
+            1,
+            new Application(
+                title: 'Test',
+                name: 'test'
             )
-        ]);
-        $page->addContent(new Text(
-            new Locale('nl'),
-            new DocumentFormat('md'),
-            'Test',
-            'Test Summary',
-            'Test Content',
-            new Creator(
-                1,
-                new Name(
-                    'Jigoro',
-                    'Kono'
-                )
+        )
+    );
+    $page->addContent(new Text(
+        new Locale('nl'),
+        new DocumentFormat('md'),
+        'Test',
+        'Test Summary',
+        'Test Content',
+        new Creator(
+            1,
+            new Name(
+                'Jigoro',
+                'Kono'
             )
-        ));
+        )
+    ));
 
-        expect($page->getContents())
-            ->toHaveCount(1)
-        ;
-    }
-);
+    expect($page->getContents())
+        ->toHaveCount(1)
+    ;
+});
