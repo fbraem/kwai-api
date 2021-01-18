@@ -51,8 +51,10 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
     /**
      * @inheritDoc
      */
-    public function getAll(CoachQuery $query, ?int $limit = null, ?int $offset = null): Collection
+    public function getAll(?CoachQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
     {
+        $query ??= $this->createQuery();
+
         /* @var Collection $coaches */
         $coaches = $query->execute($limit, $offset);
         return $coaches->mapWithKeys(
