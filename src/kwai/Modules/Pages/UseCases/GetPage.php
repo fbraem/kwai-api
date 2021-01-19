@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage UseCases
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -21,20 +21,16 @@ use Kwai\Modules\Pages\Repositories\PageRepository;
  */
 class GetPage
 {
-    private PageRepository $repo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * GetPage constructor.
      *
      * @param PageRepository  $repo
      * @param ImageRepository $imageRepo
      */
-    private function __construct(PageRepository $repo, ImageRepository $imageRepo)
-    {
-        $this->repo = $repo;
-        $this->imageRepo = $imageRepo;
+    private function __construct(
+        private PageRepository $repo,
+        private ImageRepository $imageRepo
+    ) {
     }
 
     /**
@@ -55,6 +51,8 @@ class GetPage
     }
 
     /**
+     * Factory method
+     *
      * @param PageRepository  $repo
      * @param ImageRepository $imageRepo
      * @return GetPage

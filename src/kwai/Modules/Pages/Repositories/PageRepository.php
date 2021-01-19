@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
@@ -58,4 +59,15 @@ interface PageRepository
      * @param Entity<Page> $page
      */
     public function remove(Entity $page): void;
+
+    /**
+     * Get all pages using the given query.
+     *
+     * @param PageQuery|null $query
+     * @param int|null       $limit
+     * @param int|null       $offset
+     * @return Collection
+     * @throws RepositoryException
+     */
+    public function getAll(?PageQuery $query = null, ?int $limit = null, ?int $offset = null): Collection;
 }

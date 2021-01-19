@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage UseCases
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -16,10 +16,7 @@ class BrowsePagesCommand
 {
     public ?int $limit = null;
     public ?int $offset = null;
-    /**
-     * @var int|string|null
-     */
-    public $application = null;
+    public int|string|null $application = null;
     public bool $enabled = true;
 
     const SORT_NONE = 0;

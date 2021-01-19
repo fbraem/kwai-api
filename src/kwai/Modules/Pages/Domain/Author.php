@@ -20,7 +20,7 @@ class Author implements DomainEntity
     /**
      * Author constructor.
      *
-     * @param object $props
+     * @param Name $name
      */
     public function __construct(private Name $name)
     {

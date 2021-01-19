@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\UseCases\Content;
-use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
-use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\Pages\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\UseCases\CreatePage;
 use Kwai\Modules\Pages\UseCases\CreatePageCommand;
@@ -25,6 +23,7 @@ use Tests\Context;
  * + id: Id of the created page
  */
 $context = Context::createContext();
+$context->creator = new Creator(1, new Name('Jigoro', 'Kano'));
 
 it('can create a page', function () use ($context) {
     $command = new CreatePageCommand();
@@ -40,30 +39,25 @@ it('can create a page', function () use ($context) {
         $page = CreatePage::create(
             new PageDatabaseRepository($context->db),
             new ApplicationDatabaseRepository($context->db),
-            new AuthorDatabaseRepository($context->db),
             new class implements ImageRepository {
-                public function getImages(int $id): array
+                public function getImages(int $id): Collection
                 {
-                    return [];
+                    return collect([]);
                 }
 
                 public function removeImages(int $id): void
                 {
                 }
             }
-        )($command);
+        )($command, $context->creator);
         expect($page)
             ->toBeInstanceOf(Entity::class)
             ->and($page->domain())
             ->toBeInstanceOf(Page::class)
         ;
         $context->id = $page->id();
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (ApplicationNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (AuthorNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
@@ -84,18 +78,17 @@ it('can update a page', function () use ($context) {
         $page = UpdatePage::create(
             new PageDatabaseRepository($context->db),
             new ApplicationDatabaseRepository($context->db),
-            new AuthorDatabaseRepository($context->db),
             new class implements ImageRepository {
-                public function getImages(int $id): array
+                public function getImages(int $id): Collection
                 {
-                    return [];
+                    return collect([]);
                 }
 
                 public function removeImages(int $id): void
                 {
                 }
             }
-        )($command);
+        )($command, $context->creator);
         expect($page)
             ->toBeInstanceOf(Entity::class)
         ;
@@ -103,14 +96,8 @@ it('can update a page', function () use ($context) {
         expect($page->getContents()[0]->getSummary())
             ->toBe('This is an updated summary')
         ;
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (ApplicationNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (AuthorNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (PageNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->depends('it can create a page')

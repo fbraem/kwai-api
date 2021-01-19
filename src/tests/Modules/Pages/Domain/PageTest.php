@@ -31,7 +31,7 @@ it('can add content to a page', function () {
             1,
             new Name(
                 'Jigoro',
-                'Kono'
+                'Kano'
             )
         )
     ));

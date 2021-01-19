@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\UseCases\GetPage;
@@ -26,9 +24,9 @@ it('can get a page', function () use ($context) {
         $page = GetPage::create(
             new PageDatabaseRepository($context->db),
             new class implements ImageRepository {
-                public function getImages(int $id): array
+                public function getImages(int $id): Collection
                 {
-                    return [];
+                    return collect([]);
                 }
                 public function removeImages(int $id): void
                 {
@@ -39,12 +37,8 @@ it('can get a page', function () use ($context) {
             ->toBeInstanceOf(Entity::class);
         expect($page->domain())
             ->toBeInstanceOf(Page::class);
-    } catch (QueryException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
-    } catch (PageNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')

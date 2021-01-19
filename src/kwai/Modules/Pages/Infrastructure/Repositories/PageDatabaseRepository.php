@@ -1,12 +1,13 @@
 <?php
 /**
- * @package Pages
- * @subpackage Infrastructure
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
@@ -30,17 +31,9 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery();
-        $query->filterId($id);
-
-        try {
-            $entities = $query->execute();
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        if (count($entities) ==  1) {
-            return $entities[$id];
+        $entities = $this->getAll($this->createQuery()->filterId($id));
+        if ($entities->count() > 0) {
+            return $entities->first();
         }
         throw new PageNotFoundException($id);
     }
@@ -179,5 +172,25 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAll(?PageQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
+    {
+        $query ??= $this->createQuery();
+
+        try {
+            $pages = $query->execute($limit, $offset);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        return $pages->mapWithKeys(
+            fn($item, $key) => [
+                $key => new Entity((int) $key, PageMapper::toDomain($item))
+            ]
+        );
     }
 }

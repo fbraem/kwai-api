@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
 use Kwai\Modules\Pages\Domain\Application;
 
 /**
@@ -17,14 +17,17 @@ use Kwai\Modules\Pages\Domain\Application;
  */
 class ApplicationMapper
 {
-    public static function toDomain(object $raw): Entity
+    /**
+     * Maps persistence to domain
+     *
+     * @param Collection $data
+     * @return Application
+     */
+    public static function toDomain(Collection $data): Application
     {
-        return new Entity(
-            (int) $raw->id,
-            new Application((object)[
-                'title' => $raw->title,
-                'name' => $raw->name
-            ])
+        return new Application(
+            title: $data->get('title'),
+            name: $data->get('name')
         );
     }
 }

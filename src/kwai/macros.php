@@ -6,7 +6,10 @@ declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 
-Collection::macro('filterColumns', function(Collection $prefixes) {
+Collection::macro('filterColumns', function (Collection|array $prefixes) {
+    if (is_array($prefixes)) {
+        $prefixes = collect($prefixes);
+    }
     return $this->keys()->reduce(
         function ($result, $column) use ($prefixes) {
             $prefixes->each(function ($prefix, $pos) use (&$result, $column) {
@@ -52,7 +55,7 @@ Collection::macro('recursive', function () {
  * Gets an item collection for the given key. When the key doesn't exist
  * a new Collection will be created.
  */
-Collection::macro('nest', function($key) {
+Collection::macro('nest', function ($key) {
     if (!$this->has($key)) {
         $this->put($key, new Collection());
     }

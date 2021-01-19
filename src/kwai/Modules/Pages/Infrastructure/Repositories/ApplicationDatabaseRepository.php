@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage Infrastructure
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -41,9 +41,9 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
         ;
 
         try {
-            $row = $this->db->execute(
+            $row = collect($this->db->execute(
                 $query
-            )->fetch();
+            )->fetch());
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
@@ -52,8 +52,13 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
             throw new ApplicationNotFoundException($id);
         }
 
-        return ApplicationMapper::toDomain(
-            Tables::APPLICATIONS()->createColumnFilter()->filter($row)
+        [ $application ] = $row->filterColumns([
+            Tables::APPLICATIONS()->getAliasPrefix()
+        ]);
+
+        return new Entity(
+            (int) $application->get('id'),
+            ApplicationMapper::toDomain($application)
         );
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage UseCases
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -23,12 +23,6 @@ use Illuminate\Support\Collection;
  */
 class BrowsePages
 {
-    private PageRepository $repo;
-
-    private AuthorRepository $authorRepo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * BrowsePages constructor.
      *
@@ -37,13 +31,10 @@ class BrowsePages
      * @param ImageRepository  $imageRepo
      */
     private function __construct(
-        PageRepository $repo,
-        AuthorRepository $authorRepo,
-        ImageRepository $imageRepo
+        private PageRepository $repo,
+        private AuthorRepository $authorRepo,
+        private ImageRepository $imageRepo
     ) {
-        $this->repo = $repo;
-        $this->authorRepo = $authorRepo;
-        $this->imageRepo = $imageRepo;
     }
 
     /**
@@ -86,7 +77,7 @@ class BrowsePages
 
         $count = $query->count();
 
-        $pages = $query->execute($command->limit, $command->offset);
+        $pages = $this->repo->getAll($query, $command->limit, $command->offset);
         foreach ($pages as $page) {
             $images = $this->imageRepo->getImages($page->id());
             $page->attachImages($images);
