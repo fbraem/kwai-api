@@ -23,11 +23,7 @@ class BrowsePagesCommand
     const SORT_PRIORITY = 1;
     const SORT_APPLICATION = 2;
     const SORT_CREATION_DATE = 3;
-
-    /**
-     * @var int
-     */
     public int $sort = self::SORT_NONE;
 
-    public ?string $userUid = null;
+    public int|string|null $userId = null;
 }
