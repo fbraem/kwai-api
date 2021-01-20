@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -20,7 +21,6 @@ use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
-use Kwai\Modules\News\Repositories\StoryQuery;
 use Kwai\Modules\News\Repositories\StoryRepository;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
@@ -32,19 +32,28 @@ use function Latitude\QueryBuilder\func;
 class StoryDatabaseRepository extends DatabaseRepository implements StoryRepository
 {
     /**
+     * StoryDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => StoryMapper::toDomain($item)
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
     {
-        try {
-            $entities = $this->getAll($this->createQuery()->filterId($id));
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
+        $entities = $this->getAll($this->createQuery()->filterId($id));
+        if ($entities->count() === 0) {
+            throw new StoryNotFoundException($id);
         }
-        if ($entities->count() === 1) {
-            return $entities->first();
-        }
-        throw new StoryNotFoundException($id);
+        return $entities->first();
     }
 
     /**
@@ -91,7 +100,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
     {
         try {
             $this->db->begin();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -125,7 +134,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
 
         try {
             $this->db->commit();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -139,7 +148,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
     {
         try {
             $this->db->begin();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -166,7 +175,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
 
             // Next insert contents again
             $this->insertContents($story);
-        } catch(QueryException $qe) {
+        } catch (QueryException $qe) {
             try {
                 $this->db->rollback();
             } catch (DatabaseException $e) {
@@ -177,7 +186,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
 
         try {
             $this->db->commit();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -189,7 +198,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
     {
         try {
             $this->db->begin();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -223,7 +232,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
 
         try {
             $this->db->commit();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -252,24 +261,5 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
         );
 
         $this->db->execute($query);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(
-        ?StoryQuery $query = null,
-        ?int $limit = null,
-        ?int $offset = null): Collection
-    {
-        $query ??= $this->createQuery();
-
-        /* @var Collection $stories */
-        $stories = $query->execute($limit, $offset);
-        return $stories->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, StoryMapper::toDomain($item))
-            ]
-        );
     }
 }
