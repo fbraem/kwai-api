@@ -35,18 +35,18 @@ final class MailMapper
             tag: $data->get('tag'),
             uuid: new UniqueId($data->get('raw')),
             sender: new Address(new EmailAddress($data->get('sender_email')), $data->get('sender_name', '')),
-            content: new MailContent($data->get('subject'), $data->get('text_body'), $data->get('html_body',  '')),
+            content: new MailContent($data->get('subject'), $data->get('text_body'), $data->get('html_body', '')),
             sentTime: $data->has('sent_time') ? Timestamp::createFromString($data->get('sent_time')) : null,
             traceableTime: new TraceableTime(
-            Timestamp::createFromString($data->get('created_at')),
-            $data->has('updated_at')
+                Timestamp::createFromString($data->get('created_at')),
+                $data->has('updated_at')
                 ? Timestamp::createFromString($data->get('updated_at'))
                 : null
             ),
             remark: $data->get('remark'),
             creator: CreatorMapper::toDomain($data->get('user')),
             recipients: $data->get('recipients')->map(
-                fn($recipient) => RecipientMapper::toDomain($recipient)
+                fn ($recipient) => RecipientMapper::toDomain($recipient)
             )
         );
     }
