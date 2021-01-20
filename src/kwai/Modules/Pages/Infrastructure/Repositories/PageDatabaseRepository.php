@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -27,6 +27,19 @@ use function Latitude\QueryBuilder\field;
 class PageDatabaseRepository extends DatabaseRepository implements PageRepository
 {
     /**
+     * PageDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => PageMapper::toDomain($item)
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
@@ -43,7 +56,9 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
      */
     public function createQuery(): PageQuery
     {
-        return new PageDatabaseQuery($this->db);
+        return new PageDatabaseQuery(
+            $this->db
+        );
     }
 
     /**
@@ -172,25 +187,5 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(?PageQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
-    {
-        $query ??= $this->createQuery();
-
-        try {
-            $pages = $query->execute($limit, $offset);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        return $pages->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, PageMapper::toDomain($item))
-            ]
-        );
     }
 }
