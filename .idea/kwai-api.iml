@@ -148,6 +148,19 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/routing" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/psr-http-message-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/http-foundation" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/squizlabs/php_codesniffer" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/ezyang/htmlpurifier" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin-expectations" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/php-cs-fixer/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/stopwatch" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/event-dispatcher-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/process" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/friendsofphp/php-cs-fixer" />
       <excludePattern pattern="phpstan.phar" />
     </content>
     <orderEntry type="inheritedJdk" />

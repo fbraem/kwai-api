@@ -3,16 +3,19 @@
   <component name="MessDetector">
     <phpmd_settings>
       <MessDetectorConfiguration tool_path="$PROJECT_DIR$/src/vendor/bin/phpmd" />
+      <phpmd_by_interpreter interpreter_id="8cb01efb-27f2-4a34-aab7-7253f82550cc" tool_path="/vagrant/src/vendor/bin/phpmd" timeout="30000" />
     </phpmd_settings>
   </component>
   <component name="PhpCSFixer">
     <phpcsfixer_settings>
       <PhpCSFixerConfiguration standards="PSR1;PSR2;Symfony;DoctrineAnnotation;PHP70Migration;PHP71Migration" tool_path="$USER_HOME$/.config/composer/vendor/bin/php-cs-fixer" />
+      <phpcs_fixer_by_interpreter interpreter_id="8cb01efb-27f2-4a34-aab7-7253f82550cc" standards="PSR1;PSR2;Symfony;DoctrineAnnotation;PHP70Migration;PHP71Migration" tool_path="/vagrant/src/vendor/bin/php-cs-fixer" timeout="30000" />
     </phpcsfixer_settings>
   </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <PhpCSConfiguration beautifier_path="$USER_HOME$/.config/composer/vendor/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;Squiz;Zend" tool_path="$USER_HOME$/.config/composer/vendor/bin/phpcs" />
+      <phpcs_by_interpreter interpreter_id="8cb01efb-27f2-4a34-aab7-7253f82550cc" beautifier_path="/vagrant/src/vendor/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;Squiz;Zend" tool_path="/vagrant/src/vendor/bin/phpcs" timeout="30000" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
@@ -153,6 +156,19 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/routing" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/psr-http-message-bridge" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/src/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/src/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/src/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-expectations" />
+      <path value="$PROJECT_DIR$/src/vendor/php-cs-fixer/diff" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/src/vendor/friendsofphp/php-cs-fixer" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
