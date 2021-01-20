@@ -21,5 +21,5 @@ class BrowseStoriesCommand
     public ?int $publishMonth = null;
     public int|string|null $application = null;
     public bool $promoted = false;
-    public ?string $userUid = null;
+    public int|string|null $userUid = null;
 }
