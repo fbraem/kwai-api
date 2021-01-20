@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Modules\News\UseCases;
 
+use Exception;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
-use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
@@ -22,7 +19,6 @@ it('can browse stories', function () use ($context) {
     try {
         [$count, $stories] = (new BrowseStories(
             new StoryDatabaseRepository($context->db),
-            new AuthorDatabaseRepository($context->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -39,11 +35,37 @@ it('can browse stories', function () use ($context) {
         expect($count)
             ->toBeInt()
         ;
-    } catch (QueryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
-    } catch (RepositoryException $e) {
-        $this->fail((string) $e);
-    } catch (AuthorNotFoundException $e) {
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can browse stories of a user', function () use ($context) {
+    $command = new BrowseStoriesCommand();
+    $command->userUid = 1;
+
+    try {
+        [$count, $stories] = (new BrowseStories(
+            new StoryDatabaseRepository($context->db),
+            new class implements ImageRepository {
+                public function getImages(int $id): Collection
+                {
+                    return collect();
+                }
+                public function removeImages(int $id): void
+                {
+                }
+            }
+        ))($command);
+        expect($stories)
+            ->toBeInstanceOf(Collection::class)
+        ;
+        expect($count)
+            ->toBeInt()
+        ;
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
