@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Repositories;
 
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\Query;
 
 /**
@@ -61,8 +62,8 @@ interface StoryQuery extends Query
     /**
      * Filter on the user. Only news written by the given user will be shown.
      *
-     * @param int $id
+     * @param int|UniqueId $id
      * @return StoryQuery
      */
-    public function filterUser(int $id): self;
+    public function filterUser(int|UniqueId $id): self;
 }
