@@ -16,17 +16,14 @@ use Exception;
  */
 class MailNotFoundException extends Exception
 {
-    private int $id;
-
     /**
      * MailNotFoundException constructor.
      *
      * @param int $id
      */
-    public function __construct(int $id)
+    public function __construct(private int $id)
     {
         parent::__construct('Mail not found');
-        $this->id = $id;
     }
 
     public function __toString()
