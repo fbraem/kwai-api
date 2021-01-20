@@ -36,21 +36,21 @@ class StoryMapper
                     : null
             ),
             publishTime: Timestamp::createFromString(
-                    $data->get('publish_date'),
-                    $data->get('timezone')
+                $data->get('publish_date'),
+                $data->get('timezone')
             ),
             endDate: $data->has('end_date')
-                    ? Timestamp::createFromString(
-                        $data->get('end_date'),
-                        $data->get('timezone')
-                    )
-                    : null,
+                ? Timestamp::createFromString(
+                    $data->get('end_date'),
+                    $data->get('timezone')
+                )
+                : null,
             remark: $data->get('remark'),
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($data->get('created_at')),
-                    $data->has('updated_at')
-                        ? Timestamp::createFromString($data->get('updated_at'))
-                        : null
+                $data->has('updated_at')
+                            ? Timestamp::createFromString($data->get('updated_at'))
+                            : null
             ),
             application: new Entity(
                 (int) $data->get('application')->get('id'),
