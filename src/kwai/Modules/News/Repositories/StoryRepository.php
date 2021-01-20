@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -76,10 +76,11 @@ interface StoryRepository
      * @param int|null        $limit
      * @param int|null        $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(
         ?StoryQuery $query = null,
         ?int $limit = null,
-        ?int $offset = null): Collection;
+        ?int $offset = null
+    ): Collection;
 }

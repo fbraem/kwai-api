@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -11,8 +11,6 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\News\Repositories\AuthorRepository;
 use Kwai\Modules\News\Repositories\StoryRepository;
 
 /**
@@ -22,27 +20,30 @@ use Kwai\Modules\News\Repositories\StoryRepository;
  */
 class BrowseStories
 {
-    private StoryRepository $repo;
-
-    private AuthorRepository $authorRepo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * BrowseStory constructor.
      *
      * @param StoryRepository  $repo
-     * @param AuthorRepository $authorRepo
      * @param ImageRepository  $imageRepo
      */
     public function __construct(
-        StoryRepository $repo,
-        AuthorRepository $authorRepo,
-        ImageRepository $imageRepo
+        private StoryRepository $repo,
+        private ImageRepository $imageRepo
     ) {
-        $this->repo = $repo;
-        $this->authorRepo = $authorRepo;
-        $this->imageRepo = $imageRepo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param StoryRepository $repo
+     * @param ImageRepository $imageRepo
+     * @return static
+     */
+    public static function create(
+        StoryRepository $repo,
+        ImageRepository $imageRepo
+    ): self {
+        return new self($repo, $imageRepo);
     }
 
     /**
@@ -50,9 +51,8 @@ class BrowseStories
      *
      * @param BrowseStoriesCommand $command
      * @return array
-     * @throws QueryException
      * @throws RepositoryException
-     * @throws AuthorNotFoundException
+     * @throws QueryException
      */
     public function __invoke(BrowseStoriesCommand $command): array
     {
@@ -72,11 +72,11 @@ class BrowseStories
         }
 
         if ($command->userUid) {
-            $user = $this
-                ->authorRepo
-                ->getByUniqueId(new UniqueId($command->userUid))
-            ;
-            $query->filterUser($user->id());
+            if (is_int($command->userUid)) {
+                $query->filterUser($command->userUid);
+            } else {
+                $query->filterUser(new UniqueId($command->userUid));
+            }
         }
         $count = $query->count();
 

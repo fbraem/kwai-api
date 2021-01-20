@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -19,10 +19,6 @@ use Kwai\Modules\News\Repositories\StoryRepository;
  */
 class DeleteStory
 {
-    private StoryRepository $repo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * DeleteStory constructor.
      *
@@ -30,11 +26,23 @@ class DeleteStory
      * @param ImageRepository $imageRepo
      */
     public function __construct(
+        private StoryRepository $repo,
+        private ImageRepository $imageRepo
+    ) {
+    }
+
+    /**
+     * Factory method
+     *
+     * @param StoryRepository $repo
+     * @param ImageRepository $imageRepo
+     * @return DeleteStory
+     */
+    public static function create(
         StoryRepository $repo,
         ImageRepository $imageRepo
-    ) {
-        $this->repo = $repo;
-        $this->imageRepo = $imageRepo;
+    ): self {
+        return new self($repo, $imageRepo);
     }
 
     /**

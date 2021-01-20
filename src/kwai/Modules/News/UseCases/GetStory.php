@@ -21,10 +21,6 @@ use Kwai\Modules\News\Repositories\StoryRepository;
  */
 class GetStory
 {
-    private StoryRepository $repo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * GetStory constructor.
      *
@@ -32,11 +28,23 @@ class GetStory
      * @param ImageRepository $imageRepo
      */
     public function __construct(
+        private StoryRepository $repo,
+        private ImageRepository $imageRepo
+    ) {
+    }
+
+    /**
+     * Factory method
+     *
+     * @param StoryRepository $repo
+     * @param ImageRepository $imageRepo
+     * @return GetStory
+     */
+    public static function create(
         StoryRepository $repo,
         ImageRepository $imageRepo
-    ) {
-        $this->repo = $repo;
-        $this->imageRepo = $imageRepo;
+    ): self {
+        return new self($repo, $imageRepo);
     }
 
     /**
