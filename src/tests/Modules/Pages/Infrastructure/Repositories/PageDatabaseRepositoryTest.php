@@ -2,6 +2,7 @@
 /** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
@@ -39,6 +40,21 @@ beforeAll(function () use ($context) {
         }
     }
 });
+
+it('can browse a pages', function () use ($context) {
+    $repo = new PageDatabaseRepository($context->db);
+    try {
+        $pages = $repo->getAll();
+        expect($pages)
+            ->toBeInstanceOf(Collection::class)
+        ;
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
 
 it('can create a new page', function () use ($context) {
     if (! isset($context->author)) {
