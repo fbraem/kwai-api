@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Pages\Infrastructure\Tables;
 use Kwai\Modules\Pages\Repositories\PageQuery;
+use function Latitude\QueryBuilder\express;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\group;
 use function Latitude\QueryBuilder\on;
@@ -87,12 +89,32 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
     /**
      * @inheritDoc
      */
-    public function filterUser(int $id): self
+    public function filterUser(int|UniqueId $id): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->query->andWhere(group(
-            field(Tables::CONTENTS()->user_id)->eq($id)
-        ));
+        $innerSelect = $this->db->createQueryFactory()->select()
+            ->columns(Tables::AUTHORS()->id)
+            ->from((string) Tables::AUTHORS())
+        ;
+        if (is_int($id)) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->id)->eq($id)
+            );
+        } else {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->uuid)->eq($id)
+            );
+        }
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            group(
+                field(Tables::CONTENTS()->user_id)
+                    ->in(express('%s', $innerSelect))
+            )
+        );
         return $this;
     }
 

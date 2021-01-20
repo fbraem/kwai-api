@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Repositories;
 
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\Query;
 
 /**
@@ -40,12 +41,12 @@ interface PageQuery extends Query
     public function filterVisible(): self;
 
     /**
-     * Filter the pages only for this user.
+     * Filter the pages only for this user with the given id or uuid.
      *
-     * @param int $id
+     * @param int|UniqueId $id
      * @return PageQuery
      */
-    public function filterUser(int $id): self;
+    public function filterUser(int|UniqueId $id): self;
 
     /**
      * Order by priority
