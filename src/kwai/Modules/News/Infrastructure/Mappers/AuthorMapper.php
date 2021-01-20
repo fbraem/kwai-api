@@ -28,8 +28,7 @@ final class AuthorMapper
             name: new Name(
                 $data->get('first_name'),
                 $data->get('last_name')
-                )
             )
-        ;
+        );
     }
 }

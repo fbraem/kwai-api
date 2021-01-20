@@ -50,11 +50,11 @@ it('can create a story', function () use ($context) {
     $repo = new StoryDatabaseRepository($context->db);
     try {
         $story = $repo->create(new Story(
-                enabled: true,
-                promotion: new Promotion(1),
-                publishTime: Timestamp::createNow('Europe/Brussels'),
-                application: $context->application,
-                contents: collect([
+            enabled: true,
+            promotion: new Promotion(1),
+            publishTime: Timestamp::createNow('Europe/Brussels'),
+            application: $context->application,
+            contents: collect([
                     new Text(
                         new Locale('nl'),
                         new DocumentFormat('md'),
@@ -83,23 +83,22 @@ it('can create a story', function () use ($context) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can retrieve a story',function (int $id) use ($context) {
+it('can retrieve a story', function (int $id) use ($context) {
         $repo = new StoryDatabaseRepository($context->db);
-        try {
-            $story = $repo->getById($id);
-            expect($story)
-                ->toBeInstanceOf(Entity::class)
-            ;
-            expect($story->domain())
-                ->toBeInstanceOf(Story::class)
-            ;
-        } catch (StoryNotFoundException $e) {
-            $this->fail((string) $e);
-        } catch (RepositoryException $e) {
-            $this->fail((string) $e);
-        }
+    try {
+        $story = $repo->getById($id);
+        expect($story)
+            ->toBeInstanceOf(Entity::class)
+        ;
+        expect($story->domain())
+            ->toBeInstanceOf(Story::class)
+        ;
+    } catch (StoryNotFoundException $e) {
+        $this->fail((string) $e);
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
     }
-)
+})
     ->depends('it can create a story')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
