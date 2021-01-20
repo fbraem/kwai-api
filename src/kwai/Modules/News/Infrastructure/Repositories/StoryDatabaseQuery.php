@@ -9,11 +9,13 @@ namespace Kwai\Modules\News\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\StoryQuery;
 use function Latitude\QueryBuilder\criteria;
+use function Latitude\QueryBuilder\express;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
 use function Latitude\QueryBuilder\group;
@@ -228,12 +230,32 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     /**
      * @inheritDoc
      */
-    public function filterUser(int $id): self
+    public function filterUser(int|UniqueId $id): self
     {
         /** @noinspection PhpUndefinedFieldInspection */
-        $this->query->andWhere(group(
-            field(Tables::CONTENTS()->user_id)->eq($id)
-        ));
+        $innerSelect = $this->db->createQueryFactory()->select()
+            ->columns(Tables::AUTHORS()->id)
+            ->from((string) Tables::AUTHORS())
+        ;
+        if (is_int($id)) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->id)->eq($id)
+            );
+        } else {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->uuid)->eq($id)
+            );
+        }
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            group(
+                field(Tables::CONTENTS()->user_id)
+                    ->in(express('%s', $innerSelect))
+            )
+        );
         return $this;
     }
 }
