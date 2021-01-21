@@ -49,11 +49,11 @@ class RecipientDatabaseQuery extends DatabaseQuery implements RecipientQuery
     /**
      * @inheritDoc
      */
-    public function filterOnMails(Collection $ids): RecipientQuery
+    public function filterMail(int ...$ids): RecipientQuery
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::RECIPIENTS()->mail_id)->in(...$ids->toArray())
+            field(Tables::RECIPIENTS()->mail_id)->in(...$ids)
         );
 
         return $this;
@@ -78,7 +78,8 @@ class RecipientDatabaseQuery extends DatabaseQuery implements RecipientQuery
                 $mails->put($recipient['mail_id'], new Collection());
             }
             $mails[$recipient['mail_id']]->put(
-                $recipient['id'], $recipient
+                $recipient['id'],
+                $recipient
             );
         }
 
