@@ -8,10 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
-use Kwai\Modules\Trainings\Domain\Season;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 
 /**
  * Interface SeasonRepository
@@ -23,17 +20,22 @@ interface SeasonRepository
      *
      * @param int ...$id
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getById(int ...$id): Collection;
 
     /**
      * Get all seasons
      *
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param SeasonQuery|null $query
+     * @param int|null         $limit
+     * @param int|null         $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
-    public function getAll(?int $limit = null, ?int $offset = null): Collection;
+    public function getAll(
+        ?SeasonQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 }
