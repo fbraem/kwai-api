@@ -9,6 +9,7 @@ namespace Kwai\Modules\Mails\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -29,20 +30,29 @@ use Kwai\Modules\Mails\Repositories\MailRepository;
 final class MailDatabaseRepository extends DatabaseRepository implements MailRepository
 {
     /**
+     * MailDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => MailMapper::toDomain($item)
+        );
+    }
+
+    /**
      * @inheritdoc
      */
     public function getById(int $id) : Entity
     {
         $query = $this->createQuery()->filterId($id);
 
-        try {
-            $entities = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
+        $entities = $this->getAll($query);
 
         if ($entities->isNotEmpty()) {
-            return $entities[$id];
+            return $entities->first();
         }
 
         throw new MailNotFoundException($id);
@@ -59,8 +69,7 @@ final class MailDatabaseRepository extends DatabaseRepository implements MailRep
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::MAILS())
             ->columns(... $data->keys())
-            ->values(... $data->values()
-            )
+            ->values(... $data->values())
         ;
         try {
             $this->db->execute($query);
@@ -84,24 +93,9 @@ final class MailDatabaseRepository extends DatabaseRepository implements MailRep
      *
      * @return MailQuery
      */
-    private function createQuery(): MailQuery
+    public function createQuery(): MailQuery
     {
         return new MailDatabaseQuery($this->db);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(MailQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
-    {
-        $query ??= $this->createQuery();
-
-        $mails = $query->execute($limit, $offset);
-        return $mails->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, MailMapper::toDomain($item))
-            ]
-        );
     }
 
     /**
@@ -115,12 +109,13 @@ final class MailDatabaseRepository extends DatabaseRepository implements MailRep
         /* @var Collection $recipients */
         /** @noinspection PhpUndefinedMethodInspection */
         $recipients = $mail->getRecipients();
-        if ($recipients->count() === 0)
+        if ($recipients->count() === 0) {
             return;
+        }
 
         $recipients
             ->transform(
-            fn(Recipient $recipient) => RecipientMapper::toPersistence($recipient)
+                fn(Recipient $recipient) => RecipientMapper::toPersistence($recipient)
             )
             ->map(
                 fn(Collection $item) => $item->put('mail_id', $mail->id())
@@ -137,7 +132,7 @@ final class MailDatabaseRepository extends DatabaseRepository implements MailRep
 
         try {
             $this->db->execute($query);
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
