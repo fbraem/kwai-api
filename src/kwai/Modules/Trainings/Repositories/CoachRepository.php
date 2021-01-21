@@ -1,18 +1,14 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Trainings
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Coach;
-use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 
 /**
  * Interface CoachRepository
@@ -43,7 +39,7 @@ interface CoachRepository
      * @param int|null        $limit
      * @param int|null        $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(?CoachQuery $query = null, ?int $limit = null, ?int $offset = null): Collection;
 }

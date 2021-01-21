@@ -44,7 +44,7 @@ interface DefinitionRepository
      * @param int|null             $limit
      * @param int|null             $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(?DefinitionQuery $query = null, ?int $limit = null, ?int $offset = null): Collection;
 
