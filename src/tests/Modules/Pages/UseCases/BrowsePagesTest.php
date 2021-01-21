@@ -42,7 +42,7 @@ it('can browse pages of a given user', function () use ($context) {
     $command = new BrowsePagesCommand();
     $command->userId = 1;
     try {
-        $pages = BrowsePages::create(
+        [$count, $pages] = BrowsePages::create(
             new PageDatabaseRepository($context->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
@@ -56,6 +56,9 @@ it('can browse pages of a given user', function () use ($context) {
         )($command);
         expect($pages)
             ->toBeInstanceOf(Collection::class)
+        ;
+        expect($count)
+            ->toBeInt()
         ;
     } catch (Exception $e) {
         $this->fail((string) $e);
@@ -68,7 +71,7 @@ it('can browse pages of a given application', function () use ($context) {
     $command = new BrowsePagesCommand();
     $command->application = 1;
     try {
-        $pages = BrowsePages::create(
+        [ $count, $pages ] = BrowsePages::create(
             new PageDatabaseRepository($context->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
@@ -83,7 +86,9 @@ it('can browse pages of a given application', function () use ($context) {
         expect($pages)
             ->toBeInstanceOf(Collection::class)
         ;
-
+        expect($count)
+            ->toBeInt()
+        ;
     } catch (Exception $e) {
         $this->fail((string) $e);
     }
