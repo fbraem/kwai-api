@@ -85,13 +85,13 @@ it('can manage a presence', function () use ($creator) {
     );
     $member = new Entity(
         1,
-        new Member((object) [
-            'license' => '',
-            'licenseEndDate' => Date::createFromDate(2020),
-            'name' => new Name(),
-            'gender' => Gender::MALE(),
-            'birthDate' => Date::createFromDate(1860, 12, 10)
-        ])
+        new Member(
+            license: '',
+            licenseEndDate: Date::createFromDate(2020),
+            name: new Name(),
+            gender: Gender::MALE(),
+            birthDate: Date::createFromDate(1860, 12, 10)
+        )
     );
     $training->registerPresence(new Presence(
         $member,
