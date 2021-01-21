@@ -74,7 +74,8 @@ class MailDatabaseQuery extends DatabaseQuery implements MailQuery
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query
             ->where(
-                field(Tables::MAILS()->id)->eq($id))
+                field(Tables::MAILS()->id)->eq($id)
+            )
         ;
         return $this;
     }
@@ -86,7 +87,9 @@ class MailDatabaseQuery extends DatabaseQuery implements MailQuery
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->where(field(Tables::MAILS()->uuid)->eq((string) $uniqueId))
+            ->where(
+                field(Tables::MAILS()->uuid)->eq((string) $uniqueId)
+            )
         ;
         return $this;
     }
@@ -115,9 +118,8 @@ class MailDatabaseQuery extends DatabaseQuery implements MailQuery
         }
 
         // Get all recipients
-        $mailIds = $mails->keys();
         $recipientQuery = new RecipientDatabaseQuery($this->db);
-        $recipientQuery->filterOnMails($mailIds);
+        $recipientQuery->filterMail(...$mails->keys());
         $mailRecipients = $recipientQuery->execute();
         $mails->each(
             fn ($mail) => $mail->put(
