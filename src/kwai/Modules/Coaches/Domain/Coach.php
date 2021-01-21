@@ -28,9 +28,7 @@ class Coach implements DomainEntity
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null
     ) {
-        if ($this->traceableTime === null) {
-            $this->traceableTime = new TraceableTime();
-        }
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
