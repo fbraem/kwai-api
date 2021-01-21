@@ -8,72 +8,41 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
-use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\SeasonMapper;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Repositories\SeasonQuery;
 use Kwai\Modules\Trainings\Repositories\SeasonRepository;
-use function Latitude\QueryBuilder\field;
 
 /**
  * Class SeasonDatabaseRepository
  */
 class SeasonDatabaseRepository extends DatabaseRepository implements SeasonRepository
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => SeasonMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      */
     public function getById(int ...$ids): Collection
     {
-        $query = $this->db->createQueryFactory()
-            ->select()
-            ->from((string) Tables::SEASONS())
-            ->columns(
-                'id',
-                'name'
-            )
-            ->where(field('id')->in(...$ids))
-        ;
-
-        $this->db->asArray();
-        $rows = LazyCollection::make($this->db->walk($query));
-        $this->db->asObject();
-
-        return $this->createSeasonCollection($rows);
+        $query = $this->createQuery()->filterId(...$ids);
+        return $this->getAll($query);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getAll(?int $limit = null, ?int $offset = null): Collection
-    {
-        $query = $this->db->createQueryFactory()
-            ->select()
-            ->from((string) Tables::SEASONS())
-            ->columns(
-                'id',
-                'name'
-            )
-        ;
-
-        $this->db->asArray();
-        $rows = LazyCollection::make($this->db->walk($query));
-        $this->db->asObject();
-
-        return $this->createSeasonCollection($rows);
-    }
-
-    /**
-     * Create a collection with Season entities
+     * Factory method for the query
      *
-     * @param LazyCollection $rows
-     * @return Collection
+     * @return SeasonQuery
      */
-    private function createSeasonCollection(LazyCollection $rows): Collection
+    public function createQuery(): SeasonQuery
     {
-        return $rows->mapWithKeys(fn ($data) => [
-            (int) $data->get('id') => new Entity((int) $data->get('id'), SeasonMapper::toDomain($data))
-        ])->collect();
+        return new SeasonDatabaseQuery($this->db);
     }
 }
