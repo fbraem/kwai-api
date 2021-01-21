@@ -19,7 +19,10 @@ class MemberMapper
     public static function toDomain(Collection $data): Member
     {
         return new Member(
-            name: new Name($data->get('firstname'), $data->get('lastname'))
+            name: new Name(
+                $data->get('firstname'),
+                $data->get('lastname')
+            )
         );
     }
 }

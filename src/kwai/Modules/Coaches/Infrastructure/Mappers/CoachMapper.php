@@ -27,7 +27,7 @@ class CoachMapper
     {
         return new Coach(
             member: new Entity(
-            (int) $data->get('member')->get('id'),
+                (int) $data->get('member')->get('id'),
                 MemberMapper::toDomain($data->get('member'))
             ),
             creator: CreatorMapper::toDomain($data->get('creator')),
