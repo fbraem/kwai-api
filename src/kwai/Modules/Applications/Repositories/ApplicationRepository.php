@@ -9,7 +9,6 @@ namespace Kwai\Modules\Applications\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Application;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
@@ -44,7 +43,7 @@ interface ApplicationRepository
      * @param int|null              $limit
      * @param int|null              $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(
         ?ApplicationQuery $query = null,
