@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -30,6 +31,19 @@ use function Latitude\QueryBuilder\field;
  */
 class UserDatabaseRepository extends DatabaseRepository implements UserRepository
 {
+    /**
+     * UserDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => UserMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      */
@@ -58,30 +72,6 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         }
 
         return $entities->first();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(
-        ?UserQuery $query = null,
-        ?int $limit = null,
-        ?int $offset = null
-    ): Collection {
-        $query ??= $this->createQuery();
-
-        /* @var Collection $users */
-        try {
-            $users = $query->execute($limit, $offset);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        return $users->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, UserMapper::toDomain($item))
-            ]
-        );
     }
 
     public function update(Entity $user): void
