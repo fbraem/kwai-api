@@ -8,10 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
 use Kwai\Modules\Users\Repositories\RuleQuery;
 use Kwai\Modules\Users\Repositories\RuleRepository;
@@ -22,25 +20,15 @@ use Kwai\Modules\Users\Repositories\RuleRepository;
 class RuleDatabaseRepository extends DatabaseRepository implements RuleRepository
 {
     /**
-     * @inheritDoc
+     * RuleDatabaseRepository constructor.
+     *
+     * @param Connection $db
      */
-    public function getAll(
-        ?RuleQuery $query = null,
-        ?int $limit = null,
-        ?int $offset = null
-    ): Collection {
-        $query ??= $this->createQuery();
-
-        /* @var Collection $rules */
-        try {
-            $rules = $query->execute($limit, $offset);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        return $rules->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, RuleMapper::toDomain($item))
-            ]
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => RuleMapper::toDomain($item)
         );
     }
 
