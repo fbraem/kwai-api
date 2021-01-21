@@ -11,8 +11,6 @@ use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Team;
@@ -39,9 +37,7 @@ it('can get a training', function () use ($context) {
         expect($training->getCoaches()->count())
             ->toBeGreaterThan(0)
         ;
-    } catch (TrainingNotFoundException $e) {
-        $this->fail((string) $e);
-    } catch (RepositoryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
@@ -56,7 +52,7 @@ it('can count all trainings', function () use ($context) {
         expect($count)
             ->toBeGreaterThan(0)
         ;
-    } catch (QueryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
@@ -66,9 +62,8 @@ it('can count all trainings', function () use ($context) {
 it('should throw a not found exception', function () use ($context) {
     $repo = new TrainingDatabaseRepository($context->db);
     try {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $repo->getById(1000);
-    } catch (RepositoryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
@@ -112,7 +107,7 @@ it('can filter trainings for a coach', function () use ($context) {
             ->and($trainings->count())
             ->toBeGreaterThan(0)
         ;
-    } catch (QueryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
@@ -135,7 +130,7 @@ it('can filter trainings for a team', function () use ($context) {
             ->and($trainings->count())
             ->toBeGreaterThan(0)
         ;
-    } catch (QueryException $e) {
+    } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
