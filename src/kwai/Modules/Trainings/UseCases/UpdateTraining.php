@@ -17,7 +17,6 @@ use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
@@ -80,7 +79,6 @@ class UpdateTraining
      * @param Creator               $creator
      * @return Entity<Training>
      * @throws DefinitionNotFoundException
-     * @throws QueryException
      * @throws RepositoryException
      * @throws TrainingNotFoundException
      * @throws CoachNotFoundException
@@ -111,7 +109,9 @@ class UpdateTraining
                     coach: $coaches->get($coach->id),
                     present: $coach->present,
                     head: $coach->head,
-                    traceableTime: TraceableTime::createFrom($training->getCoaches()->get($coach->id)?->getTraceableTime()),
+                    traceableTime: TraceableTime::createFrom(
+                        $training->getCoaches()->get($coach->id)?->getTraceableTime()
+                    ),
                     creator: $creator,
                     payed: $coach->payed,
                     remark: $coach->remark
@@ -126,7 +126,7 @@ class UpdateTraining
         ;
 
         $contents = new Collection();
-        foreach($command->contents as $text) {
+        foreach ($command->contents as $text) {
             $contents->add(new Text(
                 new Locale($text->locale),
                 new DocumentFormat($text->format),
@@ -136,6 +136,11 @@ class UpdateTraining
                 $creator
             ));
         }
+
+        /* @var TraceableTime $traceableTime */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $traceableTime = $training->getTraceableTime();
+        $traceableTime->markUpdated();
 
         $entity = new Entity(
             $command->id,
@@ -148,7 +153,7 @@ class UpdateTraining
                     cancelled: $command->cancelled
                 ),
                 text: $contents,
-                traceableTime: TraceableTime::createFrom($training->getTraceableTime()),
+                traceableTime: $traceableTime,
                 definition: $definition,
                 coaches: $trainingCoaches,
                 teams: $teams,
