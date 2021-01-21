@@ -1,13 +1,13 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Trainings
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Domain\ValueObjects\Gender;
 use Kwai\Core\Domain\ValueObjects\Name;
@@ -21,21 +21,18 @@ class MemberMapper
     /**
      * Maps a table record to the Coach domain entity.
      *
-     * @param object $raw
-     * @return Entity<Member>
+     * @param Collection $data
+     * @return Member
      */
 
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Member
     {
-        return new Entity(
-            (int) $raw->id,
-            new Member((object) [
-                'license' => $raw->license,
-                'licenseEndDate' => Date::createFromString($raw->license_end_date),
-                'name' => new Name($raw->firstname, $raw->lastname),
-                'gender' => new Gender((int) $raw->gender),
-                'birthDate' => Date::createFromString($raw->birthdate),
-            ])
+        return new Member(
+            license: $data->get('license'),
+            licenseEndDate: Date::createFromString($data->get('license_end_date')),
+            name: new Name($data->get('firstname'), $data->get('lastname')),
+            gender: new Gender((int) $data->get('gender')),
+            birthDate: Date::createFromString($data->get('birthdate')),
         );
     }
 }
