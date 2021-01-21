@@ -40,11 +40,8 @@ class Application implements DomainEntity
         private bool $canHavePages = false,
         private bool $canHaveEvents = false,
         private int $weight = 0
-    )
-    {
-        if ($traceableTime === null) {
-            $this->traceableTime = new TraceableTime();
-        }
+    ) {
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
