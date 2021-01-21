@@ -49,7 +49,6 @@ class CreateDefinition
      * @param CreateDefinitionCommand $command
      * @param Creator                 $creator
      * @return Entity<Definition>
-     * @throws QueryException
      * @throws RepositoryException
      * @throws TeamNotFoundException
      * @throws SeasonNotFoundException
@@ -60,7 +59,7 @@ class CreateDefinition
     ): Entity {
         if (isset($command->team_id)) {
             $teams = $this->teamRepo->getById($command->team_id);
-            if ($teams->isEmpty() == 0) {
+            if ($teams->isEmpty()) {
                 throw new TeamNotFoundException($command->team_id);
             }
             $team = $teams->first();
@@ -68,8 +67,15 @@ class CreateDefinition
             $team = null;
         }
 
-        $season = isset($command->season_id) ?
-            $this->seasonRepo->getById($command->season_id) : null;
+        if (isset($command->season_id)) {
+            $seasons = $this->seasonRepo->getById($command->season_id);
+            if ($seasons->isEmpty()) {
+                throw new SeasonNotFoundException($command->season_id);
+            }
+            $season = $seasons->first();
+        } else {
+            $season = null;
+        }
 
         $definition = new Definition(
             name: $command->name,
