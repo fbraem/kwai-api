@@ -8,10 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachMapper;
 use Kwai\Modules\Trainings\Repositories\CoachQuery;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
@@ -23,6 +21,19 @@ use Kwai\Modules\Trainings\Repositories\CoachRepository;
  */
 class CoachDatabaseRepository extends DatabaseRepository implements CoachRepository
 {
+    /**
+     * CoachDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => CoachMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      */
@@ -36,34 +47,7 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
      */
     public function getById(int ...$ids): Collection
     {
-        $query = $this->createQuery();
-        $query->filterId(...$ids);
-
-        try {
-            $coaches = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        return $coaches;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(?CoachQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
-    {
-        $query ??= $this->createQuery();
-
-        /* @var Collection $coaches */
-        $coaches = $query->execute($limit, $offset);
-        return $coaches->mapWithKeys(
-            fn($item) => [
-                $item['id'] => new Entity(
-                    (int) $item['id'],
-                    CoachMapper::toDomain($item)
-                )
-            ]
-        );
+        $query = $this->createQuery()->filterId(...$ids);
+        return $this->getAll($query);
     }
 }
