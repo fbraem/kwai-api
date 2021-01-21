@@ -17,7 +17,6 @@ use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
@@ -78,7 +77,6 @@ class CreateTraining
      * @return Entity<Training>
      * @throws RepositoryException
      * @throws DefinitionNotFoundException
-     * @throws QueryException
      */
     public function __invoke(CreateTrainingCommand $command, Creator $creator): Entity
     {
@@ -98,7 +96,7 @@ class CreateTraining
         ;
 
         $contents = new Collection();
-        foreach($command->contents as $text) {
+        foreach ($command->contents as $text) {
             $contents->add(new Text(
                 new Locale($text->locale),
                 new DocumentFormat($text->format),
