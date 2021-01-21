@@ -61,11 +61,8 @@ it('can count all trainings', function () use ($context) {
 
 it('should throw a not found exception', function () use ($context) {
     $repo = new TrainingDatabaseRepository($context->db);
-    try {
-        $repo->getById(1000);
-    } catch (Exception $e) {
-        $this->fail((string) $e);
-    }
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $repo->getById(1000);
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->throws(TrainingNotFoundException::class)
