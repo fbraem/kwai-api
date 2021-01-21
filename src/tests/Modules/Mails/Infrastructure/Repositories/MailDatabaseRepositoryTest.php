@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Infrastructure\Repositories;
 
+use Exception;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
@@ -14,7 +15,6 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Mails\Domain\Mail;
 use Kwai\Modules\Mails\Domain\Recipient;
@@ -34,23 +34,23 @@ it('can create an email', function () use ($context) {
     $repo = new MailDatabaseRepository($context->db);
     try {
         $mail = $repo->create(new Mail(
-                tag: 'test',
-                uuid: new UniqueId(),
-                sender: new Address(
-                    new EmailAddress('test@kwai.com')
-                ),
-                content: new MailContent('Test', 'This mail is a test'),
-                traceableTime: new TraceableTime(),
-                creator: $creator,
-                recipients: collect([
-                    new Recipient(
-                        type: RecipientType::TO(),
-                        address: new Address(
-                            email: new EmailAddress('jigoro.kano@kwai.com'),
-                            name: 'Jigoro Kano'
-                        )
+            tag: 'test',
+            uuid: new UniqueId(),
+            sender: new Address(
+                new EmailAddress('test@kwai.com')
+            ),
+            content: new MailContent('Test', 'This mail is a test'),
+            traceableTime: new TraceableTime(),
+            creator: $creator,
+            recipients: collect([
+                new Recipient(
+                    type: RecipientType::TO(),
+                    address: new Address(
+                        email: new EmailAddress('jigoro.kano@kwai.com'),
+                        name: 'Jigoro Kano'
                     )
-                ])
+                )
+            ])
         ));
         expect($mail)
             ->toBeInstanceOf(Entity::class)
@@ -75,9 +75,10 @@ it('can get all mails', function () use ($context) {
         expect($mails)
             ->toBeInstanceOf(Collection::class)
             ->and($mails->count())
+            ->toBeGreaterThan(0)
         ;
-    } catch (QueryException $e) {
-        $this->fails($e);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
