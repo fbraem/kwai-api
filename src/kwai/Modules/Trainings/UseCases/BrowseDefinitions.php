@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\UseCases;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 
 /**
@@ -44,6 +45,7 @@ class BrowseDefinitions
      * @param BrowseDefinitionsCommand $command
      * @return array
      * @throws QueryException
+     * @throws RepositoryException
      */
     public function __invoke(BrowseDefinitionsCommand $command)
     {
