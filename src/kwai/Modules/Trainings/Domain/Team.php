@@ -24,7 +24,6 @@ class Team implements DomainEntity
     public function __construct(
         private string $name
     ) {
-        $this->name = $name;
     }
 
     /**
