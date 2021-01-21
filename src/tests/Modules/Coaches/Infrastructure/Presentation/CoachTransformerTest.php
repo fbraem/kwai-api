@@ -11,18 +11,19 @@ use Kwai\Modules\Coaches\Presentation\Transformers\CoachTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
 
-it('can transform a coach', function() {
-   $coach = new Coach(
-       bio: 'The founder of Judo',
-       member: new Entity(1, new Member(
-           name: new Name('Jigoro', 'Kano')
-       )),
-       active: true,
-       creator: new Creator(
-           1, new Name()
-       ),
-       diploma: 'Founder'
-   );
+it('can transform a coach', function () {
+    $coach = new Coach(
+        bio: 'The founder of Judo',
+        member: new Entity(1, new Member(
+            name: new Name('Jigoro', 'Kano')
+        )),
+        active: true,
+        creator: new Creator(
+            1,
+            new Name()
+        ),
+        diploma: 'Founder'
+    );
 
     $fractal = new Manager();
     $fractal->setSerializer(new DataArraySerializer());
