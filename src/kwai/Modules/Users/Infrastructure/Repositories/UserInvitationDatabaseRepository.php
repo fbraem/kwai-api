@@ -7,9 +7,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -31,6 +31,13 @@ use function Latitude\QueryBuilder\field;
  */
 class UserInvitationDatabaseRepository extends DatabaseRepository implements UserInvitationRepository
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => UserInvitationMapper::toDomain($item)
+        );
+    }
     /**
      * @inheritdoc
      */
@@ -101,26 +108,5 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     public function createQuery(): UserInvitationQuery
     {
         return new UserInvitationDatabaseQuery($this->db);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(?UserInvitationQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
-    {
-        $query ??= $this->createQuery();
-
-        /* @var Collection $invitations */
-        try {
-            $invitations = $query->execute($limit, $offset);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        return $invitations->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, UserInvitationMapper::toDomain($item))
-            ]
-        );
     }
 }

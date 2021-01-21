@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -25,22 +25,24 @@ use function Latitude\QueryBuilder\field;
  */
 class DefinitionDatabaseRepository extends DatabaseRepository implements DefinitionRepository
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => DefinitionMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery();
-        $query->filterId($id);
+        $query = $this->createQuery()->filterId($id);
 
-        try {
-            $entities = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
+        $entities = $this->getAll($query);
         if ($entities->count() > 0) {
-            return $entities->get($id);
+            return $entities->first();
         }
 
         throw new DefinitionNotFoundException($id);
@@ -52,22 +54,6 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     public function createQuery(): DefinitionQuery
     {
         return new DefinitionDatabaseQuery($this->db);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(?DefinitionQuery $query = null, ?int $limit = null, ?int $offset = null): Collection
-    {
-        $query ??= $this->createQuery();
-
-        /* @var Collection $definitions */
-        $definitions = $query->execute($limit, $offset);
-        return $definitions->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, DefinitionMapper::toDomain($item))
-            ]
-        );
     }
 
     /**

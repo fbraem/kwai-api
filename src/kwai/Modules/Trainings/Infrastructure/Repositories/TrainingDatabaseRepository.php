@@ -11,6 +11,7 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -34,19 +35,26 @@ use function Latitude\QueryBuilder\field;
 class TrainingDatabaseRepository extends DatabaseRepository implements TrainingRepository
 {
     /**
+     * TrainingDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => TrainingMapper::toDomain($item)
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery();
-        $query->filterId($id);
+        $query = $this->createQuery()->filterId($id);
 
-        try {
-            $entities = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
+        $entities = $this->getAll($query);
         if ($entities->count() === 1) {
             return $entities[$id];
         }
@@ -65,28 +73,11 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * @inheritDoc
      */
-    public function getAll(
-        ?TrainingQuery $query = null,
-        ?int $limit = null,
-        ?int $offset = null
-    ): Collection {
-        $query ??= $this->createQuery();
-        $trainings = $query->execute($limit, $offset);
-        return $trainings->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, TrainingMapper::toDomain($item))
-            ]
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function create(Training $training): Entity
     {
         try {
             $this->db->begin();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -114,7 +105,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
             // Insert all teams
             $this->insertTeams($entity);
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             try {
                 $this->db->rollback();
             } catch (DatabaseException $e) {
@@ -125,7 +116,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         try {
             $this->db->commit();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -139,7 +130,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     {
         try {
             $this->db->begin();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
@@ -202,7 +193,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         try {
             $this->db->commit();
-        } catch(DatabaseException $e) {
+        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -240,7 +231,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         );
         try {
             $this->db->execute($query);
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -262,10 +253,10 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         $coaches
             ->transform(
-            fn(TrainingCoach $coach) => TrainingCoachMapper::toPersistence($coach)
+                fn(TrainingCoach $coach) => TrainingCoachMapper::toPersistence($coach)
             )
             ->map(
-            fn (Collection $item) => $item->put('training_id', $training->id())
+                fn (Collection $item) => $item->put('training_id', $training->id())
             )
         ;
 
@@ -278,7 +269,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         );
         try {
             $this->db->execute($query);
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -316,7 +307,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         );
         try {
             $this->db->execute($query);
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
