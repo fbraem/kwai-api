@@ -9,7 +9,6 @@ namespace Kwai\Modules\Coaches\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Coaches\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Coaches\Domain\Coach;
@@ -43,7 +42,7 @@ interface CoachRepository
      * @param int|null        $limit
      * @param int|null        $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
     public function getAll(
         ?CoachQuery $query = null,

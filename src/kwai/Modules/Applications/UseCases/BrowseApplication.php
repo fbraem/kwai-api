@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Applications\UseCases;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
 
@@ -45,6 +46,7 @@ class BrowseApplication
      * @param BrowseApplicationCommand $command
      * @return array (int, Collection)
      * @throws QueryException
+     * @throws RepositoryException
      */
     public function __invoke(BrowseApplicationCommand $command): array
     {
