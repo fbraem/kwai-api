@@ -97,7 +97,7 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
     /**
      * @inheritDoc
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
