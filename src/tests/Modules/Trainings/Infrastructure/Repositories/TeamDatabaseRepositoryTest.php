@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
 use Tests\Context;
 
