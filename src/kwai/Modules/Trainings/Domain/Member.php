@@ -19,28 +19,22 @@ use Kwai\Core\Domain\ValueObjects\Name;
  */
 class Member implements DomainEntity
 {
-    private string $license;
-
-    private Date $licenseEndDate;
-
-    private Name $name;
-
-    private Gender $gender;
-
-    private Date $birthDate;
-
     /**
      * Member constructor.
      *
-     * @param object $props
+     * @param string $license
+     * @param Date   $licenseEndDate
+     * @param Name   $name
+     * @param Gender $gender
+     * @param Date   $birthDate
      */
-    public function __construct(object $props)
-    {
-        $this->license = $props->license;
-        $this->licenseEndDate = $props->licenseEndDate;
-        $this->name = $props->name;
-        $this->gender = $props->gender;
-        $this->birthDate = $props->birthDate;
+    public function __construct(
+        private string $license,
+        private Date $licenseEndDate,
+        private Name $name,
+        private Gender $gender,
+        private Date $birthDate
+    ) {
     }
 
     /**
