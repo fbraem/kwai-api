@@ -44,9 +44,13 @@ interface TrainingRepository
      * @param int|null           $limit
      * @param int|null           $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
-    public function getAll(?TrainingQuery $query, ?int $limit, ?int $offset): Collection;
+    public function getAll(
+        ?TrainingQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 
     /**
      * Save a new training to the database.
