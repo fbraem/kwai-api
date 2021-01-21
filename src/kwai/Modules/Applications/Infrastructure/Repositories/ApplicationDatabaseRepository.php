@@ -7,11 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Applications\Infrastructure\Repositories;
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Mappers\ApplicationMapper;
 use Kwai\Modules\Applications\Repositories\ApplicationQuery;
@@ -22,20 +20,22 @@ use Kwai\Modules\Applications\Repositories\ApplicationRepository;
  */
 class ApplicationDatabaseRepository extends DatabaseRepository implements ApplicationRepository
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => ApplicationMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery();
-        $query->filterId($id);
+        $query = $this->createQuery()->filterId($id);
 
-        try {
-            $entities = $this->getAll($query);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
+        $entities = $this->getAll($query);
         if ($entities->isNotEmpty()) {
             return $entities->get($id);
         }
@@ -49,20 +49,5 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
     public function createQuery(): ApplicationQuery
     {
         return new ApplicationDatabaseQuery($this->db);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(ApplicationQuery $query, ?int $limit = null, ?int $offset = null): Collection
-    {
-        /* @var Collection $applications */
-        $applications = $query->execute($limit, $offset);
-        return $applications->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, ApplicationMapper::toDomain($item))
-            ]
-        );
-
     }
 }
