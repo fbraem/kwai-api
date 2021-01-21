@@ -39,11 +39,15 @@ interface CoachRepository
     /**
      * Executes the query and returns a collection with entities
      *
-     * @param CoachQuery $query
-     * @param int|null   $limit
-     * @param int|null   $offset
+     * @param CoachQuery|null $query
+     * @param int|null        $limit
+     * @param int|null        $offset
      * @return Collection
      * @throws QueryException
      */
-    public function getAll(CoachQuery $query, ?int $limit = null, ?int $offset = null): Collection;
+    public function getAll(
+        ?CoachQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 }
