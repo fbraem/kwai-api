@@ -46,11 +46,11 @@ class Training implements DomainEntity
         private ?Collection $teams = null,
         private ?Collection $presences = null
     ) {
-        $this->text = $text ?? new Collection();
-        $this->traceableTime = $traceableTime ?? new TraceableTime();
-        $this->coaches = $coaches ?? new Collection();
-        $this->teams = $teams ?? new Collection();
-        $this->presences = $presences ?? new Collection();
+        $this->text ??= new Collection();
+        $this->traceableTime ??= new TraceableTime();
+        $this->coaches ??= new Collection();
+        $this->teams ??= new Collection();
+        $this->presences ??= new Collection();
     }
 
     /**
