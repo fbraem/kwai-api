@@ -13,10 +13,10 @@ use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\SeasonDatabaseRepository;
@@ -58,7 +58,7 @@ class UpdateDefinition
         DefinitionDatabaseRepository $definitionRepo,
         TeamDatabaseRepository $teamRepo,
         SeasonDatabaseRepository $seasonRepo
-    ) {
+    ): UpdateDefinition {
         return new self($definitionRepo, $teamRepo, $seasonRepo);
     }
 
@@ -69,9 +69,9 @@ class UpdateDefinition
      * @param Creator                 $creator
      * @return Entity<Definition>
      * @throws DefinitionNotFoundException
-     * @throws QueryException
      * @throws RepositoryException
      * @throws TeamNotFoundException
+     * @throws SeasonNotFoundException
      */
     public function __invoke(
         UpdateDefinitionCommand $command,
@@ -86,7 +86,11 @@ class UpdateDefinition
         $currentTeam = $definition->getTeam();
         if (isset($command->team_id)) {
             if ($currentTeam == null || $command->team_id != $currentTeam->id()) {
-                $currentTeam = $this->teamRepo->getById($command->team_id);
+                $teams = $this->teamRepo->getById($command->team_id);
+                if ($teams->isEmpty()) {
+                    throw new TeamNotFoundException($command->team_id);
+                }
+                $currentTeam = $teams->first();
             }
         } else {
             if ($currentTeam != null) {
@@ -98,7 +102,11 @@ class UpdateDefinition
         $currentSeason = $definition->getSeason();
         if (isset($command->season_id)) {
             if ($currentSeason == null || $command->season_id != $currentSeason->id()) {
-                $currentSeason = $this->teamRepo->getById($command->season_id);
+                $seasons = $this->teamRepo->getById($command->season_id);
+                if ($seasons->isEmpty()) {
+                    throw new SeasonNotFoundException($command->season_id);
+                }
+                $currentSeason = $seasons->first();
             }
         } else {
             if ($currentSeason != null) {
