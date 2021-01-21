@@ -9,6 +9,7 @@ namespace Kwai\Modules\Trainings\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 
 /**
  * Interface TeamRepository
@@ -20,17 +21,22 @@ interface TeamRepository
      *
      * @param int ...$ids
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
-    public function getById(int ... $ids): Collection;
+    public function getById(int ...$ids): Collection;
 
     /**
      * Get all teams
      *
-     * @param int|null $limit
-     * @param int|null $offset
+     * @param TeamQuery|null $query
+     * @param int|null       $limit
+     * @param int|null       $offset
      * @return Collection
-     * @throws QueryException
+     * @throws RepositoryException
      */
-    public function getAll(?int $limit = null, ?int $offset = null): Collection;
+    public function getAll(
+        ?TeamQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 }

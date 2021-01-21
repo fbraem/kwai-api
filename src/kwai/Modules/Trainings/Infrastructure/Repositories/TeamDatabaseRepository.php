@@ -8,14 +8,11 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
-use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamMapper;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Repositories\TeamQuery;
 use Kwai\Modules\Trainings\Repositories\TeamRepository;
-use Latitude\QueryBuilder\Query\SelectQuery;
-use function Latitude\QueryBuilder\field;
 
 /**
  * Class TeamDatabaseRepository
@@ -23,62 +20,34 @@ use function Latitude\QueryBuilder\field;
 class TeamDatabaseRepository extends DatabaseRepository implements TeamRepository
 {
     /**
-     * @inheritDoc
+     * TeamDatabaseRepository constructor.
+     *
+     * @param Connection $db
      */
-    public function getById(int ... $ids): Collection
+    public function __construct(Connection $db)
     {
-        $query = $this->createBaseQuery()
-            ->where(field('id')->in(...$ids))
-        ;
-
-        $this->db->asArray();
-        $rows = LazyCollection::make($this->db->walk($query));
-        $this->db->asObject();
-
-        return $this->createTeamCollection($rows);
+        parent::__construct(
+            $db,
+            fn($item) => TeamMapper::toDomain($item)
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function getAll(?int $limit = null, ?int $offset = null): Collection
+    public function getById(int ...$ids): Collection
     {
-        $query = $this->createBaseQuery();
-
-        $this->db->asArray();
-        $rows = LazyCollection::make($this->db->walk($query));
-        $this->db->asObject();
-
-        return $this->createTeamCollection($rows);
+        $query = $this->createQuery()->filterId(...$ids);
+        return $this->getAll($query);
     }
 
     /**
-     * Create the base query.
+     * Factory method
      *
-     * @return SelectQuery
+     * @return TeamQuery
      */
-    private function createBaseQuery(): SelectQuery
+    public function createQuery(): TeamQuery
     {
-        return $this->db->createQueryFactory()
-            ->select()
-            ->from((string) Tables::TEAMS())
-            ->columns(
-                'id',
-                'name'
-            )
-        ;
-    }
-
-    /**
-     * Create a collection with Team entities
-     *
-     * @param LazyCollection $rows
-     * @return Collection
-     */
-    private function createTeamCollection(LazyCollection $rows): Collection
-    {
-        return $rows->mapWithKeys(fn ($data) => [
-            (int) $data->get('id') => new Entity((int) $data->get('id'), TeamMapper::toDomain($data))
-        ])->collect();
+        return new TeamDatabaseQuery($this->db);
     }
 }
