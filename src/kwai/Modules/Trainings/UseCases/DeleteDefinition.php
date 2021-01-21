@@ -34,7 +34,7 @@ class DeleteDefinition
      * @param DefinitionRepository $repo
      * @return DeleteDefinition
      */
-    public static function create(DefinitionRepository $repo)
+    public static function create(DefinitionRepository $repo): DeleteDefinition
     {
         return new self($repo);
     }
@@ -46,7 +46,7 @@ class DeleteDefinition
      * @throws RepositoryException
      * @throws DefinitionNotFoundException
      */
-    public function __invoke(DeleteDefinitionCommand $command)
+    public function __invoke(DeleteDefinitionCommand $command): void
     {
         $definition = $this->repo->getById($command->id);
         $this->repo->remove($definition);

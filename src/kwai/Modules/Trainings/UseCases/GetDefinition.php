@@ -36,17 +36,18 @@ class GetDefinition
      * @param DefinitionRepository $repo
      * @return GetDefinition
      */
-    public static function create(DefinitionRepository $repo) {
+    public static function create(DefinitionRepository $repo): GetDefinition
+    {
         return new self($repo);
     }
 
     /**
      * @param GetDefinitionCommand $command
      * @return Entity<Definition>
-     *@throws DefinitionNotFoundException
+     * @throws DefinitionNotFoundException
      * @throws RepositoryException
      */
-    public function __invoke(GetDefinitionCommand $command)
+    public function __invoke(GetDefinitionCommand $command): Entity
     {
         return $this->repo->getById($command->id);
     }
