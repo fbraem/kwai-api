@@ -85,10 +85,10 @@ class ConfirmInvitationAction extends Action
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $userAccount = (new ConfirmInvitation(
+            $userAccount = ConfirmInvitation::create(
                 new UserInvitationDatabaseRepository($database),
                 new UserAccountDatabaseRepository($database)
-            ))($command);
+            )($command);
         } catch (UnprocessableException $e) {
             return (new SimpleResponse(422, $e->getMessage()))($response);
         } catch (UserInvitationNotFoundException) {
