@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Admin\Actions;
 
-use Kwai\Applications\Club\ClubApplication;
 use Kwai\Modules\Pages\Presentation\AbstractBrowsePagesAction;
 use Kwai\Modules\Pages\UseCases\BrowsePagesCommand;
-use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
@@ -31,7 +29,7 @@ class BrowsePagesAction extends AbstractBrowsePagesAction
     protected function createCommand(Request $request, array $args): BrowsePagesCommand
     {
         $command = parent::createCommand($request, $args);
-        $command->userUid = $args['uuid'];
+        $command->userId = $args['uuid'];
         return $command;
     }
 }
