@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -21,11 +22,22 @@ use function Latitude\QueryBuilder\field;
  * Class AccessTokenDatabaseRepository
  *
  * AccessToken Repository for read/write AccessToken entity from/to a database.
- *
- * @SuppressWarnings(PHPMD.ShortVariable)
  */
 final class AccessTokenDatabaseRepository extends DatabaseRepository implements AccessTokenRepository
 {
+    /**
+     * AccessTokenDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => AccessTokenMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      * @return Entity<AccessToken>

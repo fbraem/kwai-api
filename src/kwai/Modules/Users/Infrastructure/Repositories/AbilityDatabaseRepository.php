@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -25,11 +26,17 @@ use function Latitude\QueryBuilder\field;
  * Class AbilityDatabaseRepository
  *
  * Ability repository for read/write Ability entity from/to a database.
- *
- * @SuppressWarnings(PHPMD.ShortVariable)
  */
 final class AbilityDatabaseRepository extends DatabaseRepository implements AbilityRepository
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => AbilityMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      * @return Entity<Ability>
@@ -180,27 +187,5 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
     public function createQuery(): AbilityQuery
     {
         return new AbilityDatabaseQuery($this->db);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll(
-        ?AbilityQuery $query = null,
-        ?int $limit = null,
-        ?int $offset = null
-    ): Collection {
-        $query ??= $this->createQuery();
-        /* @var Collection $abilities */
-        try {
-            $abilities = $query->execute($limit, $offset);
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        return $abilities->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, AbilityMapper::toDomain($item))
-            ]
-        );
     }
 }
