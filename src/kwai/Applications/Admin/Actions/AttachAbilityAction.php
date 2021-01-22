@@ -42,7 +42,8 @@ final class AttachAbilityAction extends Action
             $user = AttachAbilityToUser::create($userRepo, $abilityRepo)($command);
         } catch (AbilityNotFoundException) {
             return (new NotFoundResponse('Ability not found'))($response);
-        } catch (RepositoryException) {
+        } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
