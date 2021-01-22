@@ -38,20 +38,21 @@ class GetStoryAction extends Action
         $database = $this->getContainerEntry('pdo_db');
         $filesystem = $this->getContainerEntry('filesystem');
         try {
-            $story = (new GetStory(
+            $story = GetStory::create(
                 new StoryDatabaseRepository($database),
                 new StoryImageRepository(
                     $filesystem,
                     $this->getContainerEntry('settings')['files']['url']
                 )
-            ))($command);
+            )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (new SimpleResponse(
                 500,
                 'A repository exception occurred'
             )
             )($response);
-        } catch (StoryNotFoundException $e) {
+        } catch (StoryNotFoundException) {
             return (new NotFoundResponse('Story not found'))($response);
         }
 

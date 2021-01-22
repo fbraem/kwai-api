@@ -30,12 +30,13 @@ class GetArchiveAction extends Action
         $command = new GetArchiveCommand();
         $db = $this->getContainerEntry('pdo_db');
         try {
-            $archive = (new GetArchive(
+            $archive = GetArchive::create(
                 new StoryDatabaseRepository($db)
-            ))($command);
+            )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
-            new SimpleResponse(500, 'A query exception occurred.')
+                new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         }
 

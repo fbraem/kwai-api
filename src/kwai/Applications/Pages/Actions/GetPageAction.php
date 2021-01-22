@@ -46,10 +46,11 @@ class GetPageAction extends Action
                 )
             )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (PageNotFoundException $e) {
+        } catch (PageNotFoundException) {
             return (new NotFoundResponse('Page not found'))($response);
         }
         $resource = PageTransformer::createForItem(
