@@ -37,7 +37,6 @@ it('can create a story', function () use ($context) {
         $content->locale = 'nl';
         $content->summary = 'This is a test';
         $content->title = 'Test';
-        $content->author = 1;
         $command->contents = [ $content ];
 
         $story = (new CreateStory(

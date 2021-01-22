@@ -39,9 +39,4 @@ class Content
      * The content of the story
      */
     public ?string $content;
-
-    /**
-     * The id of the author of the content
-     */
-    public int $author;
 }

@@ -31,7 +31,6 @@ it('can create a page', function () use ($context) {
     $content = new Content();
     $content->title = 'Test title';
     $content->summary = 'This is a summary';
-    $content->author = 1;
     $content->content = 'This is the content of the page';
     $command->contents[] = $content;
 
@@ -70,7 +69,6 @@ it('can update a page', function () use ($context) {
     $content = new Content();
     $content->title = 'Test title';
     $content->summary = 'This is an updated summary';
-    $content->author = 1;
     $content->content = 'This is the content of the page';
     $command->contents[] = $content;
 
