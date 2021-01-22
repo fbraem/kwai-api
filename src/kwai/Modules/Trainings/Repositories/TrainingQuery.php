@@ -56,5 +56,4 @@ interface TrainingQuery extends Query
      * @return TrainingQuery
      */
     public function filterTeam(Entity $team): self;
-
 }
