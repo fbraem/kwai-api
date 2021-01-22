@@ -11,9 +11,10 @@ namespace Kwai\Applications\Admin\Actions;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
@@ -38,13 +39,15 @@ final class AttachAbilityAction extends Action
         $abilityRepo = new AbilityDatabaseRepository($database);
 
         try {
-            $user = (new AttachAbilityToUser($userRepo, $abilityRepo))($command);
-        } catch (NotFoundException $e) {
-            return (new NotFoundResponse('User or ability not found'))($response);
-        } catch (RepositoryException $e) {
+            $user = AttachAbilityToUser::create($userRepo, $abilityRepo)($command);
+        } catch (AbilityNotFoundException) {
+            return (new NotFoundResponse('Ability not found'))($response);
+        } catch (RepositoryException) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
+        } catch (UserNotFoundException) {
+            return (new NotFoundResponse('User not found'))($response);
         }
 
         return (new ResourceResponse(
