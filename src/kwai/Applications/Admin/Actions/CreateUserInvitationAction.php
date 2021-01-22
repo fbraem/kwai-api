@@ -14,7 +14,7 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
 use Kwai\Modules\Users\UseCases\InviteUser;
@@ -96,7 +96,7 @@ class CreateUserInvitationAction extends Action
             $database = $this->getContainerEntry('pdo_db');
             $invitation = (new InviteUser(
                 new UserInvitationDatabaseRepository($database),
-                new UserDatabaseRepository($database),
+                new UserAccountDatabaseRepository($database),
                 new MailDatabaseRepository($database),
                 new MailTemplate(
                     'User Invitation',
@@ -111,6 +111,7 @@ class CreateUserInvitationAction extends Action
                 $e->getMessage()
             ))($response);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);

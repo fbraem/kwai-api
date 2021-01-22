@@ -10,10 +10,9 @@ namespace Kwai\Applications\Admin\Actions;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
+use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
 use Kwai\Modules\Users\UseCases\GetUserAbilities;
@@ -41,16 +40,16 @@ class GetUserAbilitiesAction extends Action
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $abilities = (new GetUserAbilities(
-                new UserDatabaseRepository($database),
-                new AbilityDatabaseRepository($database)
-            ))($command);
-        } catch (NotFoundException $e) {
-            return (new NotFoundResponse('User not found'))($response);
+            $abilities = GetUserAbilities::create(
+                new UserDatabaseRepository($database)
+            )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
+        } catch (UserNotFoundException) {
+            return (new NotFoundResponse('User not found'))($response);
         }
 
         return (new ResourceResponse(

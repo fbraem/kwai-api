@@ -111,6 +111,7 @@ class CreateAbilityAction extends Action
                 $ruleRepo
             ))($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);

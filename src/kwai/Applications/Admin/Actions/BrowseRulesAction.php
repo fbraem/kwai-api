@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Admin\Actions;
 
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
@@ -36,15 +37,21 @@ class BrowseRulesAction extends Action
         }
 
         try {
-            $rules = (new BrowseRules(
+            $rules = BrowseRules::create(
                 new RuleDatabaseRepository($this->getContainerEntry('pdo_db'))
-            ))($command);
+            )($command);
             return (new ResourceResponse(
                 RuleTransformer::createForCollection($rules)
             ))($response);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
+            )($response);
+        } catch (QueryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         }
     }

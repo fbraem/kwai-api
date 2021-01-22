@@ -10,9 +10,9 @@ namespace Kwai\Applications\Admin\Actions;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
@@ -41,15 +41,16 @@ class GetUserInvitationAction extends Action
 
         try {
             $database = $this->getContainerEntry('pdo_db');
-            $user = (new GetUserInvitation(
+            $user = GetUserInvitation::create(
                 new UserInvitationDatabaseRepository($database)
-            ))($command);
-        } catch (NotFoundException $e) {
-            return (new NotFoundResponse('User not found'))($response);
+            )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
+        } catch (UserInvitationNotFoundException) {
+            return (new NotFoundResponse('User invitation not found'))($response);
         }
 
         return (new ResourceResponse(

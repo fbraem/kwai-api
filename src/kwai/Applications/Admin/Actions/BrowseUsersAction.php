@@ -32,7 +32,7 @@ class BrowseUsersAction extends Action
     {
         $repo = new UserDatabaseRepository($this->getContainerEntry('pdo_db'));
         try {
-            [$count, $users ] = (new BrowseUsers($repo))(
+            [$count, $users ] = BrowseUsers::create($repo)(
                 new BrowseUsersCommand()
             );
 
@@ -41,6 +41,7 @@ class BrowseUsersAction extends Action
 
             return (new ResourceResponse($resource))($response);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);

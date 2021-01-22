@@ -10,9 +10,9 @@ namespace Kwai\Applications\Admin\Actions;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
@@ -110,15 +110,16 @@ class UpdateAbilityAction extends Action
         }
 
         try {
-            $ability = (new UpdateAbility(
+            $ability = UpdateAbility::create(
                 $abilityRepo,
                 $ruleRepo
-            ))($command);
+            )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (NotFoundException $e) {
+        } catch (AbilityNotFoundException) {
             return (new NotFoundResponse('Ability not found'))($response);
         }
 
