@@ -5,11 +5,11 @@
  */
 namespace Kwai\Applications;
 
-use _HumbugBoxbde535255540\Psr\Container\ContainerInterface;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class FacebookApplication
