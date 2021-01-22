@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Author\Actions;
 
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
@@ -14,8 +15,6 @@ use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
-use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\Pages\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageImageRepository;
@@ -43,14 +42,11 @@ class CreatePageAction extends Action
         }
 
         $user = $request->getAttribute('kwai.user');
-        foreach ($command->contents as $content) {
-            $content->author = $user->id();
-        }
+        $creator = new Creator($user->id, $user->getUsername());
 
         $database = $this->getContainerEntry('pdo_db');
         $pageRepo = new PageDatabaseRepository($database);
         $applicationRepo = new ApplicationDatabaseRepository($database);
-        $authorRepo = new AuthorDatabaseRepository($database);
 
         $filesystem = $this->getContainerEntry('filesystem');
         $imageRepo = new PageImageRepository(
@@ -62,17 +58,15 @@ class CreatePageAction extends Action
             $page = CreatePage::create(
                 $pageRepo,
                 $applicationRepo,
-                $authorRepo,
                 $imageRepo
-            )($command);
+            )($command, $creator);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (new SimpleResponse(
                 500,
                 'A repository exception occurred'
             ))($response);
-        } catch (AuthorNotFoundException $e) {
-            return (new NotFoundResponse('Author not found'))($response);
-        } catch (ApplicationNotFoundException $e) {
+        } catch (ApplicationNotFoundException) {
             return (new NotFoundResponse('Application not found'))($response);
         }
 
