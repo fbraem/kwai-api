@@ -11,6 +11,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Applications\Presentation\Transformers\ApplicationTransformer;
 use Kwai\Modules\Applications\UseCases\BrowseApplication;
@@ -32,10 +33,17 @@ class BrowseApplicationAction extends Action
         $database = $this->getContainerEntry('pdo_db');
 
         try {
-            [$count, $applications] = (new BrowseApplication(
+            [$count, $applications] = BrowseApplication::create(
                 new ApplicationDatabaseRepository($database)
-            ))($command);
+            )($command);
         } catch (QueryException $e) {
+            $this->logException($e);
+            return (new SimpleResponse(
+                500,
+                'A query exception occurred'
+            ))($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
             return (new SimpleResponse(
                 500,
                 'A repository exception occurred'
