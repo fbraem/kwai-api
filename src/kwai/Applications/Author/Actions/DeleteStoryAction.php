@@ -46,12 +46,13 @@ class DeleteStoryAction extends Action
                 )
             ))($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (new SimpleResponse(
                 500,
                 'A repository exception occurred'
             )
             )($response);
-        } catch (StoryNotFoundException $e) {
+        } catch (StoryNotFoundException) {
             return (new NotFoundResponse('Story not found'))($response);
         }
 

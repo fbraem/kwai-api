@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Author\Actions;
 
+use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -23,7 +24,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Class GetPageAction
  */
-class GetPageAction extends \Kwai\Core\Infrastructure\Presentation\Action
+class GetPageAction extends Action
 {
     /**
      * @inheritDoc
@@ -45,12 +46,13 @@ class GetPageAction extends \Kwai\Core\Infrastructure\Presentation\Action
                 )
             )($command);
         } catch (RepositoryException $e) {
+            $this->logException($e);
             return (new SimpleResponse(
                 500,
                 'A repository exception occurred'
             )
             )($response);
-        } catch (PageNotFoundException $e) {
+        } catch (PageNotFoundException) {
             return (new NotFoundResponse('Page not found'))($response);
         }
 
