@@ -11,6 +11,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Presentation\Transformers\DefinitionTransformer;
 use Kwai\Modules\Trainings\UseCases\BrowseDefinitions;
@@ -49,6 +50,11 @@ class BrowseDefinitionsAction extends Action
             $this->logException($e);
             return (
                 new SimpleResponse(500, 'A query exception occurred.')
+            )($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 
