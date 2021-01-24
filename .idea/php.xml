@@ -169,6 +169,7 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/finder" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/options-resolver" />
       <path value="$PROJECT_DIR$/src/vendor/friendsofphp/php-cs-fixer" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/var-dumper" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
