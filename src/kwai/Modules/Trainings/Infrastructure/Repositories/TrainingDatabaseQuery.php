@@ -27,8 +27,16 @@ use function Latitude\QueryBuilder\on;
  */
 class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 {
-    public function __construct(Connection $db)
-    {
+    private $includePresences = false;
+
+    /**
+     * TrainingDatabaseQuery constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(
+        Connection $db,
+    ) {
         parent::__construct(
             $db,
             Tables::TRAININGS()->getColumn('id')
@@ -265,6 +273,24 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             ;
         }
 
+        if ($this->includePresences) {
+            // Get all presences
+            $presenceQuery = new TrainingPresencesDatabaseQuery($this->db);
+            $presenceQuery->filterOnTrainings($trainingIds);
+            $presences = $presenceQuery->execute();
+            foreach ($trainingIds as $trainingId) {
+                $trainings[$trainingId]
+                    ->put('presences', $presences[$trainingId] ?? new Collection())
+                ;
+            }
+        }
+
         return $trainings;
+    }
+
+    public function withPresences(): TrainingQuery
+    {
+        $this->includePresences = true;
+        return $this;
     }
 }

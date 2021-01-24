@@ -56,4 +56,11 @@ interface TrainingQuery extends Query
      * @return TrainingQuery
      */
     public function filterTeam(Entity $team): self;
+
+    /**
+     * When called, the query will also return presences
+     *
+     * @return $this
+     */
+    public function withPresences(): self;
 }

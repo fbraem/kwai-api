@@ -168,3 +168,28 @@ it('can create a training', function () use ($context) {
 })
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
+
+it('can get a training with presences', function () use ($context) {
+    $repo = new TrainingDatabaseRepository($context->db);
+    $query = $repo
+        ->createQuery()
+        ->filterId(1)
+        ->withPresences()
+    ;
+    try {
+        $trainings = $repo->getAll($query);
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
+    expect($trainings)
+        ->toBeInstanceOf(Collection::class)
+        ->and($trainings->count())
+        ->toBe(1)
+        ->and($trainings->first())
+        ->toBeInstanceOf(Entity::class)
+        ->and($trainings->first()->getPresences())
+        ->toBeInstanceOf(Collection::class)
+    ;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
