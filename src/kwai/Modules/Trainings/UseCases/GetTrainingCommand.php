@@ -15,4 +15,6 @@ namespace Kwai\Modules\Trainings\UseCases;
 class GetTrainingCommand
 {
     public int $id;
+
+    public bool $withPresences = false;
 }
