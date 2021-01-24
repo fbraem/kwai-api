@@ -53,6 +53,14 @@ class GetTraining
      */
     public function __invoke(GetTrainingCommand $command): Entity
     {
-        return $this->repo->getById($command->id);
+        $query = $this->repo->createQuery()->filterId($command->id);
+        if ($command->withPresences) {
+            $query->withPresences();
+        }
+        $trainings = $this->repo->getAll($query, 1);
+        if ($trainings->count() === 0) {
+            throw new TrainingNotFoundException($command->id);
+        }
+        return $trainings->first();
     }
 }
