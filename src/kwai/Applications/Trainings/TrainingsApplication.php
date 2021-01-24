@@ -12,6 +12,7 @@ use Kwai\Applications\Trainings\Actions\BrowseDefinitionsAction;
 use Kwai\Applications\Trainings\Actions\BrowseTrainingsAction;
 use Kwai\Applications\Trainings\Actions\GetDefinitionAction;
 use Kwai\Applications\Trainings\Actions\GetTrainingAction;
+use Kwai\Applications\Trainings\Actions\GetTrainingPresencesAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Psr\Container\ContainerInterface;
@@ -37,6 +38,14 @@ class TrainingsApplication extends Application
                 'trainings.get',
                 '/trainings/{id}',
                 fn(ContainerInterface $container) => new GetTrainingAction($container),
+                requirements: [
+                    'id' => '\d+'
+                ]
+            )
+            ->get(
+                'trainings.get.presences',
+                '/trainings/{id}/presences',
+                fn(ContainerInterface $container) => new GetTrainingPresencesAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]
