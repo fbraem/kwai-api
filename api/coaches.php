@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Kwai\Applications\Coaches\CoachesApplication;
+use Kwai\Applications\CoachesApplication;
 
 require '../src/vendor/autoload.php';
 

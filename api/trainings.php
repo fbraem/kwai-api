@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Applications\Trainings\TrainingsApplication;
+use Kwai\Applications\TrainingsApplication;
 
 require '../src/vendor/autoload.php';
 
