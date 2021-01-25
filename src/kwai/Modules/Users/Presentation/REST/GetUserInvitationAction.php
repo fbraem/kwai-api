@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Applications
- * @subpackage Admin
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
-namespace Kwai\Applications\Admin\Actions;
+namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -14,7 +14,7 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
+use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use Kwai\Modules\Users\UseCases\GetUserInvitationCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -50,11 +50,11 @@ class GetUserInvitationAction extends Action
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         } catch (UserInvitationNotFoundException) {
-            return (new NotFoundResponse('User invitation not found'))($response);
+            return (new NotFoundResponse('User not found'))($response);
         }
 
         return (new ResourceResponse(
-            UserTransformer::createForItem(
+            UserInvitationTransformer::createForItem(
                 $user
             )
         ))($response);

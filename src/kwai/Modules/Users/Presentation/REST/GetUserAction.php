@@ -5,7 +5,7 @@
  */
 declare(strict_types = 1);
 
-namespace Kwai\Applications\User\Actions;
+namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;

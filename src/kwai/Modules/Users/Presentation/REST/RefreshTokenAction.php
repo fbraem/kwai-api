@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Applications
- * @subpackage User
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
-namespace Kwai\Applications\User\Actions;
+namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -13,51 +13,25 @@ use Firebase\JWT\JWT;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
-use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
-use Kwai\Modules\Users\UseCases\AuthenticateUser;
-use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
-use Nette\Schema\Expect;
-use Nette\Schema\Processor;
-use Nette\Schema\ValidationException;
+use Kwai\Modules\Users\UseCases\CreateRefreshToken;
+use Kwai\Modules\Users\UseCases\CreateRefreshTokenCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Class LoginAction
+ * Class RefreshTokenAction
  *
- * Action to login a user with email/pwd and return access- and refreshtoken on success.
+ * Action to create a new refresh- and accesstoken (when the refreshtoken is valid).
  */
-class LoginAction extends Action
+class RefreshTokenAction extends Action
 {
     /**
-     * Create a command from the request data
-     * @param array $data
-     * @return AuthenticateUserCommand
-     */
-    private function createCommand(array $data): AuthenticateUserCommand
-    {
-        $schema = Expect::structure([
-            'username' => Expect::string()->required(),
-            'password' => Expect::string()->required(),
-        ])->otherItems(Expect::string());
-        $processor = new Processor();
-        $normalized = $processor->process($schema, $data);
-
-        $command = new AuthenticateUserCommand();
-        $command->email = $normalized->username;
-        $command->password = $normalized->password;
-
-        return $command;
-    }
-
-    /**
-     * Login the user and return an access- and refreshtoken.
      * @param  Request  $request  The current HTTP request
      * @param  Response $response The current HTTP response
-     * @param  string[] $args     Route’s named placeholders
+     * @param  array    $args     Route’s named placeholders
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -66,32 +40,34 @@ class LoginAction extends Action
         Response $response,
         array $args
     ): Response {
-        try {
-            $command = $this->createCommand($request->getParsedBody());
-        } catch (ValidationException $ve) {
-            return (new SimpleResponse(422, $ve->getMessage()))($response);
-        }
-
-        try {
-            $database = $this->getContainerEntry('pdo_db');
-            $refreshToken = AuthenticateUser::create(
-                new UserAccountDatabaseRepository($database),
-                new AccessTokenDatabaseRepository($database),
-                new RefreshTokenDatabaseRepository($database)
-            )($command);
-        } catch (AuthenticationException) {
-            return (new NotAuthorizedResponse('Authentication failed'))($response);
-        } catch (RepositoryException $e) {
-            $this->logException($e);
-            return (
-                new SimpleResponse(500, 'A repository exception occurred.')
-            )($response);
-        } catch (UserAccountNotFoundException) {
-            return (new NotAuthorizedResponse('Unknown user'))($response);
-        }
+        $data = $request->getParsedBody();
 
         $secret = $this->getContainerEntry('settings')['security']['secret'];
         $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
+        $decodedRefreshToken = JWT::decode(
+            $data['refresh_token'],
+            $secret,
+            [ $algorithm ]
+        );
+
+        $command = new CreateRefreshTokenCommand();
+        $command->identifier = $decodedRefreshToken->jti;
+
+        try {
+            $database = $this->getContainerEntry('pdo_db');
+            $refreshToken = CreateRefreshToken::create(
+                new RefreshTokenDatabaseRepository($database),
+                new AccessTokenDatabaseRepository($database)
+            )($command);
+        } catch (AuthenticationException $ae) {
+            return (new NotAuthorizedResponse('Authentication failed'))($response);
+        } catch (RepositoryException $e) {
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
+            )($response);
+        } catch (RefreshTokenNotFoundException $e) {
+            return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
+        }
 
         /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = $refreshToken->getAccessToken();

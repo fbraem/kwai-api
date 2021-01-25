@@ -1,47 +1,41 @@
 <?php
 /**
- * @package Applications
- * @subpackage Admin
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Admin\Actions;
+namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\RuleTransformer;
-use Kwai\Modules\Users\UseCases\BrowseRules;
-use Kwai\Modules\Users\UseCases\BrowseRulesCommand;
+use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
+use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use Kwai\Modules\Users\UseCases\BrowseAbilities;
+use Kwai\Modules\Users\UseCases\BrowseAbilitiesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * BrowseRulesAction
+ * Class BrowseUsersAction
+ *
+ * Action to browse all users
  */
-class BrowseRulesAction extends Action
+class BrowseAbilitiesAction extends Action
 {
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $command = new BrowseRulesCommand();
-
-        $parameters = $request->getAttribute('parameters');
-        if (array_key_exists('subject', $parameters['filter'])) {
-            $command->subject = $parameters['filter']['subject'];
-        }
-
+        $repo = new AbilityDatabaseRepository($this->getContainerEntry('pdo_db'));
         try {
-            $rules = BrowseRules::create(
-                new RuleDatabaseRepository($this->getContainerEntry('pdo_db'))
-            )($command);
+            $users = BrowseAbilities::create($repo)(new BrowseAbilitiesCommand());
             return (new ResourceResponse(
-                RuleTransformer::createForCollection($rules)
+                AbilityTransformer::createForCollection($users)
             ))($response);
         } catch (RepositoryException $e) {
             $this->logException($e);

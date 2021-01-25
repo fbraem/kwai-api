@@ -1,48 +1,39 @@
 <?php
 /**
  * @package Applications
- * @subpackage Admin
+ * @subpackage Users
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Admin;
+namespace Kwai\Applications;
 
-use Kwai\Applications\Admin\Actions\BrowsePagesAction;
-use Kwai\Applications\Admin\Actions\BrowseStoriesAction;
-use Kwai\Applications\Application;
-use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
-use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
-use Kwai\Applications\Admin\Actions\AttachAbilityAction;
-use Kwai\Applications\Admin\Actions\BrowseAbilitiesAction;
-use Kwai\Applications\Admin\Actions\BrowseRulesAction;
-use Kwai\Applications\Admin\Actions\BrowseUserInvitationsAction;
-use Kwai\Applications\Admin\Actions\BrowseUsersAction;
-// use Kwai\Applications\Admin\Actions\ConfirmInvitationAction;
-use Kwai\Applications\Admin\Actions\CreateAbilityAction;
-use Kwai\Applications\Admin\Actions\CreateUserInvitationAction;
-use Kwai\Applications\Admin\Actions\DetachAbilityAction;
-use Kwai\Applications\Admin\Actions\GetAbilityAction;
-use Kwai\Applications\Admin\Actions\GetUserAbilitiesAction;
-use Kwai\Applications\Admin\Actions\GetUserAction;
-use Kwai\Applications\Admin\Actions\GetUserInvitationAction;
-use Kwai\Applications\Admin\Actions\UpdateAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\AttachAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\BrowseAbilitiesAction;
+use Kwai\Modules\Users\Presentation\REST\BrowseRulesAction;
+use Kwai\Modules\Users\Presentation\REST\BrowseUserInvitationsAction;
+use Kwai\Modules\Users\Presentation\REST\BrowseUsersAction;
+use Kwai\Modules\Users\Presentation\REST\CreateAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\CreateUserInvitationAction;
+use Kwai\Modules\Users\Presentation\REST\DetachAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\GetAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\GetUserAbilitiesAction;
+use Kwai\Modules\Users\Presentation\REST\GetUserInvitationAction;
+use Kwai\Modules\Users\Presentation\REST\UpdateAbilityAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class AdminApplication
+ * Class UsersApplication
  */
-class AdminApplication extends Application
+class UsersApplication extends Application
 {
     public function addDependencies(): void
     {
         parent::addDependencies();
 
         $this->addDependency('filesystem', new FileSystemDependency());
-        $this->addDependency('converter', new ConvertDependency());
-        $this->addDependency('template', new TemplateDependency());
         $this->addDependency('mailer', new MailerDependency());
     }
 
@@ -53,26 +44,15 @@ class AdminApplication extends Application
         return Router::create()
             ->get(
                 'users.browse',
-                '/admin',
+                '/users',
                 fn(ContainerInterface $container) => new BrowseUsersAction($container),
                 [
                     'auth' => true
                 ]
             )
             ->get(
-                'users.get',
-                '/admin/{uuid}',
-                fn(ContainerInterface $container) => new GetUserAction($container),
-                [
-                    'auth' => true
-                ],
-                [
-                    'uuid' => $uuid_regex
-                ]
-            )
-            ->get(
                 'user.abilities.browse',
-                '/admin/{uuid}/abilities',
+                '/users/{uuid}/abilities',
                 fn(ContainerInterface $container) => new GetUserAbilitiesAction($container),
                 [
                     'auth' => true
@@ -83,7 +63,7 @@ class AdminApplication extends Application
             )
             ->patch(
                 'user.abilities.attach',
-                '/admin/{uuid}/abilities/{ability}',
+                '/users/{uuid}/abilities/{ability}',
                 fn(ContainerInterface $container) => new AttachAbilityAction($container),
                 [
                     'auth' => true
@@ -95,7 +75,7 @@ class AdminApplication extends Application
             )
             ->delete(
                 'user.abilities.detach',
-                '/admin/{uuid}/abilities/{ability}',
+                '/users/{uuid}/abilities/{ability}',
                 fn(ContainerInterface $container) => new DetachAbilityAction($container),
                 [
                     'auth' => true
@@ -107,7 +87,7 @@ class AdminApplication extends Application
             )
             ->get(
                 'users.abilities.browse',
-                '/admin/abilities',
+                '/users/abilities',
                 fn(ContainerInterface $container) => new BrowseAbilitiesAction($container),
                 [
                     'auth' => true
@@ -115,7 +95,7 @@ class AdminApplication extends Application
             )
             ->post(
                 'users.abilities.create',
-                '/admin/abilities',
+                '/users/abilities',
                 fn(ContainerInterface $container) => new CreateAbilityAction($container),
                 [
                     'auth' => true
@@ -123,7 +103,7 @@ class AdminApplication extends Application
             )
             ->get(
                 'user.abilities.read',
-                '/admin/abilities/{id}',
+                '/users/abilities/{id}',
                 fn(ContainerInterface $container) => new GetAbilityAction($container),
                 [
                     'auth' => true
@@ -134,7 +114,7 @@ class AdminApplication extends Application
             )
             ->patch(
                 'users.abilities.update',
-                '/admin/abilities/{id}',
+                '/users/abilities/{id}',
                 fn(ContainerInterface $container) => new UpdateAbilityAction($container),
                 [
                     'auth' => true
@@ -145,7 +125,7 @@ class AdminApplication extends Application
             )
             ->get(
                 'users.rules.browse',
-                '/admin/rules',
+                '/users/rules',
                 fn(ContainerInterface $container) => new BrowseRulesAction($container),
                 [
                     'auth' => true
@@ -153,7 +133,7 @@ class AdminApplication extends Application
             )
             ->get(
                 'users.invitations.browse',
-                '/admin/invitations',
+                '/users/invitations',
                 fn(ContainerInterface $container) => new BrowseUserInvitationsAction($container),
                 [
                     'auth' => true
@@ -161,7 +141,7 @@ class AdminApplication extends Application
             )
             ->post(
                 'users.invitations.create',
-                '/admin/invitations',
+                '/users/invitations',
                 fn(ContainerInterface $container) => new CreateUserInvitationAction($container),
                 [
                     'auth' => true
@@ -169,30 +149,8 @@ class AdminApplication extends Application
             )
             ->get(
                 'users.invitations.token',
-                '/admin/invitations/{uuid}',
+                '/users/invitations/{uuid}',
                 fn(ContainerInterface $container) => new GetUserInvitationAction($container),
-                [
-                    'auth' => true
-                ],
-                [
-                    'uuid' => $uuid_regex
-                ]
-            )
-            ->get(
-                'user.news.browse',
-                '/admin/{uuid}/news',
-                fn(ContainerInterface $container) => new BrowseStoriesAction($container),
-                [
-                    'auth' => true
-                ],
-                [
-                    'uuid' => $uuid_regex
-                ]
-            )
-            ->get(
-                'user.pages.browse',
-                '/admin/{uuid}/pages',
-                fn(ContainerInterface $container) => new BrowsePagesAction($container),
                 [
                     'auth' => true
                 ],

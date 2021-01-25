@@ -1,41 +1,47 @@
 <?php
 /**
- * @package Applications
- * @subpackage Admin
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Admin\Actions;
+namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
-use Kwai\Modules\Users\UseCases\BrowseUserInvitations;
-use Kwai\Modules\Users\UseCases\BrowseUserInvitationsCommand;
+use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
+use Kwai\Modules\Users\Presentation\Transformers\RuleTransformer;
+use Kwai\Modules\Users\UseCases\BrowseRules;
+use Kwai\Modules\Users\UseCases\BrowseRulesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Class BrowseUsersAction
- *
- * Action to browse all user invitations
+ * BrowseRulesAction
  */
-class BrowseUserInvitationsAction extends Action
+class BrowseRulesAction extends Action
 {
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $repo = new UserInvitationDatabaseRepository($this->getContainerEntry('pdo_db'));
+        $command = new BrowseRulesCommand();
+
+        $parameters = $request->getAttribute('parameters');
+        if (array_key_exists('subject', $parameters['filter'])) {
+            $command->subject = $parameters['filter']['subject'];
+        }
+
         try {
-            $invitations = BrowseUserInvitations::create($repo)(new BrowseUserInvitationsCommand());
+            $rules = BrowseRules::create(
+                new RuleDatabaseRepository($this->getContainerEntry('pdo_db'))
+            )($command);
             return (new ResourceResponse(
-                UserInvitationTransformer::createForCollection($invitations)
+                RuleTransformer::createForCollection($rules)
             ))($response);
         } catch (RepositoryException $e) {
             $this->logException($e);
