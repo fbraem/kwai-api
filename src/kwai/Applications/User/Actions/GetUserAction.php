@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Applications
+ * @package Modules
  * @subpackage User
  */
 declare(strict_types = 1);
@@ -35,10 +35,8 @@ class GetUserAction extends Action
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $user = $request->getAttribute('kwai.user');
         $command = new GetUserCommand();
-        $command->uuid = strval($user->getUuid());
-        $command->withAbilities = true;
+        $command->uuid = $args['uuid'];
 
         try {
             $database = $this->getContainerEntry('pdo_db');
