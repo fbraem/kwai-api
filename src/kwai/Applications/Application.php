@@ -29,6 +29,7 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Relay\Relay;
+use Tuupola\Middleware\CorsMiddleware;
 
 /**
  * Class KwaiApplication
@@ -111,6 +112,18 @@ abstract class Application
 
             $this->addMiddleware(new ErrorMiddleware($psr17Factory, $psr17Factory));
             $this->addMiddleware(new RouteMiddleware($router,$psr17Factory));
+            $settings = $this->container->get('settings');
+            if (isset($settings['cors'])) {
+                $this->addMiddleware(new CorsMiddleware([
+                    'origin' => $settings['cors']['origin'] ?? '*',
+                    'methods' =>
+                        $settings['cors']['method']
+                        ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+                    'credentials' => true,
+                    'headers.allow' => ['Accept', 'Accept-Language', 'Content-Type', 'Authorization'],
+                    'cache' => 0
+                ]));
+            }
             $this->addMiddleware(new ParametersMiddleware());
             $this->addMiddleware(new TransactionMiddleware($this->container));
             $this->addMiddleware(new LogActionMiddleware($this->container));
