@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Kwai\Applications\News\Actions\BrowseStoriesAction;
-use Kwai\Applications\News\Actions\GetArchiveAction;
-use Kwai\Applications\News\Actions\GetStoryAction;
+use Kwai\Modules\News\Presentation\REST\BrowseStoriesAction;
+use Kwai\Modules\News\Presentation\REST\GetArchiveAction;
+use Kwai\Modules\News\Presentation\REST\GetStoryAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
