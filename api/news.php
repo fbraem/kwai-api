@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 require '../src/vendor/autoload.php';
 
-use Kwai\Applications\News\NewsApplication;
+use Kwai\Applications\NewsApplication;
 
 $app = new NewsApplication();
 $app->run();
