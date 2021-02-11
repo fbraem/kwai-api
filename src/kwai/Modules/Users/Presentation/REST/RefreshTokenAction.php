@@ -59,9 +59,9 @@ class RefreshTokenAction extends Action
                 new RefreshTokenDatabaseRepository($database),
                 new AccessTokenDatabaseRepository($database)
             )($command);
-        } catch (AuthenticationException $ae) {
+        } catch (AuthenticationException) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);
-        } catch (RepositoryException $e) {
+        } catch (RepositoryException) {
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
