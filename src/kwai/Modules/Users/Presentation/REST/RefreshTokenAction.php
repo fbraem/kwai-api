@@ -95,9 +95,13 @@ class RefreshTokenAction extends Action
             ),
             'expires' => strval($accessToken->getExpiration())
         ];
-        $response->withStatus(201)
+        $response
+            ->getBody()
+            ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT))
+        ;
+        return $response
+            ->withStatus(201)
             ->withHeader("Content-Type", "application/json")
-            ->getBody()->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-        return $response;
+        ;
     }
 }
