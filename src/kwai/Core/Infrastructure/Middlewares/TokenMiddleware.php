@@ -68,7 +68,7 @@ class TokenMiddleware implements MiddlewareInterface
                 $userRepo = new UserDatabaseRepository($container->get('pdo_db'));
                 return $request->withAttribute(
                     'kwai.user',
-                    $userRepo->getByUUID($uuid)
+                    $userRepo->getByUniqueId($uuid)
                 );
             }
         ]);
