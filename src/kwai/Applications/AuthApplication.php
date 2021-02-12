@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Kwai\Applications\Application;
 use Kwai\Modules\Users\Presentation\REST\GetUserAction;
 use Kwai\Modules\Users\Presentation\REST\LoginAction;
 use Kwai\Modules\Users\Presentation\REST\LogoutAction;
