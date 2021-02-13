@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f349976490f14d0c10e4ca8223c023bd",
+    "content-hash": "9f31ee5a0c74f3ed8ba4df0342e57d53",
     "packages": [
         {
             "name": "aura/intl",
@@ -2515,28 +2515,30 @@
         },
         {
             "name": "neomerx/cors-psr7",
-            "version": "v1.0.13",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neomerx/cors-psr7.git",
-                "reference": "2556e2013f16a55532c95928455257d5b6bbc6e2"
+                "reference": "454e923aaf9ba4aa162f7aca2a514e41708b6ba5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neomerx/cors-psr7/zipball/2556e2013f16a55532c95928455257d5b6bbc6e2",
-                "reference": "2556e2013f16a55532c95928455257d5b6bbc6e2",
+                "url": "https://api.github.com/repos/neomerx/cors-psr7/zipball/454e923aaf9ba4aa162f7aca2a514e41708b6ba5",
+                "reference": "454e923aaf9ba4aa162f7aca2a514e41708b6ba5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0",
+                "php": ">=7.1.0",
                 "psr/http-message": "^1.0",
                 "psr/log": "^1.0"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
                 "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^5.7",
-                "scrutinizer/ocular": "^1.1",
-                "squizlabs/php_codesniffer": "^3.0"
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "^7.0",
+                "scrutinizer/ocular": "^1.4",
+                "squizlabs/php_codesniffer": "^2.9"
             },
             "type": "library",
             "autoload": {
@@ -2570,7 +2572,7 @@
                 "issues": "https://github.com/neomerx/cors-psr7/issues",
                 "source": "https://github.com/neomerx/cors-psr7/tree/develop"
             },
-            "time": "2018-05-23T16:10:11+00:00"
+            "time": "2019-02-14T10:35:50+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -6000,74 +6002,6 @@
                 }
             ],
             "time": "2020-09-09T08:31:54+00:00"
-        },
-        {
-            "name": "tuupola/cors-middleware",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tuupola/cors-middleware.git",
-                "reference": "4f085d11f349e83d18f1eb5802551353b2b093a3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tuupola/cors-middleware/zipball/4f085d11f349e83d18f1eb5802551353b2b093a3",
-                "reference": "4f085d11f349e83d18f1eb5802551353b2b093a3",
-                "shasum": ""
-            },
-            "require": {
-                "neomerx/cors-psr7": "^1.0.4",
-                "php": "^7.1|^8.0",
-                "psr/http-message": "^1.0.1",
-                "psr/http-server-middleware": "^1.0",
-                "tuupola/callable-handler": "^1.0",
-                "tuupola/http-factory": "^1.0.2"
-            },
-            "require-dev": {
-                "equip/dispatch": "^2.0",
-                "overtrue/phplint": "^1.0",
-                "phpstan/phpstan": "^0.12.42",
-                "phpunit/phpunit": "^7.0|^8.0|^9.0",
-                "squizlabs/php_codesniffer": "^3.5",
-                "zendframework/zend-diactoros": "^1.0|^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Tuupola\\Middleware\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mika Tuupola",
-                    "email": "tuupola@appelsiini.net",
-                    "homepage": "https://appelsiini.net/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PSR-7 and PSR-15 CORS middleware",
-            "homepage": "https://github.com/tuupola/cors-middleware",
-            "keywords": [
-                "cors",
-                "middleware",
-                "psr-15",
-                "psr-7"
-            ],
-            "support": {
-                "issues": "https://github.com/tuupola/cors-middleware/issues",
-                "source": "https://github.com/tuupola/cors-middleware/tree/1.2.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/tuupola",
-                    "type": "github"
-                }
-            ],
-            "time": "2020-10-29T11:01:06+00:00"
         },
         {
             "name": "tuupola/http-factory",

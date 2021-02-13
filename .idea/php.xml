@@ -36,7 +36,6 @@
       <path value="$PROJECT_DIR$/src/vendor/pdepend/pdepend" />
       <path value="$PROJECT_DIR$/src/vendor/mtdowling/jmespath.php" />
       <path value="$PROJECT_DIR$/src/vendor/aura/intl" />
-      <path value="$PROJECT_DIR$/src/vendor/tuupola/cors-middleware" />
       <path value="$PROJECT_DIR$/src/vendor/tuupola/http-factory" />
       <path value="$PROJECT_DIR$/src/vendor/tuupola/callable-handler" />
       <path value="$PROJECT_DIR$/src/vendor/tuupola/slim-jwt-auth" />

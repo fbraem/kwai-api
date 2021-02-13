@@ -133,7 +133,6 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/callable-handler" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/cors-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/tuupola/slim-jwt-auth" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/webmozart/assert" />

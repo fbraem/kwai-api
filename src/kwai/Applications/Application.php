@@ -24,12 +24,12 @@ use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use League\Container\Container;
+use Neomerx\Cors\Analyzer;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Relay\Relay;
-use Tuupola\Middleware\CorsMiddleware;
 
 /**
  * Class KwaiApplication
@@ -45,8 +45,8 @@ abstract class Application
     /**
      * KwaiApplication Constructor
      */
-    public function __construct(
-    ) {
+    public function __construct()
+    {
         $this->container = new Container();
         $this->container->defaultToShared();
         $this->container->add('settings', new Settings());
@@ -109,20 +109,39 @@ abstract class Application
             $router = $this->createRouter();
 
             $psr17Factory = new Psr17Factory();
+            $creator = new ServerRequestCreator(
+                $psr17Factory,
+                $psr17Factory,
+                $psr17Factory,
+                $psr17Factory
+            );
+            $serverRequest = $creator->fromGlobals();
 
-            $this->addMiddleware(new ErrorMiddleware($psr17Factory, $psr17Factory));
-            $this->addMiddleware(new RouteMiddleware($router,$psr17Factory));
             $settings = $this->container->get('settings');
             if (isset($settings['cors'])) {
-                $this->addMiddleware(new CorsMiddleware([
-                    'origin' => $settings['cors']['origin'] ?? '*',
-                    'methods' =>
-                        $settings['cors']['method']
-                        ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-                    'credentials' => true,
-                    'headers.allow' => ['Accept', 'Accept-Language', 'Content-Type', 'Authorization'],
-                    'cache' => 0
-                ]));
+                $corsSettings = new \Neomerx\Cors\Strategies\Settings();
+                $scheme = $settings['cors']['server']['scheme'] ?? 'http';
+                $corsSettings->init(
+                    $scheme,
+                    $settings['cors']['server']['host'],
+                    $settings['cors']['server']['port'] ?? $scheme === 'http' ? 80 : 443
+                );
+                $corsSettings->enableCheckHost();
+                $corsSettings->setAllowedOrigins($settings['cors']['origin'] ?? ['*']);
+                $corsSettings->setAllowedMethods(
+                    $settings['cors']['method'] ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+                );
+                $corsSettings->setAllowedHeaders(['Accept', 'Accept-Language', 'Content-Type', 'Authorization']);
+                $corsSettings->setCredentialsSupported();
+                $cors = Analyzer::instance($corsSettings)->analyze($serverRequest);
+            } else {
+                $cors = null;
+            }
+
+            $this->addMiddleware(new ErrorMiddleware($psr17Factory, $psr17Factory, $cors));
+            $this->addMiddleware(new RouteMiddleware($router, $psr17Factory));
+            if ($cors) {
+                $this->addMiddleware(new \Kwai\Core\Infrastructure\Middlewares\CorsMiddleware($psr17Factory, $cors));
             }
             $this->addMiddleware(new ParametersMiddleware());
             $this->addMiddleware(new TransactionMiddleware($this->container));
@@ -136,15 +155,6 @@ abstract class Application
                 $this->container,
                 $psr17Factory->createResponse()
             ));
-
-            $creator = new ServerRequestCreator(
-                $psr17Factory, // ServerRequestFactory
-                $psr17Factory, // UriFactory
-                $psr17Factory, // UploadedFileFactory
-                $psr17Factory  // StreamFactory
-            );
-
-            $serverRequest = $creator->fromGlobals();
 
             $relay = new Relay($this->middlewareQueue);
             $response = $relay->handle($serverRequest);
@@ -160,9 +170,10 @@ abstract class Application
 
             (new SapiEmitter())->emit($response);
         } catch (Exception $e) {
-            while(ob_get_level() >= $level) {
+            while (ob_get_level() >= $level) {
                 ob_end_clean();
             }
+
             //TODO: Log instead of throwing
             throw $e;
         }
