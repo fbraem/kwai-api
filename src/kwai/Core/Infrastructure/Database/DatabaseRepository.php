@@ -54,12 +54,12 @@ abstract class DatabaseRepository
         $query ??= $this->createQuery();
 
         try {
-            $pages = $query->execute($limit, $offset);
+            $rows = $query->execute($limit, $offset);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return $pages->mapWithKeys(
+        return $rows->mapWithKeys(
             fn($item, $key) => [
                 $key => new Entity((int) $key, ($this->mapFunction)($item))
             ]
