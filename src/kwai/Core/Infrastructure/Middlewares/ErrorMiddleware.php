@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
+use Neomerx\Cors\Contracts\AnalysisResultInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,7 +26,8 @@ class ErrorMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
-        private StreamFactoryInterface $streamFactory
+        private StreamFactoryInterface $streamFactory,
+        private ?AnalysisResultInterface $corsAnalysis = null
     ) {
     }
 
@@ -36,19 +38,46 @@ class ErrorMiddleware implements MiddlewareInterface
     {
         try {
             return $handler->handle($request);
-        } catch(Throwable $error) {
+        } catch (Throwable $error) {
+            $response = $this->responseFactory->createResponse(500, 'Internal Server Error');
+
+            // Check if we need to add cors headers
+            if ($this->corsAnalysis) {
+                $corsRequestType = $this->corsAnalysis->getRequestType();
+                if ($corsRequestType == AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST
+                    || $corsRequestType == AnalysisResultInterface::TYPE_ACTUAL_REQUEST) {
+                    $response = $this->withCorsHeaders($response);
+                }
+            }
+
             $json = [
                 'type' => get_class($error),
                 'code' => $error->getCode(),
                 'message' => $error->getMessage(),
                 'stack' =>
                     collect($error->getTrace())
-                    ->map(fn($item) => collect($item)->forget('type'))
-                    ->toArray()
+                        ->map(fn($item) => collect($item)->forget('type'))
+                        ->toArray()
             ];
-            $response = $this->responseFactory->createResponse(500, 'Internal Server Error');
+
             $body = $this->streamFactory->createStream(json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
             return $response->withBody($body)->withHeader('Content-Type', '');
         }
+    }
+
+    /**
+     * Adds cors headers to the response.
+     *
+     * @param ResponseInterface       $response
+     * @return ResponseInterface
+     */
+    private function withCorsHeaders(
+        ResponseInterface $response
+    ): ResponseInterface {
+        foreach ($this->corsAnalysis->getResponseHeaders() as $name => $value) {
+            $response = $response->withHeader($name, $value);
+        }
+
+        return $response;
     }
 }
