@@ -65,7 +65,7 @@ abstract class Application
         }
     }
 
-    abstract function createRouter(): Router;
+    abstract protected function createRouter(): Router;
 
     protected function addDependency(string $name, Dependency $dependency): void
     {
