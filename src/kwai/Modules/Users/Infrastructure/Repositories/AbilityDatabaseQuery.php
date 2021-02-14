@@ -93,6 +93,8 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
             $aliasRuleFn('id'),
             $aliasRuleFn('name'),
             $aliasRuleFn('remark'),
+            $aliasRuleFn('created_at'),
+            $aliasRuleFn('updated_at'),
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
             alias(
