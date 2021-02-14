@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
@@ -32,7 +33,10 @@ final class AbilityMapper
                     : null
             ),
             remark: $data->get('remark'),
-            rules: $data->get('rules')
+            rules: $data->get('rules',new Collection())
+                ->map(
+                    fn ($rule) => new Entity((int) $rule->get('id'), RuleMapper::toDomain($rule))
+            )
         );
     }
 
