@@ -13,6 +13,7 @@ use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Dependency;
 use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Middlewares\CorsMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\ErrorMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
@@ -141,7 +142,7 @@ abstract class Application
             $this->addMiddleware(new ErrorMiddleware($psr17Factory, $psr17Factory, $cors));
             $this->addMiddleware(new RouteMiddleware($router, $psr17Factory));
             if ($cors) {
-                $this->addMiddleware(new \Kwai\Core\Infrastructure\Middlewares\CorsMiddleware($psr17Factory, $cors));
+                $this->addMiddleware(new CorsMiddleware($psr17Factory, $cors));
             }
             $this->addMiddleware(new ParametersMiddleware());
             $this->addMiddleware(new TransactionMiddleware($this->container));
