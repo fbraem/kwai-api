@@ -71,9 +71,10 @@ class Rule implements DomainEntity
 
     /**
      * Returns the remark
-     * @return string
+     *
+     * @return string|null
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }
