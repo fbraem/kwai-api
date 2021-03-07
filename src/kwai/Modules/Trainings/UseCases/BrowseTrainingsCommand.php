@@ -43,6 +43,31 @@ class BrowseTrainingsCommand
     public ?int $month = null;
 
     /**
+     * Get only trainings for this week of the year
+     *
+     * @var int|null
+     */
+    public ?int $week = null;
+
+    /**
+     * Get only trainings starting from the given date.
+     * When no end date is given, the end date will be set to 7 days after
+     * this date.
+     *
+     * @var string|null
+     */
+    public ?string $start = null;
+
+    /**
+     * Get only trainings before the given date.
+     * When no start date is given, the start date will be set to the current
+     * date.
+     *
+     * @var string|null
+     */
+    public ?string $end = null;
+
+    /**
      * Get only trainings for this coach
      *
      * @var int|null

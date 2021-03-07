@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
+use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
@@ -56,6 +57,15 @@ class BrowseTrainings
 
         if (isset($command->year)) {
             $query->filterYearMonth($command->year, $command->month);
+        }
+
+        if (isset($command->week)) {
+            $query->filterWeek($command->week);
+        }
+
+        if (isset($command->start) || isset($command->end)) {
+            $start = $command->start ? Date::createFromString($command->start) : Date::createToDay();
+            $end = $command->end ? Date::createFromString($command->end) : Date::createFuture(7);
         }
 
         if ($command->active) {
