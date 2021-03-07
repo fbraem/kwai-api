@@ -146,7 +146,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
      */
     public function filterWeek(int $week): TrainingQuery
     {
-        $weekStart = CarbonImmutable::now()->week($week)
+        $weekStart = CarbonImmutable::now()->week($week);
         $weekStartDate = new Date($weekStart);
         $weekEndDate = new Date($weekStart->endOfWeek());
         return $this->filterBetweenDates($weekStartDate, $weekEndDate);
