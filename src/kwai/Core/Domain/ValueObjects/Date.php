@@ -13,16 +13,14 @@ use Carbon\CarbonImmutable;
  */
 final class Date
 {
-    private CarbonImmutable $date;
-
     /**
      * Constructs a new Date value object.
      *
      * @param CarbonImmutable $date
      */
-    private function __construct(CarbonImmutable $date)
-    {
-        $this->date = $date;
+    public function __construct(
+        private CarbonImmutable $date
+    ) {
     }
 
     /**
