@@ -66,6 +66,7 @@ class BrowseTrainings
         if (isset($command->start) || isset($command->end)) {
             $start = $command->start ? Date::createFromString($command->start) : Date::createToDay();
             $end = $command->end ? Date::createFromString($command->end) : Date::createFuture(7);
+            $query->filterBetweenDates($start, $end);
         }
 
         if ($command->active) {
