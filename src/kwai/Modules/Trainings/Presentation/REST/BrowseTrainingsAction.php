@@ -41,6 +41,11 @@ class BrowseTrainingsAction extends Action
         if (isset($parameters['filter']['month'])) {
             $command->month = (int) $parameters['filter']['month'];
         }
+        if (isset($parameters['filter']['week'])) {
+            $command->week = (int) $parameters['filter']['week'];
+        }
+        $command->start = $parameters['filter']['start'] ?? null;
+        $command->end = $parameters['filter']['end'] ?? null;
 
         if (! isset($command->year)) {
             $command->limit = (int)($parameters['page']['limit'] ?? 10);
