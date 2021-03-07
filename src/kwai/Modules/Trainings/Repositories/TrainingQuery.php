@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Repositories;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Domain\Team;
@@ -33,6 +34,22 @@ interface TrainingQuery extends Query
      * @return TrainingQuery
      */
     public function filterYearMonth(int $year, ?int $month = null): self;
+
+    /**
+     * Add a filter to get trainings for the given week.
+     *
+     * @param int $week
+     * @return $this
+     */
+    public function filterWeek(int $week): self;
+
+    /**
+     * Add a filter to get trainings between dates.
+     * @param Date $from
+     * @param Date $to
+     * @return $this
+     */
+    public function filterBetweenDates(Date $from, Date $to): self;
 
     /**
      * Add a filter to only return the active trainings

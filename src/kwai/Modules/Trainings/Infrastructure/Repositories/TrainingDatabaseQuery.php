@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -135,6 +137,29 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         }
         $this->query->andWhere(
             group($criteria)
+        );
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function filterWeek(int $week): TrainingQuery
+    {
+        $weekStart = CarbonImmutable::now()->week($week)
+        $weekStartDate = new Date($weekStart);
+        $weekEndDate = new Date($weekStart->endOfWeek());
+        return $this->filterBetweenDates($weekStartDate, $weekEndDate);
+    }
+
+    /**
+     * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
+     */
+    public function filterBetweenDates(Date $from, Date $to): TrainingQuery
+    {
+        $this->query->andWhere(
+            field(Tables::TRAININGS()->start_date)->between($from->format(), $to->format())
         );
         return $this;
     }
