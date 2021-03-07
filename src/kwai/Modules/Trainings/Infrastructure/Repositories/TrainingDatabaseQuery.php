@@ -29,7 +29,7 @@ use function Latitude\QueryBuilder\on;
  */
 class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 {
-    private $includePresences = false;
+    private bool $includePresences = false;
 
     /**
      * TrainingDatabaseQuery constructor.
