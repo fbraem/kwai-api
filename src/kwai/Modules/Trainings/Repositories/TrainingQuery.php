@@ -80,4 +80,11 @@ interface TrainingQuery extends Query
      * @return $this
      */
     public function withPresences(): self;
+
+    /**
+     * Order trainings on start time
+     *
+     * @return $this
+     */
+    public function orderByDate(): self;
 }

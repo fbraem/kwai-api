@@ -318,4 +318,11 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $this->includePresences = true;
         return $this;
     }
+
+    public function orderByDate(): TrainingQuery
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->orderBy(Tables::TRAININGS()->start_date, 'ASC');
+        return $this;
+    }
 }

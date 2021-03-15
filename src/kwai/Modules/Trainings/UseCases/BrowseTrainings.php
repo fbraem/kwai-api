@@ -81,6 +81,8 @@ class BrowseTrainings
             $query->filterCoach($coaches->first());
         }
 
+        $query->orderByDate();
+
         $count = $query->count();
         $trainings = $this->repo->getAll($query, $command->limit, $command->offset);
 
