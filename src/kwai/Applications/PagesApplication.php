@@ -7,12 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Kwai\Applications\Pages\Actions\BrowsePagesAction;
-use Kwai\Applications\Pages\Actions\GetPageAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
+use Kwai\Modules\Pages\Presentation\REST\BrowsePagesAction;
 use Kwai\Modules\Pages\Presentation\REST\CreatePageAction;
+use Kwai\Modules\Pages\Presentation\REST\GetPageAction;
 use Kwai\Modules\Pages\Presentation\REST\UpdatePageAction;
 use Psr\Container\ContainerInterface;
 
