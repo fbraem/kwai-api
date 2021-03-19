@@ -24,6 +24,19 @@ final class Date
     }
 
     /**
+     * Add a day to this date and return it as a new Date instance.
+     *
+     * @param int $days
+     * @return Date
+     */
+    public function addDay(int $days = 1): Date
+    {
+        return new Date(
+            $this->date->addDays($days)
+        );
+    }
+
+    /**
      * Returns a formatted date.
      * The default format is Y-m-d.
      * @see https://www.php.net/manual/en/datetime.format.php Date formats.
