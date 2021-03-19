@@ -159,7 +159,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     public function filterBetweenDates(Date $from, Date $to): TrainingQuery
     {
         $this->query->andWhere(
-            field(Tables::TRAININGS()->start_date)->between($from->format(), $to->format())
+            field(Tables::TRAININGS()->start_date)->between($from->format(), $to->addDay()->format())
         );
         return $this;
     }
