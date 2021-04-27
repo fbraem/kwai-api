@@ -14,6 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 /**
@@ -27,7 +28,8 @@ class ErrorMiddleware implements MiddlewareInterface
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-        private ?AnalysisResultInterface $corsAnalysis = null
+        private ?AnalysisResultInterface $corsAnalysis = null,
+        private ?LoggerInterface $logger = null
     ) {
     }
 
@@ -54,11 +56,15 @@ class ErrorMiddleware implements MiddlewareInterface
                 'type' => get_class($error),
                 'code' => $error->getCode(),
                 'message' => $error->getMessage(),
-                'stack' =>
-                    collect($error->getTrace())
-                        ->map(fn($item) => collect($item)->forget('type'))
-                        ->toArray()
+                'stack' => collect($error->getTrace())
+                    ->map(fn($item) => collect($item)->forget('type'))
+                    ->toArray()
             ];
+            if ($this->logger) {
+                $this->logger->error('Exception occurred', $json);
+            }
+            // Unset the stack to avoid that it is returned to the client
+            unset($json['stack']);
 
             $body = $this->streamFactory->createStream(json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
             return $response->withBody($body)->withHeader('Content-Type', '');
