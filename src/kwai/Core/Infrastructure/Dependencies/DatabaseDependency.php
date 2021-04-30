@@ -40,11 +40,14 @@ class DatabaseDependency implements Dependency
 
         $dbConfig = $settings['database'];
         $dbDefault = $settings['default_database'];
-        return new Connection(
+        $db = new Connection(
             $dbConfig[$dbDefault]['dsn'],
-            $dbConfig[$dbDefault]['user'],
-            $dbConfig[$dbDefault]['pass'],
             $logger
         );
+        $db->connect(
+            $dbConfig[$dbDefault]['user'],
+            $dbConfig[$dbDefault]['pass'],
+        );
+        return $db;
     }
 }

@@ -38,9 +38,11 @@ class Context
             try {
                 self::$db = new Connection(
                     $config['database']['test']['dsn'],
-                    $config['database']['test']['user'],
-                    $config['database']['test']['pass'],
                     $logger
+                );
+                self::$db->connect(
+                    $config['database']['test']['user'],
+                    $config['database']['test']['pass']
                 );
             } catch (DatabaseException $e) {
                 echo 'No database: ' . $e;

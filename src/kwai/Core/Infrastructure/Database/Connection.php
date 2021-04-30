@@ -32,38 +32,16 @@ final class Connection
      */
     private PDO $pdo;
 
-    private ?LoggerInterface $logger;
-
     /**
      * Constructor.
      *
-     * @param string               $dsn      A DSN connection.
-     * @param string               $user     A username
-     * @param string               $password A password
+     * @param string               $dsn A DSN connection.
      * @param LoggerInterface|null $logger
-     * @throws DatabaseException Thrown when connection failed
      */
     public function __construct(
-        string $dsn,
-        string $user = '',
-        string $password = '',
-        ?LoggerInterface $logger = null
+        private string $dsn,
+        private ?LoggerInterface $logger = null
     ) {
-        $this->logger = $logger;
-        try {
-            $this->pdo = new PDO(
-                $dsn,
-                $user,
-                $password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_PERSISTENT => true, // BEST OPTION
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                ]
-            );
-        } catch (PDOException $e) {
-            throw new DatabaseException($e);
-        }
     }
 
     /**
@@ -105,6 +83,31 @@ final class Connection
     {
         try {
             return $this->pdo->commit();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e);
+        }
+    }
+
+    /**
+     * Connects to the database. On failure a DatabaseException is thrown.
+     *
+     * @param string|null $user
+     * @param string|null $password
+     * @throws DatabaseException
+     */
+    public function connect(?string $user = '', ?string $password = ''): void
+    {
+        try {
+            $this->pdo = new PDO(
+                $this->dsn,
+                $user,
+                $password,
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_PERSISTENT => true, // BEST OPTION
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                ]
+            );
         } catch (PDOException $e) {
             throw new DatabaseException($e);
         }

@@ -19,18 +19,24 @@ it('can instantiate a database', function () {
     expect($db)->toBeInstanceOf(Connection::class);
 });
 
-it('throws an exception for an invalid connection', function () {
-    new Connection('sqlite');
-})->throws(DatabaseException::class);
-
 it('can create a QueryFactory', function () {
     $db = new Connection(DB_MEMORY);
+    try {
+        $db->connect();
+    } catch (DatabaseException $e) {
+        $this->fail((string) $e);
+    }
     $qf = $db->createQueryFactory();
     expect($qf)->toBeInstanceOf(QueryFactory::class);
 });
 
 it('can execute a query', function () {
     $db = new Connection(DB_MEMORY);
+    try {
+        $db->connect();
+    } catch (DatabaseException $e) {
+        $this->fail((string) $e);
+    }
     $qf = $db->createQueryFactory();
     $query = $qf
         ->select('name', 'type')
@@ -46,6 +52,11 @@ it('can execute a query', function () {
 
 it('throws an exception for an invalid query', function () {
     $db = new Connection(DB_MEMORY);
+    try {
+        $db->connect();
+    } catch (DatabaseException $e) {
+        $this->fail((string) $e);
+    }
     $qf = $db->createQueryFactory();
     $query = $qf
         ->select()
