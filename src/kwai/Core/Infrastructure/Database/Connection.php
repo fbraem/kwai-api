@@ -45,22 +45,6 @@ final class Connection
     }
 
     /**
-     * Change the fetch mode to array. Default is Object.
-     */
-    public function asArray(): void
-    {
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Change the fetch mode to object.
-     */
-    public function asObject(): void
-    {
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-    }
-
-    /**
      * Begins a transaction
      * @return bool
      * @throws DatabaseException
