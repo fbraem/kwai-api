@@ -36,7 +36,7 @@ class FacebookApplication extends Application
             ->get(
                 'facebook.news',
                 '/news/{id}',
-                fn(ContainerInterface $container) => new FacebookStoryAction($container),
+                fn (ContainerInterface $container) => new FacebookStoryAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]

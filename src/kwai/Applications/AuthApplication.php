@@ -28,12 +28,12 @@ class AuthApplication extends Application
             ->post(
                 'auth.login',
                 '/auth/login',
-                fn(ContainerInterface $container) => new LoginAction($container)
+                fn (ContainerInterface $container) => new LoginAction($container)
             )
             ->post(
                 'auth.logout',
                 '/auth/logout',
-                fn(ContainerInterface $container) => new LogoutAction($container),
+                fn (ContainerInterface $container) => new LogoutAction($container),
                 [
                     'auth' => true
                 ]
@@ -41,12 +41,12 @@ class AuthApplication extends Application
             ->post(
                 'auth.access_token',
                 '/auth/access_token',
-                fn(ContainerInterface $container) => new RefreshTokenAction($container),
+                fn (ContainerInterface $container) => new RefreshTokenAction($container),
             )
             ->get(
                 'auth.get',
                 '/auth',
-                fn(ContainerInterface $container) => new GetUserAction($container),
+                fn (ContainerInterface $container) => new GetUserAction($container),
                 [
                     'auth' => true
                 ]

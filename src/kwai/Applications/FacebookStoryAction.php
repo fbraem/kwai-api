@@ -34,10 +34,10 @@ class FacebookStoryAction extends Action
 
         try {
             $story = (new GetStory(
-                new StoryDatabaseRepository($this->get('pdo_db')),
+                new StoryDatabaseRepository($this->getContainerEntry('pdo_db')),
                 new StoryImageRepository(
-                    $this->get('filesystem'),
-                    $this->get('settings')['files']['url']
+                    $this->getContainerEntry('filesystem'),
+                    $this->getContainerEntry('settings')['files']['url']
                 )
             ))($command);
         } catch (StoryNotFoundException $exception) {
@@ -89,7 +89,7 @@ class FacebookStoryAction extends Action
                 }
             }
 
-            $result = $this->get('template')->createTemplate('facebook')->render(['meta' => $meta]);
+            $result = $this->getContainerEntry('template')->createTemplate('facebook')->render(['meta' => $meta]);
             $response->getBody()->write($result);
         } else {
             return $response

@@ -22,7 +22,7 @@ class PortalApplication extends Application
             ->get(
                 'portal.applications.browse',
                 '/portal/applications',
-                fn(ContainerInterface $container) => new BrowseApplicationAction($container)
+                fn (ContainerInterface $container) => new BrowseApplicationAction($container)
             )
         ;
     }

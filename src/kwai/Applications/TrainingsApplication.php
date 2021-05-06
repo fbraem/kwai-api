@@ -31,12 +31,12 @@ class TrainingsApplication extends Application
             ->get(
                 'trainings.browse',
                 '/trainings',
-                fn(ContainerInterface $container) => new BrowseTrainingsAction($container)
+                fn (ContainerInterface $container) => new BrowseTrainingsAction($container)
             )
             ->get(
                 'trainings.get',
                 '/trainings/{id}',
-                fn(ContainerInterface $container) => new GetTrainingAction($container),
+                fn (ContainerInterface $container) => new GetTrainingAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -44,7 +44,7 @@ class TrainingsApplication extends Application
             ->get(
                 'trainings.get.presences',
                 '/trainings/{id}/presences',
-                fn(ContainerInterface $container) => new GetTrainingPresencesAction($container),
+                fn (ContainerInterface $container) => new GetTrainingPresencesAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -56,12 +56,12 @@ class TrainingsApplication extends Application
             ->get(
                 'trainings.definitions.browse',
                 '/definitions',
-                fn(ContainerInterface $container) => new BrowseDefinitionsAction($container)
+                fn (ContainerInterface $container) => new BrowseDefinitionsAction($container)
             )
             ->get(
                 'trainings.definitions.get',
                 '/definitions/{id}',
-                fn(ContainerInterface $container) => new GetDefinitionAction($container),
+                fn (ContainerInterface $container) => new GetDefinitionAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]

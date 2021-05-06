@@ -45,7 +45,7 @@ class UsersApplication extends Application
             ->get(
                 'users.browse',
                 '/users',
-                fn(ContainerInterface $container) => new BrowseUsersAction($container),
+                fn (ContainerInterface $container) => new BrowseUsersAction($container),
                 [
                     'auth' => true
                 ]
@@ -53,7 +53,7 @@ class UsersApplication extends Application
             ->get(
                 'user.abilities.browse',
                 '/users/{uuid}/abilities',
-                fn(ContainerInterface $container) => new GetUserAbilitiesAction($container),
+                fn (ContainerInterface $container) => new GetUserAbilitiesAction($container),
                 [
                     'auth' => true
                 ],
@@ -64,7 +64,7 @@ class UsersApplication extends Application
             ->patch(
                 'user.abilities.attach',
                 '/users/{uuid}/abilities/{ability}',
-                fn(ContainerInterface $container) => new AttachAbilityAction($container),
+                fn (ContainerInterface $container) => new AttachAbilityAction($container),
                 [
                     'auth' => true
                 ],
@@ -76,7 +76,7 @@ class UsersApplication extends Application
             ->delete(
                 'user.abilities.detach',
                 '/users/{uuid}/abilities/{ability}',
-                fn(ContainerInterface $container) => new DetachAbilityAction($container),
+                fn (ContainerInterface $container) => new DetachAbilityAction($container),
                 [
                     'auth' => true
                 ],
@@ -88,7 +88,7 @@ class UsersApplication extends Application
             ->get(
                 'users.abilities.browse',
                 '/users/abilities',
-                fn(ContainerInterface $container) => new BrowseAbilitiesAction($container),
+                fn (ContainerInterface $container) => new BrowseAbilitiesAction($container),
                 [
                     'auth' => true
                 ]
@@ -96,7 +96,7 @@ class UsersApplication extends Application
             ->post(
                 'users.abilities.create',
                 '/users/abilities',
-                fn(ContainerInterface $container) => new CreateAbilityAction($container),
+                fn (ContainerInterface $container) => new CreateAbilityAction($container),
                 [
                     'auth' => true
                 ]
@@ -104,7 +104,7 @@ class UsersApplication extends Application
             ->get(
                 'user.abilities.read',
                 '/users/abilities/{id}',
-                fn(ContainerInterface $container) => new GetAbilityAction($container),
+                fn (ContainerInterface $container) => new GetAbilityAction($container),
                 [
                     'auth' => true
                 ],
@@ -115,7 +115,7 @@ class UsersApplication extends Application
             ->patch(
                 'users.abilities.update',
                 '/users/abilities/{id}',
-                fn(ContainerInterface $container) => new UpdateAbilityAction($container),
+                fn (ContainerInterface $container) => new UpdateAbilityAction($container),
                 [
                     'auth' => true
                 ],
@@ -126,7 +126,7 @@ class UsersApplication extends Application
             ->get(
                 'users.rules.browse',
                 '/users/rules',
-                fn(ContainerInterface $container) => new BrowseRulesAction($container),
+                fn (ContainerInterface $container) => new BrowseRulesAction($container),
                 [
                     'auth' => true
                 ]
@@ -134,7 +134,7 @@ class UsersApplication extends Application
             ->get(
                 'users.invitations.browse',
                 '/users/invitations',
-                fn(ContainerInterface $container) => new BrowseUserInvitationsAction($container),
+                fn (ContainerInterface $container) => new BrowseUserInvitationsAction($container),
                 [
                     'auth' => true
                 ]
@@ -142,7 +142,7 @@ class UsersApplication extends Application
             ->post(
                 'users.invitations.create',
                 '/users/invitations',
-                fn(ContainerInterface $container) => new CreateUserInvitationAction($container),
+                fn (ContainerInterface $container) => new CreateUserInvitationAction($container),
                 [
                     'auth' => true
                 ]
@@ -150,7 +150,7 @@ class UsersApplication extends Application
             ->get(
                 'users.invitations.token',
                 '/users/invitations/{uuid}',
-                fn(ContainerInterface $container) => new GetUserInvitationAction($container),
+                fn (ContainerInterface $container) => new GetUserInvitationAction($container),
                 [
                     'auth' => true
                 ],

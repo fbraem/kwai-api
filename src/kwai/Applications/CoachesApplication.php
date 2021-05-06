@@ -27,23 +27,23 @@ class CoachesApplication extends Application
         $router->options(
             'coaches.browse.options',
             '/coaches',
-            fn() => new PreflightAction()
+            fn () => new PreflightAction()
         );
         $router->get(
             'coaches.browse',
             '/coaches',
-            fn(ContainerInterface $container) => new BrowseCoachesAction($container),
+            fn (ContainerInterface $container) => new BrowseCoachesAction($container),
         );
 
         $router->options(
             'coaches.get.options',
             '/coaches/{id}',
-            fn() => new PreflightAction()
+            fn () => new PreflightAction()
         );
         $router->get(
             'coaches.get',
             '/coaches/{id}',
-            fn(ContainerInterface $container) => new GetCoachAction($container),
+            fn (ContainerInterface $container) => new GetCoachAction($container),
             [ 'id' => '\d+' ]
         );
 

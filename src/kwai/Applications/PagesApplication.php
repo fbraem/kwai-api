@@ -32,12 +32,12 @@ class PagesApplication extends Application
             ->get(
                 'pages.browse',
                 '/pages',
-                fn(ContainerInterface $container) => new BrowsePagesAction($container)
+                fn (ContainerInterface $container) => new BrowsePagesAction($container)
             )
             ->get(
                 'pages.get',
                 '/pages/{id}',
-                fn(ContainerInterface $container) => new GetPageAction($container),
+                fn (ContainerInterface $container) => new GetPageAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -45,7 +45,7 @@ class PagesApplication extends Application
             ->post(
                 'pages.create',
                 '/pages',
-                fn(ContainerInterface $container) => new CreatePageAction($container),
+                fn (ContainerInterface $container) => new CreatePageAction($container),
                 [
                     'auth' => true
                 ]
@@ -53,7 +53,7 @@ class PagesApplication extends Application
             ->patch(
                 'pages.update',
                 '/pages/{id}',
-                fn(ContainerInterface $container) => new UpdatePageAction($container),
+                fn (ContainerInterface $container) => new UpdatePageAction($container),
                 [
                     'auth' => true
                 ],

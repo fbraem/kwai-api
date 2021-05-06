@@ -37,12 +37,12 @@ class NewsApplication extends Application
             ->get(
                 'news.browse',
                 '/news/stories',
-                fn(ContainerInterface $container) => new BrowseStoriesAction($container)
+                fn (ContainerInterface $container) => new BrowseStoriesAction($container)
             )
             ->get(
                 'news.get',
                 '/news/stories/{id}',
-                fn(ContainerInterface $container) => new GetStoryAction($container),
+                fn (ContainerInterface $container) => new GetStoryAction($container),
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -50,7 +50,7 @@ class NewsApplication extends Application
             ->get(
                 'news.archive',
                 '/news/archive',
-                fn(ContainerInterface $container) => new GetArchiveAction($container)
+                fn (ContainerInterface $container) => new GetArchiveAction($container)
             )
         ;
     }
