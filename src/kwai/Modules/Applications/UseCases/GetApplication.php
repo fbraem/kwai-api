@@ -11,6 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Application;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
+use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
 
 /**
@@ -30,6 +31,17 @@ class GetApplication
     public function __construct(ApplicationRepository $repo)
     {
         $this->repo = $repo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param ApplicationDatabaseRepository $repo
+     * @return static
+     */
+    public static function create(ApplicationDatabaseRepository $repo): self
+    {
+        return new self($repo);
     }
 
     /**
