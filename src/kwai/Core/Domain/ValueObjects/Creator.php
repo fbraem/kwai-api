@@ -14,20 +14,16 @@ namespace Kwai\Core\Domain\ValueObjects;
  */
 class Creator
 {
-    private int $id;
-
-    private Name $name;
-
     /**
      * Creator constructor.
      *
      * @param int    $id
      * @param Name $name
      */
-    public function __construct(int $id, Name $name)
-    {
-        $this->id = $id;
-        $this->name = $name;
+    public function __construct(
+        private int $id,
+        private Name $name
+    ) {
     }
 
     /**

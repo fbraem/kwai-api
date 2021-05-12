@@ -19,24 +19,15 @@ namespace Kwai\Core\Domain;
 class Entity
 {
     /**
-     * The id of the entity
-     */
-    private int $id;
-
-    /**
-     * The real domain object
-     * @var T
-     */
-    private $domain;
-
-    /**
      * Constructor
      * @param int $id   The id of the entity
      * @phpstan-param T $domain The domain entity
      * @param mixed $domain The domain entity
      */
-    public function __construct(int $id, DomainEntity $domain)
-    {
+    public function __construct(
+        private int $id,
+        private DomainEntity $domain
+    ) {
         $this->id = $id;
         $this->domain = $domain;
     }
