@@ -9,6 +9,7 @@ namespace Kwai\Modules\Applications\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Application;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
@@ -50,4 +51,12 @@ interface ApplicationRepository
         ?int $limit = null,
         ?int $offset = null
     ): Collection;
+
+    /**
+     * Update an application.
+     *
+     * @param Entity $application
+     * @throws QueryException
+     */
+    public function update(Entity $application): void;
 }

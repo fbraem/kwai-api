@@ -28,8 +28,8 @@ class ApplicationMapper
             remark: $data->get('remark'),
             name: $data->get('name'),
             traceableTime: new TraceableTime(
-            Timestamp::createFromString($data->get('created_at')),
-            $data->has('updated_at')
+                Timestamp::createFromString($data->get('created_at')),
+                $data->has('updated_at')
                 ? Timestamp::createFromString($data->get('updated_at'))
                 : null
             ),
@@ -38,5 +38,28 @@ class ApplicationMapper
             canHaveEvents: $data->get('events', '0') === '1',
             weight: (int) $data->get('weight', 0)
         );
+    }
+
+    /**
+     * Returns a data collection from an Application object.
+     *
+     * @param Application $domain
+     * @return Collection
+     */
+    public static function toPersistence(Application $domain): Collection
+    {
+        return collect([
+            'title' => $domain->getTitle(),
+            'description' => $domain->getDescription(),
+            'short_description' => $domain->getShortDescription(),
+            'remark' => $domain->getRemark(),
+            'name' => $domain->getName(),
+            'news' => $domain->canHaveNews(),
+            'pages' => $domain->canHavePages(),
+            'events' => $domain->canHaveEvents(),
+            'weight' => $domain->getWeight(),
+            'created_at' => $domain->getTraceableTime()->getCreatedAt(),
+            'updated_at' => $domain->getTraceableTime()->getUpdatedAt(),
+        ]);
     }
 }

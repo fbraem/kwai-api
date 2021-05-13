@@ -12,8 +12,10 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Mappers\ApplicationMapper;
+use Kwai\Modules\Applications\Infrastructure\Tables;
 use Kwai\Modules\Applications\Repositories\ApplicationQuery;
 use Kwai\Modules\Applications\Repositories\ApplicationRepository;
+use function Latitude\QueryBuilder\field;
 
 /**
  * Class ApplicationDatabaseRepository
@@ -24,7 +26,7 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
     {
         parent::__construct(
             $db,
-            fn($item) => ApplicationMapper::toDomain($item)
+            fn ($item) => ApplicationMapper::toDomain($item)
         );
     }
 
@@ -49,5 +51,22 @@ class ApplicationDatabaseRepository extends DatabaseRepository implements Applic
     public function createQuery(): ApplicationQuery
     {
         return new ApplicationDatabaseQuery($this->db);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update(Entity $application): void
+    {
+        $data = ApplicationMapper::toPersistence($application->domain());
+
+        $queryFactory = $this->db->createQueryFactory();
+
+        $this->db->execute(
+            $queryFactory
+                ->update((string) Tables::APPLICATIONS())
+                ->set($data->toArray())
+                ->where(field('id')->eq($application->id()))
+        );
     }
 }
