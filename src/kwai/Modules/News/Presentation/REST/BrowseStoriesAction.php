@@ -40,6 +40,10 @@ class BrowseStoriesAction extends AbstractBrowseStoriesAction
         if (isset($parameters['filter']['application'])) {
             $command->application = (int) $parameters['filter']['application'];
         }
+        if (isset($parameters['filter']['enabled'])) {
+            // TODO: Not allowed for public view
+            $command->enabled = $parameters['filter']['enabled'] === 'true';
+        }
         return $command;
     }
 }
