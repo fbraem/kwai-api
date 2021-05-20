@@ -599,8 +599,8 @@
     <inspection_tool class="PhpSignatureMismatchDuringInheritanceInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpSillyAssignmentInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpSingleStatementWithBracesInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
-    <inspection_tool class="PhpStanGlobal" enabled="false" level="WEAK WARNING" enabled_by_default="false">
-      <scope name="Project Files" level="WEAK WARNING" enabled="false">
+    <inspection_tool class="PhpStanGlobal" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <scope name="Project Files" level="WEAK WARNING" enabled="true">
         <option name="config" value="$PROJECT_DIR$/src/phpstan.neon" />
       </scope>
     </inspection_tool>
