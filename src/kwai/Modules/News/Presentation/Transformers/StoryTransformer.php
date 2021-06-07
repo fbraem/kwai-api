@@ -89,6 +89,7 @@ class StoryTransformer extends Fractal\TransformerAbstract
             'updated_at' => $traceableTime->isUpdated()
                 ? (string) $traceableTime->getUpdatedAt() : null,
             'publish_date' => (string) $story->getPublishTime(),
+            'end_date' => $story->getEndDate()?->__toString() ?? null,
             'timezone' => $story->getPublishTime()->getTimezone(),
             'promotion' => $story->getPromotion()->getPriority(),
             'promotion_end_date' =>
