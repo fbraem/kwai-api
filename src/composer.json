@@ -14,7 +14,7 @@
         "nesbot/carbon": "2.25.3",
         "mtdowling/jmespath.php": "^2.4",
         "robmorgan/phinx": "^0.11",
-        "league/flysystem": "1.0.57",
+        "league/flysystem": "1.1.4",
         "league/commonmark": "^1.4",
         "league/csv": "^9.5",
         "cakephp/i18n": "3.8.5",
