@@ -169,7 +169,7 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
                 $queryFactory
                     ->delete((string)Tables::CONTENTS())
                     ->where(
-                        field('training_id')->eq($story->id())
+                        field('news_id')->eq($story->id())
                     )
             );
 
