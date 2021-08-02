@@ -7,6 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Exception;
+use Firebase\JWT\ExpiredException;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
@@ -44,11 +46,21 @@ class RefreshTokenAction extends Action
 
         $secret = $this->getContainerEntry('settings')['security']['secret'];
         $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
-        $decodedRefreshToken = JWT::decode(
-            $data['refresh_token'],
-            $secret,
-            [ $algorithm ]
-        );
+
+        try {
+            $decodedRefreshToken = JWT::decode(
+                $data['refresh_token'],
+                $secret,
+                [ $algorithm ]
+            );
+        } catch(ExpiredException) {
+            return (new NotAuthorizedResponse('Refreshtoken expired'))($response);
+        } catch(Exception $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'An exception occurred while decoding the refreshtoken.')
+            )($response);
+        }
 
         $command = new CreateRefreshTokenCommand();
         $command->identifier = $decodedRefreshToken->jti;
