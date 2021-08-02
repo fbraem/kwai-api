@@ -53,9 +53,9 @@ class RefreshTokenAction extends Action
                 $secret,
                 [ $algorithm ]
             );
-        } catch(ExpiredException) {
+        } catch (ExpiredException) {
             return (new NotAuthorizedResponse('Refreshtoken expired'))($response);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->logException($e);
             return (
                 new SimpleResponse(500, 'An exception occurred while decoding the refreshtoken.')
@@ -77,7 +77,7 @@ class RefreshTokenAction extends Action
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (RefreshTokenNotFoundException $e) {
+        } catch (RefreshTokenNotFoundException) {
             return (new NotAuthorizedResponse('Unknown refreshtoken'))($response);
         }
 
