@@ -13,6 +13,7 @@ use Kwai\Modules\News\Presentation\REST\GetStoryAction;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
+use Kwai\Modules\News\Presentation\REST\UpdateStoryAction;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -44,6 +45,17 @@ class NewsApplication extends Application
                 '/news/stories/{id}',
                 fn (ContainerInterface $container) => new GetStoryAction($container),
                 requirements: [
+                    'id' => '\d+'
+                ]
+            )
+            ->patch(
+                'news.update',
+                '/news/stories/{id}',
+                fn (ContainerInterface $container) => new UpdateStoryAction($container),
+                [
+                    'auth' => true
+                ],
+                [
                     'id' => '\d+'
                 ]
             )
