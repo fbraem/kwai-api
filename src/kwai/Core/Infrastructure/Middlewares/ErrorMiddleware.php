@@ -15,6 +15,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Throwable;
 
 /**
@@ -40,17 +41,12 @@ class ErrorMiddleware implements MiddlewareInterface
     {
         try {
             return $handler->handle($request);
+        } catch (ResourceNotFoundException $ex) {
+            $response = $this->responseFactory->createResponse(404, $ex->getMessage());
+            return $this->checkCorsHeaders($response);
         } catch (Throwable $error) {
             $response = $this->responseFactory->createResponse(500, 'Internal Server Error');
-
-            // Check if we need to add cors headers
-            if ($this->corsAnalysis) {
-                $corsRequestType = $this->corsAnalysis->getRequestType();
-                if ($corsRequestType == AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST
-                    || $corsRequestType == AnalysisResultInterface::TYPE_ACTUAL_REQUEST) {
-                    $response = $this->withCorsHeaders($response);
-                }
-            }
+            $response = $this->checkCorsHeaders($response);
 
             $json = [
                 'type' => get_class($error),
@@ -77,13 +73,19 @@ class ErrorMiddleware implements MiddlewareInterface
      * @param ResponseInterface       $response
      * @return ResponseInterface
      */
-    private function withCorsHeaders(
+    private function checkCorsHeaders(
         ResponseInterface $response
     ): ResponseInterface {
-        foreach ($this->corsAnalysis->getResponseHeaders() as $name => $value) {
-            $response = $response->withHeader($name, $value);
+        if ($this->corsAnalysis) {
+            $corsRequestType = $this->corsAnalysis->getRequestType();
+            if ($corsRequestType == AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST
+                || $corsRequestType == AnalysisResultInterface::TYPE_ACTUAL_REQUEST) {
+                foreach ($this->corsAnalysis->getResponseHeaders() as $name => $value) {
+                    $response = $response->withHeader($name, $value);
+                }
+                return $response;
+            }
         }
-
         return $response;
     }
 }
