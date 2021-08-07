@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Coaches\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -23,12 +25,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class BrowseCoachesAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $repo = new CoachDatabaseRepository($this->getContainerEntry('pdo_db'));
+        $repo = new CoachDatabaseRepository($this->database);
         $command = new BrowseCoachesCommand();
 
         $parameters = $request->getAttribute('parameters');

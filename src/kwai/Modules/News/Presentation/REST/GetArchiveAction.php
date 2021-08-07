@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\JSONResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -22,16 +24,22 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class GetArchiveAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database = depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
         $command = new GetArchiveCommand();
-        $db = $this->getContainerEntry('pdo_db');
         try {
             $archive = GetArchive::create(
-                new StoryDatabaseRepository($db)
+                new StoryDatabaseRepository($this->database)
             )($command);
         } catch (RepositoryException $e) {
             $this->logException($e);

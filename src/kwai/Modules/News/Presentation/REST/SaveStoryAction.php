@@ -13,6 +13,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class SaveStoryAction
@@ -21,6 +22,11 @@ use Nette\Schema\ValidationException;
  */
 abstract class SaveStoryAction extends Action
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Create the schema used to normalize and validate the structure of
      * the input body.

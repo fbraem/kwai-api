@@ -7,12 +7,17 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
+use Kwai\Core\Infrastructure\Template\PlatesEngine;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
@@ -33,6 +38,17 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class CreateUserInvitationAction extends Action
 {
     const EXPIRE_IN_DAYS = 15;
+
+    public function __construct(
+        private ?Connection $database = null,
+        private ?PlatesEngine $templateEngine = null,
+        private ?array $settings = null,
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->templateEngine ??= depends('kwai.template_engine', TemplateDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
 
     /**
      * Create a command from the request data
@@ -80,7 +96,7 @@ class CreateUserInvitationAction extends Action
 
         // Add some additional properties to the command.
         $command->expiration = self::EXPIRE_IN_DAYS;
-        $from = $this->getContainerEntry('settings')['mail']['from'];
+        $from = $this->settings['mail']['from'];
         if (is_array($from)) {
             $command->sender_mail = (string) array_key_first($from);
             $command->sender_name = $from[$command->sender_mail];
@@ -93,15 +109,14 @@ class CreateUserInvitationAction extends Action
         //TODO: In the future, move this to an execution context?
         //TODO: Check if we need to create a InviteService?
         try {
-            $database = $this->getContainerEntry('pdo_db');
             $invitation = (new InviteUser(
-                new UserInvitationDatabaseRepository($database),
-                new UserAccountDatabaseRepository($database),
-                new MailDatabaseRepository($database),
+                new UserInvitationDatabaseRepository($this->database),
+                new UserAccountDatabaseRepository($this->database),
+                new MailDatabaseRepository($this->database),
                 new MailTemplate(
                     'User Invitation',
-                    $this->getContainerEntry('template')->createTemplate('User/invitation_html'),
-                    $this->getContainerEntry('template')->createTemplate('User/invitation_txt'),
+                    $this->templateEngine->createTemplate('User/invitation_html'),
+                    $this->templateEngine->createTemplate('User/invitation_txt'),
                 ),
                 $user
             ))($command);

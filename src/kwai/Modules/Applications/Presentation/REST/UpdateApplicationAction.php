@@ -8,7 +8,9 @@ declare(strict_types=1);
 namespace Kwai\Modules\Applications\Presentation\REST;
 
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -30,6 +32,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class UpdateApplicationAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     protected function createSchema(): Structure
     {
         return Expect::structure([
@@ -60,14 +69,13 @@ class UpdateApplicationAction extends Action
     public function __invoke(Request $request, Response $response, array $args)
     {
         $command = $this->processInput($request->getParsedBody());
-        $database = $this->getContainerEntry('pdo_db');
 
         $user = $request->getAttribute('kwai.user');
         $creator = new Creator($user->id(), $user->getUsername());
 
         try {
             $application = UpdateApplication::create(
-                new ApplicationDatabaseRepository($database)
+                new ApplicationDatabaseRepository($this->database)
             )($command, $creator);
         } catch (RepositoryException $e) {
             $this->logException($e);

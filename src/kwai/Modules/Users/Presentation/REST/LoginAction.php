@@ -7,6 +7,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
@@ -32,6 +35,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class LoginAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * Create a command from the request data
      * @param array $data
@@ -73,11 +85,10 @@ class LoginAction extends Action
         }
 
         try {
-            $database = $this->getContainerEntry('pdo_db');
             $refreshToken = AuthenticateUser::create(
-                new UserAccountDatabaseRepository($database),
-                new AccessTokenDatabaseRepository($database),
-                new RefreshTokenDatabaseRepository($database)
+                new UserAccountDatabaseRepository($this->database),
+                new AccessTokenDatabaseRepository($this->database),
+                new RefreshTokenDatabaseRepository($this->database)
             )($command);
         } catch (AuthenticationException) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);
@@ -90,8 +101,8 @@ class LoginAction extends Action
             return (new NotAuthorizedResponse('Unknown user'))($response);
         }
 
-        $secret = $this->getContainerEntry('settings')['security']['secret'];
-        $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
+        $secret = $this->settings['security']['secret'];
+        $algorithm = $this->settings['security']['algorithm'];
 
         /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = $refreshToken->getAccessToken();

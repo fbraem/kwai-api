@@ -7,6 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -28,6 +30,13 @@ use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
  */
 class GetUserAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -41,9 +50,8 @@ class GetUserAction extends Action
             $command->uuid = $args['uuid'];
 
             try {
-                $database = $this->getContainerEntry('pdo_db');
                 $user = GetUser::create(
-                    new UserDatabaseRepository($database)
+                    new UserDatabaseRepository($this->database)
                 )($command);
             } catch (RepositoryException $e) {
                 $this->logException($e);

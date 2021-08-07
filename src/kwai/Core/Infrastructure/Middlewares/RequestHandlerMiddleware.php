@@ -20,7 +20,6 @@ use RuntimeException;
 class RequestHandlerMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private ContainerInterface $container,
         private ResponseInterface $response
     ) {
     }
@@ -32,11 +31,14 @@ class RequestHandlerMiddleware implements MiddlewareInterface
     {
         $action = $request->getAttribute('kwai.action');
 
+        # TODO: deprecate passing a container to the callable.
         if (is_callable($action)) {
-            $action = $action($this->container);
-            return $action($request, $this->response, $request->getAttribute('kwai.action.args'));
+            $callableAction = $action();
+        } elseif (class_exists($action)) {
+            $callableAction = new $action();
+        } else {
+            throw new RuntimeException('Invalid request handler set');
         }
-
-        throw new RuntimeException('Invalid request handler set');
+        return $callableAction($request, $this->response, $request->getAttribute('kwai.action.args'));
     }
 }

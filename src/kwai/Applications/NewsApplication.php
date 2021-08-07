@@ -10,25 +10,14 @@ namespace Kwai\Applications;
 use Kwai\Modules\News\Presentation\REST\BrowseStoriesAction;
 use Kwai\Modules\News\Presentation\REST\GetArchiveAction;
 use Kwai\Modules\News\Presentation\REST\GetStoryAction;
-use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
-use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Kwai\Modules\News\Presentation\REST\UpdateStoryAction;
-use Psr\Container\ContainerInterface;
 
 /**
  * Class NewsApplication
  */
 class NewsApplication extends Application
 {
-    public function addDependencies(): void
-    {
-        parent::addDependencies();
-
-        $this->addDependency('filesystem', new FileSystemDependency());
-        $this->addDependency('converter', new ConvertDependency());
-    }
-
     /**
      * @inheritDoc
      */
@@ -38,12 +27,12 @@ class NewsApplication extends Application
             ->get(
                 'news.browse',
                 '/news/stories',
-                fn (ContainerInterface $container) => new BrowseStoriesAction($container)
+                BrowseStoriesAction::class
             )
             ->get(
                 'news.get',
                 '/news/stories/{id}',
-                fn (ContainerInterface $container) => new GetStoryAction($container),
+                GetStoryAction::class,
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -51,7 +40,7 @@ class NewsApplication extends Application
             ->patch(
                 'news.update',
                 '/news/stories/{id}',
-                fn (ContainerInterface $container) => new UpdateStoryAction($container),
+                UpdateStoryAction::class,
                 [
                     'auth' => true
                 ],
@@ -62,7 +51,7 @@ class NewsApplication extends Application
             ->get(
                 'news.archive',
                 '/news/archive',
-                fn (ContainerInterface $container) => new GetArchiveAction($container)
+                GetArchiveAction::class
             )
         ;
     }

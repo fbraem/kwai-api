@@ -67,7 +67,8 @@
         },
         "files": [
             "kwai/Core/Infrastructure/Presentation/app.php",
-            "kwai/macros.php"
+            "kwai/macros.php",
+            "kwai/Core/Infrastructure/Dependencies/functions.php"
         ]
     },
     "autoload-dev": {

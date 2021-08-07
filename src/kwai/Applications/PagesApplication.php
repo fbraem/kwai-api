@@ -7,14 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
-use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Kwai\Modules\Pages\Presentation\REST\BrowsePagesAction;
 use Kwai\Modules\Pages\Presentation\REST\CreatePageAction;
 use Kwai\Modules\Pages\Presentation\REST\GetPageAction;
 use Kwai\Modules\Pages\Presentation\REST\UpdatePageAction;
-use Psr\Container\ContainerInterface;
 
 /**
  * Class PageApplication
@@ -32,12 +29,12 @@ class PagesApplication extends Application
             ->get(
                 'pages.browse',
                 '/pages',
-                fn (ContainerInterface $container) => new BrowsePagesAction($container)
+                BrowsePagesAction::class
             )
             ->get(
                 'pages.get',
                 '/pages/{id}',
-                fn (ContainerInterface $container) => new GetPageAction($container),
+                GetPageAction::class,
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -45,7 +42,7 @@ class PagesApplication extends Application
             ->post(
                 'pages.create',
                 '/pages',
-                fn (ContainerInterface $container) => new CreatePageAction($container),
+                CreatePageAction::class,
                 [
                     'auth' => true
                 ]
@@ -53,7 +50,7 @@ class PagesApplication extends Application
             ->patch(
                 'pages.update',
                 '/pages/{id}',
-                fn (ContainerInterface $container) => new UpdatePageAction($container),
+                UpdatePageAction::class,
                 [
                     'auth' => true
                 ],
@@ -62,13 +59,5 @@ class PagesApplication extends Application
                 ]
             )
         ;
-    }
-
-    public function addDependencies(): void
-    {
-        parent::addDependencies();
-
-        $this->addDependency('filesystem', new FileSystemDependency());
-        $this->addDependency('converter', new ConvertDependency());
     }
 }

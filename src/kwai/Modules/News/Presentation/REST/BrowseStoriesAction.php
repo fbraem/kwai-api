@@ -10,6 +10,7 @@ namespace Kwai\Modules\News\Presentation\REST;
 use Kwai\Modules\News\Presentation\AbstractBrowseStoriesAction;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class BrowseStoriesAction

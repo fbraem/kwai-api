@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Presentation;
 
-use Psr\Container\ContainerInterface;
+use Exception;
+use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -21,27 +22,14 @@ use Psr\Log\LogLevel;
 abstract class Action
 {
     /**
-     * The dependency container
-     */
-    private ContainerInterface $container;
-
-    /**
      * Action constructor.
-     * @param $container
+     *
+     * @param LoggerInterface|null $logger
      */
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * Returns an entry from the container
-     * @param string $key
-     * @return mixed
-     */
-    public function getContainerEntry(string $key)
-    {
-        return $this->container->get($key);
+    public function __construct(
+        private ?LoggerInterface $logger = null
+    ) {
+        $this->logger ??= depends('kwai.logger', LoggerDependency::class);
     }
 
     /**
@@ -53,19 +41,17 @@ abstract class Action
      */
     public function log(string $level, string $message)
     {
-        /** @var LoggerInterface $logger */
-        $logger = $this->getContainerEntry('logger');
-        if ($logger) {
-            $logger->log($level, $message);
+        if ($this->logger) {
+            $this->logger->log($level, $message);
         }
     }
 
     /**
      * Logs an exception with level ERROR
      *
-     * @param $exception
+     * @param Exception $exception
      */
-    public function logException($exception)
+    public function logException(Exception $exception)
     {
         $this->log(LogLevel::ERROR, strval($exception));
     }

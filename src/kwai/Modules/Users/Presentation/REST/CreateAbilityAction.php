@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
@@ -30,6 +32,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class CreateAbilityAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * Create the JSONAPI schema for this action
      *
@@ -95,9 +104,8 @@ class CreateAbilityAction extends Action
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $database = $this->getContainerEntry('pdo_db');
-        $abilityRepo = new AbilityDatabaseRepository($database);
-        $ruleRepo = new RuleDatabaseRepository($database);
+        $abilityRepo = new AbilityDatabaseRepository($this->database);
+        $ruleRepo = new RuleDatabaseRepository($this->database);
 
         try {
             $command = $this->createCommand($request->getParsedBody());

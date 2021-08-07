@@ -8,6 +8,12 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Presentation\REST;
 
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -19,6 +25,7 @@ use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\CreateStory;
 use Kwai\Modules\News\UseCases\CreateStoryCommand;
+use League\Flysystem\Filesystem;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -28,6 +35,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class CreateStoryAction extends SaveStoryAction
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?Filesystem $filesystem = null,
+        private ?ConverterFactory $converterFactory = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->filesystem ??= depends('kwai.fs', FileSystemDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     protected function createCommand(): CreateStoryCommand
     {
         return new CreateStoryCommand();
@@ -47,14 +67,12 @@ class CreateStoryAction extends SaveStoryAction
         $user = $request->getAttribute('kwai.user');
         $creator = new Creator($user->id(), $user->getUsername());
 
-        $database = $this->getContainerEntry('pdo_db');
-        $storyRepo = new StoryDatabaseRepository($database);
-        $categoryRepo = new ApplicationDatabaseRepository($database);
+        $storyRepo = new StoryDatabaseRepository($this->database);
+        $categoryRepo = new ApplicationDatabaseRepository($this->database);
 
-        $filesystem = $this->getContainerEntry('filesystem');
         $imageRepo = new StoryImageRepository(
-            $filesystem,
-            $this->getContainerEntry('settings')['files']['url']
+            $this->filesystem,
+            $this->settings['files']['url']
         );
 
         try {
@@ -76,7 +94,7 @@ class CreateStoryAction extends SaveStoryAction
         return (new ResourceResponse(
             StoryTransformer::createForItem(
                 $story,
-                $this->getContainerEntry('converter')
+                $this->converterFactory
             )
         ))($response);
     }

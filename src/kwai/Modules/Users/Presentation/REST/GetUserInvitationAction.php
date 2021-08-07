@@ -7,6 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -27,6 +29,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class GetUserInvitationAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -40,9 +49,8 @@ class GetUserInvitationAction extends Action
         $command->uuid = $args['uuid'];
 
         try {
-            $database = $this->getContainerEntry('pdo_db');
             $user = GetUserInvitation::create(
-                new UserInvitationDatabaseRepository($database)
+                new UserInvitationDatabaseRepository($this->database)
             )($command);
         } catch (RepositoryException $e) {
             $this->logException($e);

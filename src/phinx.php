@@ -5,7 +5,7 @@
 
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 
-$config = (new Settings())();
+$config = (new Settings())->create();
 
 $environments = $config['database'];
 $environments['default_database'] = $config['default_database'];

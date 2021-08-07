@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Applications\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -22,16 +24,21 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class GetApplicationAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     public function __invoke(Request $request, Response $response, array $args)
     {
         $command = new GetApplicationCommand();
         $command->id = (int) $args['id'];
 
-        $database = $this->getContainerEntry('pdo_db');
-
         try {
             $application = GetApplication::create(
-                new ApplicationDatabaseRepository($database)
+                new ApplicationDatabaseRepository($this->database)
             )($command);
         } catch (ApplicationNotFoundException) {
             return (new NotFoundResponse('Application not found'))($response);

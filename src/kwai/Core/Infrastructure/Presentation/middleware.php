@@ -9,11 +9,13 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Middlewares\JsonBodyParserMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\LogActionMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
-use Kwai\Core\Infrastructure\Presentation\AuthenticationRule;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,19 +23,17 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
-use Tuupola\Middleware\CorsMiddleware;
 use Tuupola\Middleware\JwtAuthentication;
+use Tuupola\Middleware\CorsMiddleware;
 use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 
 return function (App $application) {
-    $container = $application->getContainer();
-
     $application->add(new ParametersMiddleware());
-    $application->add(new TransactionMiddleware($container));
-    $application->add(new LogActionMiddleware($container));
+    $application->add(new TransactionMiddleware());
+    $application->add(new LogActionMiddleware());
     $application->add(new JsonBodyParserMiddleware());
 
-    $settings = $container->get('settings');
+    $settings = depends('kwai.settings', Settings::class);
     $application->add(new JwtAuthentication([
         'secure' => true,
         'relaxed' => $settings['security']['relaxed'] ?? [],
@@ -61,30 +61,20 @@ return function (App $application) {
             ;
             return $response->withHeader('Content-Type', 'application/json');
         },
-        'before' => function (ServerRequestInterface $request, $arguments) use ($container) {
+        'before' => function (ServerRequestInterface $request, $arguments) {
+            $db = depends('kwai.database', DatabaseDependency::class);
             $uuid = new UniqueId($arguments['decoded']['sub']);
-            $userRepo = new UserDatabaseRepository($container->get('pdo_db'));
+            $userRepo = new UserDatabaseRepository($db);
             return $request->withAttribute(
                 'kwai.user',
-                $userRepo->getByUUID($uuid)
+                $userRepo->getByUniqueId($uuid)
             );
         }
     ]));
-    if (isset($settings['cors'])) {
-        $application->addMiddleware(new CorsMiddleware([
-            'origin' => $settings['cors']['origin'] ?? '*',
-            'methods' =>
-                $settings['cors']['method']
-                ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-            'credentials' => true,
-            'headers.allow' => ['Accept', 'Accept-Language', 'Content-Type', 'Authorization'],
-            'cache' => 0
-        ]));
-    }
 
     $application->addRoutingMiddleware();
 
-    $logger = $container->get('logger');
+    $logger = depends('kwai.logger', LoggerDependency::class);
     $errorMiddleware = $application->addErrorMiddleware(
         false,
         true,

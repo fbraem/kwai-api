@@ -35,8 +35,7 @@ class Router
      */
     public function __construct(
         private bool $autoPreflight = true
-    )
-    {
+    ) {
         $this->routes = new RouteCollection();
     }
 
@@ -54,15 +53,20 @@ class Router
     /**
      * Add a GET route
      *
-     * @param string   $name
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    public function get(string $name, string $path, callable $handler, array $extra = [], array $requirements = [])
-    {
+    public function get(
+        string          $name,
+        string          $path,
+        string|callable $handler,
+        array           $extra = [],
+        array           $requirements = []
+    ) {
         return $this->add(
             $name,
             'GET',
@@ -76,15 +80,20 @@ class Router
     /**
      * Add a POST route.
      *
-     * @param string   $name
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    public function post(string $name, string $path, callable $handler, array $extra = [], array $requirements = [])
-    {
+    public function post(
+        string          $name,
+        string          $path,
+        string|callable $handler,
+        array           $extra = [],
+        array           $requirements = []
+    ) {
         return $this->add(
             $name,
             'POST',
@@ -98,14 +107,19 @@ class Router
     /**
      * Add a PATCH route.
      *
-     * @param string   $name
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    public function patch(string $name, string $path, callable $handler, array $extra = [], array $requirements = [])
+    public function patch(
+        string          $name,
+        string          $path,
+        string|callable $handler,
+        array           $extra = [],
+        array           $requirements = [])
     {
         return $this->add(
             $name,
@@ -120,14 +134,19 @@ class Router
     /**
      * Add a DELETE method
      *
-     * @param string   $name
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    public function delete(string $name, string $path, callable $handler, array $extra = [], array $requirements = [])
+    public function delete(
+        string          $name,
+        string          $path,
+        string|callable $handler,
+        array           $extra = [],
+        array           $requirements = [])
     {
         return $this->add(
             $name,
@@ -145,15 +164,20 @@ class Router
      * Note: When autoPreflight is true, this route will be created
      * automatically. So there is no need to call this method.
      *
-     * @param string   $name
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    public function options(string $name, string $path, callable $handler, array $extra = [], array $requirements = [])
-    {
+    public function options(
+        string          $name,
+        string          $path,
+        string|callable $handler,
+        array           $extra = [],
+        array           $requirements = []
+    ) {
         return $this->add(
             $name,
             'OPTIONS',
@@ -167,15 +191,20 @@ class Router
     /**
      * Add a HEAD route
      *
-     * @param string   $name
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    public function head(string $name, string $path, callable $handler, array $extra = [], array $requirements = [])
-    {
+    public function head(
+        string          $name,
+        string          $path,
+        string|callable $handler,
+        array           $extra = [],
+        array           $requirements = []
+    ) {
         return $this->add(
             $name,
             'HEAD',
@@ -233,16 +262,22 @@ class Router
     /**
      * Add a route
      *
-     * @param string   $name
-     * @param string   $method
-     * @param string   $path
-     * @param callable $handler
-     * @param array    $extra
-     * @param array    $requirements
+     * @param string          $name
+     * @param string          $method
+     * @param string          $path
+     * @param string|callable $handler
+     * @param array           $extra
+     * @param array           $requirements
      * @return $this
      */
-    private function add(string $name, string $method, string $path, callable $handler, array $extra, array $requirements)
-    {
+    private function add(
+        string          $name,
+        string          $method,
+        string          $path,
+        string|callable $handler,
+        array           $extra,
+        array           $requirements
+    ) {
         if ($this->autoPreflight) {
             $this->routes->add(
                 $name . '.options',

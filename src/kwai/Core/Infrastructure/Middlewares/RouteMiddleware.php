@@ -31,7 +31,7 @@ class RouteMiddleware implements MiddlewareInterface
     {
         [$route, $action, $parameters, $extra] = $this->router->matchRequest($request);
 
-        if (isset($action) && is_callable($action)) {
+        if (isset($action)) {
             $request = $request
                 ->withAttribute('kwai.route', $route)
                 ->withAttribute('kwai.action', $action)

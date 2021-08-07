@@ -2,6 +2,9 @@
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -14,26 +17,39 @@ use Cake\Datasource\ConnectionManager;
  */
 class TransactionMiddleware implements MiddlewareInterface
 {
-    private $container;
-
-    public function __construct($container)
+    public function __construct(
+        private ?Connection $database = null)
     {
-        $this->container = $container;
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
     }
 
     public function process(
         Request $request,
         RequestHandler $handler
     ): ResponseInterface {
-        $connection = ConnectionManager::get('default');
-        $connection->begin();
+        try {
+            $this->database->begin();
+        } catch(DatabaseException)
+        {
+            //TODO: logging
+        }
 
         $response = $handler->handle($request);
 
         if ($response->getStatusCode() > 399) { // Error
-            $connection->rollback();
+            try {
+                $this->database->rollback();
+            } catch(DatabaseException)
+            {
+                //TODO: logging
+            }
         } else {
-            $connection->commit();
+            try {
+                $this->database->commit();
+            } catch(DatabaseException)
+            {
+                //TODO: logging
+            }
         }
 
         return $response;

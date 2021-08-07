@@ -7,15 +7,23 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\Infrastructure\Template\PlatesEngine;
+use Kwai\Core\Infrastructure\Template\Template;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\UseCases\GetStory;
 use Kwai\Modules\News\UseCases\GetStoryCommand;
+use League\Flysystem\Filesystem;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -24,6 +32,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class FacebookStoryAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?Filesystem $filesystem = null,
+        private ?PlatesEngine $templateEngine = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->filesystem ??= depends('kwai.filesystem', FileSystemDependency::class);
+        $this->templateEngine ??= depends('kwai.template_engine', TemplateDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -34,10 +55,10 @@ class FacebookStoryAction extends Action
 
         try {
             $story = (new GetStory(
-                new StoryDatabaseRepository($this->getContainerEntry('pdo_db')),
+                new StoryDatabaseRepository($this->database),
                 new StoryImageRepository(
-                    $this->getContainerEntry('filesystem'),
-                    $this->getContainerEntry('settings')['files']['url']
+                    $this->filesystem,
+                    $this->settings['files']['url']
                 )
             ))($command);
         } catch (StoryNotFoundException $exception) {
@@ -89,7 +110,7 @@ class FacebookStoryAction extends Action
                 }
             }
 
-            $result = $this->getContainerEntry('template')->createTemplate('facebook')->render(['meta' => $meta]);
+            $result = $this->templateEngine->createTemplate('facebook')->render(['meta' => $meta]);
             $response->getBody()->write($result);
         } else {
             return $response

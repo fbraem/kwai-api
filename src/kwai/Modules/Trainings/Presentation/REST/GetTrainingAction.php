@@ -7,6 +7,10 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -25,6 +29,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class GetTrainingAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?ConverterFactory $converterFactory = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -33,11 +46,9 @@ class GetTrainingAction extends Action
         $command = new GetTrainingCommand();
         $command->id = (int) $args['id'];
 
-        $database = $this->getContainerEntry('pdo_db');
-
         try {
             $training = GetTraining::create(
-                new TrainingDatabaseRepository($database)
+                new TrainingDatabaseRepository($this->database)
             )($command);
         } catch (RepositoryException $re) {
             $this->logException($re);
@@ -50,7 +61,7 @@ class GetTrainingAction extends Action
 
         $resource = TrainingTransformer::createForItem(
             $training,
-            $this->getContainerEntry('converter')
+            $this->converterFactory
         );
 
         return (new ResourceResponse(

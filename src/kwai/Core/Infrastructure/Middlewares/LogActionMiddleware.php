@@ -12,13 +12,6 @@ use Psr\Http\Server\MiddlewareInterface;
  */
 class LogActionMiddleware implements MiddlewareInterface
 {
-    private $container;
-
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-
     public function process(
         Request $request,
         RequestHandler $handler

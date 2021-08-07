@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
@@ -26,12 +28,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class BrowseAbilitiesAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $repo = new AbilityDatabaseRepository($this->getContainerEntry('pdo_db'));
+        $repo = new AbilityDatabaseRepository($this->database);
         try {
             $users = BrowseAbilities::create($repo)(new BrowseAbilitiesCommand());
             return (new ResourceResponse(

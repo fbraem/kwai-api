@@ -9,6 +9,9 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Firebase\JWT\JWT;
@@ -30,6 +33,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class RefreshTokenAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * @param  Request  $request  The current HTTP request
      * @param  Response $response The current HTTP response
@@ -44,8 +56,8 @@ class RefreshTokenAction extends Action
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->getContainerEntry('settings')['security']['secret'];
-        $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
+        $secret = $this->settings['security']['secret'];
+        $algorithm = $this->settings['security']['algorithm'];
 
         try {
             $decodedRefreshToken = JWT::decode(
@@ -66,10 +78,9 @@ class RefreshTokenAction extends Action
         $command->identifier = $decodedRefreshToken->jti;
 
         try {
-            $database = $this->getContainerEntry('pdo_db');
             $refreshToken = CreateRefreshToken::create(
-                new RefreshTokenDatabaseRepository($database),
-                new AccessTokenDatabaseRepository($database)
+                new RefreshTokenDatabaseRepository($this->database),
+                new AccessTokenDatabaseRepository($this->database)
             )($command);
         } catch (AuthenticationException) {
             return (new NotAuthorizedResponse('Authentication failed'))($response);

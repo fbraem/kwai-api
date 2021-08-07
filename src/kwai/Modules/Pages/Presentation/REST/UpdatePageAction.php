@@ -8,6 +8,12 @@ declare(strict_types=1);
 namespace Kwai\Modules\Pages\Presentation\REST;
 
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
@@ -21,6 +27,7 @@ use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageImageRepository;
 use Kwai\Modules\Pages\Presentation\Transformers\PageTransformer;
 use Kwai\Modules\Pages\UseCases\UpdatePage;
+use League\Flysystem\Filesystem;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -30,6 +37,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class UpdatePageAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?Filesystem $filesystem = null,
+        private ?ConverterFactory $converterFactory = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->filesystem ??= depends('kwai.filesystem', FileSystemDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -47,14 +67,12 @@ class UpdatePageAction extends Action
         $user = $request->getAttribute('kwai.user');
         $creator = new Creator($user->id(), $user->getUsername());
 
-        $database = $this->getContainerEntry('pdo_db');
-        $pageRepo = new PageDatabaseRepository($database);
-        $applicationRepo = new ApplicationDatabaseRepository($database);
+        $pageRepo = new PageDatabaseRepository($this->database);
+        $applicationRepo = new ApplicationDatabaseRepository($this->database);
 
-        $filesystem = $this->getContainerEntry('filesystem');
         $imageRepo = new PageImageRepository(
-            $filesystem,
-            $this->getContainerEntry('settings')['files']['url']
+            $this->filesystem,
+            $this->settings['files']['url']
         );
 
         try {
@@ -78,7 +96,7 @@ class UpdatePageAction extends Action
         return (new ResourceResponse(
             PageTransformer::createForItem(
                 $page,
-                $this->getContainerEntry('converter')
+                $this->converterFactory
             )
         ))($response);
     }

@@ -12,9 +12,7 @@ use Kwai\Modules\Trainings\Presentation\REST\BrowseTrainingsAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetDefinitionAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingPresencesAction;
-use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Presentation\Router;
-use Psr\Container\ContainerInterface;
 
 /**
  * Class TrainingsApplication
@@ -31,12 +29,12 @@ class TrainingsApplication extends Application
             ->get(
                 'trainings.browse',
                 '/trainings',
-                fn (ContainerInterface $container) => new BrowseTrainingsAction($container)
+                BrowseTrainingsAction::class
             )
             ->get(
                 'trainings.get',
                 '/trainings/{id}',
-                fn (ContainerInterface $container) => new GetTrainingAction($container),
+                GetTrainingAction::class,
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -44,7 +42,7 @@ class TrainingsApplication extends Application
             ->get(
                 'trainings.get.presences',
                 '/trainings/{id}/presences',
-                fn (ContainerInterface $container) => new GetTrainingPresencesAction($container),
+                GetTrainingPresencesAction::class,
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -56,12 +54,12 @@ class TrainingsApplication extends Application
             ->get(
                 'trainings.definitions.browse',
                 '/definitions',
-                fn (ContainerInterface $container) => new BrowseDefinitionsAction($container)
+                BrowseDefinitionsAction::class
             )
             ->get(
                 'trainings.definitions.get',
                 '/definitions/{id}',
-                fn (ContainerInterface $container) => new GetDefinitionAction($container),
+                GetDefinitionAction::class,
                 requirements: [
                     'id' => '\d+'
                 ]
@@ -70,11 +68,5 @@ class TrainingsApplication extends Application
         $router->group('/trainings', $definitionRouters);
 
         return $router;
-    }
-
-    protected function addDependencies(): void
-    {
-        parent::addDependencies();
-        $this->addDependency('converter', new ConvertDependency());
     }
 }

@@ -7,7 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -27,6 +31,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class BrowseTrainingsAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?ConverterFactory $converterFactory = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -52,12 +65,10 @@ class BrowseTrainingsAction extends Action
             $command->offset = (int)($parameters['page']['offset'] ?? 0);
         }
 
-        $db = $this->getContainerEntry('pdo_db');
-
         try {
             [$count, $trainings] = BrowseTrainings::create(
-                new TrainingDatabaseRepository($db),
-                new CoachDatabaseRepository($db)
+                new TrainingDatabaseRepository($this->database),
+                new CoachDatabaseRepository($this->database)
             )($command);
         } catch (QueryException $e) {
             $this->logException($e);
@@ -75,7 +86,7 @@ class BrowseTrainingsAction extends Action
 
         $resource = TrainingTransformer::createForCollection(
             $trainings,
-            $this->getContainerEntry('converter')
+            $this->converterFactory
         );
 
         $meta = [

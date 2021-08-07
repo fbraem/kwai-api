@@ -7,6 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Presentation;
 
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -17,6 +23,7 @@ use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
+use League\Flysystem\Filesystem;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -27,13 +34,25 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 abstract class AbstractBrowseStoriesAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?Filesystem $filesystem = null,
+        private ?ConverterFactory $converterFactory = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->filesystem ??= depends('kwai.fs', FileSystemDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * Create the default command for the use case Browse Stories.
      *
      * @param Request $request
      * @param array   $args
      * @return BrowseStoriesCommand
-     * @noinspection PhpUnusedParameterInspection
      */
     protected function createCommand(Request $request, array $args): BrowseStoriesCommand
     {
@@ -52,17 +71,14 @@ abstract class AbstractBrowseStoriesAction extends Action
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $db = $this->getContainerEntry('pdo_db');
-        $filesystem = $this->getContainerEntry('filesystem');
-
         $command = $this->createCommand($request, $args);
 
         try {
             [$count, $stories] = (new BrowseStories(
-                new StoryDatabaseRepository($db),
+                new StoryDatabaseRepository($this->database),
                 new StoryImageRepository(
-                    $filesystem,
-                    $this->getContainerEntry('settings')['files']['url']
+                    $this->filesystem,
+                    $this->settings['files']['url']
                 )
             ))($command);
         } catch (QueryException $e) {
@@ -79,7 +95,7 @@ abstract class AbstractBrowseStoriesAction extends Action
 
         $resource = StoryTransformer::createForCollection(
             $stories,
-            $this->getContainerEntry('converter')
+            $this->converterFactory
         );
         $resource->setMeta([
             'limit' => $command->limit,

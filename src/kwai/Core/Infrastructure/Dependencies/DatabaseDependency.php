@@ -17,29 +17,34 @@ use Monolog\Logger;
  */
 class DatabaseDependency implements Dependency
 {
+    public function __construct(
+        private ?array $settings = null
+    ) {
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * Creates a database connection.
      *
-     * @param array $settings
      * @return Connection
      * @throws DatabaseException
      */
-    public function __invoke(array $settings)
+    public function create()
     {
         $logger = new Logger('kwai-db');
-        if (isset($settings['logger']['database'])) {
-            if (isset($settings['logger']['database']['file'])) {
+        if (isset($this->settings['logger']['database'])) {
+            if (isset($this->settings['logger']['database']['file'])) {
                 $logger->pushHandler(
                     new StreamHandler(
-                        $settings['logger']['database']['file'],
-                        $settings['logger']['database']['level'] ?? Logger::DEBUG
+                        $this->settings['logger']['database']['file'],
+                        $this->settings['logger']['database']['level'] ?? Logger::DEBUG
                     )
                 );
             }
         }
 
-        $dbConfig = $settings['database'];
-        $dbDefault = $settings['default_database'];
+        $dbConfig = $this->settings['database'];
+        $dbDefault = $this->settings['default_database'];
         $db = new Connection(
             $dbConfig[$dbDefault]['dsn'],
             $logger

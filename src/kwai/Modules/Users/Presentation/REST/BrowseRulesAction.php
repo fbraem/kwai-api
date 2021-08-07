@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
@@ -24,6 +26,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class BrowseRulesAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -38,7 +47,7 @@ class BrowseRulesAction extends Action
 
         try {
             $rules = BrowseRules::create(
-                new RuleDatabaseRepository($this->getContainerEntry('pdo_db'))
+                new RuleDatabaseRepository($this->database)
             )($command);
             return (new ResourceResponse(
                 RuleTransformer::createForCollection($rules)

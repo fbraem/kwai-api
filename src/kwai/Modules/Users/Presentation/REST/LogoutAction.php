@@ -7,6 +7,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -28,6 +31,15 @@ use Firebase\JWT\JWT;
  */
 class LogoutAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * @param  Request  $request  The current HTTP request
      * @param  Response $response The current HTTP response
@@ -42,8 +54,8 @@ class LogoutAction extends Action
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->getContainerEntry('settings')['security']['secret'];
-        $algorithm = $this->getContainerEntry('settings')['security']['algorithm'];
+        $secret = $this->settings['security']['secret'];
+        $algorithm = $this->settings['security']['algorithm'];
 
         $decodedRefreshToken = JWT::decode(
             $data['refresh_token'],
@@ -55,10 +67,9 @@ class LogoutAction extends Action
         $command->identifier = $decodedRefreshToken->jti;
 
         try {
-            $database = $this->getContainerEntry('pdo_db');
             Logout::create(
-                new RefreshTokenDatabaseRepository($database),
-                new AccessTokenDatabaseRepository($database)
+                new RefreshTokenDatabaseRepository($this->database),
+                new AccessTokenDatabaseRepository($this->database)
             )($command);
         } catch (RepositoryException $e) {
             $this->logException($e);

@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -32,6 +34,13 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ConfirmInvitationAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * Create a command from the request data
      * @param array $data
@@ -84,10 +93,9 @@ class ConfirmInvitationAction extends Action
         }
 
         try {
-            $database = $this->getContainerEntry('pdo_db');
             $userAccount = ConfirmInvitation::create(
-                new UserInvitationDatabaseRepository($database),
-                new UserAccountDatabaseRepository($database)
+                new UserInvitationDatabaseRepository($this->database),
+                new UserAccountDatabaseRepository($this->database)
             )($command);
         } catch (UnprocessableException $e) {
             return (new SimpleResponse(422, $e->getMessage()))($response);

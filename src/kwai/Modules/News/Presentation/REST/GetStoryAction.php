@@ -7,6 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -18,6 +24,7 @@ use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
 use Kwai\Modules\News\UseCases\GetStory;
 use Kwai\Modules\News\UseCases\GetStoryCommand;
+use League\Flysystem\Filesystem;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -26,6 +33,18 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class GetStoryAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?Filesystem $filesystem = null,
+        private ?ConverterFactory $converterFactory = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->filesystem ??= depends('kwai.fs', FileSystemDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
 
     /**
      * @inheritDoc
@@ -35,14 +54,12 @@ class GetStoryAction extends Action
         $command = new GetStoryCommand();
         $command->id = (int) $args['id'];
 
-        $database = $this->getContainerEntry('pdo_db');
-        $filesystem = $this->getContainerEntry('filesystem');
         try {
             $story = GetStory::create(
-                new StoryDatabaseRepository($database),
+                new StoryDatabaseRepository($this->database),
                 new StoryImageRepository(
-                    $filesystem,
-                    $this->getContainerEntry('settings')['files']['url']
+                    $this->filesystem,
+                    $this->settings['files']['url']
                 )
             )($command);
         } catch (RepositoryException $e) {
@@ -59,7 +76,7 @@ class GetStoryAction extends Action
         return (new ResourceResponse(
             StoryTransformer::createForItem(
                 $story,
-                $this->getContainerEntry('converter')
+                $this->converterFactory
             )
         ))($response);
     }

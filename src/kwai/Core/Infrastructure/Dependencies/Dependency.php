@@ -13,5 +13,5 @@ namespace Kwai\Core\Infrastructure\Dependencies;
  */
 interface Dependency
 {
-    public function __invoke(array $settings);
+    public function create();
 }

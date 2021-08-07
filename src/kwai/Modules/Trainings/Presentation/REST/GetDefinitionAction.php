@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -25,6 +27,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class GetDefinitionAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -33,11 +42,9 @@ class GetDefinitionAction extends Action
         $command = new GetDefinitionCommand();
         $command->id = (int) $args['id'];
 
-        $database = $this->getContainerEntry('pdo_db');
-
         try {
             $definition = GetDefinition::create(
-                new DefinitionDatabaseRepository($database)
+                new DefinitionDatabaseRepository($this->database)
             )($command);
         } catch (RepositoryException $re) {
             $this->logException($re);

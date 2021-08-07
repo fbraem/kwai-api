@@ -12,7 +12,6 @@ use Kwai\Modules\Users\Presentation\REST\LoginAction;
 use Kwai\Modules\Users\Presentation\REST\LogoutAction;
 use Kwai\Modules\Users\Presentation\REST\RefreshTokenAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
-use Psr\Container\ContainerInterface;
 
 /**
  * Class AuthApplication
@@ -28,12 +27,12 @@ class AuthApplication extends Application
             ->post(
                 'auth.login',
                 '/auth/login',
-                fn (ContainerInterface $container) => new LoginAction($container)
+                LoginAction::class
             )
             ->post(
                 'auth.logout',
                 '/auth/logout',
-                fn (ContainerInterface $container) => new LogoutAction($container),
+                LogoutAction::class,
                 [
                     'auth' => true
                 ]
@@ -41,12 +40,12 @@ class AuthApplication extends Application
             ->post(
                 'auth.access_token',
                 '/auth/access_token',
-                fn (ContainerInterface $container) => new RefreshTokenAction($container),
+                RefreshTokenAction::class,
             )
             ->get(
                 'auth.get',
                 '/auth',
-                fn (ContainerInterface $container) => new GetUserAction($container),
+                GetUserAction::class,
                 [
                     'auth' => true
                 ]

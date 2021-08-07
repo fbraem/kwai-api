@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Core
+ * @subpackage Infrastructure
  */
 declare(strict_types=1);
 
@@ -16,7 +16,7 @@ use Kwai\Core\Domain\ValueObjects\DocumentFormat;
  */
 class ConvertDependency implements Dependency
 {
-    public function __invoke(array $settings)
+    public function create()
     {
         $factory = new ConverterFactory();
         $factory->register((string) DocumentFormat::MARKDOWN(), MarkdownConverter::class);

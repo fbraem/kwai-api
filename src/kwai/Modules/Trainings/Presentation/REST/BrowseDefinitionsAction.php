@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -18,12 +20,20 @@ use Kwai\Modules\Trainings\UseCases\BrowseDefinitions;
 use Kwai\Modules\Trainings\UseCases\BrowseDefinitionsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class BrowseDefinitionsAction
  */
 class BrowseDefinitionsAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -40,11 +50,9 @@ class BrowseDefinitionsAction extends Action
             $command->offset = (int)$parameters['page']['offset'];
         }
 
-        $db = $this->getContainerEntry('pdo_db');
-
         try {
             [$count, $definitions] = BrowseDefinitions::create(
-                new DefinitionDatabaseRepository($db)
+                new DefinitionDatabaseRepository($this->database)
             )($command);
         } catch (QueryException $e) {
             $this->logException($e);

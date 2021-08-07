@@ -22,7 +22,7 @@ class Context
     public static function withDatabase()
     {
         if (self::$db == null) {
-            $config = (new Settings())();
+            $config = (new Settings())->create();
             // TODO: see if we can use DatabaseDependency here ...
             $logger = new Logger('kwai-db');
             if (isset($config['logger']['database'])) {

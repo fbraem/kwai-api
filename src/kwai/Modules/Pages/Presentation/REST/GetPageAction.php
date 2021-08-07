@@ -7,6 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Converter\ConverterFactory;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
@@ -18,6 +24,7 @@ use Kwai\Modules\Pages\Infrastructure\Repositories\PageImageRepository;
 use Kwai\Modules\Pages\Presentation\Transformers\PageTransformer;
 use Kwai\Modules\Pages\UseCases\GetPage;
 use Kwai\Modules\Pages\UseCases\GetPageCommand;
+use League\Flysystem\Filesystem;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -26,6 +33,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class GetPageAction extends Action
 {
+    public function __construct(
+        private ?Connection $database = null,
+        private ?Filesystem $filesystem = null,
+        private ?ConverterFactory $converterFactory = null,
+        private ?array $settings = null
+    ) {
+        parent::__construct();
+        $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->filesystem ??= depends('kwai.filesystem', FileSystemDependency::class);
+        $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
     /**
      * @inheritDoc
      */
@@ -34,15 +54,12 @@ class GetPageAction extends Action
         $command = new GetPageCommand();
         $command->id = (int) $args['id'];
 
-        $database = $this->getContainerEntry('pdo_db');
-        $filesystem = $this->getContainerEntry('filesystem');
-
         try {
             $page = GetPage::create(
-                new PageDatabaseRepository($database),
+                new PageDatabaseRepository($this->database),
                 new PageImageRepository(
-                    $filesystem,
-                    $this->getContainerEntry('settings')['files']['url']
+                    $this->filesystem,
+                    $this->settings['files']['url']
                 )
             )($command);
         } catch (RepositoryException $e) {
@@ -58,7 +75,7 @@ class GetPageAction extends Action
 
         $resource = PageTransformer::createForItem(
             $page,
-            $this->getContainerEntry('converter')
+            $this->converterFactory
         );
 
         return (new ResourceResponse(

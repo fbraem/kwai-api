@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
+use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Neomerx\Cors\Contracts\AnalysisResultInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -32,6 +33,7 @@ class ErrorMiddleware implements MiddlewareInterface
         private ?AnalysisResultInterface $corsAnalysis = null,
         private ?LoggerInterface $logger = null
     ) {
+        $this->logger ??= depends('kwai.logger', LoggerDependency::class);
     }
 
     /**
