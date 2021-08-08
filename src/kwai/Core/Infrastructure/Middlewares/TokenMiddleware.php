@@ -35,6 +35,7 @@ class TokenMiddleware implements MiddlewareInterface
     ) {
         $this->settings ??= depends('kwai.settings', Settings::class);
         $this->db ??= depends('kwai.database', DatabaseDependency::class);
+        $dbForMiddleware = $this->db;
 
         $this->jwtMiddleware = new JwtAuthentication([
             'secure' => true,
@@ -71,9 +72,9 @@ class TokenMiddleware implements MiddlewareInterface
                     // ->withHeader('Access-Control-Allow-Origin', $settings['cors']['origin'])
                 ;
             },
-            'before' => function (ServerRequestInterface $request, $arguments) use ($db) {
+            'before' => function (ServerRequestInterface $request, $arguments) use ($dbForMiddleware) {
                 $uuid = new UniqueId($arguments['decoded']['sub']);
-                $userRepo = new UserDatabaseRepository($db);
+                $userRepo = new UserDatabaseRepository($dbForMiddleware);
                 try {
                     $user = $userRepo->getByUniqueId($uuid);
                     return $request
