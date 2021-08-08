@@ -105,7 +105,7 @@ class StoryTransformer extends Fractal\TransformerAbstract
                 'summary' => $content->getSummary(),
                 'content' => $content->getContent(),
                 'html_summary' => $converter->convert($content->getSummary()),
-                'html_content' => $converter->convert($content->getContent())
+                'html_content' => $content->getContent() != null ? $converter->convert($content->getContent()) : null
             ];
         }
 
