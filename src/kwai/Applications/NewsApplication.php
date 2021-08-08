@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Applications;
 
 use Kwai\Modules\News\Presentation\REST\BrowseStoriesAction;
+use Kwai\Modules\News\Presentation\REST\CreateStoryAction;
 use Kwai\Modules\News\Presentation\REST\GetArchiveAction;
 use Kwai\Modules\News\Presentation\REST\GetStoryAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
@@ -46,6 +47,14 @@ class NewsApplication extends Application
                 ],
                 [
                     'id' => '\d+'
+                ]
+            )
+            ->post(
+                'news.create',
+                '/news/stories',
+                CreateStoryAction::class,
+                [
+                    'auth' => true
                 ]
             )
             ->get(
