@@ -26,7 +26,7 @@ it('can normalize data', function () {
             'data' => [
                 'type' => 'stories',
                 'attributes' => [
-                    'publish_date' => '2021-01-02 10:00',
+                    'publish_date' => '2021-01-02 10:00:00',
                     'timezone' => 'Europe/Brussels',
                     'promotion' => 1,
                     'contents' => [
@@ -42,7 +42,7 @@ it('can normalize data', function () {
         expect($result)->toBeObject();
         expect($result->data)->toBeObject();
         expect($result->data->type)->toBe('stories');
-        expect($result->data->attributes->publish_date)->toBe('2021-01-02 10:00');
+        expect($result->data->attributes->publish_date)->toBe('2021-01-02 10:00:00');
         expect($result->data->attributes->contents)->toBeArray();
         expect($result->data->attributes->contents[0]->title)->toBe('Test');
     } catch (ValidationException $ve) {
@@ -56,7 +56,7 @@ it('can detect an invalid publish date', function () {
         'data' => [
             'type' => 'stories',
             'attributes' => [
-                'publish_date' => '20-01-02 10:00',
+                'publish_date' => '20-01-02 10:00:00',
                 'timezone' => 'Europe/Brussels',
                 'contents' => [
                     [
@@ -93,8 +93,8 @@ it('can detect an invalid end date', function () {
         'data' => [
             'type' => 'stories',
             'attributes' => [
-                'publish_date' => '2022-01-02 10:00',
-                'end_date' => '22-01-02 10:00',
+                'publish_date' => '2022-01-02 10:00:00',
+                'end_date' => '22-01-02 10:00:00',
                 'timezone' => 'Europe/Brussels',
                 'contents' => [
                     [
@@ -113,7 +113,7 @@ it('can detect an invalid promotion value', function () {
         'data' => [
             'type' => 'stories',
             'attributes' => [
-                'publish_date' => '2022-01-02 10:00',
+                'publish_date' => '2022-01-02 10:00:00',
                 'timezone' => 'Europe/Brussels',
                 'promotion' => '1',
                 'contents' => [
@@ -133,8 +133,8 @@ it('can detect an invalid promotion end date', function () {
         'data' => [
             'type' => 'stories',
             'attributes' => [
-                'publish_date' => '2022-01-02 10:00',
-                'promotion_end_date' => '22-01-02 10:00',
+                'publish_date' => '2022-01-02 10:00:00',
+                'promotion_end_date' => '22-01-02 10:00:00',
                 'timezone' => 'Europe/Brussels',
                 'contents' => [
                     [
@@ -155,7 +155,7 @@ it('can normalize data with an id', function () {
                 'type' => 'stories',
                 'id' => '1',
                 'attributes' => [
-                    'publish_date' => '2021-01-02 10:00',
+                    'publish_date' => '2021-01-02 10:00:00',
                     'timezone' => 'Europe/Brussels',
                     'contents' => [
                         [
