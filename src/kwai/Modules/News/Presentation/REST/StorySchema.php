@@ -19,7 +19,7 @@ use Nette\Schema\Processor;
  */
 class StorySchema
 {
-    private const DATETIME_PATTERN = '\d{4}-\d{2}-\d{2} \d{2}:\d{2}';
+    private const DATETIME_PATTERN = '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}';
 
     private Structure $schema;
 
