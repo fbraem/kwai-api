@@ -43,12 +43,6 @@ class StorySchema
                     'content' => Expect::string()
                 ]))->required()
             ]),
-        ];
-        if (!$create) {
-            $dataSchema['id'] = Expect::string()->required();
-        }
-        $this->schema = Expect::structure([
-        'data' => Expect::structure($dataSchema),
             'relationships' => Expect::structure([
                 'application' => Expect::structure([
                     'data' => Expect::structure([
@@ -57,6 +51,12 @@ class StorySchema
                     ])
                 ])->required()
             ])
+        ];
+        if (!$create) {
+            $dataSchema['id'] = Expect::string()->required();
+        }
+        $this->schema = Expect::structure([
+            'data' => Expect::structure($dataSchema),
         ]);
     }
 
