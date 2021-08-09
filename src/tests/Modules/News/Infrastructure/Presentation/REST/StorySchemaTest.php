@@ -173,3 +173,14 @@ it('can normalize data with an id', function () {
         $this->fail(strval($ve));
     }
 });
+
+it('can normalize with an application relationship', function () {
+    $json = "{\"data\":{\"type\":\"stories\",\"attributes\":{\"enabled\":false,\"promotion\":0,\"timezone\":\"Europe/Brussels\",\"publish_date\":\"2021-08-08 14:46:00\",\"remark\":null,\"contents\":[{\"locale\":\"nl\",\"format\":\"md\",\"title\":\"test\",\"summary\":\"test\",\"content\":\"Dit is een langere tekst...\"}]},\"relationships\":{\"application\":{\"data\":{\"type\":\"applications\",\"id\":\"1\"}}},\"id\":\"162\"}}";
+    $schema = new StorySchema();
+    try {
+        $result = $schema->normalize(json_decode($json));
+        expect($result)->toBeObject();
+    } catch (ValidationException $ve) {
+        $this->fail(strval($ve));
+    }
+});
