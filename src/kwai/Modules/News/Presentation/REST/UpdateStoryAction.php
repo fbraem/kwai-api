@@ -14,10 +14,12 @@ use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\UseCases\Content;
 use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
@@ -34,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Class UpdateStoryAction
  */
-class UpdateStoryAction extends SaveStoryAction
+class UpdateStoryAction extends Action
 {
     public function __construct(
         private ?Connection $database = null,
@@ -50,25 +52,40 @@ class UpdateStoryAction extends SaveStoryAction
     }
 
     /**
-     * @return UpdateStoryCommand
-     */
-    protected function createCommand(): UpdateStoryCommand
-    {
-        return new UpdateStoryCommand();
-    }
-
-    /**
      * @inheritDoc
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
+        $schema = new StorySchema(false);
         try {
-            $command = $this->processInput($request->getParsedBody());
+            $normalized = $schema->normalize($request->getParsedBody());
         } catch (ValidationException $ve) {
             return (new SimpleResponse(422, $ve->getMessage()))($response);
         }
 
-        $command->id = (int) $args['id'];
+        $command = new UpdateStoryCommand();
+        $command->id = (int) $normalized->data->id;
+        $command->enabled = $normalized->data->attributes->enabled;
+        $command->application = (int) $normalized->data->relationships->application->data->id;
+        $command->promotion = $normalized->data->attributes->promotion;
+        $command->promotion_end_date = $normalized->data->attributes->promotion_end_date ?? null;
+        $command->end_date = $normalized->data->attributes->end_date ?? null;
+        $command->publish_date = $normalized->data->attributes->publish_date;
+        $command->timezone = $normalized->data->attributes->timezone;
+        $command->remark = $normalized->data->attributes->remark ?? null;
+        foreach ($normalized->data->attributes->contents as $content) {
+            $c = new Content();
+            $c->content = $content->content;
+            $c->format = $content->format;
+            $c->locale = $content->locale;
+            $c->summary = $content->summary;
+            $c->title = $content->title;
+            $command->contents[] = $c;
+        }
+
+        if ($command->id != (int) $args['id']) {
+            return (new SimpleResponse(400, 'id in body and url should be the same.'));
+        }
 
         $user = $request->getAttribute('kwai.user');
         $creator = new Creator($user->id(), $user->getUsername());

@@ -5,6 +5,7 @@ namespace Tests\Modules\News\UseCases;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -50,14 +51,6 @@ it('can create a story', function () use ($context) {
                     ));
                 }
             },
-            new class($context->db) extends AuthorDatabaseRepository {
-                public function getById(int $id): Entity
-                {
-                    return new Entity(1, new Author(
-                        name: new Name('Test', 'User')
-                    ));
-                }
-            },
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -67,7 +60,12 @@ it('can create a story', function () use ($context) {
                 {
                 }
             }
-        ))($command);
+        ))($command,
+            new Creator(
+                $id = 1,
+                $name = new Name('Jigoro', 'Kano')
+            )
+        );
         expect($story)
             ->toBeInstanceOf(Entity::class)
         ;
