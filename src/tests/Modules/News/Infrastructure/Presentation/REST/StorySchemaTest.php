@@ -175,7 +175,38 @@ it('can normalize data with an id', function () {
 });
 
 it('can normalize with an application relationship', function () {
-    $json = "{\"data\":{\"type\":\"stories\",\"attributes\":{\"enabled\":false,\"promotion\":0,\"timezone\":\"Europe/Brussels\",\"publish_date\":\"2021-08-08 14:46:00\",\"remark\":null,\"contents\":[{\"locale\":\"nl\",\"format\":\"md\",\"title\":\"test\",\"summary\":\"test\",\"content\":\"Dit is een langere tekst...\"}]},\"relationships\":{\"application\":{\"data\":{\"type\":\"applications\",\"id\":\"1\"}}},\"id\":\"162\"}}";
+    $json = <<<JSON
+        {
+            "data": {
+                "type": "stories",
+                "attributes": { 
+                    "enabled": false,
+                    "promotion": 0,
+                    "timezone":"Europe/Brussels",
+                    "publish_date": "2021-08-08 14:46:00",
+                    "remark":null,
+                    "contents":[
+                        { 
+                            "locale":"nl",
+                            "format":"md",
+                            "title":"test",
+                            "summary":"test",
+                            "content":"Dit is een langere tekst..."
+                            }
+                        ]
+                },
+                "relationships": {
+                    "application": {
+                        "data": {
+                            "type": "applications",
+                            "id":"1"
+                        }
+                    }
+                },
+                "id": "162"
+            }
+        }
+JSON;
     $schema = new StorySchema();
     try {
         $result = $schema->normalize(json_decode($json));
