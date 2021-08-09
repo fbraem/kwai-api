@@ -40,7 +40,7 @@ class FacebookStoryAction extends Action
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
-        $this->filesystem ??= depends('kwai.filesystem', FileSystemDependency::class);
+        $this->filesystem ??= depends('kwai.fs', FileSystemDependency::class);
         $this->templateEngine ??= depends('kwai.template_engine', TemplateDependency::class);
         $this->settings ??= depends('kwai.settings', Settings::class);
     }

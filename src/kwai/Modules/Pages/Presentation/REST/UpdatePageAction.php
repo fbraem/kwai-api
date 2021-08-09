@@ -45,7 +45,7 @@ class UpdatePageAction extends Action
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
-        $this->filesystem ??= depends('kwai.filesystem', FileSystemDependency::class);
+        $this->filesystem ??= depends('kwai.fs', FileSystemDependency::class);
         $this->converterFactory ??= depends('kwai.converter', ConvertDependency::class);
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
