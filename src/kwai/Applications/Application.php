@@ -123,7 +123,7 @@ abstract class Application
                 $this->addMiddleware(new CorsMiddleware($psr17Factory, $cors));
             }
             $this->addMiddleware(new ParametersMiddleware());
-            $this->addMiddleware(new TransactionMiddleware());
+            // $this->addMiddleware(new TransactionMiddleware());
             $this->addMiddleware(new LogActionMiddleware());
             $this->addMiddleware(new JsonBodyParserMiddleware());
             $this->addMiddleware(new TokenMiddleware());
