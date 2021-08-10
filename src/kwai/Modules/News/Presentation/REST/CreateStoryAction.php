@@ -15,6 +15,7 @@ use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -55,30 +56,11 @@ class CreateStoryAction extends Action
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $schema = new StorySchema(true);
         try {
-            $normalized = $schema->normalize($request->getParsedBody());
+            $command = InputSchemaProcessor::create(new StorySchema(true))
+                ->process($request->getParsedBody());
         } catch (ValidationException $ve) {
             return (new SimpleResponse(422, $ve->getMessage()))($response);
-        }
-
-        $command = new CreateStoryCommand();
-        $command->enabled = $normalized->data->attributes->enabled;
-        $command->application = (int) $normalized->data->relationships->application->data->id;
-        $command->promotion = $normalized->data->attributes->promotion;
-        $command->promotion_end_date = $normalized->data->attributes->promotion_end_date ?? null;
-        $command->end_date = $normalized->data->attributes->end_date ?? null;
-        $command->publish_date = $normalized->data->attributes->publish_date;
-        $command->timezone = $normalized->data->attributes->timezone;
-        $command->remark = $normalized->data->attributes->remark ?? null;
-        foreach ($normalized->data->attributes->contents as $content) {
-            $c = new Content();
-            $c->content = $content->content;
-            $c->format = $content->format;
-            $c->locale = $content->locale;
-            $c->summary = $content->summary;
-            $c->title = $content->title;
-            $command->contents[] = $c;
         }
 
         $user = $request->getAttribute('kwai.user');
