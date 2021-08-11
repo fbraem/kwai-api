@@ -24,7 +24,6 @@ class PageInputSchema implements InputSchema
     public function __construct(
         private bool $create = false
     ) {
-        $this->create = $create;
         $this->textSchema = new TextInputSchema();
     }
 
