@@ -23,8 +23,14 @@ class StorySchema implements InputSchema
 
     private TextInputSchema $textSchema;
 
-    public function __construct(private bool $create = false)
-    {
+    /**
+     * Constructor.
+     *
+     * @param bool $create Is this used for creating a new Story?
+     */
+    public function __construct(
+        private bool $create = false
+    ) {
         $this->textSchema = new TextInputSchema();
     }
 
