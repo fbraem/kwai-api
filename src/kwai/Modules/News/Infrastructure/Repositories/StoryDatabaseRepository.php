@@ -245,7 +245,11 @@ class StoryDatabaseRepository extends DatabaseRepository implements StoryReposit
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $contents = $story->getContents();
-        $contents
+        if (count($contents) === 0) {
+            return;
+        }
+
+        $contents = $contents
             ->transform(
                 fn(Text $text) => TextMapper::toPersistence($text)
             )
