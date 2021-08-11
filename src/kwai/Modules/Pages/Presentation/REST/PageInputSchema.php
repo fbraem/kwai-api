@@ -35,7 +35,7 @@ class PageInputSchema implements InputSchema
         return Expect::structure([
             'data' => Expect::structure([
                 'type' => Expect::string(),
-                'id' => Expect::string(null),
+                'id' => Expect::string()->required(!$this->create),
                 'attributes' => Expect::Structure([
                     'enabled' => Expect::bool(false),
                     'priority' => Expect::int(0),
