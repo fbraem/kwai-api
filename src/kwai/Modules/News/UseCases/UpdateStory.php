@@ -56,16 +56,20 @@ class UpdateStory
         $story = $this->storyRepo->getById($command->id);
         $app = $this->appRepo->getById($command->application);
 
-        $contents = collect([]);
-        foreach ($command->contents as $text) {
-            $contents->push(new Text(
-                new Locale($text->locale),
-                new DocumentFormat($text->format),
-                $text->title,
-                $text->summary,
-                $text->content,
-                $creator
-            ));
+        if ($command->contents) {
+            $contents = collect([]);
+            foreach ($command->contents as $text) {
+                $contents->push(new Text(
+                    new Locale($text->locale),
+                    new DocumentFormat($text->format),
+                    $text->title,
+                    $text->summary,
+                    $text->content,
+                    $creator
+                ));
+            }
+        } else {
+            $contents = $story->getContents();
         }
 
         $promotion = new Promotion(

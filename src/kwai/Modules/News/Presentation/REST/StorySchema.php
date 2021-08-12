@@ -50,7 +50,7 @@ class StorySchema implements InputSchema
                     'remark' => Expect::string()->nullable(),
                     'contents' => Expect::arrayOf(
                         $this->textSchema->create()
-                    )->required()
+                    )->required($this->create)
                 ]),
                 'relationships' => Expect::structure([
                     'application' => Expect::structure([
