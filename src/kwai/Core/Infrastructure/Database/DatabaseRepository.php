@@ -34,13 +34,9 @@ abstract class DatabaseRepository
     }
 
     /**
-     * @todo Make it abstract
-     * @return Query|null
+     * @return Query
      */
-    public function createQuery(): ?Query
-    {
-        return null;
-    }
+    abstract public function createQuery(): Query;
 
     /**
      * @param Query|null $query
