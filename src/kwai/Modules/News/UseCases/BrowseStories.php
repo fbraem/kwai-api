@@ -78,6 +78,9 @@ class BrowseStories
                 $query->filterUser(new UniqueId($command->userUid));
             }
         }
+
+        $query->orderByPublishDate();
+
         $count = $query->count();
 
         $stories = $this->repo->getAll($query, $command->limit, $command->offset);
