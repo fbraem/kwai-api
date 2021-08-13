@@ -258,4 +258,10 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
         );
         return $this;
     }
+
+    public function orderByPublishDate(): StoryQuery
+    {
+        $this->query->orderBy(Tables::STORIES()->publish_date, 'DESC');
+        return $this;
+    }
 }

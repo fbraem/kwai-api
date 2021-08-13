@@ -66,4 +66,11 @@ interface StoryQuery extends Query
      * @return StoryQuery
      */
     public function filterUser(int|UniqueId $id): self;
+
+    /**
+     * Order the returned rows on publish date.
+     *
+     * @return $this
+     */
+    public function orderByPublishDate(): self;
 }
