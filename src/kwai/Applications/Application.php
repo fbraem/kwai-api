@@ -26,6 +26,8 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Server\MiddlewareInterface;
 use Relay\Relay;
+use Whoops\Handler\JsonResponseHandler;
+use Whoops\Run;
 
 /**
  * Class KwaiApplication
@@ -42,6 +44,11 @@ abstract class Application
     public function __construct(
         private ?array $settings = null
     ) {
+        // Setup Whoops
+        $run = new Run();
+        $run->pushHandler(new JsonResponseHandler());
+        $run->register();
+
         $this->settings ??= depends('kwai.settings', Settings::class);
 
         //TODO: this is the old CAKEPHP connection ... keep it here until it isn't used anymore.
