@@ -52,4 +52,11 @@ interface UserAccountRepository
      * @return bool
      */
     public function existsWithEmail(EmailAddress $email): bool;
+
+    /**
+     * Factory method for a UserQuery
+     *
+     * @return UserQuery
+     */
+    public function createQuery(): UserQuery;
 }

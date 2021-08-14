@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserQuery;
@@ -20,6 +21,12 @@ use function Latitude\QueryBuilder\field;
  */
 class UserDatabaseQuery extends DatabaseQuery implements UserQuery
 {
+    public function __construct(Connection $db)
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        parent::__construct($db, Tables::USERS()->id);
+    }
+
     /**
      * @inheritDoc
      */

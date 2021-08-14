@@ -30,4 +30,6 @@ interface AccessTokenRepository
      * @throws RepositoryException
      */
     public function update(Entity $token): void;
+
+    public function createQuery(): AccessTokenQuery;
 }

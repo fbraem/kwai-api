@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -17,6 +18,7 @@ use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
+use Kwai\Modules\Users\Repositories\UserQuery;
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
@@ -26,26 +28,24 @@ use function Latitude\QueryBuilder\func;
  */
 class UserAccountDatabaseRepository extends DatabaseRepository implements UserAccountRepository
 {
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+        fn($item) => UserAccountMapper::toDomain($item)
+        );
+    }
+
     /**
      * @inheritDoc
      */
     public function get(EmailAddress $email): Entity
     {
-        $query = new UserDatabaseQuery($this->db);
-        $query->filterByEmail($email);
+        $query = $this->createQuery()->filterByEmail($email);
 
-        try {
-            $accounts = $query->execute();
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
+        $accounts = $this->getAll($query);
         if ($accounts->isNotEmpty()) {
-            $account = $accounts->first();
-            return new Entity(
-                (int) $account->get('id'),
-                UserAccountMapper::toDomain($account)
-            );
+            return $accounts->first();
         }
 
         throw new UserAccountNotFoundException($email);
@@ -56,10 +56,9 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function update(Entity $account): void
     {
-        $data = UserAccountMapper::toPersistence($account->domain());
         $query = $this->db->createQueryFactory()
             ->update((string) Tables::USERS())
-            ->set($data->toArray())
+            ->set(UserAccountMapper::toPersistence($account->domain())->toArray())
             ->where(field('id')->eq($account->id()))
         ;
         try {
@@ -118,5 +117,10 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
             throw new RepositoryException(__METHOD__, $e);
         }
         return $count->get('c') > 0;
+    }
+
+    public function createQuery(): UserQuery
+    {
+        return new UserDatabaseQuery($this->db);
     }
 }
