@@ -140,9 +140,7 @@
       <path value="$PROJECT_DIR$/src/vendor/filp/whoops" />
       <path value="$PROJECT_DIR$/src/vendor/facade/ignition-contracts" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest" />
-      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-coverage" />
       <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin" />
-      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-init" />
       <path value="$PROJECT_DIR$/src/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/src/vendor/brick/math" />
       <path value="$PROJECT_DIR$/src/vendor/ramsey/collection" />
@@ -158,7 +156,6 @@
       <path value="$PROJECT_DIR$/src/vendor/doctrine/annotations" />
       <path value="$PROJECT_DIR$/src/vendor/squizlabs/php_codesniffer" />
       <path value="$PROJECT_DIR$/src/vendor/ezyang/htmlpurifier" />
-      <path value="$PROJECT_DIR$/src/vendor/pestphp/pest-plugin-expectations" />
       <path value="$PROJECT_DIR$/src/vendor/php-cs-fixer/diff" />
       <path value="$PROJECT_DIR$/src/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/stopwatch" />
@@ -169,6 +166,9 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/options-resolver" />
       <path value="$PROJECT_DIR$/src/vendor/friendsofphp/php-cs-fixer" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/src/vendor/league/mime-type-detection" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/cache" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

@@ -64,8 +64,6 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pdepend/pdepend" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin-coverage" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin-init" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/phpdocumentor/reflection-common" />
@@ -150,7 +148,6 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/squizlabs/php_codesniffer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/ezyang/htmlpurifier" />
-      <excludeFolder url="file://$MODULE_DIR$/src/vendor/pestphp/pest-plugin-expectations" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/php-cs-fixer/diff" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/stopwatch" />
@@ -161,6 +158,8 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/options-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/friendsofphp/php-cs-fixer" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/var-dumper" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php81" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/cache" />
       <excludePattern pattern="phpstan.phar" />
     </content>
     <orderEntry type="inheritedJdk" />
