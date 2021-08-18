@@ -160,6 +160,8 @@
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/var-dumper" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/symfony/polyfill-php81" />
       <excludeFolder url="file://$MODULE_DIR$/src/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/src/vendor/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/.vagrant" />
       <excludePattern pattern="phpstan.phar" />
     </content>
     <orderEntry type="inheritedJdk" />
