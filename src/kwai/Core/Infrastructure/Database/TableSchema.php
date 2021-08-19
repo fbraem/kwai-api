@@ -97,4 +97,15 @@ abstract class TableSchema
             fn ($item, $key) => $this->$key = $item
         );
     }
+
+    /**
+     * An empty __set method, to avoid that unknown columns become part
+     * of the schema.
+     *
+     * @param string $arg
+     * @param $value
+     */
+    public function __set(string $arg, $value)
+    {
+    }
 }
