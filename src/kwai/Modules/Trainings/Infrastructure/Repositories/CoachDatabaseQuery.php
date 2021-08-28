@@ -47,10 +47,6 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
                 (string) Tables::PERSONS(),
                 on(Tables::PERSONS()->id, Tables::MEMBERS()->person_id)
             )
-            ->join(
-                (string) Tables::USERS(),
-                on(Tables::USERS()->id, Tables::COACHES()->user_id)
-            )
         ;
     }
 
