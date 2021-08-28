@@ -50,7 +50,7 @@ class TokenMiddleware implements MiddlewareInterface
                     {
                         $extra = $request->getAttribute('kwai.extra');
                         if (isset($extra)) {
-                            return $extra['auth'] ?? false;
+                            return $extra['auth'] ?? $request->hasHeader('Authorization');
                         }
                         //TODO: Remove following code when Slim dependency is
                         // removed
