@@ -119,7 +119,7 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
 
             $member = $member->merge($person);
             $coach = $coach->put('member', $member);
-            $coach->put('creator', $user);
+            $coach->put('user', $user);
             $coaches->put($coach->get('id'), $coach);
         }
 

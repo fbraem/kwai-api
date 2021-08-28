@@ -18,6 +18,11 @@ class CoachTransformer extends Fractal\TransformerAbstract
 {
     private static string $type = 'coaches';
 
+    private function __construct(
+        private ?Entity $user = null
+    ) {
+    }
+
     /**
      * Create a single resource of a Coach entity.
      *
@@ -25,7 +30,7 @@ class CoachTransformer extends Fractal\TransformerAbstract
      * @return Fractal\Resource\Item
      */
     public static function createForItem(
-        Entity $coach,
+        Entity $coach
     ): Fractal\Resource\Item {
         return new Fractal\Resource\Item(
             $coach,
@@ -42,10 +47,11 @@ class CoachTransformer extends Fractal\TransformerAbstract
      */
     public static function createForCollection(
         iterable $coaches,
+        ?Entity $user = null
     ): Fractal\Resource\Collection {
         return new Fractal\Resource\Collection(
             $coaches,
-            new self(),
+            new self($user),
             self::$type
         );
     }
@@ -67,7 +73,8 @@ class CoachTransformer extends Fractal\TransformerAbstract
             'diploma' => $coach->getDiploma() ?? null,
             'active' => $coach->isActive(),
             'remark' => $coach->getRemark(),
-            'created_at' => strval($traceableTime->getCreatedAt())
+            'created_at' => strval($traceableTime->getCreatedAt()),
+            'owner' => $this->user ? $coach->getUser()->getId() === $this->user->id() : false
         ];
         $result['updated_at'] = $traceableTime->isUpdated()
             ? strval($traceableTime->getUpdatedAt())

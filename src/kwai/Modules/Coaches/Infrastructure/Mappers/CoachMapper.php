@@ -30,7 +30,7 @@ class CoachMapper
                 (int) $data->get('member')->get('id'),
                 MemberMapper::toDomain($data->get('member'))
             ),
-            creator: CreatorMapper::toDomain($data->get('creator')),
+            user: CreatorMapper::toDomain($data->get('user')),
             bio: $data->get('description') ?? '',
             diploma: $data->get('diploma', ''),
             active: $data->get('active') === '1',

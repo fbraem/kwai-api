@@ -53,7 +53,8 @@ class BrowseCoachesAction extends Action
             )($response);
         }
 
-        $resource = CoachTransformer::createForCollection($coaches);
+        $user = $request->getAttribute('kwai.user');
+        $resource = CoachTransformer::createForCollection($coaches, $user);
         $meta = [
             'count' => $count
         ];

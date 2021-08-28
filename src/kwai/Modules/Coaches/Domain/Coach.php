@@ -24,7 +24,7 @@ class Coach implements DomainEntity
         private string $bio,
         private string $diploma,
         private bool $active,
-        private Creator $creator,
+        private Creator $user,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null
     ) {
@@ -82,13 +82,13 @@ class Coach implements DomainEntity
     }
 
     /**
-     * Get the user that created the coach
+     * Return the associated user, when the coach is also a known user.
      *
      * @return Creator
      */
-    public function getCreator(): Creator
+    public function getUser(): Creator
     {
-        return $this->creator;
+        return $this->user;
     }
 
     /**
