@@ -30,11 +30,12 @@ class CoachTransformer extends Fractal\TransformerAbstract
      * @return Fractal\Resource\Item
      */
     public static function createForItem(
-        Entity $coach
+        Entity $coach,
+        ?Entity $user = null
     ): Fractal\Resource\Item {
         return new Fractal\Resource\Item(
             $coach,
-            new self(),
+            new self($user),
             self::$type
         );
     }
