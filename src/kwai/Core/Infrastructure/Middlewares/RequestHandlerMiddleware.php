@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -31,7 +30,6 @@ class RequestHandlerMiddleware implements MiddlewareInterface
     {
         $action = $request->getAttribute('kwai.action');
 
-        # TODO: deprecate passing a container to the callable.
         if (is_callable($action)) {
             $callableAction = $action();
         } elseif (class_exists($action)) {
