@@ -60,6 +60,10 @@ class BrowseTrainingsAction extends Action
         $command->start = $parameters['filter']['start'] ?? null;
         $command->end = $parameters['filter']['end'] ?? null;
 
+        if (isset($parameters['filter']['coach'])) {
+            $command->coach = (int) $parameters['filter']['coach'];
+        }
+
         if (! isset($command->year)) {
             $command->limit = (int)($parameters['page']['limit'] ?? 10);
             $command->offset = (int)($parameters['page']['offset'] ?? 0);
