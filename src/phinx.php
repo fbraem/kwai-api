@@ -19,6 +19,7 @@ return [
             __DIR__ . '/kwai/Modules/News/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Pages/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Trainings/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Coaches/Infrastructure/Migrations',
             __DIR__ . '/domain/Content/migrations',
             __DIR__ . '/domain/Person/migrations',
             __DIR__ . '/domain/Game/migrations',
