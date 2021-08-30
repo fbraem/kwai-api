@@ -64,8 +64,10 @@ class BrowseTrainingsAction extends Action
             $command->coach = (int) $parameters['filter']['coach'];
         }
 
-        if (! isset($command->year)) {
+        if (isset($parameters['page']['limit'])) {
             $command->limit = (int)($parameters['page']['limit'] ?? 10);
+        }
+        if (isset($parameters['page']['offset'])) {
             $command->offset = (int)($parameters['page']['offset'] ?? 0);
         }
 
@@ -98,7 +100,7 @@ class BrowseTrainingsAction extends Action
         ];
         if ($command->limit) {
             $meta['limit'] = $command->limit;
-            $meta['offset'] = $command->offset;
+            $meta['offset'] = $command->offset ?? 0;
         }
         $resource->setMeta($meta);
 
