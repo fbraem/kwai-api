@@ -18,7 +18,9 @@ use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
+use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Kwai\Modules\Trainings\Presentation\Transformers\TrainingTransformer;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainings;
@@ -64,6 +66,10 @@ class BrowseTrainingsAction extends Action
             $command->coach = (int) $parameters['filter']['coach'];
         }
 
+        if (isset($parameters['filter']['definition'])) {
+            $command->definition = (int) $parameters['filter']['definition'];
+        }
+
         if (isset($parameters['page']['limit'])) {
             $command->limit = (int)($parameters['page']['limit'] ?? 10);
         }
@@ -74,7 +80,8 @@ class BrowseTrainingsAction extends Action
         try {
             [$count, $trainings] = BrowseTrainings::create(
                 new TrainingDatabaseRepository($this->database),
-                new CoachDatabaseRepository($this->database)
+                new CoachDatabaseRepository($this->database),
+                new DefinitionDatabaseRepository($this->database)
             )($command);
         } catch (QueryException $e) {
             $this->logException($e);
@@ -88,6 +95,8 @@ class BrowseTrainingsAction extends Action
             )($response);
         } catch (CoachNotFoundException) {
             return (new NotFoundResponse('Coach not found'))($response);
+        } catch (DefinitionNotFoundException $e) {
+            return (new NotFoundResponse('Definition not found'))($response);
         }
 
         $resource = TrainingTransformer::createForCollection(

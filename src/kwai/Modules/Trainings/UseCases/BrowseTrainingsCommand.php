@@ -81,4 +81,11 @@ class BrowseTrainingsCommand
      * @var bool
      */
     public bool $active = true;
+
+    /**
+     * Get only trainings for this definition
+     *
+     * @var int|null
+     */
+    public ?int $definition = null;
 }

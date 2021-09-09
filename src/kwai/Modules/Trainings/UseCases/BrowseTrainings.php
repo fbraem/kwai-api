@@ -11,7 +11,9 @@ use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
+use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
+use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 use Kwai\Modules\Trainings\Repositories\TrainingRepository;
 
 /**
@@ -21,25 +23,34 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  */
 class BrowseTrainings
 {
-    private TrainingRepository $repo;
-
-    private CoachRepository $coachRepo;
-
     /**
      * BrowseTrainings constructor.
      *
-     * @param TrainingRepository $repo
-     * @param CoachRepository    $coachRepo
+     * @param TrainingRepository   $repo
+     * @param CoachRepository      $coachRepo
+     * @param DefinitionRepository $defRepo
      */
-    public function __construct(TrainingRepository $repo, CoachRepository $coachRepo)
-    {
-        $this->repo = $repo;
-        $this->coachRepo = $coachRepo;
+    public function __construct(
+        private TrainingRepository $repo,
+        private CoachRepository $coachRepo,
+        private DefinitionRepository $defRepo,
+    ) {
     }
 
-    public static function create(TrainingRepository $repo, CoachRepository $coachRepo)
-    {
-        return new self($repo, $coachRepo);
+    /**
+     * Factory method for this use case.
+     *
+     * @param TrainingRepository   $repo
+     * @param CoachRepository      $coachRepo
+     * @param DefinitionRepository $defRepo
+     * @return BrowseTrainings
+     */
+    public static function create(
+        TrainingRepository $repo,
+        CoachRepository $coachRepo,
+        DefinitionRepository $defRepo
+    ) {
+        return new self($repo, $coachRepo, $defRepo);
     }
 
     /**
@@ -50,6 +61,7 @@ class BrowseTrainings
      * @throws QueryException
      * @throws RepositoryException
      * @throws CoachNotFoundException
+     * @throws DefinitionNotFoundException
      */
     public function __invoke(BrowseTrainingsCommand $command)
     {
@@ -79,6 +91,11 @@ class BrowseTrainings
                 throw new CoachNotFoundException($command->coach);
             }
             $query->filterCoach($coaches->first());
+        }
+
+        if ($command->definition) {
+            $definition = $this->defRepo->getById($command->definition);
+            $query->filterDefinition($definition);
         }
 
         $query->orderByDate();
