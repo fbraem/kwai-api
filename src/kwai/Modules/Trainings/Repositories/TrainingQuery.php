@@ -11,6 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Domain\Team;
 
 /**
@@ -73,6 +74,14 @@ interface TrainingQuery extends Query
      * @return TrainingQuery
      */
     public function filterTeam(Entity $team): self;
+
+    /**
+     * Add a filter to only get trainings for a specific definition.
+     *
+     * @param Entity<Definition> $definition
+     * @return TrainingQuery
+     */
+    public function filterDefinition(Entity $definition): self;
 
     /**
      * When called, the query will also return presences

@@ -325,4 +325,13 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $this->query->orderBy(Tables::TRAININGS()->start_date, 'ASC');
         return $this;
     }
+
+    public function filterDefinition(Entity $definition): TrainingQuery
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            field(Tables::TRAININGS()->definition_id)->eq($definition->id())
+        );
+        return $this;
+    }
 }
