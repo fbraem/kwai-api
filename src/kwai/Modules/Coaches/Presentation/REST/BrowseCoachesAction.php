@@ -40,6 +40,11 @@ class BrowseCoachesAction extends Action
         $repo = new CoachDatabaseRepository($this->database);
         $command = new BrowseCoachesCommand();
 
+        $command->active = $parameters['filter']['active'] ?? false;
+        if (!$command->active) {
+            //TODO: check if this is allowed.
+        }
+
         $parameters = $request->getAttribute('parameters');
         $command->limit = $parameters['page']['limit'] ?? null;
         $command->offset = $parameters['page']['offset'] ?? null;
