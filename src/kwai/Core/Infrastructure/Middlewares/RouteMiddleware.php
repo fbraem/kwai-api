@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
+use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Kwai\Core\Infrastructure\Presentation\RouteException;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -27,6 +29,9 @@ class RouteMiddleware implements MiddlewareInterface
     ) {
     }
 
+    /**
+     * @throws RouteException
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         [$route, $action, $parameters, $extra] = $this->router->matchRequest($request);

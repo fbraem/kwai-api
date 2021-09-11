@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Middlewares;
 
 use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
+use Kwai\Core\Infrastructure\Presentation\RouteException;
 use Neomerx\Cors\Contracts\AnalysisResultInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +17,6 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Throwable;
 
 /**
@@ -38,12 +38,13 @@ class ErrorMiddleware implements MiddlewareInterface
 
     /**
      * @inheritDoc
+     * @noinspection PhpRedundantCatchClauseInspection
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
             return $handler->handle($request);
-        } catch (ResourceNotFoundException $ex) {
+        } catch (RouteException $ex) {
             $response = $this->responseFactory->createResponse(404, $ex->getMessage());
             return $this->checkCorsHeaders($response);
         } catch (Throwable $error) {

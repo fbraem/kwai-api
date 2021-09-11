@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Presentation;
 
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -119,7 +120,8 @@ class Router
         string          $path,
         string|callable $handler,
         array           $extra = [],
-        array           $requirements = [])
+        array           $requirements = []
+    )
     {
         return $this->add(
             $name,
@@ -146,7 +148,8 @@ class Router
         string          $path,
         string|callable $handler,
         array           $extra = [],
-        array           $requirements = [])
+        array           $requirements = []
+    )
     {
         return $this->add(
             $name,
@@ -234,6 +237,7 @@ class Router
      *
      * @param ServerRequestInterface $request
      * @return array
+     * @throws RouteException
      */
     public function matchRequest(ServerRequestInterface $request): array
     {
@@ -242,8 +246,12 @@ class Router
         $context->fromRequest($symfonyRequest);
 
         $matcher = new UrlMatcher($this->routes, $context);
+        try {
+            $parameters = $matcher->matchRequest($symfonyRequest);
+        } catch (Exception $e) {
+            throw new RouteException(message: 'Could not find a route', previous: $e);
+        }
 
-        $parameters = $matcher->matchRequest($symfonyRequest);
         $route = $parameters['_route'] ?? null;
         unset($parameters['_route']);
         $handler = $parameters['_action'] ?? null;
@@ -284,7 +292,7 @@ class Router
                 new Route(
                     path: $path,
                     defaults: [
-                        '_action' => fn() => fn(Request $request, Response $response) => $response
+                        '_action' => fn () => fn (Request $request, Response $response) => $response
                     ],
                     methods: ['OPTIONS'],
                     requirements: $requirements
