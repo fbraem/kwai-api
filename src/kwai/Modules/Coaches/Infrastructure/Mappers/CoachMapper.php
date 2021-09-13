@@ -45,13 +45,13 @@ class CoachMapper
     {
         return collect([
             'active' => $coach->isActive(),
-            'member' => $coach->getMember()->id(),
+            'member_id' => $coach->getMember()->id(),
             'bio' => $coach->getBio(),
             'diploma' => $coach->getDiploma(),
             'remark' => $coach->getRemark(),
             'created_at'=> $coach->getTraceableTime()->getCreatedAt(),
             'updated_at'=> $coach->getTraceableTime()->getUpdatedAt()?->__toString(),
-            'user' => $coach->getUser()->id()
+            'user_id' => $coach->getUser()->id()
         ]);
     }
 }
