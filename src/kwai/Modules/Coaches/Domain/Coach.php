@@ -9,7 +9,6 @@ namespace Kwai\Modules\Coaches\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 
 /**
@@ -19,12 +18,16 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
  */
 class Coach implements DomainEntity
 {
+    /**
+     * @param Entity<Member>     $member
+     * @param Entity<User>|null  $user
+     */
     public function __construct(
         private Entity $member,
         private string $bio,
         private string $diploma,
         private bool $active,
-        private Creator $user,
+        private ?Entity $user = null,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null
     ) {
@@ -82,11 +85,21 @@ class Coach implements DomainEntity
     }
 
     /**
+     * Returns true, when the coach is also a known user.
+     *
+     * @return bool
+     */
+    public function isUser()
+    {
+        return $this->user !== null;
+    }
+
+    /**
      * Return the associated user, when the coach is also a known user.
      *
-     * @return Creator
+     * @return Entity<User>
      */
-    public function getUser(): Creator
+    public function getUser(): Entity
     {
         return $this->user;
     }

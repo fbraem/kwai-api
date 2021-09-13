@@ -75,7 +75,7 @@ class CoachTransformer extends Fractal\TransformerAbstract
             'active' => $coach->isActive(),
             'remark' => $coach->getRemark(),
             'created_at' => strval($traceableTime->getCreatedAt()),
-            'owner' => $this->user ? $coach->getUser()->getId() === $this->user->id() : false
+            'owner' => $this->user ? $coach->getUser()?->id() === $this->user->id() : false
         ];
         $result['updated_at'] = $traceableTime->isUpdated()
             ? strval($traceableTime->getUpdatedAt())

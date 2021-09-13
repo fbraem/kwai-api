@@ -49,4 +49,12 @@ interface CoachRepository
         ?int $limit = null,
         ?int $offset = null
     ): Collection;
+
+    /**
+     * Update a coach.
+     *
+     * @param Entity<Coach> $coach
+     * @throws RepositoryException
+     */
+    public function update(Entity $coach): void;
 }

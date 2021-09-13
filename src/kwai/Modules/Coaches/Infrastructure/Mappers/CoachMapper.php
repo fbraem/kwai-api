@@ -30,11 +30,28 @@ class CoachMapper
                 (int) $data->get('member')->get('id'),
                 MemberMapper::toDomain($data->get('member'))
             ),
-            user: CreatorMapper::toDomain($data->get('user')),
+            user: new Entity(
+                (int) $data->get('user')->get('id'),
+                UserMapper::toDomain($data->get('user'))
+            ),
             bio: $data->get('description') ?? '',
             diploma: $data->get('diploma', ''),
             active: $data->get('active') === '1',
             remark: $data->get('remark', null)
         );
+    }
+
+    public static function toPersistence(Coach $coach): Collection
+    {
+        return collect([
+            'active' => $coach->isActive(),
+            'member' => $coach->getMember()->id(),
+            'bio' => $coach->getBio(),
+            'diploma' => $coach->getDiploma(),
+            'remark' => $coach->getRemark(),
+            'created_at'=> $coach->getTraceableTime()->getCreatedAt(),
+            'updated_at'=> $coach->getTraceableTime()->getUpdatedAt()?->__toString(),
+            'user' => $coach->getUser()->id()
+        ]);
     }
 }
