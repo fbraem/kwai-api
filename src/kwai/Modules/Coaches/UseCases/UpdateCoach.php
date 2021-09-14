@@ -39,8 +39,9 @@ class UpdateCoach
      * @throws RepositoryException
      * @throws CoachNotFoundException
      * @throws UserNotFoundException
+     * @return Entity<Coach>
      */
-    public function __invoke(UpdateCoachCommand $command)
+    public function __invoke(UpdateCoachCommand $command): Entity
     {
         $coach = $this->coachRepo->getById($command->id);
 
