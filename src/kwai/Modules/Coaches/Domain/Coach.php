@@ -24,9 +24,9 @@ class Coach implements DomainEntity
      */
     public function __construct(
         private Entity $member,
-        private string $bio,
-        private string $diploma,
         private bool $active,
+        private ?string $bio = null,
+        private ?string $diploma = null,
         private ?Entity $user = null,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null
@@ -47,9 +47,9 @@ class Coach implements DomainEntity
     /**
      * Get the bio of the coach
      *
-     * @return string
+     * @return string|null
      */
-    public function getBio(): string
+    public function getBio(): ?string
     {
         return $this->bio;
     }
@@ -57,9 +57,9 @@ class Coach implements DomainEntity
     /**
      * Get the diploma of the coach
      *
-     * @return string
+     * @return string|null
      */
-    public function getDiploma(): string
+    public function getDiploma(): ?string
     {
         return $this->diploma;
     }

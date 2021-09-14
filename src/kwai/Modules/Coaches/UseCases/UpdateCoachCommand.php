@@ -13,9 +13,9 @@ namespace Kwai\Modules\Coaches\UseCases;
 class UpdateCoachCommand
 {
     public int $id;
-    public string $bio;
-    public string $diploma;
+    public ?string $bio = null;
+    public ?string $diploma = null;
     public bool $active = false;
     public ?string $remark = null;
-    public ?int $user_id;
+    public ?int $user_id = null;
 }

@@ -36,8 +36,8 @@ class CoachMapper
                 (int) $data->get('user')->get('id'),
                 UserMapper::toDomain($data->get('user'))
             ),
-            bio: $data->get('description') ?? '',
-            diploma: $data->get('diploma', ''),
+            bio: $data->get('description', null),
+            diploma: $data->get('diploma', null),
             active: $data->get('active') === '1',
             remark: $data->get('remark', null)
         );
