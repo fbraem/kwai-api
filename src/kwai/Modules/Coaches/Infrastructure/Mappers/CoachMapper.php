@@ -17,6 +17,8 @@ use Kwai\Modules\Coaches\Domain\Coach;
  */
 class CoachMapper
 {
+    //TODO: rename description column in bio?
+
     /**
      * Maps a table record to the Coach domain entity.
      *
@@ -46,7 +48,7 @@ class CoachMapper
         return collect([
             'active' => $coach->isActive(),
             'member_id' => $coach->getMember()->id(),
-            'bio' => $coach->getBio(),
+            'description' => $coach->getBio(),
             'diploma' => $coach->getDiploma(),
             'remark' => $coach->getRemark(),
             'created_at'=> $coach->getTraceableTime()->getCreatedAt(),

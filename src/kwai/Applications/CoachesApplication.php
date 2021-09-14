@@ -10,6 +10,7 @@ namespace Kwai\Applications;
 use Kwai\Modules\Coaches\Presentation\REST\BrowseCoachesAction;
 use Kwai\Modules\Coaches\Presentation\REST\GetCoachAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
+use Kwai\Modules\Coaches\Presentation\REST\UpdateCoachAction;
 
 /**
  * Class CoachApplication
@@ -30,6 +31,12 @@ class CoachesApplication extends Application
                 'coaches.get',
                 '/coaches/{id}',
                 GetCoachAction::class,
+                [ 'id' => '\d+' ]
+            )
+            ->patch(
+                'coaches.update',
+                '/coaches/{id}',
+                UpdateCoachAction::class,
                 [ 'id' => '\d+' ]
             )
         ;
