@@ -55,10 +55,14 @@ abstract class DatabaseRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return $rows->mapWithKeys(
-            fn($item, $key) => [
-                $key => new Entity((int) $key, ($this->mapFunction)($item))
-            ]
-        );
+        if ($this->mapFunction) {
+            return $rows->mapWithKeys(
+                fn($item, $key) => [
+                    $key => new Entity((int)$key, ($this->mapFunction)($item))
+                ]
+            );
+        }
+
+        return $rows;
     }
 }
