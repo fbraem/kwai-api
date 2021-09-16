@@ -1,7 +1,7 @@
 Coaches
 =======
 
-The following use cases must be implemented for the module use cases:
+The following use cases must be implemented for the module Coaches:
 
 Browse Coaches
 --------------
