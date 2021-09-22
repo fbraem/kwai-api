@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Coaches\UseCases;
 
 use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Coaches\Repositories\CoachRepository;
 
 /**
@@ -42,6 +43,7 @@ class BrowseCoaches
      * @param BrowseCoachesCommand $command
      * @return array
      * @throws QueryException
+     * @throws RepositoryException
      */
     public function __invoke(BrowseCoachesCommand $command)
     {
@@ -52,7 +54,7 @@ class BrowseCoaches
 
         return [
             $query->count(),
-            $coaches = $this->repo->getAll($query)
+            $this->repo->getAll($query)
         ];
     }
 }
