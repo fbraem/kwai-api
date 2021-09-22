@@ -1,0 +1,31 @@
+<?php
+/**
+ * @package Modules
+ * @subpackage Club
+ */
+declare(strict_types=1);
+
+namespace Kwai\Modules\Club\Infrastructure;
+
+use Kwai\Core\Infrastructure\Database\TableAttribute;
+use Kwai\Core\Infrastructure\Database\TableSchema;
+
+/**
+ * Class ContactsTableSchema
+ */
+#[TableAttribute(name: 'contacts')]
+class ContactsTableSchema extends TableSchema
+{
+    public ?string $id;
+    public string $email;
+    public string $tel;
+    public string $mobile;
+    public string $address;
+    public string $postal_code;
+    public string $city;
+    public ?string $county = null;
+    public string $country_id;
+    public ?string $remark;
+    public string $created_at;
+    public ?string $updated_at;
+}
