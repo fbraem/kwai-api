@@ -18,6 +18,10 @@ class CoachTransformer extends Fractal\TransformerAbstract
 {
     private static string $type = 'coaches';
 
+    protected $defaultIncludes = [
+        'member'
+    ];
+
     private function __construct(
         private ?Entity $user = null
     ) {
@@ -57,6 +61,11 @@ class CoachTransformer extends Fractal\TransformerAbstract
         );
     }
 
+    public function includeMember(Entity $coach)
+    {
+        return MemberTransformer::createForItem($coach->getMember());
+    }
+
     /**
      * Transform a Coach entity into an array
      *
@@ -69,7 +78,6 @@ class CoachTransformer extends Fractal\TransformerAbstract
 
         $result = [
             'id' => (string) $coach->id(),
-            'name' => (string) $coach->getMember()->getName(),
             'bio' => $coach->getBio(),
             'diploma' => $coach->getDiploma() ?? null,
             'active' => $coach->isActive(),
