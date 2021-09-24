@@ -28,7 +28,7 @@ abstract class TableSchema
      *
      * @param string|null $alias
      */
-    public function __construct(
+    final public function __construct(
         private ?string $alias = null
     ) {
         $this->alias ??= static::getTableName();
@@ -51,6 +51,27 @@ abstract class TableSchema
     }
 
     /**
+     * Returns the alias of the table (or the table name if no alias was set).
+     *
+     * @return string
+     */
+    public function getAlias(): string
+    {
+        return $this->alias;
+    }
+
+    /**
+     * Returns the column name with the table name.
+     *
+     * @param string $column
+     * @return string
+     */
+    public function getColumn(string $column): string
+    {
+        return $this->alias . '.' . $column;
+    }
+
+    /**
      * Calls field for the given column.
      *
      * @param string $column
@@ -58,7 +79,7 @@ abstract class TableSchema
      */
     public function field(string $column): CriteriaBuilder
     {
-        return field(self::getTableName() . '.' . $column);
+        return field($this->getColumn($column));
     }
 
     /**
@@ -67,16 +88,19 @@ abstract class TableSchema
      * @param string $column
      * @return ExpressionInterface
      */
-    public function alias(string $column): ExpressionInterface
+    public function aliasColumn(string $column): ExpressionInterface
     {
-        return alias(self::getTableName() . '.' . $column, $this->alias . '_' . $column);
+        return alias(
+            $this->getColumn($column),
+            $this->alias . '_' . $column
+        );
     }
 
     public function getAllAliases(): Collection
     {
         $ref = new ReflectionClass($this);
         return collect($ref->getProperties())
-            ->map(fn ($item) => $this->alias($item->name));
+            ->map(fn ($item) => $this->aliasColumn($item->name));
     }
 
     /**
@@ -85,17 +109,22 @@ abstract class TableSchema
      * This only works with records that has used aliases to retrieve data.
      *
      * @param Collection $record
+     * @return static
      */
-    public function map(Collection $record)
+    public function map(Collection $record): static
     {
+        $populatedSchema = new static($this->alias);
+
         $prefix = $this->alias . '_';
         $record->filter(
             fn ($item, $key) => str_starts_with($key, $prefix)
         )->mapWithKeys(
             fn ($item, $key) => [substr($key, strlen($prefix)) => $item]
         )->each(
-            fn ($item, $key) => $this->$key = $item
+            fn ($item, $key) => $populatedSchema->$key = $item
         );
+
+        return $populatedSchema;
     }
 
     /**
