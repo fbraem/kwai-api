@@ -13,6 +13,7 @@ use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Coaches\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Coaches\UseCases\BrowseCoaches;
 use Kwai\Modules\Coaches\UseCases\BrowseCoachesCommand;
@@ -55,6 +56,11 @@ class BrowseCoachesAction extends Action
             $this->logException($e);
             return (
                 new SimpleResponse(500, 'A query exception occurred.')
+            )($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 
