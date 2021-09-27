@@ -27,15 +27,20 @@ class CoachMapper
      */
     public static function toDomain(Collection $data): Coach
     {
+        if ($data->has('user')) {
+            $user = new Entity(
+                (int) $data->get('user')->get('id'),
+                UserMapper::toDomain($data->get('user'))
+            );
+        } else {
+            $user = null;
+        }
         return new Coach(
             member: new Entity(
                 (int) $data->get('member')->get('id'),
                 MemberMapper::toDomain($data->get('member'))
             ),
-            user: new Entity(
-                (int) $data->get('user')->get('id'),
-                UserMapper::toDomain($data->get('user'))
-            ),
+            user: $user,
             bio: $data->get('description', null),
             diploma: $data->get('diploma', null),
             active: $data->get('active') === '1',
@@ -53,7 +58,7 @@ class CoachMapper
             'remark' => $coach->getRemark(),
             'created_at'=> $coach->getTraceableTime()->getCreatedAt(),
             'updated_at'=> $coach->getTraceableTime()->getUpdatedAt()?->__toString(),
-            'user_id' => $coach->getUser()->id()
+            'user_id' => $coach->getUser()?->id()
         ]);
     }
 }
