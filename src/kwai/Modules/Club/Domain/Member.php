@@ -9,6 +9,7 @@ namespace Kwai\Modules\Club\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Core\Domain\ValueObjects\TraceableTime;
 
 /**
  * Class Member
@@ -21,7 +22,19 @@ class Member implements DomainEntity
      * Constructor.
      */
     public function __construct(
-        private Name $name
+        private Name $name,
+        private ?TraceableTime $traceableTime = null
     ) {
+        $this->traceableTime ??= new TraceableTime();
+    }
+
+    public function getName(): Name
+    {
+        return $this->name;
+    }
+
+    public function getTraceableTime(): TraceableTime
+    {
+        return $this->traceableTime;
     }
 }
