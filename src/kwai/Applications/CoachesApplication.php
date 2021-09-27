@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Applications;
 
 use Kwai\Modules\Coaches\Presentation\REST\BrowseCoachesAction;
+use Kwai\Modules\Coaches\Presentation\REST\CreateCoachAction;
 use Kwai\Modules\Coaches\Presentation\REST\GetCoachAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Kwai\Modules\Coaches\Presentation\REST\UpdateCoachAction;
@@ -31,13 +32,26 @@ class CoachesApplication extends Application
                 'coaches.get',
                 '/coaches/{id}',
                 GetCoachAction::class,
-                [ 'id' => '\d+' ]
+                requirements: [ 'id' => '\d+' ]
+            )
+            ->post(
+                'coaches.create',
+                '/coaches',
+                CreateCoachAction::class,
+                [
+                    'auth' => true
+                ]
             )
             ->patch(
                 'coaches.update',
                 '/coaches/{id}',
                 UpdateCoachAction::class,
-                [ 'id' => '\d+' ]
+                [
+                    'auth' => true
+                ],
+                [
+                    'id' => '\d+',
+                ]
             )
         ;
     }

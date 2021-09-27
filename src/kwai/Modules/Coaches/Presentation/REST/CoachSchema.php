@@ -39,8 +39,8 @@ class CoachSchema implements InputSchema
                 'id' => Expect::string()->required(!$this->create),
                 'attributes' => Expect::structure([
                     'active' => Expect::bool(false),
-                    'diploma' => Expect::string(),
-                    'bio' => Expect::string(),
+                    'diploma' => Expect::string()->nullable(),
+                    'bio' => Expect::string()->nullable(),
                     'remark' => Expect::string()->nullable()
                 ]),
                 'relationships' => Expect::structure([
