@@ -57,4 +57,13 @@ interface CoachRepository
      * @throws RepositoryException
      */
     public function update(Entity $coach): void;
+
+    /**
+     * Create a coach.
+     *
+     * @param Coach $coach
+     * @return Entity<Coach>
+     * @throws RepositoryException
+     */
+    public function create(Coach $coach): Entity;
 }

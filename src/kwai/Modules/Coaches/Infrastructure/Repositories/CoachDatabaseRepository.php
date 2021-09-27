@@ -13,6 +13,7 @@ use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Coaches\Domain\Coach;
 use Kwai\Modules\Coaches\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Coaches\Infrastructure\Mappers\CoachMapper;
 use Kwai\Modules\Coaches\Infrastructure\Tables;
@@ -93,5 +94,47 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
         } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function create(Coach $coach): Entity
+    {
+        try {
+            $this->db->begin();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        $data = CoachMapper::toPersistence($coach);
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string)Tables::COACHES())
+            ->columns(... $data->keys())
+            ->values(... $data->values());
+
+        try {
+            $this->db->execute($query);
+            $entity = new Entity(
+                $this->db->lastInsertId(),
+                $coach
+            );
+        } catch (QueryException $e) {
+            try {
+                $this->db->rollback();
+            } catch (DatabaseException $e) {
+                throw new RepositoryException(__METHOD__, $e);
+            }
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        try {
+            $this->db->commit();
+        } catch (DatabaseException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+
+        return $entity;
     }
 }
