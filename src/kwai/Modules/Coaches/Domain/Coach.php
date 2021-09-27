@@ -97,9 +97,9 @@ class Coach implements DomainEntity
     /**
      * Return the associated user, when the coach is also a known user.
      *
-     * @return Entity<User>
+     * @return Entity<User>|null
      */
-    public function getUser(): Entity
+    public function getUser(): ?Entity
     {
         return $this->user;
     }
