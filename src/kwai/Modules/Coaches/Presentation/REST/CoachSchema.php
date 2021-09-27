@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Coaches\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Presentation\InputSchema;
+use Kwai\Modules\Coaches\UseCases\CreateCoachCommand;
 use Kwai\Modules\Coaches\UseCases\UpdateCoachCommand;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -41,7 +42,15 @@ class CoachSchema implements InputSchema
                     'diploma' => Expect::string(),
                     'bio' => Expect::string(),
                     'remark' => Expect::string()->nullable()
-                ])
+                ]),
+                'relationships' => Expect::structure([
+                    'member' => Expect::structure([
+                        'data' => Expect::structure([
+                            'type' => Expect::anyOf('members'),
+                            'id' => Expect::string()->required()
+                        ])
+                    ])
+                ])->required($this->create)
             ])
         ]);
     }
@@ -49,11 +58,15 @@ class CoachSchema implements InputSchema
     /**
      * @inheritDoc
      */
-    public function process($normalized): UpdateCoachCommand
+    public function process($normalized): UpdateCoachCommand|CreateCoachCommand
     {
-        $command = new UpdateCoachCommand();
-        $command->id = (int) $normalized->data->id;
-
+        if ($this->create) {
+            $command = new CreateCoachCommand();
+            $command->member_id = (int) $normalized->data->relationships->member->data->id;
+        } else {
+            $command = new UpdateCoachCommand();
+            $command->id = (int) $normalized->data->id;
+        }
         $command->active = $normalized->data->attributes->active;
         $command->diploma = $normalized->data->attributes->diploma;
         $command->bio = $normalized->data->attributes->bio;
