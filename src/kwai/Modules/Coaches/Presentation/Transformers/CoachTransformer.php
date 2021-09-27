@@ -82,9 +82,13 @@ class CoachTransformer extends Fractal\TransformerAbstract
             'diploma' => $coach->getDiploma() ?? null,
             'active' => $coach->isActive(),
             'remark' => $coach->getRemark(),
-            'created_at' => strval($traceableTime->getCreatedAt()),
-            'owner' => $this->user ? $coach->getUser()?->id() === $this->user->id() : false
+            'created_at' => strval($traceableTime->getCreatedAt())
         ];
+        if ($this->user) {
+            $result['owner'] = $coach->getUser()?->id() === $this->user->id();
+        } else {
+            $result['owner'] = false;
+        }
         $result['updated_at'] = $traceableTime->isUpdated()
             ? strval($traceableTime->getUpdatedAt())
             : null
