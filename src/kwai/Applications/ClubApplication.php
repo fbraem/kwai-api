@@ -9,6 +9,7 @@ namespace Kwai\Applications;
 
 use Kwai\Modules\Club\Presentation\REST\BrowseMembersAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
+use Kwai\Modules\Club\Presentation\REST\BrowseTeamsAction;
 
 /**
  * Class ClubApplication
@@ -27,6 +28,11 @@ class ClubApplication extends Application
                 [
                     'auth' => true
                 ]
+            )
+            ->get(
+                'club.teams.browse',
+                '/club/teams',
+                BrowseTeamsAction::class
             )
         ;
     }
