@@ -87,7 +87,7 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
             )
             ->leftJoin(
                 (string) Tables::SEASONS(),
-                on(Tables::SEASONS()->id, Tables::TRAINING_DEFINITIONS()->team_id)
+                on(Tables::SEASONS()->id, Tables::TRAINING_DEFINITIONS()->season_id)
             )
             ->join(
                 (string) Tables::USERS(),
