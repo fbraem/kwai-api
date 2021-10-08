@@ -9,6 +9,7 @@ namespace Kwai\Modules\Trainings\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -46,6 +47,8 @@ class DefinitionMapper
             ),
             active: $data->get('active') === '1',
             creator: CreatorMapper::toDomain($data->get('creator')),
+            location: $data->has('location') ? new Location($data->get('location')) : null,
+            remark: $data->get('remark'),
             traceableTime: new TraceableTime(
             Timestamp::createFromString($data->get('created_at')),
             $data->has('updated_at')
