@@ -50,7 +50,7 @@ class UpdateCoachAction extends Action
         }
 
         if ($command->id != (int) $args['id']) {
-            return (new SimpleResponse(400, 'id in body and url should be the same.'));
+            return (new SimpleResponse(400, 'id in body and url should be the same.'))($response);
         }
 
         try {
