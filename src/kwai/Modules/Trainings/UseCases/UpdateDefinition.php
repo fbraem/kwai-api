@@ -133,7 +133,7 @@ class UpdateDefinition
                 active: $command->active,
                 team: $currentTeam,
                 season: $currentSeason,
-                location: new Location($command->location),
+                location: $command->location ? new Location($command->location) : null,
                 remark: $command->remark,
                 traceableTime: $traceableTime,
                 creator: $creator,
