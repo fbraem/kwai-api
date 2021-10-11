@@ -60,7 +60,7 @@ class UpdateDefinitionAction extends Action
         }
 
         $user = $request->getAttribute('kwai.user');
-        $creator = new Creator($user->id, $user->getUsername());
+        $creator = new Creator($user->id(), $user->getUsername());
 
         try {
             $definition = UpdateDefinition::create(
