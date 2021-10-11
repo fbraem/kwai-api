@@ -12,7 +12,7 @@ it('execute BrowseMembersAction', function () {
     $request = new ServerRequest('GET', '/club/members');
     $response = new Response();
 
-    $action($request, $response, []);
+    $response = $action($request, $response, []);
 
     expect($response->getStatusCode())->toBe(200);
 });

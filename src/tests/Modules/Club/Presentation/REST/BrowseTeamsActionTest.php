@@ -12,7 +12,7 @@ it('execute BrowseTeamsAction', function () {
     $request = new ServerRequest('GET', '/club/teams');
     $response = new Response();
 
-    $action($request, $response, []);
+    $response = $action($request, $response, []);
 
     expect($response->getStatusCode())->toBe(200);
 });
