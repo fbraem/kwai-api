@@ -88,7 +88,7 @@ class CreateDefinition
             active: $command->active,
             team: $team,
             season: $season,
-            location: new Location($command->location),
+            location: $command->location ? new Location($command->location) : null,
             remark: $command->remark,
             creator: $creator,
         );
