@@ -73,7 +73,6 @@ class UpdateDefinitionAction extends Action
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-
         } catch (DefinitionNotFoundException) {
             return (new NotFoundResponse('Definition not found'))($response);
         } catch (SeasonNotFoundException) {
