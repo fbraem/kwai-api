@@ -17,6 +17,8 @@ use Nette\Schema\Expect;
  */
 class DefinitionSchema implements \Kwai\Core\Infrastructure\Presentation\InputSchema
 {
+    private const TIME_PATTERN = '\d{2}:\d{2}';
+
     public function __construct(
         private bool $create = false
     ) {
@@ -35,8 +37,8 @@ class DefinitionSchema implements \Kwai\Core\Infrastructure\Presentation\InputSc
                     'name' => Expect::string()->required(),
                     'description' => Expect::string()->required(),
                     'weekday' => Expect::int()->required(),
-                    'start_time' => Expect::string()->required(),
-                    'end_time' => Expect::string()->required(),
+                    'start_time' => Expect::string()->required()->pattern(self::TIME_PATTERN),
+                    'end_time' => Expect::string()->required()->pattern(self::TIME_PATTERN),
                     'time_zone' => Expect::string()->required(),
                     'active' => Expect::bool(false),
                     'location' => Expect::string()->nullable(),
