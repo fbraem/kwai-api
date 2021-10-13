@@ -9,6 +9,7 @@ namespace Kwai\Applications;
 
 use Kwai\Modules\Trainings\Presentation\REST\BrowseDefinitionsAction;
 use Kwai\Modules\Trainings\Presentation\REST\BrowseTrainingsAction;
+use Kwai\Modules\Trainings\Presentation\REST\CreateDefinitionAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetDefinitionAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingPresencesAction;
@@ -63,6 +64,14 @@ class TrainingsApplication extends Application
                 GetDefinitionAction::class,
                 requirements: [
                     'id' => '\d+'
+                ]
+            )
+            ->post(
+                'training.definitions.create',
+                '/definitions',
+                CreateDefinitionAction::class,
+                [
+                    'auth' => true
                 ]
             )
             ->patch(
