@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Modules\Users\Domain\User;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -51,9 +56,24 @@ class Context
         return self::$db;
     }
 
+    private static function withUser(): Entity
+    {
+        return new Entity(
+            1,
+            new User(
+                new UniqueId(),
+                new EmailAddress('jigoro.kano@kwai.com'),
+                new Name('Jigoro', 'Kano')
+            )
+        );
+    }
+
     public static function createContext(): object
     {
-        return (object)['db' => self::withDatabase()];
+        return (object)[
+            'db' => self::withDatabase(),
+            'user' => self::withUser()
+        ];
     }
 
     public static function hasDatabase(): bool
