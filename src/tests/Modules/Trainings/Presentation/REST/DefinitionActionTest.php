@@ -29,7 +29,7 @@ it('can create a definition', function () use ($context, $data) {
 
     $request = new ServerRequest(
         'PATCH',
-        '/training/definitions/',
+        '/trainings/definitions/',
         []
     );
     $request = $request
@@ -58,7 +58,7 @@ it('can update a definition', function ($id) use ($context, $data) {
 
     $request = new ServerRequest(
         'PATCH',
-        '/training/definitions/',
+        '/trainings/definitions/',
         []
     );
     $request = $request
