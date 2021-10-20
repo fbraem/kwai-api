@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Presentation\InputSchema;
 use Kwai\Modules\Trainings\UseCases\CreateDefinitionCommand;
 use Kwai\Modules\Trainings\UseCases\UpdateDefinitionCommand;
 use Nette\Schema\Elements\Structure;
@@ -15,7 +16,7 @@ use Nette\Schema\Expect;
 /**
  * Class DefinitionSchema
  */
-class DefinitionSchema implements \Kwai\Core\Infrastructure\Presentation\InputSchema
+class DefinitionSchema implements InputSchema
 {
     private const TIME_PATTERN = '\d{2}:\d{2}';
 
