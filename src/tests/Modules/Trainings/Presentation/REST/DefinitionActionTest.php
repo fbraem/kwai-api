@@ -2,13 +2,8 @@
 
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\ValueObjects\Name;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Modules\Trainings\Presentation\REST\CreateDefinitionAction;
 use Kwai\Modules\Trainings\Presentation\REST\UpdateDefinitionAction;
-use Kwai\Modules\Users\Domain\User;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Tests\Context;
@@ -28,16 +23,8 @@ $data = [
         ]
     ]
 ];
-$user = new Entity(
-    1,
-    new User(
-        new UniqueId(),
-        new EmailAddress('jigoro.kano@kwai.com'),
-        new Name('Jigoro', 'Kano')
-    )
-);
 
-it('can create a definition', function () use ($context, $data, $user) {
+it('can create a definition', function () use ($context, $data) {
     $action = new CreateDefinitionAction(database: $context->db);
 
     $request = new ServerRequest(
@@ -49,7 +36,7 @@ it('can create a definition', function () use ($context, $data, $user) {
         ->withParsedBody($data)
         ->withAttribute(
             'kwai.user',
-            $user
+            $context->user
         )
     ;
     $response = new Response();
@@ -63,7 +50,7 @@ it('can create a definition', function () use ($context, $data, $user) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can update a definition', function ($id) use ($context, $data, $user) {
+it('can update a definition', function ($id) use ($context, $data) {
     $action = new UpdateDefinitionAction(database: $context->db);
 
     $data['data']['id'] = $id;
@@ -78,7 +65,7 @@ it('can update a definition', function ($id) use ($context, $data, $user) {
         ->withParsedBody($data)
         ->withAttribute(
             'kwai.user',
-            $user
+            $context->user
         )
     ;
     $response = new Response();
