@@ -11,6 +11,9 @@ use Kwai\Modules\Trainings\Presentation\REST\UpdateDefinitionAction;
 use Kwai\Modules\Users\Domain\User;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
+use Tests\Context;
+
+$context = Context::createContext();
 
 $data = [
     'data' => [
@@ -34,8 +37,8 @@ $user = new Entity(
     )
 );
 
-it('can create a definition', function () use ($data, $user) {
-    $action = new CreateDefinitionAction();
+it('can create a definition', function () use ($context, $data, $user) {
+    $action = new CreateDefinitionAction(database: $context->db);
 
     $request = new ServerRequest(
         'PATCH',
@@ -56,10 +59,12 @@ it('can create a definition', function () use ($data, $user) {
 
     $result = json_decode((string) $response->getBody(), true);
     return $result['data']['id'];
-});
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
 
-it('can update a definition', function ($id) use ($data, $user) {
-    $action = new UpdateDefinitionAction();
+it('can update a definition', function ($id) use ($context, $data, $user) {
+    $action = new UpdateDefinitionAction(database: $context->db);
 
     $data['data']['id'] = $id;
     $data['data']['attributes']['description'] = 'Updated with test "can update a definition"';
@@ -80,4 +85,7 @@ it('can update a definition', function ($id) use ($data, $user) {
 
     $response = $action($request, $response, ['id' => $id]);
     expect($response->getStatusCode())->toBe(200);
-})->depends('it can create a definition');
+})
+    ->depends('it can create a definition')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
