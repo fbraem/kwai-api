@@ -88,36 +88,29 @@ class UpdateTraining
         $training = $this->trainingRepo->getById($command->id);
 
         // Handle definition
-        $definition = isset($command->definition_id)
-            ? $this->definitionRepository->getById($command->definition_id)
+        $definition = isset($command->definition)
+            ? $this->definitionRepository->getById($command->definition)
             : null
         ;
 
         // Handle coaches
-        $trainingCoaches = collect($command->coaches);
-        if ($trainingCoaches->isNotEmpty()) {
-            $coachIds = $trainingCoaches->map(fn($item) => $item->id);
-            $coaches = $this->coachRepository->getById(...$coachIds);
-            $diff = $coachIds->diff($coaches->keys());
-            if ($diff->count() > 0) {
-                // For now throw for the first coach which is not found
-                throw new CoachNotFoundException($diff->first());
-            }
-            $trainingCoaches = $trainingCoaches->transform(
-                fn($coach) =>
-                new TrainingCoach(
-                    coach: $coaches->get($coach->id),
-                    present: $coach->present,
-                    head: $coach->head,
-                    traceableTime: TraceableTime::createFrom(
-                        $training->getCoaches()->get($coach->id)?->getTraceableTime()
-                    ),
-                    creator: $creator,
-                    payed: $coach->payed,
-                    remark: $coach->remark
-                )
-            );
-        }
+        $coaches = count($command->coaches) > 0
+            ? $this->coachRepository->getById(...$command->coaches)
+            : new Collection();
+        $trainingCoaches = $coaches->transform(
+            fn ($coach) =>
+            new TrainingCoach(
+                coach: $coaches->get($coach->id),
+                present: $coach->present,
+                head: $coach->head,
+                traceableTime: TraceableTime::createFrom(
+                    $training->getCoaches()->get($coach->id)?->getTraceableTime()
+                ),
+                creator: $creator,
+                payed: $coach->payed,
+                remark: $coach->remark
+            )
+        );
 
         // Handle teams
         $teams = count($command->teams) > 0
