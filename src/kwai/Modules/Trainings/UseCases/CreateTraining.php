@@ -80,8 +80,8 @@ class CreateTraining
      */
     public function __invoke(CreateTrainingCommand $command, Creator $creator): Entity
     {
-        $definition = isset($command->definition_id)
-            ? $this->definitionRepository->getById($command->definition_id)
+        $definition = isset($command->definition)
+            ? $this->definitionRepository->getById($command->definition)
             : null
         ;
 
