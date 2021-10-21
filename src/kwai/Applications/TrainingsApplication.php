@@ -10,6 +10,7 @@ namespace Kwai\Applications;
 use Kwai\Modules\Trainings\Presentation\REST\BrowseDefinitionsAction;
 use Kwai\Modules\Trainings\Presentation\REST\BrowseTrainingsAction;
 use Kwai\Modules\Trainings\Presentation\REST\CreateDefinitionAction;
+use Kwai\Modules\Trainings\Presentation\REST\CreateTrainingAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetDefinitionAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingPresencesAction;
@@ -32,6 +33,14 @@ class TrainingsApplication extends Application
                 'trainings.browse',
                 '/trainings',
                 BrowseTrainingsAction::class
+            )
+            ->post(
+                'trainings.create',
+                '/trainings',
+                CreateTrainingAction::class,
+                [
+                    'auth' => true
+                ]
             )
             ->get(
                 'trainings.get',
