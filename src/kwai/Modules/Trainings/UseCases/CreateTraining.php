@@ -20,6 +20,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 use Kwai\Modules\Trainings\Repositories\TeamRepository;
@@ -94,6 +95,13 @@ class CreateTraining
             ? $this->coachRepository->getById(... $command->coaches)
             : new Collection()
         ;
+        $trainingCoaches = $coaches->transform(
+            fn ($coach) =>
+            new TrainingCoach(
+                coach: $coaches->get($coach->id()),
+                creator: $creator
+            )
+        );
 
         $contents = new Collection();
         foreach ($command->contents as $text) {
@@ -118,7 +126,7 @@ class CreateTraining
             text: $contents,
             traceableTime: new TraceableTime(),
             definition: $definition,
-            coaches: $coaches,
+            coaches: $trainingCoaches,
             teams: $teams,
             remark: $command->remark,
         ));
