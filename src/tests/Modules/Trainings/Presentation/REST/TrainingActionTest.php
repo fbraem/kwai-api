@@ -42,7 +42,15 @@ $data = <<<JSON
                         "id": "2"
                     }
                 ]
-            }
+            },
+            "coaches": {
+                "data": [
+                    {
+                        "type": "coaches",
+                        "id": "1"
+                    }
+                ]
+            }    
         }
     }
 }
