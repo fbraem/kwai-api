@@ -32,16 +32,14 @@ class TrainingCoach
      */
     public function __construct(
         private Entity $coach,
-        private bool $head,
-        private bool $present,
-        private bool $payed,
         private Creator $creator,
+        private bool $head = false,
+        private bool $present = false,
+        private bool $payed = false,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null
     ) {
-        if ($this->traceableTime == null) {
-            $this->traceableTime = new TraceableTime();
-        }
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
