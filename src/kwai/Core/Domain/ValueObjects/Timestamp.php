@@ -16,17 +16,16 @@ final class Timestamp
 {
     const TIMEZONE = 'UTC';
 
-    private CarbonImmutable $datetime;
-
     /**
      * Private constructor. Use one of the create methods to create an instance
      * of this class.
      *
      * @param CarbonImmutable $datetime
      */
-    private function __construct(CarbonImmutable $datetime)
-    {
-        $this->datetime = $datetime;
+    private function __construct(
+        private CarbonImmutable $datetime
+    ) {
+        $this->datetime = $this->datetime->setTimezone(self::TIMEZONE);
     }
 
     /**

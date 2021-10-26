@@ -27,6 +27,7 @@ it('can construct a training', function () use ($creator) {
         event: new Event(
             Timestamp::createNow(),
             Timestamp::createNow(),
+            'UTC',
             new Location('Tokyo'),
         ),
         remark: 'Test Training'
@@ -44,6 +45,7 @@ it('can appoint/release a coach to a training', function () use ($creator) {
         event: new Event(
             Timestamp::createNow(),
             Timestamp::createNow(),
+            'UTC',
             new Location('Tokyo'),
         )
     );
@@ -80,6 +82,7 @@ it('can manage a presence', function () use ($creator) {
         event: new Event(
             Timestamp::createNow(),
             Timestamp::createNow(),
+            'UTC',
             new Location('Tokyo'),
         ),
     );

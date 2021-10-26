@@ -20,8 +20,9 @@ class EventMapper
     public static function toDomain(Collection $data) : Event
     {
         return new Event(
-            startDate: Timestamp::createFromString($data['start_date'], $data['time_zone']),
-            endDate: Timestamp::createFromString($data['end_date'], $data['time_zone']),
+            startDate: Timestamp::createFromString($data['start_date']),
+            endDate: Timestamp::createFromString($data['end_date']),
+            timezone: $data['time_zone'],
             location: $data->has('location') ? new Location($data->get('location')) : null,
             active: $data->get('active', '1') === '1',
             cancelled: $data->get('cancelled', '0') === '1'
@@ -31,9 +32,9 @@ class EventMapper
     public static function toPersistence(Event $event) : Collection
     {
         return collect([
-            'start_date' => (string) $event->getStartDate()->toUTC(),
-            'end_date' => (string) $event->getEndDate()->toUTC(),
-            'time_zone' => $event->getStartDate()->getTimezone(),
+            'start_date' => (string) $event->getStartDate(),
+            'end_date' => (string) $event->getEndDate(),
+            'time_zone' => $event->getTimezone(),
             'active' => $event->isActive(),
             'cancelled' => $event->isCancelled(),
             'location' => $event->getLocation()?->__toString(),

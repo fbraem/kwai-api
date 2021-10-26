@@ -19,6 +19,7 @@ class Event
      *
      * @param Timestamp       $startDate
      * @param Timestamp       $endDate
+     * @param string          $timezone
      * @param Location|null   $location
      * @param bool            $active
      * @param bool            $cancelled
@@ -26,15 +27,11 @@ class Event
     public function __construct(
         private Timestamp $startDate,
         private Timestamp $endDate,
+        private string $timezone,
         private ?Location $location = null,
         private bool $active = true,
         private bool $cancelled = false,
     ) {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->location = $location;
-        $this->active = $active;
-        $this->cancelled = $cancelled;
     }
 
     /**
@@ -44,6 +41,14 @@ class Event
     public function getStartDate(): Timestamp
     {
         return $this->startDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimezone(): string
+    {
+        return $this->timezone;
     }
 
     /**

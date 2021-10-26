@@ -117,8 +117,9 @@ class CreateTraining
 
         return $this->trainingRepo->create(new Training(
             event: new Event(
-                startDate: Timestamp::createFromString($command->start_date, $command->timezone),
-                endDate: Timestamp::createFromString($command->end_date, $command->timezone),
+                startDate: Timestamp::createFromString($command->start_date),
+                endDate: Timestamp::createFromString($command->end_date),
+                timezone: $command->timezone,
                 location: new Location($command->location),
                 active: $command->active,
                 cancelled: $command->cancelled

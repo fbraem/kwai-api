@@ -30,19 +30,16 @@ class StoryMapper
                 (int) $data->get('promotion', 0),
                 $data->has('promotion_end_date')
                     ? Timestamp::createFromString(
-                        $data->get('promotion_end_date'),
-                        $data->get('timezone')
+                        $data->get('promotion_end_date')
                     )
                     : null
             ),
             publishTime: Timestamp::createFromString(
-                $data->get('publish_date'),
-                $data->get('timezone')
+                $data->get('publish_date')
             ),
             endDate: $data->has('end_date')
                 ? Timestamp::createFromString(
-                    $data->get('end_date'),
-                    $data->get('timezone')
+                    $data->get('end_date')
                 )
                 : null,
             remark: $data->get('remark'),

@@ -148,7 +148,7 @@ class TrainingTransformer extends Fractal\TransformerAbstract
             'event' => [
                 'start_date' => strval($event->getStartDate()),
                 'end_date' => strval($event->getEndDate()),
-                'time_zone' => $event->getStartDate()->getTimezone(),
+                'timezone' => $event->getTimezone(),
                 'location' => strval($event->getLocation()),
                 'cancelled' => $event->isCancelled(),
                 'active' => $event->isActive(),

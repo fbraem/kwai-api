@@ -139,8 +139,9 @@ class UpdateTraining
             $command->id,
             new Training(
                 event: new Event(
-                    startDate: Timestamp::createFromString($command->start_date, $command->timezone),
-                    endDate: Timestamp::createFromString($command->end_date, $command->timezone),
+                    startDate: Timestamp::createFromString($command->start_date),
+                    endDate: Timestamp::createFromString($command->end_date),
+                    timezone: $command->timezone,
                     location: $command->location ? new Location($command->location) : null,
                     active: $command->active,
                     cancelled: $command->cancelled

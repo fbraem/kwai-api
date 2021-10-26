@@ -45,7 +45,7 @@ class TrainingSchema implements InputSchema
                         'location' => Expect::string(),
                         'start_date' => Expect::string()->required(),
                         'end_date' => Expect::string()->required(),
-                        'time_zone' => Expect::string()->required(),
+                        'timezone' => Expect::string()->required(),
                         'cancelled' => Expect::bool()->default(false)
                     ]),
                     'remark' => Expect::string()->nullable()
@@ -90,7 +90,7 @@ class TrainingSchema implements InputSchema
 
         $command->start_date = $normalized->data->attributes->event->start_date;
         $command->end_date = $normalized->data->attributes->event->end_date;
-        $command->timezone = $normalized->data->attributes->event->time_zone;
+        $command->timezone = $normalized->data->attributes->event->timezone;
         $command->location = $normalized->data->attributes->event->location;
         $command->cancelled = $normalized->data->attributes->event->cancelled;
 
