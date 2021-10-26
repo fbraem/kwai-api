@@ -31,8 +31,8 @@ class EventMapper
     public static function toPersistence(Event $event) : Collection
     {
         return collect([
-            'start_date' => (string) $event->getStartDate(),
-            'end_date' => (string) $event->getEndDate(),
+            'start_date' => (string) $event->getStartDate()->toUTC(),
+            'end_date' => (string) $event->getEndDate()->toUTC(),
             'time_zone' => $event->getStartDate()->getTimezone(),
             'active' => $event->isActive(),
             'cancelled' => $event->isCancelled(),

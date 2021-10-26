@@ -71,10 +71,10 @@ class StoryMapper
         return collect([
             'enabled' => $story->isEnabled(),
             'promotion' => $story->getPromotion()->getPriority(),
-            'promotion_end_date' => $story->getPromotion()->getEndDate()?->__toString(),
-            'publish_date'=> $story->getPublishTime(),
+            'promotion_end_date' => $story->getPromotion()->getEndDate()?->toUTC()->__toString(),
+            'publish_date'=> $story->getPublishTime()->toUTC(),
             'timezone' => $story->getPublishTime()->getTimezone(),
-            'end_date' => $story->getEndDate()?->__toString(),
+            'end_date' => $story->getEndDate()?->toUTC()->__toString(),
             'application_id' => $story->getApplication()->id(),
             'remark' => $story->getRemark(),
             'created_at'=> $story->getTraceableTime()->getCreatedAt(),
