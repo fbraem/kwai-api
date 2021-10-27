@@ -78,16 +78,6 @@ final class Timestamp
     }
 
     /**
-     * Converts the date to UTC
-     *
-     * @return $this
-     */
-    public function toUTC(): self
-    {
-        return new self($this->datetime->setTimezone('UTC'));
-    }
-
-    /**
      * Returns a string representation of the timestamp in the default format.
      *
      * @return string A formatted timestamp
