@@ -12,6 +12,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
@@ -92,8 +93,8 @@ class CreateStory
         $promotion = new Promotion(
             $command->promotion,
             $command->promotion_end_date
-                ? Timestamp::createFromString(
-                    $command->promotion_end_date,
+                ? new LocalTimestamp(
+                    Timestamp::createFromString($command->promotion_end_date),
                     $command->timezone
                 ) : null
         );
@@ -101,13 +102,13 @@ class CreateStory
         $story = $this->storyRepo->create(new Story(
             enabled: $command->enabled,
             promotion: $promotion,
-            publishTime: Timestamp::createFromString(
-                $command->publish_date,
+            publishTime: new LocalTimestamp(
+                Timestamp::createFromString($command->publish_date),
                 $command->timezone
             ),
             endDate: $command->end_date
-                ? Timestamp::createFromString(
-                    $command->end_date,
+                ? new LocalTimestamp(
+                    Timestamp::createFromString($command->end_date),
                     $command->timezone
                 ) : null,
             remark: $command->remark,

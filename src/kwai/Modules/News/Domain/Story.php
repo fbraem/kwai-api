@@ -10,6 +10,7 @@ namespace Kwai\Modules\News\Domain;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -23,24 +24,24 @@ class Story implements DomainEntity
     /**
      * Story constructor.
      *
-     * @param Timestamp          $publishTime
-     * @param Entity             $application
-     * @param Collection         $contents
-     * @param Promotion|null     $promotion
-     * @param Collection|null    $images
-     * @param bool               $enabled
-     * @param Timestamp|null     $endDate
-     * @param string|null        $remark
-     * @param TraceableTime|null $traceableTime
+     * @param LocalTimestamp      $publishTime
+     * @param Entity              $application
+     * @param Collection          $contents
+     * @param Promotion|null      $promotion
+     * @param Collection|null     $images
+     * @param bool                $enabled
+     * @param LocalTimestamp|null $endDate
+     * @param string|null         $remark
+     * @param TraceableTime|null  $traceableTime
      */
     public function __construct(
-        private Timestamp $publishTime,
+        private LocalTimestamp $publishTime,
         private Entity $application,
         private Collection $contents,
         private ?Promotion $promotion = null,
         private ?Collection $images = null,
         private bool $enabled = false,
-        private ?Timestamp $endDate = null,
+        private ?LocalTimestamp $endDate = null,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null,
     ) {
@@ -88,7 +89,7 @@ class Story implements DomainEntity
     /**
      * Return the end date
      */
-    public function getEndDate(): ?Timestamp
+    public function getEndDate(): ?LocalTimestamp
     {
         return $this->endDate;
     }
@@ -132,7 +133,7 @@ class Story implements DomainEntity
     /**
      * Return the publish time
      */
-    public function getPublishTime(): Timestamp
+    public function getPublishTime(): LocalTimestamp
     {
         return $this->publishTime;
     }

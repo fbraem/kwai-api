@@ -93,10 +93,9 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     public function filterActive(Timestamp $timestamp): UserInvitationQuery
     {
-        $datetime = (string) $timestamp->toUTC();
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USER_INVITATIONS()->expired_at)->gt($datetime)
+            field(Tables::USER_INVITATIONS()->expired_at)->gt((string) $timestamp)
         );
         return $this;
     }

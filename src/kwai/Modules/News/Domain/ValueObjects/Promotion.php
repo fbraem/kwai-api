@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Domain\ValueObjects;
 
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
 /**
@@ -21,11 +22,11 @@ class Promotion
      * Promotion constructor.
      *
      * @param int            $priority
-     * @param Timestamp|null $endDate
+     * @param LocalTimestamp|null $endDate
      */
     public function __construct(
         private int $priority = 0,
-        private ?Timestamp $endDate = null
+        private ?LocalTimestamp $endDate = null
     ) {
     }
 
@@ -40,7 +41,7 @@ class Promotion
     /**
      * Returns the end date of the promotion
      */
-    public function getEndDate(): ?Timestamp
+    public function getEndDate(): ?LocalTimestamp
     {
         return $this->endDate;
     }
@@ -62,7 +63,7 @@ class Promotion
             if ($this->endDate == null) {
                 return true;
             }
-            return !$this->endDate->isPast();
+            return !$this->endDate->getTimestamp()->isPast();
         }
         return false;
     }

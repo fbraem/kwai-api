@@ -88,12 +88,12 @@ class StoryTransformer extends Fractal\TransformerAbstract
             'created_at' => (string) $traceableTime->getCreatedAt(),
             'updated_at' => $traceableTime->isUpdated()
                 ? (string) $traceableTime->getUpdatedAt() : null,
-            'publish_date' => (string) $story->getPublishTime(),
-            'end_date' => $story->getEndDate()?->__toString(),
+            'publish_date' => (string) $story->getPublishTime()->getTimestamp(),
+            'end_date' => $story->getEndDate()?->getTimestamp()->__toString(),
             'timezone' => $story->getPublishTime()->getTimezone(),
             'promotion' => $story->getPromotion()->getPriority(),
             'promotion_end_date' =>
-                $story->getPromotion()->getEndDate()?->__toString(),
+                $story->getPromotion()->getEndDate()?->getTimestamp()->__toString(),
             'contents' => [],
             'images' => $story->getImages()
         ];
