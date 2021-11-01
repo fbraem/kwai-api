@@ -70,6 +70,10 @@ class BrowseTrainingsAction extends Action
             $command->definition = (int) $parameters['filter']['definition'];
         }
 
+        if (isset($parameters['filter']['active'])) {
+            $command->active = (bool) $parameters['filter']['active'];
+        }
+
         if (isset($parameters['page']['limit'])) {
             $command->limit = (int)($parameters['page']['limit'] ?? 10);
         }
