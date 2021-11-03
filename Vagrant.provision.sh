@@ -117,4 +117,4 @@ sudo a2ensite phpmyadmin
 service apache2 restart
 
 # Run the database migration
-/vagrant/src/vendor/bin/phinx migrate -c /vagrant/src/phinx.php
+/vagrant/vendor/bin/phinx migrate -c /vagrant/src/phinx.php
