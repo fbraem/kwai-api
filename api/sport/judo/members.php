@@ -1,5 +1,5 @@
 <?php
-require '../../../src/vendor/autoload.php';
+require '../../../vendor/autoload.php';
 
 use Judo\REST\Members\Actions\BrowseAction;
 use Judo\REST\Members\Actions\ReadAction;

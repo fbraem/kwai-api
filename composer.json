@@ -59,23 +59,23 @@
     },
     "autoload": {
         "psr-4": {
-            "Core\\": "./core",
-            "Domain\\": "./domain",
-            "REST\\": "./rest",
-            "Kwai\\": "./kwai",
-            "Judo\\Domain\\": "./sport/judo/domain",
-            "Judo\\REST\\": "./sport/judo/rest"
+            "Core\\": "src/core",
+            "Domain\\": "src/domain",
+            "REST\\": "src/rest",
+            "Kwai\\": "src/kwai",
+            "Judo\\Domain\\": "src/sport/judo/domain",
+            "Judo\\REST\\": "src/sport/judo/rest"
         },
         "files": [
-            "kwai/Core/Infrastructure/Presentation/app.php",
-            "kwai/macros.php",
-            "kwai/Core/Infrastructure/Dependencies/functions.php"
+            "src/kwai/Core/Infrastructure/Presentation/app.php",
+            "src/kwai/macros.php",
+            "src/kwai/Core/Infrastructure/Dependencies/functions.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "./tests",
-            "App\\PHPStan\\": "./phpstan"
+            "Tests\\": "src/tests",
+            "App\\PHPStan\\": "src/phpstan"
         }
     }
 }

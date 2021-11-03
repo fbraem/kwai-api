@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require '../src/vendor/autoload.php';
+require '../vendor/autoload.php';
 
 use Kwai\Core\Infrastructure\Presentation\PreflightAction;
 use REST\Teams\Actions\TeamCategoryBrowseAction;

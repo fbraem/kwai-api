@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use Kwai\Applications\TrainingsApplication;
 
-require '../src/vendor/autoload.php';
+require '../vendor/autoload.php';
 
 $app = new TrainingsApplication();
 $app->run();
