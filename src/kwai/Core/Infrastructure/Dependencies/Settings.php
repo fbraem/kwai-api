@@ -14,7 +14,7 @@ class Settings implements Dependency
 {
     public function create()
     {
-        $config = include __DIR__ . '/../../../../../api/config.php';
+        $config = include __DIR__ . '/../../../../../config.php';
         $config['displayErrorDetails'] = true;
         $config['determineRouteBeforeAppMiddleware'] = true;
         $config['outputBuffering'] = 'append';
