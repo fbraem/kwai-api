@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add user rules
  */
-class UserCreateRulesMigration extends \Domain\CreateRulesMigration
+class UserCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_USER = 'users';
     const SUBJECT_RULE = 'rules';

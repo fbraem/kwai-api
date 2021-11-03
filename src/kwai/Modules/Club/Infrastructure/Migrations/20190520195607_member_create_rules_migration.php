@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add member rules
  */
-class MemberCreateRulesMigration extends \Domain\CreateRulesMigration
+class MemberCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'members';
 

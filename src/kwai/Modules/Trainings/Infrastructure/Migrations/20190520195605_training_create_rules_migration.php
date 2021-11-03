@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add training rules
  */
-class TrainingCreateRulesMigration extends \Domain\CreateRulesMigration
+class TrainingCreateRulesMigration extends CreateRulesMigration
 {
     const TRAINING_SUBJECT_NAME = 'trainings';
     const COACH_SUBJECT_NAME = 'coaches';

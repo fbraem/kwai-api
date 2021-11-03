@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add team rules
  */
-class TeamCreateRulesMigration extends \Domain\CreateRulesMigration
+class TeamCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'teams';
 

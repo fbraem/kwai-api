@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add person rules
  */
-class PersonCreateRulesMigration extends \Domain\CreateRulesMigration
+class PersonCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'persons';
 

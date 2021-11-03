@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add season rules
  */
-class GameSeasonCreateRulesMigration extends \Domain\CreateRulesMigration
+class GameSeasonCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'seasons';
 

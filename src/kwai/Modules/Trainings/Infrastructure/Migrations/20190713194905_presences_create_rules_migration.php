@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add training rules
  */
-class PresencesCreateRulesMigration extends \Domain\CreateRulesMigration
+class PresencesCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'presences';
 

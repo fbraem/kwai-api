@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add event rules
  */
-class EventCreateRulesMigration extends \Domain\CreateRulesMigration
+class EventCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'events';
 

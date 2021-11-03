@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add category rules
  */
-class CategoryCreateRulesMigration extends \Domain\CreateRulesMigration
+class CategoryCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'categories';
 
