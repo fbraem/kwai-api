@@ -50,16 +50,6 @@ abstract class Application
         $run->register();
 
         $this->settings ??= depends('kwai.settings', Settings::class);
-
-        //TODO: this is the old CAKEPHP connection ... keep it here until it isn't used anymore.
-        if (ConnectionManager::getConfig('default') == null) {
-            $dbConfig = $this->settings['database'];
-            $dbDefault = $this->settings['default_database'];
-            $dsnConfig = ConnectionManager::parseDsn($dbConfig[$dbDefault]['cake_dsn']);
-            $dnsConfig['username'] = $dbConfig[$dbDefault]['user'];
-            $dnsConfig['password'] = $dbConfig[$dbDefault]['pass'];
-            ConnectionManager::setConfig('default', $dsnConfig);
-        }
     }
 
     abstract protected function createRouter(): Router;
