@@ -10,7 +10,7 @@ use Tests\Context;
 $db = Context::withDatabase();
 if ($db) {
     // Migrate the database, if needed.
-    $configArray = require(__DIR__ . '/../phinx.php');
+    $configArray = require(__DIR__ . '/../src/phinx.php');
     $configArray['environments']['test']['connection'] = $db->getPDO();
     $manager = new Manager(
         new Config($configArray),

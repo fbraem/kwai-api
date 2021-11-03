@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Applications\Author\Actions\PageInputSchema;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
+use Kwai\Modules\Pages\Presentation\REST\PageInputSchema;
 use Kwai\Modules\Pages\UseCases\CreatePageCommand;
 use Nette\Schema\ValidationException;
 
