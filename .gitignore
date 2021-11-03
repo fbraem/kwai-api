@@ -4,3 +4,4 @@ kwai.development.yaml
 /.vagrant
 /.*.cache
 /vendor/
+config.*
