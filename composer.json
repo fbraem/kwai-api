@@ -12,20 +12,13 @@
         "php": ">=8.0",
         "league/fractal": "0.18.*",
         "nesbot/carbon": "2.25.3",
-        "mtdowling/jmespath.php": "^2.4",
         "robmorgan/phinx": "^0.11",
         "league/flysystem": "1.1.4",
         "league/commonmark": "^1.4",
         "league/csv": "^9.5",
-        "cakephp/i18n": "3.8.5",
-        "slim/slim": "4.*",
         "league/plates": "^3.3",
-        "respect/validation": "1.1.31",
-        "cakephp/orm": "^3.8",
-        "cakephp/chronos": "1.2.8",
         "ramsey/uuid": "^4",
         "tuupola/slim-jwt-auth": "^3.4",
-        "slim/psr7": "^1.2.0",
         "league/container": "^3.3",
         "myclabs/php-enum": "^1.7",
         "swiftmailer/swiftmailer": "^6",
@@ -36,7 +29,6 @@
         "ext-json": "*",
         "monolog/monolog": "2.0.2",
         "latitude/latitude": "^4.2",
-        "phpoffice/phpspreadsheet": "^1.15",
         "illuminate/collections": "^8.17",
         "relay/relay": "~2.0",
         "nyholm/psr7": "^1.3",
@@ -59,22 +51,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Core\\": "src/core",
-            "Domain\\": "src/domain",
-            "REST\\": "src/rest",
-            "Kwai\\": "src/kwai",
-            "Judo\\Domain\\": "src/sport/judo/domain",
-            "Judo\\REST\\": "src/sport/judo/rest"
+            "Kwai\\": "src/kwai"
         },
         "files": [
-            "src/kwai/Core/Infrastructure/Presentation/app.php",
             "src/kwai/macros.php",
             "src/kwai/Core/Infrastructure/Dependencies/functions.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "src/tests",
+            "Tests\\": "tests",
             "App\\PHPStan\\": "src/phpstan"
         }
     }
