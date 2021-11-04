@@ -10,11 +10,11 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
-        "league/fractal": "0.18.*",
-        "nesbot/carbon": "2.25.3",
-        "robmorgan/phinx": "^0.11",
+        "league/fractal": "0.19.*",
+        "nesbot/carbon": "2.54.*",
+        "robmorgan/phinx": "^0.12",
         "league/flysystem": "1.1.4",
-        "league/commonmark": "^1.4",
+        "league/commonmark": "2.0.*",
         "league/csv": "^9.5",
         "league/plates": "^3.3",
         "ramsey/uuid": "^4",
@@ -27,7 +27,7 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
         "ext-json": "*",
-        "monolog/monolog": "2.0.2",
+        "monolog/monolog": "2.3.5",
         "latitude/latitude": "^4.2",
         "illuminate/collections": "^8.17",
         "relay/relay": "~2.0",
@@ -41,13 +41,13 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9",
-        "phpstan/phpstan": "^0.12.8",
+        "phpstan/phpstan": "1.0.*",
         "mockery/mockery": "^1.3",
-        "phpmd/phpmd": "2.9.*",
+        "phpmd/phpmd": "2.10.*",
         "squizlabs/php_codesniffer": "3.*",
         "friendsofphp/php-cs-fixer": "2.*",
         "symfony/var-dumper": "^5.2",
-        "pestphp/pest": "1.15.0"
+        "pestphp/pest": "1.20.0"
     },
     "autoload": {
         "psr-4": {
