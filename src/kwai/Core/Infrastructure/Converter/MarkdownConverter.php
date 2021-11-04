@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Converter;
 
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\MarkdownConverterInterface;
 
@@ -29,9 +29,10 @@ class MarkdownConverter implements Converter
      */
     public function __construct()
     {
-        $environment = Environment::createCommonMarkEnvironment();
+        $environment = new Environment();
+        $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new TableExtension());
-        $this->converter = new CommonMarkConverter([], $environment);
+        $this->converter = new \League\CommonMark\MarkdownConverter($environment);
     }
 
     /**
@@ -39,6 +40,6 @@ class MarkdownConverter implements Converter
      */
     public function convert(string $text): string
     {
-        return trim($this->converter->convertToHtml($text));
+        return trim((string) $this->converter->convertToHtml($text));
     }
 }
