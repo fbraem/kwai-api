@@ -5,6 +5,9 @@ require 'recipe/common.php';
 
 // Project name
 set('application', 'kwai_api');
+if (!has('public_path')) {
+    set('public_path', '/www');
+}
 
 set('ssh_multiplexing', false);
 
@@ -27,11 +30,24 @@ task('deploy:staging', function() {
         'composer.lock',
         'facebook.php'
     ];
-    $deployPath = get('release_path');
+    $releasePath = get('release_path');
 
     foreach($appFiles as $file) {
-        upload($file, "{$deployPath}");
+        upload($file, "{$releasePath}");
     }
+});
+
+task('generate:autoload', function() {
+    // Generate a simple autoload file, which make it possible to use a PSR-4
+    // autoloader for classes that are located in a private folder.
+    $realpath = run("realpath {{deploy_path}}");
+    run(
+        "echo \"<?php require('${realpath}/current/vendor/autoload.php');\" > {{public_path}}/autoload.php"
+    );
+});
+
+task('copy:api', function() {
+   run('cp -R {{release_path}}/api {{public_path}}');
 });
 
 desc('Deploy your project');
@@ -46,6 +62,8 @@ task('deploy', [
     'deploy:vendors',
     'deploy:clear_paths',
     'deploy:symlink',
+    'generate:autoload',
+    'copy:api',
     'deploy:unlock',
     'cleanup',
     'success'
