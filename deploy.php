@@ -30,7 +30,7 @@ task('deploy:staging', function() {
     $deployPath = get('release_path');
 
     foreach($appFiles as $file) {
-        upload($file, "{$deployPath}/{$file}");
+        upload($file, "{$deployPath}");
     }
 });
 
