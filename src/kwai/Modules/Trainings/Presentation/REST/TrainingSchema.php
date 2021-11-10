@@ -109,7 +109,9 @@ class TrainingSchema implements InputSchema
                 $normalized->data->relationships->teams->data
             );
         }
-        $command->definition = (int) $normalized->data->relationships?->definition?->data->id;
+        if ($normalized->data->relationships?->definition?->data) {
+            $command->definition = (int) $normalized->data->relationships->definition->data->id;
+        }
 
         return $command;
     }
