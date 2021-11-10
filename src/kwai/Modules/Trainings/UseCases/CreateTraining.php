@@ -120,7 +120,7 @@ class CreateTraining
                 startDate: Timestamp::createFromString($command->start_date),
                 endDate: Timestamp::createFromString($command->end_date),
                 timezone: $command->timezone,
-                location: new Location($command->location),
+                location: $command->location ? new Location($command->location) : null,
                 active: $command->active,
                 cancelled: $command->cancelled
             ),
