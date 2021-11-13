@@ -37,7 +37,6 @@ class TrainingSchema implements InputSchema
                 'type' => Expect::anyOf('trainings'),
                 'id' => Expect::string()->required(!$this->create),
                 'attributes' => Expect::structure([
-                    'active' => Expect::bool()->default(true),
                     'contents' => Expect::arrayOf(
                         $this->textSchema->create()
                     )->required($this->create),
@@ -46,7 +45,8 @@ class TrainingSchema implements InputSchema
                         'start_date' => Expect::string()->required(),
                         'end_date' => Expect::string()->required(),
                         'timezone' => Expect::string()->required(),
-                        'cancelled' => Expect::bool()->default(false)
+                        'cancelled' => Expect::bool()->default(false),
+                        'active' => Expect::bool()->default(true)
                     ]),
                     'remark' => Expect::string()->nullable()
                 ]),
@@ -93,8 +93,8 @@ class TrainingSchema implements InputSchema
         $command->timezone = $normalized->data->attributes->event->timezone;
         $command->location = $normalized->data->attributes->event->location;
         $command->cancelled = $normalized->data->attributes->event->cancelled;
+        $command->active = $normalized->data->attributes->event->active;
 
-        $command->active = $normalized->data->attributes->active;
         $command->remark = $normalized->data->attributes->remark;
 
         if ($normalized->data->relationships?->coaches?->data) {
