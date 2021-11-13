@@ -47,7 +47,7 @@ class TrainingSchema implements InputSchema
                         'timezone' => Expect::string()->required(),
                         'cancelled' => Expect::bool()->default(false),
                         'active' => Expect::bool()->default(true)
-                    ]),
+                    ])->required(),
                     'remark' => Expect::string()->nullable()
                 ]),
                 'relationships' => Expect::structure([
