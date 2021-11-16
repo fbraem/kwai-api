@@ -115,10 +115,10 @@ abstract class Application
                     $cors
                 )
             );
-            $this->addMiddleware(new RouteMiddleware($router, $psr17Factory));
             if ($cors) {
                 $this->addMiddleware(new CorsMiddleware($psr17Factory, $cors));
             }
+            $this->addMiddleware(new RouteMiddleware($router, $psr17Factory));
             $this->addMiddleware(new ParametersMiddleware());
             // $this->addMiddleware(new TransactionMiddleware());
             $this->addMiddleware(new LogActionMiddleware());

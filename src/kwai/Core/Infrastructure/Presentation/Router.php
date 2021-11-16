@@ -28,27 +28,19 @@ class Router
 
     /**
      * Router constructor.
-     *
-     * When autoPreflight is true (which is the default), an OPTIONS route will
-     * be automatically added for each route.
-     *
-     * @param bool $autoPreflight
      */
-    public function __construct(
-        private bool $autoPreflight = true
-    ) {
+    public function __construct() {
         $this->routes = new RouteCollection();
     }
 
     /**
      * Factory method
      *
-     * @param bool $autoPreflight
      * @return static
      */
-    public static function create(bool $autoPreflight = true): self
+    public static function create(): self
     {
-        return new Router($autoPreflight);
+        return new Router();
     }
 
     /**
@@ -162,36 +154,6 @@ class Router
     }
 
     /**
-     * Add a OPTIONS route.
-     *
-     * Note: When autoPreflight is true, this route will be created
-     * automatically. So there is no need to call this method.
-     *
-     * @param string          $name
-     * @param string          $path
-     * @param string|callable $handler
-     * @param array           $extra
-     * @param array           $requirements
-     * @return $this
-     */
-    public function options(
-        string          $name,
-        string          $path,
-        string|callable $handler,
-        array           $extra = [],
-        array           $requirements = []
-    ) {
-        return $this->add(
-            $name,
-            'OPTIONS',
-            $path,
-            $handler,
-            $extra,
-            $requirements
-        );
-    }
-
-    /**
      * Add a HEAD route
      *
      * @param string          $name
@@ -286,19 +248,6 @@ class Router
         array           $extra,
         array           $requirements
     ) {
-        if ($this->autoPreflight) {
-            $this->routes->add(
-                $name . '.options',
-                new Route(
-                    path: $path,
-                    defaults: [
-                        '_action' => fn () => fn (Request $request, Response $response) => $response
-                    ],
-                    methods: ['OPTIONS'],
-                    requirements: $requirements
-                )
-            );
-        }
         $this->routes->add(
             $name,
             new Route(
