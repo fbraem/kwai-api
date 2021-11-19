@@ -16,6 +16,7 @@ use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
 use Kwai\Modules\Trainings\Presentation\REST\GetTrainingPresencesAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Kwai\Modules\Trainings\Presentation\REST\UpdateDefinitionAction;
+use Kwai\Modules\Trainings\Presentation\REST\UpdateTrainingAction;
 
 /**
  * Class TrainingsApplication
@@ -46,6 +47,17 @@ class TrainingsApplication extends Application
                 'trainings.get',
                 '/trainings/{id}',
                 GetTrainingAction::class,
+                requirements: [
+                    'id' => '\d+'
+                ]
+            )
+            ->patch(
+                'trainings.update',
+                '/trainings/{id}',
+                UpdateTrainingAction::class,
+                [
+                    'auth' => true
+                ],
                 requirements: [
                     'id' => '\d+'
                 ]
