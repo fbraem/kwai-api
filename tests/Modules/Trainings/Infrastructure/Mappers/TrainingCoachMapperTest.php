@@ -12,7 +12,7 @@ use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingCoachMapper;
 
 it('can map a record to TrainingCoach', function () {
-   $record = collect([
+    $record = collect([
        'coach' => collect([
            'id' => '1',
            'firstname' => 'Jigoro',
@@ -24,15 +24,15 @@ it('can map a record to TrainingCoach', function () {
            'last_name' => 'Kano'
        ]),
        'remark' => 'Unit test training coach',
-       'coach_type' => 1,
+       'coach_type' => '1',
        'present' => '1',
        'payed' => '0',
        'created_at' => '2020-12-14 21:09:00'
-   ]);
+    ]);
 
-   $trainingCoach = TrainingCoachMapper::toDomain($record);
+    $trainingCoach = TrainingCoachMapper::toDomain($record);
 
-   expect($trainingCoach)
+    expect($trainingCoach)
        ->toBeInstanceOf(TrainingCoach::class)
        ->and($trainingCoach->isHead())
        ->toBe(true)
@@ -42,28 +42,28 @@ it('can map a record to TrainingCoach', function () {
        ->toBe(true)
        ->and($trainingCoach->getCreator())
        ->toBeInstanceOf(Creator::class)
-   ;
+    ;
 });
 
-it('can map a TrainingCoach to a record', function() {
-   $trainingCoach = new TrainingCoach(
-       coach: new Entity(
-           1,
-           new Coach(new Name('Jigoro', 'Kano'))
-       ),
-       creator: new Creator(
-           1,
-           new Name('Jigoro', 'Kano')
-       ),
-       payed: false,
-       head: true,
-       present: false,
-       traceableTime: new TraceableTime()
-   );
+it('can map a TrainingCoach to a record', function () {
+    $trainingCoach = new TrainingCoach(
+        coach: new Entity(
+            1,
+            new Coach(new Name('Jigoro', 'Kano'))
+        ),
+        creator: new Creator(
+            1,
+            new Name('Jigoro', 'Kano')
+        ),
+        payed: false,
+        head: true,
+        present: false,
+        traceableTime: new TraceableTime()
+    );
 
-   $record = TrainingCoachMapper::toPersistence($trainingCoach);
+    $record = TrainingCoachMapper::toPersistence($trainingCoach);
 
-   expect($record)
+    expect($record)
        ->toBeInstanceOf(Collection::class)
        ->and($record->get('coach_type'))
        ->toBe(1)
