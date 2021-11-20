@@ -91,15 +91,19 @@ class CreateTraining
             : new Collection()
         ;
 
-        $coaches = count($command->coaches) > 0
-            ? $this->coachRepository->getById(... $command->coaches)
-            : new Collection()
+        $coachCollection = new Collection($command->coaches);
+        $coaches = $coachCollection->isNotEmpty()
+            ? $this->coachRepository->getById(
+                ... $coachCollection->map(fn ($coach) => $coach->id)->toArray()
+            ) : new Collection()
         ;
-        $trainingCoaches = $coaches->transform(
-            fn ($coach) =>
-            new TrainingCoach(
-                coach: $coaches->get($coach->id()),
-                creator: $creator
+        $trainingCoaches = $coachCollection->map(
+            fn ($coach) => new TrainingCoach(
+                coach: $coaches->get($coach->id),
+                creator: $creator,
+                present: $coach->present,
+                head: $coach->head,
+                payed: $coach->payed
             )
         );
 

@@ -81,7 +81,6 @@ class UpdateTraining
      * @throws DefinitionNotFoundException
      * @throws RepositoryException
      * @throws TrainingNotFoundException
-     * @throws CoachNotFoundException
      */
     public function __invoke(UpdateTrainingCommand $command, Creator $creator): Entity
     {
@@ -94,22 +93,24 @@ class UpdateTraining
         ;
 
         // Handle coaches
-        $coaches = count($command->coaches) > 0
-            ? $this->coachRepository->getById(...$command->coaches)
-            : new Collection();
-        $trainingCoaches = $coaches->transform(
-            fn ($coach) =>
-            new TrainingCoach(
-                coach: $coaches->get($coach->id),
-                present: $coach->present,
-                head: $coach->head,
-                traceableTime: TraceableTime::createFrom(
-                    $training->getCoaches()->get($coach->id)?->getTraceableTime()
-                ),
-                creator: $creator,
-                payed: $coach->payed,
-                remark: $coach->remark
-            )
+        $coachCollection = (new Collection($command->coaches))->mapWithKeys(
+            fn ($coach) => [ $coach->id => $coach ]
+        );
+        $coaches = $coachCollection->isNotEmpty()
+            ? $this->coachRepository->getById(
+                ... $coachCollection->keys()->toArray()
+            ) : new Collection()
+        ;
+        $trainingCoaches = $coachCollection->mapWithKeys(
+            fn ($coach) => [
+                $coach->id => new TrainingCoach(
+                    coach: $coaches->get($coach->id),
+                    creator: $creator,
+                    present: $coach->present,
+                    head: $coach->head,
+                    payed: $coach->payed
+                )
+            ]
         );
 
         // Handle teams
