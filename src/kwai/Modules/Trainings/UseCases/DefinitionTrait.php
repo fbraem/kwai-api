@@ -27,12 +27,12 @@ trait DefinitionTrait
     /**
      * The id of a season
      */
-    public ?int $season_id;
+    public ?int $season_id = null;
 
     /**
      * The id of a team
      */
-    public ?int $team_id;
+    public ?int $team_id = null;
 
     /**
      * The weekday (1 = monday, ...)
@@ -57,15 +57,15 @@ trait DefinitionTrait
     /**
      * Is this definition active?
      */
-    public bool $active;
+    public bool $active = false;
 
     /**
      * The location
      */
-    public ?string $location;
+    public ?string $location = null;
 
     /**
      * A remark
      */
-    public ?string $remark;
+    public ?string $remark = null;
 }
