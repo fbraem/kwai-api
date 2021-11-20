@@ -22,11 +22,11 @@ class CoachTransformer extends Fractal\TransformerAbstract
     /**
      * Create a single resource of a Coach entity.
      *
-     * @param Entity<Coach>|TrainingCoach $coach
+     * @param Entity<Coach> $coach
      * @return Fractal\Resource\Item
      */
     public static function createForItem(
-        Entity|TrainingCoach $coach,
+        Entity $coach,
     ): Fractal\Resource\Item {
         return new Fractal\Resource\Item(
             $coach,
@@ -52,22 +52,13 @@ class CoachTransformer extends Fractal\TransformerAbstract
     }
 
     /**
-     * Transform a Team entity into an array
+     * Transform a Coach entity into an array
      *
-     * @param Entity<Coach>|TrainingCoach $coach
+     * @param Entity<Coach> $coach
      * @return array
      */
-    public function transform(Entity|TrainingCoach $coach): array
+    public function transform(Entity $coach): array
     {
-        if ($coach instanceof TrainingCoach) {
-            return [
-                'id' => $coach->getCoach()->id(),
-                'name' => (string) $coach->getCoach()->getName(),
-                'present' => $coach->isPresent(),
-                'payed' => $coach->isPayed(),
-                'head' => $coach->isHead()
-            ];
-        }
         return [
             'id' => (string) $coach->id(),
             'name' => (string) $coach->getName()
