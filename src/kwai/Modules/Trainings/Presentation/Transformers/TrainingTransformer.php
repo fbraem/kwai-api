@@ -12,6 +12,7 @@ use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use League\Fractal;
 
 /**
@@ -123,7 +124,11 @@ class TrainingTransformer extends Fractal\TransformerAbstract
         /* @var Training $training */
         $coaches = $training->getCoaches();
         if ($coaches->count() > 0) {
-            return CoachTransformer::createForCollection($coaches);
+            return CoachTransformer::createForCollection(
+                $coaches->map(
+                    fn (TrainingCoach $trainingCoach) => $trainingCoach->getCoach()
+                )
+            );
         }
         return null;
     }
@@ -165,7 +170,16 @@ class TrainingTransformer extends Fractal\TransformerAbstract
                     'html_summary' => $converter->convert($text->getSummary()),
                     'html_content' => $converter->convert($text->getContent() ?? ''),
                 ];
-            })->toArray()
+            })->toArray(),
+            'coaches' => $training->getCoaches()->values()->map(
+                fn (TrainingCoach $coach) =>
+                [
+                    'id' => (string) $coach->getCoach()->id(),
+                    'present' => $coach->isPresent(),
+                    'head' => $coach->isHead(),
+                    'payed' => $coach->isPayed()
+                ]
+            )->toArray()
         ];
         $result['updated_at'] = $traceableTime->isUpdated()
             ? strval($traceableTime->getUpdatedAt())
