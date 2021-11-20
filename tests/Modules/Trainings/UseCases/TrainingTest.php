@@ -11,6 +11,8 @@ use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Kwai\Modules\Trainings\UseCases\CreateTraining;
 use Kwai\Modules\Trainings\UseCases\CreateTrainingCommand;
+use Kwai\Modules\Trainings\UseCases\GetTraining;
+use Kwai\Modules\Trainings\UseCases\GetTrainingCommand;
 use Kwai\Modules\Trainings\UseCases\UpdateTraining;
 use Kwai\Modules\Trainings\UseCases\UpdateTrainingCommand;
 use Tests\Context;
@@ -96,6 +98,25 @@ it('can update a training', function(int $id) use ($context) {
     expect($entity)
         ->toBeInstanceOf(Entity::class)
     ;
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it can create a training')
+;
+
+it('can get a training', function (int $id) use ($context) {
+    $command = new GetTrainingCommand();
+    $command->id = $id;
+
+    try {
+        $training = GetTraining::create(new TrainingDatabaseRepository(
+            $context->db
+        ))($command);
+        expect($training)
+            ->toBeInstanceOf(Entity::class)
+        ;
+    } catch (Exception $e) {
+        $this->fail((string) $e);
+    }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a training')
