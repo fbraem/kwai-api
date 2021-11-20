@@ -50,10 +50,10 @@ class TrainingSchema implements InputSchema
                     ])->required(),
                     'coaches' => Expect::arrayOf(
                         Expect::structure([
-                            'id' => Expect::string()->castTo('int'),
-                            'head' => Expect::bool(),
-                            'present' => Expect::bool(),
-                            'payed' => Expect::bool()
+                            'id' => Expect::string()->castTo('int')->required(),
+                            'head' => Expect::bool()->required(),
+                            'present' => Expect::bool()->required(),
+                            'payed' => Expect::bool()->required()
                         ])
                     )->required(false),
                     'remark' => Expect::string()->nullable()
@@ -70,7 +70,7 @@ class TrainingSchema implements InputSchema
                             'type' => Expect::anyOf('coaches'),
                             'id' => Expect::string()->required()
                         ]))
-                    ])->required(false),
+                    ])->required(),
                     'teams' => Expect::structure([
                         'data' => Expect::arrayOf(Expect::structure([
                             'type' => Expect::anyOf('teams'),
@@ -104,10 +104,8 @@ class TrainingSchema implements InputSchema
         $command->active = $normalized->data->attributes->event->active;
 
         $command->remark = $normalized->data->attributes->remark;
+        $command->coaches = $normalized->data->attributes->coaches;
 
-        if ($normalized->data->coaches) {
-            $command->coaches = $normalized->data->coaches;
-        }
         if ($normalized->data->relationships?->teams?->data) {
             $command->teams = array_map(
                 fn ($team) => (int) $team->id,
