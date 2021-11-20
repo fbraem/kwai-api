@@ -142,6 +142,7 @@ it('can create a training', function () use ($context) {
             startDate: Timestamp::createFromString('2020-12-13 20:00:00'),
             endDate: Timestamp::createFromString('2020-12-13 21:00:00'),
             location: new Location('Sports hall of the club'),
+            timezone: 'Europe/Brussels'
         ),
         text: new Collection([
             new Text(
