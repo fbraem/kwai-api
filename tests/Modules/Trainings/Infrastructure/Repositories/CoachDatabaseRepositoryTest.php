@@ -27,7 +27,7 @@ it('can get a coach', function () use ($context) {
             ->toBeString()
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
@@ -49,9 +49,9 @@ it('can get all active coaches', function () use ($context) {
             ->toBeInstanceOf(Coach::class)
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (QueryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')

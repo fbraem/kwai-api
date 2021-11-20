@@ -110,9 +110,9 @@ it('can get a training definition', function () use ($context) {
             ->toBeInstanceOf(Definition::class)
         ;
     } catch (DefinitionNotFoundException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
@@ -133,9 +133,9 @@ it('can get all training definitions', function () use ($context) {
             ->toBeInstanceOf(Definition::class)
         ;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     } catch (QueryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
