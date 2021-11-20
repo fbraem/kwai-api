@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Kwai\Modules\Trainings\Presentation\REST\CreateTrainingAction;
+use Kwai\Modules\Trainings\Presentation\REST\UpdateTrainingAction;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Tests\Context;
@@ -14,6 +15,7 @@ $data = <<<JSON
     "data": {
         "type": "trainings",
         "attributes": {
+            "remark": "Created with unit test",
             "contents": [
                 {
                     "title": "Middengroep",
@@ -24,7 +26,7 @@ $data = <<<JSON
                 "location": "Sporthal Stekene",
                 "start_date": "2021-10-20 17:00:00",
                 "end_date": "2021-10-20 18:00:00",
-                "time_zone": "Europe/Brussels",
+                "timezone": "Europe/Brussels",
                 "cancelled": false
             }
         },
@@ -75,6 +77,39 @@ it('can create a training', function () use ($context, $data) {
 
     $response = $action($request, $response, []);
     expect($response->getStatusCode())->toBe(200);
+
+    $stream = $response->getBody();
+    $stream->rewind();
+    $json = json_decode($stream->getContents());
+    return $json->data->id;
 })
     ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can update a training', function ($id) use ($context, $data) {
+    $action = new UpdateTrainingAction(database: $context->db);
+
+    $json = json_decode($data, true);
+    $json['data']['id'] = $id;
+    $json['data']['attributes']['remark'] = 'Updated with unit test';
+
+    $request = new ServerRequest(
+        'PATCH',
+        '/trainings/' . $id
+    );
+
+    $request = $request
+        ->withParsedBody($json)
+        ->withAttribute(
+            'kwai.user',
+            $context->user
+        )
+    ;
+    $response = new Response();
+
+    $response = $action($request, $response, []);
+    expect($response->getStatusCode())->toBe(200);
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it can create a training')
 ;
