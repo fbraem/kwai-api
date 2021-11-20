@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Kwai\Modules\Trainings\Presentation\REST\BrowseTrainingsAction;
 use Kwai\Modules\Trainings\Presentation\REST\CreateTrainingAction;
+use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
 use Kwai\Modules\Trainings\Presentation\REST\UpdateTrainingAction;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
@@ -112,4 +114,35 @@ it('can update a training', function ($id) use ($context, $data) {
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a training')
+;
+
+it('can get a training', function ($id) use ($context) {
+    $action = new GetTrainingAction(database: $context->db);
+
+    $request = new ServerRequest(
+        'GET',
+        '/trainings/' . $id
+    );
+
+    $response = new Response();
+    $response = $action($request, $response, ['id' => $id]);
+    expect($response->getStatusCode())->toBe(200);
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+    ->depends('it can create a training')
+;
+
+it('can browse trainings', function () use ($context) {
+    $action = new BrowseTrainingsAction(database: $context->db);
+
+    $request = new ServerRequest(
+        'GET',
+        '/trainings'
+    );
+
+    $response = new Response();
+    $response = $action($request, $response, []);
+    expect($response->getStatusCode())->toBe(200);
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
 ;
