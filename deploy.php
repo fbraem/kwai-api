@@ -40,7 +40,7 @@ task('deploy:staging', function() {
 task('generate:autoload', function() {
     // Generate a simple autoload file, which make it possible to use a PSR-4
     // autoloader for classes that are located in a private folder.
-    $realpath = run("realpath {{deploy_path}}");
+    $realpath = run("readlink -f {{deploy_path}}");
     run(
         "echo \"<?php require('${realpath}/current/vendor/autoload.php');\" > {{public_path}}/autoload.php"
     );
