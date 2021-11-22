@@ -16,27 +16,27 @@ class StoryTableSchema extends TableSchema
 it('can handle a default schema', function () {
     $storySchema = new StoryTableSchema();
 
-    $storySchema->map(
+    $result = $storySchema->map(
         collect([
            'news_stories_id' => 1,
            'news_stories_title' => 'test'
         ])
     );
-    expect($storySchema->id)->toBeInt()->toEqual(1);
-    expect($storySchema->title)->toBeString()->toEqual('test');
-    expect($storySchema->content_text)->toBeNull();
+    expect($result->id)->toBeInt()->toEqual(1);
+    expect($result->title)->toBeString()->toEqual('test');
+    expect($result->content_text)->toBeNull();
 });
 
 it('can handle an alias', function () {
     $storySchema = new StoryTableSchema('n');
 
-    $storySchema->map(
+    $result = $storySchema->map(
         collect([
             'n_id' => 1,
             'n_title' => 'test'
         ])
     );
-    expect($storySchema->id)->toBeInt()->toEqual(1);
-    expect($storySchema->title)->toBeString()->toEqual('test');
-    expect($storySchema->content_text)->toBeNull();
+    expect($result->id)->toBeInt()->toEqual(1);
+    expect($result->title)->toBeString()->toEqual('test');
+    expect($result->content_text)->toBeNull();
 });
