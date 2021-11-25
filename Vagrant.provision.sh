@@ -50,7 +50,7 @@ sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysq
 service mysql restart
 
 # Install PHP
-PHP_VERSION=8.0
+PHP_VERSION=8.1
 apt-get install -y php${PHP_VERSION}-common php${PHP_VERSION}-cli php${PHP_VERSION}-mysql libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-intl php${PHP_VERSION}-dom php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-sqlite php${PHP_VERSION}-xml
 
 php -v
@@ -76,7 +76,7 @@ php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer
 
 # PHPMyAdmin
-PHPMYADMIN_VERSION=5.0.4
+PHPMYADMIN_VERSION=5.1.1
 wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip -nv -O /var/tmp/phpmyadmin.zip
 unzip -q /var/tmp/phpmyadmin.zip -d /var/tmp/phpmyadmin
 rm -Rf /var/www/phpmyadmin
