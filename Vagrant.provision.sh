@@ -92,7 +92,6 @@ PHPMYADMIN_CONF=$(cat <<EOF
         AllowOverride None
         Require all granted
     </Directory>
-    Listen 81
     <VirtualHost *:81>
         ServerName api.kwai.com
         ServerAdmin webmaster@localhost
