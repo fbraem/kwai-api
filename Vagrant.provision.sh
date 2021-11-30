@@ -51,12 +51,13 @@ service mysql restart
 
 # Install PHP
 PHP_VERSION=8.1
-apt-get install -y php${PHP_VERSION}-common php${PHP_VERSION}-cli php${PHP_VERSION}-mysql libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-intl php${PHP_VERSION}-dom php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-sqlite php${PHP_VERSION}-xml
+apt-get install -y php${PHP_VERSION}-common php${PHP_VERSION}-cli php${PHP_VERSION}-mysql libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-intl php${PHP_VERSION}-dom php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-sqlite php${PHP_VERSION}-xml php${PHP_VERSION}-curl
 
 php -v
 a2enmod php${PHP_VERSION}
 
 phpenmod intl
+phpenmod curl
 
 # Install unzip for Composer
 apt-get install -y unzip
