@@ -73,7 +73,7 @@ class StoryMapper
             'enabled' => $story->isEnabled(),
             'promotion' => $story->getPromotion()->getPriority(),
             'promotion_end_date' => $story->getPromotion()->getEndDate()?->getTimestamp()->__toString(),
-            'publish_date'=> $story->getPublishTime(),
+            'publish_date'=> $story->getPublishTime()->getTimestamp(),
             'timezone' => $story->getPublishTime()->getTimezone(),
             'end_date' => $story->getEndDate()?->getTimestamp()->__toString(),
             'application_id' => $story->getApplication()->id(),
