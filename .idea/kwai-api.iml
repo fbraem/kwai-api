@@ -136,6 +136,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/nunomaduro/collision" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest-plugin" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/pestphp/pest" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kwai/jsonapi" />
       <excludePattern pattern="phpstan.phar" />
     </content>
     <orderEntry type="inheritedJdk" />
