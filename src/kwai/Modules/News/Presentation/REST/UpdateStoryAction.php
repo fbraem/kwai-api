@@ -16,8 +16,8 @@ use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
@@ -25,12 +25,13 @@ use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
-use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
+use Kwai\Modules\News\Presentation\Resources\StoryResource;
 use Kwai\Modules\News\UseCases\UpdateStory;
 use League\Flysystem\Filesystem;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Kwai\JSONAPI;
 
 /**
  * Class UpdateStoryAction
@@ -96,10 +97,9 @@ class UpdateStoryAction extends Action
             return (new NotFoundResponse('Story not found'))($response);
         }
 
-        return (new ResourceResponse(
-            StoryTransformer::createForItem(
-                $story,
-                $this->converterFactory
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject(
+                new StoryResource($story, $this->converterFactory)
             )
         ))($response);
     }

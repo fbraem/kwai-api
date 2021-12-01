@@ -15,17 +15,20 @@ use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
-use Kwai\Modules\News\Presentation\Transformers\StoryTransformer;
+use Kwai\Modules\News\Presentation\Resources\StoryResource;
+use Kwai\Modules\News\Presentation\Resources\StoryTransformer;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
 use League\Flysystem\Filesystem;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Kwai\JSONAPI;
 
 /**
  * Class BrowseStoriesAction
@@ -83,27 +86,29 @@ class BrowseStoriesAction extends Action
         } catch (QueryException $e) {
             $this->logException($e);
             return (
-            new SimpleResponse(500, 'A query exception occurred.')
+                new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (
-            new SimpleResponse(500, 'A repository exception occurred.')
+                new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
 
-        $resource = StoryTransformer::createForCollection(
-            $stories,
-            $this->converterFactory
+        $resources = $stories->map(
+            fn ($story) => new StoryResource(
+                $story,
+                $this->converterFactory
+            )
         );
-        $resource->setMeta([
-            'limit' => $command->limit,
-            'offset' => $command->offset,
-            'count' => $count
-        ]);
 
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+            ->setMeta([
+                'count' => $count,
+                'limit' => $command->limit,
+                'offset' => $command->offset
+            ])
         ))($response);
     }
 }
