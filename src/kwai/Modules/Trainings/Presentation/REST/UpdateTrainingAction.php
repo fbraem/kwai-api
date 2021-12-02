@@ -58,6 +58,10 @@ class UpdateTrainingAction extends Action
             return (new SimpleResponse(422, $ve->getMessage()))($response);
         }
 
+        if ($command->id != (int) $args['id']) {
+            return (new SimpleResponse(400, 'id in body and url should be the same.'))($response);
+        }
+
         $user = $request->getAttribute('kwai.user');
         $creator = new Creator($user->id(), $user->getUsername());
 
