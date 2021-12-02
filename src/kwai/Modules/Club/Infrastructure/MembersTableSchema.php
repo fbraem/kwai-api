@@ -16,14 +16,14 @@ use Kwai\Core\Infrastructure\Database\TableSchema;
 #[TableAttribute(name: 'sport_judo_members')]
 class MembersTableSchema extends TableSchema
 {
-    public ?string $id = null;
+    public ?int $id = null;
     public string $license;
     public string $license_end_date;
-    public string $person_id;
+    public int $person_id;
     public ?string $remark = null;
-    public string $competition = '0';
+    public int $competition = 0;
     public string $created_at;
     public ?string $updated_at = null;
-    public ?string $import_id = null;
-    public string $active = '1';
+    public ?int $import_id = null;
+    public int $active = 1;
 }

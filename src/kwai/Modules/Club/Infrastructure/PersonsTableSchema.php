@@ -16,17 +16,17 @@ use Kwai\Core\Infrastructure\Database\TableSchema;
 #[TableAttribute(name: 'persons')]
 class PersonsTableSchema extends TableSchema
 {
-    public ?string $id;
+    public ?int $id = null;
     public string $lastname;
     public string $firstname;
-    public string $gender;
-    public string $active = '1';
+    public int $gender;
+    public int $active = 1;
     public string $birthdate;
     public ?string $remark = null;
-    public ?string $user_id = null;
-    public ?string $contact_id = null;
+    public ?int $user_id = null;
+    public ?int $contact_id = null;
     public ?string $code = null;
-    public string $nationality_id;
+    public int $nationality_id;
     public string $created_at;
     public ?string $updated_at = null;
 }

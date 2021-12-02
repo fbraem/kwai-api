@@ -16,7 +16,7 @@ use Kwai\Core\Infrastructure\Database\TableSchema;
 #[TableAttribute(name: 'contacts')]
 class ContactsTableSchema extends TableSchema
 {
-    public ?string $id;
+    public ?int $id = null;
     public string $email;
     public string $tel;
     public string $mobile;
@@ -24,7 +24,7 @@ class ContactsTableSchema extends TableSchema
     public string $postal_code;
     public string $city;
     public ?string $county = null;
-    public string $country_id;
+    public int $country_id;
     public ?string $remark;
     public string $created_at;
     public ?string $updated_at;
