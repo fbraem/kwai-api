@@ -109,7 +109,7 @@ it('can update a training', function ($id) use ($context, $data) {
     ;
     $response = new Response();
 
-    $response = $action($request, $response, []);
+    $response = $action($request, $response, ['id' => $id]);
     expect($response->getStatusCode())->toBe(200);
 })
     ->skip(!Context::hasDatabase(), 'No database available')
