@@ -10,15 +10,16 @@ namespace Kwai\Modules\Applications\Presentation\REST;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\Applications\Presentation\Transformers\ApplicationTransformer;
+use Kwai\Modules\Applications\Presentation\Resources\ApplicationResource;
 use Kwai\Modules\Applications\UseCases\GetApplication;
 use Kwai\Modules\Applications\UseCases\GetApplicationCommand;
+use Kwai\JSONAPI;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -50,9 +51,10 @@ class GetApplicationAction extends Action
             ))($response);
         }
 
-        $resource = ApplicationTransformer::createForItem($application);
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject(
+                new ApplicationResource($application)
+            )
         ))($response);
     }
 }

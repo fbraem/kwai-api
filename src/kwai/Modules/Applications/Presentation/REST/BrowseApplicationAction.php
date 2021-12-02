@@ -11,11 +11,12 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\Applications\Presentation\Transformers\ApplicationTransformer;
+use Kwai\Modules\Applications\Presentation\Resources\ApplicationResource;
 use Kwai\Modules\Applications\UseCases\BrowseApplication;
 use Kwai\Modules\Applications\UseCases\BrowseApplicationCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -58,16 +59,17 @@ class BrowseApplicationAction extends Action
             ))($response);
         }
 
-        $resource = ApplicationTransformer::createForCollection(
-            $applications
+        $resources = $applications->map(
+            fn($application) => new ApplicationResource($application)
         );
-        $resource->setMeta([
-            'limit' => 0,
-            'offset' => 0,
-            'count' => $count
-        ]);
-        return (new ResourceResponse(
-            $resource
+
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+            ->setMeta([
+                'limit' => 0,
+                'offset' => 0,
+                'count' => $count
+            ])
         ))($response);
     }
 }

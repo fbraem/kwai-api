@@ -12,15 +12,16 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Kwai\Modules\Applications\Presentation\Transformers\ApplicationTransformer;
+use Kwai\Modules\Applications\Presentation\Resources\ApplicationResource;
 use Kwai\Modules\Applications\UseCases\UpdateApplication;
 use Kwai\Modules\Applications\UseCases\UpdateApplicationCommand;
+use Kwai\JSONAPI;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
@@ -93,9 +94,10 @@ class UpdateApplicationAction extends Action
             ))($response);
         }
 
-        $resource = ApplicationTransformer::createForItem($application);
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject(
+                new ApplicationResource($application)
+            )
         ))($response);
     }
 }
