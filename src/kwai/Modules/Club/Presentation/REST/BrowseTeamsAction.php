@@ -11,11 +11,12 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\JSONAPI;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Club\Infrastructure\Repositories\TeamDatabaseRepository;
-use Kwai\Modules\Club\Presentation\Transformers\TeamTransformer;
+use Kwai\Modules\Club\Presentation\Resources\TeamResource;
 use Kwai\Modules\Club\UseCases\BrowseTeams;
 use Kwai\Modules\Club\UseCases\BrowseTeamsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -52,7 +53,9 @@ class BrowseTeamsAction extends Action
             )($response);
         }
 
-        $resource = TeamTransformer::createForCollection($teams);
+        $resources = $teams->map(
+            fn ($team) => new TeamResource($team)
+        );
         $meta = [
             'count' => $count
         ];
@@ -60,8 +63,9 @@ class BrowseTeamsAction extends Action
             $meta['limit'] = $command->limit;
             $meta['offset'] = $command->offset ?? 0;
         }
-        $resource->setMeta($meta);
-
-        return (new ResourceResponse($resource))($response);
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta($meta)
+        ))($response);
     }
 }

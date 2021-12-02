@@ -11,11 +11,12 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Club\Infrastructure\Repositories\MemberDatabaseRepository;
-use Kwai\Modules\Club\Presentation\Transformers\MemberTransformer;
+use Kwai\Modules\Club\Presentation\Resources\MemberResource;
 use Kwai\Modules\Club\UseCases\BrowseMembers;
 use Kwai\Modules\Club\UseCases\BrowseMembersCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -55,7 +56,10 @@ class BrowseMembersAction extends Action
             )($response);
         }
 
-        $resource = MemberTransformer::createForCollection($members);
+        $resources = $members->map(
+            fn ($member) => new MemberResource($member)
+        );
+
         $meta = [
             'count' => $count
         ];
@@ -63,8 +67,9 @@ class BrowseMembersAction extends Action
             $meta['limit'] = $command->limit;
             $meta['offset'] = $command->offset ?? 0;
         }
-        $resource->setMeta($meta);
-
-        return (new ResourceResponse($resource))($response);
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta($meta)
+        ))($response);
     }
 }
