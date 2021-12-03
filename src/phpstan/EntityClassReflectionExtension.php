@@ -2,11 +2,14 @@
 
 namespace App\PHPStan;
 
+use Kwai\Core\Domain\Entity;
 use PHPStan\Broker\ClassNotFoundException;
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\Dummy\DummyMethodReflection;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 use PHPStan\Analyser\OutOfClassScope;
+use PHPStan\Reflection\MissingMethodFromReflectionException;
 use PHPStan\Type\ObjectType;
 
 /**
@@ -23,19 +26,22 @@ class EntityClassReflectionExtension implements MethodsClassReflectionExtension
      * @param ClassReflection $classReflection
      * @param string          $methodName
      * @return bool
-     * @throws ClassNotFoundException
      */
     public function hasMethod(
         ClassReflection $classReflection,
         string $methodName
     ): bool {
-        if ($classReflection->getName() === 'Kwai\Core\Domain\Entity') {
-            return $this->findMethod(
-                $this->getT($classReflection),
-                $methodName
-            ) != null;
+        if ($classReflection->getName() !== Entity::class) {
+            return false;
         }
-        return false;
+
+        $templateMap = $classReflection->getActiveTemplateTypeMap();
+        $templateType = $templateMap->getType('T');
+        if (! $templateType instanceof ObjectType) {
+            return false;
+        }
+
+        return $templateType->hasMethod($methodName)->yes();
     }
 
     /**
@@ -44,45 +50,20 @@ class EntityClassReflectionExtension implements MethodsClassReflectionExtension
      * @param ClassReflection $classReflection
      * @param string          $methodName
      * @return MethodReflection
-     * @throws ClassNotFoundException
+     * @throws MissingMethodFromReflectionException
      */
     public function getMethod(
         ClassReflection $classReflection,
         string $methodName
     ): MethodReflection {
-        return $this->findMethod(
-            $this->getT($classReflection),
-            $methodName
-        );
-    }
-
-    /**
-     * T is the domain class. Return the ObjectType of T.
-     * @param  ClassReflection $classReflection
-     * @return ObjectType
-     */
-    private function getT(ClassReflection $classReflection): ObjectType
-    {
-        return $classReflection
-            ->getActiveTemplateTypeMap()
-            ->getType('T');
-    }
-
-    /**
-     * Find the method on the ObjectType of T.
-     *
-     * @param ObjectType $type
-     * @param string     $method
-     * @return MethodReflection|null
-     * @throws ClassNotFoundException
-     */
-    private function findMethod(
-        ObjectType $type,
-        string $method
-    ): ?MethodReflection {
-        if (!$type->hasMethod($method)->yes()) {
-            return null;
+        $templateMap = $classReflection->getActiveTemplateTypeMap();
+        $templateType = $templateMap->getType('T');
+        if ($templateType instanceof ObjectType) {
+            $reflection = $templateType->getClassReflection();
+            if ($reflection !== null) {
+                return $reflection->getMethod($methodName, new OutOfClassScope());
+            }
         }
-        return $type->getMethod($method, new OutOfClassScope());
+        return new DummyMethodReflection($methodName);
     }
 }
