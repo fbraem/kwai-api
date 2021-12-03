@@ -22,4 +22,6 @@ it('can get an application', function () use ($context) {
     $response = new Response();
     $response = $action($request, $response, ['id' => '1']);
     expect($response->getStatusCode())->toBe(200);
-});
+})
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
