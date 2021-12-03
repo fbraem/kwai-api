@@ -1,10 +1,10 @@
 parameters:
     level: 2
     paths:
-        - kwai
+        - src/kwai
     excludes_analyse:
-        - kwai/Modules/Users/Infrastructure/Migrations/*
-        - kwai/Modules/Mails/Infrastructure/Migrations/*
+        - src/kwai/Modules/Users/Infrastructure/Migrations/*
+        - src/kwai/Modules/Mails/Infrastructure/Migrations/*
 services:
 -
     class: App\PHPStan\EntityClassReflectionExtension
