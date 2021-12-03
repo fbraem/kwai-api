@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Applications\Domain\Application;
+use Kwai\Modules\News\Domain\Application;
 use Kwai\Modules\News\Presentation\Resources\ApplicationResource;
 use Kwai\JSONAPI;
 
@@ -11,10 +11,8 @@ it('can serialize an application resource', function () {
     $application = new Entity(
         1,
         new Application(
-            'Test',
-            'Test title',
-            'This is a description',
-            'This is a short description'
+            name: 'Test',
+            title: 'Test title',
         )
     );
 
@@ -41,9 +39,7 @@ it('can serialize an application resource', function () {
     expect($json->data->attributes)
         ->toMatchObject([
             'name' => 'Test',
-            'title' => 'Test title',
-            'description' => 'This is a description',
-            'short_description' => 'This is a short description'
+            'title' => 'Test title'
         ])
     ;
 });
