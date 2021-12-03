@@ -6,6 +6,9 @@
             "email": "franky.braem@gmail.com"
         }
     ],
+    "scripts": {
+        "phpstan": "vendor/bin/phpstan -c phpstan.neon"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
