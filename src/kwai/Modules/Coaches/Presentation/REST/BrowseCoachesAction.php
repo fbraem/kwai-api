@@ -11,13 +11,14 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Coaches\Infrastructure\Repositories\CoachDatabaseRepository;
+use Kwai\Modules\Coaches\Presentation\Resources\CoachResource;
 use Kwai\Modules\Coaches\UseCases\BrowseCoaches;
 use Kwai\Modules\Coaches\UseCases\BrowseCoachesCommand;
-use Kwai\Modules\Coaches\Presentation\Transformers\CoachTransformer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -41,12 +42,15 @@ class BrowseCoachesAction extends Action
         $repo = new CoachDatabaseRepository($this->database);
         $command = new BrowseCoachesCommand();
 
-        $command->active = $parameters['filter']['active'] ?? false;
-        if (!$command->active) {
-            //TODO: check if this is allowed.
-        }
-
         $parameters = $request->getAttribute('parameters');
+
+        $command->active = $parameters['filter']['active'] ?? false;
+        //TODO: check if this is allowed.
+        /*
+        if (!$command->active) {
+        }
+        */
+
         $command->limit = $parameters['page']['limit'] ?? null;
         $command->offset = $parameters['page']['offset'] ?? null;
 
@@ -65,7 +69,9 @@ class BrowseCoachesAction extends Action
         }
 
         $user = $request->getAttribute('kwai.user');
-        $resource = CoachTransformer::createForCollection($coaches, $user);
+        $resources = $coaches->map(
+            fn ($coach) => new CoachResource($coach, $user)
+        );
         $meta = [
             'count' => $count
         ];
@@ -73,8 +79,9 @@ class BrowseCoachesAction extends Action
             $meta['limit'] = $command->limit;
             $meta['offset'] = $command->offset ?? 0;
         }
-        $resource->setMeta($meta);
-
-        return (new ResourceResponse($resource))($response);
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta($meta)
+        ))($response);
     }
 }

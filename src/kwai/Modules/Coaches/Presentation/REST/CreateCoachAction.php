@@ -11,17 +11,18 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Coaches\Domain\Exceptions\CoachAlreadyExistsException;
 use Kwai\Modules\Coaches\Domain\Exceptions\MemberNotFoundException;
 use Kwai\Modules\Coaches\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Coaches\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Coaches\Infrastructure\Repositories\MemberDatabaseRepository;
 use Kwai\Modules\Coaches\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Coaches\Presentation\Transformers\CoachTransformer;
+use Kwai\Modules\Coaches\Presentation\Resources\CoachResource;
 use Kwai\Modules\Coaches\UseCases\CreateCoach;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -72,11 +73,12 @@ class CreateCoachAction extends Action
             return (new NotFoundResponse('Member not found'))($response);
         }
 
-        return (new ResourceResponse(
-            CoachTransformer::createForItem(
-                $coach,
-                $request->getAttribute('kwai.user')
-            )
+        $resource = new CoachResource(
+            $coach,
+            $request->getAttribute('kwai.user')
+        );
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

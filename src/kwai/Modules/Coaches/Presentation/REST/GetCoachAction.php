@@ -10,13 +10,14 @@ namespace Kwai\Modules\Coaches\Presentation\REST;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Coaches\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Coaches\Infrastructure\Repositories\CoachDatabaseRepository;
-use Kwai\Modules\Coaches\Presentation\Transformers\CoachTransformer;
+use Kwai\Modules\Coaches\Presentation\Resources\CoachResource;
 use Kwai\Modules\Coaches\UseCases\GetCoach;
 use Kwai\Modules\Coaches\UseCases\GetCoachCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -53,9 +54,12 @@ class GetCoachAction extends Action
             return (new NotFoundResponse('Coach not found'))($response);
         }
 
-        $user = $request->getAttribute('kwai.user');
-        $resource = CoachTransformer::createForItem($coach, $user);
-
-        return (new ResourceResponse($resource))($response);
+        $resource = new CoachResource(
+            $coach,
+            $request->getAttribute('kwai.user')
+        );
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
+        ))($response);
     }
 }
