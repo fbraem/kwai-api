@@ -9,6 +9,7 @@ namespace Kwai\Core\Infrastructure\Database;
 
 use Illuminate\Support\Collection;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Class ColumnCollection
@@ -27,7 +28,7 @@ class ColumnCollection implements IteratorAggregate
         $this->collection = $collection;
     }
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return $this->collection->getIterator();
     }
