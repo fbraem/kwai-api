@@ -16,15 +16,16 @@ use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Pages\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageImageRepository;
-use Kwai\Modules\Pages\Presentation\Transformers\PageTransformer;
+use Kwai\Modules\Pages\Presentation\Resources\PageResource;
 use Kwai\Modules\Pages\UseCases\CreatePage;
 use League\Flysystem\Filesystem;
 use Nette\Schema\ValidationException;
@@ -62,7 +63,7 @@ class CreatePageAction extends Action
         }
 
         $user = $request->getAttribute('kwai.user');
-        $creator = new Creator($user->id, $user->getUsername());
+        $creator = new Creator($user->id(), $user->getUsername());
 
         $pageRepo = new PageDatabaseRepository($this->database);
         $applicationRepo = new ApplicationDatabaseRepository($this->database);
@@ -88,11 +89,13 @@ class CreatePageAction extends Action
             return (new NotFoundResponse('Application not found'))($response);
         }
 
-        return (new ResourceResponse(
-            PageTransformer::createForItem(
-                $page,
-                $this->converterFactory
-            )
+        $resource = new PageResource(
+            $page,
+            $this->converterFactory
+        );
+
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

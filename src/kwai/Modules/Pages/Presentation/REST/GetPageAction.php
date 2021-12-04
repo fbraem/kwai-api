@@ -14,14 +14,15 @@ use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageImageRepository;
-use Kwai\Modules\Pages\Presentation\Transformers\PageTransformer;
+use Kwai\Modules\Pages\Presentation\Resources\PageResource;
 use Kwai\Modules\Pages\UseCases\GetPage;
 use Kwai\Modules\Pages\UseCases\GetPageCommand;
 use League\Flysystem\Filesystem;
@@ -73,13 +74,13 @@ class GetPageAction extends Action
             return (new NotFoundResponse('Page not found'))($response);
         }
 
-        $resource = PageTransformer::createForItem(
+        $resource = new PageResource(
             $page,
             $this->converterFactory
         );
 
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

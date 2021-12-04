@@ -10,6 +10,7 @@ namespace Kwai\Modules\News\Presentation\Resources;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\JSONAPI;
+use Kwai\Modules\News\Domain\Story;
 
 /**
  * Class StoryResource
@@ -19,6 +20,10 @@ use Kwai\JSONAPI;
 #[JSONAPI\Resource(type: 'stories', id: 'getId')]
 class StoryResource
 {
+    /**
+     * @param Entity<Story>    $story
+     * @param ConverterFactory $converterFactory
+     */
     public function __construct(
         private Entity $story,
         private ConverterFactory $converterFactory
@@ -100,6 +105,12 @@ class StoryResource
             ];
         }
         return $contents;
+    }
+
+    #[JSONAPI\Attribute(name: 'images')]
+    public function getImages(): array
+    {
+        return $this->story->getImages()->toArray();
     }
 
     #[JSONAPI\Relationship(name: 'application')]
