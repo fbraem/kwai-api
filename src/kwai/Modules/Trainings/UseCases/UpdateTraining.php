@@ -122,12 +122,12 @@ class UpdateTraining
         $contents = new Collection();
         foreach ($command->contents as $text) {
             $contents->add(new Text(
-                new Locale($text->locale),
-                new DocumentFormat($text->format),
-                $text->title,
-                $text->summary,
-                $text->content ?? null,
-                $creator
+                locale: new Locale($text->locale),
+                format: new DocumentFormat($text->format),
+                title: $text->title,
+                summary: $text->summary,
+                content: $text->content ?? null,
+                author: $creator
             ));
         }
 

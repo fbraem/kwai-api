@@ -11,16 +11,16 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Transformers\DefinitionTransformer;
+use Kwai\Modules\Trainings\Presentation\Resources\DefinitionResource;
 use Kwai\Modules\Trainings\UseCases\BrowseDefinitions;
 use Kwai\Modules\Trainings\UseCases\BrowseDefinitionsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Log\LoggerInterface;
 
 /**
  * Class BrowseDefinitionsAction
@@ -66,8 +66,8 @@ class BrowseDefinitionsAction extends Action
             )($response);
         }
 
-        $resource = DefinitionTransformer::createForCollection(
-            $definitions
+        $resources = $definitions->map(
+            fn($definition) => new DefinitionResource($definition)
         );
 
         $meta = [
@@ -77,10 +77,9 @@ class BrowseDefinitionsAction extends Action
             $meta['limit'] = $command->limit;
             $meta['offset'] = $command->offset;
         }
-        $resource->setMeta($meta);
-
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta($meta)
         ))($response);
     }
 }

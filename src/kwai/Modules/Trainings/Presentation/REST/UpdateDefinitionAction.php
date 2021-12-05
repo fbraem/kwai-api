@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Trainings
  */
 declare(strict_types=1);
 
@@ -12,17 +12,18 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\SeasonDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Transformers\DefinitionTransformer;
+use Kwai\Modules\Trainings\Presentation\Resources\DefinitionResource;
 use Kwai\Modules\Trainings\UseCases\UpdateDefinition;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -81,8 +82,10 @@ class UpdateDefinitionAction extends Action
             return (new NotFoundResponse('Team not found'))($response);
         }
 
-        return (new ResourceResponse(
-            DefinitionTransformer::createForItem($definition)
+        $resource = new DefinitionResource($definition);
+
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

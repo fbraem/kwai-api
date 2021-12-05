@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Kwai\Modules\Trainings\Presentation\REST\BrowseDefinitionsAction;
 use Kwai\Modules\Trainings\Presentation\REST\CreateDefinitionAction;
+use Kwai\Modules\Trainings\Presentation\REST\GetDefinitionAction;
 use Kwai\Modules\Trainings\Presentation\REST\UpdateDefinitionAction;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
@@ -74,5 +76,35 @@ it('can update a definition', function ($id) use ($context, $data) {
     expect($response->getStatusCode())->toBe(200);
 })
     ->depends('it can create a definition')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can get a definition', function ($id) use ($context) {
+    $action = new GetDefinitionAction(database: $context->db);
+
+    $request = new ServerRequest(
+        'GET',
+        '/trainings/definitions/' . $id
+    );
+    $response = new Response();
+
+    $response = $action($request, $response, ['id' => $id]);
+    expect($response->getStatusCode())->toBe(200);
+})
+    ->depends('it can create a definition')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can browse definitions', function () use ($context) {
+    $action = new BrowseDefinitionsAction($context->db);
+    $request = new ServerRequest(
+        'GET',
+        '/trainings/definitions'
+    );
+    $response = new Response();
+
+    $response = $action($request, $response, []);
+    expect($response->getStatusCode())->toBe(200);
+})
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

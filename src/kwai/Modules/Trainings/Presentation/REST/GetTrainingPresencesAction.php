@@ -10,13 +10,15 @@ namespace Kwai\Modules\Trainings\Presentation\REST;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
+use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Transformers\PresenceTransformer;
+use Kwai\Modules\Trainings\Presentation\Resources\PresenceResource;
 use Kwai\Modules\Trainings\UseCases\GetTraining;
 use Kwai\Modules\Trainings\UseCases\GetTrainingCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -56,13 +58,12 @@ class GetTrainingPresencesAction extends Action
             return (new NotFoundResponse('Training not found'))($response);
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
-        $resource = PresenceTransformer::createForCollection(
-            $training->getPresences()
+        $resources = $training->getPresences()->map(
+            fn (Presence $presence) => new PresenceResource($presence)
         );
 
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources)
         ))($response);
     }
 }

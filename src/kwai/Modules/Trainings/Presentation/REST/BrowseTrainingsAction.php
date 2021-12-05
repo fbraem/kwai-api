@@ -13,16 +13,17 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Transformers\TrainingTransformer;
+use Kwai\Modules\Trainings\Presentation\Resources\TrainingResource;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainings;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainingsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -103,9 +104,11 @@ class BrowseTrainingsAction extends Action
             return (new NotFoundResponse('Definition not found'))($response);
         }
 
-        $resource = TrainingTransformer::createForCollection(
-            $trainings,
-            $this->converterFactory
+        $resources = $trainings->map(
+            fn ($training) => new TrainingResource(
+                $training,
+                $this->converterFactory
+            )
         );
 
         $meta = [
@@ -115,10 +118,10 @@ class BrowseTrainingsAction extends Action
             $meta['limit'] = $command->limit;
             $meta['offset'] = $command->offset ?? 0;
         }
-        $resource->setMeta($meta);
 
-        return (new ResourceResponse(
-            $resource
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta($meta)
         ))($response);
     }
 }
