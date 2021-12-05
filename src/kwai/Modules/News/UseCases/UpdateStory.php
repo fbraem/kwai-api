@@ -61,12 +61,12 @@ class UpdateStory
             $contents = collect([]);
             foreach ($command->contents as $text) {
                 $contents->push(new Text(
-                    new Locale($text->locale),
-                    new DocumentFormat($text->format),
-                    $text->title,
-                    $text->summary,
-                    $text->content,
-                    $creator
+                    locale: new Locale($text->locale),
+                    format: new DocumentFormat($text->format),
+                    title: $text->title,
+                    summary: $text->summary,
+                    content: $text->content,
+                    author: $creator
                 ));
             }
         } else {
