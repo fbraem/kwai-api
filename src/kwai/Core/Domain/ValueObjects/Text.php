@@ -60,9 +60,9 @@ class Text
         Locale $locale,
         DocumentFormat $format,
         string $title,
+        Creator $author,
         string $summary,
-        ?string $content,
-        Creator $author
+        ?string $content = null,
     ) {
         $this->locale = $locale;
         $this->format = $format;
