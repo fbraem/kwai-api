@@ -58,7 +58,7 @@ class UserInvitation implements DomainEntity
     /**
      * Get the time when the invitation will expire
      */
-    public function getExpiration(): ?Timestamp
+    public function getExpiration(): Timestamp
     {
         return $this->expiration;
     }
