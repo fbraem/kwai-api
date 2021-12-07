@@ -130,10 +130,12 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
                 $abilities->put($ability['id'], $ability);
                 $ability->put('rules', new Collection());
             }
-            $abilities
-                ->get($ability->get('id'))
-                ->get('rules')
-                ->push($rule);
+            if ($rule->has('id')) {
+                $abilities
+                    ->get($ability->get('id'))
+                    ->get('rules')
+                    ->push($rule);
+            }
         }
 
         return $abilities;
