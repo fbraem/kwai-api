@@ -51,7 +51,11 @@ class CreateAbility
      */
     public function __invoke(CreateAbilityCommand $command): Entity
     {
-        $rules = $this->ruleRepo->getbyIds($command->rules);
+        if (count($command->rules) > 0) {
+            $rules = $this->ruleRepo->getbyIds($command->rules);
+        } else {
+            $rules = collect();
+        }
         return $this->abilityRepo->create(
             new Ability(
                 name: $command->name,

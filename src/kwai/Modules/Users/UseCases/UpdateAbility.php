@@ -56,7 +56,11 @@ class UpdateAbility
     public function __invoke(UpdateAbilityCommand $command): Entity
     {
         $ability = $this->abilityRepo->getById($command->id);
-        $newRules = $this->ruleRepo->getByIds($command->rules);
+        if (count($command->rules) > 0) {
+            $newRules = $this->ruleRepo->getByIds($command->rules);
+        } else {
+            $newRules = collect();
+        }
 
         $traceableTime = $ability->getTraceableTime();
         $traceableTime->markUpdated();
