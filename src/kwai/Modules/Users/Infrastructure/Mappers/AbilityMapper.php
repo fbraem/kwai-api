@@ -33,10 +33,10 @@ final class AbilityMapper
                     : null
             ),
             remark: $data->get('remark'),
-            rules: $data->get('rules',new Collection())
+            rules: $data->get('rules', new Collection())
                 ->map(
                     fn ($rule) => new Entity((int) $rule->get('id'), RuleMapper::toDomain($rule))
-            )
+                )
         );
     }
 
