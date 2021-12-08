@@ -97,7 +97,8 @@ it('can serialize a training to a JSON:API resource', function () {
                 'end_date' => '2021-12-05 21:00:00',
                 'timezone' => 'Europe/Brussels',
                 'cancelled' => false,
-                'active' => true
+                'active' => true,
+                'location' => null
             ],
             'contents' => [
                 (object) [
@@ -105,6 +106,8 @@ it('can serialize a training to a JSON:API resource', function () {
                     'title' => 'Competition Training',
                     'summary' => 'This is a training dedicated to competition',
                     'html_summary' => '<p>This is a training dedicated to competition</p>',
+                    'content' => null,
+                    'html_content' => ''
                 ]
             ]
         ])
