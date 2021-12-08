@@ -22,7 +22,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
 use Kwai\Modules\News\Presentation\Resources\StoryResource;
-use Kwai\Modules\News\Presentation\Resources\StoryTransformer;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
 use League\Flysystem\Filesystem;
