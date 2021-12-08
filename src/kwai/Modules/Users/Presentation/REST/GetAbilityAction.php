@@ -9,14 +9,15 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use Kwai\Modules\Users\Presentation\Resources\AbilityResource;
 use Kwai\Modules\Users\UseCases\GetAbility;
 use Kwai\Modules\Users\UseCases\GetAbilityCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -37,13 +38,9 @@ class GetAbilityAction extends Action
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param $args
-     * @return Response
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
         $command = new GetAbilityCommand();
         $command->id = intval($args['id']);
@@ -61,10 +58,10 @@ class GetAbilityAction extends Action
             return (new NotFoundResponse('Ability not found'))($response);
         }
 
-        return (new ResourceResponse(
-            AbilityTransformer::createForItem(
-                $ability
-            )
+        $resource = new AbilityResource($ability);
+
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

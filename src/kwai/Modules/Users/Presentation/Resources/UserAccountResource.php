@@ -1,0 +1,84 @@
+<?php
+/**
+ * @package Modules
+ * @subpackage Users
+ */
+declare(strict_types=1);
+
+namespace Kwai\Modules\Users\Presentation\Resources;
+
+use Kwai\Core\Domain\Entity;
+use Kwai\JSONAPI;
+use Kwai\Modules\Users\Domain\UserAccount;
+
+/**
+ * Class UserAccountResource
+ */
+#[JSONAPI\Resource(type: 'users', id: 'getId')]
+class UserAccountResource
+{
+    /**
+     * @param Entity<UserAccount> $userAccount
+     */
+    public function __construct(
+        private Entity $userAccount
+    ) {
+    }
+
+    public function getId(): string
+    {
+        return (string) $this->userAccount->id();
+    }
+
+    #[JSONAPI\Attribute(name: 'uuid')]
+    public function getUuid(): string
+    {
+        return (string) $this->userAccount->getUser()->getUuid();
+    }
+
+    #[JSONAPI\Attribute(name: 'email')]
+    public function getEmail(): string
+    {
+        return (string) $this->userAccount->getUser()->getEmailAddress();
+    }
+
+    #[JSONAPI\Attribute(name: 'username')]
+    public function getUsername(): string
+    {
+        return (string) $this->userAccount->getUser()->getUsername();
+    }
+
+    #[JSONAPI\Attribute(name: 'remark')]
+    public function getRemark(): ?string
+    {
+        return $this->userAccount->getUser()->getRemark();
+    }
+
+    #[JSONAPI\Attribute(name: 'last_login')]
+    public function getLastLogin(): string
+    {
+        return (string) $this->userAccount->getLastLogin();
+    }
+
+    #[JSONAPI\Attribute(name: 'last_login')]
+    public function getLastUnsuccessfulLogin(): ?string
+    {
+        $timestamp = $this->userAccount->getLastUnsuccessFulLogin();
+        if ($timestamp) {
+            return (string) $timestamp;
+        }
+        return null;
+    }
+
+    #[JSONAPI\Attribute(name: 'created_at')]
+    public function getCreationDate(): string
+    {
+        return (string) $this->userAccount->getUser()->getTraceableTime()->getCreatedAt();
+    }
+
+    #[JSONAPI\Attribute(name: 'updated_at')]
+    public function getUpdateDate(): ?string
+    {
+        return $this->userAccount->getUser()->getTraceableTime()->getUpdatedAt()?->__toString();
+    }
+}

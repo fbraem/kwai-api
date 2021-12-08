@@ -10,12 +10,14 @@ namespace Kwai\Modules\Users\Presentation\REST;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\RuleTransformer;
+use Kwai\Modules\Users\Presentation\Resources\RuleResource;
 use Kwai\Modules\Users\UseCases\BrowseRules;
 use Kwai\Modules\Users\UseCases\BrowseRulesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -41,17 +43,12 @@ class BrowseRulesAction extends Action
         $command = new BrowseRulesCommand();
 
         $parameters = $request->getAttribute('parameters');
-        if (array_key_exists('subject', $parameters['filter'])) {
-            $command->subject = $parameters['filter']['subject'];
-        }
+        $command->subject = $parameters['filter']['subject'] ?? null;
 
         try {
-            $rules = BrowseRules::create(
+            [$count, $rules] = BrowseRules::create(
                 new RuleDatabaseRepository($this->database)
             )($command);
-            return (new ResourceResponse(
-                RuleTransformer::createForCollection($rules)
-            ))($response);
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (
@@ -63,5 +60,11 @@ class BrowseRulesAction extends Action
                 new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         }
+
+        $resources = $rules->map(fn ($rule) => new RuleResource($rule));
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta('count', $count)
+        ))($response);
     }
 }

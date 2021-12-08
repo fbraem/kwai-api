@@ -69,7 +69,7 @@ class LoginAction extends Action
      * Login the user and return an access- and refreshtoken.
      * @param  Request  $request  The current HTTP request
      * @param  Response $response The current HTTP response
-     * @param  string[] $args     Route’s named placeholders
+     * @param  array $args        Route’s named placeholders
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

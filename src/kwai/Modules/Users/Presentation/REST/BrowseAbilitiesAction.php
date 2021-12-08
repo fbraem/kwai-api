@@ -10,12 +10,13 @@ namespace Kwai\Modules\Users\Presentation\REST;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use Kwai\Modules\Users\Presentation\Resources\AbilityResource;
 use Kwai\Modules\Users\UseCases\BrowseAbilities;
 use Kwai\Modules\Users\UseCases\BrowseAbilitiesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -42,10 +43,7 @@ class BrowseAbilitiesAction extends Action
     {
         $repo = new AbilityDatabaseRepository($this->database);
         try {
-            $users = BrowseAbilities::create($repo)(new BrowseAbilitiesCommand());
-            return (new ResourceResponse(
-                AbilityTransformer::createForCollection($users)
-            ))($response);
+            [$count, $abilities] = BrowseAbilities::create($repo)(new BrowseAbilitiesCommand());
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (
@@ -57,5 +55,11 @@ class BrowseAbilitiesAction extends Action
                 new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         }
+
+        $resources = $abilities->map(fn ($ability) => new AbilityResource($ability));
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta('count', $count)
+        ))($response);
     }
 }

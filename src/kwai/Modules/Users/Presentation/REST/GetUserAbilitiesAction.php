@@ -9,14 +9,15 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use Kwai\Modules\Users\Presentation\Resources\AbilityResource;
 use Kwai\Modules\Users\UseCases\GetUserAbilities;
 use Kwai\Modules\Users\UseCases\GetUserAbilitiesCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -39,10 +40,10 @@ class GetUserAbilitiesAction extends Action
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
+     * @param array $args
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
         $command = new GetUserAbilitiesCommand();
         $command->uuid = $args['uuid'];
@@ -60,10 +61,10 @@ class GetUserAbilitiesAction extends Action
             return (new NotFoundResponse('User not found'))($response);
         }
 
-        return (new ResourceResponse(
-            AbilityTransformer::createForCollection(
-                $abilities
-            )
+        $resources = $abilities->map(fn ($ability) => new AbilityResource($ability));
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta('count', $abilities->count())
         ))($response);
     }
 }

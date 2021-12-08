@@ -7,21 +7,23 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Presentation\REST;
 
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
+use Kwai\JSONAPI;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
+use Kwai\Modules\Users\Presentation\Resources\UserInvitationResource;
 use Kwai\Modules\Users\UseCases\InviteUser;
 use Kwai\Modules\Users\UseCases\InviteUserCommand;
 use Nette\Schema\Expect;
@@ -87,7 +89,6 @@ class CreateUserInvitationAction extends Action
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $user = $request->getAttribute('kwai.user');
         try {
             $command = $this->createCommand($request->getParsedBody());
         } catch (ValidationException $ve) {
@@ -105,9 +106,9 @@ class CreateUserInvitationAction extends Action
             $command->sender_name = '';
         }
 
-        //TODO: for now, we pass the user as argument to the use case.
-        //TODO: In the future, move this to an execution context?
-        //TODO: Check if we need to create a InviteService?
+        $user = $request->getAttribute('kwai.user');
+        $creator = new Creator($user->id(), $user->getUsername());
+
         try {
             $invitation = (new InviteUser(
                 new UserInvitationDatabaseRepository($this->database),
@@ -118,7 +119,7 @@ class CreateUserInvitationAction extends Action
                     $this->templateEngine->createTemplate('User/invitation_html'),
                     $this->templateEngine->createTemplate('User/invitation_txt'),
                 ),
-                $user
+                $creator
             ))($command);
         } catch (UnprocessableException $e) {
             return (new SimpleResponse(
@@ -132,10 +133,9 @@ class CreateUserInvitationAction extends Action
             )($response);
         }
 
-        return (new ResourceResponse(
-            UserInvitationTransformer::createForItem(
-                $invitation
-            )
+        $resource = new UserInvitationResource($invitation);
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

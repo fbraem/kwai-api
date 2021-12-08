@@ -9,18 +9,19 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
+use Kwai\Modules\Users\Presentation\Resources\UserResource;
 use Kwai\Modules\Users\UseCases\GetUser;
 use Kwai\Modules\Users\UseCases\GetUserCommand;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
-use Kwai\Modules\Users\Presentation\Transformers\UserTransformer;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 
 /**
@@ -40,10 +41,10 @@ class GetUserAction extends Action
     /**
      * @param Request $request
      * @param Response $response
-     * @param $args
+     * @param array $args
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
         if (isset($args['uuid'])) {
             $command = new GetUserCommand();
@@ -66,11 +67,9 @@ class GetUserAction extends Action
         }
 
         if ($user) {
-            return (new ResourceResponse(
-                UserTransformer::createForItem(
-                    $user
-                ),
-                'abilities'
+            $resource = new UserResource($user);
+            return (new JSONAPIResponse(
+                JSONAPI\Document::createFromObject($resource)
             ))($response);
         }
 

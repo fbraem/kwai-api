@@ -9,16 +9,17 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserAccountTransformer;
+use Kwai\Modules\Users\Presentation\Resources\UserAccountResource;
 use Kwai\Modules\Users\UseCases\ConfirmInvitation;
 use Kwai\Modules\Users\UseCases\ConfirmInvitationCommand;
 use Nette\Schema\Expect;
@@ -108,8 +109,9 @@ class ConfirmInvitationAction extends Action
             )($response);
         }
 
-        return (new ResourceResponse(
-            UserAccountTransformer::createForItem($userAccount)
+        $resource = new UserAccountResource($userAccount);
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

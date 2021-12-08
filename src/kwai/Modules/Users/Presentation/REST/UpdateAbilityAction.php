@@ -9,15 +9,16 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use Kwai\Modules\Users\Presentation\Resources\AbilityResource;
 use Kwai\Modules\Users\UseCases\UpdateAbility;
 use Kwai\Modules\Users\UseCases\UpdateAbilityCommand;
 use Nette\Schema\Elements\Structure;
@@ -131,10 +132,10 @@ class UpdateAbilityAction extends Action
             return (new NotFoundResponse('Ability not found'))($response);
         }
 
-        return (new ResourceResponse(
-            AbilityTransformer::createForItem(
-                $ability
-            )
+        $resource = new AbilityResource($ability);
+
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }

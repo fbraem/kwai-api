@@ -10,12 +10,13 @@ namespace Kwai\Modules\Users\Presentation\REST;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
+use Kwai\Modules\Users\Presentation\Resources\UserInvitationResource;
 use Kwai\Modules\Users\UseCases\BrowseUserInvitations;
 use Kwai\Modules\Users\UseCases\BrowseUserInvitationsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -42,10 +43,7 @@ class BrowseUserInvitationsAction extends Action
     {
         $repo = new UserInvitationDatabaseRepository($this->database);
         try {
-            $invitations = BrowseUserInvitations::create($repo)(new BrowseUserInvitationsCommand());
-            return (new ResourceResponse(
-                UserInvitationTransformer::createForCollection($invitations)
-            ))($response);
+            [$count, $invitations] = BrowseUserInvitations::create($repo)(new BrowseUserInvitationsCommand());
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (
@@ -57,5 +55,13 @@ class BrowseUserInvitationsAction extends Action
                 new SimpleResponse(500, 'A query exception occurred.')
             )($response);
         }
+
+        $resources = $invitations->map(
+            fn ($invitation) => new UserInvitationResource($invitation)
+        );
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromArray($resources->toArray())
+                ->setMeta('count', $count)
+        ))($response);
     }
 }

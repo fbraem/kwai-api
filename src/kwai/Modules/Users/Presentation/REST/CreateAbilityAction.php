@@ -9,13 +9,14 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\AbilityTransformer;
+use Kwai\Modules\Users\Presentation\Resources\AbilityResource;
 use Kwai\Modules\Users\UseCases\CreateAbility;
 use Kwai\Modules\Users\UseCases\CreateAbilityCommand;
 use Nette\Schema\Elements\Structure;
@@ -124,11 +125,9 @@ class CreateAbilityAction extends Action
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
         }
+        $resource = new AbilityResource($ability);
 
-        return (new ResourceResponse(
-            AbilityTransformer::createForItem(
-                $ability
-            )
-        ))($response);
-    }
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
+        ))($response);    }
 }

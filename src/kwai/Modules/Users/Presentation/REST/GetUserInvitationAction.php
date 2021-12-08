@@ -9,14 +9,15 @@ namespace Kwai\Modules\Users\Presentation\REST;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
-use Kwai\Core\Infrastructure\Presentation\Responses\ResourceResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Kwai\Modules\Users\Presentation\Transformers\UserInvitationTransformer;
+use Kwai\Modules\Users\Presentation\Resources\UserInvitationResource;
 use Kwai\Modules\Users\UseCases\GetUserInvitation;
 use Kwai\Modules\Users\UseCases\GetUserInvitationCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -49,7 +50,7 @@ class GetUserInvitationAction extends Action
         $command->uuid = $args['uuid'];
 
         try {
-            $user = GetUserInvitation::create(
+            $invitation = GetUserInvitation::create(
                 new UserInvitationDatabaseRepository($this->database)
             )($command);
         } catch (RepositoryException $e) {
@@ -61,10 +62,9 @@ class GetUserInvitationAction extends Action
             return (new NotFoundResponse('User not found'))($response);
         }
 
-        return (new ResourceResponse(
-            UserInvitationTransformer::createForItem(
-                $user
-            )
+        $resource = new UserInvitationResource($invitation);
+        return (new JSONAPIResponse(
+            JSONAPI\Document::createFromObject($resource)
         ))($response);
     }
 }
