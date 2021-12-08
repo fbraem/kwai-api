@@ -44,7 +44,7 @@ class BrowseRules
      * Get all abilities.
      *
      * @param BrowseRulesCommand $command
-     * @return Entity<Rule>[]
+     * @return array[int, array[Entity<Rule>]
      * @throws QueryException
      * @throws RepositoryException
      */
