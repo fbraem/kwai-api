@@ -2,8 +2,8 @@
 <project version="4">
   <component name="MessDetector">
     <phpmd_settings>
-      <MessDetectorConfiguration tool_path="$PROJECT_DIR$/src/vendor/bin/phpmd" />
-      <phpmd_by_interpreter interpreter_id="8cb01efb-27f2-4a34-aab7-7253f82550cc" tool_path="/vagrant/vendor/bin/phpmd" timeout="30000" />
+      <MessDetectorConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpmd" />
+      <phpmd_by_interpreter interpreter_id="585b2eaf-a725-4d20-a209-b0d34e15742b" tool_path="/vagrant/vendor/bin/phpmd" timeout="30000" />
     </phpmd_settings>
   </component>
   <component name="PhpCSFixer">

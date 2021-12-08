@@ -120,6 +120,7 @@
     <inspection_tool class="DockerFileAddOrCopySemantic" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DockerFileArgumentCount" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="DockerFileAssignments" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="DockerFileRunCommandMissingContinuation" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="DoctrineTypeDeprecatedInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DocumentWriteJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DuplicateConditionJS" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -344,6 +345,7 @@
     <inspection_tool class="JSUnusedAssignment" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JSUnusedGlobalSymbols" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JSUnusedLocalSymbols" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="JSUrlImportUsage" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="JSValidateJSDoc" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JSValidateTypes" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="JSVoidFunctionReturnValueUsed" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -373,6 +375,8 @@
     <inspection_tool class="LoopStatementThatDoesntLoopJS" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="LossyEncoding" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MagicNumberJS" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="MarkdownIncorrectTableFormatting" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="MarkdownNoTableBorders" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="MarkdownUnresolvedFileReference" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MessDetectorValidationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="CODESIZE" value="true" />
@@ -434,6 +438,7 @@
     <inspection_tool class="PgSelectFromProcedureInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhingDomInspection" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PhpAbstractStaticMethodInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpAccessingStaticMembersOnTraitInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpApplyingEmptyIndexOperatorOnStringInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpArgumentWithoutNamedIdentifierInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpArithmeticTypeCheckInspection" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -441,10 +446,15 @@
     <inspection_tool class="PhpArrayAccessOnIllegalTypeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayFillCanBeConvertedToLoopInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
     <inspection_tool class="PhpArrayFilterCanBeConvertedToLoopInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="PhpArrayIndexImmediatelyRewrittenInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpArrayIndexResetIsUnnecessaryInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayIsAlwaysEmptyInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayKeyDoesNotMatchArrayShapeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayMapCanBeConvertedToLoopInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="PhpArrayPushWithOneElementInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpArraySearchInBooleanContextInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayShapeAttributeCanBeAddedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpArrayToStringConversionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayUsedOnlyForWriteInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpArrayWriteIsNotUsedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpAssignmentInConditionInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
@@ -452,19 +462,23 @@
     <inspection_tool class="PhpAssignmentReplaceableWithPrefixExpressionInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
     <inspection_tool class="PhpAttributeCanBeAddedToOverriddenMemberInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpAttributeIsNotRepeatableInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpAutovivificationOnFalseValuesInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpBooleanCanBeSimplifiedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpCSFixerValidationInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpCSValidationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="EXTENSIONS" value="php,phtml" />
     </inspection_tool>
     <inspection_tool class="PhpCaseWithValueNotFoundInEnumInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="PhpCastIsEvaluableInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpCastIsUnnecessaryInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpClassCantBeUsedAsAttributeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpClassConstantAccessedViaChildClassInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpClassHasTooManyDeclaredMembersInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpClassImplementsSolelyTraversableInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpClassNamingConventionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpClosureCanBeConvertedToFirstClassCallableInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpClosureCanBeConvertedToShortArrowFunctionInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="PhpCommentCanBeReplacedWithNamedArgumentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpComplexClassInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpComplexFunctionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpComposerDuplicatedRequirementInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -473,17 +487,21 @@
     <inspection_tool class="PhpConcatenationWithArithmeticInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpConcatenationWithEmptyStringCanBeInlinedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpConditionAlreadyCheckedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpConditionCanBeReplacedWithMinMaxCallInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpConditionCheckedByNextConditionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpConstantNamingConventionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpConstantReassignmentInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpConstructorStyleInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpContinueTargetingSwitchInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpCoveredCharacterInClassInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpCurlyBraceAccessSyntaxUsageInspection" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PhpDangerousArrayInitializationInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpDefineCanBeReplacedWithConstInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpDefineConstantNameStartsWithLeadingSlashInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpDeprecatedCastInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpDeprecatedImplodeUsageInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpDeprecatedSerializableUsageInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpDeprecatedStdLibCallInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpDeprecationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpDisabledExtensionStubsInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
     <inspection_tool class="PhpDisabledQualityToolComposerInspection" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -501,6 +519,7 @@
     <inspection_tool class="PhpDuplicateMatchArmBodyInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpDuplicateMatchConditionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpDuplicateSwitchCaseBodyInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpDuplicatedCharacterInStrFunctionCallInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpDynamicAsStaticMethodCallInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpElementIsNotAvailableInCurrentPhpVersionInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpEnforceDocCommentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -514,8 +533,10 @@
     <inspection_tool class="PhpFeatureEnvyLocalInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpFieldAssignmentTypeMismatchInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpFieldCanBePromotedInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
+    <inspection_tool class="PhpFieldImmediatelyRewrittenInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpForeachArrayIsUsedAsValueInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpForeachNestedOuterKeyValueVariablesConflictInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpForeachOverSingleElementArrayLiteralInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpForeachVariableOverwritesAlreadyDefinedVariableInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpFormatCallWithSingleArgumentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpFormatFunctionParametersMismatchInspection" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -527,6 +548,7 @@
     <inspection_tool class="PhpGotoIntoLoopInspection" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PhpHalsteadMetricInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpHierarchyChecksInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpIdempotentOperationInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpIfCanBeMergedWithSequentialConditionInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpIfWithCommonPartsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpIgnoredClassAliasDeclaration" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
@@ -534,6 +556,7 @@
     <inspection_tool class="PhpIllegalPsrClassPathInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpIllegalStringOffsetInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpImmutablePropertyIsWrittenInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="PhpImplicitOctalLiteralUsageInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpInArrayCanBeReplacedWithComparisonInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpInapplicableAttributeTargetDeclarationInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpInappropriateInheritDocUsageInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -545,6 +568,7 @@
     <inspection_tool class="PhpInternalEntityUsedInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpInvalidInstanceofInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpInvalidMagicMethodModifiersInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpInvalidStringOffsetUsageInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpIssetCanBeReplacedWithCoalesceInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpLackOfCohesionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpLanguageLevelInspection" enabled="true" level="ERROR" enabled_by_default="true" />
@@ -556,6 +580,7 @@
     <inspection_tool class="PhpLoopCanBeReplacedWithImplodeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpLoopCanBeReplacedWithStrRepeatInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpLoopNeverIteratesInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpMatchCanBeReplacedWithSwitchStatementInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpMatchExpressionCanBeReplacedWithTernaryInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpMatchExpressionWithOnlyDefaultArmInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMemberCanBePulledUpInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -575,13 +600,16 @@
     <inspection_tool class="PhpMissingVisibilityInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMixedReturnTypeCanBeReducedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpModifierOrderInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpModuloByOneInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMultipleClassDeclarationsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMultipleClassesDeclarationsInOneFile" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNamedArgumentMightBeUnresolvedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNamedArgumentUsageInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpNamedArgumentsWithChangedOrderInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNestedDirNameCallsCanBeReplacedWithLevelParameterInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpNestedMinMaxCallInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNestedTernaryExpressionUsageInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpNeverTypedFunctionReturnViolationInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpNewClassMissingParameterListInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNoReturnAttributeCanBeAddedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNonCanonicalElementsOrderInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -590,6 +618,7 @@
     <inspection_tool class="PhpNotInstalledPackagesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpNullIsNotCompatibleWithParameterInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpNullSafeOperatorCanBeUsedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpObjectFieldsAreOnlyWrittenInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpOptionalBeforeRequiredParametersInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpOverridingMethodVisibilityInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpParameterByRefIsNotUsedAsReferenceInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -598,18 +627,23 @@
     <inspection_tool class="PhpPassByRefInspection" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PhpPluralMixedCanBeReplacedWithArrayInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPossiblePolymorphicInvocationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpPregMatchWithoutEffectiveRegexpInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPrivateFieldCanBeLocalVariableInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPromotedFieldUsageInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="PhpPropertyNamingConventionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPropertyOnlyWrittenInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPureAttributeCanBeAddedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPureFunctionMayProduceSideEffectsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpRangesInClassCanBeMergedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpReadonlyPropertyWrittenOutsideDeclarationScopeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="PhpRedundantArrayCallInForeachIteratedValueInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantAssignmentToPromotedFieldInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantAttributeParenthesisInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantCatchClauseInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpRedundantClosingTagInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpRedundantDefaultBreakContinueArgumentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantDocCommentInspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
+    <inspection_tool class="PhpRedundantIntersectionTypeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantMethodOverrideInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantOptionalArgumentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpRedundantTypeInUnionTypeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -617,6 +651,7 @@
     <inspection_tool class="PhpReturnDocTypeMismatchInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpReturnValueOfMethodIsNeverUsedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpSameParameterValueInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpSecondWriteToReadonlyPropertyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpSeparateElseIfInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpShortOpenTagInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpSignatureMismatchDuringInheritanceInspection" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -627,6 +662,7 @@
         <option name="config" value="$PROJECT_DIR$/phpstan.neon" />
       </scope>
     </inspection_tool>
+    <inspection_tool class="PhpStarClosureCanBeReplacedWithPlusInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpStatementHasEmptyBodyInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpStatementWithoutBracesInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
     <inspection_tool class="PhpStaticAsDynamicMethodCallInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -637,6 +673,7 @@
     <inspection_tool class="PhpSuspiciousNameCombinationInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpSwitchCanBeReplacedWithMatchExpressionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpSwitchCaseWithoutDefaultBranchInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="PhpSwitchStatementWitSingleBranchInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpSwitchWithCommonPartsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpTernaryExpressionCanBeReducedToShortVersionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpTernaryExpressionCanBeReplacedWithConditionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -668,8 +705,10 @@
     <inspection_tool class="PhpUnitAssertCountInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitAssertEqualsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitAssertFileEqualsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PhpUnitAssertTrueWithIncompatibleTypeArgumentInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitCoversByAccessModifierIsDeprecatedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitCoversFunctionWithoutScopeResolutionOperatorInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpUnitDeprecatedCallsIn10VersionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitDeprecatedExpectExceptionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitExpectedExceptionDocTagIsDeprecatedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnitMisorderedAssertEqualsArgumentsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -685,6 +724,7 @@
     <inspection_tool class="PhpUnnecessaryParenthesesInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
     <inspection_tool class="PhpUnnecessaryReturnInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnnecessarySemicolonInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpUnnecessarySpreadOperatorForFunctionCallArgumentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnnecessaryStaticReferenceInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnnecessaryStopStatementInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnnecessaryStringCastInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -766,6 +806,7 @@
     <inspection_tool class="SqlCaseVsIfInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlCheckUsingColumnsInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlConstantConditionInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="SqlConstantExpressionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SqlCurrentSchemaInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlDeprecateTypeInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlDerivedTableAliasInspection" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -869,6 +910,7 @@
       <option name="m_ignoreCatchBlocksWithComments" value="false" />
     </inspection_tool>
     <inspection_tool class="UnusedDefine" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UpdateDependencyToLatestVersion" enabled="false" level="INFORMATION" enabled_by_default="false" />
     <inspection_tool class="VoidExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="VueDataFunction" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="VueDuplicateTag" enabled="true" level="WARNING" enabled_by_default="true" />
