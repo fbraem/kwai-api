@@ -15,7 +15,7 @@
         "php": ">=8.0",
         "nesbot/carbon": "2.54.*",
         "league/flysystem": "1.1.4",
-        "league/commonmark": "2.0.*",
+        "league/commonmark": "2.1.*",
         "league/csv": "^9.5",
         "league/plates": "^3.3",
         "ramsey/uuid": "^4",
