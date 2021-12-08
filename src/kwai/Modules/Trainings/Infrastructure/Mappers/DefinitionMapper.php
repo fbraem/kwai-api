@@ -45,7 +45,7 @@ class DefinitionMapper
                 start: Time::createFromString($data->get('start_time'), $data->get('time_zone')),
                 end: Time::createFromString($data->get('end_time'), $data->get('time_zone')),
             ),
-            active: $data->get('active') === '1',
+            active: $data->get('active') === 1,
             creator: CreatorMapper::toDomain($data->get('creator')),
             location: $data->has('location') ? new Location($data->get('location')) : null,
             remark: $data->get('remark'),

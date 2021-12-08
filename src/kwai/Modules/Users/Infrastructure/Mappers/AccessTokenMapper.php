@@ -22,7 +22,7 @@ final class AccessTokenMapper
         return new AccessToken(
             identifier: new TokenIdentifier($data->get('identifier')),
             expiration: Timestamp::createFromString($data->get('expiration')),
-            revoked: $data->get('revoked', '0') === '1',
+            revoked: $data->get('revoked', 0) === 1,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($data->get('created_at')),
                 $data->has('updated_at') ? Timestamp::createFromString($data->get('updated_at')) : null
@@ -39,7 +39,7 @@ final class AccessTokenMapper
         return collect([
             'identifier' => strval($accessToken->getIdentifier()),
             'expiration' => strval($accessToken->getExpiration()),
-            'revoked' => $accessToken->isRevoked() ? '1' : '0',
+            'revoked' => $accessToken->isRevoked() ? 1 : 0,
             'created_at' => strval($accessToken->getTraceableTime()->getCreatedAt()),
             'updated_at' => $accessToken->getTraceableTime()->getUpdatedAt()?->__toString(),
             'user_id' => $accessToken->getUserAccount()->id()

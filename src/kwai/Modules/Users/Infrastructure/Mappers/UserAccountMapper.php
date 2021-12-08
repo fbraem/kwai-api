@@ -32,7 +32,7 @@ final class UserAccountMapper
                 ? Timestamp::createFromString($data->get('last_unsuccessful_login'))
                 : null,
             password: new Password($data->get('password')),
-            revoked: $data->get('revoked', '0') === '1'
+            revoked: $data->get('revoked', 0) === 1
         );
     }
 

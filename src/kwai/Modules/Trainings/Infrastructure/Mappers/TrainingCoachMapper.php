@@ -32,9 +32,9 @@ class TrainingCoachMapper
                 (int) $data->get('coach_id'),
                 CoachMapper::toDomain($data)
             ),
-            head: $data->get('coach_type', 0) === '1',
-            payed: $data->get('payed', '0') === '1',
-            present: $data->get('present', '0') === '1',
+            head: $data->get('coach_type', 0) === 1,
+            payed: $data->get('payed', 0) === 1,
+            present: $data->get('present', 0) === 1,
             remark: $data->get('remark'),
             creator: CreatorMapper::toDomain($data->get('creator')),
             traceableTime: new TraceableTime(

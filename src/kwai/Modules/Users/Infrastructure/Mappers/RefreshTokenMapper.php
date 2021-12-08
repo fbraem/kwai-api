@@ -32,7 +32,7 @@ final class RefreshTokenMapper
         return new RefreshToken(
             identifier: new TokenIdentifier($data->get('identifier')),
             expiration: Timestamp::createFromString($data->get('expiration')),
-            revoked: $data->get('revoked', '0') === '1',
+            revoked: $data->get('revoked', 0) === 1,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($data->get('created_at')),
                 $data->has('updated_at') ? Timestamp::createFromString($data->get('updated_at')) : null
@@ -55,7 +55,7 @@ final class RefreshTokenMapper
         return collect([
             'identifier' => strval($refreshToken->getIdentifier()),
             'expiration' => strval($refreshToken->getExpiration()),
-            'revoked' => $refreshToken->isRevoked() ? '1' : '0',
+            'revoked' => $refreshToken->isRevoked() ? 1 : 0,
             'created_at' => strval($refreshToken->getTraceableTime()->getCreatedAt()),
             'updated_at' => $refreshToken->getTraceableTime()->getUpdatedAt()?->__toString(),
             'access_token_id' => $refreshToken->getAccessToken()->id()

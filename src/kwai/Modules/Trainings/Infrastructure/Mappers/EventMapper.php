@@ -24,8 +24,8 @@ class EventMapper
             endDate: Timestamp::createFromString($data['end_date']),
             timezone: $data['time_zone'],
             location: $data->has('location') ? new Location($data->get('location')) : null,
-            active: $data->get('active', '1') === '1',
-            cancelled: $data->get('cancelled', '0') === '1'
+            active: $data->get('active', 1) === 1,
+            cancelled: $data->get('cancelled', 0) === 1
         );
     }
 

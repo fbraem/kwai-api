@@ -26,7 +26,7 @@ class StoryMapper
     public static function toDomain(Collection $data): Story
     {
         return new Story(
-            enabled: $data->get('enabled', '0') === '1',
+            enabled: $data->get('enabled', '0') === 1,
             promotion: new Promotion(
                 (int) $data->get('promotion', 0),
                 $data->has('promotion_end_date')

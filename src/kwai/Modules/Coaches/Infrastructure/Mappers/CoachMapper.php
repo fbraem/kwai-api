@@ -43,7 +43,7 @@ class CoachMapper
             user: $user,
             bio: $data->get('description', null),
             diploma: $data->get('diploma', null),
-            active: $data->get('active') === '1',
+            active: $data->get('active') === 1,
             remark: $data->get('remark', null)
         );
     }

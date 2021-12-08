@@ -35,7 +35,7 @@ class UserInvitationMapper
             expiration: Timestamp::createFromString($data->get('expired_at'), $data->get('expired_at_timezone')),
             name: $data->get('name'),
             creator: CreatorMapper::toDomain($data->get('creator')),
-            revoked: $data->get('revoked', '0') === '1',
+            revoked: $data->get('revoked', 0) === 1,
             remark: $data->get('remark'),
             confirmation: $data->has('confirmed_at') ? Timestamp::createFromString($data->get('confirmed_at')) : null,
             traceableTime: new TraceableTime(
