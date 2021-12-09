@@ -26,8 +26,7 @@ class TrainingResource
     public function __construct(
         private Entity           $training,
         private ConverterFactory $converterFactory
-    )
-    {
+    ) {
     }
 
     public function getId(): string
@@ -84,11 +83,27 @@ class TrainingResource
         return $this->training->getTraceableTime()->getUpdatedAt()?->__toString();
     }
 
+    #[JSONAPI\Attribute(name: 'coaches')]
+    public function getTrainingCoaches(): array
+    {
+        // Coaches are stored with the id as key, to return an array
+        // values is used to turn it into a normal array.
+        return $this->training->getCoaches()->map(
+            fn(TrainingCoach $coach) => (object) [
+                'id' => $coach->getCoach()->id(),
+                'head' => $coach->isHead(),
+                'present' => $coach->isPresent(),
+                'payed' => $coach->isPayed(),
+                'remark' => $coach->getRemark()
+            ]
+        )->values()->all();
+    }
+
     #[JSONAPI\Relationship(name: 'coaches')]
     public function getCoaches(): array
     {
         return $this->training->getCoaches()->map(
-            fn(TrainingCoach $coach) => new TrainingCoachResource($coach)
+            fn(TrainingCoach $coach) => new CoachResource($coach->getCoach())
         )->toArray();
     }
 
