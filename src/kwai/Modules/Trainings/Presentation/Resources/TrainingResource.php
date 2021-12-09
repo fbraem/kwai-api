@@ -90,7 +90,7 @@ class TrainingResource
         // values is used to turn it into a normal array.
         return $this->training->getCoaches()->map(
             fn(TrainingCoach $coach) => (object) [
-                'id' => $coach->getCoach()->id(),
+                'id' => (string) $coach->getCoach()->id(),
                 'head' => $coach->isHead(),
                 'present' => $coach->isPresent(),
                 'payed' => $coach->isPayed(),
