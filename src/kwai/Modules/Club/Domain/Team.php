@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Club\Domain;
 
+use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 
 /**
@@ -14,7 +15,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
  *
  * Represents a team of a club.
  */
-class Team implements \Kwai\Core\Domain\DomainEntity
+class Team implements DomainEntity
 {
     /**
      * Constructor.
