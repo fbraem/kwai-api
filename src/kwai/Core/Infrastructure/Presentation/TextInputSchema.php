@@ -28,7 +28,7 @@ class TextInputSchema implements InputSchema
             'locale' => Expect::string('nl'),
             'format' => Expect::string('md'),
             'summary' => Expect::string()->required(),
-            'content' => Expect::string()
+            'content' => Expect::string()->nullable()
         ]);
     }
 
