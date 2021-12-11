@@ -43,7 +43,7 @@ class BrowsePages
     {
         $query = $this->repo->createQuery();
 
-        if (isset($command->enabled)) {
+        if ($command->enabled) {
             $query->filterVisible();
         }
 

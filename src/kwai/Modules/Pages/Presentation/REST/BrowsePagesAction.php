@@ -50,7 +50,10 @@ class BrowsePagesAction extends Action
     {
         $command = new BrowsePagesCommand();
         $parameters = $request->getAttribute('parameters');
-        $command->enabled = (bool) ($parameters['filter']['enabled'] ?? false);
+        if (isset($parameters['filter']['enabled'])) {
+            // TODO: Not allowed for public view
+            $command->enabled = $parameters['filter']['enabled'] === 'true';
+        }
         $command->limit = (int) ($parameters['page']['limit'] ?? 10);
         $command->offset = (int) ($parameters['page']['offset'] ?? 0);
         if (isset($parameters['filter']['application'])) {
