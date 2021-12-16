@@ -44,7 +44,9 @@ class BrowseCoachesAction extends Action
 
         $parameters = $request->getAttribute('parameters');
 
-        $command->active = $parameters['filter']['active'] ?? false;
+        if (isset($parameters['filter']['active'])) {
+            $command->active = (bool) $parameters['filter']['active'];
+        }
         //TODO: check if this is allowed.
         /*
         if (!$command->active) {
