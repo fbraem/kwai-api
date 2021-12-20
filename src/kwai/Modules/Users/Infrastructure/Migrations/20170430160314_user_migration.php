@@ -30,7 +30,7 @@ class UserMigration extends AbstractMigration
             ->create()
         ;
 
-        $settings = (new Settings())();
+        $settings = (new Settings())->create();
         if ($this->getEnvironment() == 'test') {
             $password = 'hajime';
             $data = [
