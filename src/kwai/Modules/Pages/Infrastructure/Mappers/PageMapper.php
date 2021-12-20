@@ -26,7 +26,7 @@ class PageMapper
     {
         $application = $data->get('application');
         return new Page(
-            enabled: $data->get('enabled', '0') === 1,
+            enabled: $data->get('enabled', 0) === 1,
             remark: $data->get('remark'),
             priority: (int) $data->get('priority', 0),
             traceableTime: new TraceableTime(

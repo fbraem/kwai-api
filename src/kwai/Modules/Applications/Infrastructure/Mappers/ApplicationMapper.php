@@ -33,9 +33,9 @@ class ApplicationMapper
                 ? Timestamp::createFromString($data->get('updated_at'))
                 : null
             ),
-            canHaveNews: $data->get('news', '0') === 1,
-            canHavePages: $data->get('pages', '0') === 1,
-            canHaveEvents: $data->get('events', '0') === 1,
+            canHaveNews: $data->get('news', 0) === 1,
+            canHavePages: $data->get('pages', 0) === 1,
+            canHaveEvents: $data->get('events', 0) === 1,
             weight: (int) $data->get('weight', 0)
         );
     }

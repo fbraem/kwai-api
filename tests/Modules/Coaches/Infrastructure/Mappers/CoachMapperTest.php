@@ -19,7 +19,7 @@ it('can map data to a coach', function () {
        ]),
        'description' => 'Our coach',
        'diploma' => 'Founder',
-       'active' => '0',
+       'active' => 0,
        'remark' => 'The founder of Judo'
     ]);
     $coach = CoachMapper::toDomain($data);

@@ -25,8 +25,8 @@ it('can map a record to TrainingCoach', function () {
        ]),
        'remark' => 'Unit test training coach',
        'coach_type' => '1',
-       'present' => '1',
-       'payed' => '0',
+       'present' => 1,
+       'payed' => 0,
        'created_at' => '2020-12-14 21:09:00'
     ]);
 
