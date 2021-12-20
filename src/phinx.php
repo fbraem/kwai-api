@@ -2,7 +2,7 @@
 /**
  * Phinx migration configuration
  */
-
+require '../vendor/autoload.php';
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 
 $config = (new Settings())->create();
