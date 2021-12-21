@@ -2,13 +2,13 @@
 /**
  * Phinx migration configuration
  */
-require '../vendor/autoload.php';
+require __DIR__ . '/../autoload.php';
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 
 $config = (new Settings())->create();
 
 $environments = $config['database'];
-$environments['default_database'] = $config['default_database'];
+$environments['default_environment'] = $config['default_database'];
 
 return [
     'paths' => [
