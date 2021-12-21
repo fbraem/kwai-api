@@ -48,6 +48,11 @@ Clone this repository.
 
 Deployer
 --------
+
+> To be able to deploy on a (shared) host SSH must be setup. The article
+> ["Deploying a Symfony application with Deployer"](https://dev.to/andersbjorkland/deploying-a-symfony-application-with-deployer-afe)
+> can help.
+
 Install [deployer](https://deployer.org/) (version 6.x)
 and create a hosts.yml file in the folder where the repository is cloned.
 This file can look like this:
