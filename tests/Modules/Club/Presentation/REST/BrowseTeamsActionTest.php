@@ -9,7 +9,7 @@ use Tests\Context;
 
 $context = Context::createContext();
 
-it('execute BrowseTeamsAction', function ($context) {
+it('execute BrowseTeamsAction', function () use ($context) {
     $action = new BrowseTeamsAction($context->db);
 
     $request = new ServerRequest('GET', '/club/teams');
