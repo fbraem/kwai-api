@@ -1,31 +1,34 @@
 Kwai-api
 ========
 
-Kwai-api is a part of the kwai system. The ultimate goal of Kwai is to manage a (sports)club. The focus is currently on judo sport (Kwai means club in Japanese), but in the future it may be possible to support
-other sports.
+Kwai-api is part of the kwai system. The ultimate goal of Kwai is to manage a 
+(sports)club. The focus is currently on judo sport (Kwai means club in 
+Japanese), but in the future it may be possible to support other sports.
 
-The frontend of kwai can be found in the [kwai-ui](https://github.com/fbraem/kwai-ui) repository.
+The frontend of kwai can be found in the
+[kwai-vite](https://github.com/fbraem/kwai-vite) repository.
 
 > Kwai is a greenfield project. As long as there is no official release,
-> everything can change. Although there is still a lot to do, kwai is already used in production for
-> our club but that is no guarantee that it will work for you...
+> everything can change. Although there is still a lot to do, kwai is already
+> used in production for our club but that is no guarantee that it will work 
+> for you...
 
-[Jetbrains](https://www.jetbrains.com/?from=kwai-api) allows Kwai-api to use phpstorm for development!
+[Jetbrains](https://www.jetbrains.com/?from=kwai-api) allows Kwai-api to use
+phpstorm for development!
 
-<img alt="jetbrains" src="jetbrains.png" width="200px" />
+<img alt="jetbrains" src="jetbrains.png" width="150px" />
 
 API
 ===
 Kwai-api is the REST api for Kwai. It's written in PHP.
-The [JSONAPI](http://jsonapi.org) standard will be followed as best as 
-possible: Links are not used and URL's are not always as defined.
+The [JSONAPI](http://jsonapi.org) standard is followed as best as 
+possible. A separate PHP module [kwai/jsonapi](https://github.com/fbraem/kwai-jsonapi)
+is written for this.
 
 Currently the following api's are already available:
 
 - news
 - pages
-- members
-- teams
 - trainings
 
 TODO
@@ -34,84 +37,92 @@ TODO
 There is still a lot to do:
 
 - tournament management
+- teams
 - member follow-up system
 - events
 - ...
 
-Kwai is currently more CRUD then domain oriented. This api must evolve from an anemic model to real DDD.
-
 Installation
 ============
+Clone this repository.
 
-Clone this repository and run `composer install` in the `src` as current directory. When all goes well, create a `config.php` in the `api` directory. This PHP file must return an array with some configuration:
+Deployer
+--------
+Install [deployer](https://deployer.org/) (version 6.x)
+and create a hosts.yml file in the folder where the repository is cloned.
+This file can look like this:
 
-> For now we are using two types of database code: the CakePHP ORM and the
-> repository pattern with [Latitude](https://latitude.shadowhand.com/). That's
-> why there are two DSN properties in the configuration. In the long run
-> the repository code will be the only code left.
+````yaml
+kwai:
+  stage: production
+  user: 
+  deploy_path: ~/{{application}}_pro
+  public_path: /www
+  http_user: 
+````
 
-    return [
-        'database' => [
-            'development' => [
-                'cake_dsn' => 'mysql://',
-                'dsn' => 'mysql:',
-                'adapter' => 'mysql',
-                'host' => '',
-                'user' => '',
-                'pass' => '',
-                'name' => '',
-                'charset' => 'utf8',
-                'prefix' => ''
-            ]
-        ],
-        'default_database' => 'development',
-        'logger' => [
-            'kwai' => [
-                'file' => '/var/tmp/kwai.log',
-                'level' => Logger::DEBUG
-            ],
-            'database' => [
-                'file' => '/var/tmp/kwai_db.log',
-                'level' => Logger::DEBUG
-            ]
-        ],
-        'files' => [
-            'local => '/var/www...',
-            'url => ''
-        ],
-        'mail' => [
-            'host' => '',
-            'user' => '',
-            'pass' => '',
-            'port' => 2525,
-            'from' => [ ],
-            'subject' => ''
-        ],
-        'website' => [
-            'url' => '',
-            'email' => ''
-        ],
-        'cors' => [
-            'origin' => []
-        ]
-    ];
+`application` contains the value 'kwai_api'.
 
-When the configuration is finished, run the database migrations from the `src` directory:
+Run deployer from the folder where hosts.yml is located:
 
-    ./vendor/bin/phinx migrate -c phinx.php
+````shell
+dep deploy production
+````
 
-On shared hosting:
+When the deploy is successful, the deploy_path will contain a `shared` and a
+`releases` folder and a symbolic link `current`. The symbolic link will point
+to the latest deployed application code. The shared folder contains folders
+and files that will be shared between different releases. In this folder the 
+config folder is used to store `config.php`. Use `config.dist.php` to create
+a config.php for this installation.
 
-    php ./vendor/robmorgan/phinx/phinx.php migrate -c phinx.php
+In the public_path, the api php entry files will be copied into the api folder.
+These files will be overwritten on each deploy. In the public path an autoload
+PHP script will be created. This autoload script will load the
+vendor/autoload.php file.
+
+The database migration is currently not executed after a deploy. When a 
+migration is needed, go to the src folder in the current folder of the 
+deploy_path and run it manually:
+
+````shell
+../vendor/bin/phinx migrate -c ./phinx.php
+````
+
+Manual
+------
+The recommended way of installing kwai-api is using deployer, but it is also
+possible to install it manually.
+
+Run `composer install` in the folder where the repository is cloned. Copy all 
+folders api, src, config and vendor to the host. Change the config.dist.php
+file in the config folder to config.php and change the configuration.
+
+To run a migration of the database, you need access to your host and run it
+manually from the src folder on the host:
+
+````shell
+../vendor/bin/phinx migrate -c ./phinx.php
+````
+
+Development
+============
+
+Clone this repository in a folder. The easiest way to setup a development
+environment is to use [vagrant](https://www.vagrantup.com/). 
+
+Just run vagrant up from the root folder and everything will be installed.
+Copy `kwai.dist.yaml` to `kwai.development.yaml` and fill in the properties.
 
 Running Tests
 =============
 
-A testing environment is easily set up with [vagrant](https://www.vagrantup.com).
-Copy `kwai.dest.yaml` to `kwai.development.yaml` and fill in the properties.
 Kwai uses [pest](https://pestphp.com/) to run tests:
 
     vagrant up
     vagrant ssh KWAI_API
-    cd /vagrant/src
+    cd /vagrant
     ./vendor/bin/pest -c ./tests/phpunit.xml
+
+> TIP: use an IDE like [PHPStorm](https://www.jetbrains.com/phpstorm/?from=kwai-api) 
+> to develop, test and run kwai-api.
