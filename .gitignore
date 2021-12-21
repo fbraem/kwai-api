@@ -4,4 +4,6 @@ kwai.development.yaml
 /.vagrant
 /.*.cache
 /vendor/
-config.*
+/config/config.acc.php
+/config/config.php
+/config/config.production.php
