@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Tests\Modules\News\Domain\ValueObjects;
 
 use Carbon\Carbon;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 
@@ -22,7 +23,13 @@ it('can check if a promotion is enabled', function () {
         ->toBe(true)
     ;
 
-    $promotion = new Promotion(1, Timestamp::createNow());
+    $promotion = new Promotion(
+        1,
+        new LocalTimestamp(
+            Timestamp::createNow(),
+            'Europe/Brussels'
+        )
+    );
     expect($promotion->isEnabled())
         ->toBe(true)
     ;
@@ -43,7 +50,10 @@ it('can check if a promotion is active', function () {
     $timeStamp->subDays(7);
     $promotion = new Promotion(
         1,
-        Timestamp::createFromString($timeStamp->toDateTimeString())
+        new LocalTimestamp(
+            Timestamp::createFromString($timeStamp->toDateTimeString()),
+            'Europe/Brussels'
+        )
     );
     expect($promotion->isActive())
         ->toBe(false)
@@ -53,7 +63,10 @@ it('can check if a promotion is active', function () {
     $timeStamp->addDays(7);
     $promotion = new Promotion(
         1,
-        Timestamp::createFromString($timeStamp->toDateTimeString())
+        new LocalTimestamp(
+            Timestamp::createFromString($timeStamp->toDateTimeString()),
+            'Europe/Brussels'
+        )
     );
     expect($promotion->isActive())
         ->toBe(true)
