@@ -116,8 +116,9 @@ Development
 Clone this repository in a folder. The easiest way to setup a development
 environment is to use [vagrant](https://www.vagrantup.com/). 
 
-Just run vagrant up from the root folder and everything will be installed.
 Copy `kwai.dist.yaml` to `kwai.development.yaml` and fill in the properties.
+Run `vagrant up` from the repository folder and everything will be 
+installed automatically.
 
 Running Tests
 =============
