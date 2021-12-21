@@ -22,12 +22,12 @@ it('can add content to a page', function () {
         )
     );
     $page->addContent(new Text(
-        new Locale('nl'),
-        new DocumentFormat('md'),
-        'Test',
-        'Test Summary',
-        'Test Content',
-        new Creator(
+        locale: new Locale('nl'),
+        format: new DocumentFormat('md'),
+        title: 'Test',
+        summary:'Test Summary',
+        content: 'Test Content',
+        author: new Creator(
             1,
             new Name(
                 'Jigoro',
