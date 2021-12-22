@@ -44,7 +44,8 @@ There is still a lot to do:
 
 Installation
 ============
-Clone this repository.
+Clone this repository. There are two ways of installing kwai-api: using
+Deployer or do a manual install.
 
 Deployer
 --------
