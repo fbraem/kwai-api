@@ -54,8 +54,8 @@ Deployer
 > can help.
 
 Install [deployer](https://deployer.org/) (version 6.x)
-and create a hosts.yml file in the folder where the repository is cloned.
-This file can look like this:
+and create a deployer configuration file. The `hosts.yml` file can be used as an
+example. This file can look like this:
 
 ````yaml
 kwai:
