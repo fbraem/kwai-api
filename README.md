@@ -89,7 +89,7 @@ vendor/autoload.php file.
 
 The database migration is currently not executed after a deploy. When a 
 migration is needed, go to the src folder in the current folder of the 
-deploy_path and run it manually:
+deploy_path on the (shared) host and run it manually:
 
 ````shell
 ../vendor/bin/phinx migrate -c ./phinx.php
@@ -101,8 +101,8 @@ The recommended way of installing kwai-api is using deployer, but it is also
 possible to install it manually.
 
 Run `composer install` in the folder where the repository is cloned. Copy all 
-folders api, src, config and vendor to the host. Change the config.dist.php
-file in the config folder to config.php and change the configuration.
+folders api, src, config and vendor to the host. Rename the config.dist.php
+file in the config folder into config.php and change the configuration.
 
 To run a migration of the database, you need access to your host and run it
 manually from the src folder on the host:
@@ -131,5 +131,6 @@ Kwai uses [pest](https://pestphp.com/) to run tests:
     cd /vagrant
     ./vendor/bin/pest -c ./tests/phpunit.xml
 
-> TIP: use an IDE like [PHPStorm](https://www.jetbrains.com/phpstorm/?from=kwai-api) 
-> to develop, test and run kwai-api.
+Credits
+=======
++ [PHPStorm](https://www.jetbrains.com/phpstorm/?from=kwai-api)
