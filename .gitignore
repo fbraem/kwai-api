@@ -7,4 +7,4 @@ kwai.development.yaml
 /config/config.acc.php
 /config/config.php
 /config/config.production.php
-/hosts.yml
+/hosts.*.yml
