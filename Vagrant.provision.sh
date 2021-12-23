@@ -16,7 +16,8 @@ a2enmod rewrite
 mkdir -p -v /var/www/kwai_files
 chown www-data:www-data /var/www/kwai_files
 
-VIRTUAL_HOST=$(cat <<EOF
+# Create a configuration that is used while developing kwai-api/vite
+API_CONF=$(cat <<EOF
     <VirtualHost *:80>
       ServerName api.kwai.com
 
@@ -36,7 +37,30 @@ VIRTUAL_HOST=$(cat <<EOF
     </VirtualHost>
 EOF
 )
-echo "${VIRTUAL_HOST}" > /etc/apache2/sites-available/kwai.conf
+echo "${API_CONF}" > /etc/apache2/sites-available/api.conf
+
+# Create a configuration that can be used to test the deployment of kwai-api
+DEPLOY_CONF=$(cat <<EOF
+    <VirtualHost *:82>
+      ServerName api.kwai.com
+
+      ServerAdmin webmaster@localhost
+      DocumentRoot /var/www/kwai_dev_api/api
+	    Alias "/files" "/var/www/kwai_files"
+
+      <Directory /var/www/kwai_dev_api/api>
+        Options -Indexes
+        AllowOverride All
+        Require all granted
+        RewriteEngine On
+      </Directory>
+
+      ErrorLog \${APACHE_LOG_DIR}/kwai_dev_api_error.log
+      CustomLog \${APACHE_LOG_DIR}/kwai_dev_api_access.log combined
+    </VirtualHost>
+EOF
+)
+echo "${DEPLOY_CONF}" > /etc/apache2/sites-available/kwai_dev_api.conf
 
 # MySQL
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $KWAI_DATABASE_PASSWORD"
@@ -112,7 +136,8 @@ fi
 
 # Everything installed, enable sites, restart apache
 sudo a2dissite 000-default
-sudo a2ensite kwai
+sudo a2ensite api
+sudo a2ensite kwai_dev_api
 sudo a2ensite phpmyadmin
 service apache2 restart
 
