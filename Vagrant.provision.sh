@@ -21,10 +21,10 @@ VIRTUAL_HOST=$(cat <<EOF
       ServerName api.kwai.com
 
       ServerAdmin webmaster@localhost
-      DocumentRoot /var/www/kwai_api
+      DocumentRoot /var/www/kwai_api/api
 	    Alias "/files" "/var/www/kwai_files"
 
-      <Directory /var/www/kwai_api>
+      <Directory /var/www/kwai_api/api>
         Options -Indexes
         AllowOverride All
         Require all granted
