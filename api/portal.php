@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-require '../src/vendor/autoload.php';
+require '../autoload.php';
 
-use Kwai\Applications\Portal\PortalApplication;
+use Kwai\Applications\PortalApplication;
 
 $app = new PortalApplication();
 $app->run();

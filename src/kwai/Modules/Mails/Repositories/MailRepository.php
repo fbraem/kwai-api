@@ -1,15 +1,17 @@
 <?php
 /**
- * User Repository interface
+ * @package Modules
+ * @subpackage Mails
  */
 declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Repositories;
 
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Mails\Domain\Exceptions\MailNotFoundException;
 use Kwai\Modules\Mails\Domain\Mail;
 
 /**
@@ -23,19 +25,10 @@ interface MailRepository
      * @param  int    $id
      * @return Entity
      * @phpstan-return Entity<Mail>
-     * @throws NotFoundException
+     * @throws MailNotFoundException
      * @throws RepositoryException
      */
     public function getById(int $id) : Entity;
-
-    /**
-     * Get the mail with the given uuid
-     * @param  UniqueId $uid
-     * @return Entity<Mail>
-     * @throws RepositoryException
-     * @throws NotFoundException
-     */
-    public function getByUUID(UniqueId $uid) : Entity;
 
     /**
      * Save a new Mail
@@ -45,4 +38,13 @@ interface MailRepository
      * @throws RepositoryException
      */
     public function create(Mail $mail): Entity;
+
+    /**
+     * @param MailQuery $query
+     * @param int|null  $limit
+     * @param int|null  $offset
+     * @return Collection
+     * @throws QueryException
+     */
+    public function getAll(MailQuery $query, ?int $limit = null, ?int $offset = null) : Collection;
 }

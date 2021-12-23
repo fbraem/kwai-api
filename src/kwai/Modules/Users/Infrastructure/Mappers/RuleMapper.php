@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\Entity;
@@ -18,36 +19,38 @@ final class RuleMapper
 {
     /**
      * Make a Rule entity from a row object
-     * @param object $raw
-     * @return Entity
+     *
+     * @param Collection $data
+     * @return Rule
      */
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Rule
     {
-        return new Entity(
-            (int) $raw->id,
-            new Rule((object)[
-                'name' => $raw->name,
-                'action' => $raw->action,
-                'subject' => $raw->subject,
-                'traceableTime' => new TraceableTime(
-                    Timestamp::createFromString($raw->created_at),
-                    isset($raw->updated_at)
-                        ? Timestamp::createFromString($raw->updated_at)
-                        : null
-                ),
-                'remark' => $raw->remark ?? ''
-            ])
+        return new Rule(
+            name: $data->get('name'),
+            action: $data->get('action'),
+            subject: $data->get('subject'),
+            traceableTime: new TraceableTime(
+                Timestamp::createFromString($data->get('created_at')),
+                $data->has('updated_at')
+                    ? Timestamp::createFromString($data->get('updated_at'))
+                    : null
+            ),
+            remark: $data->get('remark')
         );
     }
 
     /**
      * Persist a Rule entity to a Database row object
+     *
      * @param Entity $rule
-     * @return object
+     * @return Collection
      */
-    public static function toPersistence(Entity $rule): object
+    public static function toPersistence(Entity $rule): Collection
     {
-        //TODO: implement
-        return (object)[];
+        return collect([
+            'name' => $rule->getName(),
+            'action' => $rule->getAction(),
+            'subject' => $rule->getSubject()
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -19,10 +19,7 @@ class BrowseStoriesCommand
     public bool $enabled = true;
     public ?int $publishYear = null;
     public ?int $publishMonth = null;
-    /**
-     * @var int|string|null
-     */
-    public $application = null;
+    public int|string|null $application = null;
     public bool $promoted = false;
-    public ?string $userUid = null;
+    public int|string|null $userUid = null;
 }

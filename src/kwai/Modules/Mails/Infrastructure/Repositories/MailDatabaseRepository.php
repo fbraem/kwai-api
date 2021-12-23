@@ -1,79 +1,61 @@
 <?php
 /**
- * Mail Repository.
- * @package kwai
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Core\Infrastructure\Database;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Mails\Domain\Exceptions\MailNotFoundException;
 use Kwai\Modules\Mails\Domain\Mail;
+use Kwai\Modules\Mails\Domain\Recipient;
 use Kwai\Modules\Mails\Infrastructure\Mappers\MailMapper;
+use Kwai\Modules\Mails\Infrastructure\Mappers\RecipientMapper;
 use Kwai\Modules\Mails\Infrastructure\Tables;
+use Kwai\Modules\Mails\Repositories\MailQuery;
 use Kwai\Modules\Mails\Repositories\MailRepository;
-use Kwai\Modules\Users\Infrastructure\Tables as UsersTables;
-use Latitude\QueryBuilder\Query\SelectQuery;
-use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\on;
 
 /**
  * Class MailDatabaseRepository
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-final class MailDatabaseRepository extends Database\DatabaseRepository implements MailRepository
+final class MailDatabaseRepository extends DatabaseRepository implements MailRepository
 {
     /**
-     * @inheritdoc
+     * MailDatabaseRepository constructor.
+     *
+     * @param Connection $db
      */
-    public function getById(int $id) : Entity
+    public function __construct(Connection $db)
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $query = $this->createBaseQuery()
-            ->where(field(Tables::MAILS()->id)->eq(strval($id)))
-        ;
-
-        try {
-            $row = $this->db->execute($query)->fetch();
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-        if ($row) {
-            $mailRow = Tables::MAILS()->createColumnFilter()->filter($row);
-            $mailRow->user = UsersTables::USERS()->createColumnFilter()->filter($row);
-            return MailMapper::toDomain($mailRow);
-        }
-        throw new NotFoundException('Mail');
+        parent::__construct(
+            $db,
+            fn($item) => MailMapper::toDomain($item)
+        );
     }
 
     /**
      * @inheritdoc
      */
-    public function getByUUID(UniqueId $uid) : Entity
+    public function getById(int $id) : Entity
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $query = $this->createBaseQuery()
-            ->where(field(Tables::MAILS()->uuid)->eq(strval($uid)))
-        ;
+        $query = $this->createQuery()->filterId($id);
 
-        try {
-            $row = $this->db->execute($query)->fetch();
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
+        $entities = $this->getAll($query);
+
+        if ($entities->isNotEmpty()) {
+            return $entities->first();
         }
-        if ($row) {
-            $mailRow = Tables::MAILS()->createColumnFilter()->filter($row);
-            $mailRow->user = UsersTables::USERS()->createColumnFilter()->filter($row);
-            return MailMapper::toDomain($mailRow);
-        }
-        throw new NotFoundException('Mail');
+
+        throw new MailNotFoundException($id);
     }
 
     /**
@@ -83,68 +65,75 @@ final class MailDatabaseRepository extends Database\DatabaseRepository implement
     {
         $data = MailMapper::toPersistence($mail);
 
+        // Insert mail
         $query = $this->db->createQueryFactory()
             ->insert((string) Tables::MAILS())
-            ->columns(
-                ... array_keys($data)
-            )
-            ->values(
-                ... array_values($data)
-            )
+            ->columns(... $data->keys())
+            ->values(... $data->values())
         ;
         try {
             $this->db->execute($query);
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        return new Entity(
+
+        $entity = new Entity(
             $this->db->lastInsertId(),
             $mail
         );
+
+        // Insert all recipients
+        $this->insertRecipients($entity);
+
+        return $entity;
     }
 
     /**
-     * Create the base SELECT query
-     * @return SelectQuery
+     * Create the query
+     *
+     * @return MailQuery
      */
-    private function createBaseQuery(): SelectQuery
+    public function createQuery(): MailQuery
     {
-        $aliasMailFn = Tables::MAILS()->getAliasFn();
-        $aliasUserFn = UsersTables::USERS()->getAliasFn();
+        return new MailDatabaseQuery($this->db);
+    }
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        return $this->db->createQueryFactory()
-            ->select(
-                $aliasMailFn('id'),
-                $aliasMailFn('tag'),
-                $aliasMailFn('uuid'),
-                $aliasMailFn('sender_email'),
-                $aliasMailFn('sender_name'),
-                $aliasMailFn('subject'),
-                $aliasMailFn('html_body'),
-                $aliasMailFn('text_body'),
-                $aliasMailFn('sent_time'),
-                $aliasMailFn('remark'),
-                $aliasMailFn('user_id'),
-                $aliasMailFn('created_at'),
-                $aliasMailFn('updated_at'),
-                $aliasUserFn('id'),
-                $aliasUserFn('email'),
-                $aliasUserFn('first_name'),
-                $aliasUserFn('last_name'),
-                $aliasUserFn('remark'),
-                $aliasUserFn('uuid'),
-                $aliasUserFn('created_at'),
-                $aliasUserFn('updated_at')
+    /**
+     * Insert recipients for a mail
+     *
+     * @param Entity $mail
+     * @throws RepositoryException
+     */
+    private function insertRecipients(Entity $mail)
+    {
+        /* @var Collection $recipients */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $recipients = $mail->getRecipients();
+        if ($recipients->count() === 0) {
+            return;
+        }
+
+        $recipients
+            ->transform(
+                fn(Recipient $recipient) => RecipientMapper::toPersistence($recipient)
             )
-            ->from((string) Tables::MAILS())
-            ->join(
-                (string) UsersTables::USERS(),
-                on(
-                    Tables::MAILS()->user_id,
-                    UsersTables::USERS()->id
-                )
+            ->map(
+                fn(Collection $item) => $item->put('mail_id', $mail->id())
             )
         ;
+
+        $query = $this->db->createQueryFactory()
+            ->insert((string) Tables::RECIPIENTS())
+            ->columns(... $recipients->first()->keys())
+        ;
+        $recipients->each(
+            fn(Collection $recipient) => $query->values(... $recipient->values())
+        );
+
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 }

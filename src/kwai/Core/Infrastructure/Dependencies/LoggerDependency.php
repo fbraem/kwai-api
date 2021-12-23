@@ -9,6 +9,7 @@ namespace Kwai\Core\Infrastructure\Dependencies;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use function depends;
 
 /**
  * Class LoggerDependency
@@ -17,16 +18,22 @@ use Monolog\Logger;
  */
 class LoggerDependency implements Dependency
 {
-    public function __invoke(array $settings)
+    public function __construct(
+        private ?array $settings = null
+    ) {
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
+    public function create()
     {
         $logger = new Logger('kwai');
 
-        if (isset($settings['logger']['kwai'])) {
-            if (isset($settings['logger']['kwai']['file'])) {
+        if (isset($this->settings['logger']['kwai'])) {
+            if (isset($this->settings['logger']['kwai']['file'])) {
                 $logger->pushHandler(
                     new StreamHandler(
-                        $settings['logger']['kwai']['file'],
-                        $settings['logger']['kwai']['level'] ?? Logger::DEBUG
+                        $this->settings['logger']['kwai']['file'],
+                        $this->settings['logger']['kwai']['level'] ?? Logger::DEBUG
                     )
                 );
             }

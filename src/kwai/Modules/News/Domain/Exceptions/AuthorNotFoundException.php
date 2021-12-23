@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -8,27 +8,25 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Domain\Exceptions;
 
 use Exception;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 
 /**
  * Class AuthorNotFoundException
  */
 class AuthorNotFoundException extends Exception
 {
-    private int $id;
-
     /**
      * AuthorNotFoundException constructor.
      *
-     * @param int|string $id
+     * @param int|UniqueId $id
      */
-    public function __construct($id)
+    public function __construct(private int|UniqueId $id)
     {
         parent::__construct('Author not found');
-        $this->id = $id;
     }
 
     public function __toString()
     {
-        return __CLASS__ . ': Author(' . $this->id . ') not found';
+        return __CLASS__ . ': Author(' . strval($this->id) . ') not found';
     }
 }

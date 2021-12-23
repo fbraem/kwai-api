@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -63,7 +63,6 @@ class UpdateStoryCommand
 
     /**
      * The content of the story.
-     * @var Content[]
      */
-    public array $contents = [];
+    public ?array $contents = null;
 }

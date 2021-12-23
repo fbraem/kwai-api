@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\alias;
@@ -30,15 +32,22 @@ abstract class DatabaseQuery implements Query
      */
     protected SelectQuery $query;
 
+    private string $countColumn;
+
     /**
      * DatabaseQuery constructor.
      *
-     * @param Connection  $db
+     * Set count column when joins are used that result in multiple rows
+     * with the same id. This will result in a count(distinct(column)) query.
+     *
+     * @param Connection $db
+     * @param string     $countColumn
      */
-    public function __construct(Connection $db)
+    public function __construct(Connection $db, string $countColumn = '0')
     {
         $this->db = $db;
         $this->query = $this->db->createQueryFactory()->select();
+        $this->countColumn = $countColumn;
         $this->initQuery();
     }
 
@@ -65,20 +74,33 @@ abstract class DatabaseQuery implements Query
 
         // Instead of trying to count a column, we just
         // count the number '0'
-        $this->query->columns(
-            alias(func('COUNT', literal('0')), 'c')
-        );
+        if ($this->countColumn == '0') {
+            $this->query->columns(
+                alias(func('COUNT', literal('0')), 'c')
+            );
+        } else {
+            $this->query->columns(
+                alias(
+                    func(
+                        'COUNT',
+                        func('distinct', $this->countColumn)
+                    ),
+                    'c'
+                )
+            );
+        }
 
         $row = $this->db->execute(
             $this->query
         )->fetch();
-        return (int) $row->c;
+        return (int) $row['c'];
     }
 
     /**
+     * Default implementation: return all records.
      * @inheritDoc
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $this->query->limit($limit);
         $this->query->offset($offset);
@@ -87,6 +109,29 @@ abstract class DatabaseQuery implements Query
             ... $this->getColumns()
         );
 
-        return $this->db->execute($this->query)->fetchAll();
+        /** @noinspection PhpUndefinedMethodInspection */
+        return collect($this->db->execute($this->query)->fetchAll())
+            ->recursive();
+    }
+
+    /**
+     * Does the same as execute, except it allows to lazy load the
+     * records.
+     *
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return LazyCollection
+     * @throws QueryException
+     */
+    protected function walk(?int $limit = null, ?int $offset = null): LazyCollection
+    {
+        $this->query->limit($limit);
+        $this->query->offset($offset);
+
+        $this->query->columns(
+            ... $this->getColumns()
+        );
+
+        return LazyCollection::make($this->db->walk($this->query));
     }
 }

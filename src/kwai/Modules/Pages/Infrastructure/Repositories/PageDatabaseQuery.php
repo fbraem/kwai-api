@@ -1,17 +1,18 @@
 <?php
 /**
- * @package Pages
- * @subpackage Infrastructure
- * @noinspection PhpUndefinedFieldInspection
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
+use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Pages\Infrastructure\Mappers\PageMapper;
 use Kwai\Modules\Pages\Infrastructure\Tables;
 use Kwai\Modules\Pages\Repositories\PageQuery;
+use function Latitude\QueryBuilder\express;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\group;
 use function Latitude\QueryBuilder\on;
@@ -25,6 +26,7 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
 {
     protected function initQuery(): void
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
             ->from((string) Tables::PAGES())
             ->join(
@@ -45,17 +47,20 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
     /**
      * @inheritDoc
      */
-    public function filterId(int $id): void
+    public function filterId(int $id): self
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::PAGES()->id)->eq($id)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterApplication($nameOrId): void
+    public function filterApplication($nameOrId): self
     {
         if (is_string($nameOrId)) {
             $this->query->andWhere(group(
@@ -66,55 +71,79 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
                 field(Tables::APPLICATIONS()->id)->eq($nameOrId)
             ));
         }
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function filterVisible(): void
+    public function filterVisible(): self
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(group(
             field(Tables::PAGES()->enabled)->eq(true)
         ));
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function filterUser(int $id): void
+    public function filterUser(int|UniqueId $id): self
     {
-        $this->query->andWhere(group(
-            field(Tables::CONTENTS()->user_id)->eq($id)
-        ));
+        /** @noinspection PhpUndefinedFieldInspection */
+        $innerSelect = $this->db->createQueryFactory()->select()
+            ->columns(Tables::AUTHORS()->id)
+            ->from((string) Tables::AUTHORS())
+        ;
+        if (is_int($id)) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->id)->eq($id)
+            );
+        } else {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->uuid)->eq($id)
+            );
+        }
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            group(
+                field(Tables::CONTENTS()->user_id)
+                    ->in(express('%s', $innerSelect))
+            )
+        );
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function execute(?int $limit = null, ?int $offset = null)
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         // TODO: For now the relation page -> content is 1 on 1. In the future
         // TODO: it will be possible to translate a page, which will result in
         // TODO: 1 on many.
-        $rows = parent::execute($limit, $offset);
-        if (count($rows) == 0) {
-            return [];
-        }
+        $rows = parent::walk($limit, $offset);
 
-        $pageColumnFilter = Tables::PAGES()->createColumnFilter();
-        $applicationColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
-        $contentColumnFilter = Tables::CONTENTS()->createColumnFilter();
-        $authorColumnFilter = Tables::AUTHORS()->createColumnFilter();
+        $prefixes = [
+            Tables::PAGES()->getAliasPrefix(),
+            Tables::APPLICATIONS()->getAliasPrefix(),
+            Tables::CONTENTS()->getAliasPrefix(),
+            Tables::AUTHORS()->getAliasPrefix()
+        ];
 
-        $pages = [];
+        $pages = new Collection();
+
         foreach ($rows as $row) {
-            $page = $pageColumnFilter->filter($row);
-            $page->application = $applicationColumnFilter->filter($row);
-            $page->contents = [
-                $contentColumnFilter->filter($row)
-            ];
-            $page->contents[0]->author = $authorColumnFilter->filter($row);
-            $pages[$page->id] = PageMapper::toDomain($page);
+            [ $page, $application, $content, $author ] =
+                $row->filterColumns($prefixes);
+            $page->put('application', $application);
+            $content->put('creator', $author);
+            $page->put('contents', new Collection([$content]));
+            $pages->put($page->get('id'), $page);
         }
 
         return $pages;
@@ -154,24 +183,30 @@ class PageDatabaseQuery extends DatabaseQuery implements PageQuery
     /**
      * @inheritDoc
      */
-    public function orderByPriority(): void
+    public function orderByPriority(): self
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->orderBy(Tables::PAGES()->priority, 'DESC');
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function orderByApplication(): void
+    public function orderByApplication(): self
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->orderBy(Tables::APPLICATIONS()->title);
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function orderByCreationDate(): void
+    public function orderByCreationDate(): self
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->orderBy(Tables::PAGES()->created_at, 'DESC');
+        return $this;
     }
 }

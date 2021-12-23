@@ -16,41 +16,22 @@ use Kwai\Core\Domain\DomainEntity;
 class Rule implements DomainEntity
 {
     /**
-     * The name of the rule.
+     * Rule constructor.
+     *
+     * @param string             $name
+     * @param string             $subject
+     * @param string             $action
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
      */
-    private string $name;
-
-    /**
-     * The subject of the rule.
-     */
-    private string $subject;
-
-    /**
-     * The action of the rule.
-     */
-    private string $action;
-
-    /**
-     * A remark
-     */
-    private ?string $remark;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * Constructor.
-     * @param  object $props Ability properties
-     */
-    public function __construct(object $props)
-    {
-        $this->name = $props->name;
-        $this->action = $props->action;
-        $this->subject = $props->subject;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->remark = $props->remark ?? null;
+    public function __construct(
+        private string $name,
+        private string $subject,
+        private string $action,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null
+    ) {
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
@@ -90,9 +71,10 @@ class Rule implements DomainEntity
 
     /**
      * Returns the remark
-     * @return string
+     *
+     * @return string|null
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }

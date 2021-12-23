@@ -12,7 +12,6 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use TheSeer\Tokenizer\Token;
 
 /**
 * AccessToken entity
@@ -20,42 +19,23 @@ use TheSeer\Tokenizer\Token;
 class AccessToken implements DomainEntity
 {
     /**
-     * A unique identifier for the token.
-     */
-    private TokenIdentifier $identifier;
-
-    /**
-     * Timestamp when the token expires
-     */
-    private Timestamp $expiration;
-
-    /**
-     * Is this token revoked?
-     */
-    private bool $revoked;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The user that owns the token.
-     * @var Entity<UserAccount>
-     */
-    private Entity $account;
-
-    /**
      * Constructor
-     * @param object $props
+     *
+     * @param TokenIdentifier    $identifier
+     * @param Timestamp          $expiration
+     * @param bool               $revoked
+     * @param Entity             $account
+     * @param TraceableTime|null $traceableTime
      */
-    public function __construct(object $props)
+    public function __construct(
+        private TokenIdentifier $identifier,
+        private Timestamp $expiration,
+        private Entity $account,
+        private bool $revoked = false,
+        private ?TraceableTime $traceableTime = null,
+    )
     {
-        $this->identifier = $props->identifier;
-        $this->expiration = $props->expiration;
-        $this->revoked = $props->revoked ?? false;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->account = $props->account;
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage UseCases
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -11,10 +11,8 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
-use Kwai\Modules\Pages\Repositories\AuthorRepository;
 use Kwai\Modules\Pages\Repositories\PageRepository;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class BrowsePages
@@ -23,27 +21,16 @@ use Tightenco\Collect\Support\Collection;
  */
 class BrowsePages
 {
-    private PageRepository $repo;
-
-    private AuthorRepository $authorRepo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * BrowsePages constructor.
      *
      * @param PageRepository   $repo
-     * @param AuthorRepository $authorRepo
      * @param ImageRepository  $imageRepo
      */
     private function __construct(
-        PageRepository $repo,
-        AuthorRepository $authorRepo,
-        ImageRepository $imageRepo
+        private PageRepository $repo,
+        private ImageRepository $imageRepo
     ) {
-        $this->repo = $repo;
-        $this->authorRepo = $authorRepo;
-        $this->imageRepo = $imageRepo;
     }
 
     /**
@@ -51,13 +38,12 @@ class BrowsePages
      * @return array
      * @throws QueryException
      * @throws RepositoryException
-     * @throws AuthorNotFoundException
      */
     public function __invoke(BrowsePagesCommand $command): array
     {
         $query = $this->repo->createQuery();
 
-        if (isset($command->enabled)) {
+        if ($command->enabled) {
             $query->filterVisible();
         }
 
@@ -77,16 +63,17 @@ class BrowsePages
                 break;
         }
 
-        if ($command->userUid) {
-            $user = $this->authorRepo
-                ->getByUniqueId(new UniqueId($command->userUid))
-            ;
-            $query->filterUser($user->id());
+        if ($command->userId) {
+            if (is_int($command->userId)) {
+                $query->filterUser((int) $command->userId);
+            } else {
+                $query->filterUser(new UniqueId($command->userId));
+            }
         }
 
         $count = $query->count();
 
-        $pages = $query->execute($command->limit, $command->offset);
+        $pages = $this->repo->getAll($query, $command->limit, $command->offset);
         foreach ($pages as $page) {
             $images = $this->imageRepo->getImages($page->id());
             $page->attachImages($images);
@@ -98,18 +85,15 @@ class BrowsePages
      * Factory method to create this use case.
      *
      * @param PageRepository   $repo
-     * @param AuthorRepository $authorRepo
      * @param ImageRepository  $imageRepo
      * @return BrowsePages
      */
     public static function create(
         PageRepository $repo,
-        AuthorRepository $authorRepo,
         ImageRepository $imageRepo
     ): self {
         return new self(
             $repo,
-            $authorRepo,
             $imageRepo
         );
     }

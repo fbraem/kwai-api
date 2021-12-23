@@ -1,23 +1,23 @@
 <?php
 /**
- * @package Pages
- * @subpackage UseCases
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\UseCases;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
-use Kwai\Modules\Pages\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Repositories\ApplicationRepository;
-use Kwai\Modules\Pages\Repositories\AuthorRepository;
 use Kwai\Modules\Pages\Repositories\PageRepository;
 
 /**
@@ -27,68 +27,51 @@ use Kwai\Modules\Pages\Repositories\PageRepository;
  */
 class CreatePage
 {
-    private PageRepository $pageRepo;
-
-    private ApplicationRepository $applicationRepo;
-
-    private AuthorRepository $authorRepo;
-
-    private ImageRepository $imageRepo;
-
     /**
      * SavePage constructor.
      *
      * @param PageRepository        $pageRepo
      * @param ApplicationRepository $applicationRepo
-     * @param AuthorRepository      $authorRepo
      * @param ImageRepository       $imageRepo
      */
     private function __construct(
-        PageRepository $pageRepo,
-        ApplicationRepository $applicationRepo,
-        AuthorRepository $authorRepo,
-        ImageRepository $imageRepo
+        private PageRepository $pageRepo,
+        private ApplicationRepository $applicationRepo,
+        private ImageRepository $imageRepo
     ) {
-        $this->pageRepo = $pageRepo;
-        $this->applicationRepo = $applicationRepo;
-        $this->authorRepo = $authorRepo;
-        $this->imageRepo = $imageRepo;
     }
 
     /**
      * Executes the use case.
      *
      * @param CreatePageCommand $command
+     * @param Creator           $creator
      * @return Entity<Page>
      * @throws ApplicationNotFoundException
-     * @throws AuthorNotFoundException
      * @throws RepositoryException
      */
-    public function __invoke(CreatePageCommand $command): Entity
+    public function __invoke(CreatePageCommand $command, Creator $creator): Entity
     {
         $app = $this->applicationRepo->getById($command->application);
 
-        $contents = [];
+        $contents = new Collection();
         foreach ($command->contents as $text) {
-            $author = $this->authorRepo->getById($text->author);
-            $contents[] = new Text(
-                new Locale($text->locale),
-                new DocumentFormat($text->format),
-                $text->title,
-                $text->summary,
-                $text->content,
-                $author
-            );
+            $contents->push(new Text(
+                locale: new Locale($text->locale),
+                format: new DocumentFormat($text->format),
+                title: $text->title,
+                summary: $text->summary,
+                content: $text->content,
+                author: $creator
+            ));
         }
 
         $page = $this->pageRepo->create(new Page(
-            (object) [
-                'enabled' => $command->enabled,
-                'contents' => $contents,
-                'priority' => $command->priority,
-                'remark' => $command->remark,
-                'application' => $app
-            ]
+            enabled: $command->enabled,
+            contents: $contents,
+            priority: $command->priority,
+            remark: $command->remark,
+            application: $app
         ));
 
         $images = $this->imageRepo->getImages($page->id());
@@ -103,20 +86,17 @@ class CreatePage
      *
      * @param PageRepository        $pageRepo
      * @param ApplicationRepository $applicationRepo
-     * @param AuthorRepository      $authorRepo
      * @param ImageRepository       $imageRepo
      * @return CreatePage
      */
     public static function create(
         PageRepository $pageRepo,
         ApplicationRepository $applicationRepo,
-        AuthorRepository $authorRepo,
         ImageRepository $imageRepo
     ) : self {
         return new self(
             $pageRepo,
             $applicationRepo,
-            $authorRepo,
             $imageRepo
         );
     }

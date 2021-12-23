@@ -12,26 +12,16 @@ namespace Kwai\Core\Domain\ValueObjects;
 final class TraceableTime
 {
     /**
-     * Time of creation
-     */
-    private Timestamp $created_at;
-
-    /**
-     * Time of last update
-     */
-    private ?Timestamp $updated_at;
-
-    /**
      * Constructor
      *
-     * @param Timestamp $created_at The timestamp of creation
-     * @param Timestamp $updated_at The timestamp of the last modification
+     * @param Timestamp|null $created_at The timestamp of creation
+     * @param Timestamp|null $updated_at The timestamp of the last modification
      */
     public function __construct(
-        Timestamp $created_at = null,
-        Timestamp $updated_at = null
+        private ?Timestamp $created_at = null,
+        private ?Timestamp $updated_at = null
     ) {
-        $this->created_at = $created_at ?? Timestamp::createNow();
+        $this->created_at ??= Timestamp::createNow();
         $this->updated_at = $updated_at;
     }
 
@@ -65,8 +55,25 @@ final class TraceableTime
     /**
      * Change the updateAt to the current timestamp
      */
-    public function markUpdated(): void
+    public function markUpdated(): TraceableTime
     {
         $this->updated_at = Timestamp::createNow();
+        return $this;
+    }
+
+    /**
+     * Create a copy from the given traceable time, and sets the updated_at
+     * value to the current timestamp. When from is null, a new instance
+     * will be returned.
+     *
+     * @param TraceableTime|null $from
+     * @return TraceableTime
+     */
+    public static function createFrom(?TraceableTime $from = null): self
+    {
+        if ($from) {
+            return new self($from->getCreatedAt(), Timestamp::createNow());
+        }
+        return new self();
     }
 }

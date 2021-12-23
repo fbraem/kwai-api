@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Core\Domain\ValueObjects;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Users\Domain\User;
 
 /**
  * Class Text
@@ -44,9 +43,8 @@ class Text
 
     /**
      * The author of the text.
-     * @var Entity<User>
      */
-    private Entity $author;
+    private Creator $author;
 
     /**
      * Text constructor.
@@ -56,15 +54,15 @@ class Text
      * @param string         $title
      * @param string         $summary
      * @param string|null    $content
-     * @param Entity         $author
+     * @param Creator        $author
      */
     public function __construct(
         Locale $locale,
         DocumentFormat $format,
         string $title,
+        Creator $author,
         string $summary,
-        ?string $content,
-        Entity $author
+        ?string $content = null,
     ) {
         $this->locale = $locale;
         $this->format = $format;
@@ -117,7 +115,7 @@ class Text
     /**
      * Return the author
      */
-    public function getAuthor(): Entity
+    public function getAuthor(): Creator
     {
         return $this->author;
     }

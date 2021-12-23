@@ -7,15 +7,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
-use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * User Account Entity. A user with account information like password,
@@ -24,49 +19,21 @@ use Kwai\Modules\Users\Domain\ValueObjects\Username;
 class UserAccount implements DomainEntity
 {
     /**
-     * User
-     */
-    private User $user;
-
-    /**
-     * The timestamp of the last login
-     */
-    private ?Timestamp $lastLogin;
-
-    /**
-     * TODO: add to table
-     * The last unsuccessful login
-     */
-    private ?Timestamp $lastUnsuccessfulLogin;
-
-    /**
-     * The password of the user
-     */
-    private Password $password;
-
-    /**
-     * Is the user revoked?
-     */
-    private bool $revoked;
-
-    /**
-     * The abilities of the user.
-     * @var Ability[]
-     */
-    private array $abilities;
-
-    /**
      * Constructor.
-     * @param  object $props User properties
+     *
+     * @param User            $user
+     * @param Password        $password
+     * @param Timestamp|null  $lastLogin
+     * @param Timestamp|null  $lastUnsuccessfulLogin
+     * @param bool            $revoked
      */
-    public function __construct(object $props)
-    {
-        $this->user = $props->user;
-        $this->lastLogin = $props->lastLogin ?? null;
-        $this->lastUnsuccessfulLogin = $props->lastUnsuccessfulLogin ?? null;
-        $this->revoked = $props->revoked ?? false;
-        $this->password = $props->password ?? null;
-        $this->abilities = $props->abilities ?? [];
+    public function __construct(
+        private User $user,
+        private Password $password,
+        private ?Timestamp $lastLogin = null,
+        private ?Timestamp $lastUnsuccessfulLogin = null,
+        private bool $revoked = false,
+    ) {
     }
 
     /**
@@ -97,16 +64,8 @@ class UserAccount implements DomainEntity
     }
 
     /**
-     * Return the abilities of this user.
-     * @return Ability[]
-     */
-    public function getAbilities(): array
-    {
-        return $this->abilities;
-    }
-
-    /**
      * Returns the user.
+     *
      * @return User
      */
     public function getUser(): User
@@ -116,7 +75,8 @@ class UserAccount implements DomainEntity
 
     /**
      * Get the last login timestamp
-     * @return Timestamp
+     *
+     * @return Timestamp|null
      */
     public function getLastLogin(): ?Timestamp
     {
@@ -134,20 +94,12 @@ class UserAccount implements DomainEntity
 
     /**
      * Get the last unsuccessful login timestamp
-     * @return Timestamp
+     *
+     * @return Timestamp|null
      */
     public function getLastUnsuccessfulLogin(): ?Timestamp
     {
         return $this->lastUnsuccessfulLogin;
-    }
-
-    /**
-     * Adds an ability to this user.
-     * @param Entity<Ability> $ability
-     */
-    public function addAbility(Entity $ability)
-    {
-        $this->abilities[] = $ability;
     }
 
     public function getPassword(): Password

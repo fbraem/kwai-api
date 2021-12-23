@@ -2,13 +2,13 @@
 /**
  * Phinx migration configuration
  */
-
+require __DIR__ . '/../autoload.php';
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 
-$config = (new Settings())();
+$config = (new Settings())->create();
 
 $environments = $config['database'];
-$environments['default_database'] = $config['default_database'];
+$environments['default_environment'] = $config['default_database'];
 
 return [
     'paths' => [
@@ -18,15 +18,8 @@ return [
             __DIR__ . '/kwai/Modules/Mails/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/News/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Pages/Infrastructure/Migrations',
-            __DIR__ . '/domain/Content/migrations',
-            __DIR__ . '/domain/Person/migrations',
-            __DIR__ . '/domain/Game/migrations',
-            __DIR__ . '/domain/Team/migrations',
-            __DIR__ . '/domain/Club/migrations',
-            __DIR__ . '/domain/Event/migrations',
-            __DIR__ . '/sport/judo/domain/Member/migrations',
-            __DIR__ . '/domain/Training/migrations',
-            __DIR__ . '/domain/Member/migrations',
+            __DIR__ . '/kwai/Modules/Trainings/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Coaches/Infrastructure/Migrations'
         ]
     ],
     'environments' => $environments

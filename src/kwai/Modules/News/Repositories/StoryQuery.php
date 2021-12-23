@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\News\Repositories;
 
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\Query;
 
 /**
@@ -21,8 +22,9 @@ interface StoryQuery extends Query
      * Add a filter for the given id
      *
      * @param int $id
+     * @return StoryQuery
      */
-    public function filterId(int $id): void;
+    public function filterId(int $id): self;
 
     /**
      * Add a filter on the publication date.
@@ -30,31 +32,45 @@ interface StoryQuery extends Query
      *
      * @param int      $year
      * @param int|null $month
+     * @return StoryQuery
      */
-    public function filterPublishDate(int $year, ?int $month): void;
+    public function filterPublishDate(int $year, ?int $month): self;
 
     /**
      * Only select the promoted news stories.
+     *
+     * @return StoryQuery
      */
-    public function filterPromoted(): void;
+    public function filterPromoted(): self;
 
     /**
      * Add a filter on the application.
      *
      * @param int|string $appNameOrId
+     * @return StoryQuery
      */
-    public function filterApplication($appNameOrId): void;
+    public function filterApplication(int|string $appNameOrId): self;
 
     /**
      * Only select news stories that are enabled
      * and don't show news stories which are expired.
+     *
+     * @return StoryQuery
      */
-    public function filterVisible(): void;
+    public function filterVisible(): self;
 
     /**
      * Filter on the user. Only news written by the given user will be shown.
      *
-     * @param int $id
+     * @param int|UniqueId $id
+     * @return StoryQuery
      */
-    public function filterUser(int $id): void;
+    public function filterUser(int|UniqueId $id): self;
+
+    /**
+     * Order the returned rows on publish date.
+     *
+     * @return $this
+     */
+    public function orderByPublishDate(): self;
 }

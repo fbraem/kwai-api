@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types=1);
@@ -10,16 +10,16 @@ namespace Kwai\Modules\Users\UseCases;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
-use Kwai\Core\Domain\Exceptions\NotAllowedException;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
+use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
-use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
  * Usecase: confirm an invitation and create a new user account
@@ -29,35 +29,39 @@ use Kwai\Modules\Users\Repositories\UserRepository;
 final class ConfirmInvitation
 {
     /**
-     * The invitation repository
-     */
-    private UserInvitationRepository $invitationRepo;
-
-    /**
-     * The user repository
-     */
-    private UserRepository $userRepo;
-
-    /**
      * ConfirmInvitation constructor.
+     *
      * @param UserInvitationRepository $invitationRepo
-     * @param UserRepository $userRepo
+     * @param UserAccountRepository    $userAccountRepository
      */
     public function __construct(
-        UserInvitationRepository $invitationRepo,
-        UserRepository $userRepo
+        private UserInvitationRepository $invitationRepo,
+        private UserAccountRepository $userAccountRepository
     ) {
-        $this->invitationRepo = $invitationRepo;
-        $this->userRepo = $userRepo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param UserInvitationRepository $invitationRepository
+     * @param UserAccountRepository    $userAccountRepository
+     * @return ConfirmInvitation
+     */
+    public static function create(
+        UserInvitationRepository $invitationRepository,
+        UserAccountRepository $userAccountRepository
+    ) {
+        return new self($invitationRepository, $userAccountRepository);
     }
 
     /**
      * Create a new user account.
+     *
      * @param ConfirmInvitationCommand $command
      * @return Entity The new user account
-     * @throws NotFoundException
      * @throws UnprocessableException
      * @throws RepositoryException
+     * @throws UserInvitationNotFoundException
      * @noinspection PhpUndefinedMethodInspection
      */
     public function __invoke(ConfirmInvitationCommand $command): Entity
@@ -76,24 +80,29 @@ final class ConfirmInvitation
         }
 
         $email = new EmailAddress($command->email);
-        if ($this->userRepo->existsWithEmail($email)) {
+        try {
+            $this->userAccountRepository->get($email);
             throw new UnprocessableException('Email is already used');
+        } catch (UserAccountNotFoundException) {
         }
 
-        $user = new User((object)[
-            'uuid' => new UniqueId(),
-            'emailAddress' => $email,
-            'username' => new Username($command->firstName, $command->lastName)
-        ]);
+        $user = new User(
+            uuid: new UniqueId(),
+            emailAddress: $email,
+            username: new Name(
+                $command->firstName,
+                $command->lastName
+            )
+        );
 
-        $account = new UserAccount((object) [
-            'user' => $user,
-            'password' => Password::fromString($command->password)
-        ]);
+        $account = new UserAccount(
+            user: $user,
+            password: Password::fromString($command->password)
+        );
 
         $invitation->confirm();
         $this->invitationRepo->update($invitation);
 
-        return $this->userRepo->create($account);
+        return $this->userAccountRepository->create($account);
     }
 }

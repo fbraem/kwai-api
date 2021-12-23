@@ -14,10 +14,16 @@ use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
  */
 class MailerDependency implements Dependency
 {
-    public function __invoke(array $settings)
+    public function __construct(
+        private ?array $settings = null
+    ) {
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
+    public function create()
     {
         return (new MailerServiceFactory())->create(
-            $settings['mail']['url']
+            $this->settings['mail']['url']
         );
     }
 }

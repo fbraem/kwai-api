@@ -15,17 +15,12 @@ namespace Kwai\Modules\Users\Domain\ValueObjects;
 final class Password
 {
     /**
-     * The password of the user.
-     * @var string
-     */
-    private $password;
-
-    /**
      * Constructor.
      * @param string $password A hashed string used as password.
      */
-    public function __construct(string $password)
-    {
+    public function __construct(
+        private string $password
+    ) {
         $this->password = $password;
     }
 

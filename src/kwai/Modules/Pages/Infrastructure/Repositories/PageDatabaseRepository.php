@@ -1,7 +1,7 @@
 <?php
 /**
- * @package Pages
- * @subpackage Infrastructure
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
@@ -9,6 +9,7 @@ namespace Kwai\Modules\Pages\Infrastructure\Repositories;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -26,21 +27,26 @@ use function Latitude\QueryBuilder\field;
 class PageDatabaseRepository extends DatabaseRepository implements PageRepository
 {
     /**
+     * PageDatabaseRepository constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            fn($item) => PageMapper::toDomain($item)
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery();
-        $query->filterId($id);
-
-        try {
-            $entities = $query->execute();
-        } catch (QueryException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        if (count($entities) ==  1) {
-            return $entities[$id];
+        $entities = $this->getAll($this->createQuery()->filterId($id));
+        if ($entities->count() > 0) {
+            return $entities->first();
         }
         throw new PageNotFoundException($id);
     }
@@ -50,7 +56,9 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
      */
     public function createQuery(): PageQuery
     {
-        return new PageDatabaseQuery($this->db);
+        return new PageDatabaseQuery(
+            $this->db
+        );
     }
 
     /**
@@ -98,7 +106,7 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
                 $content->getTitle(),
                 $content->getContent(),
                 $content->getSummary(),
-                $content->getAuthor()->id()
+                $content->getAuthor()->getId()
             );
         }
 
@@ -137,7 +145,7 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
                     'title' => $content->getTitle(),
                     'content' => $content->getContent(),
                     'summary' => $content->getSummary(),
-                    'user_id' => $content->getAuthor()->id(),
+                    'user_id' => $content->getAuthor()->getId(),
                     'updated_at' => (string) Timestamp::createNow()
                 ])
                 ->where(

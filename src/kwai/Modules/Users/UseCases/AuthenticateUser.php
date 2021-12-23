@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -10,14 +10,13 @@ namespace Kwai\Modules\Users\UseCases;
 use DateTime;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
-use Kwai\Modules\Users\Repositories\UserRepository;
+use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
@@ -27,26 +26,38 @@ use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
  */
 final class AuthenticateUser
 {
-    private UserRepository $userRepo;
-
-    private AccessTokenRepository $accessTokenRepo;
-
-    private RefreshTokenRepository $refreshTokenRepo;
-
     /**
      * Constructor.
-     * @param UserRepository $userRepo A user repository
-     * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
-     * @param RefreshTokenRepository $refreshTokenRepo An refreshtoken repository
+     *
+     * @param UserAccountRepository  $userAccountRepo
+     * @param AccessTokenRepository  $accessTokenRepo
+     * @param RefreshTokenRepository $refreshTokenRepo
      */
     public function __construct(
-        UserRepository $userRepo,
-        AccessTokenRepository $accessTokenRepo,
-        RefreshTokenRepository $refreshTokenRepo
+        private UserAccountRepository $userAccountRepo,
+        private AccessTokenRepository $accessTokenRepo,
+        private RefreshTokenRepository $refreshTokenRepo
     ) {
-        $this->userRepo = $userRepo;
-        $this->accessTokenRepo = $accessTokenRepo;
-        $this->refreshTokenRepo = $refreshTokenRepo;
+    }
+
+    /**
+     * Factory method
+     *
+     * @param UserAccountRepository  $userAccountRepo
+     * @param AccessTokenRepository  $accessTokenRepository
+     * @param RefreshTokenRepository $refreshTokenRepository
+     * @return AuthenticateUser
+     */
+    public static function create(
+        UserAccountRepository $userAccountRepo,
+        AccessTokenRepository $accessTokenRepository,
+        RefreshTokenRepository $refreshTokenRepository
+    ) {
+        return new self(
+            $userAccountRepo,
+            $accessTokenRepository,
+            $refreshTokenRepository
+        );
     }
 
     /**
@@ -56,17 +67,16 @@ final class AuthenticateUser
      * token will contain an access token. This access token will be
      * associated with the authenticated user.
      *
-     * @param  AuthenticateUserCommand $command
+     * @param AuthenticateUserCommand $command
      * @return Entity<RefreshToken>              A RefreshToken entity
-     * @throws NotFoundException
-     *    Thrown when user can't be found
      * @throws AuthenticationException
      *    Thrown when the password is invalid, or when the user is revoked.
      * @throws RepositoryException
+     * @throws UserAccountNotFoundException
      */
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
-        $account = $this->userRepo->getAccount(new EmailAddress($command->email));
+        $account = $this->userAccountRepo->get(new EmailAddress($command->email));
         /** @noinspection PhpUndefinedMethodInspection */
         if (!$account->login($command->password)) {
             throw new AuthenticationException('Invalid password');
@@ -76,26 +86,26 @@ final class AuthenticateUser
             throw new AuthenticationException('User is revoked');
         }
 
-        $this->userRepo->updateAccount($account);
+        $this->userAccountRepo->update($account);
 
         $accessToken = $this->accessTokenRepo->create(
-            new AccessToken((object) [
-                'identifier' => new TokenIdentifier(),
-                'expiration' => Timestamp::createFromDateTime(
+            new AccessToken(
+                identifier: new TokenIdentifier(),
+                expiration: Timestamp::createFromDateTime(
                     new DateTime('now +2 hours')
                 ),
-                'account' => $account
-            ])
+                account: $account
+            )
         );
 
         return $this->refreshTokenRepo->create(
-            new RefreshToken((object)[
-                'identifier' => new TokenIdentifier(),
-                'expiration' => Timestamp::createFromDateTime(
+            new RefreshToken(
+                identifier: new TokenIdentifier(),
+                expiration: Timestamp::createFromDateTime(
                     new DateTime('now +1 month')
                 ),
-                'accessToken' => $accessToken
-            ])
+                accessToken: $accessToken
+            )
         );
     }
 }

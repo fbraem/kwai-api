@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add page rules
  */
-class PageCreateRulesMigration extends \Domain\CreateRulesMigration
+class PageCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'page';
 

@@ -7,12 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
 
 /**
  * UserInvitation Entity
@@ -20,66 +20,31 @@ use Kwai\Core\Domain\Entity;
 class UserInvitation implements DomainEntity
 {
     /**
-     * A UUID of the invitation.
-     */
-    private UniqueId $uuid;
-
-    /**
-     * The email address of the invited user
-     */
-    private EmailAddress $emailAddress;
-
-    /**
-     * Track create & modify times
-     */
-    private TraceableTime $traceableTime;
-
-    /**
-     * The timestamp when the invitation expires
-     */
-    private Timestamp $expiration;
-
-    /**
-     * A remark about the invitation
-     */
-    private string $remark;
-
-    /**
-     * The name of the invited user
-     */
-    private string $name;
-
-    /**
-     * The creator of the invitation.
-     * @var Entity<User>
-     */
-    private Entity $creator;
-
-    /**
-     * Is this invitation revoked?
-     */
-    private bool $revoked;
-
-    /**
-     * Timestamp of confirmation
-     */
-    private ?Timestamp $confirmation;
-
-    /**
      * Constructor.
-     * @param object $props User Invitation properties
+     *
+     * @param EmailAddress       $emailAddress
+     * @param Timestamp          $expiration
+     * @param string             $name
+     * @param Creator            $creator
+     * @param string|null        $remark
+     * @param UniqueId|null      $uuid
+     * @param bool               $revoked
+     * @param TraceableTime|null $traceableTime
+     * @param Timestamp|null     $confirmation
      */
-    public function __construct(object $props)
-    {
-        $this->uuid = $props->uuid;
-        $this->emailAddress = $props->emailAddress;
-        $this->traceableTime = $props->traceableTime;
-        $this->expiration = $props->expiration;
-        $this->remark = $props->remark ?? '';
-        $this->name = $props->name;
-        $this->creator = $props->creator;
-        $this->revoked = $props->revoked ?? false;
-        $this->confirmation = $props->confirmation ?? null;
+    public function __construct(
+        private EmailAddress $emailAddress,
+        private Timestamp $expiration,
+        private string $name,
+        private Creator $creator,
+        private ?string $remark = null,
+        private ?UniqueId $uuid = null,
+        private bool $revoked = false,
+        private ?TraceableTime $traceableTime = null,
+        private ?Timestamp $confirmation = null,
+    ) {
+        $this->uuid ??= new UniqueId();
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
@@ -91,9 +56,9 @@ class UserInvitation implements DomainEntity
     }
 
     /**
-     * Get the last login timestamp
+     * Get the time when the invitation will expire
      */
-    public function getExpiration(): ?Timestamp
+    public function getExpiration(): Timestamp
     {
         return $this->expiration;
     }
@@ -117,7 +82,7 @@ class UserInvitation implements DomainEntity
     /**
      * Get the remark
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }
@@ -140,9 +105,10 @@ class UserInvitation implements DomainEntity
 
     /**
      * Get the user that created this invitation.
-     * @return Entity<User>
+     *
+     * @return Creator
      */
-    public function getCreator(): Entity
+    public function getCreator(): Creator
     {
         return $this->creator;
     }

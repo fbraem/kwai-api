@@ -14,7 +14,19 @@ use Kwai\Core\Infrastructure\Repositories\Query;
  */
 interface ApplicationQuery extends Query
 {
-    public function filterId(int $id): void;
+    /**
+     * Filter on id
+     *
+     * @param int $id
+     * @return $this
+     */
+    public function filterId(int $id): self;
 
-    public function filterApplication(string $application);
+    /**
+     * Filter on application
+     *
+     * @param string $application
+     * @return $this
+     */
+    public function filterApplication(string $application): self;
 }

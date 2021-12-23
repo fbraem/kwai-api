@@ -1,20 +1,18 @@
 <?php
 /**
- * User Repository interface
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Repositories;
 
-use Kwai\Core\Domain\Exceptions\NotFoundException;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Ability;
-use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
+use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Domain\UserAccount;
 
 /**
  * User repository interface
@@ -25,105 +23,49 @@ interface UserRepository
      * Get the user with the given id.
      *
      * @param  int    $id
-     * @throws NotFoundException
+     * @throws UserNotFoundException
      * @throws RepositoryException
      * @return Entity<User>
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function getById(int $id) : Entity;
 
     /**
-     * Get the user with the given uuid.
+     * Get the user with the given unique id.
      *
-     * @param  UniqueId $uid
-     * @throws NotFoundException
-     * @throws RepositoryException
+     * @param UniqueId $uuid
      * @return Entity<User>
-     */
-    public function getByUUID(UniqueId $uid) : Entity;
-
-    /**
-     * Get the user with the given email address.
-     *
-     * @param  EmailAddress $email
-     * @throws NotFoundException
+     * @throws UserNotFoundException
      * @throws RepositoryException
-     * @return Entity<User>
      */
-    public function getByEmail(EmailAddress $email) : Entity;
-
-    /**
-     * Checks if a user with the given email address exists
-     *
-     * @param  EmailAddress $email
-     * @throws RepositoryException
-     * @return bool
-     */
-    public function existsWithEmail(EmailAddress $email) : bool;
-
-    /**
-     * Get the user account with the given email address.
-     *
-     * @param EmailAddress $email
-     * @throws NotFoundException
-     * @throws RepositoryException
-     * @return Entity
-     */
-    public function getAccount(EmailAddress $email) : Entity;
+    public function getByUniqueId(UniqueId $uuid) : Entity;
 
     /**
      * Get all users.
      *
-     * @return Entity[]
+     * @param UserQuery|null $query
+     * @param int|null       $limit
+     * @param int|null       $offset
+     * @return Collection
      * @throws RepositoryException
      */
-    public function getAll(): array;
+    public function getAll(
+        ?UserQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 
     /**
-     * Get the user associated with the given token identifier
-     * (from an accesstoken).
+     * Creates a UserQuery
      *
-     * @param  TokenIdentifier $token
-     * @throws NotFoundException
-     * @throws RepositoryException
-     * @return Entity<User>
+     * @return UserQuery
      */
-    public function getByAccessToken(TokenIdentifier $token) : Entity;
+    public function createQuery(): UserQuery;
 
     /**
-     * Update the login information.
+     * Update a user
      *
-     * @param Entity<UserAccount> $account
+     * @param Entity $user
      * @throws RepositoryException
      */
-    public function updateAccount(Entity $account): void;
-
-    /**
-     * Create a new user account.
-     *
-     * @param UserAccount $account
-     * @throws RepositoryException
-     * @return Entity
-     */
-    public function create(UserAccount $account): Entity;
-
-    /**
-     * Add the ability to the user.
-     *
-     * @param Entity<Ability> $user
-     * @param Entity<Ability> $ability
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function addAbility(Entity $user, Entity $ability): Entity;
-
-    /**
-     * Remove the ability from the user.
-     *
-     * @param Entity<Ability> $user
-     * @param Entity<Ability> $ability
-     * @throws RepositoryException
-     * @return Entity<User>
-     */
-    public function removeAbility(Entity $user, Entity $ability): Entity;
+    public function update(Entity $user): void;
 }

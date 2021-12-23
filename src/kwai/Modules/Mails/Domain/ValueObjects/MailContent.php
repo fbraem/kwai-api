@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
@@ -13,34 +13,16 @@ namespace Kwai\Modules\Mails\Domain\ValueObjects;
 final class MailContent
 {
     /**
-     * Subject
-     */
-    private string $subject;
-
-    /**
-     * HTML
-     */
-    private string $html;
-
-    /**
-     * Plain text
-     */
-    private string $text;
-
-    /**
      * MailContent constructor.
-     * @param string $subject [description]
-     * @param string $text    [description]
-     * @param string $html    [description]
+     * @param string $subject Subject of the mail
+     * @param string $text    Text content of the mail
+     * @param string $html    HTML content of the mail
      */
     public function __construct(
-        string $subject,
-        string $text,
-        string $html = ''
+        private string $subject,
+        private string $text,
+        private string $html = ''
     ) {
-        $this->subject = $subject;
-        $this->text = $text;
-        $this->html = $html;
     }
 
     /**

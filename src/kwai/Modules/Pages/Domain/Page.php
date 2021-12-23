@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Domain;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
@@ -18,67 +19,38 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 class Page implements DomainEntity
 {
     /**
-     * Is this page enabled?
-     */
-    private bool $enabled;
-
-    /**
-     * The content.
-     * @var Text[]
-     */
-    private array $contents;
-
-    /**
-     * Associated images
-     * @var string[]
-     */
-    private array $images = [];
-
-    /**
-     * Priority of the page. Used for sorting.
-     */
-    private int $priority;
-
-    /**
-     * A remark
-     */
-    private ?string $remark;
-
-    /**
-     * The associated application.
-     * @var Entity<Application>
-     */
-    private Entity $application;
-
-    /**
-     * When is this page created/updated?
-     */
-    private TraceableTime $traceableTime;
-
-    /**
      * Page constructor.
      *
-     * @param object $props
+     * @param Entity             $application
+     * @param bool               $enabled
+     * @param Collection|null    $contents
+     * @param Collection|null    $images
+     * @param int                $priority
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
      */
-    public function __construct(object $props)
-    {
-        $this->enabled = $props->enabled ?? false;
-        $this->contents = $props->contents ?? [];
-        $this->images = $props->images ?? [];
-        $this->priority = $props->priority ?? 0;
-        $this->remark = $props->remark ?? null;
-        $this->application = $props->application;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
+    public function __construct(
+        private Entity $application,
+        private bool $enabled = false,
+        private ?Collection $contents = null,
+        private ?Collection $images = null,
+        private int $priority = 0,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null
+    ) {
+        $this->contents ??= new Collection();
+        $this->images ??= new Collection();
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
      * Attach images
      *
-     * @param string[] $images
+     * @param Collection $images
      */
-    public function attachImages(array $images)
+    public function attachImages(Collection $images)
     {
-        $this->images = $images;
+        $this->images->merge($images);
     }
 
     /**
@@ -88,7 +60,7 @@ class Page implements DomainEntity
      */
     public function addContent(Text $content)
     {
-        $this->contents[] = $content;
+        $this->contents->push($content);
     }
 
     /**
@@ -102,21 +74,21 @@ class Page implements DomainEntity
     /**
      * Get the contents
      *
-     * @return Text[]
+     * @return Collection
      */
-    public function getContents(): array
+    public function getContents(): Collection
     {
-        return $this->contents;
+        return $this->contents->collect();
     }
 
     /**
      * Get all attached images
      *
-     * @return string[]
+     * @return Collection
      */
-    public function getImages(): array
+    public function getImages(): Collection
     {
-        return $this->images;
+        return $this->images->collect();
     }
 
     /**

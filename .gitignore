@@ -1,5 +1,10 @@
 *.key
 /docs/
-/.phpunit.result.cache
 kwai.development.yaml
 /.vagrant
+/.*.cache
+/vendor/
+/config/config.acc.php
+/config/config.php
+/config/config.production.php
+/hosts.*.yml

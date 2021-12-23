@@ -1,9 +1,11 @@
 <?php
 
+use Kwai\Core\Infrastructure\Migrations\CreateRulesMigration;
+
 /**
  * Add news rules
  */
-class NewsCreateRulesMigration extends \Domain\CreateRulesMigration
+class NewsCreateRulesMigration extends CreateRulesMigration
 {
     const SUBJECT_NAME = 'news';
 

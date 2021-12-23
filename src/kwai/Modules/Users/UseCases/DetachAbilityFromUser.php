@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types=1);
@@ -8,9 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
+use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
@@ -24,42 +25,48 @@ use Kwai\Modules\Users\Repositories\UserRepository;
  */
 class DetachAbilityFromUser
 {
-    private UserRepository $userRepo;
-
-    private AbilityRepository $abilityRepo;
-
     /**
      * DetachAbilityFromUser constructor.
      *
      * @param UserRepository    $userRepo
      * @param AbilityRepository $abilityRepo
      */
-    public function __construct(UserRepository $userRepo, AbilityRepository $abilityRepo)
-    {
+    public function __construct(
+        private UserRepository $userRepo,
+        private AbilityRepository $abilityRepo
+    ) {
         $this->userRepo = $userRepo;
         $this->abilityRepo = $abilityRepo;
     }
 
     /**
+     * Factory method
+     *
+     * @param UserRepository    $userRepo
+     * @param AbilityRepository $abilityRepository
+     * @return DetachAbilityFromUser
+     */
+    public static function create(UserRepository $userRepo, AbilityRepository $abilityRepository): self
+    {
+        return new self($userRepo, $abilityRepository);
+    }
+
+    /**
      * @param DetachAbilityFromUserCommand $command
      * @return Entity
-     * @throws NotFoundException
      * @throws RepositoryException
+     * @throws UserNotFoundException
+     * @throws AbilityNotFoundException
      */
     public function __invoke(DetachAbilityFromUserCommand $command): Entity
     {
-        $user = $this->userRepo->getByUUID(new UniqueId($command->uuid));
-        $abilities = $this->abilityRepo->getByUser($user);
+        $user = $this->userRepo->getByUniqueId(new UniqueId($command->uuid));
+        $ability = $this->abilityRepo->getById($command->abilityId);
+
         /** @noinspection PhpUndefinedMethodInspection */
-        $user->setAbilities($abilities);
+        $user->removeAbility($ability);
 
-        // Not attached, so return the user
-        if (!isset($abilities[$command->abilityId])) {
-            return $user;
-        }
-
-        // Remove it
-        $this->userRepo->removeAbility($user, $abilities[$command->abilityId]);
+        $this->userRepo->update($user);
 
         return $user;
     }

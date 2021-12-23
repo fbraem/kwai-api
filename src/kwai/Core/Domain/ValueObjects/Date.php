@@ -13,16 +13,27 @@ use Carbon\CarbonImmutable;
  */
 final class Date
 {
-    private CarbonImmutable $date;
-
     /**
      * Constructs a new Date value object.
      *
      * @param CarbonImmutable $date
      */
-    private function __construct(CarbonImmutable $date)
+    public function __construct(
+        private CarbonImmutable $date
+    ) {
+    }
+
+    /**
+     * Add a day to this date and return it as a new Date instance.
+     *
+     * @param int $days
+     * @return Date
+     */
+    public function addDay(int $days = 1): Date
     {
-        $this->date = $date;
+        return new Date(
+            $this->date->addDays($days)
+        );
     }
 
     /**
@@ -79,5 +90,22 @@ final class Date
     public static function createFuture(int $days): Date
     {
         return new Date(CarbonImmutable::today()->addDays($days));
+    }
+
+    /**
+     * Creates a date from a string.
+     *
+     * @param string $str
+     * @param string $format
+     * @return Date
+     */
+    public static function createFromString(
+        string $str,
+        string $format = 'Y-m-d'
+    ): self {
+        return new self(CarbonImmutable::createFromFormat(
+            $format,
+            $str
+        ));
     }
 }

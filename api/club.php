@@ -1,13 +1,10 @@
 <?php
-/**
- * @package Kwai
- * @subpackage api
- */
+
 declare(strict_types=1);
 
-require '../src/vendor/autoload.php';
+use Kwai\Applications\ClubApplication;
 
-use Kwai\Applications\Club\ClubApplication;
+require '../autoload.php';
 
 $app = new ClubApplication();
 $app->run();

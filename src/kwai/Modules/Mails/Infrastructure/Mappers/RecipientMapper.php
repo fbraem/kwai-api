@@ -1,17 +1,16 @@
 <?php
 /**
- * @package kwai
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
-
+use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\Recipient;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
-
 use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 
 /**
@@ -21,31 +20,33 @@ final class RecipientMapper
 {
     /**
      * Creates a Recipient entity from a database row.
-     * @param object $raw
-     * @return Entity<Recipient>
+     *
+     * @param Collection $data
+     * @return Recipient
      */
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Recipient
     {
-        return new Entity(
-            (int) $raw->id,
-            new Recipient((object)[
-                'type' => new RecipientType($raw->type),
-                'address' => new Address($raw->email, $raw->sender_name ?? '')
-            ])
+        return new Recipient(
+            type: new RecipientType((int) $data->get('type')),
+            address: new Address(
+                new EmailAddress($data->get('email')),
+                $data->get('name', '')
+            )
         );
     }
 
     /**
-     * Returns an array representation of recipient to store it in a database.
+     * Returns a Collection representation of recipient to store it in a database.
+     *
      * @param Recipient $recipient
-     * @return array
+     * @return Collection
      */
-    public static function toPersistence(Recipient $recipient): array
+    public static function toPersistence(Recipient $recipient): Collection
     {
-        return [
+        return collect([
             'type' => strval($recipient->getType()),
             'email' => $recipient->getAddress()->getEmail(),
             'name' => $recipient->getAddress()->getName()
-        ];
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types=1);
@@ -21,25 +21,27 @@ use Kwai\Modules\Users\Repositories\RuleRepository;
 class CreateAbility
 {
     /**
-     * The ability repository
-     */
-    private AbilityRepository $abilityRepo;
-
-    /**
-     * The rule repository
-     */
-    private RuleRepository $ruleRepo;
-
-    /**
      * CreateAbility constructor.
      *
      * @param AbilityRepository $abilityRepo
      * @param RuleRepository $ruleRepo
      */
-    public function __construct(AbilityRepository $abilityRepo, RuleRepository $ruleRepo)
+    public function __construct(
+        private AbilityRepository $abilityRepo,
+        private RuleRepository $ruleRepo
+    ) {
+    }
+
+    /**
+     * Factory method
+     *
+     * @param AbilityRepository $abilityRepo
+     * @param RuleRepository    $ruleRepo
+     * @return static
+     */
+    public static function create(AbilityRepository $abilityRepo, RuleRepository $ruleRepo): self
     {
-        $this->abilityRepo = $abilityRepo;
-        $this->ruleRepo = $ruleRepo;
+        return new self($abilityRepo, $ruleRepo);
     }
 
     /**
@@ -49,13 +51,17 @@ class CreateAbility
      */
     public function __invoke(CreateAbilityCommand $command): Entity
     {
-        $rules = $this->ruleRepo->getbyIds($command->rules);
+        if (count($command->rules) > 0) {
+            $rules = $this->ruleRepo->getbyIds($command->rules);
+        } else {
+            $rules = collect();
+        }
         return $this->abilityRepo->create(
-            new Ability((object) [
-              'name' => $command->name,
-              'remark' => $command->remark,
-              'rules' =>  $rules
-            ])
+            new Ability(
+                name: $command->name,
+                remark: $command->remark,
+                rules:  $rules
+            )
         );
     }
 }

@@ -10,6 +10,7 @@ namespace Kwai\Core\Infrastructure\Database;
 use Closure;
 use MyCLabs\Enum\Enum;
 use function Latitude\QueryBuilder\alias;
+use function Latitude\QueryBuilder\field;
 
 /**
  * Class TableEnum
@@ -18,6 +19,14 @@ use function Latitude\QueryBuilder\alias;
  */
 class TableEnum extends Enum
 {
+    public function alias(string $column) {
+        return alias($column, $this->getAlias($column));
+    }
+
+    public function field(string $column) {
+        return field($this->getColumn($column));
+    }
+
     /**
      * Creates a function that calls the alias method for a column.
      *
@@ -61,7 +70,7 @@ class TableEnum extends Enum
      *
      * @return string
      */
-    private function getAliasPrefix(): string
+    public function getAliasPrefix(): string
     {
         return $this->getValue() . '_';
     }

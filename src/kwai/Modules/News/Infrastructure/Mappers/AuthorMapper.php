@@ -1,15 +1,15 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Modules\News\Domain\Author;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
 
 /**
  * Class AuthorMapper
@@ -18,13 +18,17 @@ use Kwai\Modules\Users\Domain\ValueObjects\Username;
  */
 final class AuthorMapper
 {
-    public static function toDomain(object $raw): Entity
+    /**
+     * @param Collection $data
+     * @return Author
+     */
+    public static function toDomain(Collection $data): Author
     {
-        return new Entity(
-            (int) $raw->id,
-            new Author((object)[
-                'name' => new Username($raw->first_name ?? null, $raw->last_name ?? null)
-            ])
+        return new Author(
+            name: new Name(
+                $data->get('first_name'),
+                $data->get('last_name')
+            )
         );
     }
 }

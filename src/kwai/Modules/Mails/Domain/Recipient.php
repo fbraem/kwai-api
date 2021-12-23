@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
@@ -17,25 +17,15 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 class Recipient implements DomainEntity
 {
     /**
-     * The type of the recipient
-     * @var RecipientType
-     */
-    private $type;
-
-    /**
-     * The address of the recipient
-     * @var Address
-     */
-    private $address;
-
-    /**
      * Constructor
-     * @param object $props Recipient properties
+     *
+     * @param RecipientType $type
+     * @param Address       $address
      */
-    public function __construct(object $props)
-    {
-        $this->type = $props->type;
-        $this->address = $props->address;
+    public function __construct(
+        private RecipientType $type,
+        private Address $address
+    ) {
     }
 
     /**

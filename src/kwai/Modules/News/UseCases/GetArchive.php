@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Module
  * @subpackage News
  */
 declare(strict_types=1);
@@ -18,17 +18,27 @@ use Kwai\Modules\News\Repositories\StoryRepository;
  */
 class GetArchive
 {
-    private StoryRepository $repo;
-
     /**
      * GetArchive constructor.
      *
      * @param StoryRepository $repo
      */
-    public function __construct(StoryRepository $repo)
+    public function __construct(private StoryRepository $repo)
     {
-        $this->repo = $repo;
     }
+
+    /**
+     * Factory method
+     *
+     * @param StoryRepository $repo
+     * @return GetArchive
+     */
+    public static function create(
+        StoryRepository $repo
+    ): self {
+        return new self($repo);
+    }
+
 
     /**
      * @param GetArchiveCommand $command

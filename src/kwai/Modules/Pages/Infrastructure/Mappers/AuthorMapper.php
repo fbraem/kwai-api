@@ -1,15 +1,15 @@
 <?php
 /**
- * @package Pages
- * @subpackage Infrastructure
+ * @package Modules
+ * @subpackage Pages
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Pages\Domain\Author;
-use Kwai\Modules\Users\Domain\ValueObjects\Username;
+use Illuminate\Support\Collection;
+use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\Name;
 
 /**
  * Class AuthorMapper
@@ -18,13 +18,16 @@ use Kwai\Modules\Users\Domain\ValueObjects\Username;
  */
 final class AuthorMapper
 {
-    public static function toDomain(object $raw): Entity
+    public static function toDomain(Collection $data): Creator
     {
-        return new Entity(
-            (int) $raw->id,
-            new Author((object)[
-                'name' => new Username($raw->first_name ?? null, $raw->last_name ?? null)
-            ])
+        return new Creator(
+            (int) $data->get('id'),
+            name: new Name(
+                $data->get(
+                    'first_name',
+                    $data->get('last_name')
+                )
+            )
         );
     }
 }

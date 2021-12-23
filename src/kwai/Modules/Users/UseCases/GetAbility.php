@@ -1,16 +1,16 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
+use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
 use Kwai\Modules\Users\Repositories\AbilityRepository;
 
 /**
@@ -20,20 +20,33 @@ use Kwai\Modules\Users\Repositories\AbilityRepository;
  */
 class GetAbility
 {
-    private AbilityRepository $repo;
-
-    public function __construct(AbilityRepository $repo)
+    /**
+     * GetAbility constructor.
+     *
+     * @param AbilityRepository $repo
+     */
+    public function __construct(private AbilityRepository $repo)
     {
-        $this->repo = $repo;
     }
 
     /**
-     * Get a user
+     * Factory method
+     *
+     * @param AbilityRepository $repo
+     * @return static
+     */
+    public static function create(AbilityRepository $repo): self
+    {
+        return new self($repo);
+    }
+
+    /**
+     * Get an ability
      *
      * @param GetAbilityCommand $command
      * @return Entity<Ability>
-     * @throws NotFoundException
      * @throws RepositoryException
+     * @throws AbilityNotFoundException
      */
     public function __invoke(GetAbilityCommand $command): Entity
     {

@@ -1,21 +1,21 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
- * @noinspection PhpUndefinedFieldInspection
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\News\Domain\Story;
-use Kwai\Modules\News\Infrastructure\Mappers\StoryMapper;
 use Kwai\Modules\News\Infrastructure\Tables;
 use Kwai\Modules\News\Repositories\StoryQuery;
 use function Latitude\QueryBuilder\criteria;
+use function Latitude\QueryBuilder\express;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
 use function Latitude\QueryBuilder\group;
@@ -30,7 +30,21 @@ use function Latitude\QueryBuilder\on;
 class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
 {
     /**
+     * StoryDatabaseQuery constructor.
+     *
+     * @param Connection $db
+     */
+    public function __construct(Connection $db)
+    {
+        parent::__construct(
+            $db,
+            Tables::STORIES()->getColumn('id')
+        );
+    }
+
+    /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
      */
     protected function initQuery(): void
     {
@@ -44,7 +58,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
                 (string) Tables::CONTENTS(),
                 on(Tables::CONTENTS()->news_id, Tables::STORIES()->id)
             )
-            ->join(
+            ->leftJoin(
                 (string) Tables::AUTHORS(),
                 on(Tables::AUTHORS()->id, Tables::CONTENTS()->user_id)
             )
@@ -55,17 +69,20 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     /**
      * @inheritDoc
      */
-    public function filterId(int $id): void
+    public function filterId(int $id): self
     {
+        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
             field(Tables::STORIES()->id)->eq($id)
         );
+        return $this;
     }
 
     /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterPublishDate(int $year, ?int $month = null): void
+    public function filterPublishDate(int $year, ?int $month = null): self
     {
         $criteria = criteria(
             "%s = %d",
@@ -88,12 +105,14 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             );
         }
         $this->query->andWhere(group($criteria));
+        return $this;
     }
 
     /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterPromoted(): void
+    public function filterPromoted(): self
     {
         $now = Timestamp::createNow();
         $criteria = field(Tables::STORIES()->promotion)->gt(0)
@@ -103,36 +122,34 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             ));
         $this->query->andWhere(group($criteria));
         $this->query->orderBy(Tables::STORIES()->promotion, 'DESC');
+        return $this;
     }
 
     /**
      * @inheritDoc
-     * @return Entity<Story>[]
      */
-    public function execute(?int $limit = null, ?int $offset = null): array
+    public function execute(?int $limit = null, ?int $offset = null): Collection
     {
-        // TODO: For now the relation news -> content is 1 on 1. In the future
-        // TODO: it will be possible to translate a story, which will result in
-        // TODO: 1 on many.
-        $rows = parent::execute($limit, $offset);
-        if (count($rows) == 0) {
-            return [];
-        }
+        $rows = parent::walk($limit, $offset);
 
-        $storyColumnFilter = Tables::STORIES()->createColumnFilter();
-        $applicationColumnFilter = Tables::APPLICATIONS()->createColumnFilter();
-        $contentColumnFilter = Tables::CONTENTS()->createColumnFilter();
-        $authorColumnFilter = Tables::AUTHORS()->createColumnFilter();
+        $stories = collect();
 
-        $stories = [];
+        $filters = collect([
+            Tables::STORIES()->getAliasPrefix(),
+            Tables::APPLICATIONS()->getAliasPrefix(),
+            Tables::CONTENTS()->getAliasPrefix(),
+            Tables::AUTHORS()->getAliasPrefix()
+        ]);
+
         foreach ($rows as $row) {
-            $story = $storyColumnFilter->filter($row);
-            $story->application = $applicationColumnFilter->filter($row);
-            $story->contents = [
-                $contentColumnFilter->filter($row)
-            ];
-            $story->contents[0]->author = $authorColumnFilter->filter($row);
-            $stories[$story->id] = StoryMapper::toDomain($story);
+            [ $story, $application, $content, $user ] = $row->filterColumns($filters);
+            $story->put('application', $application);
+            if (!$stories->has($story->get('id'))) {
+                $stories->put($story['id'], $story);
+                $story->put('contents', new Collection());
+            }
+            $content->put('creator', $user);
+            $stories[$story['id']]['contents']->push($content);
         }
 
         return $stories;
@@ -144,6 +161,7 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
     protected function getColumns(): array
     {
         $aliasFn = Tables::STORIES()->getAliasFn();
+        $aliasApplicationFn = Tables::APPLICATIONS()->getAliasFn();
         $aliasContentFn = Tables::CONTENTS()->getAliasFn();
         $aliasAuthorFn = Tables::AUTHORS()->getAliasFn();
         return [
@@ -157,9 +175,9 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
             $aliasFn('remark'),
             $aliasFn('created_at'),
             $aliasFn('updated_at'),
-            Tables::APPLICATIONS()->getAliasFn()('id'),
-            Tables::APPLICATIONS()->getAliasFn()('title'),
-            Tables::APPLICATIONS()->getAliasFn()('name'),
+            $aliasApplicationFn('id'),
+            $aliasApplicationFn('title'),
+            $aliasApplicationFn('name'),
             $aliasContentFn('locale'),
             $aliasContentFn('format'),
             $aliasContentFn('title'),
@@ -175,8 +193,9 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
 
     /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterApplication($appNameOrId): void
+    public function filterApplication(int|string $appNameOrId): self
     {
         if (is_string($appNameOrId)) {
             $this->query->andWhere(group(
@@ -187,12 +206,14 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
                 field(Tables::APPLICATIONS()->id)->eq($appNameOrId)
             ));
         }
+        return $this;
     }
 
     /**
      * @inheritDoc
+     * @noinspection PhpUndefinedFieldInspection
      */
-    public function filterVisible(): void
+    public function filterVisible(): self
     {
         $now = Timestamp::createNow();
         $this->query->andWhere(group(
@@ -203,15 +224,44 @@ class StoryDatabaseQuery extends DatabaseQuery implements StoryQuery
                 ->and(field(Tables::STORIES()->end_date)->gt((string) $now))
             ))
         ));
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function filterUser(int $id): void
+    public function filterUser(int|UniqueId $id): self
     {
-        $this->query->andWhere(group(
-            field(Tables::CONTENTS()->user_id)->eq($id)
-        ));
+        /** @noinspection PhpUndefinedFieldInspection */
+        $innerSelect = $this->db->createQueryFactory()->select()
+            ->columns(Tables::AUTHORS()->id)
+            ->from((string) Tables::AUTHORS())
+        ;
+        if (is_int($id)) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->id)->eq($id)
+            );
+        } else {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $innerSelect->where(
+                field(Tables::AUTHORS()->uuid)->eq($id)
+            );
+        }
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->query->andWhere(
+            group(
+                field(Tables::CONTENTS()->user_id)
+                    ->in(express('%s', $innerSelect))
+            )
+        );
+        return $this;
+    }
+
+    public function orderByPublishDate(): StoryQuery
+    {
+        $this->query->orderBy(Tables::STORIES()->publish_date, 'DESC');
+        return $this;
     }
 }

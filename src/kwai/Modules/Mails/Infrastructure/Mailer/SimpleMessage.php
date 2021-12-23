@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Mails
  */
 declare(strict_types = 1);
@@ -15,26 +15,14 @@ use Swift_Message;
 class SimpleMessage implements Message
 {
     /**
-     * The subject
-     */
-    private string $subject;
-
-    /**
-     * The message body
-     */
-    private string $body;
-
-    /**
      * Create a new message
      * @param string $subject
      * @param string $body
      */
     public function __construct(
-        string $subject,
-        string $body
+        private string $subject,
+        private string $body
     ) {
-        $this->subject = $subject;
-        $this->body = $body;
     }
 
     /**

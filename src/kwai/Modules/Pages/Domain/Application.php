@@ -17,24 +17,15 @@ use Kwai\Core\Domain\DomainEntity;
 class Application implements DomainEntity
 {
     /**
-     * The title of the application.
-     */
-    private string $title;
-
-    /**
-     * The name of the application
-     */
-    private string $name;
-
-    /**
      * Application constructor.
      *
-     * @param object $props
+     * @param string $title
+     * @param string $name
      */
-    public function __construct(object $props)
-    {
-        $this->title = $props->title;
-        $this->name = $props->name;
+    public function __construct(
+        private string $title,
+        private string $name
+    ) {
     }
 
     /**
@@ -52,6 +43,4 @@ class Application implements DomainEntity
     {
         return $this->name;
     }
-
-
 }

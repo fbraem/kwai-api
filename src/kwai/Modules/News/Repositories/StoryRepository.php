@@ -1,13 +1,15 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Domain\Story;
@@ -66,4 +68,19 @@ interface StoryRepository
      * @throws RepositoryException
      */
     public function remove(Entity $story);
+
+    /**
+     * Get all stories using the given query.
+     *
+     * @param StoryQuery|null $query
+     * @param int|null        $limit
+     * @param int|null        $offset
+     * @return Collection
+     * @throws RepositoryException
+     */
+    public function getAll(
+        ?StoryQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 }

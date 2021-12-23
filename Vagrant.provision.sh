@@ -36,41 +36,73 @@ VIRTUAL_HOST=$(cat <<EOF
     </VirtualHost>
 EOF
 )
-echo "${VIRTUAL_HOST}" > /etc/apache2/sites-enabled/000-default.conf
+echo "${VIRTUAL_HOST}" > /etc/apache2/sites-available/kwai.conf
 
 # MySQL
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $KWAI_DATABASE_PASSWORD"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $KWAI_DATABASE_PASSWORD"
 apt-get install -y mysql-server
-mysql -uroot -p$KWAI_DATABASE_PASSWORD -e "CREATE DATABASE $KWAI_DATABASE_NAME"
-mysql -uroot -p$KWAI_DATABASE_PASSWORD -e "grant all privileges on $KWAI_DATABASE_NAME.* to '$KWAI_DATABASE_USER'@'%' identified by '$KWAI_DATABASE_PASSWORD'"
+mysql -uroot -p"$KWAI_DATABASE_PASSWORD" -e "CREATE DATABASE $KWAI_DATABASE_NAME"
+mysql -uroot -p"$KWAI_DATABASE_PASSWORD" -e "grant all privileges on $KWAI_DATABASE_NAME.* to '$KWAI_DATABASE_USER'@'%' identified by '$KWAI_DATABASE_PASSWORD'"
 
 # update mysql conf file to allow remote access to the db
 sed -i "s/.*bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
 service mysql restart
 
 # Install PHP
-apt-get install -y php7.4 php-mysql libapache2-mod-php php-intl
+PHP_VERSION=8.1
+apt-get install -y php${PHP_VERSION}-common php${PHP_VERSION}-cli php${PHP_VERSION}-mysql libapache2-mod-php${PHP_VERSION} php${PHP_VERSION}-intl php${PHP_VERSION}-dom php${PHP_VERSION}-gd php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-sqlite php${PHP_VERSION}-xml php${PHP_VERSION}-curl
 
 php -v
-a2enmod php7.4
+a2enmod php${PHP_VERSION}
 
 phpenmod intl
+phpenmod curl
+
+# Install unzip for Composer
+apt-get install -y unzip
 
 # Composer
+EXPECTED_CHECKSUM="$(wget -q -O - https://composer.github.io/installer.sig)"
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === 'c31c1e292ad7be5f49291169c0ac8f683499edddcfd4e42232982d0fd193004208a58ff6f353fde0012d35fdd72bc394') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php
+ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+then
+    >&2 echo 'ERROR: Invalid installer checksum'
+    rm composer-setup.php
+    exit 1
+fi
+php composer-setup.php --quiet
 php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer
 
 # PHPMyAdmin
-add-apt-repository -y ppa:phpmyadmin/ppa
-apt-get update
-apt-get upgrade
-debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install no"
-apt-get -yq install phpmyadmin
+PHPMYADMIN_VERSION=5.1.1
+wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip -nv -O /var/tmp/phpmyadmin.zip
+unzip -q /var/tmp/phpmyadmin.zip -d /var/tmp/phpmyadmin
+rm -Rf /var/www/phpmyadmin
+mv /var/tmp/phpmyadmin/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages /var/www/phpmyadmin
+mv /var/www/phpmyadmin/config.sample.inc.php /var/www/phpmyadmin/config.inc.php
+chown -R www-data:www-data /var/www/phpmyadmin
+rm /var/tmp/phpmyadmin.zip
+rm -r /var/tmp/phpmyadmin
+
+PHPMYADMIN_CONF=$(cat <<EOF
+    <Directory /var/www/phpmyadmin>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+    <VirtualHost *:81>
+        ServerName api.kwai.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/phpmyadmin
+        ErrorLog ${APACHE_LOG_DIR}/phpmyadmin_error.log
+        CustomLog ${APACHE_LOG_DIR}/phpmyadmin_access.log combined
+    </VirtualHost>
+EOF
+)
+echo "${PHPMYADMIN_CONF}" > /etc/apache2/sites-available/phpmyadmin.conf
 
 # Document root is a symlink to /vagrant
 if ! [ -L /var/www/kwai_api ]; then
@@ -78,8 +110,11 @@ if ! [ -L /var/www/kwai_api ]; then
   ln -fs /vagrant/ /var/www/kwai_api
 fi
 
-# Everything installed, restart apache
+# Everything installed, enable sites, restart apache
+sudo a2dissite 000-default
+sudo a2ensite kwai
+sudo a2ensite phpmyadmin
 service apache2 restart
 
 # Run the database migration
-/vagrant/src/vendor/bin/phinx migrate -c /vagrant/src/phinx.php
+/vagrant/vendor/bin/phinx migrate -c /vagrant/src/phinx.php

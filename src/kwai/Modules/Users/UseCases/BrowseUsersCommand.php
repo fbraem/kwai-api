@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types=1);
@@ -14,4 +14,7 @@ namespace Kwai\Modules\Users\UseCases;
  */
 class BrowseUsersCommand
 {
+    public ?int $limit = null;
+
+    public ?int $offset = null;
 }

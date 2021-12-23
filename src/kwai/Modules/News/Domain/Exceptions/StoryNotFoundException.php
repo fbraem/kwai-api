@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
@@ -14,17 +14,14 @@ use Exception;
  */
 class StoryNotFoundException extends Exception
 {
-    private int $id;
-
     /**
      * StoryNotFoundException constructor.
      *
      * @param int $id
      */
-    public function __construct(int $id)
+    public function __construct(private int $id)
     {
         parent::__construct('Story not found');
-        $this->id = $id;
     }
 
     public function __toString()

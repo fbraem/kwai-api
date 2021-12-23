@@ -15,9 +15,15 @@ use League\Flysystem\Filesystem;
  */
 class FileSystemDependency implements Dependency
 {
-    public function __invoke(array $settings)
+    public function __construct(
+        private ?array $settings = null
+    ) {
+        $this->settings ??= depends('kwai.settings', Settings::class);
+    }
+
+    public function create()
     {
-        $flyAdapter = new Local($settings['files']['local']);
+        $flyAdapter = new Local($this->settings['files']['local']);
         return new Filesystem($flyAdapter);
     }
 }

@@ -9,10 +9,11 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Database;
 
+use Generator;
+use Illuminate\Support\Collection;
 use Latitude\QueryBuilder\Engine\SqliteEngine;
 use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\QueryFactory;
-
 use Latitude\QueryBuilder\Engine\CommonEngine;
 use Latitude\QueryBuilder\Engine\MySqlEngine;
 use PDO;
@@ -31,54 +32,16 @@ final class Connection
      */
     private PDO $pdo;
 
-    private ?LoggerInterface $logger;
-
     /**
      * Constructor.
      *
-     * @param string               $dsn      A DSN connection.
-     * @param string               $user     A username
-     * @param string               $password A password
+     * @param string               $dsn A DSN connection.
      * @param LoggerInterface|null $logger
-     * @throws DatabaseException Thrown when connection failed
      */
     public function __construct(
-        string $dsn,
-        string $user = '',
-        string $password = '',
-        ?LoggerInterface $logger = null
+        private string $dsn,
+        private ?LoggerInterface $logger = null
     ) {
-        $this->logger = $logger;
-        try {
-            $this->pdo = new PDO(
-                $dsn,
-                $user,
-                $password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_PERSISTENT => true, // BEST OPTION
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
-                ]
-            );
-        } catch (PDOException $e) {
-            throw new DatabaseException($e);
-        }
-    }
-
-    /**
-     * Change the fetch mode to array. Default is Object.
-     */
-    public function asArray(): void
-    {
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Change the fetch mode to object.
-     */
-    public function asObject(): void
-    {
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
 
     /**
@@ -104,6 +67,32 @@ final class Connection
     {
         try {
             return $this->pdo->commit();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e);
+        }
+    }
+
+    /**
+     * Connects to the database. On failure a DatabaseException is thrown.
+     *
+     * @param string|null $user
+     * @param string|null $password
+     * @throws DatabaseException
+     */
+    public function connect(?string $user = '', ?string $password = ''): void
+    {
+        try {
+            $this->pdo = new PDO(
+                $this->dsn,
+                $user,
+                $password,
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_PERSISTENT => true, // BEST OPTION
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false
+                ]
+            );
         } catch (PDOException $e) {
             throw new DatabaseException($e);
         }
@@ -143,6 +132,35 @@ final class Connection
             return $stmt;
         } catch (PDOException $e) {
             throw new QueryException($compiledQuery->sql(), $e);
+        }
+    }
+
+    /**
+     * Run a select statement and returns a generator.
+     *
+     * @param AbstractQuery $query
+     * @return Generator
+     * @throws QueryException
+     */
+    public function walk(AbstractQuery $query)
+    {
+        $compiledQuery = $query->compile();
+        if ($this->logger) {
+            $this->logger->debug($compiledQuery->sql(), $compiledQuery->params());
+        }
+        try {
+            $stmt = $this->pdo->prepare($compiledQuery->sql());
+            $stmt->execute($compiledQuery->params());
+        } catch (PDOException $e) {
+            throw new QueryException($compiledQuery->sql(), $e);
+        }
+
+        while ($record = $stmt->fetch()) {
+            if (is_array($record)) {
+                yield(new Collection($record));
+            } else {
+                yield($record);
+            }
         }
     }
 

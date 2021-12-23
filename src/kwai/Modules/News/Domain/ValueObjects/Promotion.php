@@ -1,12 +1,13 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage News
  */
 declare(strict_types=1);
 
 namespace Kwai\Modules\News\Domain\ValueObjects;
 
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
 /**
@@ -18,28 +19,15 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 class Promotion
 {
     /**
-     * When this priority > 0, the promotion is active. The value can be used
-     * to order the stories.
-     */
-    private int $priority = 0;
-
-    /**
-     * When does the promotion end?
-     */
-    private ?Timestamp $endDate;
-
-    /**
      * Promotion constructor.
      *
      * @param int            $priority
-     * @param Timestamp|null $endDate
+     * @param LocalTimestamp|null $endDate
      */
     public function __construct(
-        int $priority = 0,
-        Timestamp $endDate = null
+        private int $priority = 0,
+        private ?LocalTimestamp $endDate = null
     ) {
-        $this->priority = $priority;
-        $this->endDate = $endDate;
     }
 
     /**
@@ -53,7 +41,7 @@ class Promotion
     /**
      * Returns the end date of the promotion
      */
-    public function getEndDate(): ?Timestamp
+    public function getEndDate(): ?LocalTimestamp
     {
         return $this->endDate;
     }
@@ -75,7 +63,7 @@ class Promotion
             if ($this->endDate == null) {
                 return true;
             }
-            return !$this->endDate->isPast();
+            return !$this->endDate->getTimestamp()->isPast();
         }
         return false;
     }

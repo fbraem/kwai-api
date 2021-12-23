@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -11,49 +11,48 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
-use Kwai\Modules\Users\Repositories\UserRepository;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 
-use Firebase\JWT\JWT;
-
 /**
- * Usecase: Create a new access- and refreshtoken
+ * CreateRefreshToken
+ *
+ * Create a new access- and refreshtoken
  */
-final class CreateRefreshToken
+class CreateRefreshToken
 {
-    private AccessTokenRepository $accessTokenRepo;
-
-    private RefreshTokenRepository $refreshTokenRepo;
-
     /**
      * Constructor.
      * @param RefreshTokenRepository $refreshTokenRepo An refreshtoken repository
      * @param AccessTokenRepository $accessTokenRepo An accesstoken repository
      */
     public function __construct(
-        RefreshTokenRepository $refreshTokenRepo,
-        AccessTokenRepository $accessTokenRepo
+        private RefreshTokenRepository $refreshTokenRepo,
+        private AccessTokenRepository $accessTokenRepo
     ) {
-        $this->refreshTokenRepo = $refreshTokenRepo;
-        $this->accessTokenRepo = $accessTokenRepo;
+    }
+
+    public static function create(RefreshTokenRepository $refreshTokenRepo, AccessTokenRepository $accessTokenRepo)
+    {
+        return new self($refreshTokenRepo, $accessTokenRepo);
     }
 
     /**
      * Create a new refresh- and accesstoken using the old refresh token.
      * The refreshtoken must be valid and the user is checked. On succes, a new
      * refreshtoken with a new accesstoken is returned.
-     * @param  CreateRefreshTokenCommand $command
-     * @return Entity<RefreshToken>               A RefreshToken entity
-     * @throws \Kwai\Core\Domain\Exceptions\NotFoundException
-     *    Thrown when the refreshtoken can't be found
-     * @throws AuthenticationException
-     *    Thrown when the refresh token is expired.
+     *
+     * @param CreateRefreshTokenCommand $command
+     * @return Entity<RefreshToken>     A RefreshToken entity
+     * @throws AuthenticationException  Thrown when the refresh token is expired.
      * @throws RepositoryException
+     * @throws RefreshTokenNotFoundException
+     * @noinspection PhpUndefinedMethodInspection
      */
     public function __invoke(CreateRefreshTokenCommand $command): Entity
     {
@@ -86,23 +85,23 @@ final class CreateRefreshToken
         }
 
         $accessToken = $this->accessTokenRepo->create(
-            new AccessToken((object) [
-                'identifier' => new TokenIdentifier(),
-                'expiration' => Timestamp::createFromDateTime(
+            new AccessToken(
+                identifier: new TokenIdentifier(),
+                expiration: Timestamp::createFromDateTime(
                     new \DateTime('now +2 hours')
                 ),
-                'account' => $user
-            ])
+                account: $user
+            )
         );
 
         $refreshToken = $this->refreshTokenRepo->create(
-            new RefreshToken((object)[
-                'identifier' => new TokenIdentifier(),
-                'expiration' => Timestamp::createFromDateTime(
+            new RefreshToken(
+                identifier: new TokenIdentifier(),
+                expiration: Timestamp::createFromDateTime(
                     new \DateTime('now +1 month')
                 ),
-                'accessToken' => $accessToken
-            ])
+                accessToken: $accessToken
+            )
         );
 
         return $refreshToken;

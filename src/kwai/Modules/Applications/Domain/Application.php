@@ -15,38 +15,33 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
  */
 class Application implements DomainEntity
 {
-    private string $title;
-
-    private string $description;
-
-    private string $shortDescription;
-
-    private ?string $remark = null;
-
-    private TraceableTime $traceableTime;
-
-    private string $name;
-
-    private bool $canHaveNews;
-
-    private bool $canHavePages;
-
-    private bool $canHaveEvents;
-
-    private int $weight;
-
-    public function __construct(object $props)
-    {
-        $this->title = $props->title;
-        $this->description = $props->description;
-        $this->shortDescription = $props->shortDescription;
-        $this->remark = $props->remark ?? null;
-        $this->traceableTime = $props->traceableTime ?? new TraceableTime();
-        $this->name = $props->name;
-        $this->canHaveNews = $props->canHaveNews ?? true;
-        $this->canHavePages = $props->canHavePages ?? true;
-        $this->canHaveEvents = $props->canHaveEvents ?? true;
-        $this->weight = $props->weight ?? 0;
+    /**
+     * Application constructor.
+     *
+     * @param string             $name
+     * @param string             $title
+     * @param string             $description
+     * @param string             $shortDescription
+     * @param string|null        $remark
+     * @param TraceableTime|null $traceableTime
+     * @param bool               $canHaveNews
+     * @param bool               $canHavePages
+     * @param bool               $canHaveEvents
+     * @param int                $weight
+     */
+    public function __construct(
+        private string $name,
+        private string $title,
+        private string $description,
+        private string $shortDescription,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = null,
+        private bool $canHaveNews = false,
+        private bool $canHavePages = false,
+        private bool $canHaveEvents = false,
+        private int $weight = 0
+    ) {
+        $this->traceableTime ??= new TraceableTime();
     }
 
     /**

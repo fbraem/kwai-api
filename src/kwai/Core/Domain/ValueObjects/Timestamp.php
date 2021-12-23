@@ -14,19 +14,16 @@ use DateTime;
  */
 final class Timestamp
 {
-    const TIMEZONE = 'UTC';
-
-    private CarbonImmutable $datetime;
-
     /**
      * Private constructor. Use one of the create methods to create an instance
      * of this class.
      *
      * @param CarbonImmutable $datetime
      */
-    private function __construct(CarbonImmutable $datetime)
-    {
-        $this->datetime = $datetime;
+    private function __construct(
+        private CarbonImmutable $datetime
+    ) {
+        $this->datetime = $this->datetime->setTimezone('UTC');
     }
 
     /**
@@ -46,12 +43,13 @@ final class Timestamp
      * Returns a formatted timestamp.
      *
      * When format is null, toDateTimeString will be used.
+     *
      * @see https://carbon.nesbot.com/docs/#api-formatting String Formatting.
      *
-     * @param string $format The format to use
+     * @param string|null $format The format to use
      * @return string A formatted timestamp
      */
-    public function format($format = null): string
+    public function format(?string $format = null): string
     {
         if ($format) {
             return $this->datetime->format($format);
@@ -90,23 +88,21 @@ final class Timestamp
     /**
      * Creates a new Timestamp object.
      *
-     * @param int $year
-     * @param int $month
-     * @param int $day
-     * @param int $hour
-     * @param int $minute
-     * @param int $sec
-     * @param string $timezone The timezone to use. Default is UTC.
+     * @param int|null $year
+     * @param int      $month
+     * @param int      $day
+     * @param int      $hour
+     * @param int      $minute
+     * @param int      $sec
      * @return Timestamp
      */
     public static function create(
-        int $year = null,
+        ?int $year = null,
         int $month = 1,
         int $day = 1,
         int $hour = 0,
         int $minute = 0,
-        int $sec = 0,
-        string $timezone = self::TIMEZONE
+        int $sec = 0
     ): self {
         return new self(CarbonImmutable::create(
             $year,
@@ -114,8 +110,7 @@ final class Timestamp
             $day,
             $hour,
             $minute,
-            $sec,
-            $timezone
+            $sec
         ));
     }
 
@@ -134,37 +129,32 @@ final class Timestamp
             $datetimeObject->day ?? 1,
             $datetimeObject->hour ?? 0,
             $datetimeObject->minute ?? 0,
-            $datetimeObject->sec ?? 0,
-            $datetimeObject->timezone ?? self::TIMEZONE
+            $datetimeObject->sec ?? 0
         ));
     }
 
     /**
      * Create a Timestamp with the current time
      *
-     * @param string $timezone The timezone to use. Default is UTC.
      * @return Timestamp
      */
-    public static function createNow($timezone = self::TIMEZONE): self
+    public static function createNow(): self
     {
-        return new self(CarbonImmutable::now($timezone));
+        return new self(CarbonImmutable::now());
     }
 
     /**
      * Create a Timestamp from a string
      *
      * @param string $str A datetime in format Y-m-d H:i:s
-     * @param string $timezone The timezone to use. Default is UTC.
      * @return Timestamp
      */
     public static function createFromString(
-        string $str,
-        string $timezone = self::TIMEZONE
+        string $str
     ): self {
         return new self(CarbonImmutable::createFromFormat(
             'Y-m-d H:i:s',
-            $str,
-            $timezone
+            $str
         ));
     }
 
