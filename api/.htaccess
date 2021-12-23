@@ -11,7 +11,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}.php -f
-    RewriteRule ^([^/]*)(.*)?$ /api/$1.php?$2 [QSA,L]
+    RewriteRule ^([^/]*)(.*)?$ /$1.php?$2 [QSA,L]
 
 </IfModule>
 
