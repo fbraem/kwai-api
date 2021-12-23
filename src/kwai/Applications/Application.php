@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Cake\Datasource\ConnectionManager;
 use Exception;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Middlewares\CorsMiddleware;
