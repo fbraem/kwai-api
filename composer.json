@@ -66,5 +66,10 @@
             "Tests\\": "tests/",
             "App\\PHPStan\\": "src/phpstan/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
