@@ -77,11 +77,9 @@ final class AuthenticateUser
     public function __invoke(AuthenticateUserCommand $command): Entity
     {
         $account = $this->userAccountRepo->get(new EmailAddress($command->email));
-        /** @noinspection PhpUndefinedMethodInspection */
         if (!$account->login($command->password)) {
             throw new AuthenticationException('Invalid password');
         }
-        /** @noinspection PhpUndefinedMethodInspection */
         if ($account->isRevoked()) {
             throw new AuthenticationException('User is revoked');
         }
