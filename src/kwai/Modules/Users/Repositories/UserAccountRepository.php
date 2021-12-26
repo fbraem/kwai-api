@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Repositories;
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -27,6 +28,21 @@ interface UserAccountRepository
      * @return Entity<UserAccount>
      */
     public function get(EmailAddress $email): Entity;
+
+    /**
+     * Get all user accounts.
+     *
+     * @param UserQuery|null $query
+     * @param int|null       $limit
+     * @param int|null       $offset
+     * @return Collection<Entity<UserAccount>>
+     * @throws RepositoryException
+     */
+    public function getAll(
+        ?UserQuery $query = null,
+        ?int $limit = null,
+        ?int $offset = null
+    ): Collection;
 
     /**
      * Update the login information.
