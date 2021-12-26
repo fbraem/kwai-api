@@ -24,7 +24,7 @@ interface UserAccountRepository
      * @param EmailAddress $email
      * @throws RepositoryException
      * @throws UserAccountNotFoundException
-     * @return Entity
+     * @return Entity<UserAccount>
      */
     public function get(EmailAddress $email): Entity;
 
@@ -39,7 +39,7 @@ interface UserAccountRepository
     /**
      * Create a user account.
      * @param UserAccount $account
-     * @return Entity
+     * @return Entity<UserAccount>
      * @throws RepositoryException
      */
     public function create(UserAccount $account): Entity;
