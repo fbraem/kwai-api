@@ -14,7 +14,7 @@ use Kwai\Modules\Users\Domain\UserAccount;
 /**
  * Class UserAccountResource
  */
-#[JSONAPI\Resource(type: 'users', id: 'getId')]
+#[JSONAPI\Resource(type: 'user_accounts', id: 'getId')]
 class UserAccountResource
 {
     /**
