@@ -56,7 +56,7 @@ class TeamDatabaseQuery extends DatabaseQuery implements TeamQuery
     public function filterId(int $id): TeamQuery
     {
         $this->query->andWhere(
-            $this->teamsTableSchema->field('id')->eq('$id')
+            $this->teamsTableSchema->field('id')->eq($id)
         );
         return $this;
     }
