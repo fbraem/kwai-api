@@ -60,7 +60,7 @@ class UserAccountResource
         return (string) $this->userAccount->getLastLogin();
     }
 
-    #[JSONAPI\Attribute(name: 'last_login')]
+    #[JSONAPI\Attribute(name: 'last_unsuccessful_login')]
     public function getLastUnsuccessfulLogin(): ?string
     {
         $timestamp = $this->userAccount->getLastUnsuccessFulLogin();
