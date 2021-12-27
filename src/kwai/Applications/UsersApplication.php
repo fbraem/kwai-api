@@ -10,6 +10,7 @@ namespace Kwai\Applications;
 use Kwai\Modules\Users\Presentation\REST\AttachAbilityAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseAbilitiesAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseRulesAction;
+use Kwai\Modules\Users\Presentation\REST\BrowseUserAccountsAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseUserInvitationsAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseUsersAction;
 use Kwai\Modules\Users\Presentation\REST\CreateAbilityAction;
@@ -145,6 +146,14 @@ class UsersApplication extends Application
                 ],
                 [
                     'uuid' => $uuid_regex
+                ]
+            )
+            ->get(
+                'user_accounts',
+                '/users/accounts',
+                BrowseUserAccountsAction::class,
+                [
+                    'auth' => true
                 ]
             )
         ;
