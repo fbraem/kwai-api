@@ -70,6 +70,12 @@ class UserAccountResource
         return null;
     }
 
+    #[JSONAPI\Attribute(name: 'revoked')]
+    public function isRevoked(): bool
+    {
+        return $this->userAccount->isRevoked();
+    }
+
     #[JSONAPI\Attribute(name: 'created_at')]
     public function getCreationDate(): string
     {
