@@ -19,10 +19,10 @@ it('can create a user account', function () use ($context) {
         $userAccount = $repo->create(
             new UserAccount(
                 user: new User(
-                uuid: new UniqueId(),
-                emailAddress: new EmailAddress('jigoro.kano@kwai.com'),
-                username: new Name('Jigoro', 'Kano')
-            ),
+                    uuid: new UniqueId(),
+                    emailAddress: new EmailAddress('jigoro.kano@kwai.com'),
+                    username: new Name('Jigoro', 'Kano')
+                ),
                 password: Password::fromString('judo')
             )
         );

@@ -45,13 +45,11 @@ final class UserAccountMapper
     public static function toPersistence(UserAccount $account): Collection
     {
         $lastLogin = $account->getLastLogin();
-        // $lastUnsuccessfulLogin = $account->getLastUnsuccessFulLogin();
+        $lastUnsuccessfulLogin = $account->getLastUnsuccessFulLogin();
 
         return collect([
-            // TODO: add last_unsuccessful_login
-            // TODO: add revoked to table
-            // 'last_unsuccessful_login' => $lastUnsuccessfulLogin ? strval($lastUnsuccessfulLogin) : null,
-            // 'revoked' => $account->isRevoked() ? '1' : '0',
+            'last_unsuccessful_login' => $lastUnsuccessfulLogin ? strval($lastUnsuccessfulLogin) : null,
+            'revoked' => $account->isRevoked() ? 1 : 0,
             'last_login' => $lastLogin ? strval($lastLogin) : null,
             'password' => strval($account->getPassword()),
         ])->merge(UserMapper::toPersistence($account->getUser()));
