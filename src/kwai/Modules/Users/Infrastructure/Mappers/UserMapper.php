@@ -45,8 +45,8 @@ final class UserMapper
             ),
             remark: $data->get('remark'),
             username: new Name(
-            $data->get('first_name'),
-            $data->get('last_name')
+                $data->get('first_name'),
+                $data->get('last_name')
             ),
             member: $data->get('member_id')
         );
