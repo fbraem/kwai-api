@@ -46,7 +46,7 @@ Collection::macro('filterColumns', function (Collection|array $prefixes) {
 Collection::macro('recursive', function () {
     return $this->map(function ($value) {
         return is_array($value)
-            ? (new static($value))->recursive()
+            ? collect($value)->recursive()
             : $value;
     });
 });
