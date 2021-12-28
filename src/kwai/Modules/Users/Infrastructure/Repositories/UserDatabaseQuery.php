@@ -52,7 +52,9 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
             $aliasFn('member_id'),
             $aliasFn('uuid'),
             $aliasFn('created_at'),
-            $aliasFn('updated_at')
+            $aliasFn('updated_at'),
+            $aliasFn('revoked'),
+            $aliasFn('last_unsuccessful_login')
         ];
     }
 
