@@ -17,22 +17,6 @@ use Tests\Context;
 
 $context = Context::createContext();
 
-beforeAll(function () use ($context) {
-    $userRepo = new UserDatabaseRepository($context->db);
-    try {
-        $query = $userRepo
-            ->createQuery()
-            ->filterByEmail(new EmailAddress('jigoro.kano@kwai.com'))
-        ;
-        $users = $userRepo->getAll($query);
-        if ($users->isNotEmpty()) {
-            $context->user = $users->first();
-        }
-    } catch (QueryException $e) {
-        echo $e->getMessage(), PHP_EOL;
-    }
-});
-
 it('can create an accesstoken', function () use ($context) {
     if (!isset($context->user)) {
         return null;
