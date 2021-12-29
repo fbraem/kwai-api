@@ -63,7 +63,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
         $data = UserInvitationMapper::toPersistence($invitation);
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::USER_INVITATIONS())
+            ->insert(Tables::USER_INVITATIONS->value)
             ->columns(
                 ... $data->keys()
             )
@@ -88,11 +88,13 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
      */
     public function update(Entity $invitation): void
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         $invitation->getTraceableTime()->markUpdated();
         $data = UserInvitationMapper::toPersistence($invitation->domain());
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::USER_INVITATIONS(), $data->toArray())
+            ->update(
+                Tables::USER_INVITATIONS->value,
+                $data->toArray()
+            )
             ->where(field('id')->eq($invitation->id()))
         ;
         try {

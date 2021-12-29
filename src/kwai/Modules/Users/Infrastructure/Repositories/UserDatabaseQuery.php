@@ -23,8 +23,10 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
 {
     public function __construct(Connection $db)
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        parent::__construct($db, Tables::USERS()->id);
+        parent::__construct(
+            $db,
+            Tables::USERS->column('id')
+        );
     }
 
     /**
@@ -32,7 +34,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     protected function initQuery(): void
     {
-        $this->query->from((string) Tables::USERS());
+        $this->query->from((string) Tables::USERS->value);
     }
 
     /**
@@ -40,22 +42,21 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     protected function getColumns(): array
     {
-        $aliasFn = Tables::USERS()->getAliasFn();
-        return [
-            $aliasFn('id'),
-            $aliasFn('email'),
-            $aliasFn('password'),
-            $aliasFn('last_login'),
-            $aliasFn('first_name'),
-            $aliasFn('last_name'),
-            $aliasFn('remark'),
-            $aliasFn('member_id'),
-            $aliasFn('uuid'),
-            $aliasFn('created_at'),
-            $aliasFn('updated_at'),
-            $aliasFn('revoked'),
-            $aliasFn('last_unsuccessful_login')
-        ];
+        return Tables::USERS->aliases(
+            'id',
+            'email',
+            'password',
+            'last_login',
+            'first_name',
+            'last_name',
+            'remark',
+            'member_id',
+            'uuid',
+            'created_at',
+            'updated_at',
+            'revoked',
+            'last_unsuccessful_login'
+        );
     }
 
     /**
@@ -63,9 +64,8 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     public function filterById(int $id): UserQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USERS()->id)->eq($id)
+            Tables::USERS->field('id')->eq($id)
         );
         return $this;
     }
@@ -75,9 +75,8 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     public function filterByUUID(UniqueId $uuid): UserQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USERS()->uuid)->eq($uuid)
+            Tables::USERS->field('uuid')->eq($uuid)
         );
         return $this;
     }
@@ -87,9 +86,8 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     public function filterByEmail(EmailAddress $email): UserQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USERS()->email)->eq($email)
+            Tables::USERS->field('email')->eq($email)
         );
         return $this;
     }
@@ -103,14 +101,8 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
 
         $users = new Collection();
 
-        $filters = new Collection([
-            Tables::USERS()->getAliasPrefix()
-        ]);
-
         foreach ($rows as $row) {
-            [
-                $user
-            ] = $row->filterColumns($filters);
+            $user = Tables::USERS->collect($row);
             $users->put($user->get('id'), $user);
         }
 

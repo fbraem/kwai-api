@@ -57,7 +57,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
     public function update(Entity $account): void
     {
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::USERS())
+            ->update(Tables::USERS->value)
             ->set(UserAccountMapper::toPersistence($account->domain())->toArray())
             ->where(field('id')->eq($account->id()))
         ;
@@ -76,7 +76,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
         $data = UserAccountMapper::toPersistence($account);
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::USERS())
+            ->insert(Tables::USERS->value)
             ->columns(
                 ... $data->keys()
             )
@@ -100,16 +100,15 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function existsWithEmail(EmailAddress $email): bool
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $query = $this->db->createQueryFactory()
             ->select(
                 alias(
-                    func('COUNT', Tables::USERS()->id),
+                    func('COUNT', Tables::USERS->column('id')),
                     'c'
                 )
             )
-            ->from((string) Tables::USERS())
-            ->where(field('email')->eq(strval($email)))
+            ->from(Tables::USERS->value)
+            ->where(Tables::USERS->field('email')->eq(strval($email)))
         ;
         try {
             $count = collect($this->db->execute($query)->fetch());

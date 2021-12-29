@@ -12,8 +12,6 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AbilityQuery;
-use function Latitude\QueryBuilder\alias;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -23,8 +21,10 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
 {
     public function __construct(Connection $db)
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        parent::__construct($db, Tables::ABILITIES()->id);
+        parent::__construct(
+            $db,
+            Tables::ABILITIES->column('id')
+        );
     }
 
     /**
@@ -32,9 +32,8 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
      */
     public function filterById(int $id): AbilityQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::ABILITIES()->id)->eq($id)
+            Tables::ABILITIES->field('id')->eq($id)
         );
         return $this;
     }
@@ -44,35 +43,34 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
      */
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from((string) Tables::ABILITIES())
+            ->from(Tables::ABILITIES->value)
             ->leftJoin(
-                (string) Tables::ABILITY_RULES(),
+                Tables::ABILITY_RULES->value,
                 on(
-                    Tables::ABILITIES()->id,
-                    Tables::ABILITY_RULES()->ability_id
+                    Tables::ABILITIES->column('id'),
+                    Tables::ABILITY_RULES->column('ability_id')
                 )
             )
             ->leftJoin(
-                (string) Tables::RULES(),
+                Tables::RULES->value,
                 on(
-                    Tables::ABILITY_RULES()->rule_id,
-                    Tables::RULES()->id
+                    Tables::ABILITY_RULES->column('rule_id'),
+                    Tables::RULES->column('id')
                 )
             )
             ->leftJoin(
-                (string) Tables::RULE_ACTIONS(),
+                Tables::RULE_ACTIONS->value,
                 on(
-                    Tables::RULES()->action_id,
-                    Tables::RULE_ACTIONS()->id
+                    Tables::RULES->column('action_id'),
+                    Tables::RULE_ACTIONS->column('id')
                 )
             )
             ->leftJoin(
-                (string) Tables::RULE_SUBJECTS(),
+                Tables::RULE_SUBJECTS->value,
                 on(
-                    Tables::RULES()->subject_id,
-                    Tables::RULE_SUBJECTS()->id
+                    Tables::RULES->column('subject_id'),
+                    Tables::RULE_SUBJECTS->column('id')
                 )
             )
         ;
@@ -83,28 +81,11 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
      */
     protected function getColumns(): array
     {
-        $aliasFn = Tables::ABILITIES()->getAliasFn();
-        $aliasRuleFn = Tables::RULES()->getAliasFn();
-        /** @noinspection PhpUndefinedFieldInspection */
         return [
-            $aliasFn('id'),
-            $aliasFn('name'),
-            $aliasFn('remark'),
-            $aliasRuleFn('id'),
-            $aliasRuleFn('name'),
-            $aliasRuleFn('remark'),
-            $aliasRuleFn('created_at'),
-            $aliasRuleFn('updated_at'),
-            $aliasFn('created_at'),
-            $aliasFn('updated_at'),
-            alias(
-                Tables::RULE_ACTIONS()->name,
-                Tables::RULES()->getAlias('action')
-            ),
-            alias(
-                Tables::RULE_SUBJECTS()->name,
-                Tables::RULES()->getAlias('subject')
-            )
+            ...Tables::ABILITIES->aliases('id', 'name', 'remark', 'created_at', 'updated_at'),
+            ...Tables::RULES->aliases('name', 'remark', 'created_at', 'updated_at'),
+            Tables::RULE_ACTIONS->alias('name', Tables::RULES->aliasPrefix() . 'action'),
+            Tables::RULE_SUBJECTS->alias('name', Tables::RULES->aliasPrefix() . 'subject')
         ];
     }
 
@@ -116,16 +97,10 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
         $rows = parent::walk($limit, $offset);
 
         $abilities = new Collection();
-        $filters = new Collection([
-            Tables::ABILITIES()->getAliasPrefix(),
-            Tables::RULES()->getAliasPrefix()
-        ]);
 
         foreach ($rows as $row) {
-            [
-                $ability,
-                $rule
-            ] = $row->filterColumns($filters);
+            $ability = Tables::ABILITIES->collect($row);
+            $rule = Tables::RULES->collect($row);
             if (!$abilities->has($ability->get('id'))) {
                 $abilities->put($ability['id'], $ability);
                 $ability->put('rules', new Collection());

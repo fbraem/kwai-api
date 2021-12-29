@@ -67,7 +67,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
         }
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::ABILITIES())
+            ->insert(Tables::ABILITIES->value)
             ->columns(
                 ... $data->keys()
             )
@@ -127,7 +127,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             )
         ;
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::ABILITY_RULES())
+            ->insert(Tables::ABILITY_RULES)
             ->columns(...$rules->first()->keys())
         ;
         $rules->each(
@@ -150,7 +150,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
 
         $queryFactory = $this->db->createQueryFactory();
         $query = $queryFactory
-            ->update((string) Tables::ABILITIES())
+            ->update(Tables::ABILITIES)
             ->set(AbilityMapper::toPersistence($ability->domain())->toArray())
             ->where(field('id')->eq($ability->id()))
         ;
@@ -160,7 +160,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             // First delete all rules
             $this->db->execute(
                 $queryFactory
-                  ->delete((string) Tables::ABILITY_RULES())
+                  ->delete(Tables::ABILITY_RULES)
                   ->where(field('ability_id')->eq($ability->id()))
             );
             // Insert the rules again

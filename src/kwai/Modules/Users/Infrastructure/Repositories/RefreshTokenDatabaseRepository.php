@@ -69,7 +69,7 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
         $data = RefreshTokenMapper::toPersistence($token);
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::REFRESH_TOKENS())
+            ->insert(Tables::REFRESH_TOKENS->value)
             ->columns(... $data->keys())
             ->values(... $data->values())
         ;
@@ -90,12 +90,14 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
      */
     public function update(Entity $token): void
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         $token->getTraceableTime()->markUpdated();
 
         $data = RefreshTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::REFRESH_TOKENS(), $data->toArray())
+            ->update(
+                Tables::REFRESH_TOKENS->value,
+                $data->toArray()
+            )
             ->where(field('id')->eq($token->id()))
         ;
         try {

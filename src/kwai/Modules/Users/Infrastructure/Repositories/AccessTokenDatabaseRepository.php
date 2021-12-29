@@ -49,7 +49,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
         $data = AccessTokenMapper::toPersistence($token);
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::ACCESS_TOKENS())
+            ->insert(Tables::ACCESS_TOKENS->value)
             ->columns(
                 ... $data->keys()
             )
@@ -74,12 +74,11 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
      */
     public function update(Entity $token): void
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         $token->getTraceableTime()->markUpdated();
 
         $data = AccessTokenMapper::toPersistence($token->domain());
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::ACCESS_TOKENS())
+            ->update(Tables::ACCESS_TOKENS->value)
             ->set($data->toArray())
             ->where(field('id')->eq($token->id()))
         ;

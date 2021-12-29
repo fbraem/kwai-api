@@ -27,13 +27,12 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->query->from((string) Tables::USER_INVITATIONS())
+        $this->query->from(Tables::USER_INVITATIONS->value)
             ->join(
-                (string) Tables::USERS(),
+                Tables::USERS->value,
                 on(
-                    Tables::USER_INVITATIONS()->user_id,
-                    Tables::USERS()->id
+                    Tables::USER_INVITATIONS->column('user_id'),
+                    Tables::USERS->column('id')
                 )
             );
     }
@@ -43,24 +42,25 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     protected function getColumns(): array
     {
-        $aliasUserFn = Tables::USERS()->getAliasFn();
-        $aliasUserInvitationFn = Tables::USER_INVITATIONS()->getAliasFn();
-
         return [
-            $aliasUserInvitationFn('id'),
-            $aliasUserInvitationFn('email'),
-            $aliasUserInvitationFn('name'),
-            $aliasUserInvitationFn('uuid'),
-            $aliasUserInvitationFn('expired_at'),
-            $aliasUserInvitationFn('expired_at_timezone'),
-            $aliasUserInvitationFn('remark'),
-            $aliasUserInvitationFn('user_id'),
-            $aliasUserInvitationFn('created_at'),
-            $aliasUserInvitationFn('updated_at'),
-            $aliasUserInvitationFn('confirmed_at'),
-            $aliasUserFn('id'),
-            $aliasUserFn('first_name'),
-            $aliasUserFn('last_name')
+            ...Tables::USER_INVITATIONS->aliases(
+                'id',
+                'email',
+                'name',
+                'uuid',
+                'expired_at',
+                'expired_at_timezone',
+                'remark',
+                'user_id',
+                'created_at',
+                'updated_at',
+                'confirmed_at'
+            ),
+            ...Tables::USERS->aliases(
+                'id',
+                'first_name',
+                'last_name'
+            )
         ];
     }
 
@@ -69,9 +69,8 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     public function filterByUniqueId(UniqueId $uuid): UserInvitationQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USER_INVITATIONS()->uuid)->eq($uuid)
+            Tables::USER_INVITATIONS->field('uuid')->eq($uuid)
         );
         return $this;
     }
@@ -81,9 +80,8 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     public function filterByEmail(EmailAddress $emailAddress): UserInvitationQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USER_INVITATIONS()->email)->eq($emailAddress)
+            Tables::USER_INVITATIONS->field('email')->eq($emailAddress)
         );
         return $this;
     }
@@ -93,9 +91,8 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     public function filterActive(Timestamp $timestamp): UserInvitationQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USER_INVITATIONS()->expired_at)->gt((string) $timestamp)
+            Tables::USER_INVITATIONS->field('expired_at')->gt((string) $timestamp)
         );
         return $this;
     }
@@ -108,15 +105,16 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
         $rows = parent::walk($limit, $offset);
 
         $invitations = new Collection();
-        $filters = new Collection([
-            Tables::USER_INVITATIONS()->getAliasPrefix(),
-            Tables::USERS()->getAliasPrefix()
-        ]);
-
         foreach ($rows as $row) {
-            [ $invitation, $creator ] = $row->filterColumns($filters);
-            $invitation->put('creator', $creator);
-            $invitations->put($invitation->get('id'), $invitation);
+            $invitation = Tables::USER_INVITATIONS->collect($row);
+            $invitation->put(
+                'creator',
+                Tables::USERS->collect($row)
+            );
+            $invitations->put(
+                $invitation->get('id'),
+                $invitation
+            );
         }
 
         return $invitations;

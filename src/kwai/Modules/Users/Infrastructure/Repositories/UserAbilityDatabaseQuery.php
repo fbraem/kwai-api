@@ -25,8 +25,7 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     public function __construct(Connection $db)
     {
         $this->abilityQuery = new AbilityDatabaseQuery($db);
-        /** @noinspection PhpUndefinedFieldInspection */
-        parent::__construct($db, Tables::USERS()->id);
+        parent::__construct($db, Tables::USERS->column('id'));
     }
 
     /**
@@ -35,12 +34,11 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     protected function initQuery(): void
     {
         $this->query = $this->abilityQuery->query;
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->join(
-            (string) Tables::USER_ABILITIES(),
+            (string) Tables::USER_ABILITIES->value,
             on(
-                Tables::ABILITIES()->id,
-                Tables::USER_ABILITIES()->ability_id
+                Tables::ABILITIES->column('id'),
+                Tables::USER_ABILITIES->column('ability_id')
             )
         );
     }
@@ -51,16 +49,15 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     protected function getColumns(): array
     {
         return [
-            Tables::USER_ABILITIES()->alias('user_id'),
+            Tables::USER_ABILITIES->alias('user_id'),
             ...$this->abilityQuery->getColumns()
         ];
     }
 
     public function filterByUser(int ...$userIds): UserAbilityQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::USER_ABILITIES()->user_id)->in(...$userIds)
+            Tables::USER_ABILITIES->field('user_id')->in(...$userIds)
         );
         return $this;
     }
@@ -70,25 +67,22 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
         $rows = parent::walk($limit, $offset);
 
         $users = new Collection();
-        $filters = new Collection([
-            Tables::USER_ABILITIES()->getAliasPrefix(),
-            Tables::ABILITIES()->getAliasPrefix(),
-            Tables::RULES()->getAliasPrefix()
-        ]);
 
         foreach ($rows as $row) {
-            [
-                $user,
-                $ability,
-                $rule
-            ] = $row->filterColumns($filters);
-            /** @noinspection PhpUndefinedMethodInspection */
-            $user = $users->nest($user->get('user_id'));
-            if (!$user->has($ability->get('id'))) {
+            $user_id = Tables::USER_ABILITIES->collect($row)->get('user_id');
+            $ability = Tables::ABILITIES->collect($row);
+            $rule = Tables::RULES->collect($row);
+
+            $userAbilities = $users->when(
+                !$users->has($user_id),
+                fn ($collection) => $collection->put($user_id, new Collection())
+            )->get($user_id);
+
+            if (!$userAbilities->has($ability->get('id'))) {
                 $ability->put('rules', new Collection());
-                $user->put($ability->get('id'), $ability);
+                $userAbilities->put($ability->get('id'), $ability);
             }
-            $user
+            $userAbilities
                 ->get($ability->get('id'))
                 ->get('rules')
                 ->push($rule)

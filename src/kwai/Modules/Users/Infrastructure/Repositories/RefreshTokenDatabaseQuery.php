@@ -27,19 +27,19 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
     {
         /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from((string) Tables::REFRESH_TOKENS())
+            ->from(Tables::REFRESH_TOKENS->value)
             ->join(
-                (string) Tables::ACCESS_TOKENS(),
+                Tables::ACCESS_TOKENS->value,
                 on(
-                    Tables::REFRESH_TOKENS()->access_token_id,
-                    Tables::ACCESS_TOKENS()->id
+                    Tables::REFRESH_TOKENS->column('access_token_id'),
+                    Tables::ACCESS_TOKENS->column('id')
                 )
             )
             ->join(
-                (string) Tables::USERS(),
+                Tables::USERS->value,
                 on(
-                    Tables::ACCESS_TOKENS()->user_id,
-                    Tables::USERS()->id
+                    Tables::ACCESS_TOKENS->column('user_id'),
+                    Tables::USERS->column('id')
                 )
             )
         ;
@@ -50,34 +50,36 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
      */
     protected function getColumns(): array
     {
-        $aliasAccessTokenFn = Tables::ACCESS_TOKENS()->getAliasFn();
-        $aliasRefreshTokenFn = Tables::REFRESH_TOKENS()->getAliasFn();
-        $aliasUserFn = Tables::USERS()->getAliasFn();
-
         return [
-            $aliasRefreshTokenFn('id'),
-            $aliasRefreshTokenFn('identifier'),
-            $aliasRefreshTokenFn('access_token_id'),
-            $aliasRefreshTokenFn('expiration'),
-            $aliasRefreshTokenFn('revoked'),
-            $aliasRefreshTokenFn('created_at'),
-            $aliasRefreshTokenFn('updated_at'),
-            $aliasAccessTokenFn('id'),
-            $aliasAccessTokenFn('identifier'),
-            $aliasAccessTokenFn('expiration'),
-            $aliasAccessTokenFn('revoked'),
-            $aliasAccessTokenFn('created_at'),
-            $aliasAccessTokenFn('updated_at'),
-            $aliasUserFn('id'),
-            $aliasUserFn('email'),
-            $aliasUserFn('password'),
-            $aliasUserFn('last_login'),
-            $aliasUserFn('first_name'),
-            $aliasUserFn('last_name'),
-            $aliasUserFn('remark'),
-            $aliasUserFn('uuid'),
-            $aliasUserFn('created_at'),
-            $aliasUserFn('updated_at')
+            ...Tables::REFRESH_TOKENS->aliases(
+            'id',
+                'identifier',
+                'access_token_id',
+                'expiration',
+                'revoked',
+                'created_at',
+                'updated_at'
+            ),
+            ...Tables::ACCESS_TOKENS->aliases(
+                'id',
+                'identifier',
+                'expiration',
+                'revoked',
+                'created_at',
+                'updated_at'
+            ),
+            ...Tables::USERS->aliases(
+                'id',
+                'email',
+                'password',
+                'last_login',
+                'first_name',
+                'last_name',
+                'remark',
+                'uuid',
+                'created_at',
+                'updated_at'
+            )
         ];
     }
 
@@ -86,9 +88,8 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
      */
     public function filterTokenIdentifier(TokenIdentifier $identifier): RefreshTokenQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->where(
-            field(Tables::REFRESH_TOKENS()->identifier)->eq(strval($identifier))
+            Tables::REFRESH_TOKENS->field('identifier')->eq(strval($identifier))
         )
         ;
         return $this;
@@ -101,20 +102,12 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
     {
         $rows = parent::walk($limit, $offset);
 
-        $prefixes = [
-            Tables::REFRESH_TOKENS()->getAliasPrefix(),
-            Tables::ACCESS_TOKENS()->getAliasPrefix(),
-            Tables::USERS()->getAliasPrefix()
-        ];
-
         $refreshTokens = new Collection([]);
         foreach ($rows as $row) {
-            [
-                $refreshToken,
-                $accessToken,
-                $user
-            ] = $row->filterColumns($prefixes);
-            $accessToken->put('user', $user);
+            $accessToken = Tables::ACCESS_TOKENS->collect($row);
+            $accessToken->put('user', Tables::USERS->collect($row));
+
+            $refreshToken = Tables::REFRESH_TOKENS->collect($row);
             $refreshToken->put('accessToken', $accessToken);
             $refreshTokens->put($refreshToken->get('id'), $refreshToken);
         }

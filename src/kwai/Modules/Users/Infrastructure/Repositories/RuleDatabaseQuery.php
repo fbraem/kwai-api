@@ -25,21 +25,20 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
      */
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from((string) Tables::RULES())
+            ->from(Tables::RULES->value)
             ->join(
-                (string) Tables::RULE_ACTIONS(),
+                Tables::RULE_ACTIONS->value,
                 on(
-                    Tables::RULES()->action_id,
-                    Tables::RULE_ACTIONS()->id
+                    Tables::RULES->column('action_id'),
+                    Tables::RULE_ACTIONS->column('id')
                 )
             )
             ->join(
-                (string) Tables::RULE_SUBJECTS(),
+                Tables::RULE_SUBJECTS->value,
                 on(
-                    Tables::RULES()->subject_id,
-                    Tables::RULE_SUBJECTS()->id
+                    Tables::RULES->column('subject_id'),
+                    Tables::RULE_SUBJECTS->column('id')
                 )
             )
         ;
@@ -50,25 +49,12 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
      */
     protected function getColumns(): array
     {
-        $aliasRulesFn = Tables::RULES()->getAliasFn();
-
-        /** @noinspection PhpUndefinedFieldInspection */
         return [
-            $aliasRulesFn('id'),
-            $aliasRulesFn('name'),
-            $aliasRulesFn('remark'),
-            $aliasRulesFn('created_at'),
-            $aliasRulesFn('updated_at'),
+            ...Tables::RULES->aliases('id', 'name', 'remark', 'created_at', 'updated_at'),
             // Trick the mapper with the 'rules_' prefix ...
-            alias(
-                Tables::RULE_ACTIONS()->name,
-                Tables::RULES()->getAlias('action')
-            ),
+            Tables::RULE_ACTIONS->alias('name', Tables::RULES->aliasPrefix() . 'action'),
             // Trick the mapper with the 'rules_' prefix ...
-            alias(
-                Tables::RULE_SUBJECTS()->name,
-                Tables::RULES()->getAlias('subject')
-            )
+            Tables::RULE_SUBJECTS->alias('name', Tables::RULES->aliasPrefix() . 'subject')
         ];
     }
 
@@ -77,9 +63,8 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
      */
     public function filterById(int ...$id): RuleQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::RULES()->id)->in(...$id)
+            Tables::RULES->field('id')->in(...$id)
         );
         return $this;
     }
@@ -89,9 +74,8 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
      */
     public function filterBySubject(string $subject): RuleQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::RULE_SUBJECTS()->name)->eq($subject)
+            Tables::RULE_SUBJECTS->field('name')->eq($subject)
         );
         return $this;
     }
@@ -101,12 +85,9 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
         $rows = parent::walk($limit, $offset);
 
         $rules = new Collection();
-        $filters = new Collection([
-            Tables::RULES()->getAliasPrefix()
-        ]);
 
         foreach ($rows as $row) {
-            [ $rule ] = $row->filterColumns($filters);
+            $rule = Tables::RULES->collect($row);
             $rules->put($rule->get('id'), $rule);
         }
 

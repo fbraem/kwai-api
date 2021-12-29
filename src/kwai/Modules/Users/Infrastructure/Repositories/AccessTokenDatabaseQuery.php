@@ -19,8 +19,10 @@ class AccessTokenDatabaseQuery extends DatabaseQuery implements AccessTokenQuery
 {
     public function __construct(Connection $db)
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        parent::__construct($db, Tables::ACCESS_TOKENS()->id);
+        parent::__construct(
+            $db,
+            Tables::ACCESS_TOKENS->column('id')
+        );
     }
 
     /**
@@ -28,7 +30,7 @@ class AccessTokenDatabaseQuery extends DatabaseQuery implements AccessTokenQuery
      */
     protected function initQuery(): void
     {
-        $this->query->from((string) Tables::ACCESS_TOKENS());
+        $this->query->from(Tables::ACCESS_TOKENS->value);
     }
 
     /**
@@ -36,10 +38,8 @@ class AccessTokenDatabaseQuery extends DatabaseQuery implements AccessTokenQuery
      */
     protected function getColumns(): array
     {
-        $aliasFn = Tables::ACCESS_TOKENS()->getAliasFn();
-
         return [
-            $aliasFn('id')
+            Tables::ACCESS_TOKENS->alias('id')
         ];
     }
 }
