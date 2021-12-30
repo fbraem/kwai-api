@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Presentation\Resources;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
+use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
 
 /**
@@ -19,6 +20,7 @@ class UserAccountResource
 {
     /**
      * @param Entity<UserAccount> $userAccount
+     * @param ?Entity<User> $user
      */
     public function __construct(
         private Entity $userAccount,
@@ -93,7 +95,7 @@ class UserAccountResource
     public function isOwner(): bool
     {
         if ($this->user) {
-            return $this->userAccount->getUser()?->id() === $this->user->id();
+            return $this->userAccount->id() === $this->user->id();
         }
         return false;
     }

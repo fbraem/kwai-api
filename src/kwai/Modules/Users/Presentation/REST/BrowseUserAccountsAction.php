@@ -60,7 +60,10 @@ class BrowseUserAccountsAction extends Action
         }
 
         $resources = $accounts->map(
-            fn ($account) => new UserAccountResource($account)
+            fn ($account) => new UserAccountResource(
+                $account,
+                $request->getAttribute('kwai.user')
+            )
         );
         return (new JSONAPIResponse(
             JSONAPI\Document::createFromArray($resources->toArray())
