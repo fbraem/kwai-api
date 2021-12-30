@@ -21,7 +21,8 @@ class UserAccountResource
      * @param Entity<UserAccount> $userAccount
      */
     public function __construct(
-        private Entity $userAccount
+        private Entity $userAccount,
+        private ?Entity $user = null
     ) {
     }
 
@@ -86,5 +87,14 @@ class UserAccountResource
     public function getUpdateDate(): ?string
     {
         return $this->userAccount->getUser()->getTraceableTime()->getUpdatedAt()?->__toString();
+    }
+
+    #[JSONAPI\Attribute(name: 'owner')]
+    public function isOwner(): bool
+    {
+        if ($this->user) {
+            return $this->userAccount->getUser()?->id() === $this->user->id();
+        }
+        return false;
     }
 }
