@@ -42,7 +42,9 @@ it('can serialize a User into a JSON:API resource', function () {
     expect($json->data->attributes)
         ->toMatchObject([
             'email' => 'jigoro.kano@kwai.com',
-            'username' => 'Jigoro Kano'
+            'username' => 'Jigoro Kano',
+            'first_name' => 'Jigoro',
+            'last_name' => 'Kano'
         ])
     ;
 });

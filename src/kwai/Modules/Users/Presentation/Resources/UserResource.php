@@ -50,6 +50,18 @@ class UserResource
         return (string) $this->user->getUsername();
     }
 
+    #[JSONAPI\Attribute(name: 'first_name')]
+    public function getFirstName(): string
+    {
+        return (string) $this->user->getUsername()->getFirstName();
+    }
+
+    #[JSONAPI\Attribute(name: 'last_name')]
+    public function getLastName(): string
+    {
+        return (string) $this->user->getUsername()->getLastName();
+    }
+
     #[JSONAPI\Attribute(name: 'remark')]
     public function getRemark(): ?string
     {
