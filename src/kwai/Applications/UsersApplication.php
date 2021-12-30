@@ -18,6 +18,7 @@ use Kwai\Modules\Users\Presentation\REST\CreateUserInvitationAction;
 use Kwai\Modules\Users\Presentation\REST\DetachAbilityAction;
 use Kwai\Modules\Users\Presentation\REST\GetAbilityAction;
 use Kwai\Modules\Users\Presentation\REST\GetUserAbilitiesAction;
+use Kwai\Modules\Users\Presentation\REST\GetUserAction;
 use Kwai\Modules\Users\Presentation\REST\GetUserInvitationAction;
 use Kwai\Modules\Users\Presentation\REST\UpdateAbilityAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
@@ -38,6 +39,17 @@ class UsersApplication extends Application
                 BrowseUsersAction::class,
                 [
                     'auth' => true
+                ]
+            )
+            ->get(
+                'users.get',
+                '/users/{uuid}',
+                GetUserAction::class,
+                [
+                    'auth' => true
+                ],
+                [
+                    'uuid' => $uuid_regex
                 ]
             )
             ->get(
