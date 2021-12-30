@@ -52,8 +52,9 @@ class BrowseUsersAction extends Action
             )($response);
         }
 
+        $currentUser = $request->getAttribute('kwai.user');
         $resources = $users->map(
-            fn ($user) => new UserResource($user)
+            fn ($user) => new UserResource($user, $currentUser)
         );
         return (new JSONAPIResponse(
             JSONAPI\Document::createFromArray($resources->toArray())

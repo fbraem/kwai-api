@@ -19,9 +19,11 @@ class UserResource
 {
     /**
      * @param Entity<User> $user
+     * @param Entity<User> $currentUser
      */
     public function __construct(
-        private Entity $user
+        private Entity $user,
+        private ?Entity $currentUser = null
     ) {
     }
 
@@ -54,7 +56,6 @@ class UserResource
         return $this->user->getRemark();
     }
 
-
     #[JSONAPI\Attribute(name: 'created_at')]
     public function getCreationDate(): string
     {
@@ -73,5 +74,14 @@ class UserResource
         return $this->user->getAbilities()->map(
             fn ($ability) => new AbilityResource($ability)
         )->toArray();
+    }
+
+    #[JSONAPI\Attribute(name: 'owner')]
+    public function isOwner(): bool
+    {
+        if ($this->currentUser) {
+            return $this->currentUser->id() === $this->user->id();
+        }
+        return false;
     }
 }

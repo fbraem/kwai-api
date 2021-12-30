@@ -67,7 +67,10 @@ class GetUserAction extends Action
         }
 
         if ($user) {
-            $resource = new UserResource($user);
+            $resource = new UserResource(
+                $user,
+                $request->getAttribute('kwai.user')
+            );
             return (new JSONAPIResponse(
                 JSONAPI\Document::createFromObject($resource)
             ))($response);
