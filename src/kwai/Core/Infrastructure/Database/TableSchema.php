@@ -103,6 +103,14 @@ abstract class TableSchema
             ->map(fn ($item) => $this->aliasColumn($item->name));
     }
 
+    public static function aliases(?string $alias = null): Collection
+    {
+        $schema = new static($alias);
+        $ref = new ReflectionClass(static::class);
+        return collect($ref->getProperties())
+            ->map(fn ($item) => $schema->aliasColumn($item->name));
+    }
+
     /**
      * Map all items of the record to the schema properties.
      *
@@ -126,6 +134,19 @@ abstract class TableSchema
 
         return $populatedSchema;
     }
+
+    /**
+     * Factory method that will create and map the record to this schema.
+     *
+     * @param Collection  $record
+     * @param string|null $alias
+     * @return static
+     */
+    public static function createFromRow(Collection $record, ?string $alias = null): static
+    {
+        $populatedSchema = new static($alias);
+        return $populatedSchema->map($record);
+   }
 
     /**
      * An empty __set method, to avoid that unknown columns become part
