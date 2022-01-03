@@ -70,7 +70,7 @@ class TrainingSchema implements InputSchema
                             'type' => Expect::anyOf('coaches'),
                             'id' => Expect::string()->required()
                         ]))
-                    ])->required(),
+                    ])->required(false),
                     'teams' => Expect::structure([
                         'data' => Expect::arrayOf(Expect::structure([
                             'type' => Expect::anyOf('teams'),
