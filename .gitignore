@@ -8,3 +8,4 @@ kwai.development.yaml
 /config/config.php
 /config/config.production.php
 /hosts.*.yml
+/.idea
