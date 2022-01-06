@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -31,8 +31,7 @@ class Ability implements DomainEntity
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null,
         private ?Collection $rules = null
-    )
-    {
+    ) {
         $this->traceableTime ??= new TraceableTime();
         $this->rules ??= collect();
     }
