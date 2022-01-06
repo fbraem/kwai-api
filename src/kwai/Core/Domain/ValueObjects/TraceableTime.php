@@ -22,7 +22,6 @@ final class TraceableTime
         private ?Timestamp $updated_at = null
     ) {
         $this->created_at ??= Timestamp::createNow();
-        $this->updated_at = $updated_at;
     }
 
     /**
