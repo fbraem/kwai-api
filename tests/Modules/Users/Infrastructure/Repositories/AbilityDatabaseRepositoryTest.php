@@ -25,12 +25,37 @@ it('can create an ability', function () use ($context) {
         expect($ability->domain())
             ->toBeInstanceOf(Ability::class)
         ;
-        return $ability;
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, strval($e));
+        $this->fail((string) $e);
     }
-    return null;
+    return $ability;
 })
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can update an ability', function ($ability) use ($context) {
+    if ($ability == null) {
+        return;
+    }
+    $repo = new AbilityDatabaseRepository($context->db);
+    try {
+        $updatedAbility = new Ability(
+            name: $ability->getName(),
+            remark: 'Updated with a test',
+            traceableTime: $ability->getTraceableTime()->markUpdated()
+        );
+        $repo->update(
+            new Entity(
+                $ability->id(),
+                $updatedAbility
+            )
+        );
+        $this->assertTrue(true);
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    }
+})
+    ->depends('it can create an ability')
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
