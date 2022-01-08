@@ -12,7 +12,7 @@ use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Modules\Coaches\Domain\User;
 
 /**
- * Class UserMapper
+ * Class UserDTO
  */
 class UserMapper
 {

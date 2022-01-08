@@ -15,7 +15,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\UserAccount;
-use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountDTO;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\UserQuery;
@@ -32,7 +32,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
     {
         parent::__construct(
             $db,
-        fn($item) => UserAccountMapper::toDomain($item)
+        fn($item) => UserAccountDTO::toDomain($item)
         );
     }
 
@@ -58,7 +58,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
     {
         $query = $this->db->createQueryFactory()
             ->update(Tables::USERS->value)
-            ->set(UserAccountMapper::toPersistence($account->domain())->toArray())
+            ->set(UserAccountDTO::toPersistence($account->domain())->toArray())
             ->where(field('id')->eq($account->id()))
         ;
         try {
@@ -73,7 +73,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function create(UserAccount $account): Entity
     {
-        $data = UserAccountMapper::toPersistence($account);
+        $data = UserAccountDTO::toPersistence($account);
 
         $query = $this->db->createQueryFactory()
             ->insert(Tables::USERS->value)

@@ -15,7 +15,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\UserInvitation;
-use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationDTO;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\UserInvitationQuery;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
@@ -35,7 +35,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     {
         parent::__construct(
             $db,
-            fn($item) => UserInvitationMapper::toDomain($item)
+            fn($item) => UserInvitationDTO::toDomain($item)
         );
     }
     /**
@@ -60,7 +60,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
      */
     public function create(UserInvitation $invitation): Entity
     {
-        $data = UserInvitationMapper::toPersistence($invitation);
+        $data = UserInvitationDTO::toPersistence($invitation);
 
         $query = $this->db->createQueryFactory()
             ->insert(Tables::USER_INVITATIONS->value)
@@ -89,7 +89,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     public function update(Entity $invitation): void
     {
         $invitation->getTraceableTime()->markUpdated();
-        $data = UserInvitationMapper::toPersistence($invitation->domain());
+        $data = UserInvitationDTO::toPersistence($invitation->domain());
         $query = $this->db->createQueryFactory()
             ->update(
                 Tables::USER_INVITATIONS->value,

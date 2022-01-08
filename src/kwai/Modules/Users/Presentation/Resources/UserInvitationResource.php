@@ -57,7 +57,13 @@ class UserInvitationResource
     #[JSONAPI\Attribute(name: 'expired_at')]
     public function getExpiredAt(): string
     {
-        return (string) $this->userInvitation->getExpiration();
+        return (string) $this->userInvitation->getExpiration()->getTimestamp();
+    }
+
+    #[JSONAPI\Attribute(name: 'expired_at_timezone')]
+    public function getExpiredAtTimezone(): string
+    {
+        return (string) $this->userInvitation->getExpiration()->getTimezone();
     }
 
     #[JSONAPI\Attribute(name: 'confirmed_at')]

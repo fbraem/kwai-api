@@ -9,10 +9,15 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
+use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
+use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
+use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenDTO;
+use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenDTO;
+use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
 use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
 use Kwai\Modules\Users\Repositories\RefreshTokenQuery;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -25,21 +30,20 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
      */
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from(Tables::REFRESH_TOKENS->value)
+            ->from(RefreshTokenTable::name())
             ->join(
-                Tables::ACCESS_TOKENS->value,
+                AccessTokenTable::name(),
                 on(
-                    Tables::REFRESH_TOKENS->column('access_token_id'),
-                    Tables::ACCESS_TOKENS->column('id')
+                    RefreshTokenTable::column('access_token_id'),
+                    AccessTokenTable::column('id')
                 )
             )
             ->join(
-                Tables::USERS->value,
+                UsersTableSchema::name(),
                 on(
-                    Tables::ACCESS_TOKENS->column('user_id'),
-                    Tables::USERS->column('id')
+                    AccessTokenTable::column('user_id'),
+                    UsersTableSchema::column('id')
                 )
             )
         ;
@@ -51,35 +55,9 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
     protected function getColumns(): array
     {
         return [
-            ...Tables::REFRESH_TOKENS->aliases(
-            'id',
-                'identifier',
-                'access_token_id',
-                'expiration',
-                'revoked',
-                'created_at',
-                'updated_at'
-            ),
-            ...Tables::ACCESS_TOKENS->aliases(
-                'id',
-                'identifier',
-                'expiration',
-                'revoked',
-                'created_at',
-                'updated_at'
-            ),
-            ...Tables::USERS->aliases(
-                'id',
-                'email',
-                'password',
-                'last_login',
-                'first_name',
-                'last_name',
-                'remark',
-                'uuid',
-                'created_at',
-                'updated_at'
-            )
+            ...RefreshTokenTable::aliases(),
+            ...AccessTokenTable::aliases(),
+            ...UsersTableSchema::aliases()
         ];
     }
 
@@ -89,27 +67,36 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
     public function filterTokenIdentifier(TokenIdentifier $identifier): RefreshTokenQuery
     {
         $this->query->where(
-            Tables::REFRESH_TOKENS->field('identifier')->eq(strval($identifier))
+            RefreshTokenTable::field('identifier')->eq(strval($identifier))
         )
         ;
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection<RefreshTokenDTO>
+     * @throws QueryException
      */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
+        /** @var Collection<RefreshTokenDTO> $refreshTokens */
         $refreshTokens = new Collection([]);
         foreach ($rows as $row) {
-            $accessToken = Tables::ACCESS_TOKENS->collect($row);
-            $accessToken->put('user', Tables::USERS->collect($row));
-
-            $refreshToken = Tables::REFRESH_TOKENS->collect($row);
-            $refreshToken->put('accessToken', $accessToken);
-            $refreshTokens->put($refreshToken->get('id'), $refreshToken);
+            $refreshToken = RefreshTokenTable::createFromRow($row);
+            $refreshTokens->put(
+                $refreshToken->id,
+                new RefreshTokenDTO(
+                    $refreshToken,
+                    new AccessTokenDTO(
+                        AccessTokenTable::createFromRow($row),
+                        UsersTableSchema::createFromRow($row)
+                    )
+                )
+            );
         }
 
         return $refreshTokens;

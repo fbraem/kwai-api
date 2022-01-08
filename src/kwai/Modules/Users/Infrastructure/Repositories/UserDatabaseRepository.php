@@ -17,8 +17,9 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Infrastructure\Mappers\UserMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
 use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
 use Kwai\Modules\Users\Repositories\UserQuery;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use function Latitude\QueryBuilder\field;
@@ -41,7 +42,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     {
         parent::__construct(
             $db,
-            fn($item) => UserMapper::toDomain($item)
+            static fn(UserDTO $dto) => $dto->createEntity()
         );
     }
 
@@ -83,10 +84,16 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             throw new RepositoryException(__METHOD__, $e);
         }
 
+        $data = (new UserDTO())
+            ->persistEntity($user)
+            ->user
+            ->collect()
+        ;
+
         $queryFactory = $this->db->createQueryFactory();
         $query = $queryFactory
-            ->update(Tables::USERS->value)
-            ->set(UserMapper::toPersistence($user->domain())->toArray())
+            ->update(UsersTableSchema::name())
+            ->set($data->toArray())
             ->where(field('id')->eq($user->id()))
         ;
 

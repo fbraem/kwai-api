@@ -4,20 +4,30 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use Exception;
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\RuleDatabaseRepository;
 use Tests\Context;
 
 $context = Context::createContext();
 
 it('can create an ability', function () use ($context) {
+    $ruleRepo = new RuleDatabaseRepository($context->db);
+    try {
+        $rule = $ruleRepo->getByIds([1])->first();
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    }
+
     $repo = new AbilityDatabaseRepository($context->db);
     try {
         $ability = $repo->create(new Ability(
             name: 'Test',
-            remark: 'Test Ability'
+            remark: 'Test Ability',
+            rules: new Collection([$rule])
         ));
         expect($ability)
             ->toBeInstanceOf(Entity::class)

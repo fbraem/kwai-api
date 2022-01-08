@@ -10,7 +10,10 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTableSchema;
+use Kwai\Modules\Users\Infrastructure\RulesTableSchema;
 use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Modules\Users\Infrastructure\UserAbilitiesTableSchema;
 use Kwai\Modules\Users\Repositories\UserAbilityQuery;
 use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
@@ -25,7 +28,7 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     public function __construct(Connection $db)
     {
         $this->abilityQuery = new AbilityDatabaseQuery($db);
-        parent::__construct($db, Tables::USERS->column('id'));
+        parent::__construct($db, UserAbilitiesTableSchema::column('user_id'));
     }
 
     /**
@@ -35,10 +38,10 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     {
         $this->query = $this->abilityQuery->query;
         $this->query->join(
-            (string) Tables::USER_ABILITIES->value,
+            (string) UserAbilitiesTableSchema::name(),
             on(
-                Tables::ABILITIES->column('id'),
-                Tables::USER_ABILITIES->column('ability_id')
+                AbilitiesTableSchema::column('id'),
+                UserAbilitiesTableSchema::column('ability_id')
             )
         );
     }
@@ -49,7 +52,7 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     protected function getColumns(): array
     {
         return [
-            Tables::USER_ABILITIES->alias('user_id'),
+            ...UserAbilitiesTableSchema::aliases(),
             ...$this->abilityQuery->getColumns()
         ];
     }
@@ -57,7 +60,7 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     public function filterByUser(int ...$userIds): UserAbilityQuery
     {
         $this->query->andWhere(
-            Tables::USER_ABILITIES->field('user_id')->in(...$userIds)
+            UserAbilitiesTableSchema::field('user_id')->in(...$userIds)
         );
         return $this;
     }
@@ -69,21 +72,21 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
         $users = new Collection();
 
         foreach ($rows as $row) {
-            $user_id = Tables::USER_ABILITIES->collect($row)->get('user_id');
-            $ability = Tables::ABILITIES->collect($row);
-            $rule = Tables::RULES->collect($row);
+            $user_id = UserAbilitiesTableSchema::createFromRow($row)->user_id;
+            $ability = AbilitiesTableSchema::createFromRow($row);
+            $rule = RulesTableSchema::createFromRow($row);
 
             $userAbilities = $users->when(
                 !$users->has($user_id),
                 fn ($collection) => $collection->put($user_id, new Collection())
             )->get($user_id);
 
-            if (!$userAbilities->has($ability->get('id'))) {
+            if (!$userAbilities->has($ability->id)) {
                 $ability->put('rules', new Collection());
-                $userAbilities->put($ability->get('id'), $ability);
+                $userAbilities->put($ability->id, $ability);
             }
             $userAbilities
-                ->get($ability->get('id'))
+                ->get($ability->id)
                 ->get('rules')
                 ->push($rule)
             ;

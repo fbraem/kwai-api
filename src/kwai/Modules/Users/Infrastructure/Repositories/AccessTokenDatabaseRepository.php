@@ -14,7 +14,8 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
-use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenMapper;
+use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
+use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenDTO;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AccessTokenQuery;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
@@ -36,7 +37,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
     {
         parent::__construct(
             $db,
-            fn ($item) => AccessTokenMapper::toDomain($item)
+            fn ($item) => (new AccessTokenDTO($item))->toDomain()
         );
     }
 
@@ -46,16 +47,16 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
      */
     public function create(AccessToken $token): Entity
     {
-        $data = AccessTokenMapper::toPersistence($token);
+        $data = (new AccessTokenDTO())
+            ->persist($token)
+            ->accessToken
+            ->collect()
+        ;
 
         $query = $this->db->createQueryFactory()
-            ->insert(Tables::ACCESS_TOKENS->value)
-            ->columns(
-                ... $data->keys()
-            )
-            ->values(
-                ... $data->values()
-            )
+            ->insert(AccessTokenTable::name())
+            ->columns(... $data->keys())
+            ->values(... $data->values())
         ;
         try {
             $this->db->execute($query);
@@ -76,9 +77,14 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
     {
         $token->getTraceableTime()->markUpdated();
 
-        $data = AccessTokenMapper::toPersistence($token->domain());
+        $data = (new AccessTokenDTO())
+            ->persistEntity($token)
+            ->accessToken
+            ->collect()
+        ;
+
         $query = $this->db->createQueryFactory()
-            ->update(Tables::ACCESS_TOKENS->value)
+            ->update(AccessTokenTable::name())
             ->set($data->toArray())
             ->where(field('id')->eq($token->id()))
         ;

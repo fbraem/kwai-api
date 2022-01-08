@@ -10,7 +10,7 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Mappers\RuleMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
 use Kwai\Modules\Users\Repositories\RuleQuery;
 use Kwai\Modules\Users\Repositories\RuleRepository;
 
@@ -28,7 +28,7 @@ class RuleDatabaseRepository extends DatabaseRepository implements RuleRepositor
     {
         parent::__construct(
             $db,
-            fn($item) => RuleMapper::toDomain($item)
+            static fn(RuleDTO $dto) => $dto->createEntity()
         );
     }
 

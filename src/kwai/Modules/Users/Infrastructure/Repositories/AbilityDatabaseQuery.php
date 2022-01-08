@@ -10,7 +10,14 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTableSchema;
+use Kwai\Modules\Users\Infrastructure\AbilityRulesTableSchema;
+use Kwai\Modules\Users\Infrastructure\Mappers\AbilityDTO;
+use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
+use Kwai\Modules\Users\Infrastructure\RuleActionsTableSchema;
+use Kwai\Modules\Users\Infrastructure\RulesTableSchema;
+use Kwai\Modules\Users\Infrastructure\RuleSubjectsTableSchema;
 use Kwai\Modules\Users\Repositories\AbilityQuery;
 use function Latitude\QueryBuilder\on;
 
@@ -23,7 +30,7 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     {
         parent::__construct(
             $db,
-            Tables::ABILITIES->column('id')
+            AbilitiesTableSchema::column('id')
         );
     }
 
@@ -33,7 +40,7 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     public function filterById(int $id): AbilityQuery
     {
         $this->query->andWhere(
-            Tables::ABILITIES->field('id')->eq($id)
+            AbilitiesTableSchema::field('id')->eq($id)
         );
         return $this;
     }
@@ -44,33 +51,33 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     protected function initQuery(): void
     {
         $this->query
-            ->from(Tables::ABILITIES->value)
+            ->from(AbilitiesTableSchema::getTableName())
             ->leftJoin(
-                Tables::ABILITY_RULES->value,
+                AbilityRulesTableSchema::getTableName(),
                 on(
-                    Tables::ABILITIES->column('id'),
-                    Tables::ABILITY_RULES->column('ability_id')
+                    AbilitiesTableSchema::column('id'),
+                    AbilityRulesTableSchema::column('ability_id')
                 )
             )
             ->leftJoin(
-                Tables::RULES->value,
+                RulesTableSchema::getTableName(),
                 on(
-                    Tables::ABILITY_RULES->column('rule_id'),
-                    Tables::RULES->column('id')
+                    AbilityRulesTableSchema::column('rule_id'),
+                    RulesTableSchema::column('id')
                 )
             )
             ->leftJoin(
-                Tables::RULE_ACTIONS->value,
+                RuleActionsTableSchema::getTableName(),
                 on(
-                    Tables::RULES->column('action_id'),
-                    Tables::RULE_ACTIONS->column('id')
+                    RulesTableSchema::column('action_id'),
+                    RuleActionsTableSchema::column('id')
                 )
             )
             ->leftJoin(
-                Tables::RULE_SUBJECTS->value,
+                RuleSubjectsTableSchema::getTableName(),
                 on(
-                    Tables::RULES->column('subject_id'),
-                    Tables::RULE_SUBJECTS->column('id')
+                    RulesTableSchema::column('subject_id'),
+                    RuleSubjectsTableSchema::column('id')
                 )
             )
         ;
@@ -82,34 +89,43 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     protected function getColumns(): array
     {
         return [
-            ...Tables::ABILITIES->aliases('id', 'name', 'remark', 'created_at', 'updated_at'),
-            ...Tables::RULES->aliases('name', 'remark', 'created_at', 'updated_at'),
-            Tables::RULE_ACTIONS->alias('name', Tables::RULES->aliasPrefix() . 'action'),
-            Tables::RULE_SUBJECTS->alias('name', Tables::RULES->aliasPrefix() . 'subject')
+            ...AbilitiesTableSchema::aliases(),
+            ...RulesTableSchema::aliases(),
+            ...RuleActionsTableSchema::aliases(),
+            ...RuleSubjectsTableSchema::aliases()
         ];
     }
 
     /**
-     * @inheritDoc
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection<AbilityDTO>
+     * @throws QueryException
      */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
+        /** @var Collection<AbilityDTO> $abilities */
         $abilities = new Collection();
 
         foreach ($rows as $row) {
-            $ability = Tables::ABILITIES->collect($row);
-            $rule = Tables::RULES->collect($row);
-            if (!$abilities->has($ability->get('id'))) {
-                $abilities->put($ability['id'], $ability);
-                $ability->put('rules', new Collection());
-            }
-            if ($rule->has('id')) {
-                $abilities
-                    ->get($ability->get('id'))
-                    ->get('rules')
-                    ->push($rule);
+            $ability = AbilitiesTableSchema::createFromRow($row);
+            $dto = $abilities
+                ->when(
+                    !$abilities->has($ability->id),
+                    fn ($collection) => $collection->put($ability->id, new AbilityDTO($ability))
+                )->get($ability->id)
+            ;
+            $abilityRules = AbilityRulesTableSchema::createFromRow($row);
+            if ($abilityRules->rule_id) {
+                $dto->rules->push(
+                    new RuleDTO(
+                        RulesTableSchema::createFromRow($row),
+                        RuleActionsTableSchema::createFromRow($row),
+                        RuleSubjectsTableSchema::createFromRow($row)
+                    )
+                );
             }
         }
 

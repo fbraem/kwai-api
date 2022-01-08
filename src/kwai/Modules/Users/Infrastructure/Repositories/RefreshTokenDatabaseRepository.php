@@ -15,7 +15,8 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenMapper;
+use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenDTO;
+use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
 use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\RefreshTokenQuery;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
@@ -32,7 +33,7 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
     {
         parent::__construct(
             $db,
-            fn($item) => RefreshTokenMapper::toDomain($item)
+            fn($item) => $item->toDomain()
         );
     }
 
@@ -66,10 +67,11 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
      */
     public function create(RefreshToken $token): Entity
     {
-        $data = RefreshTokenMapper::toPersistence($token);
+        $dto = new RefreshTokenDTO();
+        $data = $dto->toPersistence($token)->collect();
 
         $query = $this->db->createQueryFactory()
-            ->insert(Tables::REFRESH_TOKENS->value)
+            ->insert(RefreshTokenTable::name())
             ->columns(... $data->keys())
             ->values(... $data->values())
         ;
@@ -91,11 +93,13 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
     public function update(Entity $token): void
     {
         $token->getTraceableTime()->markUpdated();
+        $dto = new RefreshTokenDTO();
+        $dto->toPersistence($token->domain());
 
-        $data = RefreshTokenMapper::toPersistence($token->domain());
+        $data = $dto->refreshToken->collect();
         $query = $this->db->createQueryFactory()
             ->update(
-                Tables::REFRESH_TOKENS->value,
+                RefreshTokenTable::name(),
                 $data->toArray()
             )
             ->where(field('id')->eq($token->id()))

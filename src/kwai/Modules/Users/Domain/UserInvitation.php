@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Domain;
 
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -23,7 +24,7 @@ class UserInvitation implements DomainEntity
      * Constructor.
      *
      * @param EmailAddress       $emailAddress
-     * @param Timestamp          $expiration
+     * @param LocalTimestamp     $expiration
      * @param string             $name
      * @param Creator            $creator
      * @param string|null        $remark
@@ -34,7 +35,7 @@ class UserInvitation implements DomainEntity
      */
     public function __construct(
         private EmailAddress $emailAddress,
-        private Timestamp $expiration,
+        private LocalTimestamp $expiration,
         private string $name,
         private Creator $creator,
         private ?string $remark = null,
@@ -58,7 +59,7 @@ class UserInvitation implements DomainEntity
     /**
      * Get the time when the invitation will expire
      */
-    public function getExpiration(): Timestamp
+    public function getExpiration(): LocalTimestamp
     {
         return $this->expiration;
     }

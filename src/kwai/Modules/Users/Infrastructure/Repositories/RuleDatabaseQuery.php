@@ -9,10 +9,12 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
+use Kwai\Modules\Users\Infrastructure\RuleActionsTableSchema;
+use Kwai\Modules\Users\Infrastructure\RulesTableSchema;
+use Kwai\Modules\Users\Infrastructure\RuleSubjectsTableSchema;
 use Kwai\Modules\Users\Repositories\RuleQuery;
-use function Latitude\QueryBuilder\alias;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -26,19 +28,19 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
     protected function initQuery(): void
     {
         $this->query
-            ->from(Tables::RULES->value)
+            ->from(RulesTableSchema::name())
             ->join(
-                Tables::RULE_ACTIONS->value,
+                RuleActionsTableSchema::name(),
                 on(
-                    Tables::RULES->column('action_id'),
-                    Tables::RULE_ACTIONS->column('id')
+                    RulesTableSchema::column('action_id'),
+                    RuleActionsTableSchema::column('id')
                 )
             )
             ->join(
-                Tables::RULE_SUBJECTS->value,
+                RuleSubjectsTableSchema::name(),
                 on(
-                    Tables::RULES->column('subject_id'),
-                    Tables::RULE_SUBJECTS->column('id')
+                    RulesTableSchema::column('subject_id'),
+                    RuleSubjectsTableSchema::column('id')
                 )
             )
         ;
@@ -50,11 +52,9 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
     protected function getColumns(): array
     {
         return [
-            ...Tables::RULES->aliases('id', 'name', 'remark', 'created_at', 'updated_at'),
-            // Trick the mapper with the 'rules_' prefix ...
-            Tables::RULE_ACTIONS->alias('name', Tables::RULES->aliasPrefix() . 'action'),
-            // Trick the mapper with the 'rules_' prefix ...
-            Tables::RULE_SUBJECTS->alias('name', Tables::RULES->aliasPrefix() . 'subject')
+            ...RulesTableSchema::aliases(),
+            ...RuleActionsTableSchema::aliases(),
+            ...RuleSubjectsTableSchema::aliases()
         ];
     }
 
@@ -64,7 +64,7 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
     public function filterById(int ...$id): RuleQuery
     {
         $this->query->andWhere(
-            Tables::RULES->field('id')->in(...$id)
+            RulesTableSchema::field('id')->in(...$id)
         );
         return $this;
     }
@@ -75,20 +75,34 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
     public function filterBySubject(string $subject): RuleQuery
     {
         $this->query->andWhere(
-            Tables::RULE_SUBJECTS->field('name')->eq($subject)
+            RuleSubjectsTableSchema::field('name')->eq($subject)
         );
         return $this;
     }
 
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection<RuleDTO>
+     * @throws QueryException
+     */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
 
+        /** @var Collection<RuleDTO> $rules */
         $rules = new Collection();
 
         foreach ($rows as $row) {
-            $rule = Tables::RULES->collect($row);
-            $rules->put($rule->get('id'), $rule);
+            $rule = RulesTableSchema::createFromRow($row);
+            $rules->put(
+                $rule->id,
+                new RuleDTO(
+                    $rule,
+                    RuleActionsTableSchema::createFromRow($row),
+                    RuleSubjectsTableSchema::createFromRow($row)
+                )
+            );
         }
 
         return $rules;

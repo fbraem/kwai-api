@@ -55,11 +55,19 @@ abstract class DatabaseRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
+        // TODO: old mapper functions return the Domain object, new ones return
+        //  an Entity. This can be refactored, once all old mapper functions
+        //  are replaced.
+        $mapFn = $this->mapFunction;
         if ($this->mapFunction) {
             return $rows->mapWithKeys(
-                fn($item, $key) => [
-                    $key => new Entity((int)$key, ($this->mapFunction)($item))
-                ]
+                function ($item, $key) use ($mapFn) {
+                    $result = $mapFn($item);
+                    if (is_a($result, Entity::class)) {
+                        return [ $result->id() => $result ];
+                    }
+                    return [ $key => new Entity((int) $key, $result) ];
+                }
             );
         }
 
