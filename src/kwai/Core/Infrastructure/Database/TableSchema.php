@@ -35,12 +35,25 @@ abstract class TableSchema
     }
 
     /**
+     * @deprecated
+     */
+    public static function getTableName(): string
+    {
+        $ref = new ReflectionClass(static::class);
+        $attributes = $ref->getAttributes(TableAttribute::class);
+        if (count($attributes) > 0) {
+            return $attributes[0]->getArguments()['name'] ?? '';
+        }
+        return '';
+    }
+
+    /**
      * Gets the table name that is associated with the schema.
      * The table name should be defined using the TableAttribute at class level.
      *
      * @return string
      */
-    public static function getTableName(): string
+    public static function name(): string
     {
         $ref = new ReflectionClass(static::class);
         $attributes = $ref->getAttributes(TableAttribute::class);
@@ -77,9 +90,9 @@ abstract class TableSchema
      * @param string $column
      * @return CriteriaBuilder
      */
-    public function field(string $column): CriteriaBuilder
+    public static function field(string $column): CriteriaBuilder
     {
-        return field($this->getColumn($column));
+        return field(static::column($column));
     }
 
     /**
@@ -103,12 +116,32 @@ abstract class TableSchema
             ->map(fn ($item) => $this->aliasColumn($item->name));
     }
 
-    public static function aliases(?string $alias = null): Collection
+    public static function column(string $column): string
+    {
+        return static::getTableName() . '.' . $column;
+    }
+
+    public static function aliases(?string $alias = null): array
     {
         $schema = new static($alias);
         $ref = new ReflectionClass(static::class);
         return collect($ref->getProperties())
-            ->map(fn ($item) => $schema->aliasColumn($item->name));
+            ->map(fn ($item) => $schema->aliasColumn($item->name))
+            ->toArray();
+    }
+
+    public function collect(string|array|null $forget = 'id'): Collection
+    {
+        $ref = new ReflectionClass($this);
+        $data = collect($ref->getProperties())
+            ->mapWithKeys(
+                fn ($item) => [ $item->name => $item->getValue($this) ]
+            )
+        ;
+        if ($forget) {
+            return $data->forget($forget);
+        }
+        return $data;
     }
 
     /**
