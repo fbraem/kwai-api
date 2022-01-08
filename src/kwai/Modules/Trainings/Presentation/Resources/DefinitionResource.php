@@ -95,4 +95,14 @@ class DefinitionResource
     {
         return $this->definition->getTraceableTime()->getUpdatedAt()?->__toString();
     }
+
+    #[JSONAPI\Relationship(name: 'team')]
+    public function getTeam(): ?TeamResource
+    {
+        $team = $this->definition->getTeam();
+        if ($team) {
+            return new TeamResource($team);
+        }
+        return null;
+    }
 }
