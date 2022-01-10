@@ -12,6 +12,7 @@ use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
@@ -111,12 +112,15 @@ final class InviteUser
         $invitation = $this->userInvitationRepo->create(
             new UserInvitation(
                 emailAddress: new EmailAddress($command->email),
-                expiration: Timestamp::createFromDateTime(
-                    new DateTime("now +{$command->expiration} days")
+                expiration: new LocalTimestamp(
+                    Timestamp::createFromDateTime(
+                        new DateTime("now +{$command->expiration} days")
+                    ),
+                    'UTC'
                 ),
-                remark: $command->remark,
                 name: $command->name,
                 creator: $this->creator,
+                remark: $command->remark,
             )
         );
 
@@ -129,7 +133,6 @@ final class InviteUser
 
         /** @noinspection PhpUndefinedMethodInspection */
         $mail = new Mail(
-            tag: 'user.invitation',
             uuid: $invitation->getUniqueId(),
             sender: new Address(
                 new EmailAddress($command->sender_mail),
@@ -141,6 +144,7 @@ final class InviteUser
                 $this->template->renderPlainText($templateVars)
             ),
             creator: $this->creator,
+            tag: 'user.invitation',
             recipients: collect([
                 new Recipient(
                     type: RecipientType::TO(),
