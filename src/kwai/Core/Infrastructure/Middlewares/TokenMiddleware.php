@@ -17,7 +17,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Routing\RouteContext;
 use Tuupola\Middleware\JwtAuthentication;
 use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 
@@ -56,13 +55,8 @@ class TokenMiddleware implements MiddlewareInterface
                             if ($request->hasHeader('Authorization')) {
                                 return strlen($request->getHeader('Authorization')[0]) > 0;
                             }
-                            return false;
                         }
-                        //TODO: Remove following code when Slim dependency is
-                        // removed
-                        $routeContext = RouteContext::fromRequest($request);
-                        $route = $routeContext->getRoute();
-                        return !empty($route) && $route->getArgument('auth', 'false') === 'true';
+                        return false;
                     }
                 }
             ],
