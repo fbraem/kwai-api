@@ -17,7 +17,7 @@ $data = [
         'attributes' => [
             'email' => "jigor.kano" . strval(rand(1, 100)) . "@gmail.com",
             'name' => 'Jigoro Kano',
-            'remark' => 'A userinvitation created with a unittest'
+            'remark' => 'A user invitation created with a unittest'
         ]
     ]
 ];
@@ -27,7 +27,7 @@ it('can create an user invitation', function () use ($context, $data) {
 
     $request = new ServerRequest(
         'POST',
-        '/userss/invitations/',
+        '/users/invitations/',
         []
     );
     $request = $request
