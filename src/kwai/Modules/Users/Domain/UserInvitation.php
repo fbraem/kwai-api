@@ -69,7 +69,7 @@ class UserInvitation implements DomainEntity
      */
     public function isExpired(): bool
     {
-        return $this->expiration->isPast();
+        return $this->expiration->getTimestamp()->isPast();
     }
 
     /**

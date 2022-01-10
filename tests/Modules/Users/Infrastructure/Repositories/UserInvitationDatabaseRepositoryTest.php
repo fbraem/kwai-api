@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
@@ -36,7 +37,9 @@ it('can create an invitation', function () use ($context) {
 
         $invitation = new UserInvitation(
             emailAddress: new EmailAddress('gella.vandecaveye@kwai.com'),
-            expiration: Timestamp::createFromDateTime(new DateTime("now +14 days")),
+            expiration: new LocalTimestamp(
+                Timestamp::createFromDateTime(new DateTime("now +14 days")),
+                'Europe/Brussels'),
             name: 'Gella Vandecaveye',
             creator: new Creator(
                 id: $user->id(),
