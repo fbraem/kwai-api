@@ -163,7 +163,7 @@ final class Timestamp
      * @param  DateTime $time
      * @return Timestamp
      */
-    public static function createFromDateTime(DateTime $time)
+    public static function createFromDateTime(DateTime $time): self
     {
         return new self(CarbonImmutable::instance($time));
     }
