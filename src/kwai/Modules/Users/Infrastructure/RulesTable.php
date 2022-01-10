@@ -11,10 +11,10 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class RulesTableSchema
+ * Class RulesTable
  */
 #[TableAttribute(name: 'rules')]
-class RulesTableSchema extends TableSchema
+class RulesTable extends TableSchema
 {
     public ?int $id = null;
     public string $name;

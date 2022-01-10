@@ -130,14 +130,14 @@ abstract class TableSchema
             ->toArray();
     }
 
-    public function collect(string|array|null $forget = 'id'): Collection
-    {
+    public function collect(string|array|null $forget = 'id'): Collection {
         $ref = new ReflectionClass($this);
         $data = collect($ref->getProperties())
             ->mapWithKeys(
                 fn ($item) => [ $item->name => $item->getValue($this) ]
             )
         ;
+
         if ($forget) {
             return $data->forget($forget);
         }

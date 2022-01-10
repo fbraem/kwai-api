@@ -14,9 +14,9 @@ use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenDTO;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenDTO;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountDTO;
 use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
-use Kwai\Modules\Users\Infrastructure\Tables;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\RefreshTokenQuery;
 use function Latitude\QueryBuilder\on;
 
@@ -40,10 +40,10 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
                 )
             )
             ->join(
-                UsersTableSchema::name(),
+                UsersTable::name(),
                 on(
                     AccessTokenTable::column('user_id'),
-                    UsersTableSchema::column('id')
+                    UsersTable::column('id')
                 )
             )
         ;
@@ -57,7 +57,7 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
         return [
             ...RefreshTokenTable::aliases(),
             ...AccessTokenTable::aliases(),
-            ...UsersTableSchema::aliases()
+            ...UsersTable::aliases()
         ];
     }
 
@@ -83,7 +83,6 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
     {
         $rows = parent::walk($limit, $offset);
 
-        /** @var Collection<RefreshTokenDTO> $refreshTokens */
         $refreshTokens = new Collection([]);
         foreach ($rows as $row) {
             $refreshToken = RefreshTokenTable::createFromRow($row);
@@ -93,7 +92,7 @@ class RefreshTokenDatabaseQuery extends DatabaseQuery implements RefreshTokenQue
                     $refreshToken,
                     new AccessTokenDTO(
                         AccessTokenTable::createFromRow($row),
-                        UsersTableSchema::createFromRow($row)
+                        new UserAccountDTO(UsersTable::createFromRow($row))
                     )
                 )
             );

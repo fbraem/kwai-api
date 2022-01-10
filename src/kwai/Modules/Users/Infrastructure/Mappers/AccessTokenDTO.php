@@ -13,7 +13,7 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 final class AccessTokenDTO
 {
@@ -23,22 +23,37 @@ final class AccessTokenDTO
     ) {
     }
 
+    /**
+     * Creates an AccessToken domain object from a database row.
+     *
+     * @return AccessToken
+     */
     public function create(): AccessToken
     {
         return new AccessToken(
             identifier: new TokenIdentifier($this->accessToken->identifier),
             expiration: Timestamp::createFromString($this->accessToken->expiration),
+            account: $this->userAccount->createEntity(),
             revoked: $this->accessToken->revoked === 1,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->accessToken->created_at),
                 $this->accessToken->updated_at
                     ? Timestamp::createFromString($this->accessToken->updated_at)
                     : null
-            ),
-            account: new Entity(
-                (int) $this->userTable->id,
-                UserAccountDTO::toDomain($this->userTable)
             )
+        );
+    }
+
+    /**
+     * Creates an AccessToken entity from a database row.
+     *
+     * @return Entity<AccessToken>
+     */
+    public function createEntity(): Entity
+    {
+        return new Entity(
+            $this->accessToken->id,
+            $this->create()
         );
     }
 
@@ -48,7 +63,7 @@ final class AccessTokenDTO
      * @param AccessToken $accessToken
      * @return $this
      */
-    public function persist(AccessToken $accessToken): static
+    public function persist(AccessToken $accessToken): AccessTokenDTO
     {
         $this->accessToken->identifier = (string) $accessToken->getIdentifier();
         $this->accessToken->expiration = (string) $accessToken->getExpiration();
@@ -67,7 +82,7 @@ final class AccessTokenDTO
      * @param Entity<AccessToken> $accessToken
      * @return $this
      */
-    public function persistEntity(Entity $accessToken): static
+    public function persistEntity(Entity $accessToken): AccessTokenDTO
     {
         $this->accessToken->id = $accessToken->id();
         return $this->persist($accessToken->domain());

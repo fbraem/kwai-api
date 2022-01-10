@@ -128,7 +128,7 @@ final class InviteUser
         $templateVars = [
             'uuid' => $invitation->getUniqueId(),
             'name' => $command->name,
-            'expires' => $invitation->getExpiration()->diffInDays()
+            'expires' => $invitation->getExpiration()->getTimestamp()->diffInDays()
         ];
 
         /** @noinspection PhpUndefinedMethodInspection */

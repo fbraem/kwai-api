@@ -17,7 +17,6 @@ use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenDTO;
 use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
-use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\RefreshTokenQuery;
 use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use function Latitude\QueryBuilder\field;
@@ -33,7 +32,7 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
     {
         parent::__construct(
             $db,
-            fn($item) => $item->toDomain()
+            fn(RefreshTokenDTO $item) => $item->createEntity()
         );
     }
 
@@ -68,7 +67,12 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
     public function create(RefreshToken $token): Entity
     {
         $dto = new RefreshTokenDTO();
-        $data = $dto->toPersistence($token)->collect();
+        $data = $dto
+            ->persist($token)
+            ->refreshToken
+            ->collect()
+            ->forget('id')
+        ;
 
         $query = $this->db->createQueryFactory()
             ->insert(RefreshTokenTable::name())
@@ -93,10 +97,13 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
     public function update(Entity $token): void
     {
         $token->getTraceableTime()->markUpdated();
-        $dto = new RefreshTokenDTO();
-        $dto->toPersistence($token->domain());
+        $data = (new RefreshTokenDTO())
+            ->persistEntity($token)
+            ->refreshToken
+            ->collect()
+            ->forget('id')
+        ;
 
-        $data = $dto->refreshToken->collect();
         $query = $this->db->createQueryFactory()
             ->update(
                 RefreshTokenTable::name(),

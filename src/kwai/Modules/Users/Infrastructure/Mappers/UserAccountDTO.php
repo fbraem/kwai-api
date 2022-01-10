@@ -12,12 +12,12 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 final class UserAccountDTO
 {
     public function __construct(
-        public UsersTableSchema $user = new UsersTableSchema()
+        public UsersTable $user = new UsersTable()
     ) {
     }
 
@@ -30,13 +30,13 @@ final class UserAccountDTO
     {
         return new UserAccount(
             user: (new UserDTO($this->user))->create(),
+            password: new Password($this->user->password),
             lastLogin: $this->user->last_login
                 ? Timestamp::createFromString($this->user->last_login)
                 : null,
             lastUnsuccessfulLogin: $this->user->last_unsuccessful_login
                 ? Timestamp::createFromString($this->user->last_unsuccessful_login)
                 : null,
-            password: new Password($this->user->password),
             revoked: $this->user->revoked === 1
         );
     }

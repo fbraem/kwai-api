@@ -83,11 +83,11 @@ class CreateUserInvitationAction extends Action
     /**
      * @param Request  $request
      * @param Response $response
-     * @param          $args
+     * @param array    $args
      * @return Response
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __invoke(Request $request, Response $response, $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         try {
             $command = $this->createCommand($request->getParsedBody());

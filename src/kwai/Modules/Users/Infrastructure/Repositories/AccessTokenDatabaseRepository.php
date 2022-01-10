@@ -11,12 +11,10 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Core\Infrastructure\Repositories\Query;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenDTO;
-use Kwai\Modules\Users\Infrastructure\Tables;
 use Kwai\Modules\Users\Repositories\AccessTokenQuery;
 use Kwai\Modules\Users\Repositories\AccessTokenRepository;
 use function Latitude\QueryBuilder\field;
@@ -37,7 +35,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
     {
         parent::__construct(
             $db,
-            fn ($item) => (new AccessTokenDTO($item))->toDomain()
+            fn (AccessTokenDTO $item) => $item->createEntity()
         );
     }
 
@@ -51,6 +49,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
             ->persist($token)
             ->accessToken
             ->collect()
+            ->forget('id')
         ;
 
         $query = $this->db->createQueryFactory()
@@ -81,6 +80,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
             ->persistEntity($token)
             ->accessToken
             ->collect()
+            ->forget('id')
         ;
 
         $query = $this->db->createQueryFactory()

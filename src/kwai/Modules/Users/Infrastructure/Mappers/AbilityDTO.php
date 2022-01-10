@@ -12,17 +12,17 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\Ability;
-use Kwai\Modules\Users\Infrastructure\AbilitiesTableSchema;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
 
 final class AbilityDTO
 {
     /**
-     * @param AbilitiesTableSchema $ability
-     * @param Collection<RuleDTO>  $rules
+     * @param AbilitiesTable      $ability
+     * @param Collection<RuleDTO> $rules
      */
     public function __construct(
-        public AbilitiesTableSchema $ability = new AbilitiesTableSchema(),
-        public Collection $rules = new Collection()
+        public AbilitiesTable $ability = new AbilitiesTable(),
+        public Collection     $rules = new Collection()
     ) {
     }
 
@@ -35,16 +35,16 @@ final class AbilityDTO
     {
         return new Ability(
             name: $this->ability->name,
+            remark: $this->ability->remark,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->ability->created_at),
                 $this->ability->updated_at
                     ? Timestamp::createFromString($this->ability->updated_at)
                     : null
             ),
-            remark: $this->ability->remark,
             rules: $this->rules
                 ->map(
-                    fn ($ruleDto) => $ruleDto->createEntity()
+                    fn (RuleDTO $ruleDto) => $ruleDto->createEntity()
                 )
         );
     }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Modules
+ * @subpackage Users
  */
 declare(strict_types=1);
 
@@ -10,12 +10,15 @@ namespace Kwai\Modules\Users\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Users\Infrastructure\AbilitiesTableSchema;
-use Kwai\Modules\Users\Infrastructure\RulesTableSchema;
-use Kwai\Modules\Users\Infrastructure\Tables;
-use Kwai\Modules\Users\Infrastructure\UserAbilitiesTableSchema;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
+use Kwai\Modules\Users\Infrastructure\Mappers\AbilityDTO;
+use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
+use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
+use Kwai\Modules\Users\Infrastructure\RulesTable;
+use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
+use Kwai\Modules\Users\Infrastructure\UserAbilitiesTable;
 use Kwai\Modules\Users\Repositories\UserAbilityQuery;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -28,7 +31,7 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     public function __construct(Connection $db)
     {
         $this->abilityQuery = new AbilityDatabaseQuery($db);
-        parent::__construct($db, UserAbilitiesTableSchema::column('user_id'));
+        parent::__construct($db, UserAbilitiesTable::column('user_id'));
     }
 
     /**
@@ -38,10 +41,10 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     {
         $this->query = $this->abilityQuery->query;
         $this->query->join(
-            (string) UserAbilitiesTableSchema::name(),
+            (string) UserAbilitiesTable::name(),
             on(
-                AbilitiesTableSchema::column('id'),
-                UserAbilitiesTableSchema::column('ability_id')
+                AbilitiesTable::column('id'),
+                UserAbilitiesTable::column('ability_id')
             )
         );
     }
@@ -52,7 +55,7 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     protected function getColumns(): array
     {
         return [
-            ...UserAbilitiesTableSchema::aliases(),
+            ...UserAbilitiesTable::aliases(),
             ...$this->abilityQuery->getColumns()
         ];
     }
@@ -60,11 +63,17 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
     public function filterByUser(int ...$userIds): UserAbilityQuery
     {
         $this->query->andWhere(
-            UserAbilitiesTableSchema::field('user_id')->in(...$userIds)
+            UserAbilitiesTable::field('user_id')->in(...$userIds)
         );
         return $this;
     }
 
+    /**
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection<AbilityDTO>
+     * @throws QueryException
+     */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
@@ -72,9 +81,8 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
         $users = new Collection();
 
         foreach ($rows as $row) {
-            $user_id = UserAbilitiesTableSchema::createFromRow($row)->user_id;
-            $ability = AbilitiesTableSchema::createFromRow($row);
-            $rule = RulesTableSchema::createFromRow($row);
+            $user_id = UserAbilitiesTable::createFromRow($row)->user_id;
+            $ability = AbilitiesTable::createFromRow($row);
 
             $userAbilities = $users->when(
                 !$users->has($user_id),
@@ -82,13 +90,18 @@ class UserAbilityDatabaseQuery extends DatabaseQuery implements UserAbilityQuery
             )->get($user_id);
 
             if (!$userAbilities->has($ability->id)) {
-                $ability->put('rules', new Collection());
-                $userAbilities->put($ability->id, $ability);
+                $userAbilities->put($ability->id, new AbilityDTO($ability));
             }
+
+            $ruleDTO = new RuleDTO(
+                rule: RulesTable::createFromRow($row),
+                action: RuleActionsTable::createFromRow($row),
+                subject: RuleSubjectsTable::createFromRow($row)
+            );
             $userAbilities
                 ->get($ability->id)
-                ->get('rules')
-                ->push($rule)
+                ->rules
+                ->push($ruleDTO)
             ;
         }
 

@@ -26,39 +26,47 @@ final class RefreshTokenDTO
     }
 
     /**
-     * Maps the RefreshToken table to the RefreshToken entity
+     * Creates a RefreshToken domain object from a database row.
+     *
      * @return RefreshToken
      */
-    public function toDomain(): RefreshToken
+    public function create(): RefreshToken
     {
         return new RefreshToken(
             identifier: new TokenIdentifier($this->refreshToken->identifier),
             expiration: Timestamp::createFromString($this->refreshToken->expiration),
+            accessToken: $this->accessTokenDTO->createEntity(),
             revoked: $this->refreshToken->revoked === 1,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->refreshToken->created_at),
                 $this->refreshToken->updated_at
                     ? Timestamp::createFromString($this->refreshToken->updated_at)
                     : null
-            ),
-            accessToken: new Entity(
-                $this->refreshToken->access_token_id,
-                $this->accessTokenDTO->toDomain()
             )
         );
     }
 
     /**
-     * Maps the RefreshToken entity to the RefreshToken table.
+     * Creates a RefreshToken entity from a database row.
      *
-     * @param Entity<RefreshToken>|RefreshToken $refreshToken
-     * @return RefreshTokenDTO The refreshtoken table data.
+     * @return Entity
      */
-    public function toPersistence(Entity|RefreshToken $refreshToken): self
+    public function createEntity(): Entity
     {
-        if (is_a($refreshToken, Entity::class)) {
-            $this->refreshToken->id = $refreshToken->id();
-        }
+        return new Entity(
+            $this->refreshToken->id,
+            $this->create()
+        );
+    }
+
+    /**
+     * Persists a RefreshToken domain object to a database row.
+     *
+     * @param RefreshToken $refreshToken
+     * @return RefreshTokenDTO
+     */
+    public function persist(RefreshToken $refreshToken): RefreshTokenDTO
+    {
         $this->refreshToken->identifier = (string) $refreshToken->getIdentifier();
         $this->refreshToken->expiration = (string) $refreshToken->getExpiration();
         $this->refreshToken->revoked = $refreshToken->isRevoked() ? 1 : 0;
@@ -67,9 +75,18 @@ final class RefreshTokenDTO
             $this->refreshToken->updated_at = (string)$refreshToken->getTraceableTime()->getUpdatedAt();
         }
         $this->refreshToken->access_token_id = $refreshToken->getAccessToken()->id();
-
-        $this->accessTokenDTO->toPersistence($refreshToken->getAccessToken());
-
         return $this;
+    }
+
+    /**
+     * Persists a RefreshToken entity to a database row.
+     *
+     * @param Entity<RefreshToken> $refreshToken
+     * @return $this
+     */
+    public function persistEntity(Entity $refreshToken): RefreshTokenDTO
+    {
+        $this->refreshToken->id = $refreshToken->id();
+        return $this->persist($refreshToken->domain());
     }
 }

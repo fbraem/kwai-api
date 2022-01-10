@@ -17,7 +17,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 /**
  * Class UserInvitationDTO
@@ -26,7 +26,7 @@ final class UserInvitationDTO
 {
     public function __construct(
         public UserInvitationsTable $userInvitation = new UserInvitationsTable(),
-        public UsersTableSchema $user = new UsersTableSchema()
+        public UsersTable $user = new UsersTable()
     ) {
     }
 
@@ -88,7 +88,7 @@ final class UserInvitationDTO
     {
         $this->userInvitation->uuid = (string) $invitation->getUniqueId();
         $this->userInvitation->email = (string) $invitation->getEmailAddress();
-        $this->userInvitation->expired_at = (string) $invitation->getExpiration();
+        $this->userInvitation->expired_at = (string) $invitation->getExpiration()->getTimestamp();
         $this->userInvitation->expired_at_timezone = $invitation->getExpiration()->getTimezone();
         $this->userInvitation->confirmed_at = $invitation->isConfirmed()
             ? (string) $invitation->getConfirmation()

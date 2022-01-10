@@ -12,9 +12,11 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Core\Infrastructure\Database\QueryException;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationDTO;
+use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserInvitationQuery;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -27,12 +29,12 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
      */
     protected function initQuery(): void
     {
-        $this->query->from(Tables::USER_INVITATIONS->value)
+        $this->query->from(UserInvitationsTable::name())
             ->join(
-                Tables::USERS->value,
+                UsersTable::name(),
                 on(
-                    Tables::USER_INVITATIONS->column('user_id'),
-                    Tables::USERS->column('id')
+                    UserInvitationsTable::column('user_id'),
+                    UsersTable::column('id')
                 )
             );
     }
@@ -43,24 +45,8 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
     protected function getColumns(): array
     {
         return [
-            ...Tables::USER_INVITATIONS->aliases(
-                'id',
-                'email',
-                'name',
-                'uuid',
-                'expired_at',
-                'expired_at_timezone',
-                'remark',
-                'user_id',
-                'created_at',
-                'updated_at',
-                'confirmed_at'
-            ),
-            ...Tables::USERS->aliases(
-                'id',
-                'first_name',
-                'last_name'
-            )
+            ...UserInvitationsTable::aliases(),
+            ...UsersTable::aliases()
         ];
     }
 
@@ -70,7 +56,7 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
     public function filterByUniqueId(UniqueId $uuid): UserInvitationQuery
     {
         $this->query->andWhere(
-            Tables::USER_INVITATIONS->field('uuid')->eq($uuid)
+            UserInvitationsTable::field('uuid')->eq($uuid)
         );
         return $this;
     }
@@ -81,7 +67,7 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
     public function filterByEmail(EmailAddress $emailAddress): UserInvitationQuery
     {
         $this->query->andWhere(
-            Tables::USER_INVITATIONS->field('email')->eq($emailAddress)
+            UserInvitationsTable::field('email')->eq($emailAddress)
         );
         return $this;
     }
@@ -92,13 +78,16 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
     public function filterActive(Timestamp $timestamp): UserInvitationQuery
     {
         $this->query->andWhere(
-            Tables::USER_INVITATIONS->field('expired_at')->gt((string) $timestamp)
+            UserInvitationsTable::field('expired_at')->gt((string) $timestamp)
         );
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection<UserInvitationDTO>
+     * @throws QueryException
      */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
@@ -106,15 +95,11 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
 
         $invitations = new Collection();
         foreach ($rows as $row) {
-            $invitation = Tables::USER_INVITATIONS->collect($row);
-            $invitation->put(
-                'creator',
-                Tables::USERS->collect($row)
+            $invitation = new UserInvitationDTO(
+            UserInvitationsTable::createFromRow($row),
+            UsersTable::createFromRow($row)
             );
-            $invitations->put(
-                $invitation->get('id'),
-                $invitation
-            );
+            $invitations->push($invitation);
         }
 
         return $invitations;

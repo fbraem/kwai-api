@@ -19,9 +19,8 @@ class RefreshTokenTable extends TableSchema
     public ?int $id = null;
     public string $identifier;
     public ?int $access_token_id;
-    public int $user_id;
     public string $expiration;
     public int $revoked;
     public string $created_at;
-    public string $updated_at;
+    public ?string $updated_at = null;
 }

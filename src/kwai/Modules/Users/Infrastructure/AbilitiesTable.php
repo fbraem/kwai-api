@@ -11,14 +11,14 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class RuleActionsTableSchema
+ * Class AbilitiesTable
  */
-#[TableAttribute(name: 'rule_actions')]
-class RuleActionsTableSchema extends TableSchema
+#[TableAttribute(name: 'abilities')]
+class AbilitiesTable extends TableSchema
 {
     public ?int $id = null;
     public string $name;
     public ?string $remark = null;
     public string $created_at;
-    public ?string $updated_at;
+    public ?string $updated_at = null;
 }

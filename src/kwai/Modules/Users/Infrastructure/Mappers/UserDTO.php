@@ -16,7 +16,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 /**
  * Mapper for the entity User
@@ -24,11 +24,11 @@ use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
 final class UserDTO
 {
     /**
-     * @param UsersTableSchema       $user
+     * @param UsersTable             $user
      * @param Collection<AbilityDTO> $abilities
      */
     public function __construct(
-        public UsersTableSchema $user = new UsersTableSchema(),
+        public UsersTable $user = new UsersTable(),
         public Collection $abilities = new Collection()
     ) {
     }
@@ -43,21 +43,21 @@ final class UserDTO
         return new User(
             uuid: new UniqueId($this->user->uuid),
             emailAddress: new EmailAddress($this->user->email),
+            username: new Name(
+                $this->user->first_name,
+                $this->user->last_name
+            ),
             abilities: $this->abilities->map(
                 fn(AbilityDTO $dto) => $dto->createEntity()
             ),
+            remark: $this->user->remark,
+            member: $this->user->member_id,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->user->created_at),
                 $this->user->updated_at
                     ? Timestamp::createFromString($this->user->updated_at)
                     : null
-            ),
-            remark: $this->user->remark,
-            username: new Name(
-                $this->user->first_name,
-                $this->user->last_name
-            ),
-            member: $this->user->member_id
+            )
         );
     }
 
@@ -80,7 +80,7 @@ final class UserDTO
      * @param User $user
      * @return $this
      */
-    public function persist(User $user): static
+    public function persist(User $user): UserDTO
     {
         $this->user->uuid = (string) $user->getUuid();
         $this->user->email = (string) $user->getEmailAddress();
@@ -98,7 +98,7 @@ final class UserDTO
         return $this;
     }
 
-    public function persistEntity(Entity $user): static
+    public function persistEntity(Entity $user): UserDTO
     {
         $this->user->id = $user->id();
         return $this->persist($user->domain());

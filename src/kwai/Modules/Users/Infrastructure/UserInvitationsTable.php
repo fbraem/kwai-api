@@ -7,9 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure;
 
+use Kwai\Core\Infrastructure\Database\TableAttribute;
+
 /**
  * Class UserInvitationsTable
  */
+#[TableAttribute(name:'user_invitations')]
 class UserInvitationsTable extends \Kwai\Core\Infrastructure\Database\TableSchema
 {
     public ?int $id = null;

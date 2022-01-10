@@ -16,7 +16,8 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\UserAccount;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountDTO;
-use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\UserQuery;
 use function Latitude\QueryBuilder\alias;
@@ -30,9 +31,12 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
 {
     public function __construct(Connection $db)
     {
+        // TODO: check if this can be handled in a better way.
+        //  UserQuery creates UserDTO objects, replace them with a special
+        //  one: UserAccountDTO
         parent::__construct(
             $db,
-        fn($item) => UserAccountDTO::toDomain($item)
+        fn(UserDTO $item) => (new UserAccountDTO($item->user))->createEntity()
         );
     }
 
@@ -56,9 +60,14 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function update(Entity $account): void
     {
+        $data = (new UserAccountDTO())->persistEntity($account)
+            ->user
+            ->collect()
+            ->forget('id')
+        ;
         $query = $this->db->createQueryFactory()
-            ->update(Tables::USERS->value)
-            ->set(UserAccountDTO::toPersistence($account->domain())->toArray())
+            ->update(UsersTable::name())
+            ->set($data->toArray())
             ->where(field('id')->eq($account->id()))
         ;
         try {
@@ -73,10 +82,14 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
      */
     public function create(UserAccount $account): Entity
     {
-        $data = UserAccountDTO::toPersistence($account);
+        $data = (new UserAccountDTO())->persist($account)
+            ->user
+            ->collect()
+            ->forget('id')
+        ;
 
         $query = $this->db->createQueryFactory()
-            ->insert(Tables::USERS->value)
+            ->insert(UsersTable::name())
             ->columns(
                 ... $data->keys()
             )
@@ -103,12 +116,14 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
         $query = $this->db->createQueryFactory()
             ->select(
                 alias(
-                    func('COUNT', Tables::USERS->column('id')),
+                    func('COUNT', UsersTable::column('id')),
                     'c'
                 )
             )
-            ->from(Tables::USERS->value)
-            ->where(Tables::USERS->field('email')->eq(strval($email)))
+            ->from(UsersTable::name())
+            ->where(
+                UsersTable::field('email')->eq((string) $email)
+            )
         ;
         try {
             $count = collect($this->db->execute($query)->fetch());

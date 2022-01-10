@@ -16,8 +16,8 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\AbilityNotFoundException;
 use Kwai\Modules\Users\Domain\Ability;
-use Kwai\Modules\Users\Infrastructure\AbilitiesTableSchema;
-use Kwai\Modules\Users\Infrastructure\AbilityRulesTableSchema;
+use Kwai\Modules\Users\Infrastructure\AbilitiesTable;
+use Kwai\Modules\Users\Infrastructure\AbilityRulesTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AbilityDTO;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
 use Kwai\Modules\Users\Repositories\AbilityQuery;
@@ -68,9 +68,12 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $data = $dto->ability->collect();
+        $data = $dto->ability
+            ->collect()
+            ->forget('id')
+        ;
         $query = $this->db->createQueryFactory()
-            ->insert(AbilitiesTableSchema::name())
+            ->insert(AbilitiesTable::name())
             ->columns(... $data->keys())
             ->values(...$data->values())
         ;
@@ -124,7 +127,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             )
         ;
         $query = $this->db->createQueryFactory()
-            ->insert(AbilityRulesTableSchema::name())
+            ->insert(AbilityRulesTable::name())
             ->columns(...$rules->first()->keys())
         ;
         $rules->each(
@@ -146,11 +149,14 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
         }
 
         $dto = (new AbilityDTO())->persist($ability->domain());
-        $data = $dto->ability->collect();
+        $data = $dto->ability
+            ->collect()
+            ->forget('id')
+        ;
 
         $queryFactory = $this->db->createQueryFactory();
         $query = $queryFactory
-            ->update(AbilitiesTableSchema::name())
+            ->update(AbilitiesTable::name())
             ->set($data->toArray())
             ->where(field('id')->eq($ability->id()))
         ;
@@ -160,7 +166,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
             // First delete all rules
             $this->db->execute(
                 $queryFactory
-                  ->delete(AbilityRulesTableSchema::name())
+                  ->delete(AbilityRulesTable::name())
                   ->where(field('ability_id')->eq($ability->id()))
             );
             // Insert the rules again

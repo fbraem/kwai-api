@@ -11,10 +11,10 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class UsersTableSchema
+ * Class UsersTable
  */
 #[TableAttribute(name: 'users')]
-class UsersTableSchema extends TableSchema
+class UsersTable extends TableSchema
 {
     public ?int $id = null;
     public string $email;

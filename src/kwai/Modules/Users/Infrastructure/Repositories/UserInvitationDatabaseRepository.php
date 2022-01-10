@@ -16,7 +16,7 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationDTO;
-use Kwai\Modules\Users\Infrastructure\Tables;
+use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
 use Kwai\Modules\Users\Repositories\UserInvitationQuery;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 use function Latitude\QueryBuilder\field;
@@ -35,9 +35,10 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     {
         parent::__construct(
             $db,
-            fn($item) => UserInvitationDTO::toDomain($item)
+            fn(UserInvitationDTO $item) => $item->createEntity()
         );
     }
+
     /**
      * @inheritdoc
      */
@@ -60,10 +61,14 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
      */
     public function create(UserInvitation $invitation): Entity
     {
-        $data = UserInvitationDTO::toPersistence($invitation);
+        $data = (new UserInvitationDTO())
+            ->persist($invitation)
+            ->userInvitation
+            ->collect()
+            ->forget('id');
 
         $query = $this->db->createQueryFactory()
-            ->insert(Tables::USER_INVITATIONS->value)
+            ->insert(UserInvitationsTable::name())
             ->columns(
                 ... $data->keys()
             )
@@ -89,10 +94,15 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     public function update(Entity $invitation): void
     {
         $invitation->getTraceableTime()->markUpdated();
-        $data = UserInvitationDTO::toPersistence($invitation->domain());
+        $data = (new UserInvitationDTO())
+            ->persistEntity($invitation)
+            ->userInvitation
+            ->collect()
+            ->forget('id');
+
         $query = $this->db->createQueryFactory()
             ->update(
-                Tables::USER_INVITATIONS->value,
+                UserInvitationsTable::name(),
                 $data->toArray()
             )
             ->where(field('id')->eq($invitation->id()))

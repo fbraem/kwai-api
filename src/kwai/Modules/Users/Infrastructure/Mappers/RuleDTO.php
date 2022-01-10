@@ -12,16 +12,16 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\Rule;
-use Kwai\Modules\Users\Infrastructure\RuleActionsTableSchema;
-use Kwai\Modules\Users\Infrastructure\RulesTableSchema;
-use Kwai\Modules\Users\Infrastructure\RuleSubjectsTableSchema;
+use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
+use Kwai\Modules\Users\Infrastructure\RulesTable;
+use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 
 final class RuleDTO
 {
     public function __construct(
-        public RulesTableSchema $rule = new RulesTableSchema(),
-        public RuleActionsTableSchema $action = new RuleActionsTableSchema(),
-        public RuleSubjectsTableSchema $subject = new RuleSubjectsTableSchema()
+        public RulesTable              $rule = new RulesTable(),
+        public RuleActionsTable        $action = new RuleActionsTable(),
+        public RuleSubjectsTable $subject = new RuleSubjectsTable()
     ) {
     }
 
@@ -34,20 +34,20 @@ final class RuleDTO
     {
         return new Rule(
             name: $this->rule->name,
-            action: $this->action->name,
             subject: $this->subject->name,
+            action: $this->action->name,
+            remark: $this->rule->remark,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->rule->created_at),
                 $this->rule->updated_at
                 ? Timestamp::createFromString($this->rule->updated_at)
                 : null
-            ),
-            remark: $this->rule->remark
+            )
         );
     }
 
     /**
-     * Create a Rule entity from a database row
+     * Create a Rule entity from a database row.
      *
      * @return Entity<Rule>
      */

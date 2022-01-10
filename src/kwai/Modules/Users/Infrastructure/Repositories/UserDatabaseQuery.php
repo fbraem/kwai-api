@@ -14,7 +14,7 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserQuery;
 
 /**
@@ -26,7 +26,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
     {
         parent::__construct(
             $db,
-            UsersTableSchema::column('id')
+            UsersTable::column('id')
         );
     }
 
@@ -35,7 +35,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     protected function initQuery(): void
     {
-        $this->query->from(UsersTableSchema::getTableName());
+        $this->query->from(UsersTable::name());
     }
 
     /**
@@ -43,7 +43,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
      */
     protected function getColumns(): array
     {
-        return UsersTableSchema::aliases();
+        return UsersTable::aliases();
     }
 
     /**
@@ -52,7 +52,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
     public function filterById(int $id): UserQuery
     {
         $this->query->andWhere(
-            UsersTableSchema::field('id')->eq($id)
+            UsersTable::field('id')->eq($id)
         );
         return $this;
     }
@@ -63,7 +63,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
     public function filterByUUID(UniqueId $uuid): UserQuery
     {
         $this->query->andWhere(
-            UsersTableSchema::field('uuid')->eq($uuid)
+            UsersTable::field('uuid')->eq($uuid)
         );
         return $this;
     }
@@ -74,7 +74,7 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
     public function filterByEmail(EmailAddress $email): UserQuery
     {
         $this->query->andWhere(
-            UsersTableSchema::field('email')->eq($email)
+            UsersTable::field('email')->eq($email)
         );
         return $this;
     }
@@ -89,11 +89,10 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
     {
         $rows = parent::walk($limit, $offset);
 
-        /** @var Collection<UserDTO> $users */
         $users = new Collection();
 
         foreach ($rows as $row) {
-            $user = UsersTableSchema::createFromRow($row);
+            $user = UsersTable::createFromRow($row);
             $users->put(
                 $user->id,
                 new UserDTO($user)
@@ -111,10 +110,9 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
         $abilityQuery->filterByUser(...$userIds);
         $abilities = $abilityQuery->execute();
         foreach ($userIds as $userId) {
-            $users[$userId]->abilities->put(
-                'abilities',
-                $abilities->get($userId, new Collection())
-            );
+            if ($abilities->has($userId)) {
+                $users[$userId]->abilities = $abilities->get($userId);
+            }
         }
 
         return $users;

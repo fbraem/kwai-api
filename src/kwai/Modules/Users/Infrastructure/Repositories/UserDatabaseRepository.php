@@ -18,8 +18,8 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
-use Kwai\Modules\Users\Infrastructure\Tables;
-use Kwai\Modules\Users\Infrastructure\UsersTableSchema;
+use Kwai\Modules\Users\Infrastructure\UserAbilitiesTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserQuery;
 use Kwai\Modules\Users\Repositories\UserRepository;
 use function Latitude\QueryBuilder\field;
@@ -92,7 +92,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
 
         $queryFactory = $this->db->createQueryFactory();
         $query = $queryFactory
-            ->update(UsersTableSchema::name())
+            ->update(UsersTable::name())
             ->set($data->toArray())
             ->where(field('id')->eq($user->id()))
         ;
@@ -102,9 +102,12 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             // Update abilities
             // First delete all abilities
             $this->db->execute(
-                $queryFactory
-                    ->delete(Tables::USER_ABILITIES->value)
-                ->where(field('user_id')->eq($user->id()))
+            $queryFactory
+                ->delete(UserAbilitiesTable::name())
+                ->where(
+                    UserAbilitiesTable::field('user_id')
+                        ->eq($user->id())
+                )
             );
             $this->insertAbilities($user);
         } catch (QueryException $e) {
@@ -154,7 +157,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         ;
 
         $query = $this->db->createQueryFactory()
-            ->insert(Tables::USER_ABILITIES->value)
+            ->insert(UserAbilitiesTable::name())
             ->columns(... $abilities->first()->keys())
         ;
         $abilities->each(

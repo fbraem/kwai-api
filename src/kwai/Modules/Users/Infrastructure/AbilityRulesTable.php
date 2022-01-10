@@ -11,11 +11,13 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class UserAbilitiesTableSchema
+ * Class AbilityRulesTable
  */
-#[TableAttribute(name: 'user_abilities')]
-class UserAbilitiesTableSchema extends TableSchema
+#[TableAttribute(name: 'ability_rules')]
+class AbilityRulesTable extends TableSchema
 {
-    public ?int $user_id = null;
     public ?int $ability_id = null;
+    public ?int $rule_id = null;
+    public ?string $created_at = null;
+    public ?string $updated_at = null;
 }
