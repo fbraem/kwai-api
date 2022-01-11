@@ -11,19 +11,22 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class MembersTableSchema
+ * Class PersonsTable
  */
-#[TableAttribute(name: 'sport_judo_members')]
-class MembersTableSchema extends TableSchema
+#[TableAttribute(name: 'persons')]
+class PersonsTable extends TableSchema
 {
     public ?int $id = null;
-    public string $license;
-    public string $license_end_date;
-    public int $person_id;
+    public string $lastname;
+    public string $firstname;
+    public int $gender;
+    public int $active = 1;
+    public string $birthdate;
     public ?string $remark = null;
-    public int $competition = 0;
+    public ?int $user_id = null;
+    public ?int $contact_id = null;
+    public ?string $code = null;
+    public int $nationality_id;
     public string $created_at;
     public ?string $updated_at = null;
-    public ?int $import_id = null;
-    public int $active = 1;
 }

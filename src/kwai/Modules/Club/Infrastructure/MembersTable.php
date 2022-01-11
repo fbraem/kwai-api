@@ -10,15 +10,20 @@ namespace Kwai\Modules\Club\Infrastructure;
 use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
-#[TableAttribute(name: 'teams')]
-class TeamsTableSchema extends TableSchema
+/**
+ * Class MembersTable
+ */
+#[TableAttribute(name: 'sport_judo_members')]
+class MembersTable extends TableSchema
 {
     public ?int $id = null;
-    public string $name;
-    public ?string $season_id = null;
-    public ?int $team_category_id = null;
-    public int $active = 1;
+    public string $license;
+    public string $license_end_date;
+    public int $person_id;
     public ?string $remark = null;
+    public int $competition = 0;
     public string $created_at;
     public ?string $updated_at = null;
+    public ?int $import_id = null;
+    public int $active = 1;
 }

@@ -11,7 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Modules\Club\Domain\Exceptions\MemberNotFoundException;
-use Kwai\Modules\Club\Infrastructure\Mappers\MemberMapper;
+use Kwai\Modules\Club\Infrastructure\Mappers\MemberDTO;
 use Kwai\Modules\Club\Repositories\MemberRepository;
 
 /**
@@ -23,7 +23,7 @@ class MemberDatabaseRepository extends DatabaseRepository implements MemberRepos
     {
         parent::__construct(
             $db,
-            fn ($item) => MemberMapper::toDomain($item)
+            fn (MemberDTO $item) => $item->createEntity()
         );
     }
 

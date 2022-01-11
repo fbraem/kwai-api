@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 use Kwai\Modules\Trainings\Domain\Team;
 
 /**
- * Class TeamMapper
+ * Class TeamDTO
  */
 class TeamMapper
 {

@@ -14,5 +14,11 @@ use Kwai\Core\Infrastructure\Repositories\Query;
  */
 interface TeamQuery extends Query
 {
+    /**
+     * Filter on team id.
+     *
+     * @param int $id
+     * @return $this
+     */
     public function filterId(int $id): self;
 }

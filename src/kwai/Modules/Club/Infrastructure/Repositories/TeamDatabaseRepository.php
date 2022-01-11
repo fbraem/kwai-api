@@ -10,10 +10,8 @@ namespace Kwai\Modules\Club\Infrastructure\Repositories;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Club\Domain\Exceptions\TeamNotFoundException;
-use Kwai\Modules\Club\Infrastructure\Mappers\TeamMapper;
-use Kwai\Modules\Club\Repositories\TeamQuery;
+use Kwai\Modules\Club\Infrastructure\Mappers\TeamDTO;
 use Kwai\Modules\Club\Repositories\TeamRepository;
 
 /**
@@ -25,7 +23,7 @@ class TeamDatabaseRepository extends DatabaseRepository implements TeamRepositor
     {
         parent::__construct(
             $db,
-        fn ($item) => TeamMapper::toDomain($item)
+        fn (TeamDTO $item) => $item->createEntity()
         );
     }
 

@@ -10,10 +10,10 @@ namespace Kwai\Modules\Club\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Club\Infrastructure\ContactsTableSchema;
+use Kwai\Modules\Club\Infrastructure\ContactsTable;
 use Kwai\Modules\Club\Infrastructure\Mappers\MemberDTO;
-use Kwai\Modules\Club\Infrastructure\MembersTableSchema;
-use Kwai\Modules\Club\Infrastructure\PersonsTableSchema;
+use Kwai\Modules\Club\Infrastructure\MembersTable;
+use Kwai\Modules\Club\Infrastructure\PersonsTable;
 use Kwai\Modules\Club\Repositories\MemberQuery;
 use function Latitude\QueryBuilder\on;
 
@@ -22,16 +22,8 @@ use function Latitude\QueryBuilder\on;
  */
 class MemberDatabaseQuery extends DatabaseQuery implements MemberQuery
 {
-    private MembersTableSchema $membersSchema;
-    private ContactsTableSchema $contactsSchema;
-    private PersonsTableSchema $personsSchema;
-
     public function __construct(Connection $db)
     {
-        $this->membersSchema = new MembersTableSchema();
-        $this->contactsSchema = new ContactsTableSchema();
-        $this->personsSchema = new PersonsTableSchema();
-
         parent::__construct($db);
     }
 
@@ -41,19 +33,19 @@ class MemberDatabaseQuery extends DatabaseQuery implements MemberQuery
     protected function initQuery(): void
     {
         $this->query
-            ->from(MembersTableSchema::getTableName())
+            ->from(MembersTable::name())
             ->join(
-                PersonsTableSchema::getTableName(),
+                PersonsTable::name(),
                 on(
-                    $this->personsSchema->getColumn('id'),
-                    $this->membersSchema->getColumn('person_id')
+                    PersonsTable::column('id'),
+                    MembersTable::column('person_id')
                 )
             )
             ->join(
-                $this->contactsSchema::getTableName(),
+                ContactsTable::name(),
                 on(
-                    $this->contactsSchema->getColumn('id'),
-                    $this->personsSchema->getColumn('contact_id')
+                    ContactsTable::column('id'),
+                    PersonsTable::column('contact_id')
                 )
             )
         ;
@@ -65,9 +57,9 @@ class MemberDatabaseQuery extends DatabaseQuery implements MemberQuery
     protected function getColumns(): array
     {
         return [
-            ...$this->membersSchema->getAllAliases(),
-            ...$this->contactsSchema->getAllAliases(),
-            ...$this->personsSchema->getAllAliases()
+            ...MembersTable::aliases(),
+            ...ContactsTable::aliases(),
+            ...PersonsTable::aliases()
         ];
     }
 
@@ -77,14 +69,14 @@ class MemberDatabaseQuery extends DatabaseQuery implements MemberQuery
     public function filterId(int $id): MemberQuery
     {
         $this->query->andWhere(
-            $this->membersSchema->field('id')->eq($id)
+            MembersTable::field('id')->eq($id)
         );
         return $this;
     }
 
     /**
      * @inheritDoc
-     * @returns Collection<string,MemberDTO>
+     * @returns Collection<MemberDTO>
      */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
@@ -93,15 +85,13 @@ class MemberDatabaseQuery extends DatabaseQuery implements MemberQuery
         $members = new Collection();
 
         foreach ($rows as $row) {
-            $member = $this->membersSchema->map($row);
-            $contact = $this->contactsSchema->map($row);
-            $person = $this->personsSchema->map($row);
+            $member = MembersTable::createFromRow($row);
             $members->put(
                 $member->id,
                 new MemberDTO(
                     $member,
-                    $contact,
-                    $person
+                    ContactsTable::createFromRow($row),
+                    PersonsTable::createFromRow($row)
                 )
             );
         }
