@@ -51,30 +51,30 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     protected function initQuery(): void
     {
         $this->query
-            ->from(AbilitiesTable::getTableName())
+            ->from(AbilitiesTable::name())
             ->leftJoin(
-                AbilityRulesTable::getTableName(),
+                AbilityRulesTable::name(),
                 on(
                     AbilitiesTable::column('id'),
                     AbilityRulesTable::column('ability_id')
                 )
             )
             ->leftJoin(
-                RulesTable::getTableName(),
+                RulesTable::name(),
                 on(
                     AbilityRulesTable::column('rule_id'),
                     RulesTable::column('id')
                 )
             )
             ->leftJoin(
-                RuleActionsTable::getTableName(),
+                RuleActionsTable::name(),
                 on(
                     RulesTable::column('action_id'),
                     RuleActionsTable::column('id')
                 )
             )
             ->leftJoin(
-                RuleSubjectsTable::getTableName(),
+                RuleSubjectsTable::name(),
                 on(
                     RulesTable::column('subject_id'),
                     RuleSubjectsTable::column('id')

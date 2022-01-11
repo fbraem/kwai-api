@@ -31,20 +31,7 @@ abstract class TableSchema
     final public function __construct(
         private ?string $alias = null
     ) {
-        $this->alias ??= static::getTableName();
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getTableName(): string
-    {
-        $ref = new ReflectionClass(static::class);
-        $attributes = $ref->getAttributes(TableAttribute::class);
-        if (count($attributes) > 0) {
-            return $attributes[0]->getArguments()['name'] ?? '';
-        }
-        return '';
+        $this->alias ??= static::name();
     }
 
     /**
@@ -118,7 +105,7 @@ abstract class TableSchema
 
     public static function column(string $column): string
     {
-        return static::getTableName() . '.' . $column;
+        return static::name() . '.' . $column;
     }
 
     public static function aliases(?string $alias = null): array
@@ -186,9 +173,9 @@ abstract class TableSchema
      * of the schema.
      *
      * @param string $arg
-     * @param $value
+     * @param mixed $value
      */
-    public function __set(string $arg, $value)
+    public function __set(string $arg, mixed $value)
     {
     }
 }
