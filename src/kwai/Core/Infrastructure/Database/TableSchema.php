@@ -61,17 +61,6 @@ abstract class TableSchema
     }
 
     /**
-     * Returns the column name with the table name.
-     *
-     * @param string $column
-     * @return string
-     */
-    public function getColumn(string $column): string
-    {
-        return $this->alias . '.' . $column;
-    }
-
-    /**
      * Calls field for the given column.
      *
      * @param string $column
@@ -88,47 +77,52 @@ abstract class TableSchema
      * @param string $column
      * @return ExpressionInterface
      */
-    public function aliasColumn(string $column): ExpressionInterface
+    public function alias(string $column): ExpressionInterface
     {
         return alias(
-            $this->getColumn($column),
+            static::column($column),
             $this->alias . '_' . $column
         );
     }
 
-    public function getAllAliases(): Collection
-    {
-        $ref = new ReflectionClass($this);
-        return collect($ref->getProperties())
-            ->map(fn ($item) => $this->aliasColumn($item->name));
-    }
-
+    /**
+     * Returns the column prefixed with the table name.
+     *
+     * @param string $column
+     * @return string
+     */
     public static function column(string $column): string
     {
         return static::name() . '.' . $column;
     }
 
+    /**
+     * Returns aliases for all the properties of the table.
+     *
+     * @param string|null $alias
+     * @return array
+     */
     public static function aliases(?string $alias = null): array
     {
         $schema = new static($alias);
         $ref = new ReflectionClass(static::class);
         return collect($ref->getProperties())
-            ->map(fn ($item) => $schema->aliasColumn($item->name))
+            ->map(fn ($item) => $schema->alias($item->name))
             ->toArray();
     }
 
-    public function collect(string|array|null $forget = 'id'): Collection {
+    /**
+     * Returns all properties of the table as a collection.
+     *
+     * @return Collection
+     */
+    public function collect(): Collection {
         $ref = new ReflectionClass($this);
-        $data = collect($ref->getProperties())
+        return collect($ref->getProperties())
             ->mapWithKeys(
                 fn ($item) => [ $item->name => $item->getValue($this) ]
             )
         ;
-
-        if ($forget) {
-            return $data->forget($forget);
-        }
-        return $data;
     }
 
     /**
