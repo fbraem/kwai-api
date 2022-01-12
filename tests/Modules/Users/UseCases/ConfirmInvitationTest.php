@@ -10,6 +10,7 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
@@ -51,12 +52,15 @@ it('can confirm an invitation', function () use ($context) {
         public function getByUniqueId(UniqueId $uuid): Entity
         {
             return new Entity(1, new UserInvitation(
-                uuid: new UniqueId(),
                 emailAddress: new EmailAddress('gella.vandecavye@kwai.com'),
+                expiration: new LocalTimestamp(
+                    Timestamp::createFromDateTime(new DateTime('now +15 days')),
+                    'UTC'
+                ),
                 name: 'Gella Vandecaveye',
                 creator: $this->creator,
                 remark: 'This is a test invitation',
-                expiration: Timestamp::createFromDateTime(new DateTime('now +15 days'))
+                uuid: new UniqueId()
             ));
         }
         public function update(Entity $invitation): void
@@ -101,12 +105,15 @@ it('can handle an expired invitation', function () use ($context) {
         public function getByUniqueId(UniqueId $uuid): Entity
         {
             return new Entity(1, new UserInvitation(
-                uuid: new UniqueId(),
                 emailAddress: new EmailAddress('gella.vandecavye@kwai.com'),
+                expiration: new LocalTimestamp(
+                    Timestamp::createFromDateTime(new DateTime('now -1 days')),
+                'UTC'
+                ),
                 name: 'Gella Vandecaveye',
                 creator: $this->creator,
                 remark: 'This is a test invitation',
-                expiration: Timestamp::createFromDateTime(new DateTime('now -1 days'))
+                uuid: new UniqueId()
             ));
         }
         public function update(Entity $invitation): void
