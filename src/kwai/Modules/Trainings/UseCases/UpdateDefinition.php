@@ -12,7 +12,6 @@ use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
-use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
@@ -130,13 +129,13 @@ class UpdateDefinition
                         $command->time_zone
                     )
                 ),
-                active: $command->active,
+                creator: $creator,
                 team: $currentTeam,
                 season: $currentSeason,
+                active: $command->active,
                 location: $command->location ? new Location($command->location) : null,
                 remark: $command->remark,
                 traceableTime: $traceableTime,
-                creator: $creator,
             )
         );
         $this->definitionRepo->update($updatedDefinition);
