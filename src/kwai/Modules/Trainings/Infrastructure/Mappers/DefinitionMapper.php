@@ -40,7 +40,7 @@ class DefinitionMapper
             team: $data->has('team')
                 ? new Entity((int) $data->get('team')->get('id'), TeamMapper::toDomain($data->get('team')))
                 : null,
-            weekday: new Weekday((int) $data->get('weekday')),
+            weekday: Weekday::from((int) $data->get('weekday')),
             period: new TimePeriod(
                 start: Time::createFromString($data->get('start_time'), $data->get('time_zone')),
                 end: Time::createFromString($data->get('end_time'), $data->get('time_zone')),
@@ -71,7 +71,7 @@ class DefinitionMapper
             'description' => $definition->getDescription(),
             'season_id' => $definition->getSeason()?->id(),
             'team_id' => $definition->getTeam()?->id(),
-            'weekday' => $definition->getWeekday(),
+            'weekday' => $definition->getWeekday()->value,
             'start_time' => $definition->getPeriod()->getStart(),
             'end_time' => $definition->getPeriod()->getEnd(),
             'time_zone' => $definition->getPeriod()->getEnd()->getTimezone(),

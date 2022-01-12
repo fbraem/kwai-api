@@ -7,11 +7,14 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Presentation\REST;
 
+use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Presentation\InputSchema;
 use Kwai\Modules\Trainings\UseCases\CreateDefinitionCommand;
 use Kwai\Modules\Trainings\UseCases\UpdateDefinitionCommand;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
+use Nette\Schema\ValidationException;
+use ValueError;
 
 /**
  * Class DefinitionSchema
@@ -71,7 +74,11 @@ class DefinitionSchema implements InputSchema
 
         $command->name = $normalized->data->attributes->name;
         $command->description = $normalized->data->attributes->description;
-        $command->weekday = $normalized->data->attributes->weekday;
+        try {
+            $command->weekday = Weekday::from($normalized->data->attributes->weekday);
+        } catch (ValueError) {
+            throw new ValidationException("Invalid value for weekday: {$normalized->data->attributes->weekday}");
+        }
         $command->start_time = $normalized->data->attributes->start_time;
         $command->end_time = $normalized->data->attributes->end_time;
         $command->time_zone = $normalized->data->attributes->time_zone;

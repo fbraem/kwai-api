@@ -215,6 +215,6 @@ class Training implements DomainEntity
      */
     public function addText(Text $text)
     {
-        $this->text->put($text->getLocale(), $text);
+        $this->text->put($text->getLocale()->value, $text);
     }
 }

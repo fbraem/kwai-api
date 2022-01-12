@@ -101,8 +101,8 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
         foreach ($page->getContents() as $content) {
             $query->values(
                 $pageId,
-                (string) $content->getLocale(),
-                (string) $content->getFormat(),
+                $content->getLocale()->value,
+                $content->getFormat()->value,
                 $content->getTitle(),
                 $content->getContent(),
                 $content->getSummary(),
@@ -141,7 +141,7 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
             $query = $this->db->createQueryFactory()
                 ->update((string) Tables::CONTENTS())
                 ->set([
-                    'format' => $content->getFormat(),
+                    'format' => $content->getFormat()->value,
                     'title' => $content->getTitle(),
                     'content' => $content->getContent(),
                     'summary' => $content->getSummary(),
@@ -150,7 +150,7 @@ class PageDatabaseRepository extends DatabaseRepository implements PageRepositor
                 ])
                 ->where(
                     field('page_id')->eq($page->id())
-                        ->and(field('locale')->eq($content->getLocale()))
+                        ->and(field('locale')->eq($content->getLocale()->value))
                 )
             ;
             try {

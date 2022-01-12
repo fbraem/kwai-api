@@ -7,28 +7,18 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Domain\ValueObjects;
 
-use MyCLabs\Enum\Enum;
-
 /**
- * Class Weekday
+ * Enum Weekday
  *
- * A class representing a day in the week.
- *
- * @method static Weekday MONDAY()
- * @method static Weekday TUESDAY()
- * @method static Weekday WEDNESDAY()
- * @method static Weekday THURSDAY()
- * @method static Weekday FRIDAY()
- * @method static Weekday SATURDAY()
- * @method static Weekday SUNDAY()
+ * A enum for representing a day in the week.
  */
-class Weekday extends Enum
+enum Weekday: int
 {
-    private const MONDAY = 1;
-    private const TUESDAY = 2;
-    private const WEDNESDAY = 3;
-    private const THURSDAY = 4;
-    private const FRIDAY = 5;
-    private const SATURDAY = 6;
-    private const SUNDAY = 7;
+    case MONDAY = 1;
+    case TUESDAY = 2;
+    case WEDNESDAY = 3;
+    case THURSDAY = 4;
+    case FRIDAY = 5;
+    case SATURDAY = 6;
+    case SUNDAY = 7;
 }

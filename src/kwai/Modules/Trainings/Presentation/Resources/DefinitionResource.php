@@ -45,7 +45,7 @@ class DefinitionResource
     #[JSONAPI\Attribute(name: 'weekday')]
     public function getWeekday(): int
     {
-        return $this->definition->getWeekday()->getValue();
+        return $this->definition->getWeekday()->value;
     }
 
     #[JSONAPI\Attribute(name: 'start_time')]

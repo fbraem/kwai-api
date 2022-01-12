@@ -59,9 +59,9 @@ class TrainingResource
     {
         return $this->training->getText()->map(function (Text $text) {
             $converter = $this->converterFactory
-                ->createConverter((string)$text->getFormat());
+                ->createConverter($text->getFormat());
             return [
-                'locale' => $text->getLocale(),
+                'locale' => $text->getLocale()->value,
                 'title' => $text->getTitle(),
                 'summary' => $text->getSummary(),
                 'content' => $text->getContent(),

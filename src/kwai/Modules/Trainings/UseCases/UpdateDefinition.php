@@ -119,7 +119,7 @@ class UpdateDefinition
             new Definition(
                 name: $command->name,
                 description: $command->description,
-                weekday: new Weekday($command->weekday),
+                weekday: $command->weekday,
                 period: new TimePeriod(
                     Time::createFromString(
                         $command->start_time,

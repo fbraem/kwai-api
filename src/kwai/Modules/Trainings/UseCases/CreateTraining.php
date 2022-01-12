@@ -110,8 +110,8 @@ class CreateTraining
         $contents = new Collection();
         foreach ($command->contents as $text) {
             $contents->add(new Text(
-                locale: new Locale($text->locale),
-                format: new DocumentFormat($text->format),
+                locale: $text->locale,
+                format: $text->format,
                 title: $text->title,
                 summary: $text->summary,
                 content: $text->content ?? null,

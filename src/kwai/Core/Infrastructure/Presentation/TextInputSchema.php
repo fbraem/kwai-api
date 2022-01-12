@@ -7,9 +7,13 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Presentation;
 
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\UseCases\Content;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
+use Nette\Schema\ValidationException;
+use ValueError;
 
 /**
  * Class TextInputSchema
@@ -36,12 +40,20 @@ class TextInputSchema implements InputSchema
      * @inheritDoc
      * @return Content
      */
-    public function process($normalized)
+    public function process($normalized): Content
     {
         $c = new Content();
         $c->content = $normalized->content;
-        $c->format = $normalized->format;
-        $c->locale = $normalized->locale;
+        try {
+            $c->format = DocumentFormat::from($normalized->format);
+        } catch (ValueError) {
+            throw new ValidationException("Invalid document format {$normalized->format}");
+        }
+        try {
+            $c->locale = Locale::from($normalized->locale);
+        } catch (ValueError) {
+            throw new ValidationException("Invalid locale {$normalized->locale}");
+        }
         $c->summary = $normalized->summary;
         $c->title = $normalized->title;
         return $c;

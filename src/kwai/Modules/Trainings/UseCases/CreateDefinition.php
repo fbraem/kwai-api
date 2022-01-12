@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
+use Carbon\Traits\Week;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
@@ -80,7 +81,7 @@ class CreateDefinition
         $definition = new Definition(
             name: $command->name,
             description: $command->description,
-            weekday: new Weekday($command->weekday),
+            weekday: $command->weekday,
             period: new TimePeriod(
                 Time::createFromString($command->start_time, $command->time_zone),
                 Time::createFromString($command->end_time, $command->time_zone)

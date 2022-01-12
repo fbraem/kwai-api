@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
+use Kwai\Core\Domain\ValueObjects\Weekday;
+
 /**
  * Trait DefinitionTrait
  *
@@ -35,9 +37,9 @@ trait DefinitionTrait
     public ?int $team_id = null;
 
     /**
-     * The weekday (1 = monday, ...)
+     * The weekday
      */
-    public int $weekday;
+    public Weekday $weekday;
 
     /**
      * The start time (HH:MM)

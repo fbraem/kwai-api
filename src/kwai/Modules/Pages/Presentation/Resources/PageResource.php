@@ -76,9 +76,9 @@ class PageResource
     {
         $contents = [];
         foreach ($this->page->getContents() as $content) {
-            $converter = $this->converterFactory->createConverter((string) $content->getFormat());
+            $converter = $this->converterFactory->createConverter($content->getFormat());
             $contents[] = [
-                'locale' => $content->getLocale(),
+                'locale' => $content->getLocale()->value,
                 'title' => $content->getTitle(),
                 'summary' => $content->getSummary(),
                 'content' => $content->getContent(),

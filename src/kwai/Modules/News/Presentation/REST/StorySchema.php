@@ -81,7 +81,9 @@ class StorySchema implements InputSchema
         $command->publish_date = $normalized->data->attributes->publish_date;
         $command->timezone = $normalized->data->attributes->timezone;
         $command->remark = $normalized->data->attributes->remark ?? null;
-        $command->contents = $normalized->data->attributes->contents;
+        foreach ($normalized->data->attributes->contents as $content) {
+            $command->contents[] = $this->textSchema->process($content);
+        }
 
         return $command;
     }

@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Core\UseCases;
 
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Domain\ValueObjects\Locale;
+
 /**
  * Class Content
  *
@@ -23,12 +26,12 @@ class Content
     /**
      * Language code
      */
-    public string $locale = 'nl';
+    public Locale $locale = Locale::NL;
 
     /**
      * The format of the content
      */
-    public string $format = 'md';
+    public DocumentFormat $format = DocumentFormat::MARKDOWN;
 
     /**
      * Summary of the story

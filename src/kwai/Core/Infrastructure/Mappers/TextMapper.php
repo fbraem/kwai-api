@@ -26,8 +26,8 @@ class TextMapper
     public static function toDomain(Collection $data): Text
     {
         return new Text(
-            locale: new Locale($data->get('locale')),
-            format: new DocumentFormat($data->get('format')),
+            locale: Locale::from($data->get('locale')),
+            format: DocumentFormat::from($data->get('format')),
             title: $data->get('title'),
             summary: $data->get('summary'),
             content: $data->get('content'),
@@ -38,8 +38,8 @@ class TextMapper
     public static function toPersistence(Text $text): Collection
     {
         return collect([
-            'locale' => (string) $text->getLocale(),
-            'format' => (string) $text->getFormat(),
+            'locale' => $text->getLocale()->value,
+            'format' => $text->getFormat()->value,
             'title' => $text->getTitle(),
             'summary' => $text->getSummary(),
             'content' => $text->getContent(),

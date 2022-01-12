@@ -94,8 +94,9 @@ class TrainingSchema implements InputSchema
             $command->id = (int) $normalized->data->id;
         }
 
-        $command->contents = $normalized->data->attributes->contents;
-
+        foreach ($normalized->data->attributes->contents as $content) {
+            $command->contents[] = $this->textSchema->process($content);
+        }
         $command->start_date = $normalized->data->attributes->event->start_date;
         $command->end_date = $normalized->data->attributes->event->end_date;
         $command->timezone = $normalized->data->attributes->event->timezone;

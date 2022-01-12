@@ -1,23 +1,18 @@
 <?php
 /**
- * @noinspection PhpUnusedPrivateFieldInspection
- * @package Kwai
- * @subpackage Core
+ * @package Core
+ * @subpackage Domain
  */
-
 declare(strict_types=1);
 
 namespace Kwai\Core\Domain\ValueObjects;
 
-use MyCLabs\Enum\Enum;
-
 /**
- * Class DocumentFormat
+ * Enum DocumentFormat
  *
- * Value object for the format of the document.
- * @method static DocumentFormat MARKDOWN()
+ * Values the format of a document.
  */
-class DocumentFormat extends Enum
+enum DocumentFormat: string
 {
-    private const MARKDOWN = 'md';
+    case MARKDOWN = 'md';
 }

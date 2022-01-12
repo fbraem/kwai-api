@@ -19,7 +19,7 @@ class ConvertDependency implements Dependency
     public function create()
     {
         $factory = new ConverterFactory();
-        $factory->register((string) DocumentFormat::MARKDOWN(), MarkdownConverter::class);
+        $factory->register(DocumentFormat::MARKDOWN->value, MarkdownConverter::class);
         return $factory;
     }
 }
