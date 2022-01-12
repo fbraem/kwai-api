@@ -113,12 +113,16 @@ abstract class TableSchema
 
     /**
      * Returns all properties of the table as a collection.
+     * A property that is not initialized will be skipped.
      *
      * @return Collection
      */
     public function collect(): Collection {
         $ref = new ReflectionClass($this);
         return collect($ref->getProperties())
+            ->filter(
+                fn($item) => $item->isInitialized($this)
+            )
             ->mapWithKeys(
                 fn ($item) => [ $item->name => $item->getValue($this) ]
             )
