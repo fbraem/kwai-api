@@ -31,11 +31,14 @@ it('can detach an ability from a user', function () use ($context) {
             new UserDatabaseRepository($context->db),
             new AbilityDatabaseRepository($context->db)
         )($command);
-        expect($user)
-            ->toBeInstanceOf(Entity::class)
-            ->and($user->getAbilities()->count())
-            ->toBe($abilityCount - 1)
-        ;
+        if ( $abilityCount > 0 ) {
+            expect($user)
+                ->toBeInstanceOf(Entity::class)
+                ->and($user->getAbilities()->count())
+                ->toBe($abilityCount - 1);
+        } else {
+            $this->expectNotToPerformAssertions();
+        }
     } catch (Exception $e) {
         $this->fail((string) $e);
     }
