@@ -21,6 +21,7 @@ use Kwai\Modules\Users\UseCases\BrowseUserInvitations;
 use Kwai\Modules\Users\UseCases\BrowseUserInvitationsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class BrowseUsersAction
@@ -30,9 +31,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class BrowseUserInvitationsAction extends Action
 {
     public function __construct(
-        private ?Connection $database = null
+        private ?Connection $database = null,
+        ?LoggerInterface $logger = null
     ) {
-        parent::__construct();
+        parent::__construct($logger);
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
     }
 
