@@ -41,9 +41,15 @@ class BrowseUserInvitationsAction extends Action
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
+        $parameters = $request->getAttribute('parameters');
+
+        $command = new BrowseUserInvitationsCommand();
+        $command->limit = (int) ($parameters['page']['limit'] ?? 10);
+        $command->offset = (int) ($parameters['page']['offset'] ?? 0);
+
         $repo = new UserInvitationDatabaseRepository($this->database);
         try {
-            [$count, $invitations] = BrowseUserInvitations::create($repo)(new BrowseUserInvitationsCommand());
+            [$count, $invitations] = BrowseUserInvitations::create($repo)($command);
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (
