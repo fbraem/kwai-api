@@ -27,12 +27,6 @@ class UserInvitationResource
 
     public function getId(): string
     {
-        return (string) $this->userInvitation->id();
-    }
-
-    #[JSONAPI\Attribute(name: 'uuid')]
-    public function getUuid(): string
-    {
         return (string) $this->userInvitation->getUuid();
     }
 
