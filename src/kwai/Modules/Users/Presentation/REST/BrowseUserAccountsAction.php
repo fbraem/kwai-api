@@ -30,7 +30,7 @@ class BrowseUserAccountsAction extends Action
 {
     public function __construct(
         private ?Connection $database = null,
-        private ?LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct($logger);
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
@@ -42,8 +42,11 @@ class BrowseUserAccountsAction extends Action
     public function __invoke(Request $request, Response $response, array $args)
     {
         $repo = new UserAccountDatabaseRepository($this->database);
+        $parameters = $request->getAttribute('parameters');
 
         $command = new BrowseUserAccountsCommand();
+        $command->limit = (int) ($parameters['page']['limit'] ?? 10);
+        $command->offset = (int) ($parameters['page']['offset'] ?? 0);
 
         try {
             [$count, $accounts] = BrowseUserAccounts::create($repo)($command);
