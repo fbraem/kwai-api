@@ -30,12 +30,6 @@ class UserAccountResource
 
     public function getId(): string
     {
-        return (string) $this->userAccount->id();
-    }
-
-    #[JSONAPI\Attribute(name: 'uuid')]
-    public function getUuid(): string
-    {
         return (string) $this->userAccount->getUser()->getUuid();
     }
 

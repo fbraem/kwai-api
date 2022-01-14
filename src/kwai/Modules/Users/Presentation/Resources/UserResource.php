@@ -29,19 +29,13 @@ class UserResource
 
     public function getId(): string
     {
-        return (string) $this->user->id();
+        return (string) $this->user->getUuid();
     }
 
     #[JSONAPI\Attribute(name: 'email')]
     public function getEmail(): string
     {
         return (string) $this->user->getEmailAddress();
-    }
-
-    #[JSONAPI\Attribute(name: 'uuid')]
-    public function getUniqueId(): string
-    {
-        return (string) $this->user->getUuid();
     }
 
     #[JSONAPI\Attribute(name: 'username')]
