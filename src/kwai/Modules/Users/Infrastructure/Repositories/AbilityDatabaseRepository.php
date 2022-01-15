@@ -45,7 +45,7 @@ final class AbilityDatabaseRepository extends DatabaseRepository implements Abil
      */
     public function getById(int $id): Entity
     {
-        $query = $this->createQuery()->filterById($id);
+        $query = $this->createQuery()->filterByIds($id);
 
         $entities = $this->getAll($query);
         if ($entities->isNotEmpty()) {

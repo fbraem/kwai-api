@@ -17,8 +17,8 @@ interface AbilityQuery extends Query
     /**
      * Filter by id of the ability
      *
-     * @param int $id
+     * @param int ...$id
      * @return $this
      */
-    public function filterById(int $id): self;
+    public function filterByIds(int ...$id): self;
 }

@@ -37,10 +37,10 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     /**
      * @inheritDoc
      */
-    public function filterById(int $id): AbilityQuery
+    public function filterByIds(int... $ids): AbilityQuery
     {
         $this->query->andWhere(
-            AbilitiesTable::field('id')->eq($id)
+            AbilitiesTable::field('id')->in($ids)
         );
         return $this;
     }
@@ -106,7 +106,6 @@ class AbilityDatabaseQuery extends DatabaseQuery implements AbilityQuery
     {
         $rows = parent::walk($limit, $offset);
 
-        /** @var Collection<AbilityDTO> $abilities */
         $abilities = new Collection();
 
         foreach ($rows as $row) {
