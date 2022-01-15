@@ -29,7 +29,7 @@ class AbilityNotFoundException extends Exception
         $this->id = $id;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return __CLASS__ . ': Ability(' . $this->id . ') not found';
     }

@@ -29,7 +29,7 @@ class AuthenticationException extends Exception
      * Returns a string representation of the exception.
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return __CLASS__ . ': ' . $this->getMessage();
     }

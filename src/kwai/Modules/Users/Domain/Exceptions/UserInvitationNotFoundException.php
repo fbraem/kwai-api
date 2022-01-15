@@ -27,7 +27,7 @@ class UserInvitationNotFoundException extends Exception
         parent::__construct('User invitation not found');
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return __CLASS__ . ': UserInvitation(' . $this->uuid . ') not found';
     }

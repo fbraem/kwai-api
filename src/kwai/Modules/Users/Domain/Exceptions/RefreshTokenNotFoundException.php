@@ -27,7 +27,7 @@ class RefreshTokenNotFoundException extends Exception
         parent::__construct('User not found');
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return __CLASS__ . ': RefreshToken(' . $this->tokenIdentifier . ') not found';
     }

@@ -27,7 +27,7 @@ class UserNotFoundException extends Exception
         parent::__construct('User not found');
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return __CLASS__ . ': User(' . $this->id . ') not found';
     }
