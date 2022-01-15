@@ -80,7 +80,7 @@ it('throws a not found exception when user does not exist', function () use ($co
         /** @noinspection PhpUnhandledExceptionInspection */
         $repo->getById(10000);
     } catch (RepositoryException $e) {
-        $this->assertTrue(false, (string) $e);
+        $this->fail((string) $e);
     }
 })
     ->skip(!Context::hasDatabase(), 'No database available')
