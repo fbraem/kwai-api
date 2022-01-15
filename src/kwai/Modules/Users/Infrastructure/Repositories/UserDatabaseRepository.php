@@ -28,8 +28,6 @@ use function Latitude\QueryBuilder\field;
  * Class UserDatabaseRepository
  *
  * User Repository for read/write User entity from/to a database.
- *
- * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class UserDatabaseRepository extends DatabaseRepository implements UserRepository
 {
@@ -78,12 +76,6 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
 
     public function update(Entity $user): void
     {
-        try {
-            $this->db->begin();
-        } catch (DatabaseException $e) {
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
         $data = (new UserDTO())
             ->persistEntity($user)
             ->user
@@ -99,29 +91,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
 
         try {
             $this->db->execute($query);
-            // Update abilities
-            // First delete all abilities
-            $this->db->execute(
-            $queryFactory
-                ->delete(UserAbilitiesTable::name())
-                ->where(
-                    UserAbilitiesTable::field('user_id')
-                        ->eq($user->id())
-                )
-            );
-            $this->insertAbilities($user);
         } catch (QueryException $e) {
-            try {
-                $this->db->rollback();
-            } catch (DatabaseException $e) {
-                throw new RepositoryException(__METHOD__, $e);
-            }
-            throw new RepositoryException(__METHOD__, $e);
-        }
-
-        try {
-            $this->db->commit();
-        } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
     }
@@ -135,24 +105,19 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     }
 
     /**
-     * Insert abilities of the user
-     *
-     * @param Entity<User> $user
-     * @throws QueryException
+     * @inheritDoc
      */
-    private function insertAbilities(Entity $user)
+    public function insertAbilities(Entity $user, Collection $abilities): void
     {
-        $abilities = $user->getAbilities();
-        if ($abilities->count() === 0) {
+        if ($abilities->count() == 0)
             return;
-        }
 
-        $abilities
-            ->transform(
-                fn (Entity $ability) => collect(['ability_id' => $ability->id()])
-            )
+        $abilities = $abilities
             ->map(
-                fn (Collection $item) => $item->put('user_id', $user->id())
+                fn (Entity $ability) => collect([
+                    'ability_id' => $ability->id(),
+                    'user_id' => $user->id()
+                ])
             )
         ;
 
@@ -164,6 +129,37 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
             fn(Collection $ability) => $query->values(... $ability->values())
         );
 
-        $this->db->execute($query);
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteAbilities(Entity $user, Collection $abilities): void
+    {
+        if ($abilities->count() == 0)
+            return;
+
+        $abilityIds = $abilities->map(fn (Entity $item) => $item->id());
+
+        $query = $this->db->createQueryFactory()
+            ->delete(UserAbilitiesTable::name())
+            ->where(
+                UserAbilitiesTable::field('user_id')
+                    ->eq($user->id())
+            )->andWhere(
+                UserAbilitiesTable::field('ability_id')
+                    ->in($abilityIds->values())
+            )
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
     }
 }
