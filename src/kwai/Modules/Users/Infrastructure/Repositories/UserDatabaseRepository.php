@@ -153,7 +153,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
                     ->eq($user->id())
             )->andWhere(
                 UserAbilitiesTable::field('ability_id')
-                    ->in($abilityIds->values())
+                    ->in(...$abilityIds->values())
             )
         ;
         try {
