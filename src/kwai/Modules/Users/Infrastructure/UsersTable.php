@@ -20,8 +20,8 @@ class UsersTable extends TableSchema
     public string $email;
     public string $password;
     public ?string $last_login = null;
-    public string $first_name;
-    public string $last_name;
+    public ?string $first_name = null;
+    public ?string $last_name = null;
     public ?string $remark = null;
     public ?int $member_id = null;
     public string $uuid;
