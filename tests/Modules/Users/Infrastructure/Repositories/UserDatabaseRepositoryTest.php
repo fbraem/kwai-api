@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Ability;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -77,7 +78,6 @@ it('can get a user with the given uuid', function ($uuid) use ($context) {
 it('throws a not found exception when user does not exist', function () use ($context) {
     $repo = new UserDatabaseRepository($context->db);
     try {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $repo->getById(10000);
     } catch (RepositoryException $e) {
         $this->fail((string) $e);
@@ -85,4 +85,66 @@ it('throws a not found exception when user does not exist', function () use ($co
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->throws(UserNotFoundException::class)
+;
+
+it('can add an ability', function ($user) use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+
+    $abilities = new Collection([
+        new Entity(
+            1,
+            new Ability(name: 'Admin')
+        )
+    ]);
+
+    try {
+        $repo->insertAbilities($user, $abilities);
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    }
+
+    try {
+        $user = $repo->getById($user->id());
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    } catch (UserNotFoundException $e) {
+        $this->fail((string) $e);
+    }
+    expect($user->getAbilities()->toArray())
+        ->toHaveCount(1)
+    ;
+})
+    ->depends('it can get a user with email')
+    ->skip(!Context::hasDatabase(), 'No database available')
+;
+
+it('can remove an ability', function ($user) use ($context) {
+    $repo = new UserDatabaseRepository($context->db);
+
+    $abilities = new Collection([
+        new Entity(
+            1,
+            new Ability(name: 'Admin')
+        )
+    ]);
+
+    try {
+        $repo->deleteAbilities($user, $abilities);
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    }
+
+    try {
+        $user = $repo->getById($user->id());
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
+    } catch (UserNotFoundException $e) {
+        $this->fail((string) $e);
+    }
+    expect($user->getAbilities()->toArray())
+        ->toHaveCount(0)
+    ;
+})
+    ->depends('it can get a user with email')
+    ->skip(!Context::hasDatabase(), 'No database available')
 ;

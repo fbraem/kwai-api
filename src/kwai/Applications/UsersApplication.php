@@ -22,6 +22,7 @@ use Kwai\Modules\Users\Presentation\REST\GetUserAction;
 use Kwai\Modules\Users\Presentation\REST\GetUserInvitationAction;
 use Kwai\Modules\Users\Presentation\REST\UpdateAbilityAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
+use Kwai\Modules\Users\Presentation\REST\UpdateUserAction;
 
 /**
  * Class UsersApplication
@@ -45,6 +46,17 @@ class UsersApplication extends Application
                 'users.get',
                 '/users/{uuid}',
                 GetUserAction::class,
+                [
+                    'auth' => true
+                ],
+                [
+                    'uuid' => $uuid_regex
+                ]
+            )
+            ->patch(
+                'users.update',
+                '/users/{uuid}',
+                UpdateUserAction::class,
                 [
                     'auth' => true
                 ],
