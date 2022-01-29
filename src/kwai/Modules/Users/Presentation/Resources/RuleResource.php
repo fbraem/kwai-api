@@ -36,12 +36,6 @@ class RuleResource
         return $this->rule->getName();
     }
 
-    #[JSONAPI\Attribute(name: 'action')]
-    public function getAction(): string
-    {
-        return $this->rule->getAction();
-    }
-
     #[JSONAPI\Attribute(name: 'subject')]
     public function getSubject(): string
     {

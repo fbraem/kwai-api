@@ -12,15 +12,13 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\Rule;
-use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 
 final class RuleDTO
 {
     public function __construct(
-        public RulesTable              $rule = new RulesTable(),
-        public RuleActionsTable        $action = new RuleActionsTable(),
+        public RulesTable $rule = new RulesTable(),
         public RuleSubjectsTable $subject = new RuleSubjectsTable()
     ) {
     }
@@ -35,7 +33,6 @@ final class RuleDTO
         return new Rule(
             name: $this->rule->name,
             subject: $this->subject->name,
-            action: $this->action->name,
             remark: $this->rule->remark,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->rule->created_at),
@@ -68,6 +65,7 @@ final class RuleDTO
     public function persist(Rule $rule): static
     {
         $this->rule->name = $rule->getName();
+        $this->rule->permission = $rule->getPermission();
         $this->rule->remark = $rule->getRemark();
         return $this;
     }

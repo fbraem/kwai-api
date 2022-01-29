@@ -11,8 +11,7 @@ it('can serialize a Rule entity to JSON:API', function () {
         1,
         new Rule(
             name: 'AddUser',
-            subject: 'User',
-            action: 'Add'
+            subject: 'User'
         )
     );
 
@@ -39,7 +38,6 @@ it('can serialize a Rule entity to JSON:API', function () {
     expect($json->data->attributes)
         ->toMatchObject([
             'name' => 'AddUser',
-            'action' => 'Add',
             'subject' => 'User'
         ])
     ;

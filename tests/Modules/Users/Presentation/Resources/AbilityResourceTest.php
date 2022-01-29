@@ -18,8 +18,7 @@ it('can serialize an Role to a JSON:API resource', function () {
                     1,
                     new Rule(
                         name: 'Manage Team',
-                        subject: 'Team',
-                        action: 'manage'
+                        subject: 'Team'
                     )
                 )
             ])

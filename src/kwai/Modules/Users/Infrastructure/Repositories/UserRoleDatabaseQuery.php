@@ -14,7 +14,6 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Users\Infrastructure\RolesTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\RoleDTO;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
-use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 use Kwai\Modules\Users\Infrastructure\UserRolesTable;
@@ -95,7 +94,6 @@ class UserRoleDatabaseQuery extends DatabaseQuery implements UserRoleQuery
 
             $ruleDTO = new RuleDTO(
                 rule: RulesTable::createFromRow($row),
-                action: RuleActionsTable::createFromRow($row),
                 subject: RuleSubjectsTable::createFromRow($row)
             );
             $userRoles

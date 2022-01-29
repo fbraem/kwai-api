@@ -15,7 +15,6 @@ use Kwai\Modules\Users\Infrastructure\RolesTable;
 use Kwai\Modules\Users\Infrastructure\RoleRulesTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\RoleDTO;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
-use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 use Kwai\Modules\Users\Repositories\RoleQuery;
@@ -67,13 +66,6 @@ class RoleDatabaseQuery extends DatabaseQuery implements RoleQuery
                 )
             )
             ->leftJoin(
-                RuleActionsTable::name(),
-                on(
-                    RulesTable::column('action_id'),
-                    RuleActionsTable::column('id')
-                )
-            )
-            ->leftJoin(
                 RuleSubjectsTable::name(),
                 on(
                     RulesTable::column('subject_id'),
@@ -91,7 +83,6 @@ class RoleDatabaseQuery extends DatabaseQuery implements RoleQuery
         return [
             ...RolesTable::aliases(),
             ...RulesTable::aliases(),
-            ...RuleActionsTable::aliases(),
             ...RuleSubjectsTable::aliases()
         ];
     }
@@ -121,7 +112,6 @@ class RoleDatabaseQuery extends DatabaseQuery implements RoleQuery
                 $dto->rules->push(
                     new RuleDTO(
                         RulesTable::createFromRow($row),
-                        RuleActionsTable::createFromRow($row),
                         RuleSubjectsTable::createFromRow($row)
                     )
                 );

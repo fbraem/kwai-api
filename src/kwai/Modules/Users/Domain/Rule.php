@@ -20,27 +20,17 @@ class Rule implements DomainEntity
      *
      * @param string             $name
      * @param string             $subject
-     * @param string             $action
+     * @param int                $permission
      * @param string|null        $remark
      * @param TraceableTime|null $traceableTime
      */
     public function __construct(
         private string $name,
         private string $subject,
-        private string $action,
+        private int $permission = 0,
         private ?string $remark = null,
-        private ?TraceableTime $traceableTime = null
+        private ?TraceableTime $traceableTime = new TraceableTime()
     ) {
-        $this->traceableTime ??= new TraceableTime();
-    }
-
-    /**
-     * Return the action.
-     * @return string
-     */
-    public function getAction(): string
-    {
-        return $this->action;
     }
 
     /**
@@ -60,6 +50,11 @@ class Rule implements DomainEntity
         return $this->subject;
     }
 
+    public function hasPermission($permission): bool
+    {
+        return ($this->permission | $permission) === $permission;
+    }
+
     /**
      * Get the created_at/updated_at timestamps
      * @return TraceableTime
@@ -77,5 +72,15 @@ class Rule implements DomainEntity
     public function getRemark(): ?string
     {
         return $this->remark;
+    }
+
+    /**
+     * Returns the permission.
+     *
+     * @return int
+     */
+    public function getPermission(): int
+    {
+        return $this->permission;
     }
 }

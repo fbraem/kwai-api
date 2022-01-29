@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Modules\Users\Infrastructure\Mappers\RuleDTO;
-use Kwai\Modules\Users\Infrastructure\RuleActionsTable;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 use Kwai\Modules\Users\Repositories\RuleQuery;
@@ -30,13 +29,6 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
         $this->query
             ->from(RulesTable::name())
             ->join(
-                RuleActionsTable::name(),
-                on(
-                    RulesTable::column('action_id'),
-                    RuleActionsTable::column('id')
-                )
-            )
-            ->join(
                 RuleSubjectsTable::name(),
                 on(
                     RulesTable::column('subject_id'),
@@ -53,7 +45,6 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
     {
         return [
             ...RulesTable::aliases(),
-            ...RuleActionsTable::aliases(),
             ...RuleSubjectsTable::aliases()
         ];
     }
@@ -99,7 +90,6 @@ class RuleDatabaseQuery extends DatabaseQuery implements RuleQuery
                 $rule->id,
                 new RuleDTO(
                     $rule,
-                    RuleActionsTable::createFromRow($row),
                     RuleSubjectsTable::createFromRow($row)
                 )
             );
