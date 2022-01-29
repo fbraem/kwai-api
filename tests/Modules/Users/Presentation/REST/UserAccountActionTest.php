@@ -21,7 +21,7 @@ it('can browse users', function () use ($context) {
     expect($response->getStatusCode())->toBe(200);
 
     $result = json_decode((string) $response->getBody(), true);
-    return $result['data'][0]['attributes']['uuid'];
+    return $result['data'][0]['id'];
 })
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

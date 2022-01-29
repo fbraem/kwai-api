@@ -11,18 +11,15 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class RulesTable
+ * Class RolesTable
  */
-#[TableAttribute(name: 'rules')]
-class RulesTable extends TableSchema
+#[TableAttribute(name: 'roles')]
+class RolesTable extends TableSchema
 {
-    public int $id;
+    public ?int $id = null;
     public string $name;
-    public int $action_id;
-    public int $subject_id;
-    public int $owner;
-    public int $permission;
-    public ?string $remark;
+    public ?string $remark = null;
+    private ?string $description;
     public string $created_at;
-    public ?string $updated_at;
+    public ?string $updated_at = null;
 }

@@ -45,9 +45,9 @@ class UserSchema implements InputSchema
                     'remark' => Expect::string()->nullable(),
                 ]),
                 'relationships' => Expect::structure([
-                    'abilities' => Expect::structure([
+                    'roles' => Expect::structure([
                         'data' => Expect::arrayOf(Expect::structure([
-                            'type' => Expect::anyOf('abilities'),
+                            'type' => Expect::anyOf('roles'),
                             'id' => Expect::string()->required()
                         ]))
                     ])->required(false)
@@ -69,10 +69,10 @@ class UserSchema implements InputSchema
         $command->uuid = $normalized->data->id;
         $command->remark = $normalized->data->attributes->remark;
 
-        if ($normalized->data->relationships?->abilities?->data) {
-            $command->abilities = array_map(
-                fn ($ability) => (int) $ability->id,
-                $normalized->data->relationships->abilities->data
+        if ($normalized->data->relationships?->roles?->data) {
+            $command->roles = array_map(
+                fn ($role) => (int) $role->id,
+                $normalized->data->relationships->roles->data
             );
         }
 

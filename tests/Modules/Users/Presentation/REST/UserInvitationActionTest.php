@@ -15,7 +15,7 @@ $data = [
     'data' => [
         'type' => 'user_invitations',
         'attributes' => [
-            'email' => "jigor.kano" . strval(rand(1, 100)) . "@gmail.com",
+            'email' => "jigor.kano" . rand(1, 100) . "@gmail.com",
             'name' => 'Jigoro Kano',
             'remark' => 'A user invitation created with a unittest'
         ]
@@ -42,7 +42,7 @@ it('can create an user invitation', function () use ($context, $data) {
     expect($response->getStatusCode())->toBe(200);
 
     $result = json_decode((string) $response->getBody(), true);
-    return $result['data']['attributes']['uuid'];
+    return $result['data']['id'];
 })
     ->skip(!Context::hasDatabase(), 'No database available')
 ;

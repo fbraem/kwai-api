@@ -10,10 +10,11 @@ use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Presentation\Resources\UserResource;
 
 it('can serialize a User into a JSON:API resource', function () {
+    $uuid = new UniqueId();
     $user = new Entity(
         1,
         new User(
-            uuid: new UniqueId(),
+            uuid: $uuid,
             emailAddress: new EmailAddress('jigoro.kano@kwai.com'),
             username: new Name('Jigoro', 'Kano')
         )
@@ -35,7 +36,7 @@ it('can serialize a User into a JSON:API resource', function () {
     expect($json->data)
         ->toMatchObject([
             'type' => 'users',
-            'id' => '1'
+            'id' => (string) $uuid
         ])
         ->toHaveProperty('attributes')
     ;

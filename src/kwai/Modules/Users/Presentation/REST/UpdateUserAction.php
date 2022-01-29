@@ -19,7 +19,7 @@ use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Infrastructure\Repositories\AbilityDatabaseRepository;
+use Kwai\Modules\Users\Infrastructure\Repositories\RoleDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Presentation\Resources\UserResource;
 use Kwai\Modules\Users\UseCases\UpdateUser;
@@ -62,7 +62,7 @@ class UpdateUserAction extends Action
         try {
             $user = UpdateUser::create(
                 new UserDatabaseRepository($this->database),
-                new AbilityDatabaseRepository($this->database)
+                new RoleDatabaseRepository($this->database)
             )($command, $user);
         } catch (RepositoryException) {
             return (

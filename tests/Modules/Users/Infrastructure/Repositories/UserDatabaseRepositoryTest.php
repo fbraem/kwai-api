@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Ability;
+use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -47,7 +47,7 @@ it('can get a user with the given id', function ($user) use ($context) {
             ->toBeInstanceOf(User::class)
         ;
         /** @noinspection PhpUndefinedMethodInspection */
-        expect($entity->getAbilities())
+        expect($entity->getRoles())
             ->toBeInstanceOf(Collection::class)
         ;
         /* @noinspection PhpUndefinedMethodInspection */
@@ -87,18 +87,18 @@ it('throws a not found exception when user does not exist', function () use ($co
     ->throws(UserNotFoundException::class)
 ;
 
-it('can add an ability', function ($user) use ($context) {
+it('can add a role', function ($user) use ($context) {
     $repo = new UserDatabaseRepository($context->db);
 
-    $abilities = new Collection([
+    $roles = new Collection([
         new Entity(
             1,
-            new Ability(name: 'Admin')
+            new Role(name: 'Admin')
         )
     ]);
 
     try {
-        $repo->insertAbilities($user, $abilities);
+        $repo->insertRoles($user, $roles);
     } catch (RepositoryException $e) {
         $this->fail((string) $e);
     }
@@ -110,7 +110,7 @@ it('can add an ability', function ($user) use ($context) {
     } catch (UserNotFoundException $e) {
         $this->fail((string) $e);
     }
-    expect($user->getAbilities()->toArray())
+    expect($user->getRoles()->toArray())
         ->toHaveCount(1)
     ;
 })
@@ -118,18 +118,18 @@ it('can add an ability', function ($user) use ($context) {
     ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can remove an ability', function ($user) use ($context) {
+it('can remove a role', function ($user) use ($context) {
     $repo = new UserDatabaseRepository($context->db);
 
-    $abilities = new Collection([
+    $roles = new Collection([
         new Entity(
             1,
-            new Ability(name: 'Admin')
+            new Role(name: 'Admin')
         )
     ]);
 
     try {
-        $repo->deleteAbilities($user, $abilities);
+        $repo->deleteRoles($user, $roles);
     } catch (RepositoryException $e) {
         $this->fail((string) $e);
     }
@@ -141,7 +141,7 @@ it('can remove an ability', function ($user) use ($context) {
     } catch (UserNotFoundException $e) {
         $this->fail((string) $e);
     }
-    expect($user->getAbilities()->toArray())
+    expect($user->getRoles()->toArray())
         ->toHaveCount(0)
     ;
 })

@@ -23,35 +23,33 @@ class User implements DomainEntity
     /**
      * Constructor.
      *
-     * @param UniqueId           $uuid
-     * @param EmailAddress       $emailAddress
-     * @param Name               $username
-     * @param Collection|null    $abilities
-     * @param string|null        $remark
-     * @param int|null           $member
-     * @param TraceableTime|null $traceableTime
+     * @param UniqueId      $uuid
+     * @param EmailAddress  $emailAddress
+     * @param Name          $username
+     * @param Collection    $roles
+     * @param string        $remark
+     * @param int|null      $member
+     * @param TraceableTime $traceableTime
      */
     public function __construct(
-        private UniqueId $uuid,
-        private EmailAddress $emailAddress,
-        private Name $username,
-        private ?Collection $abilities = null,
-        private ?string $remark = null,
-        private ?int $member = null,
-        private ?TraceableTime $traceableTime = null
+        private UniqueId      $uuid,
+        private EmailAddress  $emailAddress,
+        private Name          $username,
+        private Collection    $roles = new Collection(),
+        private string        $remark = '',
+        private ?int          $member = null,
+        private TraceableTime $traceableTime = new TraceableTime()
     ) {
-        $this->traceableTime ??= new TraceableTime();
-        $this->abilities ??= collect();
     }
 
     /**
-     * Return the abilities of this user.
+     * Return the roles of this user.
      *
      * @return Collection
      */
-    public function getAbilities(): Collection
+    public function getRoles(): Collection
     {
-        return $this->abilities->collect();
+        return $this->roles->collect();
     }
 
     /**
@@ -74,9 +72,9 @@ class User implements DomainEntity
 
     /**
      * Get the remark
-     * @return string|null
+     * @return string
      */
-    public function getRemark(): ?string
+    public function getRemark(): string
     {
         return $this->remark;
     }
@@ -100,32 +98,33 @@ class User implements DomainEntity
     }
 
     /**
-     * Adds an ability to this user.
-     * @param Entity<Ability> $ability
+     * Adds a role to this user.
+     *
+     * @param Entity<Role> $role
      */
-    public function addAbility(Entity $ability)
+    public function addRole(Entity $role)
     {
-        $this->abilities->put($ability->id(), $ability);
+        $this->roles->put($role->id(), $role);
     }
 
     /**
-     * Set the abilities of the user
+     * Set the roles of the user
      *
-     * @param Collection $abilities
+     * @param Collection $roles
      */
-    public function setAbilities(Collection $abilities)
+    public function setRoles(Collection $roles)
     {
-        $this->abilities = $abilities->collect();
+        $this->roles = $roles->collect();
     }
 
     /**
-     * Removes the ability from the user.
+     * Removes the role from the user.
      *
-     * @param Entity $ability
+     * @param Entity $role
      */
-    public function removeAbility(Entity $ability)
+    public function removeRole(Entity $role)
     {
-        unset($this->abilities[$ability->id()]);
+        unset($this->roles[$role->id()]);
     }
 
     /**

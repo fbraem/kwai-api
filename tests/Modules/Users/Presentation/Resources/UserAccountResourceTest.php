@@ -40,16 +40,15 @@ it('can serialize an UserAccount to a JSON:API resource', function () {
     ;
     expect($json->data)
         ->toMatchObject([
-            'type' => 'users',
-            'id' => '1'
+            'type' => 'user_accounts',
+            'id' => (string) $uuid
         ])
         ->toHaveProperty('attributes')
     ;
     expect($json->data->attributes)
         ->toMatchObject([
             'email' => 'jigoro.kano@kwai.com',
-            'username' => 'Jigoro Kano',
-            'uuid' => (string) $uuid
+            'username' => 'Jigoro Kano'
         ])
     ;
 });

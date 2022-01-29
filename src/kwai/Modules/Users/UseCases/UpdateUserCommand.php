@@ -24,5 +24,5 @@ class UpdateUserCommand
 
     public ?string $remark = null;
 
-    public ?array $abilities = null;
+    public ?array $roles = null;
 }

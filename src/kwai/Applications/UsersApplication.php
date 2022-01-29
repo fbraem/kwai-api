@@ -7,20 +7,20 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Kwai\Modules\Users\Presentation\REST\AttachAbilityAction;
-use Kwai\Modules\Users\Presentation\REST\BrowseAbilitiesAction;
+use Kwai\Modules\Users\Presentation\REST\AttachRoleAction;
+use Kwai\Modules\Users\Presentation\REST\BrowseRolesAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseRulesAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseUserAccountsAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseUserInvitationsAction;
 use Kwai\Modules\Users\Presentation\REST\BrowseUsersAction;
-use Kwai\Modules\Users\Presentation\REST\CreateAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\CreateRoleAction;
 use Kwai\Modules\Users\Presentation\REST\CreateUserInvitationAction;
-use Kwai\Modules\Users\Presentation\REST\DetachAbilityAction;
-use Kwai\Modules\Users\Presentation\REST\GetAbilityAction;
-use Kwai\Modules\Users\Presentation\REST\GetUserAbilitiesAction;
+use Kwai\Modules\Users\Presentation\REST\DetachRoleAction;
+use Kwai\Modules\Users\Presentation\REST\GetRoleAction;
+use Kwai\Modules\Users\Presentation\REST\GetUserRolesAction;
 use Kwai\Modules\Users\Presentation\REST\GetUserAction;
 use Kwai\Modules\Users\Presentation\REST\GetUserInvitationAction;
-use Kwai\Modules\Users\Presentation\REST\UpdateAbilityAction;
+use Kwai\Modules\Users\Presentation\REST\UpdateRoleAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Kwai\Modules\Users\Presentation\REST\UpdateUserAction;
 
@@ -65,9 +65,9 @@ class UsersApplication extends Application
                 ]
             )
             ->get(
-                'user.abilities.browse',
-                '/users/{uuid}/abilities',
-                GetUserAbilitiesAction::class,
+                'user.roles.browse',
+                '/users/{uuid}/roles',
+                GetUserRolesAction::class,
                 [
                     'auth' => true
                 ],
@@ -76,49 +76,49 @@ class UsersApplication extends Application
                 ]
             )
             ->patch(
-                'user.abilities.attach',
-                '/users/{uuid}/abilities/{ability}',
-                AttachAbilityAction::class,
+                'user.roles.attach',
+                '/users/{uuid}/roles/{role}',
+                AttachRoleAction::class,
                 [
                     'auth' => true
                 ],
                 [
                     'uuid' => $uuid_regex,
-                    'ability' => '\d+'
+                    'role' => '\d+'
                 ]
             )
             ->delete(
-                'user.abilities.detach',
-                '/users/{uuid}/abilities/{ability}',
-                DetachAbilityAction::class,
+                'user.roles.detach',
+                '/users/{uuid}/roles/{role}',
+                DetachRoleAction::class,
                 [
                     'auth' => true
                 ],
                 [
                     'uuid' => $uuid_regex,
-                    'ability' => '\d+'
+                    'role' => '\d+'
                 ]
             )
             ->get(
-                'users.abilities.browse',
-                '/users/abilities',
-                BrowseAbilitiesAction::class,
+                'users.roles.browse',
+                '/users/roles',
+                BrowseRolesAction::class,
                 [
                     'auth' => true
                 ]
             )
             ->post(
-                'users.abilities.create',
-                '/users/abilities',
-                CreateAbilityAction::class,
+                'users.roles.create',
+                '/users/roles',
+                CreateRoleAction::class,
                 [
                     'auth' => true
                 ]
             )
             ->get(
-                'user.abilities.read',
-                '/users/abilities/{id}',
-                GetAbilityAction::class,
+                'user.roles.read',
+                '/users/roles/{id}',
+                GetRoleAction::class,
                 [
                     'auth' => true
                 ],
@@ -127,9 +127,9 @@ class UsersApplication extends Application
                 ]
             )
             ->patch(
-                'users.abilities.update',
-                '/users/abilities/{id}',
-                UpdateAbilityAction::class,
+                'users.roles.update',
+                '/users/roles/{id}',
+                UpdateRoleAction::class,
                 [
                     'auth' => true
                 ],

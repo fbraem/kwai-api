@@ -105,13 +105,14 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
 
         $userIds = $users->keys()->toArray();
 
-        // Get the abilities of all users
-        $abilityQuery = new UserAbilityDatabaseQuery($this->db);
-        $abilityQuery->filterByUser(...$userIds);
-        $abilities = $abilityQuery->execute();
+        // Get the roles of all users
+        $roleQuery = new UserRoleDatabaseQuery($this->db);
+        $roleQuery->filterByUser(...$userIds);
+        $roles = $roleQuery->execute();
+        # TODO: loop users instead
         foreach ($userIds as $userId) {
-            if ($abilities->has($userId)) {
-                $users[$userId]->abilities = $abilities->get($userId);
+            if ($roles->has($userId)) {
+                $users[$userId]->roles = $roles->get($userId);
             }
         }
 

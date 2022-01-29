@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
@@ -17,7 +18,7 @@ it('can serialize an UserInvitation to a JSON:API resource', function () {
         1,
         new UserInvitation(
             emailAddress: new EmailAddress('ingrid.berghmans@kwai.com'),
-            expiration: Timestamp::createNow(),
+            expiration: new LocalTimestamp(Timestamp::createNow(), 'UTC'),
             name: 'Ingrid Berghmans',
             creator: new Creator(1, new Name('Jigoro', 'Kano')),
             uuid: $uuid,
@@ -40,7 +41,7 @@ it('can serialize an UserInvitation to a JSON:API resource', function () {
     expect($json->data)
         ->toMatchObject([
             'type' => 'user_invitations',
-            'id' => '1'
+            'id' => (string) $uuid
         ])
         ->toHaveProperty('attributes')
     ;
@@ -48,7 +49,6 @@ it('can serialize an UserInvitation to a JSON:API resource', function () {
         ->toMatchObject([
             'email' => 'ingrid.berghmans@kwai.com',
             'username' => 'Ingrid Berghmans',
-            'uuid' => (string) $uuid,
             'confirmed_at' => null
         ])
     ;

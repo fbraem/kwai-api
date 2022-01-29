@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Ability;
+use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 
@@ -71,22 +71,22 @@ interface UserRepository
     public function update(Entity $user): void;
 
     /**
-     * Link the abilities to the given user.
+     * Link the roles to the given user.
      *
-     * @param Entity                      $user
-     * @param Collection<Entity<Ability>> $abilities
-     * @throws RepositoryException
+     * @param Entity                   $user
+     * @param Collection<Entity<Role>> $roles
      * @return void
+     *@throws RepositoryException
      */
-    public function insertAbilities(Entity $user, Collection $abilities): void;
+    public function insertRoles(Entity $user, Collection $roles): void;
 
     /**
-     * Remove the abilities from the given user.
+     * Remove the roles from the given user.
      *
-     * @param Entity                      $user
-     * @param Collection<Entity<Ability>> $abilities
-     * @throws RepositoryException
+     * @param Entity                   $user
+     * @param Collection<Entity<Role>> $roles
      * @return void
+     *@throws RepositoryException
      */
-    public function deleteAbilities(Entity $user, Collection $abilities): void;
+    public function deleteRoles(Entity $user, Collection $roles): void;
 }

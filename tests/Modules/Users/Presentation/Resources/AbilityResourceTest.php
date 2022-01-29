@@ -2,15 +2,15 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
-use Kwai\Modules\Users\Domain\Ability;
+use Kwai\Modules\Users\Domain\Role;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Rule;
-use Kwai\Modules\Users\Presentation\Resources\AbilityResource;
+use Kwai\Modules\Users\Presentation\Resources\RoleResource;
 
-it('can serialize an Ability to a JSON:API resource', function () {
-    $ability = new Entity(
+it('can serialize an Role to a JSON:API resource', function () {
+    $role = new Entity(
         1,
-        new Ability(
+        new Role(
             name: 'Coach',
             remark: 'All rules for a coach',
             rules: collect([
@@ -26,7 +26,7 @@ it('can serialize an Ability to a JSON:API resource', function () {
         )
     );
 
-    $resource = new AbilityResource($ability);
+    $resource = new RoleResource($role);
 
     try {
         $jsonapi = JSONAPI\Document::createFromObject($resource)->serialize();
@@ -41,7 +41,7 @@ it('can serialize an Ability to a JSON:API resource', function () {
     ;
     expect($json->data)
         ->toMatchObject([
-            'type' => 'abilities',
+            'type' => 'roles',
             'id' => '1'
         ])
         ->toHaveProperty('attributes')

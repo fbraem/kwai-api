@@ -27,7 +27,7 @@ it('can invite a user', function () use ($context) {
     $command = new InviteUserCommand();
     $command->sender_mail = 'test@kwai.com';
     $command->sender_name = 'Webmaster';
-    $command->email = 'ingrid.berghmans@kwai.com';
+    $command->email = 'ingrid.berghmans' . rand(1, 100) . '@kwai.com';
     $command->name = 'Ingrid Berghmans';
     $command->expiration = 14;
 

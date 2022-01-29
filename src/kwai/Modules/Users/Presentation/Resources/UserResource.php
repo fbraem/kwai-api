@@ -19,7 +19,7 @@ class UserResource
 {
     /**
      * @param Entity<User> $user
-     * @param Entity<User> $currentUser
+     * @param Entity|null  $currentUser
      */
     public function __construct(
         private Entity $user,
@@ -74,11 +74,11 @@ class UserResource
         return $this->user->getTraceableTime()->getUpdatedAt()?->__toString();
     }
 
-    #[JSONAPI\Relationship(name: 'abilities')]
-    public function getAbilities(): array
+    #[JSONAPI\Relationship(name: 'roles')]
+    public function getRoles(): array
     {
-        return $this->user->getAbilities()->map(
-            fn ($ability) => new AbilityResource($ability)
+        return $this->user->getRoles()->map(
+            fn ($role) => new RoleResource($role)
         )->toArray();
     }
 

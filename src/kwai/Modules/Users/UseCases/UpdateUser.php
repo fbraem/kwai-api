@@ -16,7 +16,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
-use Kwai\Modules\Users\Repositories\AbilityRepository;
+use Kwai\Modules\Users\Repositories\RoleRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
@@ -29,28 +29,28 @@ class UpdateUser
     /**
      * Constructor.
      *
-     * @param UserRepository    $userRepo
-     * @param AbilityRepository $abilityRepository
+     * @param UserRepository $userRepo
+     * @param RoleRepository $roleRepo
      */
     public function __construct(
         private UserRepository $userRepo,
-        private AbilityRepository $abilityRepository
+        private RoleRepository $roleRepo
     ) {
     }
 
     /**
      * Factory method.
      *
-     * @param UserRepository    $userRepo
-     * @param AbilityRepository $abilityRepository
+     * @param UserRepository $userRepo
+     * @param RoleRepository $roleRepo
      * @return UpdateUser
      */
     public static function create(
         UserRepository $userRepo,
-        AbilityRepository $abilityRepository
+        RoleRepository $roleRepo
     ) : self
     {
-        return new self($userRepo, $abilityRepository);
+        return new self($userRepo, $roleRepo);
     }
 
     /**
@@ -85,7 +85,7 @@ class UpdateUser
                 uuid: $user->getUuid(),
                 emailAddress: $email ?? $user->getEmailAddress(),
                 username: new Name($command->first_name, $command->last_name),
-                abilities: $user->getAbilities(),
+                roles: $user->getRoles(),
                 remark: $command->remark,
                 member: $user->getMember(),
                 traceableTime: $traceableTime
@@ -94,18 +94,18 @@ class UpdateUser
 
         $this->userRepo->update($user);
 
-        if ($command->abilities && count($command->abilities) > 0) {
-            $query = $this->abilityRepository->createQuery();
-            $query->filterByIds(...$command->abilities);
-            $abilities = $this->abilityRepository->getAll($query);
+        if ($command->roles && count($command->roles) > 0) {
+            $query = $this->roleRepo->createQuery();
+            $query->filterByIds(...$command->roles);
+            $roles = $this->roleRepo->getAll($query);
 
-            $abilitiesToAdd = $abilities->diffKeys($user->getAbilities());
-            $abilitiesToAdd->each(fn (Entity $ability) => $user->addAbility($ability));
-            $this->userRepo->insertAbilities($user, $abilitiesToAdd);
+            $rolesToAdd = $roles->diffKeys($user->getRoles());
+            $rolesToAdd->each(fn (Entity $role) => $user->addRole($role));
+            $this->userRepo->insertRoles($user, $rolesToAdd);
 
-            $abilitiesToRemove = $user->getAbilities()->diffKeys($abilities);
-            $abilitiesToRemove->each(fn (Entity $ability) => $user->removeAbility($ability));
-            $this->userRepo->deleteAbilities($user, $abilitiesToRemove);
+            $rolesToRemove = $user->getRoles()->diffKeys($roles);
+            $rolesToRemove->each(fn (Entity $role) => $user->removeRole($role));
+            $this->userRepo->deleteRoles($user, $rolesToRemove);
         }
 
         return $user;

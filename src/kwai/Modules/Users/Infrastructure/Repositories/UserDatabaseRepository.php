@@ -18,7 +18,7 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
-use Kwai\Modules\Users\Infrastructure\UserAbilitiesTable;
+use Kwai\Modules\Users\Infrastructure\UserRolesTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserQuery;
 use Kwai\Modules\Users\Repositories\UserRepository;
@@ -107,26 +107,26 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     /**
      * @inheritDoc
      */
-    public function insertAbilities(Entity $user, Collection $abilities): void
+    public function insertRoles(Entity $user, Collection $roles): void
     {
-        if ($abilities->count() == 0)
+        if ($roles->count() == 0)
             return;
 
-        $abilities = $abilities
+        $roles = $roles
             ->map(
-                fn (Entity $ability) => collect([
-                    'ability_id' => $ability->id(),
+                fn (Entity $role) => collect([
+                    'role_id' => $role->id(),
                     'user_id' => $user->id()
                 ])
             )
         ;
 
         $query = $this->db->createQueryFactory()
-            ->insert(UserAbilitiesTable::name())
-            ->columns(... $abilities->first()->keys())
+            ->insert(UserRolesTable::name())
+            ->columns(... $roles->first()->keys())
         ;
-        $abilities->each(
-            fn(Collection $ability) => $query->values(... $ability->values())
+        $roles->each(
+            fn(Collection $role) => $query->values(... $role->values())
         );
 
         try {
@@ -139,21 +139,21 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     /**
      * @inheritDoc
      */
-    public function deleteAbilities(Entity $user, Collection $abilities): void
+    public function deleteRoles(Entity $user, Collection $roles): void
     {
-        if ($abilities->count() == 0)
+        if ($roles->count() == 0)
             return;
 
-        $abilityIds = $abilities->map(fn (Entity $item) => $item->id());
+        $roleIds = $roles->map(fn (Entity $item) => $item->id());
 
         $query = $this->db->createQueryFactory()
-            ->delete(UserAbilitiesTable::name())
+            ->delete(UserRolesTable::name())
             ->where(
-                UserAbilitiesTable::field('user_id')
+                UserRolesTable::field('user_id')
                     ->eq($user->id())
             )->andWhere(
-                UserAbilitiesTable::field('ability_id')
-                    ->in(...$abilityIds->values())
+                UserRolesTable::field('role_id')
+                    ->in(...$roleIds->values())
             )
         ;
         try {
