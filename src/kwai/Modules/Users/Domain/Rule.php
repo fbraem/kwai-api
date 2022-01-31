@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use Kwai\Core\Domain\Permission;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\DomainEntity;
 
@@ -50,9 +51,9 @@ class Rule implements DomainEntity
         return $this->subject;
     }
 
-    public function hasPermission($permission): bool
+    public function hasPermission(Permission $permission): bool
     {
-        return ($this->permission | $permission) === $permission;
+        return ($this->permission & $permission->value) === $permission->value;
     }
 
     /**
