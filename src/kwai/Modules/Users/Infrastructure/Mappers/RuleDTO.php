@@ -33,6 +33,7 @@ final class RuleDTO
         return new Rule(
             name: $this->rule->name,
             subject: $this->subject->name,
+            permission: $this->rule->permission,
             remark: $this->rule->remark,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->rule->created_at),
