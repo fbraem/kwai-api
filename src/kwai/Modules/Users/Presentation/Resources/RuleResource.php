@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Presentation\Resources;
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\Permission;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Rule;
 
@@ -52,6 +53,30 @@ class RuleResource
     public function getCreationDate(): string
     {
         return (string) $this->rule->getTraceableTime()->getCreatedAt();
+    }
+
+    #[JSONAPI\Attribute(name: 'can_update')]
+    public function canUpdate(): bool
+    {
+        return $this->rule->hasPermission(Permission::CanUpdate);
+    }
+
+    #[JSONAPI\Attribute(name: 'can_create')]
+    public function canCreate(): bool
+    {
+        return $this->rule->hasPermission(Permission::CanCreate);
+    }
+
+    #[JSONAPI\Attribute(name: 'can_view')]
+    public function canView(): bool
+    {
+        return $this->rule->hasPermission(Permission::CanView);
+    }
+
+    #[JSONAPI\Attribute(name: 'can_delete')]
+    public function canDelete(): bool
+    {
+        return $this->rule->hasPermission(Permission::CanDelete);
     }
 
     #[JSONAPI\Attribute(name: 'updated_at')]
