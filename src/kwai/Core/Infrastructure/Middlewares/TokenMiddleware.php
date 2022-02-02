@@ -47,16 +47,8 @@ class TokenMiddleware implements MiddlewareInterface
                 new class implements RuleInterface {
                     public function __invoke(ServerRequestInterface $request): bool
                     {
-                        $extra = $request->getAttribute('kwai.extra');
-                        if (isset($extra)) {
-                            if (isset($extra['auth'])) {
-                                return $extra['auth'];
-                            }
-                            if ($request->hasHeader('Authorization')) {
-                                return strlen($request->getHeader('Authorization')[0]) > 0;
-                            }
-                        }
-                        return false;
+                        $extra = $request->getAttribute('kwai.extra') ?? ['auth' => false];
+                        return $extra['auth'] ?? false;
                     }
                 }
             ],
