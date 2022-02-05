@@ -26,7 +26,7 @@ class User implements DomainEntity
      * @param UniqueId      $uuid
      * @param EmailAddress  $emailAddress
      * @param Name          $username
-     * @param Collection    $roles
+     * @param Collection<Entity<Role>>    $roles
      * @param string        $remark
      * @param int|null      $member
      * @param TraceableTime $traceableTime
@@ -125,6 +125,16 @@ class User implements DomainEntity
     public function removeRole(Entity $role)
     {
         unset($this->roles[$role->id()]);
+    }
+
+    /**
+     * Checks if the user has the given role.
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles->contains(
+            fn(Entity $role) => $role->getName() === $roleName
+        );
     }
 
     /**
