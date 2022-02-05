@@ -1,11 +1,11 @@
 <?php
 /**
  * @package Core
- * @subpackage Domain
+ * @subpackage Infrastructure
  */
 declare(strict_types=1);
 
-namespace Kwai\Core\Domain;
+namespace Kwai\Core\Infrastructure\Security;
 
 /**
  * Interface Policy
