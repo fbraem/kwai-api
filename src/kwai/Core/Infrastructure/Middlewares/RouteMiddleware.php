@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
-use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
+use Exception;
 use Kwai\Core\Infrastructure\Presentation\RouteException;
 use Kwai\Core\Infrastructure\Presentation\Router;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -66,7 +65,7 @@ class RouteMiddleware implements MiddlewareInterface
                     ->withAttribute('kwai.action', $action)
                     ->withAttribute('kwai.action.args', $parameters)
                     ->withAttribute('kwai.extra', $extra);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw new RouteException(message: 'Could not find a route', previous: $e);
             }
         }
