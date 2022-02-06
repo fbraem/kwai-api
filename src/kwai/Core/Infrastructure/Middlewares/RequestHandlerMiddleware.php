@@ -11,6 +11,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use ReflectionClass;
+use ReflectionException;
 use RuntimeException;
 
 /**
@@ -30,7 +32,17 @@ class RequestHandlerMiddleware implements MiddlewareInterface
     {
         $action = $request->getAttribute('kwai.action');
 
-        if (is_callable($action)) {
+        if ($action instanceof ReflectionClass) {
+            try {
+                $callableAction = $action->newInstance();
+            } catch (ReflectionException $e) {
+                throw new RuntimeException(
+                    message: "Could not create an instance of the action class: $action",
+                    previous: $e
+                );
+            }
+        }
+        elseif (is_callable($action)) {
             $callableAction = $action();
         } elseif (class_exists($action)) {
             $callableAction = new $action();
