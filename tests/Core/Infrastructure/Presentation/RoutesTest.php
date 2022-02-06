@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Applications\UsersApplication;
+use Kwai\Applications\Users\UsersApplication;
 use Nyholm\Psr7\ServerRequest;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Component\Routing\Matcher\UrlMatcher;

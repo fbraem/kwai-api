@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 require '../autoload.php';
 
-use Kwai\Applications\UsersApplication;
+use Kwai\Applications\Users\UsersApplication;
 
 $app = new UsersApplication();
 $app->run();
