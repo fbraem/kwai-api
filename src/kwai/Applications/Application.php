@@ -1,7 +1,6 @@
 <?php
 /**
- * @package Kwai
- * @subpackage Applications
+ * @package Applications
  */
 declare(strict_types=1);
 
@@ -17,7 +16,8 @@ use Kwai\Core\Infrastructure\Middlewares\ParametersMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\RequestHandlerMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\RouteMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\TokenMiddleware;
-use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
+// use Kwai\Core\Infrastructure\Middlewares\TransactionMiddleware;
+use Kwai\Core\Infrastructure\Presentation\RouteClassLoader;
 use Kwai\Core\Infrastructure\Presentation\Router;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Neomerx\Cors\Analyzer;
@@ -29,7 +29,7 @@ use Whoops\Handler\JsonResponseHandler;
 use Whoops\Run;
 
 /**
- * Class KwaiApplication
+ * Class Application
  */
 abstract class Application
 {
@@ -38,7 +38,7 @@ abstract class Application
     public const UUID_REGEX = '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}+';
 
     /**
-     * KwaiApplication Constructor
+     * Application Constructor
      */
     public function __construct(
         private ?array $settings = null
@@ -51,7 +51,19 @@ abstract class Application
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
 
-    abstract protected function createRouter(): Router;
+    protected function getActions(): array
+    {
+        return [];
+    }
+
+    /**
+     * @deprecated
+     * @return Router|null
+     */
+    protected function createRouter(): ?Router
+    {
+        return null;
+    }
 
     public function addMiddlewares(): void
     {
@@ -76,8 +88,6 @@ abstract class Application
         $level = ob_get_level();
 
         try {
-            $router = $this->createRouter();
-
             $psr17Factory = new Psr17Factory();
             $creator = new ServerRequestCreator(
                 $psr17Factory,
@@ -117,7 +127,15 @@ abstract class Application
             if ($cors) {
                 $this->addMiddleware(new CorsMiddleware($psr17Factory, $cors));
             }
-            $this->addMiddleware(new RouteMiddleware($router, $psr17Factory));
+
+            $routes = $this->getActions();
+            if (count($routes) > 0) {
+                $loader = new RouteClassLoader();
+                $this->addMiddleware(new RouteMiddleware($loader->loadAll($routes)));
+            } else {
+                $routes = $this->createRouter();
+                $this->addMiddleware(new RouteMiddleware($routes));
+            }
             $this->addMiddleware(new ParametersMiddleware());
             // $this->addMiddleware(new TransactionMiddleware());
             $this->addMiddleware(new LogActionMiddleware());
