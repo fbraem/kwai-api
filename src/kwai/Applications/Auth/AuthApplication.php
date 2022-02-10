@@ -11,7 +11,7 @@ use Kwai\Applications\Application;
 use Kwai\Applications\Auth\Actions\LoginAction;
 use Kwai\Applications\Auth\Actions\LogoutAction;
 use Kwai\Applications\Auth\Actions\RefreshTokenAction;
-use Kwai\Applications\Users\Actions\GetUserAction;
+use Kwai\Applications\Auth\Actions\GetUserAction;
 
 /**
  * Class AuthApplication
