@@ -27,7 +27,7 @@ use function depends;
 #[Route(
     path: '/auth',
     name: 'auth.get',
-    defaults: ['auth' => true],
+    options: ['auth' => true],
     methods: ['GET']
 )]
 class GetUserAction extends Action
