@@ -140,7 +140,7 @@ abstract class Application
             // $this->addMiddleware(new TransactionMiddleware());
             $this->addMiddleware(new LogActionMiddleware());
             $this->addMiddleware(new JsonBodyParserMiddleware());
-            $this->addMiddleware(new TokenMiddleware());
+            $this->addMiddleware(new TokenMiddleware($psr17Factory));
 
             $this->addMiddlewares();
 

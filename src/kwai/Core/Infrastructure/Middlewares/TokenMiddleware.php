@@ -7,75 +7,45 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Middlewares;
 
+use Exception;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
+use Monolog\Logger;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Tuupola\Middleware\JwtAuthentication;
-use Tuupola\Middleware\JwtAuthentication\RuleInterface;
 
 /**
  * Class TokenMiddleware
- * A wrapper around JwtAuthentication middleware.
+ *
+ * Middleware for checking the access token.
+ * This code is based on https://github.com/tuupola/slim-jwt-auth
  */
 class TokenMiddleware implements MiddlewareInterface
 {
     private MiddlewareInterface $jwtMiddleware;
 
     public function __construct(
+        private ResponseFactoryInterface $responseFactory,
         private ?array $settings = null,
-        private ?Connection $db = null
+        private ?Connection $db = null,
+        private ?Logger $logger = null
     ) {
         $this->settings ??= depends('kwai.settings', Settings::class);
         $this->db ??= depends('kwai.database', DatabaseDependency::class);
-        $dbForMiddleware = $this->db;
-
-        $this->jwtMiddleware = new JwtAuthentication([
-            'secure' => true,
-            'relaxed' => $this->settings['security']['relaxed'] ?? [],
-            'secret' => $this->settings['security']['secret'],
-            'algorithm' => [$this->settings['security']['algorithm']],
-            'rules' => [
-                // When the route contains the argument auth with the value true,
-                // this middleware must run!
-                new class implements RuleInterface {
-                    public function __invoke(ServerRequestInterface $request): bool
-                    {
-                        $extra = $request->getAttribute('kwai.extra') ?? ['auth' => false];
-                        return $extra['auth'] ?? false;
-                    }
-                }
-            ],
-            'error' => function (ResponseInterface $response, $arguments) {
-                $data['status'] = 'error';
-                $data['message'] = $arguments['message'];
-                $response->getBody()->write(
-                    json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
-                );
-                return $response
-                    ->withHeader('Content-Type', 'application/json')
-                    // ->withHeader('Access-Control-Allow-Credentials', 'true')
-                    // ->withHeader('Access-Control-Allow-Origin', $settings['cors']['origin'])
-                ;
-            },
-            'before' => function (ServerRequestInterface $request, $arguments) use ($dbForMiddleware) {
-                $uuid = new UniqueId($arguments['decoded']['sub']);
-                $userRepo = new UserDatabaseRepository($dbForMiddleware);
-                try {
-                    $user = $userRepo->getByUniqueId($uuid);
-                    return $request
-                        ->withAttribute('kwai.user', $user);
-                } catch (UserNotFoundException) {
-                }
-                return null;
-            }
-        ]);
+        $this->logger ??= depends('kwai.logger', LoggerDependency::class);
     }
 
     /**
@@ -83,6 +53,102 @@ class TokenMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->jwtMiddleware->process($request, $handler);
+        // Only check authentication when the route has an option with 'auth'
+        // set to true.
+        $extra = $request->getAttribute('kwai.extra') ?? ['auth' => false];
+        $shouldAuthenticate = $extra['auth'] ?? false;
+        if (!$shouldAuthenticate) {
+            return $handler->handle($request);
+        }
+
+        $scheme = $request->getUri()->getScheme();
+        $host = $request->getUri()->getHost();
+
+        /* HTTP allowed only if secure is false or server is in relaxed array. */
+        if ("https" !== $scheme) {
+            if (!in_array($host, $this->settings['security']["relaxed"] ?? [])) {
+                $message = sprintf(
+                    "Insecure use of middleware over %s denied by configuration.",
+                    strtoupper($scheme)
+                );
+                $response = $this->responseFactory->createResponse();
+                return (new NotAuthorizedResponse($message))($response);
+            }
+        }
+
+        // Try to find the token in header or cookie
+        $token = $this->fetchToken($request);
+        if ($token === null) {
+            $response = $this->responseFactory->createResponse();
+            return (new SimpleResponse(400, 'Token not found'))($response);
+        }
+
+        // Try to decode the token
+        try {
+            $decoded = JWT::decode(
+                $token,
+                new Key(
+                    $this->settings['security']['secret'],
+                    $this->settings['security']['algorithm'] ?? 'HS256'
+                )
+            );
+        } catch (ExpiredException) {
+            $response = $this->responseFactory->createResponse();
+            return (new NotAuthorizedResponse('Token is expired'))($response);
+        } catch (Exception $exception) {
+            $this->logger->warning($exception->getMessage(), [$token]);
+            $response = $this->responseFactory->createResponse();
+            return (new SimpleResponse(400, 'Token could not be decoded'))($response);
+        }
+
+        $uuid = new UniqueId($decoded->sub);
+        $userRepo = new UserDatabaseRepository($this->db);
+        try {
+            $user = $userRepo->getByUniqueId($uuid);
+            $request = $request->withAttribute('kwai.user', $user);
+        } catch (UserNotFoundException) {
+            $this->logger->warning("User with uuid $uuid does not exist");
+            $response = $this->responseFactory->createResponse();
+            return (new SimpleResponse(400, 'User not found'))($response);
+        }
+
+        // Everything is ok, let the next middleware do its thing
+        return $handler->handle($request);
+    }
+
+    /**
+     * Fetch the access token.
+     */
+    private function fetchToken(ServerRequestInterface $request): ?string
+    {
+        $regexp = $this->settings['security']['regexp'] ?? '/Bearer\s+(.*)$/i';
+
+        /* Check for token in header. */
+        $headerName = $this->settings['security']['header'] ?? 'Authorization';
+        $header = $request->getHeaderLine($headerName);
+
+        if (false === empty($header)) {
+            if (preg_match($regexp, $header, $matches)) {
+                $this->logger->debug('Using token from request header', [$headerName]);
+                return $matches[1];
+            }
+        }
+
+        /* Token not found in header try a cookie. */
+        $cookieParams = $request->getCookieParams();
+        $cookieName = $this->settings['security']['cookie'] ?? 'token';
+        if (isset($cookieParams[$cookieName])) {
+            $this->logger->debug('Using token from cookie', [$cookieName]);
+            if (preg_match(
+                $regexp,
+                $cookieParams[$cookieName],
+                $matches
+            )) {
+                return $matches[1];
+            }
+            return $cookieParams[$cookieName];
+        };
+
+        return null;
     }
 }

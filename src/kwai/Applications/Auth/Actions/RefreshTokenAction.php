@@ -10,6 +10,7 @@ namespace Kwai\Applications\Auth\Actions;
 use Exception;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -64,13 +65,12 @@ class RefreshTokenAction extends Action
         $data = $request->getParsedBody();
 
         $secret = $this->settings['security']['secret'];
-        $algorithm = $this->settings['security']['algorithm'];
+        $algorithm = $this->settings['security']['algorithm'] ?? 'HS256';
 
         try {
             $decodedRefreshToken = JWT::decode(
                 $data['refresh_token'],
-                $secret,
-                [ $algorithm ]
+                new Key($secret, $algorithm)
             );
         } catch (ExpiredException) {
             return (new NotAuthorizedResponse('Refreshtoken expired'))($response);
