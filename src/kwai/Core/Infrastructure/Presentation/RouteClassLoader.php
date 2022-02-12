@@ -25,7 +25,13 @@ class RouteClassLoader extends AnnotationClassLoader
         ReflectionMethod $method,
         object $annot
     ) {
-        $route->setDefault('_action', $class);
+        $options = $route->getOptions();
+        // Remove symfony option
+        unset($options['compiler_class']);
+        $route->addDefaults([
+            '_action' => $class,
+            '_extra' => $options
+        ]);
     }
 
     public function loadAll(array $classes): RouteCollection
