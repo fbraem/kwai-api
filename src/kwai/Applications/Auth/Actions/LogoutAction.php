@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Applications\Auth\Actions;
 
+use Exception;
 use Firebase\JWT\JWT;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
@@ -65,11 +66,19 @@ class LogoutAction extends Action
         $secret = $this->settings['security']['secret'];
         $algorithm = $this->settings['security']['algorithm'];
 
-        $decodedRefreshToken = JWT::decode(
-            $data['refresh_token'],
-            $secret,
-            [ $algorithm ]
-        );
+        if (!isset($data['refresh_token'])) {
+            return (new SimpleResponse(400, 'Refreshtoken is missing'))($response);
+        }
+
+        try {
+            $decodedRefreshToken = JWT::decode(
+                $data['refresh_token'],
+                $secret,
+                [$algorithm]
+            );
+        } catch (Exception $e) {
+            return (new SimpleResponse(400, $e->getMessage()))($response);
+        }
 
         $command = new LogoutCommand();
         $command->identifier = $decodedRefreshToken->jti;
