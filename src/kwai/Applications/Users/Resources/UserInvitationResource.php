@@ -36,8 +36,8 @@ class UserInvitationResource
         return (string) $this->userInvitation->getEmailAddress();
     }
 
-    #[JSONAPI\Attribute(name: 'username')]
-    public function getUsername(): string
+    #[JSONAPI\Attribute(name: 'name')]
+    public function getName(): string
     {
         return $this->userInvitation->getName();
     }
