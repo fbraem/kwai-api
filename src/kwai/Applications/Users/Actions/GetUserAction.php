@@ -29,10 +29,10 @@ use function depends;
 /**
  * Class UserAction
  *
- * Action to get the logged-in user.
+ * Action to get a user.
  */
 #[Route(
-    path: '/users',
+    path: '/users/{uuid}',
     name: 'users.get',
     requirements: ['uuid' => Application::UUID_REGEX],
     defaults: ['auth' => true],
