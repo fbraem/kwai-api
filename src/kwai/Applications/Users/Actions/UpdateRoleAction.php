@@ -27,6 +27,7 @@ use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Symfony\Component\Routing\Annotation\Route;
 use function depends;
 
 /**
@@ -34,6 +35,16 @@ use function depends;
  *
  * Action to update an existing role
  */
+#[Route(
+    path: '/users/roles/{id}',
+    name: 'users.roles.update',
+    requirements: [
+        'id' => '\d+'
+    ],
+    options: [
+        'auth' => true
+    ]
+)]
 class UpdateRoleAction extends Action
 {
     public function __construct(

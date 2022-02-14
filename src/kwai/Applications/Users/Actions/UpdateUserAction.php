@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Actions;
 
+use Kwai\Applications\Application;
 use Kwai\Applications\Users\Resources\UserResource;
 use Kwai\Applications\Users\Schemas\UserSchema;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
@@ -28,11 +29,22 @@ use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use function depends;
 
 /**
  * Class UpdateUserAction
  */
+#[Route(
+    path: '/users/{uuid}',
+    name: 'users.update',
+    requirements: [
+        'uuid' => Application::UUID_REGEX
+    ],
+    options: [
+        'auth' => true
+    ]
+)]
 class UpdateUserAction extends Action
 {
     public function __construct(
