@@ -38,12 +38,9 @@ use function depends;
 #[Route(
     path: '/users/{uuid}',
     name: 'users.update',
-    requirements: [
-        'uuid' => Application::UUID_REGEX
-    ],
-    options: [
-        'auth' => true
-    ]
+    requirements: ['uuid' => Application::UUID_REGEX],
+    options: ['auth' => true],
+    methods: ['PATCH']
 )]
 class UpdateUserAction extends Action
 {

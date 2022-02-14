@@ -38,12 +38,9 @@ use function depends;
 #[Route(
     path: '/users/roles/{id}',
     name: 'users.roles.update',
-    requirements: [
-        'id' => '\d+'
-    ],
-    options: [
-        'auth' => true
-    ]
+    requirements: ['id' => '\d+'],
+    options: ['auth' => true],
+    methods: ['PATCH']
 )]
 class UpdateRoleAction extends Action
 {
