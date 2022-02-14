@@ -9,8 +9,6 @@ namespace Kwai\Applications\Auth\Actions;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -18,6 +16,7 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\Infrastructure\Security\JsonWebToken;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
@@ -68,10 +67,11 @@ class RefreshTokenAction extends Action
         $algorithm = $this->settings['security']['algorithm'] ?? 'HS256';
 
         try {
-            $decodedRefreshToken = JWT::decode(
+            $decodedRefreshToken = JsonWebToken::decode(
                 $data['refresh_token'],
-                new Key($secret, $algorithm)
-            );
+                $secret,
+                $algorithm
+            )->getObject();
         } catch (ExpiredException) {
             return (new NotAuthorizedResponse('Refreshtoken expired'))($response);
         } catch (Exception $e) {
@@ -103,26 +103,26 @@ class RefreshTokenAction extends Action
         $accessToken = $refreshToken->getAccessToken();
         /** @noinspection PhpUndefinedMethodInspection */
         $data = [
-            'access_token' => JWT::encode(
-                [
+            'access_token' => (new JsonWebToken(
+                $secret,
+                $algorithm,
+                (object) [
                     'iat' => $accessToken->getTraceableTime()->getCreatedAt()->format('U'),
                     'exp' => $accessToken->getExpiration()->format('U'),
                     'jti' => strval($accessToken->getIdentifier()),
                     'sub' => strval($accessToken->getUserAccount()->getUser()->getUuid()),
                     'scope' => []
-                ],
+                ]
+                ))->encode(),
+            'refresh_token' => (new JsonWebToken(
                 $secret,
-                $algorithm
-            ),
-            'refresh_token' => JWT::encode(
-                [
+                $algorithm,
+                (object)[
                     'iat' => $refreshToken->getTraceableTime()->getCreatedAt()->format('U'),
                     'exp' => $refreshToken->getExpiration()->format('U'),
                     'jti' => strval($refreshToken->getIdentifier())
                 ],
-                $secret,
-                $algorithm
-            ),
+            ))->encode(),
             'expires' => strval($accessToken->getExpiration())
         ];
         $response

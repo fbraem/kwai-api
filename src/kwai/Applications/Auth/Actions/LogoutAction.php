@@ -8,8 +8,6 @@ declare(strict_types = 1);
 namespace Kwai\Applications\Auth\Actions;
 
 use Exception;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -18,6 +16,7 @@ use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\OkResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\Infrastructure\Security\JsonWebToken;
 use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
@@ -72,16 +71,17 @@ class LogoutAction extends Action
         }
 
         try {
-            $decodedRefreshToken = JWT::decode(
+            $refreshToken = JsonWebToken::decode(
                 $data['refresh_token'],
-                new Key($secret, $algorithm)
-            );
+                $secret,
+                $algorithm
+            )->getObject();
         } catch (Exception $e) {
             return (new SimpleResponse(400, $e->getMessage()))($response);
         }
 
         $command = new LogoutCommand();
-        $command->identifier = $decodedRefreshToken->jti;
+        $command->identifier = $refreshToken->jti;
 
         try {
             Logout::create(

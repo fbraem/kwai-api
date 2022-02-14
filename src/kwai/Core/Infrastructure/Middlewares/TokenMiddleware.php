@@ -18,6 +18,7 @@ use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
+use Kwai\Core\Infrastructure\Security\JsonWebToken;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Monolog\Logger;
@@ -85,13 +86,11 @@ class TokenMiddleware implements MiddlewareInterface
 
         // Try to decode the token
         try {
-            $decoded = JWT::decode(
+            $decoded = JsonWebToken::decode(
                 $token,
-                new Key(
-                    $this->settings['security']['secret'],
-                    $this->settings['security']['algorithm'] ?? 'HS256'
-                )
-            );
+                $this->settings['security']['secret'],
+                $this->settings['security']['algorithm'] ?? 'HS256'
+            )->getObject();
         } catch (ExpiredException) {
             $response = $this->responseFactory->createResponse();
             return (new NotAuthorizedResponse('Token is expired'))($response);

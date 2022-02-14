@@ -15,6 +15,7 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Core\Infrastructure\Security\JsonWebToken;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
@@ -111,30 +112,28 @@ class LoginAction extends Action
         $secret = $this->settings['security']['secret'];
         $algorithm = $this->settings['security']['algorithm'];
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $accessToken = $refreshToken->getAccessToken();
-        /** @noinspection PhpUndefinedMethodInspection */
         $data = [
-            'access_token' => JWT::encode(
-                [
+            'access_token' => (new JsonWebToken(
+                $secret,
+                $algorithm,
+                (object)[
                     'iat' => $accessToken->getTraceableTime()->getCreatedAt()->format('U'),
                     'exp' => $accessToken->getExpiration()->format('U'),
                     'jti' => strval($accessToken->getIdentifier()),
                     'sub' => strval($accessToken->getUserAccount()->getUser()->getUuid()),
                     'scope' => []
                 ],
+            ))->encode(),
+            'refresh_token' => (new JsonWebToken(
                 $secret,
-                $algorithm
-            ),
-            'refresh_token' => JWT::encode(
-                [
+                $algorithm,
+                (object) [
                     'iat' => $refreshToken->getTraceableTime()->getCreatedAt()->format('U'),
                     'exp' => $refreshToken->getExpiration()->format('U'),
                     'jti' => strval($refreshToken->getIdentifier())
                 ],
-                $secret,
-                $algorithm
-            ),
+            ))->encode(),
             'expires' => strval($accessToken->getExpiration())
         ];
 
