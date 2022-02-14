@@ -8,6 +8,9 @@ declare(strict_types = 1);
 namespace Kwai\Applications\Users\Actions;
 
 use Kwai\Applications\Users\Resources\UserInvitationResource;
+use Kwai\Applications\Users\Schemas\UserInvitationSchema;
+use Kwai\Applications\Users\Security\InviterPolicy;
+use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Database\Connection;
@@ -15,7 +18,10 @@ use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
+use Kwai\Core\Infrastructure\Presentation\Responses\ForbiddenResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
+use Kwai\Core\Infrastructure\Presentation\Responses\NotAuthorizedResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
@@ -31,6 +37,7 @@ use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function depends;
 
@@ -53,39 +60,12 @@ class CreateUserInvitationAction extends Action
         private ?Connection $database = null,
         private ?PlatesEngine $templateEngine = null,
         private ?array $settings = null,
+        ?LoggerInterface $logger = null
     ) {
-        parent::__construct();
+        parent::__construct($logger);
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
         $this->templateEngine ??= depends('kwai.template_engine', TemplateDependency::class);
         $this->settings ??= depends('kwai.settings', Settings::class);
-    }
-
-    /**
-     * Create a command from the request data
-     * @param array $data
-     * @return InviteUserCommand
-     * @throws ValidationException
-     */
-    private function createCommand(array $data): InviteUserCommand
-    {
-        $schema = Expect::structure([
-            'data' => Expect::structure([
-                'type' => Expect::string(),
-                'attributes' => Expect::structure([
-                    'email' => Expect::string()->required(),
-                    'name' => Expect::string()->required(),
-                    'remark' => Expect::string()
-                ])
-            ])
-        ]);
-        $processor = new Processor();
-        $normalized = $processor->process($schema, $data);
-
-        $command = new InviteUserCommand();
-        $command->email = $normalized->data->attributes->email;
-        $command->name = $normalized->data->attributes->name;
-        $command->remark = $normalized->data->attributes->remark ?? null;
-        return $command;
     }
 
     /**
@@ -93,12 +73,19 @@ class CreateUserInvitationAction extends Action
      * @param Response $response
      * @param array    $args
      * @return Response
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __invoke(Request $request, Response $response, array $args): Response
     {
+        $user = $request->getAttribute('kwai.user');
+        $policy = new InviterPolicy($user);
+        if (!$policy->canCreate()) {
+            return (new ForbiddenResponse('Not allowed to invite a user'))($response);
+        }
+
         try {
-            $command = $this->createCommand($request->getParsedBody());
+            $command = InputSchemaProcessor::create(new UserInvitationSchema())
+                ->process($request->getParsedBody())
+            ;
         } catch (ValidationException $ve) {
             return (new SimpleResponse(422, $ve->getMessage()))($response);
         }
@@ -114,7 +101,6 @@ class CreateUserInvitationAction extends Action
             $command->sender_name = '';
         }
 
-        $user = $request->getAttribute('kwai.user');
         $creator = new Creator($user->id(), $user->getUsername());
 
         try {
