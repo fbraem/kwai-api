@@ -66,6 +66,10 @@ class RefreshTokenAction extends Action
         $secret = $this->settings['security']['secret'];
         $algorithm = $this->settings['security']['algorithm'] ?? 'HS256';
 
+        if (!isset($data['refresh_token'])) {
+            return (new SimpleResponse(400, 'No refresh token passed'))($response);
+        }
+
         try {
             $decodedRefreshToken = JsonWebToken::decode(
                 $data['refresh_token'],
