@@ -28,7 +28,7 @@ class MailerException extends Exception
         $this->exception = $exception;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $str = __CLASS__ . ': ' . $this->getMessage();
         if ($this->exception) {
