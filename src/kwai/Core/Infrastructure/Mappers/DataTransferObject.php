@@ -12,6 +12,7 @@ use Kwai\Core\Domain\Entity;
 
 /**
  * Interface DataTransferObject
+ * @deprecated
  */
 interface DataTransferObject
 {
