@@ -7,11 +7,12 @@ declare(strict_types = 1);
 namespace Kwai\Core\Domain\ValueObjects;
 
 use InvalidArgumentException;
+use Stringable;
 
 /**
  * Value object for an email address.
  */
-final class EmailAddress
+final class EmailAddress implements Stringable
 {
     /**
      * The username part of the email address.
@@ -27,7 +28,7 @@ final class EmailAddress
      * Constructs a new EmailAddress.
      *
      * @param string $emailAddress
-     * @throws InvalidArgumentException Thrown when the emailaddress is invalid
+     * @throws InvalidArgumentException Thrown when the email address is invalid
      */
     public function __construct(string $emailAddress)
     {
@@ -35,7 +36,7 @@ final class EmailAddress
             list($this->userName, $this->domain) = explode('@', $emailAddress);
         } else {
             throw new InvalidArgumentException(
-                "'$emailAddress' is not a valid emailaddress."
+                "'$emailAddress' is not a valid email address."
             );
         }
     }
@@ -43,7 +44,7 @@ final class EmailAddress
     /**
      * Returns a string representation.
      *
-     * @return string The full emailaddress.
+     * @return string The full email address.
      */
     public function __toString(): string
     {
