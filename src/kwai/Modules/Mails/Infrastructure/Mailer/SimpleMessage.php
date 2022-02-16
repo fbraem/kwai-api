@@ -7,7 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Mailer;
 
-use Swift_Message;
+use Symfony\Component\Mime\Email;
 
 /**
  * An email message
@@ -36,8 +36,10 @@ class SimpleMessage implements Message
     /**
     * @inheritdoc
      */
-    public function createMessage(): Swift_Message
+    public function createMessage(): Email
     {
-        return (new Swift_Message($this->getSubject()))->setBody($this->body);
+        return (new Email())
+            ->subject($this->subject)
+            ->text($this->body);
     }
 }

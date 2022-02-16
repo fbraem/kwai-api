@@ -7,10 +7,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Mailer;
 
-use Swift_Message;
+use Symfony\Component\Mime\Email;
 
 /**
- * Interface for a email message
+ * Interface for an email message
  */
 interface Message
 {
@@ -21,8 +21,9 @@ interface Message
     public function getSubject(): string;
 
     /**
-     * Create a Swift_Message message
-     * @return Swift_Message
+     * Create a Email message
+     *
+     * @return Email
      */
-    public function createMessage(): Swift_Message;
+    public function createMessage(): Email;
 }

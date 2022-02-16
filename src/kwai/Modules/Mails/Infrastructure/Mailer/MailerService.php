@@ -15,20 +15,25 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 interface MailerService
 {
     /**
-     * Send a message. Returns the number of successfully sent messages.
-     * @param Message $message
-     * @param Address $from
-     * @param array $to
-     * @param array $cc
-     * @param array $bcc
-     * @SuppressWarnings(PHPMD.ShortVariable)
-     * @return int
+     * Returns the from address
+     *
+     * @return Address
+     */
+    public function getFrom(): Address;
+
+    /**
+     * Send a message.
+     *
+     * @param Message        $message
+     * @param array<Address> $to
+     * @param array<Address> $cc
+     * @param array<Address> $bcc
+     * @return void
      */
     public function send(
         Message $message,
-        Address $from,
         array $to,
         array $cc = [],
         array $bcc = []
-    ): int;
+    ): void;
 }

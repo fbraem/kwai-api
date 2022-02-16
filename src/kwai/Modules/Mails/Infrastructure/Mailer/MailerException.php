@@ -10,7 +10,9 @@ namespace Kwai\Modules\Mails\Infrastructure\Mailer;
 use Exception;
 
 /**
- * This exception is thrown when an exception occurs with SmtpMailerService.
+ * Class MailerException
+ *
+ * This exception is thrown when an exception occurs with a MailerService.
  */
 class MailerException extends Exception
 {
