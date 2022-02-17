@@ -54,10 +54,11 @@ final class SymfonyMailerService implements MailerService
             (string) $address->getEmail(), $address->getName()
         );
 
+        $from = $message->getFrom() ?? $this->getFrom();
         $symfonyMessage = $message->createMessage()
             ->from(new \Symfony\Component\Mime\Address(
-                (string) $this->getFrom()->getEmail(),
-                $this->getFrom()->getName()
+                (string) $from->getEmail(),
+                $from->getName()
             ))
             ->to(...array_map($mapToSymfonyAddress, $to))
         ;

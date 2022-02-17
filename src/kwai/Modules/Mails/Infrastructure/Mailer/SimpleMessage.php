@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Mails\Infrastructure\Mailer;
 
+use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Symfony\Component\Mime\Email;
 
 /**
@@ -16,12 +17,15 @@ class SimpleMessage implements Message
 {
     /**
      * Create a new message
-     * @param string $subject
-     * @param string $body
+     *
+     * @param string       $subject
+     * @param string       $body
+     * @param Address|null $from
      */
     public function __construct(
         private string $subject,
-        private string $body
+        private string $body,
+        private ?Address $from = null
     ) {
     }
 
@@ -35,11 +39,19 @@ class SimpleMessage implements Message
 
     /**
     * @inheritdoc
-     */
+    */
     public function createMessage(): Email
     {
         return (new Email())
             ->subject($this->subject)
             ->text($this->body);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFrom(): ?Address
+    {
+       return $this->from;
     }
 }
