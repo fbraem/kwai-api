@@ -32,9 +32,38 @@ it('can send a mail', function () {
         new SimpleMessage('Hello', 'World'),
         [
             Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
+        ],
+        [
+            Address::create(['gella.vandecaveye@kwai.com' => 'Gella Vandecaveye'])
         ]
     );
-});
+})->expectNotToPerformAssertions();
+
+it('can overrule the sender', function () {
+    $settings = (new Settings())->create();
+    $mailer = (new MailerServiceFactory(
+        new MailerConfiguration(
+            DsnConfiguration::create(
+                scheme: 'smtp',
+                user: $settings['mail']['user'],
+                pwd: $settings['mail']['pass'],
+                host: $settings['mail']['host'],
+                port: $settings['mail']['port']
+            ),
+            $settings['mail']['from']
+        )
+    ))->create();
+
+    $mailer->send(
+        new SimpleMessage(
+            'Hello',
+            'World',
+            Address::create(['ingrid.berghmans@kwai.com' => 'Ingrid Berghmans'])
+        ), [
+            Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
+        ]
+    );
+})->expectNotToPerformAssertions();
 
 it('fails when no recipient is set', function () {
     $settings = (new Settings())->create();
