@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Mails\Infrastructure\Mailer;
+namespace Kwai\Core\Infrastructure\Mailer;
 
 use Kwai\Core\Infrastructure\Configuration\DsnConfiguration;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;

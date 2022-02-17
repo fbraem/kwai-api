@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Modules
- * @subpackage Mails
+ * @package Core
+ * @subpackage Infrastructure
  */
 declare(strict_types = 1);
 
-namespace Kwai\Modules\Mails\Infrastructure\Mailer;
+namespace Kwai\Core\Infrastructure\Mailer;
 
 use Exception;
 

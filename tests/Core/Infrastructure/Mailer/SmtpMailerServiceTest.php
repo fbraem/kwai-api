@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Mails\Infstrastucture\Mailer;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Infrastructure\Configuration\DsnConfiguration;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
-use Kwai\Modules\Mails\Infrastructure\Mailer\MailerConfiguration;
-use Kwai\Modules\Mails\Infrastructure\Mailer\MailerServiceFactory;
+use Kwai\Core\Infrastructure\Mailer\MailerConfiguration;
+use Kwai\Core\Infrastructure\Mailer\MailerServiceFactory;
 
-use Kwai\Modules\Mails\Infrastructure\Mailer\SimpleMessage;
-use Kwai\Modules\Mails\Infrastructure\Mailer\MailerException;
+use Kwai\Core\Infrastructure\Mailer\SimpleMessage;
+use Kwai\Core\Infrastructure\Mailer\MailerException;
 
 it('can send a mail', function () {
     $settings = (new Settings())->create();
