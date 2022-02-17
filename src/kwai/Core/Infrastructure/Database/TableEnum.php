@@ -16,6 +16,7 @@ use function Latitude\QueryBuilder\field;
  * Class TableEnum
  *
  * A base class for an enumeration of table names.
+ * @deprecated Will be replaced with TableAttribute/TableSchema
  */
 class TableEnum extends Enum
 {
