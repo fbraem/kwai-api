@@ -62,7 +62,7 @@ abstract class Action
      * @param Request  $request
      * @param Response $response
      * @param array    $args
-     * @return mixed
+     * @return Response
      */
-    abstract public function __invoke(Request $request, Response $response, array $args);
+    abstract public function __invoke(Request $request, Response $response, array $args): Response;
 }
