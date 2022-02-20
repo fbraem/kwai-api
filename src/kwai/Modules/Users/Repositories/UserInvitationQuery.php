@@ -45,4 +45,12 @@ interface UserInvitationQuery extends Query
      * @return UserInvitationQuery
      */
     public function filterActive(Timestamp $timestamp): self;
+
+    /**
+     * Filter only the confirmed or not confirmed invitations.
+     *
+     * @param bool $confirmed
+     * @return UserInvitationQuery
+     */
+    public function filterConfirmed(bool $confirmed): self;
 }

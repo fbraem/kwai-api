@@ -84,6 +84,23 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
     }
 
     /**
+     * @inheritDoc
+     */
+    public function filterConfirmed(bool $confirmed): UserInvitationQuery
+    {
+        if ($confirmed) {
+            $this->query->andWhere(
+                UserInvitationsTable::field('confirmed_at')->isNotNull()
+            );
+        } else {
+            $this->query->andWhere(
+                UserInvitationsTable::field('confirmed_at')->isNull()
+            );
+        }
+        return $this;
+    }
+
+    /**
      * @param int|null $limit
      * @param int|null $offset
      * @return Collection<UserInvitationDTO>
