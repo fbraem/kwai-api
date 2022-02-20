@@ -53,7 +53,7 @@ class GetUserRolesAction extends Action
      * @param array $args
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new GetUserRolesCommand();
         $command->uuid = $args['uuid'];

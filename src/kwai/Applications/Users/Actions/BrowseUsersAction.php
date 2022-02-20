@@ -46,7 +46,7 @@ class BrowseUsersAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $repo = new UserDatabaseRepository($this->database);
         try {

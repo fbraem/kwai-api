@@ -45,7 +45,7 @@ class BrowseRulesAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new BrowseRulesCommand();
 

@@ -55,7 +55,7 @@ class UpdateUserAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         try {
             $command = InputSchemaProcessor::create(new UserSchema())

@@ -80,10 +80,10 @@ class CreateRoleAction extends Action
     /**
      * Process the data
      *
-     * @param $data
+     * @param array $data
      * @return mixed
      */
-    private function processInput($data)
+    private function processInput(array $data): mixed
     {
         $processor = new Processor();
         return $processor->process($this->createSchema(), $data);
@@ -112,7 +112,7 @@ class CreateRoleAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $roleRepo = new RoleDatabaseRepository($this->database);
         $ruleRepo = new RuleDatabaseRepository($this->database);

@@ -50,7 +50,7 @@ final class DetachRoleAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new DetachRoleFromUserCommand();
         $command->uuid = $args['uuid'];

@@ -25,8 +25,8 @@ use Kwai\Modules\Users\UseCases\ConfirmInvitationCommand;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Annotation\Route;
 use function depends;
 
@@ -83,16 +83,16 @@ class ConfirmInvitationAction extends Action
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param array $args
-     * @return ResponseInterface
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return Response
      */
     public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
+        Request $request,
+        Response $response,
         array $args
-    ): ResponseInterface {
+    ): Response {
         try {
             $command = $this->createCommand($request->getParsedBody());
             $command->uuid = $args['uuid'];
