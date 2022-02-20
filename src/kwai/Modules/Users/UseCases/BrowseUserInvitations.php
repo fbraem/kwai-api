@@ -49,6 +49,10 @@ class BrowseUserInvitations
             $query->filterActive($localTime->getTimestamp());
         }
 
+        if (isset($command->confirmed)) {
+            $query->filterConfirmed($command->confirmed);
+        }
+
         return [
             $query->count(),
             $this->repo->getAll($query, $command->limit, $command->offset)

@@ -27,6 +27,12 @@ class BrowseUserInvitationsCommand
     public ?string $active_timezone = null;
 
     /**
+     * Select only the confirmed/not confirmed invitations
+     * @var bool|null
+     */
+    public ?bool $confirmed = null;
+
+    /**
      * Limit of returned records
      *
      * @var int|null

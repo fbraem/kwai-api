@@ -49,7 +49,7 @@ class BrowseUserInvitationsAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $parameters = $request->getAttribute('parameters');
 
@@ -62,6 +62,9 @@ class BrowseUserInvitationsAction extends Action
         }
         if (isset($parameters['filter']['active_timezone'])) {
             $command->active_timezone = $parameters['filter']['active_timezone'];
+        }
+        if (isset($parameters['filter']['confirmed'])) {
+            $command->confirmed = $parameters['filter']['confirmed'] === 'true';
         }
 
         $repo = new UserInvitationDatabaseRepository($this->database);
