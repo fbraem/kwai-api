@@ -46,7 +46,7 @@ class BrowsePagesAction extends Action
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
 
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new BrowsePagesCommand();
         $parameters = $request->getAttribute('parameters');

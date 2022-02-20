@@ -67,7 +67,7 @@ class UpdateApplicationAction extends Action
         return $command;
     }
 
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = $this->processInput($request->getParsedBody());
 

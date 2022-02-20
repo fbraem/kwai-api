@@ -50,7 +50,7 @@ class GetPageAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new GetPageCommand();
         $command->id = (int) $args['id'];

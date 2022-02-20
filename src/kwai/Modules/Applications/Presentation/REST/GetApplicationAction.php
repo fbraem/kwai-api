@@ -32,7 +32,7 @@ class GetApplicationAction extends Action
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
     }
 
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new GetApplicationCommand();
         $command->id = (int) $args['id'];
