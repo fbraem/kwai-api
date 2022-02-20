@@ -36,4 +36,23 @@ class LocalTimestamp
     {
         return $this->timezone;
     }
+
+    /**
+     * Factory method.
+     * It will convert the passed datetime from the given
+     * timezone to UTC.
+     *
+     * @param string $datetime
+     * @param string $timezone
+     * @return static
+     */
+    public static function createFromString(
+        string $datetime,
+        string $timezone
+    ): self {
+        return new LocalTimestamp(
+            Timestamp::createFromString($datetime, $timezone),
+            $timezone
+        );
+    }
 }
