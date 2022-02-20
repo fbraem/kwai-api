@@ -129,7 +129,8 @@ final class Timestamp
             $datetimeObject->day ?? 1,
             $datetimeObject->hour ?? 0,
             $datetimeObject->minute ?? 0,
-            $datetimeObject->sec ?? 0
+            $datetimeObject->sec ?? 0,
+            $datetimeObject->timezone ?? 'UTC'
         ));
     }
 
@@ -144,17 +145,21 @@ final class Timestamp
     }
 
     /**
-     * Create a Timestamp from a string
+     * Create a Timestamp from a string. The datetime will always be stored
+     * as UTC.
      *
      * @param string $str A datetime in format Y-m-d H:i:s
+     * @param string $timezone
      * @return Timestamp
      */
     public static function createFromString(
-        string $str
+        string $str,
+        string $timezone = 'UTC'
     ): self {
         return new self(CarbonImmutable::createFromFormat(
             'Y-m-d H:i:s',
-            $str
+            $str,
+            $timezone
         ));
     }
 
