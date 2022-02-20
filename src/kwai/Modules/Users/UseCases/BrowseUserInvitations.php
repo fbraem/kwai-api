@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
@@ -25,11 +25,8 @@ class BrowseUserInvitations
 
     /**
      * Factory method
-     *
-     * @param UserInvitationRepository $repo
-     * @return BrowseUserInvitations
      */
-    public static function create(UserInvitationRepository $repo)
+    public static function create(UserInvitationRepository $repo): self
     {
         return new self($repo);
     }
@@ -37,8 +34,6 @@ class BrowseUserInvitations
     /**
      * Browse all user invitations and returns a list
      *
-     * @param BrowseUserInvitationsCommand $command
-     * @return array
      * @throws QueryException
      * @throws RepositoryException
      */
@@ -47,7 +42,11 @@ class BrowseUserInvitations
         $query = $this->repo->createQuery();
 
         if ($command->active_time && $command->active_timezone) {
-            $query->filterActive(Timestamp::createFromString($command->active_time, $command->active_timezone));
+            $localTime = LocalTimestamp::createFromString(
+                $command->active_time,
+                $command->active_timezone
+            );
+            $query->filterActive($localTime->getTimestamp());
         }
 
         return [

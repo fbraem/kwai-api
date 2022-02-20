@@ -57,6 +57,13 @@ class BrowseUserInvitationsAction extends Action
         $command->limit = (int) ($parameters['page']['limit'] ?? 10);
         $command->offset = (int) ($parameters['page']['offset'] ?? 0);
 
+        if (isset($parameters['filter']['active'])) {
+            $command->active_time = $parameters['filter']['active'];
+        }
+        if (isset($parameters['filter']['active_timezone'])) {
+            $command->active_timezone = $parameters['filter']['active_timezone'];
+        }
+
         $repo = new UserInvitationDatabaseRepository($this->database);
         try {
             [$count, $invitations] = BrowseUserInvitations::create($repo)($command);
@@ -77,7 +84,11 @@ class BrowseUserInvitationsAction extends Action
         );
         return (new JSONAPIResponse(
             JSONAPI\Document::createFromArray($resources->toArray())
-                ->setMeta('count', $count)
+                ->setMeta([
+                    'count' => $count,
+                    'limit' => $command->limit,
+                    'offset' => $command->offset
+                ])
         ))($response);
     }
 }
