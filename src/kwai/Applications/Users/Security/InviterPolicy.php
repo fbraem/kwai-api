@@ -10,6 +10,7 @@ namespace Kwai\Applications\Users\Security;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Security\Policy;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserInvitation;
 
 /**
  * Class InviterPolicy
@@ -20,9 +21,11 @@ class InviterPolicy implements Policy
 {
     /**
      * @param ?Entity<User> $user
+     * @param ?Entity<UserInvitation>   $invitation
      */
     public function __construct(
-        private ?Entity $user = null
+        private ?Entity $user = null,
+        private ?Entity $invitation = null
     ) {
     }
 
@@ -39,7 +42,7 @@ class InviterPolicy implements Policy
      */
     public function canRemove(): bool
     {
-        return $this->user?->hasRole('admin') ?? false;
+        return $this->canView();
     }
 
     /**
@@ -47,7 +50,13 @@ class InviterPolicy implements Policy
      */
     public function canView(): bool
     {
-        return $this->user?->hasRole('admin') ?? false;
+        if ($this->user === null) {
+            return false;
+        }
+        if ($this->user->hasRole('admin')) {
+            return true;
+        }
+        return $this->user->id() === $this->invitation->getCreator()->getId();
     }
 
     /**
@@ -55,6 +64,6 @@ class InviterPolicy implements Policy
      */
     public function canUpdate(): bool
     {
-        return $this->user?->hasRole('admin') ?? false;
+        return $this->canView();
     }
 }
