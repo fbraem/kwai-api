@@ -9,6 +9,7 @@ namespace Kwai\Modules\Users\Domain;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\DomainEntity;
+use Kwai\Core\Domain\Permission;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
@@ -135,6 +136,26 @@ class User implements DomainEntity
         return $this->roles->contains(
             fn(Entity $role) => $role->getName() === $roleName
         );
+    }
+
+    /**
+     * Returns true when the user has the permission for the given subject.
+     *
+     * @param string     $subject
+     * @param Permission $permission
+     * @return bool
+     */
+    public function hasPermission(string $subject, Permission $permission): bool
+    {
+        $allRules = collect([]);
+        foreach($this->roles as $role) {
+            $allRules = $allRules->merge($role->getRules());
+        }
+        $permissions = $allRules->filter(
+            fn(Entity $rule) =>
+                in_array($rule->getSubject(), ['all', $subject]) && $rule->hasPermission($permission)
+        );
+        return $permissions->isNotEmpty();
     }
 
     /**
