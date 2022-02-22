@@ -9,9 +9,11 @@ namespace Kwai\Applications\Users\Actions;
 
 use Kwai\Applications\Application;
 use Kwai\Applications\Users\Resources\UserInvitationResource;
+use Kwai\Applications\Users\Security\InviterPolicy;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\Responses\ForbiddenResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -69,6 +71,12 @@ class GetUserInvitationAction extends Action
             )($response);
         } catch (UserInvitationNotFoundException) {
             return (new NotFoundResponse('User not found'))($response);
+        }
+
+        $user = $request->getAttribute('kwai.user');
+        $policy = new InviterPolicy($user, $invitation);
+        if (!$policy->canView()) {
+            return (new ForbiddenResponse('Not allowed to view this invitation'))($response);
         }
 
         $resource = new UserInvitationResource($invitation);
