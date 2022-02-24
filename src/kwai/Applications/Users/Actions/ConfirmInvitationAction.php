@@ -8,10 +8,12 @@ declare(strict_types=1);
 namespace Kwai\Applications\Users\Actions;
 
 use Kwai\Applications\Users\Resources\UserAccountResource;
+use Kwai\Applications\Users\Schemas\UserInvitationConfirmationSchema;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
+use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
 use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
@@ -27,6 +29,7 @@ use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function depends;
 
@@ -36,50 +39,18 @@ use function depends;
  * Action to confirm an invitation.
  */
 #[Route(
-    path: '/users/invitation/{uuid}',
+    path: '/users/invitations/{uuid}',
     name: 'users.invitations.confirm',
     methods: ['POST']
 )]
 class ConfirmInvitationAction extends Action
 {
     public function __construct(
-        private ?Connection $database = null
+        private ?Connection $database = null,
+        ?LoggerInterface $logger = null
     ) {
-        parent::__construct();
+        parent::__construct($logger);
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
-    }
-
-    /**
-     * Create a command from the request data
-     * @param array $data
-     * @return ConfirmInvitationCommand
-     */
-    private function createCommand(array $data): ConfirmInvitationCommand
-    {
-        $schema = Expect::structure([
-            'data' => Expect::structure([
-                'type' => Expect::string(),
-                'attributes' => Expect::structure([
-                    'remark' => Expect::string(),
-                    'first_name' => Expect::string()->required(),
-                    'last_name' => Expect::string()->required(),
-                    'email' => Expect::string()->required(),
-                    'password' => Expect::string()->required()
-                ])
-            ])
-        ]);
-
-        $processor = new Processor();
-        $normalized = $processor->process($schema, $data);
-
-        $command = new ConfirmInvitationCommand();
-        $command->firstName = $normalized->data->attributes->first_name;
-        $command->lastName = $normalized->data->attributes->last_name;
-        $command->email = $normalized->data->attributes->email;
-        $command->remark = $normalized->data->attributes->remark ?? null;
-        $command->password = $normalized->data->attributes->password;
-
-        return $command;
     }
 
     /**
@@ -94,10 +65,15 @@ class ConfirmInvitationAction extends Action
         array $args
     ): Response {
         try {
-            $command = $this->createCommand($request->getParsedBody());
-            $command->uuid = $args['uuid'];
+            $command = InputSchemaProcessor::create(new UserInvitationConfirmationSchema())
+                ->process($request->getParsedBody())
+            ;
         } catch (ValidationException $ve) {
             return (new SimpleResponse(422, $ve->getMessage()))($response);
+        }
+
+        if ($args['uuid'] !== $command->uuid) {
+            return (new SimpleResponse(400, 'uuid in body and url should be the same.'))($response);
         }
 
         try {
