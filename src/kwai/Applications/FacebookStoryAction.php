@@ -17,7 +17,6 @@ use Kwai\Core\Infrastructure\Presentation\Responses\NotFoundResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
-use Kwai\Core\Infrastructure\Template\Template;
 use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryImageRepository;
@@ -29,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class FacebookStoryAction
+ * @deprecated
  */
 class FacebookStoryAction extends Action
 {
@@ -48,7 +48,7 @@ class FacebookStoryAction extends Action
     /**
      * @inheritDoc
      */
-    public function __invoke(Request $request, Response $response, array $args)
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $command = new GetStoryCommand();
         $command->id = $args['id'];
