@@ -17,6 +17,7 @@ use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationDTO;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserInvitationQuery;
+use function Latitude\QueryBuilder\group;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -78,7 +79,11 @@ class UserInvitationDatabaseQuery extends DatabaseQuery implements UserInvitatio
     public function filterActive(Timestamp $timestamp): UserInvitationQuery
     {
         $this->query->andWhere(
-            UserInvitationsTable::field('expired_at')->gt((string) $timestamp)
+            group(
+                UserInvitationsTable::field('expired_at')
+                    ->gt((string) $timestamp)
+                    ->and(UserInvitationsTable::field('confirmed_at')->isNull())
+            )
         );
         return $this;
     }
