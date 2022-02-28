@@ -16,25 +16,20 @@ use Exception;
 class NotAllowedException extends Exception
 {
     /**
-     * Action that is not allowed
-     */
-    private string $action;
-
-    /**
-     * Subject on which the action is not allowed
-     */
-    private string $subject;
-
-    /**
-     * NotAuthorizedException constructor
+     * NotAllowedException constructor
      * @param string $subject
      * @param string $action
      */
-    public function __construct(string $subject, string $action)
-    {
-        parent::__construct($action . ' not allowed on ' . $subject);
-        $this->subject = $subject;
-        $this->action = $action;
+    public function __construct(
+        string $subject,
+        string $action,
+        string $message = ''
+    ) {
+        $fullMessage = $action . ' not allowed on ' . $subject;
+        if ($message) {
+            $fullMessage .= ': ' . $message;
+        }
+        parent::__construct($fullMessage);
     }
 
     /**
