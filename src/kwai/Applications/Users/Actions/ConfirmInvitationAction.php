@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Actions;
 
+use Kwai\Applications\Application;
 use Kwai\Applications\Users\Resources\UserAccountResource;
 use Kwai\Applications\Users\Schemas\UserInvitationConfirmationSchema;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
@@ -41,6 +42,7 @@ use function depends;
 #[Route(
     path: '/users/invitations/{uuid}',
     name: 'users.invitations.confirm',
+    requirements: ['uuid' => Application::UUID_REGEX],
     methods: ['POST']
 )]
 class ConfirmInvitationAction extends Action
