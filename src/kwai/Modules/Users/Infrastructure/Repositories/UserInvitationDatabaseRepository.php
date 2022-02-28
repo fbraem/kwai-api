@@ -121,4 +121,17 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     {
         return new UserInvitationDatabaseQuery($this->db);
     }
+
+    public function remove(Entity $invitation): void
+    {
+        $query = $this->db->createQueryFactory()
+            ->delete(UserInvitationsTable::name())
+            ->where(field('id')->eq($invitation->id()))
+        ;
+        try {
+            $this->db->execute($query);
+        } catch (QueryException $e) {
+            throw new RepositoryException(__METHOD__, $e);
+        }
+    }
 }

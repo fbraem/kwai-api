@@ -66,4 +66,12 @@ interface UserInvitationRepository
         ?int $limit = null,
         ?int $offset = null
     ): Collection;
+
+    /**
+     * Removes an invitation.
+     *
+     * @param Entity<UserInvitation> $invitation
+     * @throws RepositoryException
+     */
+    public function remove(Entity $invitation): void;
 }

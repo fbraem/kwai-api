@@ -20,6 +20,7 @@ use Kwai\Applications\Users\Actions\BrowseUsersAction;
 use Kwai\Applications\Users\Actions\ConfirmInvitationAction;
 use Kwai\Applications\Users\Actions\CreateRoleAction;
 use Kwai\Applications\Users\Actions\CreateUserInvitationAction;
+use Kwai\Applications\Users\Actions\DeleteUserInvitationAction;
 use Kwai\Applications\Users\Actions\DetachRoleAction;
 use Kwai\Applications\Users\Actions\GetRoleAction;
 use Kwai\Applications\Users\Actions\GetUserAction;
@@ -43,6 +44,7 @@ class UsersApplication extends Application
             ConfirmInvitationAction::class,
             CreateRoleAction::class,
             CreateUserInvitationAction::class,
+            DeleteUserInvitationAction::class,
             DetachRoleAction::class,
             GetRoleAction::class,
             GetUserAction::class,
