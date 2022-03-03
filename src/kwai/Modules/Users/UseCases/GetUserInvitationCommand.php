@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
+use Kwai\Core\Domain\ValueObjects\UniqueId;
+
 /**
  * Class GetUserInvitationCommand
  *
@@ -15,7 +17,14 @@ namespace Kwai\Modules\Users\UseCases;
 class GetUserInvitationCommand
 {
     /**
-     * The unique id of a user invitation.
+     * @param string $uuid
      */
-    public string $uuid;
+    public function __construct(private string $uuid)
+    {
+    }
+
+    public function getUuid(): UniqueId
+    {
+        return new UniqueId($this->uuid);
+    }
 }

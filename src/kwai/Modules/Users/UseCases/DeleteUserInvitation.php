@@ -12,6 +12,7 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
+use Kwai\Modules\Users\Services\UserInvitationService;
 
 /**
  * Class DeleteUserInvitation
@@ -37,14 +38,8 @@ class DeleteUserInvitation
      */
     public function __invoke(DeleteUserInvitationCommand $command)
     {
-        $invitation = $this->repo->getByUniqueId(new UniqueId($command->uuid));
-        if ($invitation->isConfirmed()) {
-            throw new NotAllowedException(
-                'User invitation',
-                'Delete',
-                'A confirmed user invitation cannot be deleted'
-            );
-        }
-        $this->repo->remove($invitation);
+        $service = new UserInvitationService($this->repo);
+        $invitation = $service->getInvitation(new UniqueId($command->uuid));
+        $service->remove($invitation);
     }
 }
