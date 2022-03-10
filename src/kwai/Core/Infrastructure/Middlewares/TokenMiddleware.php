@@ -9,9 +9,9 @@ namespace Kwai\Core\Infrastructure\Middlewares;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
+use Kwai\Core\Infrastructure\Configuration\SecurityConfiguration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\LoggerDependency;
@@ -36,15 +36,16 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class TokenMiddleware implements MiddlewareInterface
 {
-    private MiddlewareInterface $jwtMiddleware;
+    private SecurityConfiguration $config;
 
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
-        private ?array $settings = null,
+        private ?Configuration $settings = null,
         private ?Connection $db = null,
         private ?Logger $logger = null
     ) {
         $this->settings ??= depends('kwai.settings', Settings::class);
+        $this->config = $this->settings->getSecurityConfiguration();
         $this->db ??= depends('kwai.database', DatabaseDependency::class);
         $this->logger ??= depends('kwai.logger', LoggerDependency::class);
     }
@@ -67,7 +68,7 @@ class TokenMiddleware implements MiddlewareInterface
 
         /* HTTP allowed only if secure is false or server is in relaxed array. */
         if ("https" !== $scheme) {
-            if (!in_array($host, $this->settings['security']["relaxed"] ?? [])) {
+            if (!in_array($host, $this->config->getRelaxed())) {
                 $message = sprintf(
                     "Insecure use of middleware over %s denied by configuration.",
                     strtoupper($scheme)
@@ -88,8 +89,8 @@ class TokenMiddleware implements MiddlewareInterface
         try {
             $decoded = JsonWebToken::decode(
                 $token,
-                $this->settings['security']['secret'],
-                $this->settings['security']['algorithm'] ?? 'HS256'
+                $this->config->getSecret(),
+                $this->config->getAlgorithm()
             )->getObject();
         } catch (ExpiredException) {
             $response = $this->responseFactory->createResponse();
@@ -120,10 +121,10 @@ class TokenMiddleware implements MiddlewareInterface
      */
     private function fetchToken(ServerRequestInterface $request): ?string
     {
-        $regexp = $this->settings['security']['regexp'] ?? '/Bearer\s+(.*)$/i';
+        $regexp = $this->config->getRegex();
 
         /* Check for token in header. */
-        $headerName = $this->settings['security']['header'] ?? 'Authorization';
+        $headerName = $this->config->getHeader();
         $header = $request->getHeaderLine($headerName);
 
         if (false === empty($header)) {
@@ -135,7 +136,7 @@ class TokenMiddleware implements MiddlewareInterface
 
         /* Token not found in header try a cookie. */
         $cookieParams = $request->getCookieParams();
-        $cookieName = $this->settings['security']['cookie'] ?? 'token';
+        $cookieName = $this->config->getCookie();
         if (isset($cookieParams[$cookieName])) {
             $this->logger->debug('Using token from cookie', [$cookieName]);
             if (preg_match(

@@ -9,3 +9,6 @@ kwai.development.yaml
 /config/config.production.php
 /hosts.*.yml
 /.idea
+/config/.kwai
+/config/.kwai.acc
+/config/.kwai.production

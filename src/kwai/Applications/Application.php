@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Kwai\Applications;
 
 use Exception;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Middlewares\CorsMiddleware;
 use Kwai\Core\Infrastructure\Middlewares\ErrorMiddleware;
@@ -41,7 +42,7 @@ abstract class Application
      * Application Constructor
      */
     public function __construct(
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         // Setup Whoops
         $run = new Run();
@@ -97,21 +98,11 @@ abstract class Application
             );
             $serverRequest = $creator->fromGlobals();
 
-            if (isset($this->settings['cors'])) {
-                $corsSettings = new \Neomerx\Cors\Strategies\Settings();
-                $scheme = $this->settings['cors']['server']['scheme'] ?? 'http';
-                $corsSettings->init(
-                    $scheme,
-                    $this->settings['cors']['server']['host'],
-                    $this->settings['cors']['server']['port'] ?? $scheme === 'http' ? 80 : 443
-                );
-                $corsSettings->enableCheckHost();
-                $corsSettings->setAllowedOrigins($this->settings['cors']['origin'] ?? ['*']);
-                $corsSettings->setAllowedMethods(
-                    $this->settings['cors']['method'] ?? ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
-                );
-                $corsSettings->setAllowedHeaders(['Accept', 'Accept-Language', 'Content-Type', 'Authorization']);
-                $corsSettings->setCredentialsSupported();
+            $corsSettings = $this->settings
+                ->getCorsConfiguration()
+                ->createCorsSettings()
+            ;
+            if ($corsSettings) {
                 $cors = Analyzer::instance($corsSettings)->analyze($serverRequest);
             } else {
                 $cors = null;

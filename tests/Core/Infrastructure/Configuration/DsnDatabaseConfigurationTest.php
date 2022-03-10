@@ -10,7 +10,7 @@ it('can read a database DSN', function() {
         'mysql:host=localhost;dbname=test;port=3306;charset=utf8mb4'
     );
     expect($config->getDriver())->toEqual('mysql');
-    expect($config->getDsn())->toEqual($dsn);
+    expect((string) $config)->toEqual($dsn);
     expect($config->getHost())->toEqual('localhost');
     expect($config->getDatabaseName())->toEqual('test');
 });

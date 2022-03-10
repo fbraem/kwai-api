@@ -7,13 +7,17 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Dependencies;
 
+use Kwai\Core\Infrastructure\Configuration\Configuration;
+
 /**
  * Class Settings
  */
 class Settings implements Dependency
 {
-    public function create()
+    public function create(): Configuration
     {
-        return include __DIR__ . '/../../../../../config/config.php';
+        $config = new Configuration();
+        $config->load();
+        return $config;
     }
 }

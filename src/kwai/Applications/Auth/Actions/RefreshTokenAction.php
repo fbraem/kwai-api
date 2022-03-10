@@ -9,6 +9,8 @@ namespace Kwai\Applications\Auth\Actions;
 
 use Exception;
 use Firebase\JWT\ExpiredException;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
+use Kwai\Core\Infrastructure\Configuration\SecurityConfiguration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -40,13 +42,16 @@ use function depends;
 )]
 class RefreshTokenAction extends Action
 {
+    private SecurityConfiguration $configuration;
+
     public function __construct(
         private ?Connection $database = null,
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
         $this->settings ??= depends('kwai.settings', Settings::class);
+        $this->configuration = $this->settings->getSecurityConfiguration();
     }
 
     /**
@@ -63,8 +68,8 @@ class RefreshTokenAction extends Action
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->settings['security']['secret'];
-        $algorithm = $this->settings['security']['algorithm'] ?? 'HS256';
+        $secret = $this->configuration->getSecret();
+        $algorithm = $this->configuration->getAlgorithm();
 
         if (!isset($data['refresh_token'])) {
             return (new SimpleResponse(400, 'No refresh token passed'))($response);

@@ -8,6 +8,8 @@ declare(strict_types = 1);
 namespace Kwai\Applications\Auth\Actions;
 
 use Firebase\JWT\JWT;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
+use Kwai\Core\Infrastructure\Configuration\SecurityConfiguration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -43,13 +45,16 @@ use function depends;
 )]
 class LoginAction extends Action
 {
+    private SecurityConfiguration $configuration;
+
     public function __construct(
         private ?Connection $database = null,
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
         $this->settings ??= depends('kwai.settings', Settings::class);
+        $this->configuration = $this->settings->getSecurityConfiguration();
     }
 
     /**
@@ -109,8 +114,8 @@ class LoginAction extends Action
             return (new NotAuthorizedResponse('Unknown user'))($response);
         }
 
-        $secret = $this->settings['security']['secret'];
-        $algorithm = $this->settings['security']['algorithm'];
+        $secret = $this->configuration->getSecret();
+        $algorithm = $this->configuration->getAlgorithm();
 
         $accessToken = $refreshToken->getAccessToken();
         $data = [

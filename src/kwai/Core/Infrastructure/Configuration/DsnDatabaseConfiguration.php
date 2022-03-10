@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Configuration;
 
+use Stringable;
+
 /**
  * Class DsnDatabaseConfiguration
  */
-class DsnDatabaseConfiguration
+class DsnDatabaseConfiguration implements Stringable
 {
     private string $driver;
 
@@ -39,7 +41,7 @@ class DsnDatabaseConfiguration
         return $this->driver;
     }
 
-    public function getDsn(): string
+    public function __toString(): string
     {
         return $this->dsn;
     }
