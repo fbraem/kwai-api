@@ -50,7 +50,6 @@ class CorsConfiguration implements Configurable
 
     public function validate(Dotenv $env): void
     {
-        // TODO: Implement validate() method.
     }
 
     public function createCorsSettings(): ?Settings

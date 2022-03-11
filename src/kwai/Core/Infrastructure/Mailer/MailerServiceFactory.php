@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Mailer;
 
-use InvalidArgumentException;
+use Kwai\Core\Infrastructure\Configuration\MailerConfiguration;
 
 /**
  * MailerServiceFactory

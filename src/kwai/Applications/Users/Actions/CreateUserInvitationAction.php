@@ -12,6 +12,7 @@ use Kwai\Applications\Users\Schemas\UserInvitationSchema;
 use Kwai\Applications\Users\Security\InviterPolicy;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -54,7 +55,7 @@ class CreateUserInvitationAction extends Action
     public function __construct(
         private ?Connection $database = null,
         private ?PlatesEngine $templateEngine = null,
-        private ?array $settings = null,
+        private ?Configuration $settings = null,
         ?LoggerInterface $logger = null
     ) {
         parent::__construct($logger);
@@ -87,14 +88,9 @@ class CreateUserInvitationAction extends Action
 
         // Add some additional properties to the command.
         $command->expiration = self::EXPIRE_IN_DAYS;
-        $from = $this->settings['mail']['from'];
-        if (is_array($from)) {
-            $command->sender_mail = (string) array_key_first($from);
-            $command->sender_name = $from[$command->sender_mail];
-        } else {
-            $command->sender_mail = $from;
-            $command->sender_name = '';
-        }
+        $from = $this->settings->getMailerConfiguration()->getFromAddress();
+        $command->sender_mail = (string) $from->getEmail();
+        $command->sender_name = $from->getName();
 
         $creator = new Creator($user->id(), $user->getUsername());
 

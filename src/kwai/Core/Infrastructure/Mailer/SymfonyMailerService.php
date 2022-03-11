@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Mailer;
 
+use Kwai\Core\Infrastructure\Configuration\MailerConfiguration;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Mailer;

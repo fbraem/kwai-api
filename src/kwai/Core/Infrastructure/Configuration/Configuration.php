@@ -14,13 +14,7 @@ use Dotenv\Dotenv;
  */
 class Configuration
 {
-    private DatabaseConfiguration $databaseConfiguration;
-
-    private CorsConfiguration $corsConfiguration;
-
-    private LoggerConfiguration $loggerConfiguration;
-
-    private SecurityConfiguration $securityConfiguration;
+    private ?array $vars = null;
 
     public function __construct(
         private ?Dotenv $env = null
@@ -29,46 +23,71 @@ class Configuration
             __DIR__ . '/../../../../../config',
             '.kwai'
         );
-        $this->databaseConfiguration = new DatabaseConfiguration();
-        $this->corsConfiguration = new CorsConfiguration();
-        $this->loggerConfiguration = new LoggerConfiguration();
-        $this->securityConfiguration = new SecurityConfiguration();
     }
 
     public function getDatabaseConfiguration(): DatabaseConfiguration
     {
-        return $this->databaseConfiguration;
+        if ($this->vars === null) {
+            $this->vars = $this->env->load();
+        }
+        $config = new DatabaseConfiguration();
+        $config->validate($this->env);
+        $config->load($this->vars);
+        return $config;
     }
 
     public function getCorsConfiguration(): CorsConfiguration
     {
-        return $this->corsConfiguration;
+        if ($this->vars === null) {
+            $this->vars = $this->env->load();
+        }
+        $config = new CorsConfiguration();
+        $config->validate($this->env);
+        $config->load($this->vars);
+        return $config;
     }
 
     public function getLoggerConfiguration(): LoggerConfiguration
     {
-        return $this->loggerConfiguration;
+        if ($this->vars === null) {
+            $this->vars = $this->env->load();
+        }
+        $config = new LoggerConfiguration();
+        $config->validate($this->env);
+        $config->load($this->vars);
+        return $config;
     }
 
     public function getSecurityConfiguration(): SecurityConfiguration
     {
-        return $this->securityConfiguration;
+        if ($this->vars === null) {
+            $this->vars = $this->env->load();
+        }
+        $config = new SecurityConfiguration();
+        $config->validate($this->env);
+        $config->load($this->vars);
+        return $config;
     }
 
-    public function load(): void
+    public function getMailerConfiguration(): MailerConfiguration
     {
-        $vars = $this->env->load();
+        if ($this->vars === null) {
+            $this->vars = $this->env->load();
+        }
+        $config = new MailerConfiguration();
+        $config->validate($this->env);
+        $config->load($this->vars);
+        return $config;
+    }
 
-        $this->databaseConfiguration->validate($this->env);
-        $this->databaseConfiguration->load($vars);
-
-        $this->corsConfiguration->validate($this->env);
-        $this->corsConfiguration->load($vars);
-
-        $this->loggerConfiguration->validate($this->env);
-        $this->loggerConfiguration->load($vars);
-
-        $this->securityConfiguration->validate($this->env);
-        $this->securityConfiguration->load($vars);
+    public function getWebsiteConfiguration(): WebsiteConfiguration
+    {
+        if ($this->vars === null) {
+            $this->vars = $this->env->load();
+        }
+        $config = new WebsiteConfiguration();
+        $config->validate($this->env);
+        $config->load($this->vars);
+        return $config;
     }
 }

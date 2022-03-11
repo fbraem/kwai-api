@@ -16,8 +16,6 @@ class Settings implements Dependency
 {
     public function create(): Configuration
     {
-        $config = new Configuration();
-        $config->load();
-        return $config;
+        return new Configuration();
     }
 }
