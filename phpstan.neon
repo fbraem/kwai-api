@@ -2,6 +2,7 @@ parameters:
     level: 2
     paths:
         - src/kwai
+        - tests
     excludePaths:
         - src/kwai/Modules/Applications/Infrastructure/Migrations/*
         - src/kwai/Modules/Club/Infrastructure/Migrations/*
@@ -11,6 +12,11 @@ parameters:
         - src/kwai/Modules/Pages/Infrastructure/Migrations/*
         - src/kwai/Modules/Trainings/Infrastructure/Migrations/*
         - src/kwai/Modules/Users/Infrastructure/Migrations/*
+    ignoreErrors:
+        -
+            message: '#Undefined variable: $this#'
+            paths:
+                - tests
 services:
 -
     class: App\PHPStan\EntityClassReflectionExtension
