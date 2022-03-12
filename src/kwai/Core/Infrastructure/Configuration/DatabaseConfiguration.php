@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Configuration;
 
 use Dotenv\Dotenv;
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -62,5 +64,21 @@ class DatabaseConfiguration implements Configurable
             'KWAI_DB_USER',
             'KWAI_DB_PASSWORD',
         ]);
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    public function createConnection(): Connection
+    {
+        $db = new Connection(
+            $this->dsn,
+            $this->getLogger()
+        );
+        $db->connect(
+            $this->user,
+            $this->password,
+        );
+        return $db;
     }
 }
