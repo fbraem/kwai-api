@@ -7,9 +7,11 @@ use Kwai\Applications\Users\Actions\GetRoleAction;
 use Kwai\Applications\Users\Actions\UpdateRoleAction;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach()->withDatabase();
+
 
 $data = [
     'data' => [
@@ -21,8 +23,8 @@ $data = [
     ]
 ];
 
-it('can create a role', function () use ($context, $data) {
-    $action = new CreateRoleAction($context->db);
+it('can create a role', function () use ($data) {
+    $action = new CreateRoleAction($this->db);
 
     $request = new ServerRequest(
         'PATCH',
@@ -33,7 +35,7 @@ it('can create a role', function () use ($context, $data) {
         ->withParsedBody($data)
         ->withAttribute(
             'kwai.user',
-            $context->user
+            $this->withUser()
         )
     ;
     $response = new Response();
@@ -44,11 +46,12 @@ it('can create a role', function () use ($context, $data) {
     $result = json_decode((string) $response->getBody(), true);
     return $result['data']['id'];
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn () => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can update a role', function ($id) use ($context, $data) {
-    $action = new UpdateRoleAction($context->db);
+
+it('can update a role', function ($id) use ($data) {
+    $action = new UpdateRoleAction($this->db);
 
     $data['data']['id'] = $id;
     $data['data']['attributes']['remark'] = 'Updated with unit test';
@@ -61,7 +64,7 @@ it('can update a role', function ($id) use ($context, $data) {
         ->withParsedBody($data)
         ->withAttribute(
             'kwai.user',
-            $context->user
+            $this->withUser()
         )
     ;
 
@@ -69,12 +72,12 @@ it('can update a role', function ($id) use ($context, $data) {
     $response = $action($request, $response, ['id' => $id]);
     expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a role')
+    ->skip(fn () => !$this->hasDatabase(), 'Skipped, no database available')
 ;
 
-it('can get a role', function ($id) use ($context) {
-    $action = new GetRoleAction($context->db);
+it('can get a role', function ($id) {
+    $action = new GetRoleAction($this->db);
 
     $request = new ServerRequest(
         'GET',
@@ -85,12 +88,12 @@ it('can get a role', function ($id) use ($context) {
     $response = $action($request, $response, ['id' => $id]);
     expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a role')
+    ->skip(fn () => !$this->hasDatabase(), 'Skipped, no database available')
 ;
 
-it('can browse roles', function () use ($context) {
-    $action = new BrowseRolesAction($context->db);
+it('can browse roles', function () {
+    $action = new BrowseRolesAction($this->db);
 
     $request = new ServerRequest(
         'GET',
@@ -101,5 +104,5 @@ it('can browse roles', function () use ($context) {
     $response = $action($request, $response, []);
     expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn () => !$this->hasDatabase(), 'Skipped, no database available')
 ;

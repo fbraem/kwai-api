@@ -4,12 +4,13 @@ declare(strict_types=1);
 use Kwai\Applications\Users\Actions\BrowseRulesAction;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach()->withDatabase();
 
-it('can browse rules', function () use ($context) {
-    $action = new BrowseRulesAction($context->db);
+it('can browse rules', function () {
+    $action = new BrowseRulesAction($this->db);
 
     $request = new ServerRequest(
         'GET',
@@ -20,5 +21,5 @@ it('can browse rules', function () use ($context) {
     $response = $action($request, $response, []);
     expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn () => !$this->hasDatabase(), 'No database available')
 ;
