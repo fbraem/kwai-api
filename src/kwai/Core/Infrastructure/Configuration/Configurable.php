@@ -14,7 +14,7 @@ use Dotenv\Dotenv;
  */
 interface Configurable
 {
-    public function load(array $variables): void;
+    public static function createFromVariables(array $variables): self;
 
-    public function validate(Dotenv $env): void;
+    public static function validate(Dotenv $env): void;
 }

@@ -7,8 +7,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 it('can configure a logger', function () {
-    $config = new LoggerConfiguration('KWAI_');
-    $config->load([
+    $config = LoggerConfiguration::createFromVariables([
         'LOG_FILE' => '',
         'LOG_LEVEL' => LogLevel::ERROR
     ]);

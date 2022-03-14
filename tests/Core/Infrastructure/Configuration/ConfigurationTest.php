@@ -6,7 +6,6 @@ use Kwai\Core\Infrastructure\Configuration\DsnDatabaseConfiguration;
 
 it('can load configuration', function () {
     $config = new Configuration();
-    $config->load();
     expect($config->getDatabaseConfiguration())
         ->toBeObject()
     ;

@@ -18,16 +18,23 @@ class SecurityConfiguration implements Configurable
 {
     private array $relaxed = [];
 
-    private string $secret;
-
-    private string $algorithm;
-
-    private string $header;
-
-    private string $regex;
-
-    private string $cookie;
-
+    public function __construct(
+        string|array|null $relaxed,
+        private string $secret,
+        private string $algorithm = 'HS256',
+        private string $header = 'Authorization',
+        private string $regex = '/Bearer\s+(.*)$/i',
+        private string $cookie = 'token'
+    ) {
+        if (is_string($relaxed)) {
+            $this->relaxed = array_map(
+                static fn($element) => trim($element),
+                explode(',', $relaxed)
+            );
+        } elseif (is_array($relaxed)) {
+            $this->relaxed = $relaxed;
+        }
+    }
     /**
      * @return array
      */
@@ -76,24 +83,26 @@ class SecurityConfiguration implements Configurable
         return $this->cookie;
     }
 
-    public function load(array $variables): void
+    public static function createFromVariables(array $variables): self
     {
-        $relaxed = $variables['KWAI_SECURITY_RELAXED'] ?? null;
-        if ($relaxed) {
-            $this->relaxed = array_map(
-                static fn($element) => trim($element),
-                explode(',', $relaxed)
-            );
+        $args = [];
+        $parameters = [
+            'KWAI_SECURITY_RELAXED' => 'relaxed',
+            'KWAI_SECURITY_SECRET' => 'secret',
+            'KWAI_SECURITY_ALGORITHM' => 'algorithm',
+            'KWAI_SECURITY_HEADER' => 'header',
+            'KWAI_SECURITY_REGEX' => 'regex',
+            'KWAI_SECURITY_COOKIE' => 'cookie'
+        ];
+        foreach($parameters as $variableName => $argName) {
+            if (isset($variables[$variableName])) {
+                $args[$argName] = $variables[$variableName];
+            }
         }
-
-        $this->secret = $variables['KWAI_SECURITY_SECRET'];
-        $this->algorithm = $variables['KWAI_SECURITY_ALGORITHM'] ?? 'HS256';
-        $this->header = $variables['KWAI_SECURITY_HEADER'] ?? 'Authorization';
-        $this->regex = $variables['KWAI_SECURITY_REGEX'] ?? '/Bearer\s+(.*)$/i';
-        $this->cookie = $variables['KWAI_SECURITY_COOKIE'] ?? 'token';
+        return new self(...$args);
     }
 
-    public function validate(Dotenv $env): void
+    public static function validate(Dotenv $env): void
     {
         $env->required([
             'KWAI_SECURITY_SECRET'

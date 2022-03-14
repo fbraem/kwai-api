@@ -30,10 +30,8 @@ class Configuration
         if ($this->vars === null) {
             $this->vars = $this->env->load();
         }
-        $config = new DatabaseConfiguration();
-        $config->validate($this->env);
-        $config->load($this->vars);
-        return $config;
+        DatabaseConfiguration::validate($this->env);
+        return DatabaseConfiguration::createFromVariables($this->vars);
     }
 
     public function getCorsConfiguration(): CorsConfiguration
@@ -41,10 +39,8 @@ class Configuration
         if ($this->vars === null) {
             $this->vars = $this->env->load();
         }
-        $config = new CorsConfiguration();
-        $config->validate($this->env);
-        $config->load($this->vars);
-        return $config;
+        CorsConfiguration::validate($this->env);
+        return CorsConfiguration::createFromVariables($this->vars);
     }
 
     public function getLoggerConfiguration(): LoggerConfiguration
@@ -52,10 +48,8 @@ class Configuration
         if ($this->vars === null) {
             $this->vars = $this->env->load();
         }
-        $config = new LoggerConfiguration();
-        $config->validate($this->env);
-        $config->load($this->vars);
-        return $config;
+        LoggerConfiguration::validate($this->env);
+        return LoggerConfiguration::createFromVariables($this->vars);
     }
 
     public function getSecurityConfiguration(): SecurityConfiguration
@@ -63,10 +57,8 @@ class Configuration
         if ($this->vars === null) {
             $this->vars = $this->env->load();
         }
-        $config = new SecurityConfiguration();
-        $config->validate($this->env);
-        $config->load($this->vars);
-        return $config;
+        SecurityConfiguration::validate($this->env);
+        return SecurityConfiguration::createFromVariables($this->vars);
     }
 
     public function getMailerConfiguration(): MailerConfiguration
@@ -74,10 +66,8 @@ class Configuration
         if ($this->vars === null) {
             $this->vars = $this->env->load();
         }
-        $config = new MailerConfiguration();
-        $config->validate($this->env);
-        $config->load($this->vars);
-        return $config;
+        MailerConfiguration::validate($this->env);
+        return MailerConfiguration::createFromVariables($this->vars);
     }
 
     public function getWebsiteConfiguration(): WebsiteConfiguration
@@ -85,9 +75,7 @@ class Configuration
         if ($this->vars === null) {
             $this->vars = $this->env->load();
         }
-        $config = new WebsiteConfiguration();
-        $config->validate($this->env);
-        $config->load($this->vars);
-        return $config;
+        WebsiteConfiguration::validate($this->env);
+        return WebsiteConfiguration::createFromVariables($this->vars);
     }
 }

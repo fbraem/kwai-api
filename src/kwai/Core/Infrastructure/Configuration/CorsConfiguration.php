@@ -17,44 +17,76 @@ use Neomerx\Cors\Strategies\Settings;
  */
 class CorsConfiguration implements Configurable
 {
-    private string $scheme;
+    private array $origin;
 
-    private ?string $host = null;
+    private array $methods;
 
     private int $port;
 
-    private array $origin = ['*'];
-
-    private array $methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
-
-    public function load(array $variables): void
-    {
-        $this->scheme = $variables['KWAI_CORS_SCHEME'] ?? 'http';
-        $this->host = $variables['KWAI_CORS_HOST'] ?? null;
-        $this->port = $variables['KWAI_CORS_PORT'] ?? $this->scheme === 'http' ? 80 : 443;
-        $origin = $variables['KWAI_CORS_ORIGIN'] ?? null;
-        if ($origin) {
+    /**
+     * @param string                $scheme
+     * @param string|null           $host
+     * @param int|null              $port
+     * @param string[]|string $origin
+     * @param string[]|string $methods
+     */
+    public function __construct(
+        private string $scheme = 'http',
+        private ?string $host = null,
+        ?int $port = null,
+        array|string $origin = ['*'],
+        array|string $methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+    ) {
+        $this->port = $port ?: ($scheme === 'http' ? 80 : 443);
+        if (is_string($origin)) {
             $this->origin = array_map(
                 static fn($element) => trim($element),
                 explode(',', $origin)
             );
+        } else {
+            $this->origin = $origin;
         }
-        $methods = $variables['KWAI_CORS_METHODS'] ?? null;
-        if ($methods) {
+        if (is_string($methods)) {
             $this->methods = array_map(
                 static fn($element) => trim($element),
                 explode(',', $methods)
             );
+        } else {
+            $this->methods = $methods;
         }
     }
 
-    public function validate(Dotenv $env): void
+    public static function createFromVariables(array $variables): self
+    {
+        $parameters = [
+            'KWAI_CORS_SCHEME' => 'scheme',
+            'KWAI_CORS_HOST' => 'host',
+            'KWAI_CORS_PORT' => 'port',
+            'KWAI_CORS_ORIGIN' => 'origin',
+            'KWAI_CORS_METHODS' => 'methods'
+        ];
+        $args = [];
+        foreach($parameters as $variableName => $argName) {
+            if (isset($variables[$variableName])) {
+                $args[$argName] = $variables[$variableName];
+            }
+        }
+        return new self(...$args);
+    }
+
+    public static function validate(Dotenv $env): void
     {
     }
 
+    /**
+     * Creates a Cors Setting. When there is no host configured, null will be
+     * returned.
+     *
+     * @return Settings|null
+     */
     public function createCorsSettings(): ?Settings
     {
-        if ($this->host !== null) {
+        if ($this->host === null) {
             return null;
         }
 

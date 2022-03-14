@@ -15,9 +15,15 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
  */
 class MailerConfiguration implements Configurable
 {
-    private DsnConfiguration $dsn;
-
-    private string|array $from;
+    /**
+     * @param DsnConfiguration $dsn
+     * @param Address          $from
+     */
+    public function __construct(
+        private DsnConfiguration $dsn,
+        private Address $from
+    ) {
+    }
 
     public function getDsn(): DsnConfiguration
     {
@@ -25,26 +31,29 @@ class MailerConfiguration implements Configurable
     }
 
     public function getFromAddress(): Address {
-        return Address::create($this->from);
+        return $this->from;
     }
 
-    public function load(array $variables): void
-    {
-        $this->dsn = new DsnConfiguration($variables['KWAI_MAIL_DSN']);
-        if (isset($variables['KWAI_MAIL_FROM_NAME'])) {
-            $this->from = [
-                $variables['KWAI_MAIL_FROM'] => $variables['KWAI_MAIL_FROM_NAME']
-            ];
-        } else {
-            $this->from = $variables['KWAI_MAIL_FROM'];
-        }
-    }
-
-    public function validate(Dotenv $env): void
+    public static function validate(Dotenv $env): void
     {
         $env->required([
             'KWAI_MAIL_DSN',
             'KWAI_MAIL_FROM'
         ]);
+    }
+
+    public static function createFromVariables(array $variables): self
+    {
+        if (isset($variables['KWAI_MAIL_FROM_NAME'])) {
+            $from = [
+                $variables['KWAI_MAIL_FROM'] => $variables['KWAI_MAIL_FROM_NAME']
+            ];
+        } else {
+            $from = $variables['KWAI_MAIL_FROM'];
+        }
+        return new self(
+            new DsnConfiguration($variables['KWAI_MAIL_DSN']),
+            new Address($from)
+        );
     }
 }

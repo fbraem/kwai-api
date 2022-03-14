@@ -17,20 +17,17 @@ use Psr\Log\LoggerInterface;
  */
 class DatabaseConfiguration implements Configurable
 {
-    private string $dsn;
-
-    private string $user;
-
-    private string $password;
-
     public function __construct(
-        private LoggerConfiguration $loggerConfiguration = new LoggerConfiguration('KWAI_DB_')
+        private DsnDatabaseConfiguration $dsn,
+        private string $user,
+        private string $password,
+        private ?LoggerConfiguration $loggerConfiguration = null
     ) {
     }
 
     public function getDsn(): DsnDatabaseConfiguration
     {
-        return new DsnDatabaseConfiguration($this->dsn);
+        return $this->dsn;
     }
 
     public function getUser(): string
@@ -48,16 +45,17 @@ class DatabaseConfiguration implements Configurable
         return $this->loggerConfiguration->createLogger('kwai.db');
     }
 
-    public function load(array $variables): void
+    public static function createFromVariables(array $variables): self
     {
-        $this->dsn = $variables['KWAI_DB_DSN'];
-        $this->user = $variables['KWAI_DB_USER'];
-        $this->password = $variables['KWAI_DB_PASSWORD'];
-
-        $this->loggerConfiguration->load($variables);
+        return new self(
+            new DsnDatabaseConfiguration($variables['KWAI_DB_DSN']),
+            $variables['KWAI_DB_USER'],
+            $variables['KWAI_DB_PASSWORD'],
+            LoggerConfiguration::createFromPrefixedVariables('KWAI_DB', $variables)
+        );
     }
 
-    public function validate(Dotenv $env): void
+    public static function validate(Dotenv $env): void
     {
         $env->required([
             'KWAI_DB_DSN',
