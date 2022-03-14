@@ -14,7 +14,7 @@ parameters:
         - src/kwai/Modules/Users/Infrastructure/Migrations/*
     ignoreErrors:
         -
-            message: '#Undefined variable: $this#'
+            message: '#Undefined variable: \$this#'
             paths:
                 - tests
 services:
