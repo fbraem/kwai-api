@@ -11,6 +11,7 @@ namespace Kwai\Core\Infrastructure\Database;
 
 use Generator;
 use Illuminate\Support\Collection;
+use Kwai\Core\Infrastructure\Configuration\DsnDatabaseConfiguration;
 use Latitude\QueryBuilder\Engine\SqliteEngine;
 use Latitude\QueryBuilder\Query\AbstractQuery;
 use Latitude\QueryBuilder\QueryFactory;
@@ -35,11 +36,11 @@ final class Connection
     /**
      * Constructor.
      *
-     * @param string               $dsn A DSN connection.
-     * @param LoggerInterface|null $logger
+     * @param DsnDatabaseConfiguration $dsn A DSN connection.
+     * @param LoggerInterface|null     $logger
      */
     public function __construct(
-        private string $dsn,
+        private DsnDatabaseConfiguration $dsn,
         private ?LoggerInterface $logger = null
     ) {
     }
@@ -83,7 +84,7 @@ final class Connection
     {
         try {
             $this->pdo = new PDO(
-                $this->dsn,
+                (string) $this->dsn,
                 $user,
                 $password,
                 [
@@ -179,6 +180,14 @@ final class Connection
     public function getDriver(): string
     {
         return $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    }
+
+    /**
+     * Get the database name
+     */
+    public function getDatabaseName(): string
+    {
+        return $this->dsn->getDatabaseName();
     }
 
     /**

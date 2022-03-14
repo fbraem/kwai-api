@@ -72,7 +72,7 @@ class DatabaseConfiguration implements Configurable
     public function createConnection(): Connection
     {
         $db = new Connection(
-            $this->dsn,
+            $this->getDsn(),
             $this->getLogger()
         );
         $db->connect(
