@@ -3,12 +3,20 @@
  * Phinx migration configuration
  */
 require __DIR__ . '/../autoload.php';
-use Kwai\Core\Infrastructure\Dependencies\Settings;
 
-$config = (new Settings())->create();
+use Kwai\Core\Infrastructure\Database\Connection;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 
-$environments = $config['database'];
-$environments['default_environment'] = $config['default_database'];
+/** @var Connection $db */
+$db = depends('kwai.database', DatabaseDependency::class);
+
+$environments = [
+    'default_environment' => 'kwai',
+    'kwai' => [
+        'name' => $db->getDatabaseName(),
+        'connection' => $db->getPdo()
+    ]
+];
 
 return [
     'paths' => [
