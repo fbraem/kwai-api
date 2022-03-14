@@ -8,17 +8,14 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
-use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Modules\Users\Domain\User;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 
 /**
  * Class Context
  *
  * Use this class to create a context for tests. When a database is available
- *
+ * @deprecated (Start using DatabaseTrait)
  */
 class Context
 {
@@ -27,31 +24,7 @@ class Context
     public static function withDatabase()
     {
         if (self::$db == null) {
-            $config = (new Settings())->create();
-            // TODO: see if we can use DatabaseDependency here ...
-            $logger = new Logger('kwai-db');
-            if (isset($config['logger']['database'])) {
-                if (isset($config['logger']['database']['file'])) {
-                    $logger->pushHandler(
-                        new StreamHandler(
-                            $config['logger']['database']['file'],
-                            $config['logger']['database']['level'] ?? Logger::DEBUG
-                        )
-                    );
-                }
-            }
-            try {
-                self::$db = new Connection(
-                    $config['database']['test']['dsn'],
-                    $logger
-                );
-                self::$db->connect(
-                    $config['database']['test']['user'],
-                    $config['database']['test']['pass']
-                );
-            } catch (DatabaseException $e) {
-                echo 'No database: ' . $e;
-            }
+            self::$db = depends('kwai.database', DatabaseDependency::class);
         }
         return self::$db;
     }
