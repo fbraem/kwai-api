@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Configuration;
 
 use Dotenv\Dotenv;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 
 /**
@@ -44,16 +45,15 @@ class MailerConfiguration implements Configurable
 
     public static function createFromVariables(array $variables): self
     {
+        $email = new EmailAddress($variables['KWAI_MAIL_FROM']);
         if (isset($variables['KWAI_MAIL_FROM_NAME'])) {
-            $from = [
-                $variables['KWAI_MAIL_FROM'] => $variables['KWAI_MAIL_FROM_NAME']
-            ];
+            $from = new Address($email, $variables['KWAI_MAIL_FROM_NAME']);
         } else {
-            $from = $variables['KWAI_MAIL_FROM'];
+            $from = new Address($email);
         }
         return new self(
             new DsnConfiguration($variables['KWAI_MAIL_DSN']),
-            new Address($from)
+            $from
         );
     }
 }
