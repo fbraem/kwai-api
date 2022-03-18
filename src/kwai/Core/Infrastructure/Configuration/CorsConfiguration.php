@@ -71,11 +71,15 @@ class CorsConfiguration implements Configurable
                 $args[$argName] = $variables[$variableName];
             }
         }
+        if (isset($args['port'])) {
+            $args['port'] = intval($args['port']);
+        }
         return new self(...$args);
     }
 
     public static function validate(Dotenv $env): void
     {
+        $env->ifPresent('KWAI_CORS_PORT')->isInteger();
     }
 
     /**
