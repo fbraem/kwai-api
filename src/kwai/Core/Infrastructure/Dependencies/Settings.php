@@ -16,6 +16,9 @@ class Settings implements Dependency
 {
     public function create(): Configuration
     {
-        return new Configuration();
+        return Configuration::createFromFile(
+            __DIR__ . '/../../../../../config',
+            '.kwai'
+        );
     }
 }
