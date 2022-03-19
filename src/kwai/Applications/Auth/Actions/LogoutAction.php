@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Applications\Auth\Actions;
 
 use Exception;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
@@ -42,7 +43,7 @@ class LogoutAction extends Action
 {
     public function __construct(
         private ?Connection $database = null,
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
@@ -63,8 +64,8 @@ class LogoutAction extends Action
     ): Response {
         $data = $request->getParsedBody();
 
-        $secret = $this->settings['security']['secret'];
-        $algorithm = $this->settings['security']['algorithm'] ?? 'HS256';
+        $secret = $this->settings->getSecurityConfiguration()->getSecret();
+        $algorithm = $this->settings->getSecurityConfiguration()->getAlgorithm();
 
         if (!isset($data['refresh_token'])) {
             return (new SimpleResponse(400, 'Refreshtoken is missing'))($response);

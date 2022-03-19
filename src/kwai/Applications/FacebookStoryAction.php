@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Dependencies\FileSystemDependency;
@@ -36,7 +37,7 @@ class FacebookStoryAction extends Action
         private ?Connection $database = null,
         private ?Filesystem $filesystem = null,
         private ?PlatesEngine $templateEngine = null,
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
@@ -58,7 +59,7 @@ class FacebookStoryAction extends Action
                 new StoryDatabaseRepository($this->database),
                 new StoryImageRepository(
                     $this->filesystem,
-                    $this->settings['files']['url']
+                    $this->settings->getFilesystemConfiguration()->getUrl()
                 )
             ))($command);
         } catch (StoryNotFoundException $exception) {

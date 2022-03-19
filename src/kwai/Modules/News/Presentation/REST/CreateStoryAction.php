@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\News\Presentation\REST;
 
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
@@ -41,7 +42,7 @@ class CreateStoryAction extends Action
         private ?Connection $database = null,
         private ?Filesystem $filesystem = null,
         private ?ConverterFactory $converterFactory = null,
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
@@ -70,7 +71,7 @@ class CreateStoryAction extends Action
 
         $imageRepo = new StoryImageRepository(
             $this->filesystem,
-            $this->settings['files']['url']
+            $this->settings->getFilesystemConfiguration()->getUrl()
         );
 
         try {

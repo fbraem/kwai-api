@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Pages\Presentation\REST;
 
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
@@ -38,7 +39,7 @@ class GetPageAction extends Action
         private ?Connection $database = null,
         private ?Filesystem $filesystem = null,
         private ?ConverterFactory $converterFactory = null,
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         parent::__construct();
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
@@ -60,7 +61,7 @@ class GetPageAction extends Action
                 new PageDatabaseRepository($this->database),
                 new PageImageRepository(
                     $this->filesystem,
-                    $this->settings['files']['url']
+                    $this->settings->getFilesystemConfiguration()->getUrl()
                 )
             )($command);
         } catch (RepositoryException $e) {

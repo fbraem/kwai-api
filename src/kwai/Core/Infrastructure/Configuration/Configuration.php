@@ -10,6 +10,7 @@ namespace Kwai\Core\Infrastructure\Configuration;
 use Dotenv\Dotenv;
 use Dotenv\Loader\Loader;
 use Dotenv\Parser\Parser;
+use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Store\StringStore;
 
@@ -18,9 +19,12 @@ use Dotenv\Store\StringStore;
  */
 class Configuration
 {
+    private array $variables = [];
+
     public function __construct(
         private Dotenv $env
     ) {
+        $this->variables = $env->load();
     }
 
     /**
@@ -32,8 +36,12 @@ class Configuration
      */
     public static function createFromFile(string $path, string $file): self
     {
-        $env = Dotenv::createImmutable($path, $file);
-        $env->load();
+        $repository = RepositoryBuilder::createWithNoAdapters()
+            ->immutable()
+            ->addAdapter(ArrayAdapter::create()->get())
+            ->make()
+        ;
+        $env = Dotenv::create($repository, $path, $file);
         return new self($env);
     }
 
@@ -45,45 +53,54 @@ class Configuration
      */
     public static function createFromString(string $content): self
     {
-        $repository = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
+        $repository = RepositoryBuilder::createWithNoAdapters()
+            ->immutable()
+            ->addAdapter(ArrayAdapter::create()->get())
+            ->make()
+        ;
         $env = new Dotenv(new StringStore($content), new Parser(), new Loader(), $repository);
-        $env->load();
         return new self($env);
     }
 
     public function getDatabaseConfiguration(): DatabaseConfiguration
     {
         DatabaseConfiguration::validate($this->env);
-        return DatabaseConfiguration::createFromVariables($_SERVER);
+        return DatabaseConfiguration::createFromVariables($this->variables);
     }
 
     public function getCorsConfiguration(): CorsConfiguration
     {
         CorsConfiguration::validate($this->env);
-        return CorsConfiguration::createFromVariables($_SERVER);
+        return CorsConfiguration::createFromVariables($this->variables);
     }
 
     public function getLoggerConfiguration(): LoggerConfiguration
     {
         LoggerConfiguration::validate($this->env);
-        return LoggerConfiguration::createFromVariables($_SERVER);
+        return LoggerConfiguration::createFromVariables($this->variables);
     }
 
     public function getSecurityConfiguration(): SecurityConfiguration
     {
         SecurityConfiguration::validate($this->env);
-        return SecurityConfiguration::createFromVariables($_SERVER);
+        return SecurityConfiguration::createFromVariables($this->variables);
     }
 
     public function getMailerConfiguration(): MailerConfiguration
     {
         MailerConfiguration::validate($this->env);
-        return MailerConfiguration::createFromVariables($_SERVER);
+        return MailerConfiguration::createFromVariables($this->variables);
     }
 
     public function getWebsiteConfiguration(): WebsiteConfiguration
     {
         WebsiteConfiguration::validate($this->env);
-        return WebsiteConfiguration::createFromVariables($_SERVER);
+        return WebsiteConfiguration::createFromVariables($this->variables);
+    }
+
+    public function getFilesystemConfiguration(): FilesystemConfiguration
+    {
+        FilesystemConfiguration::validate($this->env);
+        return FilesystemConfiguration::createFromVariables($this->variables);
     }
 }
