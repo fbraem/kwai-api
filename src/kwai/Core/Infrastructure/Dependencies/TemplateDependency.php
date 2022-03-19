@@ -21,7 +21,7 @@ class TemplateDependency implements Dependency
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
 
-    public function create()
+    public function create(): PlatesEngine
     {
         $websiteConfiguration = $this->settings->getWebsiteConfiguration();
         $variables = [

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Dependencies;
 
-use League\Flysystem\Adapter\Local;
+use Kwai\Core\Infrastructure\Configuration\Configuration;
 use League\Flysystem\Filesystem;
 
 /**
@@ -16,14 +16,13 @@ use League\Flysystem\Filesystem;
 class FileSystemDependency implements Dependency
 {
     public function __construct(
-        private ?array $settings = null
+        private ?Configuration $settings = null
     ) {
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
 
-    public function create()
+    public function create(): Filesystem
     {
-        $flyAdapter = new Local($this->settings['files']['local']);
-        return new Filesystem($flyAdapter);
+        return $this->settings->getFilesystemConfiguration()->createFilesystem();
     }
 }

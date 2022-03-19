@@ -25,10 +25,9 @@ class DatabaseDependency implements Dependency
     /**
      * Creates a database connection.
      *
-     * @return Connection
      * @throws DatabaseException
      */
-    public function create()
+    public function create(): Connection
     {
         return $this
             ->settings

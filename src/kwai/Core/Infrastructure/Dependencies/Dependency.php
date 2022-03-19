@@ -13,5 +13,5 @@ namespace Kwai\Core\Infrastructure\Dependencies;
  */
 interface Dependency
 {
-    public function create();
+    public function create(): mixed;
 }

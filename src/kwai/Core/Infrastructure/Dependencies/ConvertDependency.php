@@ -16,7 +16,7 @@ use Kwai\Core\Domain\ValueObjects\DocumentFormat;
  */
 class ConvertDependency implements Dependency
 {
-    public function create()
+    public function create(): ConverterFactory
     {
         $factory = new ConverterFactory();
         $factory->register(DocumentFormat::MARKDOWN->value, MarkdownConverter::class);

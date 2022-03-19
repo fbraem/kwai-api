@@ -10,6 +10,7 @@ namespace Kwai\Core\Infrastructure\Dependencies;
 use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use function depends;
 
 /**
@@ -25,7 +26,7 @@ class LoggerDependency implements Dependency
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
 
-    public function create()
+    public function create(): LoggerInterface
     {
         return $this->settings
             ->getLoggerConfiguration()
