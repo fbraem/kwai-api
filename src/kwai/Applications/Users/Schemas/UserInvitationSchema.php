@@ -17,7 +17,7 @@ use Nette\Schema\Expect;
  */
 class UserInvitationSchema implements InputSchema
 {
-    public function __construct()
+    public function __construct(private bool $create = false)
     {
     }
 
@@ -30,9 +30,10 @@ class UserInvitationSchema implements InputSchema
             'data' => Expect::structure([
                 'type' => Expect::string(),
                 'attributes' => Expect::structure([
-                    'email' => Expect::string()->required(),
-                    'name' => Expect::string()->required(),
-                    'remark' => Expect::string()
+                    'email' => Expect::string()->required($this->create),
+                    'name' => Expect::string()->required($this->create),
+                    'remark' => Expect::string(),
+                    'expiration' => Expect::int()
                 ])
             ])
         ]);

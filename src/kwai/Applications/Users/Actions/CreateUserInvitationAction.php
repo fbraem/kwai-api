@@ -79,7 +79,7 @@ class CreateUserInvitationAction extends Action
         }
 
         try {
-            $command = InputSchemaProcessor::create(new UserInvitationSchema())
+            $command = InputSchemaProcessor::create(new UserInvitationSchema(true))
                 ->process($request->getParsedBody())
             ;
         } catch (ValidationException $ve) {
