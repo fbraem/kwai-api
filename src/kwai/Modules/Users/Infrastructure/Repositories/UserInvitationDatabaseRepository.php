@@ -93,7 +93,6 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
      */
     public function update(Entity $invitation): void
     {
-        $invitation->getTraceableTime()->markUpdated();
         $data = (new UserInvitationDTO())
             ->persistEntity($invitation)
             ->userInvitation
