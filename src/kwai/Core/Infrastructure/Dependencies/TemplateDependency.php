@@ -27,7 +27,7 @@ class TemplateDependency implements Dependency
         $variables = [
             'website' => [
                 'url' => $websiteConfiguration->getUrl(),
-                'email' => $websiteConfiguration->getEmail(),
+                'email' => $websiteConfiguration->getAddress()->getEmail(),
             ]
         ];
         return new PlatesEngine(__DIR__ . '/../../../../templates', $variables);

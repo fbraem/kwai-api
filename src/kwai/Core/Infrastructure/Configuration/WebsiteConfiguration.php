@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Configuration;
 
 use Dotenv\Dotenv;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 
 /**
@@ -32,24 +33,19 @@ class WebsiteConfiguration implements Configurable
         return $this->url;
     }
 
-    public function getEmail(): Address
+    public function getAddress(): Address
     {
         return $this->email;
     }
 
     public static function createFromVariables(array $variables): self
     {
-        if (isset($variables['KWAI_MAIL_FROM_NAME'])) {
-            $from = [
-                $variables['KWAI_MAIL_FROM'] => $variables['KWAI_MAIL_FROM_NAME']
-            ];
-        } else {
-            $from = $variables['KWAI_MAIL_FROM'];
-        }
-
         return new self(
             $variables['KWAI_WEBSITE_URL'],
-            new Address($from)
+            new Address(
+                new EmailAddress($variables['KWAI_WEBSITE_EMAIL']),
+                $variables['KWAI_WEBSITE_EMAIL_FROM'] ?? ''
+            )
         );
     }
 
