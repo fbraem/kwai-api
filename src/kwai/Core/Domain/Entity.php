@@ -28,8 +28,6 @@ class Entity
         private int $id,
         private DomainEntity $domain
     ) {
-        $this->id = $id;
-        $this->domain = $domain;
     }
 
     /**
