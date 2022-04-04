@@ -25,8 +25,8 @@ class Entity
      * @param T $domain The domain entity
      */
     public function __construct(
-        private int $id,
-        private DomainEntity $domain
+        private readonly int $id,
+        private readonly DomainEntity $domain
     ) {
     }
 
