@@ -7,6 +7,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use DateTime;
+use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
@@ -28,9 +30,9 @@ class UserInvitation implements DomainEntity
      * @param string             $name
      * @param Creator            $creator
      * @param string|null        $remark
-     * @param UniqueId|null      $uuid
+     * @param UniqueId           $uuid
      * @param bool               $revoked
-     * @param TraceableTime|null $traceableTime
+     * @param TraceableTime      $traceableTime
      * @param Timestamp|null     $confirmation
      */
     public function __construct(
@@ -39,13 +41,11 @@ class UserInvitation implements DomainEntity
         private string $name,
         private Creator $creator,
         private ?string $remark = null,
-        private ?UniqueId $uuid = null,
+        private UniqueId $uuid = new UniqueId(),
         private bool $revoked = false,
-        private ?TraceableTime $traceableTime = null,
+        private TraceableTime $traceableTime = new TraceableTime(),
         private ?Timestamp $confirmation = null,
     ) {
-        $this->uuid ??= new UniqueId();
-        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
@@ -160,5 +160,27 @@ class UserInvitation implements DomainEntity
     public function confirm(): void
     {
         $this->confirmation = Timestamp::createNow();
+    }
+
+    /**
+     * Renews the invitation (when it is not yet confirmed)
+     *
+     * @throws NotAllowedException
+     */
+    public function renew(int $expiry = 15): void
+    {
+        if ($this->isConfirmed()) {
+            throw new NotAllowedException(
+                'User invitation',
+                'Renew',
+                'A confirmed user invitation cannot be renewed'
+            );
+        }
+        $this->expiration = new LocalTimestamp(
+            Timestamp::createFromDateTime(
+                new DateTime("now +{$expiry} days")
+            ),
+            'UTC'
+        );
     }
 }
