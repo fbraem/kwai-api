@@ -63,7 +63,7 @@ class GetUserInvitationAction extends Action
         try {
             $invitation = GetUserInvitation::create(
                 new UserInvitationDatabaseRepository($this->database)
-            )($command);
+            )->execute($command);
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (

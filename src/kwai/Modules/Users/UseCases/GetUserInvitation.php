@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
 /**
@@ -26,8 +25,9 @@ class GetUserInvitation
      *
      * @param UserInvitationRepository $repo
      */
-    public function __construct(private UserInvitationRepository $repo)
-    {
+    public function __construct(
+        private readonly UserInvitationRepository $repo
+    ) {
     }
 
     /**
@@ -45,11 +45,11 @@ class GetUserInvitation
      * Get a user invitation
      *
      * @param GetUserInvitationCommand $command
-     * @return Entity<User>
+     * @return UserInvitationEntity
      * @throws RepositoryException
      * @throws UserInvitationNotFoundException
      */
-    public function __invoke(GetUserInvitationCommand $command): Entity
+    public function execute(GetUserInvitationCommand $command): UserInvitationEntity
     {
         return $this->repo->getByUniqueId(new UniqueId($command->uuid));
     }
