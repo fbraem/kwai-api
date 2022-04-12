@@ -21,7 +21,7 @@ class InviterPolicy implements Policy
 {
     /**
      * @param ?Entity<User> $user
-     * @param UserInvitationEntity   $invitation
+     * @param ?UserInvitationEntity   $invitation
      */
     public function __construct(
         private ?Entity $user = null,
@@ -56,7 +56,10 @@ class InviterPolicy implements Policy
         if ($this->user->hasRole('admin')) {
             return true;
         }
-        return $this->user->id() === $this->invitation->getCreator()->getId();
+        if ($this->invitation) {
+            return $this->user->id() === $this->invitation->getCreator()->getId();
+        }
+        return false;
     }
 
     /**
