@@ -10,6 +10,7 @@ namespace Kwai\Core\Infrastructure\Database;
 use Closure;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\EntityTrait;
 use Kwai\Core\Infrastructure\Repositories\Query;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 
@@ -55,17 +56,21 @@ abstract class DatabaseRepository
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        // TODO: old mapper functions return the Domain object, new ones return
-        //  an Entity. This can be refactored, once all old mapper functions
-        //  are replaced.
+        // TODO: old mapper functions return the Domain object, some return
+        //  an Entity. This can be refactored, when all entities use EntityTrait
         $mapFn = $this->mapFunction;
         if ($this->mapFunction) {
             return $rows->mapWithKeys(
                 function ($item, $key) use ($mapFn) {
                     $result = $mapFn($item);
+                    if (is_object($result) && isset(class_uses(get_class($result))[EntityTrait::class])) {
+                        return [ $result->id() => $result ];
+                    }
+                    // TODO: the following code will be obsolete when EntityTrait will be used everywhere
                     if (is_a($result, Entity::class)) {
                         return [ $result->id() => $result ];
                     }
+                    // TODO: the following code will be obsolete when EntityTrait will be used everywhere
                     return [ $key => new Entity((int) $key, $result) ];
                 }
             );
