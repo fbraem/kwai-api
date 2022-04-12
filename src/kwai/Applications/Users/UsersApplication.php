@@ -27,6 +27,7 @@ use Kwai\Applications\Users\Actions\GetUserAction;
 use Kwai\Applications\Users\Actions\GetUserInvitationAction;
 use Kwai\Applications\Users\Actions\GetUserRolesAction;
 use Kwai\Applications\Users\Actions\UpdateUserAction;
+use Kwai\Applications\Users\Actions\UpdateUserInvitationAction;
 
 /**
  * Class UsersApplication
@@ -53,7 +54,8 @@ class UsersApplication extends Application
             LoginAction::class,
             LogoutAction::class,
             RefreshTokenAction::class,
-            UpdateUserAction::class
+            UpdateUserAction::class,
+            UpdateUserInvitationAction::class
         ];
     }
 }
