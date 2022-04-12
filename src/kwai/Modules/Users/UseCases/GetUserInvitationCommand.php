@@ -16,15 +16,5 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
  */
 class GetUserInvitationCommand
 {
-    /**
-     * @param string $uuid
-     */
-    public function __construct(private string $uuid)
-    {
-    }
-
-    public function getUuid(): UniqueId
-    {
-        return new UniqueId($this->uuid);
-    }
+    public string $uuid;
 }
