@@ -23,6 +23,7 @@ use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 use Kwai\Modules\Mails\Repositories\MailRepository;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
@@ -87,11 +88,11 @@ final class InviteUser
      * Create an invitation and create a mail.
      *
      * @param InviteUserCommand $command
-     * @return Entity<UserInvitation> A user invitation
+     * @return UserInvitationEntity A user invitation
      * @throws UnprocessableException
      * @throws RepositoryException
      */
-    public function __invoke(InviteUserCommand $command): Entity
+    public function __invoke(InviteUserCommand $command): UserInvitationEntity
     {
         $email = new EmailAddress($command->email);
         if ($this->userAccountRepo->existsWithEmail($email)) {
@@ -124,14 +125,12 @@ final class InviteUser
             )
         );
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $templateVars = [
             'uuid' => $invitation->getUniqueId(),
             'name' => $command->name,
             'expires' => $invitation->getExpiration()->getTimestamp()->diffInDays()
         ];
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $mail = new Mail(
             uuid: $invitation->getUniqueId(),
             sender: new Address(

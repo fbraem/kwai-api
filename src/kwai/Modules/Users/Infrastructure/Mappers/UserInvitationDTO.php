@@ -7,7 +7,6 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
@@ -16,6 +15,7 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 
@@ -38,7 +38,6 @@ final class UserInvitationDTO
     public function create(): UserInvitation
     {
         return new UserInvitation(
-            uuid: new UniqueId($this->userInvitation->uuid),
             emailAddress: new EmailAddress($this->userInvitation->email),
             expiration: new LocalTimestamp(
                 Timestamp::createFromString($this->userInvitation->expired_at),
@@ -52,27 +51,29 @@ final class UserInvitationDTO
                     $this->user->last_name
                 )
             ),
-            revoked: $this->userInvitation->revoked === 1,
             remark: $this->userInvitation->remark,
-            confirmation: $this->userInvitation->confirmed_at
-                ? Timestamp::createFromString($this->userInvitation->confirmed_at)
-                : null,
+            uuid: new UniqueId($this->userInvitation->uuid),
+            revoked: $this->userInvitation->revoked === 1,
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($this->userInvitation->created_at),
                 $this->userInvitation->updated_at
                     ? Timestamp::createFromString($this->userInvitation->updated_at)
                     : null
-            )
+            ),
+            confirmation: $this->userInvitation->confirmed_at
+                ? Timestamp::createFromString($this->userInvitation->confirmed_at)
+                : null
         );
     }
 
     /**
      * Create a UserInvitation entity
-     * @return Entity<UserInvitation>
+     *
+     * @return UserInvitationEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): UserInvitationEntity
     {
-        return new Entity(
+        return new UserInvitationEntity(
             $this->userInvitation->id,
             $this->create()
         );
@@ -106,10 +107,10 @@ final class UserInvitationDTO
     /**
      * Persist the entity UserInvitation to a database row.
      *
-     * @param Entity<UserInvitation> $invitation
+     * @param UserInvitationEntity $invitation
      * @return $this
      */
-    public function persistEntity(Entity $invitation): static
+    public function persistEntity(UserInvitationEntity $invitation): static
     {
         $this->userInvitation->id = $invitation->id();
         return $this->persist($invitation->domain());

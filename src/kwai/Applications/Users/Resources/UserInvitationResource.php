@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 
 /**
  * Class UserInvitationResource
@@ -18,10 +17,10 @@ use Kwai\Modules\Users\Domain\UserInvitation;
 class UserInvitationResource
 {
     /**
-     * @param Entity<UserInvitation> $userInvitation
+     * @param UserInvitationEntity $userInvitation
      */
     public function __construct(
-        private Entity $userInvitation
+        private UserInvitationEntity $userInvitation
     ) {
     }
 

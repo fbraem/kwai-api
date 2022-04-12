@@ -8,11 +8,11 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 
 /**
  * UserInvitation repository interface
@@ -25,24 +25,24 @@ interface UserInvitationRepository
      * @param  UniqueId $uuid A unique id
      * @throws UserInvitationNotFoundException
      * @throws RepositoryException
-     * @return Entity<UserInvitation> An invitation
+     * @return UserInvitationEntity An invitation
      */
-    public function getByUniqueId(UniqueId $uuid) : Entity;
+    public function getByUniqueId(UniqueId $uuid) : UserInvitationEntity;
 
     /**
      * Save a new UserInvitation
      * @param  UserInvitation $invitation
      * @throws RepositoryException
-     * @return Entity<UserInvitation>
+     * @return UserInvitationEntity
      */
-    public function create(UserInvitation $invitation): Entity;
+    public function create(UserInvitation $invitation): UserInvitationEntity;
 
     /**
      * Update the invitation.
      * @throws RepositoryException
-     * @param  Entity<UserInvitation> $invitation
+     * @param  UserInvitationEntity $invitation
      */
-    public function update(Entity $invitation): void;
+    public function update(UserInvitationEntity $invitation): void;
 
     /**
      * Factory method
@@ -70,8 +70,8 @@ interface UserInvitationRepository
     /**
      * Removes an invitation.
      *
-     * @param Entity<UserInvitation> $invitation
+     * @param UserInvitationEntity $invitation
      * @throws RepositoryException
      */
-    public function remove(Entity $invitation): void;
+    public function remove(UserInvitationEntity $invitation): void;
 }

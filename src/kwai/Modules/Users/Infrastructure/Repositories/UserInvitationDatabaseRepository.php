@@ -7,7 +7,6 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
@@ -15,6 +14,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserInvitationDTO;
 use Kwai\Modules\Users\Infrastructure\UserInvitationsTable;
 use Kwai\Modules\Users\Repositories\UserInvitationQuery;
@@ -42,7 +42,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     /**
      * @inheritdoc
      */
-    public function getByUniqueId(UniqueId $uuid) : Entity
+    public function getByUniqueId(UniqueId $uuid) : UserInvitationEntity
     {
         $query = $this->createQuery()
             ->filterByUniqueId($uuid)
@@ -59,7 +59,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     /**
      * @inheritdoc
      */
-    public function create(UserInvitation $invitation): Entity
+    public function create(UserInvitation $invitation): UserInvitationEntity
     {
         $data = (new UserInvitationDTO())
             ->persist($invitation)
@@ -82,7 +82,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return new Entity(
+        return new UserInvitationEntity(
             $this->db->lastInsertId(),
             $invitation
         );
@@ -91,7 +91,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
     /**
      * @inheritdoc
      */
-    public function update(Entity $invitation): void
+    public function update(UserInvitationEntity $invitation): void
     {
         $data = (new UserInvitationDTO())
             ->persistEntity($invitation)
@@ -121,7 +121,7 @@ class UserInvitationDatabaseRepository extends DatabaseRepository implements Use
         return new UserInvitationDatabaseQuery($this->db);
     }
 
-    public function remove(Entity $invitation): void
+    public function remove(UserInvitationEntity $invitation): void
     {
         $query = $this->db->createQueryFactory()
             ->delete(UserInvitationsTable::name())
