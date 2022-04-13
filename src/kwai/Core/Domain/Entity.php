@@ -15,6 +15,7 @@ namespace Kwai\Core\Domain;
  *
  * @template T of DomainEntity
  * @SuppressWarnings(PHPMD.ShortVariable)
+ * @deprecated (Create separate Entity classes with EntityTrait)
  */
 class Entity
 {
