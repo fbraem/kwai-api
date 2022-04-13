@@ -8,7 +8,6 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Domain;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\DomainEntity;
 use Kwai\Core\Domain\Permission;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
@@ -19,7 +18,7 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 /**
  * User Entity
  */
-class User implements DomainEntity
+class User
 {
     /**
      * Constructor.

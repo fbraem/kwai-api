@@ -15,12 +15,11 @@ use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\DomainEntity;
 
 /**
  * UserInvitation Entity
  */
-class UserInvitation implements DomainEntity
+class UserInvitation
 {
     /**
      * Constructor.
