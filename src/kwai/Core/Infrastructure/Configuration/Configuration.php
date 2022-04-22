@@ -103,4 +103,9 @@ class Configuration
         FilesystemConfiguration::validate($this->env);
         return FilesystemConfiguration::createFromVariables($this->variables);
     }
+
+    public function getVariable(string $key, string $default = ''): string
+    {
+        return $this->variables[$key] ?? $default;
+    }
 }
