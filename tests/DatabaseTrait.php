@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Tests;
 
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;
@@ -50,9 +50,9 @@ trait DatabaseTrait
         return $this;
     }
 
-    public function withUser(): Entity
+    public function withUser(): UserEntity
     {
-        return new Entity(
+        return new UserEntity(
             1,
             new User(
                 new UniqueId(),
