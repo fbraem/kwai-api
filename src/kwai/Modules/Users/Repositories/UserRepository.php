@@ -8,12 +8,11 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\RoleEntity;
+use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
  * User repository interface
@@ -26,19 +25,19 @@ interface UserRepository
      * @param  int    $id
      * @throws UserNotFoundException
      * @throws RepositoryException
-     * @return Entity<User>
+     * @return UserEntity
      */
-    public function getById(int $id) : Entity;
+    public function getById(int $id) : UserEntity;
 
     /**
      * Get the user with the given unique id.
      *
      * @param UniqueId $uuid
-     * @return Entity<User>
+     * @return UserEntity
      * @throws UserNotFoundException
      * @throws RepositoryException
      */
-    public function getByUniqueId(UniqueId $uuid) : Entity;
+    public function getByUniqueId(UniqueId $uuid) : UserEntity;
 
     /**
      * Get all users.
@@ -65,28 +64,28 @@ interface UserRepository
     /**
      * Update a user
      *
-     * @param Entity $user
+     * @param UserEntity $user
      * @throws RepositoryException
      */
-    public function update(Entity $user): void;
+    public function update(UserEntity $user): void;
 
     /**
      * Link the roles to the given user.
      *
-     * @param Entity                   $user
-     * @param Collection<Entity<Role>> $roles
+     * @param UserEntity             $user
+     * @param Collection<RoleEntity> $roles
      * @return void
-     *@throws RepositoryException
+     * @throws RepositoryException
      */
-    public function insertRoles(Entity $user, Collection $roles): void;
+    public function insertRoles(UserEntity $user, Collection $roles): void;
 
     /**
      * Remove the roles from the given user.
      *
-     * @param Entity                   $user
-     * @param Collection<Entity<Role>> $roles
+     * @param UserEntity             $user
+     * @param Collection<RoleEntity> $roles
      * @return void
-     *@throws RepositoryException
+     * @throws RepositoryException
      */
-    public function deleteRoles(Entity $user, Collection $roles): void;
+    public function deleteRoles(UserEntity $user, Collection $roles): void;
 }

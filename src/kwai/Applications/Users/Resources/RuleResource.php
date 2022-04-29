@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Permission;
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\Rule;
+use Kwai\Modules\Users\Domain\RuleEntity;
 
 /**
  * Class RuleResource
@@ -19,10 +18,10 @@ use Kwai\Modules\Users\Domain\Rule;
 class RuleResource
 {
     /**
-     * @param Entity<Rule> $rule
+     * @param RuleEntity $rule
      */
     public function __construct(
-        private Entity $rule
+        private RuleEntity $rule
     ) {
     }
 

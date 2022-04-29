@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\RoleEntity;
+use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
  * Class UserResource
@@ -18,12 +18,12 @@ use Kwai\Modules\Users\Domain\User;
 class UserResource
 {
     /**
-     * @param Entity<User> $user
-     * @param Entity|null  $currentUser
+     * @param UserEntity      $user
+     * @param UserEntity|null $currentUser
      */
     public function __construct(
-        private Entity $user,
-        private ?Entity $currentUser = null
+        private readonly UserEntity $user,
+        private readonly ?UserEntity $currentUser = null
     ) {
     }
 
@@ -78,7 +78,7 @@ class UserResource
     public function getRoles(): array
     {
         return $this->user->getRoles()->map(
-            fn ($role) => new RoleResource($role)
+            fn (RoleEntity $role) => new RoleResource($role)
         )->toArray();
     }
 

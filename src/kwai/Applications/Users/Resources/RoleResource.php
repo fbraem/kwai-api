@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\Role;
+use Kwai\Modules\Users\Domain\RoleEntity;
+use Kwai\Modules\Users\Domain\RuleEntity;
 
 /**
  * Class RoleResource
@@ -18,10 +18,10 @@ use Kwai\Modules\Users\Domain\Role;
 class RoleResource
 {
     /**
-     * @param Entity<Role> $role
+     * @param RoleEntity $role
      */
     public function __construct(
-        private Entity $role
+        private RoleEntity $role
     ) {
     }
 
@@ -58,7 +58,7 @@ class RoleResource
     public function getRules(): array
     {
         return $this->role->getRules()->map(
-            fn ($rule) => new RuleResource($rule)
+            fn (RuleEntity $rule) => new RuleResource($rule)
         )->toArray();
     }
 }

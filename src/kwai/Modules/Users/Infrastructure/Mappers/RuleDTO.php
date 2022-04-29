@@ -9,9 +9,9 @@ namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\Entity;
 
 use Kwai\Modules\Users\Domain\Rule;
+use Kwai\Modules\Users\Domain\RuleEntity;
 use Kwai\Modules\Users\Infrastructure\RulesTable;
 use Kwai\Modules\Users\Infrastructure\RuleSubjectsTable;
 
@@ -47,11 +47,11 @@ final class RuleDTO
     /**
      * Create a Rule entity from a database row.
      *
-     * @return Entity<Rule>
+     * @return RuleEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): RuleEntity
     {
-        return new Entity(
+        return new RuleEntity(
             $this->rule->id,
             $this->create()
         );
@@ -63,7 +63,7 @@ final class RuleDTO
      * @param Rule $rule
      * @return $this
      */
-    public function persist(Rule $rule): static
+    public function persist(Rule $rule): RuleDTO
     {
         $this->rule->name = $rule->getName();
         $this->rule->permission = $rule->getPermission();
@@ -74,10 +74,10 @@ final class RuleDTO
     /**
      * Persist a Rule entity to a database row.
      *
-     * @param Entity<Rule> $rule
+     * @param RuleEntity $rule
      * @return $this
      */
-    public function persistEntity(Entity $rule): static
+    public function persistEntity(RuleEntity $rule): RuleDTO
     {
         $this->rule->id = $rule->id();
         return $this->persist($rule->domain());

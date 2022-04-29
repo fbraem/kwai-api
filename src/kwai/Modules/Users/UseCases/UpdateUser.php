@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
@@ -15,7 +14,9 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Repositories\RoleRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
@@ -61,7 +62,7 @@ class UpdateUser
      * @throws QueryException
      * @throws UnprocessableException
      */
-    public function __invoke(UpdateUserCommand $command, Entity $activeUser): Entity
+    public function __invoke(UpdateUserCommand $command, UserEntity $activeUser): UserEntity
     {
         $user = $this->userRepo->getByUniqueId(new UniqueId($command->uuid));
 
@@ -79,7 +80,7 @@ class UpdateUser
         $traceableTime = $user->getTraceableTime();
         $traceableTime->markUpdated();
 
-        $user = new Entity(
+        $user = new UserEntity(
             $user->id(),
             new User(
                 uuid: $user->getUuid(),
@@ -100,11 +101,11 @@ class UpdateUser
             $roles = $this->roleRepo->getAll($query);
 
             $rolesToAdd = $roles->diffKeys($user->getRoles());
-            $rolesToAdd->each(fn (Entity $role) => $user->addRole($role));
+            $rolesToAdd->each(fn (RoleEntity $role) => $user->addRole($role));
             $this->userRepo->insertRoles($user, $rolesToAdd);
 
             $rolesToRemove = $user->getRoles()->diffKeys($roles);
-            $rolesToRemove->each(fn (Entity $role) => $user->removeRole($role));
+            $rolesToRemove->each(fn (RoleEntity $role) => $user->removeRole($role));
             $this->userRepo->deleteRoles($user, $rolesToRemove);
         }
 

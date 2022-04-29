@@ -1,6 +1,6 @@
 <?php
 /**
- * @package kwai
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -8,10 +8,11 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\Role;
+use Kwai\Modules\Users\Domain\RoleEntity;
+use Kwai\Modules\Users\Domain\RuleEntity;
 use Kwai\Modules\Users\Infrastructure\RolesTable;
 
 final class RoleDTO
@@ -52,11 +53,11 @@ final class RoleDTO
     /**
      * Create a Role entity from a database row
      *
-     * @return Entity<Role>
+     * @return RoleEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): RoleEntity
     {
-        return new Entity(
+        return new RoleEntity(
             $this->role->id,
             $this->create()
         );
@@ -77,7 +78,7 @@ final class RoleDTO
             $this->role->updated_at = (string) $role->getTraceableTime()->getUpdatedAt();
         }
         $this->rules = $role->getRules()->map(
-            static fn(Entity $rule) => (new RuleDTO())->persistEntity($rule)
+            static fn(RuleEntity $rule) => (new RuleDTO())->persistEntity($rule)
         );
         return $this;
     }
@@ -85,10 +86,10 @@ final class RoleDTO
     /**
      * Persist the Role entity to a database row.
      *
-     * @param Entity<Role> $role
+     * @param RoleEntity $role
      * @return $this
      */
-    public function persistEntity(Entity $role): RoleDTO
+    public function persistEntity(RoleEntity $role): RoleDTO
     {
         $this->role->id = $role->id();
         return $this->persist($role->domain());

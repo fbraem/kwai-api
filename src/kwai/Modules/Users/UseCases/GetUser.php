@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
@@ -45,11 +44,11 @@ class GetUser
      * Get a user
      *
      * @param GetUserCommand $command
-     * @return Entity<User>
+     * @return UserEntity
      * @throws RepositoryException
      * @throws UserNotFoundException
      */
-    public function __invoke(GetUserCommand $command): Entity
+    public function __invoke(GetUserCommand $command): UserEntity
     {
         return $this->userRepo->getByUniqueId(new UniqueId($command->uuid));
     }

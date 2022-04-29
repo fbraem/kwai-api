@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\Domain;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Permission;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
@@ -26,7 +25,7 @@ class User
      * @param UniqueId      $uuid
      * @param EmailAddress  $emailAddress
      * @param Name          $username
-     * @param Collection<Entity<Role>>    $roles
+     * @param Collection<RoleEntity>    $roles
      * @param string        $remark
      * @param int|null      $member
      * @param TraceableTime $traceableTime
@@ -100,9 +99,9 @@ class User
     /**
      * Adds a role to this user.
      *
-     * @param Entity<Role> $role
+     * @param RoleEntity $role
      */
-    public function addRole(Entity $role)
+    public function addRole(RoleEntity $role)
     {
         $this->roles->put($role->id(), $role);
     }
@@ -120,9 +119,9 @@ class User
     /**
      * Removes the role from the user.
      *
-     * @param Entity $role
+     * @param RoleEntity $role
      */
-    public function removeRole(Entity $role)
+    public function removeRole(RoleEntity $role)
     {
         unset($this->roles[$role->id()]);
     }
@@ -133,7 +132,7 @@ class User
     public function hasRole(string $roleName): bool
     {
         return $this->roles->contains(
-            fn(Entity $role) => $role->getName() === $roleName
+            fn(RoleEntity $role) => $role->getName() === $roleName
         );
     }
 
@@ -151,7 +150,7 @@ class User
             $allRules = $allRules->merge($role->getRules());
         }
         $permissions = $allRules->filter(
-            fn(Entity $rule) =>
+            fn(RuleEntity $rule) =>
                 in_array($rule->getSubject(), ['all', $subject]) && $rule->hasPermission($permission)
         );
         return $permissions->isNotEmpty();

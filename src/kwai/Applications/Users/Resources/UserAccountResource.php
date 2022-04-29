@@ -9,8 +9,8 @@ namespace Kwai\Applications\Users\Resources;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
  * Class UserAccountResource
@@ -20,11 +20,11 @@ class UserAccountResource
 {
     /**
      * @param Entity<UserAccount> $userAccount
-     * @param ?Entity<User> $user
+     * @param ?UserEntity $user
      */
     public function __construct(
-        private Entity $userAccount,
-        private ?Entity $user = null
+        private readonly Entity $userAccount,
+        private readonly ?UserEntity $user = null
     ) {
     }
 

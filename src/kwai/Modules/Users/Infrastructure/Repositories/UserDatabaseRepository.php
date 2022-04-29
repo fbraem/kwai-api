@@ -8,15 +8,14 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
-use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\RoleEntity;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
 use Kwai\Modules\Users\Infrastructure\UserRolesTable;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
@@ -47,7 +46,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     /**
      * @inheritDoc
      */
-    public function getById(int $id): Entity
+    public function getById(int $id): UserEntity
     {
         $query = $this->createQuery()->filterById($id);
 
@@ -62,7 +61,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     /**
      * @inheritDoc
      */
-    public function getByUniqueId(UniqueId $uuid): Entity
+    public function getByUniqueId(UniqueId $uuid): UserEntity
     {
         $query = $this->createQuery()->filterByUUID($uuid);
 
@@ -74,7 +73,7 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
         return $entities->first();
     }
 
-    public function update(Entity $user): void
+    public function update(UserEntity $user): void
     {
         $data = (new UserDTO())
             ->persistEntity($user)
@@ -107,14 +106,14 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     /**
      * @inheritDoc
      */
-    public function insertRoles(Entity $user, Collection $roles): void
+    public function insertRoles(UserEntity $user, Collection $roles): void
     {
         if ($roles->count() == 0)
             return;
 
         $roles = $roles
             ->map(
-                fn (Entity $role) => collect([
+                fn (RoleEntity $role) => collect([
                     'role_id' => $role->id(),
                     'user_id' => $user->id()
                 ])
@@ -139,12 +138,12 @@ class UserDatabaseRepository extends DatabaseRepository implements UserRepositor
     /**
      * @inheritDoc
      */
-    public function deleteRoles(Entity $user, Collection $roles): void
+    public function deleteRoles(UserEntity $user, Collection $roles): void
     {
         if ($roles->count() == 0)
             return;
 
-        $roleIds = $roles->map(fn (Entity $item) => $item->id());
+        $roleIds = $roles->map(fn (RoleEntity $item) => $item->id());
 
         $query = $this->db->createQueryFactory()
             ->delete(UserRolesTable::name())

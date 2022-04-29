@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Security;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Security\Policy;
-use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Domain\UserInvitationEntity;
 
 /**
@@ -20,11 +19,11 @@ use Kwai\Modules\Users\Domain\UserInvitationEntity;
 class InviterPolicy implements Policy
 {
     /**
-     * @param ?Entity<User> $user
+     * @param ?UserEntity $user
      * @param ?UserInvitationEntity   $invitation
      */
     public function __construct(
-        private ?Entity $user = null,
+        private ?UserEntity $user = null,
         private ?UserInvitationEntity $invitation = null
     ) {
     }

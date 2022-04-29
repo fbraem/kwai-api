@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\RoleNotFoundException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Repositories\RoleRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
@@ -53,12 +53,12 @@ class DetachRoleFromUser
 
     /**
      * @param DetachRoleFromUserCommand $command
-     * @return Entity<User>
+     * @return UserEntity
      * @throws RepositoryException
      * @throws UserNotFoundException
      * @throws RoleNotFoundException
      */
-    public function __invoke(DetachRoleFromUserCommand $command): Entity
+    public function __invoke(DetachRoleFromUserCommand $command): UserEntity
     {
         $user = $this->userRepo->getByUniqueId(new UniqueId($command->uuid));
         $role = $this->roleRepo->getById($command->roleId);

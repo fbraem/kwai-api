@@ -8,14 +8,15 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 /**
@@ -64,11 +65,11 @@ final class UserDTO
     /**
      * Create a User entity from a database row.
      *
-     * @return Entity<User>
+     * @return UserEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): UserEntity
     {
-        return new Entity(
+        return new UserEntity(
             $this->user->id,
             $this->create()
         );
@@ -93,12 +94,12 @@ final class UserDTO
             $this->user->updated_at = (string) $user->getTraceableTime()->getUpdatedAt();
         }
         $this->roles = $user->getRoles()->map(
-            fn(Entity $role) => (new RoleDTO())->persistEntity($role)
+            fn(RoleEntity $role) => (new RoleDTO())->persistEntity($role)
         );
         return $this;
     }
 
-    public function persistEntity(Entity $user): UserDTO
+    public function persistEntity(UserEntity $user): UserDTO
     {
         $this->user->id = $user->id();
         return $this->persist($user->domain());
