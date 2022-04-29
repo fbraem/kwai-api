@@ -1,55 +1,66 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Applications\Users\Actions\BrowseUsersAction;
-use Kwai\Applications\Users\Actions\UpdateUserAction;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\ServerRequest;
-use Tests\Context;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Tests\HttpClientTrait;
 
-$context = Context::createContext();
+$config = depends('settings', Settings::class);
 
-it('can browse users', function () use ($context) {
-    $action = new BrowseUsersAction($context->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/users'
-    );
-    $response = new Response();
-
-    $response = $action($request, $response, []);
-    expect($response->getStatusCode())->toBe(200);
-
-    $result = json_decode((string) $response->getBody(), true);
-    return $result['data'][0]['id'];
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
+uses(HttpClientTrait::class);
+beforeEach()
+    ->withHttpClient('http://api.kwai.com')
+    ->login(
+        $config->getVariable('KWAI_TEST_USER'),
+        $config->getVariable('KWAI_TEST_PASSWORD')
+    )
 ;
 
-it('can get a user', function ($uuid) use ($context) {
-    $action = new BrowseUsersAction($context->db);
+it('can browse users', function () {
+    $response = $this->get('/users');
+    expect($response->getStatusCode())
+        ->toBe(200)
+    ;
 
-    $request = new ServerRequest(
-        'GET',
-        '/users/' . $uuid
-    );
-    $response = new Response();
+    $data = $response->toArray();
+    expect($data['meta']['count'])
+        ->toBeGreaterThan(0)
+    ;
+    expect($data)
+        ->toHaveKey('data')
+    ;
+    expect($data['data'])
+        ->toBeArray()
+    ;
+    expect($data['data'][0])
+        ->toHaveKey('type', 'users')
+        ->toHaveKey('id')
+    ;
+    return $data['data'][0]['id'];
+});
 
-    $response = $action($request, $response, ['uuid' => $uuid]);
+it('can get a user', function ($uuid) {
+    $response = $this->get('/users/' . $uuid);
     expect($response->getStatusCode())->toBe(200);
+
+    $data = $response->toArray();
+    expect($data)
+        ->toHaveKey('data')
+    ;
+    expect($data['data'])
+        ->toHaveKey('id')
+    ;
+    expect($data['data']['id'])
+        ->toBe($uuid)
+    ;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can browse users')
 ;
 
-it('can update a user', function($uuid) use ($context) {
-    $action = new UpdateUserAction($context->db);
-
+it('can update a user', function ($uuid) {
     $data = [
         'data' => [
             'type' => 'users',
-            'id' => (string) $uuid,
+            'id' => $uuid,
             'attributes' => [
                 'first_name' => 'Jigoro',
                 'last_name' => 'Kano',
@@ -57,21 +68,9 @@ it('can update a user', function($uuid) use ($context) {
             ]
         ]
     ];
-    $request = new ServerRequest(
-        'PATCH',
-        '/users/' . $uuid
-    );
-    $request = $request
-        ->withParsedBody($data)
-        ->withAttribute(
-            'kwai.user',
-            $context->user
-        )
-    ;
 
-    $response = $action($request, new Response(), ['uuid' => (string) $uuid]);
+    $response = $this->patch('/users/' . $uuid, $data);
     expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can browse users')
 ;
