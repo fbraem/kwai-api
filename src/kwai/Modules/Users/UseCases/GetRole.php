@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\RoleNotFoundException;
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Repositories\RoleRepository;
 
 /**
@@ -44,11 +43,11 @@ class GetRole
      * Get a role
      *
      * @param GetRoleCommand $command
-     * @return Entity<Role>
+     * @return RoleEntity
      * @throws RepositoryException
      * @throws RoleNotFoundException
      */
-    public function __invoke(GetRoleCommand $command): Entity
+    public function __invoke(GetRoleCommand $command): RoleEntity
     {
         return $this->repo->getByID($command->id);
     }

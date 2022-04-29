@@ -8,10 +8,10 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\RoleNotFoundException;
+use Kwai\Modules\Users\Domain\RoleEntity;
 
 /**
  * Role repository interface
@@ -21,13 +21,12 @@ interface RoleRepository
     /**
      * Get a role.
      *
-     * @param  int $id Id of a role
-     * @return Entity<Role>  A role
-     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @param int $id Id of a role
+     * @return RoleEntity A role
      * @throws RoleNotFoundException
      * @throws RepositoryException
      */
-    public function getById(int $id) : Entity;
+    public function getById(int $id) : RoleEntity;
 
     /**
      * Get all roles
@@ -48,18 +47,18 @@ interface RoleRepository
      * Create a new role entity
      *
      * @param Role $role
-     * @return Entity<Role>
-     *@throws RepositoryException
+     * @return RoleEntity
+     * @throws RepositoryException
      */
-    public function create(Role $role): Entity;
+    public function create(Role $role): RoleEntity;
 
     /**
      * Update the role
      *
-     * @param Entity<Role> $role
+     * @param RoleEntity $role
      * @throws RepositoryException
      */
-    public function update(Entity $role): void;
+    public function update(RoleEntity $role): void;
 
     /**
      * Factory method to create query

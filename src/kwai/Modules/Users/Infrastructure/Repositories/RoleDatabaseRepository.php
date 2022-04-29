@@ -8,7 +8,6 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
@@ -16,6 +15,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\RoleNotFoundException;
 use Kwai\Modules\Users\Domain\Role;
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Infrastructure\RolesTable;
 use Kwai\Modules\Users\Infrastructure\RoleRulesTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\RoleDTO;
@@ -41,9 +41,8 @@ final class RoleDatabaseRepository extends DatabaseRepository implements RoleRep
 
     /**
      * @inheritDoc
-     * @return Entity<Role>
      */
-    public function getById(int $id): Entity
+    public function getById(int $id): RoleEntity
     {
         $query = $this->createQuery()->filterByIds($id);
 
@@ -58,7 +57,7 @@ final class RoleDatabaseRepository extends DatabaseRepository implements RoleRep
     /**
      * @inheritDoc
      */
-    public function create(Role $role): Entity
+    public function create(Role $role): RoleEntity
     {
         $dto = (new RoleDTO())->persist($role);
 
@@ -81,7 +80,7 @@ final class RoleDatabaseRepository extends DatabaseRepository implements RoleRep
         try {
             $this->db->execute($query);
 
-            $entity = new Entity(
+            $entity = new RoleEntity(
                 $this->db->lastInsertId(),
                 $role
             );
@@ -140,7 +139,7 @@ final class RoleDatabaseRepository extends DatabaseRepository implements RoleRep
     /**
      * @inheritDoc
      */
-    public function update(Entity $role): void
+    public function update(RoleEntity $role): void
     {
         try {
             $this->db->begin();

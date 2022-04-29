@@ -11,6 +11,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\RoleNotFoundException;
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Repositories\RoleRepository;
 use Kwai\Modules\Users\Repositories\RuleRepository;
 
@@ -49,11 +50,11 @@ class UpdateRole
 
     /**
      * @param UpdateRoleCommand $command
-     * @return Entity<Role>
+     * @return RoleEntity
      * @throws RepositoryException
      * @throws RoleNotFoundException
      */
-    public function __invoke(UpdateRoleCommand $command): Entity
+    public function __invoke(UpdateRoleCommand $command): RoleEntity
     {
         $role = $this->roleRepo->getById($command->id);
         if (count($command->rules) > 0) {
@@ -65,7 +66,7 @@ class UpdateRole
         $traceableTime = $role->getTraceableTime();
         $traceableTime->markUpdated();
 
-        $role = new Entity(
+        $role = new RoleEntity(
             $role->id(),
             new Role(
                 name: $command->name,

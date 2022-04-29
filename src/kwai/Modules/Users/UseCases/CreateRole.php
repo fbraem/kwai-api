@@ -10,6 +10,7 @@ namespace Kwai\Modules\Users\UseCases;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Role;
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Repositories\RoleRepository;
 use Kwai\Modules\Users\Repositories\RuleRepository;
 
@@ -46,10 +47,10 @@ class CreateRole
 
     /**
      * @param CreateRoleCommand $command
-     * @return Entity<Role>
+     * @return RoleEntity
      * @throws RepositoryException
      */
-    public function __invoke(CreateRoleCommand $command): Entity
+    public function __invoke(CreateRoleCommand $command): RoleEntity
     {
         if (count($command->rules) > 0) {
             $rules = $this->ruleRepo->getbyIds($command->rules);
