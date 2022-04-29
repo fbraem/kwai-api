@@ -59,9 +59,8 @@ class ErrorMiddleware implements MiddlewareInterface
                     ->map(fn($item) => collect($item)->forget('type'))
                     ->toArray()
             ];
-            if ($this->logger) {
-                $this->logger->error('Exception occurred', $json);
-            }
+            $this->logger?->error('Exception occurred', $json);
+
             // Unset the stack to avoid that it is returned to the client
             unset($json['stack']);
 
