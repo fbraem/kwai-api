@@ -66,7 +66,7 @@ class ErrorMiddleware implements MiddlewareInterface
             unset($json['stack']);
 
             $body = $this->streamFactory->createStream(json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            return $response->withBody($body)->withHeader('Content-Type', '');
+            return $response->withBody($body)->withHeader('Content-Type', 'application/json');
         }
     }
 
