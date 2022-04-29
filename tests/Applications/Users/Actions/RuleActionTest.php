@@ -2,24 +2,26 @@
 declare(strict_types=1);
 
 use Kwai\Applications\Users\Actions\BrowseRulesAction;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Tests\DatabaseTrait;
+use Tests\HttpClientTrait;
 
-uses(DatabaseTrait::class);
-beforeEach()->withDatabase();
+uses(HttpClientTrait::class);
+
+$config = depends('settings', Settings::class);
+beforeEach()
+    ->withHttpClient('http://api.kwai.com')
+    ->login(
+        $config->getVariable('KWAI_TEST_USER'),
+        $config->getVariable('KWAI_TEST_PASSWORD')
+    )
+;
 
 it('can browse rules', function () {
-    $action = new BrowseRulesAction($this->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/users/rules'
-    );
-    $response = new Response();
-
-    $response = $action($request, $response, []);
-    expect($response->getStatusCode())->toBe(200);
-})
-    ->skip(fn () => !$this->hasDatabase(), 'No database available')
-;
+    $response = $this->get('/users/rules');
+    expect($response->getStatusCode())
+        ->toBe(200)
+    ;
+});

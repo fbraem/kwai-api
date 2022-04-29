@@ -1,17 +1,19 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Applications\Users\Actions\BrowseRolesAction;
-use Kwai\Applications\Users\Actions\CreateRoleAction;
-use Kwai\Applications\Users\Actions\GetRoleAction;
-use Kwai\Applications\Users\Actions\UpdateRoleAction;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\ServerRequest;
-use Tests\DatabaseTrait;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
+use Tests\HttpClientTrait;
 
-uses(DatabaseTrait::class);
-beforeEach()->withDatabase();
+$config = depends('settings', Settings::class);
 
+uses(HttpClientTrait::class);
+beforeEach()
+    ->withHttpClient('http://api.kwai.com')
+    ->login(
+        $config->getVariable('KWAI_TEST_USER'),
+        $config->getVariable('KWAI_TEST_PASSWORD')
+    )
+;
 
 $data = [
     'data' => [
@@ -24,85 +26,32 @@ $data = [
 ];
 
 it('can create a role', function () use ($data) {
-    $action = new CreateRoleAction($this->db);
-
-    $request = new ServerRequest(
-        'PATCH',
-        '/users/roles/',
-        []
-    );
-    $request = $request
-        ->withParsedBody($data)
-        ->withAttribute(
-            'kwai.user',
-            $this->withUser()
-        )
-    ;
-    $response = new Response();
-
-    $response = $action($request, $response, []);
+    $response = $this->post('/users/roles', $data);
     expect($response->getStatusCode())->toBe(200);
 
-    $result = json_decode((string) $response->getBody(), true);
+    $result = json_decode($response->getContent(false), true);
     return $result['data']['id'];
-})
-    ->skip(fn () => !$this->hasDatabase(), 'No database available')
-;
-
+});
 
 it('can update a role', function ($id) use ($data) {
-    $action = new UpdateRoleAction($this->db);
-
     $data['data']['id'] = $id;
     $data['data']['attributes']['remark'] = 'Updated with unit test';
 
-    $request = new ServerRequest(
-        'PATCH',
-        '/users/roles/' . $id
-    );
-    $request = $request
-        ->withParsedBody($data)
-        ->withAttribute(
-            'kwai.user',
-            $this->withUser()
-        )
-    ;
-
-    $response = new Response();
-    $response = $action($request, $response, ['id' => $id]);
+    $response = $this->patch('/users/roles/' . $id, $data);
     expect($response->getStatusCode())->toBe(200);
 })
     ->depends('it can create a role')
-    ->skip(fn () => !$this->hasDatabase(), 'Skipped, no database available')
 ;
 
 it('can get a role', function ($id) {
-    $action = new GetRoleAction($this->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/users/roles/' . $id
-    );
-    $response = new Response();
-
-    $response = $action($request, $response, ['id' => $id]);
+    $response = $this->get('/users/roles/' . $id);
     expect($response->getStatusCode())->toBe(200);
 })
     ->depends('it can create a role')
-    ->skip(fn () => !$this->hasDatabase(), 'Skipped, no database available')
 ;
 
 it('can browse roles', function () {
-    $action = new BrowseRolesAction($this->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/users/roles'
-    );
-    $response = new Response();
-
-    $response = $action($request, $response, []);
+    $response = $this->get('/users/roles');
     expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(fn () => !$this->hasDatabase(), 'Skipped, no database available')
 ;
