@@ -84,6 +84,28 @@ trait HttpClientTrait
         return $response;
     }
 
+    public function post(string $path, array $data): ResponseInterface
+    {
+        try {
+            $response = $this->client->request(
+                'POST',
+                $path,
+                [
+                    'json' => $data
+                ]
+            );
+            expect($response)
+                ->when(
+                    $response->getStatusCode() === 500,
+                    fn ($response) => $response->getContent(false)->dd()
+                )
+            ;
+        } catch (TransportExceptionInterface $e) {
+            $this->fail((string) $e);
+        }
+        return $response;
+    }
+
     public function patch(string $path, array $data): ResponseInterface
     {
         try {
