@@ -1,11 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Applications\Users\Actions\BrowseRulesAction;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\ServerRequest;
-use Tests\DatabaseTrait;
 use Tests\HttpClientTrait;
 
 uses(HttpClientTrait::class);
