@@ -14,7 +14,7 @@ use Kwai\Core\Domain\EntityTrait;
  *
  * @mixin RefreshToken
  */
-class RefreshTokenEntity
+final class RefreshTokenEntity
 {
     use EntityTrait;
 

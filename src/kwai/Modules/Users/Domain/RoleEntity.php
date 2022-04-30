@@ -14,7 +14,7 @@ use Kwai\Core\Domain\EntityTrait;
  *
  * @mixin Role
  */
-class RoleEntity
+final class RoleEntity
 {
     use EntityTrait;
 

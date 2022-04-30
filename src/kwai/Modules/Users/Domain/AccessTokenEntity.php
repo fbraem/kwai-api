@@ -12,7 +12,7 @@ use Kwai\Core\Domain\EntityTrait;
 /**
  * Class AccessTokenEntity
  */
-class AccessTokenEntity
+final class AccessTokenEntity
 {
     use EntityTrait;
 
