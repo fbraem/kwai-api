@@ -11,6 +11,7 @@ use Kwai\Core\Domain\EntityTrait;
 
 /**
  * Class AccessTokenEntity
+ * @mixin AccessToken
  */
 final class AccessTokenEntity
 {
