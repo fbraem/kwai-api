@@ -13,7 +13,7 @@ use Kwai\Core\Domain\EntityTrait;
  * Class UserEntity
  * @mixin User
  */
-class UserEntity
+final class UserEntity
 {
     use EntityTrait;
 

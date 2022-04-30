@@ -14,7 +14,7 @@ use Kwai\Core\Domain\EntityTrait;
  *
  * @mixin UserAccount
  */
-class UserAccountEntity
+final class UserAccountEntity
 {
     use EntityTrait;
 
