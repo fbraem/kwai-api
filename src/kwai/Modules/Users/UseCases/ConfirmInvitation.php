@@ -17,6 +17,7 @@ use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
@@ -58,13 +59,12 @@ final class ConfirmInvitation
      * Create a new user account.
      *
      * @param ConfirmInvitationCommand $command
-     * @return Entity The new user account
-     * @throws UnprocessableException
+     * @return UserAccountEntity The new user account
      * @throws RepositoryException
+     * @throws UnprocessableException
      * @throws UserInvitationNotFoundException
-     * @noinspection PhpUndefinedMethodInspection
      */
-    public function __invoke(ConfirmInvitationCommand $command): Entity
+    public function __invoke(ConfirmInvitationCommand $command): UserAccountEntity
     {
         $invitation = $this->invitationRepo->getByUniqueId(new UniqueId($command->uuid));
         if ($invitation->isExpired()) {

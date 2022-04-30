@@ -7,23 +7,22 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
 use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
  * Class UserAccountResource
  */
 #[JSONAPI\Resource(type: 'user_accounts', id: 'getId')]
-class UserAccountResource
+final class UserAccountResource
 {
     /**
-     * @param Entity<UserAccount> $userAccount
-     * @param ?UserEntity $user
+     * @param UserAccountEntity $userAccount
+     * @param ?UserEntity       $user
      */
     public function __construct(
-        private readonly Entity $userAccount,
+        private readonly UserAccountEntity $userAccount,
         private readonly ?UserEntity $user = null
     ) {
     }
