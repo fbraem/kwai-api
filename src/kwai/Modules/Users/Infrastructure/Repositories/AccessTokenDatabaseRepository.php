@@ -7,12 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\AccessTokenEntity;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
 use Kwai\Modules\Users\Infrastructure\Mappers\AccessTokenDTO;
 use Kwai\Modules\Users\Repositories\AccessTokenQuery;
@@ -41,9 +41,8 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
 
     /**
      * @inheritDoc
-     * @return Entity<AccessToken>
      */
-    public function create(AccessToken $token): Entity
+    public function create(AccessToken $token): AccessTokenEntity
     {
         $data = (new AccessTokenDTO())
             ->persist($token)
@@ -63,7 +62,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return new Entity(
+        return new AccessTokenEntity(
             $this->db->lastInsertId(),
             $token
         );
@@ -72,7 +71,7 @@ final class AccessTokenDatabaseRepository extends DatabaseRepository implements 
     /**
      * @inheritdoc
      */
-    public function update(Entity $token): void
+    public function update(AccessTokenEntity $token): void
     {
         $token->getTraceableTime()->markUpdated();
 

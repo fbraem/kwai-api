@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
@@ -15,6 +14,7 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserAccountDTO;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserDTO;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
@@ -43,7 +43,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
     /**
      * @inheritDoc
      */
-    public function get(EmailAddress $email): Entity
+    public function get(EmailAddress $email): UserAccountEntity
     {
         $query = $this->createQuery()->filterByEmail($email);
 
@@ -58,7 +58,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
     /**
      * @inheritDoc
      */
-    public function update(Entity $account): void
+    public function update(UserAccountEntity $account): void
     {
         $data = (new UserAccountDTO())->persistEntity($account)
             ->user
@@ -80,7 +80,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
     /**
      * @inheritDoc
      */
-    public function create(UserAccount $account): Entity
+    public function create(UserAccount $account): UserAccountEntity
     {
         $data = (new UserAccountDTO())->persist($account)
             ->user
@@ -102,7 +102,7 @@ class UserAccountDatabaseRepository extends DatabaseRepository implements UserAc
         } catch (QueryException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
-        return new Entity(
+        return new UserAccountEntity(
             $this->db->lastInsertId(),
             $account
         );

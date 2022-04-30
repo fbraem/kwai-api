@@ -9,8 +9,8 @@ namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\RefreshToken;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
 
@@ -49,11 +49,11 @@ final class RefreshTokenDTO
     /**
      * Creates a RefreshToken entity from a database row.
      *
-     * @return Entity
+     * @return RefreshTokenEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): RefreshTokenEntity
     {
-        return new Entity(
+        return new RefreshTokenEntity(
             $this->refreshToken->id,
             $this->create()
         );
@@ -81,10 +81,10 @@ final class RefreshTokenDTO
     /**
      * Persists a RefreshToken entity to a database row.
      *
-     * @param Entity<RefreshToken> $refreshToken
+     * @param RefreshTokenEntity $refreshToken
      * @return $this
      */
-    public function persistEntity(Entity $refreshToken): RefreshTokenDTO
+    public function persistEntity(RefreshTokenEntity $refreshToken): RefreshTokenDTO
     {
         $this->refreshToken->id = $refreshToken->id();
         return $this->persist($refreshToken->domain());

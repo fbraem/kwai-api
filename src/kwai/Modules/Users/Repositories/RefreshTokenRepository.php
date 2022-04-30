@@ -8,9 +8,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\RefreshToken;
 
@@ -22,25 +22,27 @@ interface RefreshTokenRepository
     /**
      * Get a refreshtoken by its token identifier.
      *
-     * @param  TokenIdentifier $identifier A token identifier
+     * @param TokenIdentifier $identifier A token identifier
+     * @return RefreshTokenEntity A refreshtoken
      * @throws RefreshTokenNotFoundException
      * @throws RepositoryException
-     * @return Entity<RefreshToken>        A refreshtoken
      */
-    public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity;
+    public function getByTokenIdentifier(TokenIdentifier $identifier) : RefreshTokenEntity;
 
     /**
      * Save a new RefreshToken
-     * @param  RefreshToken $token
+     *
+     * @param RefreshToken $token
+     * @return RefreshTokenEntity
      * @throws RepositoryException
-     * @return Entity<RefreshToken>
      */
-    public function create(RefreshToken $token): Entity;
+    public function create(RefreshToken $token): RefreshTokenEntity;
 
     /**
      * Update the refreshtoken.
-     * @param  Entity<RefreshToken> $token
+     *
+     * @param RefreshTokenEntity $token
      * @throws RepositoryException
      */
-    public function update(Entity $token): void;
+    public function update(RefreshTokenEntity $token): void;
 }

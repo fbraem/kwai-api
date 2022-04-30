@@ -7,13 +7,13 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
 use Kwai\Modules\Users\Domain\RefreshToken;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Mappers\RefreshTokenDTO;
 use Kwai\Modules\Users\Infrastructure\RefreshTokenTable;
@@ -48,9 +48,8 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
 
     /**
      * @inheritDoc
-     * @return Entity<RefreshToken>
      */
-    public function getByTokenIdentifier(TokenIdentifier $identifier) : Entity
+    public function getByTokenIdentifier(TokenIdentifier $identifier) : RefreshTokenEntity
     {
         $query = $this->createQuery()->filterTokenIdentifier($identifier);
         $tokens = $this->getAll($query);
@@ -62,9 +61,8 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
 
     /**
      * @inheritDoc
-     * @return Entity<RefreshToken>
      */
-    public function create(RefreshToken $token): Entity
+    public function create(RefreshToken $token): RefreshTokenEntity
     {
         $dto = new RefreshTokenDTO();
         $data = $dto
@@ -85,7 +83,7 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return new Entity(
+        return new RefreshTokenEntity(
             $this->db->lastInsertId(),
             $token
         );
@@ -94,7 +92,7 @@ final class RefreshTokenDatabaseRepository extends DatabaseRepository implements
     /**
      * @inheritDoc
      */
-    public function update(Entity $token): void
+    public function update(RefreshTokenEntity $token): void
     {
         $token->getTraceableTime()->markUpdated();
         $data = (new RefreshTokenDTO())

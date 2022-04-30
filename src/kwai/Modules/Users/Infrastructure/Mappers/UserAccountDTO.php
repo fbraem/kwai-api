@@ -8,9 +8,9 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
 
@@ -44,11 +44,11 @@ final class UserAccountDTO
     /**
      * Create a UserAccount entity from a database row.
      *
-     * @return Entity<UserAccount>
+     * @return UserAccountEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): UserAccountEntity
     {
-        return new Entity(
+        return new UserAccountEntity(
             $this->user->id,
             $this->create()
         );
@@ -60,7 +60,7 @@ final class UserAccountDTO
      * @param UserAccount $account
      * @return $this
      */
-    public function persist(UserAccount $account): static
+    public function persist(UserAccount $account): UserAccountDTO
     {
         (new UserDTO($this->user))
             ->persist($account->getUser());
@@ -81,10 +81,10 @@ final class UserAccountDTO
     /**
      * Persist the account entity to a database row.
      *
-     * @param Entity<UserAccount> $account
+     * @param UserAccountEntity $account
      * @return $this
      */
-    public function persistEntity(Entity $account): static
+    public function persistEntity(UserAccountEntity $account): UserAccountDTO
     {
         $this->user->id = $account->id();
         return $this->persist($account->domain());

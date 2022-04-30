@@ -13,6 +13,7 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
@@ -22,7 +23,7 @@ use Kwai\Modules\Users\Repositories\RefreshTokenRepository;
 use Kwai\Modules\Users\Domain\Exceptions\AuthenticationException;
 
 /**
- * Usecase: Authenticate a user and create a refresh token.
+ * Use case: Authenticate a user and create a refresh token.
  */
 final class AuthenticateUser
 {
@@ -68,13 +69,12 @@ final class AuthenticateUser
      * associated with the authenticated user.
      *
      * @param AuthenticateUserCommand $command
-     * @return Entity<RefreshToken>              A RefreshToken entity
-     * @throws AuthenticationException
-     *    Thrown when the password is invalid, or when the user is revoked.
+     * @return RefreshTokenEntity A RefreshToken entity
+     * @throws AuthenticationException Thrown when the password is invalid, or when the user is revoked.
      * @throws RepositoryException
      * @throws UserAccountNotFoundException
      */
-    public function __invoke(AuthenticateUserCommand $command): Entity
+    public function __invoke(AuthenticateUserCommand $command): RefreshTokenEntity
     {
         $account = $this->userAccountRepo->get(new EmailAddress($command->email));
         if (!$account->login($command->password)) {

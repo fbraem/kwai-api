@@ -7,13 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\AccessTokenEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\AccessTokenTable;
-use Kwai\Modules\Users\Infrastructure\UsersTable;
 
 final class AccessTokenDTO
 {
@@ -47,11 +46,11 @@ final class AccessTokenDTO
     /**
      * Creates an AccessToken entity from a database row.
      *
-     * @return Entity<AccessToken>
+     * @return AccessTokenEntity
      */
-    public function createEntity(): Entity
+    public function createEntity(): AccessTokenEntity
     {
-        return new Entity(
+        return new AccessTokenEntity(
             $this->accessToken->id,
             $this->create()
         );
@@ -79,10 +78,10 @@ final class AccessTokenDTO
     /**
      * Persist an AccessToken entity to a database row.
      *
-     * @param Entity<AccessToken> $accessToken
+     * @param AccessTokenEntity $accessToken
      * @return $this
      */
-    public function persistEntity(Entity $accessToken): AccessTokenDTO
+    public function persistEntity(AccessTokenEntity $accessToken): AccessTokenDTO
     {
         $this->accessToken->id = $accessToken->id();
         return $this->persist($accessToken->domain());

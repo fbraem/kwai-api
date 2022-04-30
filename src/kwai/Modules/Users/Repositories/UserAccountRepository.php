@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
 
 /**
  * Interface UserAccountRepository
@@ -23,11 +23,11 @@ interface UserAccountRepository
      * Get a UserAccount using the email address.
      *
      * @param EmailAddress $email
+     * @return UserAccountEntity
      * @throws RepositoryException
      * @throws UserAccountNotFoundException
-     * @return Entity<UserAccount>
      */
-    public function get(EmailAddress $email): Entity;
+    public function get(EmailAddress $email): UserAccountEntity;
 
     /**
      * Get all user accounts.
@@ -35,7 +35,7 @@ interface UserAccountRepository
      * @param UserQuery|null $query
      * @param int|null       $limit
      * @param int|null       $offset
-     * @return Collection<Entity<UserAccount>>
+     * @return Collection<UserAccountEntity>
      * @throws RepositoryException
      */
     public function getAll(
@@ -47,18 +47,19 @@ interface UserAccountRepository
     /**
      * Update the login information.
      *
-     * @param Entity<UserAccount> $account
+     * @param UserAccountEntity $account
      * @throws RepositoryException
      */
-    public function update(Entity $account): void;
+    public function update(UserAccountEntity $account): void;
 
     /**
      * Create a user account.
+     *
      * @param UserAccount $account
-     * @return Entity<UserAccount>
+     * @return UserAccountEntity
      * @throws RepositoryException
      */
-    public function create(UserAccount $account): Entity;
+    public function create(UserAccount $account): UserAccountEntity;
 
     /**
      * Checks if a user with the given email already exists
