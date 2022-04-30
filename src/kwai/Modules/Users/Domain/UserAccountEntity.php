@@ -24,8 +24,8 @@ final class UserAccountEntity
     ) {
     }
 
-    public function domain()
+    public function domain(): UserAccount
     {
-        return $this->domain();
+        return $this->domain;
     }
 }
