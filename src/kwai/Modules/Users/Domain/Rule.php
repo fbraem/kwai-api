@@ -14,7 +14,7 @@ use Kwai\Core\Domain\DomainEntity;
 /**
  * Rule Entity
  */
-class Rule implements DomainEntity
+final class Rule implements DomainEntity
 {
     /**
      * Rule constructor.
@@ -26,11 +26,11 @@ class Rule implements DomainEntity
      * @param TraceableTime|null $traceableTime
      */
     public function __construct(
-        private string $name,
-        private string $subject,
-        private int $permission = 0,
-        private ?string $remark = null,
-        private ?TraceableTime $traceableTime = new TraceableTime()
+        private readonly string $name,
+        private readonly string $subject,
+        private readonly int $permission = 0,
+        private readonly ?string $remark = null,
+        private readonly ?TraceableTime $traceableTime = new TraceableTime()
     ) {
     }
 

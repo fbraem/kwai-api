@@ -17,7 +17,7 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 /**
  * User Entity
  */
-class User
+final class User
 {
     /**
      * Constructor.
@@ -31,13 +31,13 @@ class User
      * @param TraceableTime $traceableTime
      */
     public function __construct(
-        private UniqueId      $uuid,
-        private EmailAddress  $emailAddress,
-        private Name          $username,
-        private Collection    $roles = new Collection(),
-        private string        $remark = '',
-        private ?int          $member = null,
-        private TraceableTime $traceableTime = new TraceableTime()
+        private readonly UniqueId      $uuid,
+        private readonly EmailAddress  $emailAddress,
+        private readonly Name          $username,
+        private readonly Collection    $roles = new Collection(),
+        private readonly string        $remark = '',
+        private readonly ?int          $member = null,
+        private readonly TraceableTime $traceableTime = new TraceableTime()
     ) {
     }
 
@@ -104,16 +104,6 @@ class User
     public function addRole(RoleEntity $role)
     {
         $this->roles->put($role->id(), $role);
-    }
-
-    /**
-     * Set the roles of the user
-     *
-     * @param Collection $roles
-     */
-    public function setRoles(Collection $roles)
-    {
-        $this->roles = $roles->collect();
     }
 
     /**

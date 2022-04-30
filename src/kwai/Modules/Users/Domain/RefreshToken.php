@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -9,32 +9,30 @@ namespace Kwai\Modules\Users\Domain;
 
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 /**
 * RefreshToken entity
  */
-class RefreshToken implements DomainEntity
+final class RefreshToken implements DomainEntity
 {
     /**
      * Constructor
      *
      * @param TokenIdentifier    $identifier
      * @param Timestamp          $expiration
-     * @param Entity             $accessToken
+     * @param AccessTokenEntity  $accessToken
      * @param bool               $revoked
      * @param TraceableTime|null $traceableTime
      */
     public function __construct(
-        private TokenIdentifier $identifier,
-        private Timestamp $expiration,
-        private Entity $accessToken,
+        private readonly TokenIdentifier $identifier,
+        private readonly Timestamp $expiration,
+        private readonly AccessTokenEntity $accessToken,
         private bool $revoked = false,
-        private ?TraceableTime $traceableTime = null,
+        private readonly ?TraceableTime $traceableTime = new TraceableTime()
     ) {
-        $this->traceableTime ??= new TraceableTime();
     }
 
     /**
@@ -93,9 +91,9 @@ class RefreshToken implements DomainEntity
     /**
      * Get the associated accesstoken
      *
-     * @return Entity|null
+     * @return AccessTokenEntity
      */
-    public function getAccessToken(): ?Entity
+    public function getAccessToken(): AccessTokenEntity
     {
         return $this->accessToken;
     }

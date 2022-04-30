@@ -13,7 +13,7 @@ use Kwai\Core\Domain\EntityTrait;
  * Class RuleEntity
  * @mixin Rule
  */
-class RuleEntity
+final class RuleEntity
 {
     use EntityTrait;
 

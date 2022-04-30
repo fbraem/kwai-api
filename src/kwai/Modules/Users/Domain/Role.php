@@ -16,21 +16,21 @@ use Kwai\Core\Domain\Entity;
 /**
  * Role Entity
  */
-class Role implements DomainEntity
+final class Role implements DomainEntity
 {
     /**
      * Constructor.
      *
      * @param string        $name
-     * @param string        $remark
-     * @param string        $description
+     * @param string|null   $remark
+     * @param string|null   $description
      * @param TraceableTime $traceableTime
      * @param Collection    $rules
      */
     public function __construct(
         private string $name,
-        private string $remark = '',
-        private string $description = '',
+        private ?string $remark = '',
+        private ?string $description = '',
         private TraceableTime $traceableTime = new TraceableTime(),
         private Collection $rules = new Collection()
     ) {
@@ -38,13 +38,11 @@ class Role implements DomainEntity
 
     /**
      * Add a rule to this role
-     * @param Entity<Rule> $rule
+     *
+     * @param RuleEntity $rule
      */
-    public function addRule(Entity $rule): void
+    public function addRule(RuleEntity $rule): void
     {
-        if (!is_a($rule->domain(), Rule::class)) {
-            throw new InvalidArgumentException('$rule argument is not a Rule class');
-        }
         $this->rules[] = $rule;
     }
 

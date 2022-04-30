@@ -16,7 +16,7 @@ use Kwai\Modules\Users\Domain\ValueObjects\Password;
  * User Account Entity. A user with account information like password,
  * revoked, ...
  */
-class UserAccount implements DomainEntity
+final class UserAccount implements DomainEntity
 {
     /**
      * Constructor.
@@ -28,8 +28,8 @@ class UserAccount implements DomainEntity
      * @param bool            $revoked
      */
     public function __construct(
-        private User $user,
-        private Password $password,
+        private readonly User $user,
+        private readonly Password $password,
         private ?Timestamp $lastLogin = null,
         private ?Timestamp $lastUnsuccessfulLogin = null,
         private bool $revoked = false,
@@ -84,7 +84,7 @@ class UserAccount implements DomainEntity
     }
 
     /**
-     * Checks if the user has loggedin before
+     * Checks if the user has logged in before
      * @return bool
      */
     public function hasLastLogin(): bool

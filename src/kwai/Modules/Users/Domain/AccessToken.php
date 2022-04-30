@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -9,33 +9,30 @@ namespace Kwai\Modules\Users\Domain;
 
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\DomainEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 
 /**
 * AccessToken entity
  */
-class AccessToken implements DomainEntity
+final class AccessToken implements DomainEntity
 {
     /**
      * Constructor
      *
-     * @param TokenIdentifier    $identifier
-     * @param Timestamp          $expiration
-     * @param bool               $revoked
-     * @param Entity             $account
-     * @param TraceableTime|null $traceableTime
+     * @param TokenIdentifier   $identifier
+     * @param Timestamp         $expiration
+     * @param UserAccountEntity $account
+     * @param bool              $revoked
+     * @param ?TraceableTime    $traceableTime
      */
     public function __construct(
-        private TokenIdentifier $identifier,
-        private Timestamp $expiration,
-        private Entity $account,
+        private readonly TokenIdentifier $identifier,
+        private readonly Timestamp $expiration,
+        private readonly UserAccountEntity $account,
         private bool $revoked = false,
-        private ?TraceableTime $traceableTime = null,
-    )
-    {
-        $this->traceableTime ??= new TraceableTime();
+        private readonly ?TraceableTime $traceableTime = new TraceableTime(),
+    ) {
     }
 
     /**
@@ -84,9 +81,10 @@ class AccessToken implements DomainEntity
 
     /**
      * Get the owner of this token
-     * @return Entity<UserAccount>
+     *
+     * @return UserAccountEntity
      */
-    public function getUserAccount(): Entity
+    public function getUserAccount(): UserAccountEntity
     {
         return $this->account;
     }

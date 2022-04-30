@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Kwai/Modules
+ * @package Modules
  * @subpackage Users
  */
 declare(strict_types = 1);
@@ -19,7 +19,7 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 /**
  * UserInvitation Entity
  */
-class UserInvitation
+final class UserInvitation
 {
     /**
      * Constructor.
@@ -35,14 +35,14 @@ class UserInvitation
      * @param Timestamp|null     $confirmation
      */
     public function __construct(
-        private EmailAddress $emailAddress,
+        private readonly EmailAddress $emailAddress,
         private LocalTimestamp $expiration,
-        private string $name,
-        private Creator $creator,
-        private ?string $remark = null,
-        private UniqueId $uuid = new UniqueId(),
+        private readonly string $name,
+        private readonly Creator $creator,
+        private readonly ?string $remark = null,
+        private readonly UniqueId $uuid = new UniqueId(),
         private bool $revoked = false,
-        private TraceableTime $traceableTime = new TraceableTime(),
+        private readonly TraceableTime $traceableTime = new TraceableTime(),
         private ?Timestamp $confirmation = null,
     ) {
     }
@@ -177,7 +177,7 @@ class UserInvitation
         }
         $this->expiration = new LocalTimestamp(
             Timestamp::createFromDateTime(
-                new DateTime("now +{$expiry} days")
+                new DateTime("now +$expiry days")
             ),
             'UTC'
         );
