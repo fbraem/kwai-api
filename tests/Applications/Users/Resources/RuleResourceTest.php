@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 use Kwai\Applications\Users\Resources\RuleResource;
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Rule;
+use Kwai\Modules\Users\Domain\RuleEntity;
 
 it('can serialize a Rule entity to JSON:API', function () {
-    $rule = new Entity(
+    $rule = new RuleEntity(
         1,
         new Rule(
             name: 'AddUser',

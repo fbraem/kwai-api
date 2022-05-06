@@ -2,19 +2,20 @@
 declare(strict_types=1);
 
 use Kwai\Applications\Users\Resources\RoleResource;
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Role;
+use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\Rule;
+use Kwai\Modules\Users\Domain\RuleEntity;
 
 it('can serialize an Role to a JSON:API resource', function () {
-    $role = new Entity(
+    $role = new RoleEntity(
         1,
         new Role(
             name: 'Coach',
             remark: 'All rules for a coach',
             rules: collect([
-                new Entity(
+                new RuleEntity(
                     1,
                     new Rule(
                         name: 'Manage Team',

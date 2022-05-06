@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Kwai\Applications\Users\Resources\UserInvitationResource;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
@@ -11,10 +10,11 @@ use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 
 it('can serialize an UserInvitation to a JSON:API resource', function () {
     $uuid = new UniqueId();
-    $account = new Entity(
+    $account = new UserInvitationEntity(
         1,
         new UserInvitation(
             emailAddress: new EmailAddress('ingrid.berghmans@kwai.com'),

@@ -2,18 +2,18 @@
 declare(strict_types=1);
 
 use Kwai\Applications\Users\Resources\UserAccountResource;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\Password;
 
 it('can serialize an UserAccount to a JSON:API resource', function () {
     $uuid = new UniqueId();
-    $account = new Entity(
+    $account = new UserAccountEntity(
         1,
         new UserAccount(
             user: new User(
