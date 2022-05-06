@@ -22,18 +22,20 @@ final class User
     /**
      * Constructor.
      *
-     * @param UniqueId      $uuid
-     * @param EmailAddress  $emailAddress
-     * @param Name          $username
-     * @param Collection<RoleEntity>    $roles
-     * @param string        $remark
-     * @param int|null      $member
-     * @param TraceableTime $traceableTime
+     * @param UniqueId               $uuid
+     * @param EmailAddress           $emailAddress
+     * @param Name                   $username
+     * @param bool                   $admin
+     * @param Collection<RoleEntity> $roles
+     * @param string                 $remark
+     * @param int|null               $member
+     * @param TraceableTime          $traceableTime
      */
     public function __construct(
         private readonly UniqueId      $uuid,
         private readonly EmailAddress  $emailAddress,
         private readonly Name          $username,
+        private bool                   $admin = false,
         private readonly Collection    $roles = new Collection(),
         private readonly string        $remark = '',
         private readonly ?int          $member = null,
@@ -154,5 +156,13 @@ final class User
     public function getMember(): ?int
     {
         return $this->member;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->admin;
     }
 }
