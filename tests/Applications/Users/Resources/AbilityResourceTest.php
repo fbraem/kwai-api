@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Applications\Users\Resources\ResourceTypes;
 use Kwai\Applications\Users\Resources\RoleResource;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Role;
@@ -41,7 +42,7 @@ it('can serialize an Role to a JSON:API resource', function () {
     ;
     expect($json->data)
         ->toMatchObject([
-            'type' => 'roles',
+            'type' => ResourceTypes::ROLES,
             'id' => '1'
         ])
         ->toHaveProperty('attributes')

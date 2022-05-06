@@ -14,7 +14,7 @@ use Kwai\Modules\Users\Domain\RuleEntity;
 /**
  * Class RuleResource
  */
-#[JSONAPI\Resource(type: 'rules', id: 'getId')]
+#[JSONAPI\Resource(type: ResourceTypes::RULES, id: 'getId')]
 class RuleResource
 {
     /**

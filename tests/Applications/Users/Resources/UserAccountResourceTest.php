@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Applications\Users\Resources\ResourceTypes;
 use Kwai\Applications\Users\Resources\UserAccountResource;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
@@ -40,7 +41,7 @@ it('can serialize an UserAccount to a JSON:API resource', function () {
     ;
     expect($json->data)
         ->toMatchObject([
-            'type' => 'user_accounts',
+            'type' => ResourceTypes::USER_ACCOUNTS,
             'id' => (string) $uuid
         ])
         ->toHaveProperty('attributes')

@@ -14,7 +14,7 @@ use Kwai\Modules\Users\Domain\UserEntity;
 /**
  * Class UserResource
  */
-#[JSONAPI\Resource(type: 'users', id: 'getId')]
+#[JSONAPI\Resource(type: ResourceTypes::USERS, id: 'getId')]
 class UserResource
 {
     /**

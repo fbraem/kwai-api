@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Applications\Users\Resources\ResourceTypes;
 use Kwai\Applications\Users\Resources\UserInvitationResource;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
@@ -40,7 +41,7 @@ it('can serialize an UserInvitation to a JSON:API resource', function () {
     ;
     expect($json->data)
         ->toMatchObject([
-            'type' => 'user_invitations',
+            'type' => ResourceTypes::USER_INVITATIONS,
             'id' => (string) $uuid
         ])
         ->toHaveProperty('attributes')
@@ -48,7 +49,7 @@ it('can serialize an UserInvitation to a JSON:API resource', function () {
     expect($json->data->attributes)
         ->toMatchObject([
             'email' => 'ingrid.berghmans@kwai.com',
-            'username' => 'Ingrid Berghmans',
+            'name' => 'Ingrid Berghmans',
             'confirmed_at' => null
         ])
     ;

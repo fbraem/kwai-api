@@ -13,7 +13,7 @@ use Kwai\Modules\Users\Domain\UserInvitationEntity;
 /**
  * Class UserInvitationResource
  */
-#[JSONAPI\Resource(type: 'user_invitations', id: 'getId')]
+#[JSONAPI\Resource(type: ResourceTypes::USER_INVITATIONS, id: 'getId')]
 class UserInvitationResource
 {
     /**

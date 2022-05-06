@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Applications\Users\Resources\ResourceTypes;
 use Kwai\Applications\Users\Resources\RuleResource;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\Rule;
@@ -30,7 +31,7 @@ it('can serialize a Rule entity to JSON:API', function () {
     ;
     expect($json->data)
         ->toMatchObject([
-            'type' => 'rules',
+            'type' => ResourceTypes::RULES,
             'id' => '1'
         ])
         ->toHaveProperty('attributes')
