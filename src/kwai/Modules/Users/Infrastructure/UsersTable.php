@@ -29,5 +29,5 @@ class UsersTable extends TableSchema
     public ?string $updated_at;
     public ?int $revoked;
     public ?string $last_unsuccessful_login;
-    public bool $admin;
+    public int $admin;
 }

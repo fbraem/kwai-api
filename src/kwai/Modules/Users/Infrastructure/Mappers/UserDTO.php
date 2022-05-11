@@ -48,7 +48,7 @@ final class UserDTO
                 $this->user->first_name,
                 $this->user->last_name
             ),
-            admin: $this->user->admin,
+            admin: $this->user->admin === 1,
             roles: $this->roles->map(
                 fn(RoleDTO $dto) => $dto->createEntity()
             ),
@@ -97,7 +97,7 @@ final class UserDTO
         $this->roles = $user->getRoles()->map(
             fn(RoleEntity $role) => (new RoleDTO())->persistEntity($role)
         );
-        $this->user->admin = $user->isAdmin();
+        $this->user->admin = $user->isAdmin() ? 1 : 0;
         return $this;
     }
 
