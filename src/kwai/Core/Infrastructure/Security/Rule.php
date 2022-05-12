@@ -9,6 +9,9 @@ namespace Kwai\Core\Infrastructure\Security;
 
 /**
  * Class Rule
+ *
+ * A class for representing CASL rules.
+ * @see https://casl.js.org
  */
 class Rule
 {
