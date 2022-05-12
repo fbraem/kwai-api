@@ -12,6 +12,7 @@ use Kwai\Applications\Auth\Actions\LoginAction;
 use Kwai\Applications\Auth\Actions\LogoutAction;
 use Kwai\Applications\Auth\Actions\RefreshTokenAction;
 use Kwai\Applications\Users\Actions\AttachRoleAction;
+use Kwai\Applications\Users\Actions\BrowsePermissionsAction;
 use Kwai\Applications\Users\Actions\BrowseRolesAction;
 use Kwai\Applications\Users\Actions\BrowseRulesAction;
 use Kwai\Applications\Users\Actions\BrowseUserAccountsAction;
@@ -38,6 +39,7 @@ class UsersApplication extends Application
     public function getActions(): array {
         return [
             AttachRoleAction::class,
+            BrowsePermissionsAction::class,
             BrowseRolesAction::class,
             BrowseRulesAction::class,
             BrowseUserAccountsAction::class,
