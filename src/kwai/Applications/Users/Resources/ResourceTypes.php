@@ -16,8 +16,6 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  */
 enum ResourceTypes: string
 {
-    const ROLES = 'roles';
-    const RULES = 'rules';
     const USER_ACCOUNTS = 'user_accounts';
     const USER_INVITATIONS = 'user_invitations';
     const USERS = 'users';
