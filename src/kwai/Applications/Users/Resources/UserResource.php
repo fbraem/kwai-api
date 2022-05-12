@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Applications\Users\Resources;
 
 use Kwai\JSONAPI;
-use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
@@ -72,14 +71,6 @@ class UserResource
     public function getUpdateDate(): ?string
     {
         return $this->user->getTraceableTime()->getUpdatedAt()?->__toString();
-    }
-
-    #[JSONAPI\Relationship(name: 'roles')]
-    public function getRoles(): array
-    {
-        return $this->user->getRoles()->map(
-            fn (RoleEntity $role) => new RoleResource($role)
-        )->toArray();
     }
 
     #[JSONAPI\Attribute(name: 'owner')]

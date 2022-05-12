@@ -15,7 +15,7 @@ use Nette\Schema\Expect;
 /**
  * Class UserSchema
  *
- * Inputschema for creating or updating a user.
+ * Input schema for creating or updating a user.
  */
 class UserSchema implements InputSchema
 {
@@ -43,14 +43,6 @@ class UserSchema implements InputSchema
                     'first_name' => Expect::string()->required($this->create),
                     'last_name' => Expect::string()->required($this->create),
                     'remark' => Expect::string()->nullable(),
-                ]),
-                'relationships' => Expect::structure([
-                    'roles' => Expect::structure([
-                        'data' => Expect::arrayOf(Expect::structure([
-                            'type' => Expect::anyOf('roles'),
-                            'id' => Expect::string()->required()
-                        ]))
-                    ])->required(false)
                 ])
             ])
         ]);
@@ -68,13 +60,6 @@ class UserSchema implements InputSchema
         $command->last_name = $normalized->data->attributes->last_name;
         $command->uuid = $normalized->data->id;
         $command->remark = $normalized->data->attributes->remark;
-
-        if ($normalized->data->relationships?->roles?->data) {
-            $command->roles = array_map(
-                fn ($role) => (int) $role->id,
-                $normalized->data->relationships->roles->data
-            );
-        }
 
         return $command;
     }
