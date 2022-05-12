@@ -5,7 +5,6 @@ use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Infrastructure\Repositories\RoleDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\UseCases\UpdateUser;
 use Kwai\Modules\Users\UseCases\UpdateUserCommand;
@@ -21,8 +20,7 @@ it('can update a user', function () use ($context) {
     $command->remark = "Updated with 'can update a user test'";
     try {
         $user = UpdateUser::create(
-            new UserDatabaseRepository($context->db),
-            new RoleDatabaseRepository($context->db)
+            new UserDatabaseRepository($context->db)
         )($command, $context->user);
         expect($user->getRemark())
             ->toEqual("Updated with 'can update a user test'")

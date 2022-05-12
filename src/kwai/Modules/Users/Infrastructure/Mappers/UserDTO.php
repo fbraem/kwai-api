@@ -7,14 +7,12 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 
-use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Infrastructure\UsersTable;
@@ -26,11 +24,9 @@ final class UserDTO
 {
     /**
      * @param UsersTable          $user
-     * @param Collection<RoleDTO> $roles
      */
     public function __construct(
-        public UsersTable $user = new UsersTable(),
-        public Collection $roles = new Collection()
+        public UsersTable $user = new UsersTable()
     ) {
     }
 
@@ -49,9 +45,6 @@ final class UserDTO
                 $this->user->last_name
             ),
             admin: $this->user->admin === 1,
-            roles: $this->roles->map(
-                fn(RoleDTO $dto) => $dto->createEntity()
-            ),
             remark: $this->user->remark ?? '',
             member: $this->user->member_id,
             traceableTime: new TraceableTime(
@@ -94,9 +87,6 @@ final class UserDTO
         if ($user->getTraceableTime()->isUpdated()) {
             $this->user->updated_at = (string) $user->getTraceableTime()->getUpdatedAt();
         }
-        $this->roles = $user->getRoles()->map(
-            fn(RoleEntity $role) => (new RoleDTO())->persistEntity($role)
-        );
         $this->user->admin = $user->isAdmin() ? 1 : 0;
         return $this;
     }

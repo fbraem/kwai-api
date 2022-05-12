@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
@@ -68,24 +67,4 @@ interface UserRepository
      * @throws RepositoryException
      */
     public function update(UserEntity $user): void;
-
-    /**
-     * Link the roles to the given user.
-     *
-     * @param UserEntity             $user
-     * @param Collection<RoleEntity> $roles
-     * @return void
-     * @throws RepositoryException
-     */
-    public function insertRoles(UserEntity $user, Collection $roles): void;
-
-    /**
-     * Remove the roles from the given user.
-     *
-     * @param UserEntity             $user
-     * @param Collection<RoleEntity> $roles
-     * @return void
-     * @throws RepositoryException
-     */
-    public function deleteRoles(UserEntity $user, Collection $roles): void;
 }

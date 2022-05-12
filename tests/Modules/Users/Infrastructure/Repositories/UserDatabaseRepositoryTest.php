@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Users\Domain\Role;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
@@ -46,11 +45,6 @@ it('can get a user with the given id', function ($user) use ($context) {
         expect($entity->domain())
             ->toBeInstanceOf(User::class)
         ;
-        /** @noinspection PhpUndefinedMethodInspection */
-        expect($entity->getRoles())
-            ->toBeInstanceOf(Collection::class)
-        ;
-        /* @noinspection PhpUndefinedMethodInspection */
         return $entity->getUuid();
     } catch (Exception $e) {
         $this->fail((string) $e);
@@ -85,66 +79,4 @@ it('throws a not found exception when user does not exist', function () use ($co
 })
     ->skip(!Context::hasDatabase(), 'No database available')
     ->throws(UserNotFoundException::class)
-;
-
-it('can add a role', function ($user) use ($context) {
-    $repo = new UserDatabaseRepository($context->db);
-
-    $roles = new Collection([
-        new Entity(
-            1,
-            new Role(name: 'Admin')
-        )
-    ]);
-
-    try {
-        $repo->insertRoles($user, $roles);
-    } catch (RepositoryException $e) {
-        $this->fail((string) $e);
-    }
-
-    try {
-        $user = $repo->getById($user->id());
-    } catch (RepositoryException $e) {
-        $this->fail((string) $e);
-    } catch (UserNotFoundException $e) {
-        $this->fail((string) $e);
-    }
-    expect($user->getRoles()->toArray())
-        ->toHaveCount(1)
-    ;
-})
-    ->depends('it can get a user with email')
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
-
-it('can remove a role', function ($user) use ($context) {
-    $repo = new UserDatabaseRepository($context->db);
-
-    $roles = new Collection([
-        new Entity(
-            1,
-            new Role(name: 'Admin')
-        )
-    ]);
-
-    try {
-        $repo->deleteRoles($user, $roles);
-    } catch (RepositoryException $e) {
-        $this->fail((string) $e);
-    }
-
-    try {
-        $user = $repo->getById($user->id());
-    } catch (RepositoryException $e) {
-        $this->fail((string) $e);
-    } catch (UserNotFoundException $e) {
-        $this->fail((string) $e);
-    }
-    expect($user->getRoles()->toArray())
-        ->toHaveCount(0)
-    ;
-})
-    ->depends('it can get a user with email')
-    ->skip(!Context::hasDatabase(), 'No database available')
 ;

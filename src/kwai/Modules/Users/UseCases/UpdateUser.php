@@ -14,10 +14,8 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
-use Kwai\Modules\Users\Domain\RoleEntity;
 use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserEntity;
-use Kwai\Modules\Users\Repositories\RoleRepository;
 use Kwai\Modules\Users\Repositories\UserRepository;
 
 /**
@@ -31,11 +29,9 @@ class UpdateUser
      * Constructor.
      *
      * @param UserRepository $userRepo
-     * @param RoleRepository $roleRepo
      */
     public function __construct(
-        private UserRepository $userRepo,
-        private RoleRepository $roleRepo
+        private UserRepository $userRepo
     ) {
     }
 
@@ -43,15 +39,13 @@ class UpdateUser
      * Factory method.
      *
      * @param UserRepository $userRepo
-     * @param RoleRepository $roleRepo
      * @return UpdateUser
      */
     public static function create(
-        UserRepository $userRepo,
-        RoleRepository $roleRepo
+        UserRepository $userRepo
     ) : self
     {
-        return new self($userRepo, $roleRepo);
+        return new self($userRepo);
     }
 
     /**
@@ -86,7 +80,6 @@ class UpdateUser
                 uuid: $user->getUuid(),
                 emailAddress: $email ?? $user->getEmailAddress(),
                 username: new Name($command->first_name, $command->last_name),
-                roles: $user->getRoles(),
                 remark: $command->remark,
                 member: $user->getMember(),
                 traceableTime: $traceableTime
@@ -94,20 +87,6 @@ class UpdateUser
         );
 
         $this->userRepo->update($user);
-
-        if ($command->roles && count($command->roles) > 0) {
-            $query = $this->roleRepo->createQuery();
-            $query->filterByIds(...$command->roles);
-            $roles = $this->roleRepo->getAll($query);
-
-            $rolesToAdd = $roles->diffKeys($user->getRoles());
-            $rolesToAdd->each(fn (RoleEntity $role) => $user->addRole($role));
-            $this->userRepo->insertRoles($user, $rolesToAdd);
-
-            $rolesToRemove = $user->getRoles()->diffKeys($roles);
-            $rolesToRemove->each(fn (RoleEntity $role) => $user->removeRole($role));
-            $this->userRepo->deleteRoles($user, $rolesToRemove);
-        }
 
         return $user;
     }

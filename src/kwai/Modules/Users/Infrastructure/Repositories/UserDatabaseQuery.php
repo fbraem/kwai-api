@@ -99,23 +99,6 @@ class UserDatabaseQuery extends DatabaseQuery implements UserQuery
             );
         }
 
-        if ($rows->isEmpty()) {
-            return new Collection();
-        }
-
-        $userIds = $users->keys()->toArray();
-
-        // Get the roles of all users
-        $roleQuery = new UserRoleDatabaseQuery($this->db);
-        $roleQuery->filterByUser(...$userIds);
-        $roles = $roleQuery->execute();
-        # TODO: loop users instead
-        foreach ($userIds as $userId) {
-            if ($roles->has($userId)) {
-                $users[$userId]->roles = $roles->get($userId);
-            }
-        }
-
         return $users;
     }
 }
