@@ -33,7 +33,7 @@ class InviterPolicy implements Policy
      */
     public function canCreate(): bool
     {
-        return $this->user?->hasRole('admin') ?? false;
+        return $this->user?->isAdmin() ?? false;
     }
 
     /**
@@ -52,7 +52,7 @@ class InviterPolicy implements Policy
         if ($this->user === null) {
             return false;
         }
-        if ($this->user->hasRole('admin')) {
+        if ($this->user->isAdmin()) {
             return true;
         }
         if ($this->invitation) {
