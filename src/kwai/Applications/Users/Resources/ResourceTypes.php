@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Users\Resources;
 
-use Doctrine\Common\Annotations\Annotation\Enum;
-
 /**
  * Enum ResourceTypes
  *
