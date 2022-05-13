@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Tests\Core\Infrastructure\Converter;
 
-use Kwai\Core\Infrastructure\Converter\Converter;
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Converter\MarkdownConverter;
-use PHPUnit\Framework\TestCase;
 
 it('can create a converter', function () {
     $factory = new ConverterFactory();
     $factory->register('md', MarkdownConverter::class);
-    $converter = $factory->createConverter('md');
+    $converter = $factory->createConverter(DocumentFormat::MARKDOWN);
     expect($converter)->toBeInstanceOf(MarkdownConverter::class);
     return $converter;
 });
