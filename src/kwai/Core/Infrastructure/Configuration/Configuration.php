@@ -17,12 +17,12 @@ use Dotenv\Store\StringStore;
 /**
  * Class Configuration
  */
-class Configuration
+final class Configuration
 {
     private array $variables = [];
 
     public function __construct(
-        private Dotenv $env
+        private readonly Dotenv $env
     ) {
         $this->variables = $env->load();
     }
