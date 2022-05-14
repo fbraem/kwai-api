@@ -8,12 +8,13 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Application;
 use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
 
-it('can retrieve an application', function () use ($context) {
-    $repo = new ApplicationDatabaseRepository($context->db);
+it('can retrieve an application', function () {
+    $this->withDatabase();
+    $repo = new ApplicationDatabaseRepository($this->db);
     try {
         $application = $repo->getById(1);
         expect($application)->toBeInstanceOf(Entity::class);
@@ -23,4 +24,6 @@ it('can retrieve an application', function () use ($context) {
     } catch (ApplicationNotFoundException $e) {
         $this->assertTrue(false, strval($e));
     }
-});
+})
+    ->skip(fn() => $this->hasDatabase())
+;
