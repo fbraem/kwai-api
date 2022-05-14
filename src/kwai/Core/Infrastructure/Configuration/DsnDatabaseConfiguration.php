@@ -25,7 +25,13 @@ class DsnDatabaseConfiguration implements Stringable
         if (count($parts) != 2) {
             throw new \InvalidArgumentException('Invalid DSN specified');
         }
+
         $this->driver = $parts[0];
+        if ($this->driver === 'sqlite' && $parts[1] === ':memory:') {
+            $this->parameters['dbname'] = ':memory:';
+            return;
+        }
+
         $parameter_strings = explode(';', $parts[1]);
         foreach ($parameter_strings as $parameter) {
             $parameter_parts = explode('=', $parameter, 2);
