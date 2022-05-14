@@ -12,8 +12,9 @@ use Tests\DatabaseTrait;
 
 uses(DatabaseTrait::class);
 
+beforeEach(fn() => $this->withDatabase());
+
 it('can retrieve an application', function () {
-    $this->withDatabase();
     $repo = new ApplicationDatabaseRepository($this->db);
     try {
         $application = $repo->getById(1);
@@ -25,5 +26,5 @@ it('can retrieve an application', function () {
         $this->assertTrue(false, strval($e));
     }
 })
-    ->skip(fn() => $this->hasDatabase())
+    ->skip(fn() => !$this->hasDatabase())
 ;
