@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Infrastructure\Presentation\TextInputSchema;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
@@ -34,7 +35,7 @@ it('can set a default format', function () {
         ]
     );
     $content = $schema->process($normalized);
-    expect($content->format)->toBe('md');
+    expect($content->format)->toBe(DocumentFormat::MARKDOWN);
 });
 
 it('throws an exception when required value is missing', function () {
