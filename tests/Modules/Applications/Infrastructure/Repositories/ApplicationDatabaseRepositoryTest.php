@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Modules\Applications\Infrastructure\Repositories;
 
+use Exception;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Application;
@@ -20,10 +21,8 @@ it('can retrieve an application', function () {
         $application = $repo->getById(1);
         expect($application)->toBeInstanceOf(Entity::class);
         expect($application->domain())->toBeInstanceOf(Application::class);
-    } catch (RepositoryException $e) {
-        $this->assertTrue(false, strval($e));
-    } catch (ApplicationNotFoundException $e) {
-        $this->assertTrue(false, strval($e));
+    } catch (Exception $e) {
+        $this->fail((string) $e);
     }
 })
     ->skip(fn() => !$this->hasDatabase())
