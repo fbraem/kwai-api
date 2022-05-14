@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
+use Latitude\QueryBuilder\Partial\Expression;
 
 #[TableAttribute(name:'news_stories')]
 class StoryTableSchema extends TableSchema
@@ -69,7 +70,6 @@ it('can map a row with alias', function () {
 it('can create aliases', function () {
     $aliases = StoryTableSchema::aliases();
     expect($aliases)
-       ->toBeInstanceOf(Collection::class)
-       ->and($aliases->toArray())
+        ->toBeArray()
     ;
 });
