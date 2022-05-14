@@ -6,7 +6,8 @@ use Tests\HttpClientTrait;
 require __DIR__ . '/../vendor/autoload.php';
 
 $httpFeature = [
-    'Applications/Users/Actions'
+    'Applications/Users/Actions',
+    'Modules/Applications/Presentation/REST'
 ];
 
 uses(HttpClientTrait::class)->in(...$httpFeature);
