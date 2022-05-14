@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace Tests\Core\Domain\Infrastructure;
 
+use Kwai\Core\Infrastructure\Configuration\DsnDatabaseConfiguration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -15,12 +16,12 @@ use Latitude\QueryBuilder\QueryFactory;
 const DB_MEMORY = 'sqlite::memory:';
 
 it('can instantiate a database', function () {
-    $db = new Connection(DB_MEMORY);
+    $db = new Connection(new DsnDatabaseConfiguration(DB_MEMORY));
     expect($db)->toBeInstanceOf(Connection::class);
 });
 
 it('can create a QueryFactory', function () {
-    $db = new Connection(DB_MEMORY);
+    $db = new Connection(new DsnDatabaseConfiguration(DB_MEMORY));
     try {
         $db->connect();
     } catch (DatabaseException $e) {
@@ -31,7 +32,7 @@ it('can create a QueryFactory', function () {
 });
 
 it('can execute a query', function () {
-    $db = new Connection(DB_MEMORY);
+    $db = new Connection(new DsnDatabaseConfiguration(DB_MEMORY));
     try {
         $db->connect();
     } catch (DatabaseException $e) {
@@ -51,7 +52,7 @@ it('can execute a query', function () {
 });
 
 it('throws an exception for an invalid query', function () {
-    $db = new Connection(DB_MEMORY);
+    $db = new Connection(new DsnDatabaseConfiguration(DB_MEMORY));
     try {
         $db->connect();
     } catch (DatabaseException $e) {
