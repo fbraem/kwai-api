@@ -5,9 +5,7 @@ namespace Tests\Modules\Applications\Infrastructure\Repositories;
 
 use Exception;
 use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Applications\Domain\Application;
-use Kwai\Modules\Applications\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Tests\DatabaseTrait;
 
