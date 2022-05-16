@@ -7,18 +7,6 @@ it('can browse user permissions', function () {
 
     $data = $response->toArray();
     expect($data)
-        ->toHaveKey('data')
-    ;
-    expect($data['data'])
-        ->toBeArray()
-        ->toHaveKey('type')
-        ->toHaveKey('id')
-        ->toHaveKey('attributes')
-    ;
-    expect($data['data']['type'])
-        ->toBe('rules')
-    ;
-    expect($data['data']['attributes'])
-        ->toBeArray()
+        ->tobeJSONAPIObject('rules')
     ;
 });
