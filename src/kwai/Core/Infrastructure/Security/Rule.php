@@ -38,7 +38,7 @@ class Rule
         return $this->fields;
     }
 
-    public function getConditions(): object
+    public function getConditions(): ?object
     {
         return $this->conditions;
     }
