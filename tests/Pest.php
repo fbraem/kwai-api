@@ -7,7 +7,13 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $httpFeature = [
     'Applications/Users/Actions',
-    'Modules/Applications/Presentation/REST'
+    'Modules/Applications/Presentation/REST',
+    'Modules/Club/Presentation/REST',
+    'Modules/Coaches/Presentation/REST',
+    'Modules/Mails/Presentation/REST',
+    'Modules/News/Presentation/REST',
+    'Modules/Pages/Presentation/REST',
+    'Modules/Trainings/Presentation/REST'
 ];
 
 uses(HttpClientTrait::class)->in(...$httpFeature);
