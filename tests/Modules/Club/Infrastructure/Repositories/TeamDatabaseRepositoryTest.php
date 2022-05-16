@@ -4,12 +4,14 @@ declare(strict_types=1);
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Club\Infrastructure\Repositories\TeamDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
 
-it('can get all teams', function () use ($context) {
-    $repo = new TeamDatabaseRepository($context->db);
+beforeEach(fn() => $this->withDatabase());
+
+it('can get all teams', function () {
+    $repo = new TeamDatabaseRepository($this->db);
 
     try {
         $query = $repo->createQuery();
@@ -21,4 +23,5 @@ it('can get all teams', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available');
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
+;
