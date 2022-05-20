@@ -10,6 +10,7 @@ namespace Kwai\Modules\Coaches\Presentation\Resources;
 use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
 use Kwai\Modules\Coaches\Domain\Coach;
+use Kwai\Modules\Users\Domain\UserEntity;
 
 /**
  * Class CoachResource
@@ -18,11 +19,12 @@ use Kwai\Modules\Coaches\Domain\Coach;
 class CoachResource
 {
     /**
-     * @param Entity<Coach> $coach
+     * @param Entity<Coach>   $coach
+     * @param UserEntity|null $user
      */
     public function __construct(
         private Entity $coach,
-        private ?Entity $user = null
+        private ?UserEntity $user = null
     ) {
     }
 
