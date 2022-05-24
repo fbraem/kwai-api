@@ -8,6 +8,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Locale;
+use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -20,50 +21,45 @@ use Kwai\Modules\News\Domain\Story;
 use Kwai\Modules\News\Domain\ValueObjects\Promotion;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
 
-beforeAll(function () use ($context) {
-    if (Context::hasDatabase()) {
-        $context->author = new Creator(
-            1,
-            new Name(
-                'Jigoro',
-                'Kano'
-            )
-        );
+beforeEach(fn() => $this->withDatabase());
 
-        try {
-            $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
-        } catch (ApplicationNotFoundException) {
-        } catch (RepositoryException) {
-        }
-    }
-});
-
-it('can create a story', function () use ($context) {
+it('can create a story', function () {
     // This test will create a promoted story.
-    if (! isset($context->application)) {
-        $this->fail('No application found');
+    try {
+        $application = (new ApplicationDatabaseRepository($this->db))->getById(1);
+    } catch (ApplicationNotFoundException $e) {
+        $this->fail((string) $e);
+    } catch (RepositoryException $e) {
+        $this->fail((string) $e);
     }
-    $repo = new StoryDatabaseRepository($context->db);
+    $author = new Creator(
+        1,
+        new Name(
+            'Jigoro',
+            'Kano'
+        )
+    );
+    $repo = new StoryDatabaseRepository($this->db);
     try {
         $story = $repo->create(new Story(
-            enabled: true,
-            promotion: new Promotion(1),
-            publishTime: Timestamp::createNow('Europe/Brussels'),
-            application: $context->application,
+            publishTime: new LocalTimestamp(Timestamp::createNow(), 'Europe/Brussels'),
+            application: $application,
             contents: collect([
                     new Text(
-                        new Locale('nl'),
-                        new DocumentFormat('md'),
+                        Locale::NL,
+                        DocumentFormat::MARKDOWN,
                         'Unit Test',
+                        $author,
                         'Summary for Unit Test',
                         'Content for **Unit** Test',
-                        $context->author
                     )
-                ])
+                ]),
+            promotion: new Promotion(1),
+            enabled: true
         ));
         expect($story)
             ->toBeInstanceOf(Entity::class)
@@ -80,11 +76,11 @@ it('can create a story', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can retrieve a story', function (int $id) use ($context) {
-        $repo = new StoryDatabaseRepository($context->db);
+it('can retrieve a story', function (int $id) {
+        $repo = new StoryDatabaseRepository($this->db);
     try {
         $story = $repo->getById($id);
         expect($story)
@@ -100,11 +96,11 @@ it('can retrieve a story', function (int $id) use ($context) {
     }
 })
     ->depends('it can create a story')
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can query stories', function () use ($context) {
-    $repo = new StoryDatabaseRepository($context->db);
+it('can query stories', function () {
+    $repo = new StoryDatabaseRepository($this->db);
     $query = $repo->createQuery();
     $query->filterPromoted();
     try {
@@ -120,5 +116,5 @@ it('can query stories', function () use ($context) {
     }
 })
     ->depends('it can create a story')
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

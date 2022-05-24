@@ -9,12 +9,14 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\News\Domain\Application;
 use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
 
-it('can retrieve an application by id', function () use ($context) {
-    $repo = new ApplicationDatabaseRepository($context->db);
+beforeEach(fn() => $this->withDatabase());
+
+it('can retrieve an application by id', function ()  {
+    $repo = new ApplicationDatabaseRepository($this->db);
     try {
         $application = $repo->getById(1);
         expect($application)
@@ -29,5 +31,5 @@ it('can retrieve an application by id', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
