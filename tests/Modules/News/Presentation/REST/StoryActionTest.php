@@ -3,15 +3,6 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Modules\News\Presentation\REST\BrowseStoriesAction;
-use Kwai\Modules\News\Presentation\REST\CreateStoryAction;
-use Kwai\Modules\News\Presentation\REST\GetStoryAction;
-use Kwai\Modules\News\Presentation\REST\UpdateStoryAction;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\ServerRequest;
-use Tests\Context;
-
-$context = Context::createContext();
 
 $now = (string) Timestamp::createNow();
 $data = <<<JSON
@@ -41,85 +32,50 @@ $data = <<<JSON
 }
 JSON;
 
-it('can create a story', function () use ($context, $data) {
-    $action = new CreateStoryAction($context->db);
-
-    $request = new ServerRequest(
-        'POST',
-        '/news/stories'
-    );
-    $request = $request
-        ->withParsedBody(json_decode($data, true))
-        ->withAttribute('kwai.user', $context->user)
-    ;
-    $response = new Response();
-
-    $response = $action($request, $response, []);
+it('can create a story', function () use ($data) {
+    $response = $this->post('/news/stories', json_decode($data, true));
     expect($response->getStatusCode())->toBe(200);
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('stories')
+    ;
+    return $result['data']['id'];
+});
 
-    $stream = $response->getBody();
-    $stream->rewind();
-    $json = json_decode($stream->getContents());
-    return $json->data->id;
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
-
-it('can update a story', function ($id) use ($context, $data) {
-    $action = new UpdateStoryAction($context->db);
-
+it('can update a story', function ($id) use ($data) {
     $json = json_decode($data, true);
     $json['data']['id'] = $id;
     $json['data']['attributes']['remark'] = 'Updated with unit test';
 
-    $request = new ServerRequest(
-        'PATCH',
-        '/news/stories/' . $id
-    );
-
-    $request = $request
-        ->withParsedBody($json)
-        ->withAttribute(
-            'kwai.user',
-            $context->user
-        )
+    $response = $this->patch("/news/stories/$id", $json);
+    expect($response->getStatusCode())->toBe(200);
+    expect($response->toArray())
+        ->tobeJSONAPIObject('stories')
     ;
-    $response = new Response();
-
-    $response = $action($request, $response, ['id' => $id]);
-    expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a story')
 ;
 
-it('can get a story', function ($id) use ($context) {
-    $action = new GetStoryAction($context->db);
+it('can get a story', function ($id) {
+    $response = $this->get("/news/stories/$id");
+    expect($response->getStatusCode())
+        ->toBe(200)
+    ;
 
-    $request = new ServerRequest(
-        'GET',
-        '/news/stories/' . $id
-    );
-
-    $response = new Response();
-    $response = $action($request, $response, [ 'id' => $id]);
-    expect($response->getStatusCode())->toBe(200);
+    expect($response->toArray())
+        ->tobeJSONAPIObject('stories')
+    ;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a story')
 ;
 
-it('can browse stories', function () use ($context) {
-    $action = new BrowseStoriesAction($context->db);
+it('can browse stories', function () {
+    $response = $this->get('/news/stories');
+    expect($response->getStatusCode())
+        ->toBe(200)
+    ;
 
-    $request = new ServerRequest(
-        'GET',
-        '/news/stories'
-    );
-
-    $response = new Response();
-    $response = $action($request, $response, []);
-    expect($response->getStatusCode())->toBe(200);
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
+    expect($response->toArray())
+        ->tobeJSONAPIArray('stories')
+    ;
+});
