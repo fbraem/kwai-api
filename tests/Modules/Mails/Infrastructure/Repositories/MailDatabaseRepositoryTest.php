@@ -22,26 +22,28 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
 
-it('can create an email', function () use ($context) {
+beforeEach(fn() => $this->withDatabase());
+
+it('can create an email', function () {
     $creator = new Creator(
         id: 1,
         name: new Name('Jigoro', 'Kano')
     );
-    $repo = new MailDatabaseRepository($context->db);
+    $repo = new MailDatabaseRepository($this->db);
     try {
         $mail = $repo->create(new Mail(
-            tag: 'test',
             uuid: new UniqueId(),
             sender: new Address(
                 new EmailAddress('test@kwai.com')
             ),
             content: new MailContent('Test', 'This mail is a test'),
-            traceableTime: new TraceableTime(),
             creator: $creator,
+            traceableTime: new TraceableTime(),
+            tag: 'test',
             recipients: collect([
                 new Recipient(
                     type: RecipientType::TO(),
@@ -65,11 +67,11 @@ it('can create an email', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available');
 ;
 
-it('can get all mails', function () use ($context) {
-    $repo = new MailDatabaseRepository($context->db);
+it('can get all mails', function () {
+    $repo = new MailDatabaseRepository($this->db);
     try {
         $mails = $repo->getAll();
         expect($mails)
@@ -81,5 +83,5 @@ it('can get all mails', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available');
 ;
