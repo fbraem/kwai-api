@@ -22,18 +22,18 @@ it('can add content to a page', function () {
         )
     );
     $page->addContent(new Text(
-        locale: new Locale('nl'),
-        format: new DocumentFormat('md'),
+        locale: Locale::NL,
+        format: DocumentFormat::MARKDOWN,
         title: 'Test',
-        summary:'Test Summary',
-        content: 'Test Content',
         author: new Creator(
             1,
             new Name(
                 'Jigoro',
                 'Kano'
             )
-        )
+        ),
+        summary: 'Test Summary',
+        content: 'Test Content'
     ));
 
     expect($page->getContents())
