@@ -26,6 +26,14 @@ trait DatabaseTrait
         return $this->db !== null;
     }
 
+    public function isDatabaseDriver(string $driver): bool
+    {
+        if ($this->db === null) {
+            return false;
+        }
+        return $this->db->getDriver() === $driver;
+    }
+
     public function withDatabase(): self
     {
         static $migrated = false;
