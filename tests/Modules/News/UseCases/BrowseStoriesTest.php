@@ -8,17 +8,18 @@ use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\BrowseStories;
 use Kwai\Modules\News\UseCases\BrowseStoriesCommand;
-use Tests\Context;
 use Illuminate\Support\Collection;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can browse stories', function () use ($context) {
+it('can browse stories', function () {
     $command = new BrowseStoriesCommand();
 
     try {
         [$count, $stories] = (new BrowseStories(
-            new StoryDatabaseRepository($context->db),
+            new StoryDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -39,16 +40,16 @@ it('can browse stories', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can browse stories of a user', function () use ($context) {
+it('can browse stories of a user', function () {
     $command = new BrowseStoriesCommand();
     $command->userUid = 1;
 
     try {
         [$count, $stories] = (new BrowseStories(
-            new StoryDatabaseRepository($context->db),
+            new StoryDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -69,5 +70,5 @@ it('can browse stories of a user', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

@@ -6,25 +6,26 @@ namespace Tests\Modules\News\UseCases;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
+use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\UseCases\Content;
-use Kwai\Modules\News\Domain\Author;
 use Kwai\Modules\News\Domain\Application;
 use Kwai\Modules\News\Domain\Exceptions\ApplicationNotFoundException;
 use Kwai\Modules\News\Domain\Exceptions\AuthorNotFoundException;
 use Kwai\Modules\News\Domain\Story;
-use Kwai\Modules\News\Infrastructure\Repositories\AuthorDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\CreateStory;
 use Kwai\Modules\News\UseCases\CreateStoryCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create a story', function () use ($context) {
+it('can create a story', function ()  {
     $command = new CreateStoryCommand();
     try {
         $command->application = 1;
@@ -34,15 +35,15 @@ it('can create a story', function () use ($context) {
 
         $content = new Content();
         $content->content = 'This is a test from CreateStoryTest';
-        $content->format = 'md';
-        $content->locale = 'nl';
+        $content->format = DocumentFormat::MARKDOWN;
+        $content->locale = Locale::NL;
         $content->summary = 'This is a test';
         $content->title = 'Test';
         $command->contents = [ $content ];
 
         $story = (new CreateStory(
-            new StoryDatabaseRepository($context->db),
-            new class($context->db) extends ApplicationDatabaseRepository {
+            new StoryDatabaseRepository($this->db),
+            new class($this->db) extends ApplicationDatabaseRepository {
                 public function getById(int $id): Entity
                 {
                     return new Entity(1, new Application(
@@ -93,5 +94,5 @@ it('can create a story', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

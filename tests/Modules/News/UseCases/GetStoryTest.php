@@ -11,17 +11,18 @@ use Kwai\Modules\News\Domain\Exceptions\StoryNotFoundException;
 use Kwai\Modules\News\Infrastructure\Repositories\StoryDatabaseRepository;
 use Kwai\Modules\News\UseCases\GetStory;
 use Kwai\Modules\News\UseCases\GetStoryCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can get a story', function () use ($context) {
+it('can get a story', function () {
     $command = new GetStoryCommand();
     $command->id = 1;
 
     try {
         $story = (new GetStory(
-            new StoryDatabaseRepository($context->db),
+            new StoryDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -42,5 +43,5 @@ it('can get a story', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
