@@ -1,5 +1,4 @@
 <?php
-/** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
@@ -10,39 +9,30 @@ use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Pages\Domain\Exceptions\ApplicationNotFoundException;
+use Kwai\Modules\Pages\Domain\Application;
 use Kwai\Modules\Pages\Domain\Exceptions\PageNotFoundException;
 use Kwai\Modules\Pages\Domain\Page;
-use Kwai\Modules\Pages\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-/**
- * Context for all tests in this file
- * + db: Database connection
- * + author: Author used to create/update pages
- */
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-beforeAll(function () use ($context) {
-    if (Context::hasDatabase()) {
-        $context->author = new Creator(
-            1,
-            new Name(
-                'Jigoro',
-                'Kano'
-            )
-        );
-        try {
-            $context->application = (new ApplicationDatabaseRepository($context->db))->getById(1);
-        } catch (ApplicationNotFoundException) {
-        } catch (RepositoryException) {
-        }
-    }
-});
+$author = new Creator(
+    1,
+    new Name(
+        'Jigoro',
+        'Kano'
+    )
+);
 
-it('can browse a pages', function () use ($context) {
-    $repo = new PageDatabaseRepository($context->db);
+$application = new Entity(
+    1,
+    new Application('Test', 'Test')
+);
+
+it('can browse a pages', function () {
+    $repo = new PageDatabaseRepository($this->db);
     try {
         $pages = $repo->getAll();
         expect($pages)
@@ -52,33 +42,25 @@ it('can browse a pages', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-
-it('can create a new page', function () use ($context) {
-    if (! isset($context->author)) {
-        $this->fail('No author');
-    }
-    if (! isset($context->application)) {
-        $this->fail('No application');
-    }
-
-    $repo = new PageDatabaseRepository($context->db);
+it('can create a new page', function () use ($author, $application) {
+    $repo = new PageDatabaseRepository($this->db);
     try {
         $page = $repo->create(new Page(
+            application: $application,
             enabled: true,
             contents: collect([
                 new Text(
-                    locale: new Locale('nl'),
-                    format: new DocumentFormat('md'),
+                    locale: Locale::NL,
+                    format: DocumentFormat::MARKDOWN,
                     title: 'Test Page',
+                    author: $author,
                     summary: 'This is a test summary',
-                    content: 'This is the content',
-                    author: $context->author
+                    content: 'This is the content'
                 ),
-            ]),
-            application: $context->application
+            ])
         ));
         expect($page)
             ->toBeInstanceOf(Entity::class)
@@ -91,11 +73,11 @@ it('can create a new page', function () use ($context) {
     }
     return $page->id();
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can find a page for a given id', function ($id) use ($context) {
-    $repo = new PageDatabaseRepository($context->db);
+it('can find a page for a given id', function ($id) {
+    $repo = new PageDatabaseRepository($this->db);
     try {
         $page = $repo->getById($id);
         expect($page)
@@ -110,32 +92,32 @@ it('can find a page for a given id', function ($id) use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a new page')
 ;
 
-it('can update a page', function ($id) use ($context) {
-    $repo = new PageDatabaseRepository($context->db);
+it('can update a page', function ($id) {
+    $repo = new PageDatabaseRepository($this->db);
     try {
         $oldPage = $repo->getById($id);
         /** @var Text $oldText */
         $oldText = $oldPage->getContents()[0];
         $newText = new Text(
-            $oldText->getLocale(),
-            $oldText->getFormat(),
-            'Test Update',
-            $oldText->getSummary(),
-            $oldText->getContent(),
-            $oldText->getAuthor()
+            locale: $oldText->getLocale(),
+            format: $oldText->getFormat(),
+            title: 'Test Update',
+            author: $oldText->getAuthor(),
+            summary: $oldText->getSummary(),
+            content: $oldText->getContent()
         );
         $page = new Entity(
             $oldPage->id(),
             new Page(
+                application: $oldPage->getApplication(),
                 enabled: $oldPage->isEnabled(),
                 contents: collect([$newText]),
                 images: $oldPage->getImages(),
-                priority: $oldPage->getPriority(),
-                application: $oldPage->getApplication()
+                priority: $oldPage->getPriority()
             )
         );
         $repo->update($page);
@@ -149,12 +131,12 @@ it('can update a page', function ($id) use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a new page')
 ;
 
-it('can delete a page', function ($id) use ($context) {
-    $repo = new PageDatabaseRepository($context->db);
+it('can delete a page', function ($id) {
+    $repo = new PageDatabaseRepository($this->db);
     try {
         $page = $repo->getById($id);
         $repo->remove($page);
@@ -166,12 +148,12 @@ it('can delete a page', function ($id) use ($context) {
     }
     return $id;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a new page')
 ;
 
-test('getById throws a page not found exception', function ($id) use ($context) {
-    $repo = new PageDatabaseRepository($context->db);
+test('getById throws a page not found exception', function ($id) {
+    $repo = new PageDatabaseRepository($this->db);
     try {
         /** @noinspection PhpUnhandledExceptionInspection */
         $repo->getById($id);
@@ -181,5 +163,5 @@ test('getById throws a page not found exception', function ($id) use ($context) 
 })
     ->throws(PageNotFoundException::class)
     ->depends('it can delete a page')
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
