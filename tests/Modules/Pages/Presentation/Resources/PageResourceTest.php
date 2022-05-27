@@ -22,8 +22,8 @@ it('can serialize a page resource', function () use ($context) {
     $application = new Entity(
         1,
         new Application(
-            name: 'test',
-            title: 'This is a test'
+            title: 'This is a test',
+            name: 'test'
         )
     );
     $page = new Entity(
@@ -36,15 +36,15 @@ it('can serialize a page resource', function () use ($context) {
         )
     );
     $page->addContent(new Text(
-        locale: new Locale('nl'),
-        format: new DocumentFormat('md'),
+        locale: Locale::NL,
+        format: DocumentFormat::MARKDOWN,
         title: 'Test page',
-        summary: 'This is a test',
-        content: 'This is a test',
         author: new Creator(
             id: $context->user->id(),
             name: new Name('Jigoro', 'Kano')
-        )
+        ),
+        summary: 'This is a test',
+        content: 'This is a test'
     ));
 
     $converterFactory = new ConverterFactory();
