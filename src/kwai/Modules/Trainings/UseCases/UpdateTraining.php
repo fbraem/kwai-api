@@ -122,12 +122,12 @@ class UpdateTraining
         $contents = new Collection();
         foreach ($command->contents as $text) {
             $contents->add(new Text(
-                locale: $text->locale,
-                format: $text->format,
+                locale: Locale::from($text->locale),
+                format: DocumentFormat::from($text->format),
                 title: $text->title,
+                author: $creator,
                 summary: $text->summary,
-                content: $text->content ?? null,
-                author: $creator
+                content: $text->content ?? null
             ));
         }
 
@@ -148,11 +148,11 @@ class UpdateTraining
                     cancelled: $command->cancelled
                 ),
                 text: $contents,
-                traceableTime: $traceableTime,
+                remark: $command->remark,
                 definition: $definition,
+                traceableTime: $traceableTime,
                 coaches: $trainingCoaches,
                 teams: $teams,
-                remark: $command->remark,
             )
         );
         $this->trainingRepo->update($entity);
