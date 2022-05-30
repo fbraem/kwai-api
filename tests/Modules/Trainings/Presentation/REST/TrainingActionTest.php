@@ -1,16 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
-use Kwai\Modules\Trainings\Presentation\REST\BrowseTrainingsAction;
-use Kwai\Modules\Trainings\Presentation\REST\CreateTrainingAction;
-use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
-use Kwai\Modules\Trainings\Presentation\REST\UpdateTrainingAction;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\ServerRequest;
-use Tests\Context;
-
-$context = Context::createContext();
 
 $data = <<<JSON
 {
@@ -60,89 +49,51 @@ $data = <<<JSON
 }
 JSON;
 
-it('can create a training', function () use ($context, $data) {
-    $action = new CreateTrainingAction(database: $context->db);
-
-    $request = new ServerRequest(
-        'POST',
-        '/trainings'
-    );
-
-    $request = $request
-        ->withParsedBody(json_decode($data, true))
-        ->withAttribute(
-            'kwai.user',
-            $context->user
-        )
-    ;
-    $response = new Response();
-
-    $response = $action($request, $response, []);
+it('can create a training', function () use ($data) {
+    $response = $this->post('/trainings', json_decode($data, true));
     expect($response->getStatusCode())->toBe(200);
 
-    $stream = $response->getBody();
-    $stream->rewind();
-    $json = json_decode($stream->getContents());
-    return $json->data->id;
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('trainings')
+    ;
+    return $result['data']['id'];
+});
 
-it('can update a training', function ($id) use ($context, $data) {
-    $action = new UpdateTrainingAction(database: $context->db);
-
+it('can update a training', function ($id) use ($data) {
     $json = json_decode($data, true);
     $json['data']['id'] = $id;
     $json['data']['attributes']['remark'] = 'Updated with unit test';
 
-    $request = new ServerRequest(
-        'PATCH',
-        '/trainings/' . $id
-    );
+    $response = $this->patch("/trainings/$id", $json);
+    expect($response->getStatusCode())->toBe(200);
 
-    $request = $request
-        ->withParsedBody($json)
-        ->withAttribute(
-            'kwai.user',
-            $context->user
-        )
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('trainings')
     ;
-    $response = new Response();
-
-    $response = $action($request, $response, ['id' => $id]);
-    expect($response->getStatusCode())->toBe(200);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a training')
 ;
 
-it('can get a training', function ($id) use ($context) {
-    $action = new GetTrainingAction(database: $context->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/trainings/' . $id
-    );
-
-    $response = new Response();
-    $response = $action($request, $response, ['id' => $id]);
+it('can get a training', function ($id) {
+    $response = $this->get("/trainings/$id");
     expect($response->getStatusCode())->toBe(200);
+
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('trainings')
+    ;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
     ->depends('it can create a training')
 ;
 
-it('can browse trainings', function () use ($context) {
-    $action = new BrowseTrainingsAction(database: $context->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/trainings'
-    );
-
-    $response = new Response();
-    $response = $action($request, $response, []);
+it('can browse trainings', function () {
+    $response = $this->get("/trainings");
     expect($response->getStatusCode())->toBe(200);
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
+
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIArray('trainings')
+    ;
+});
