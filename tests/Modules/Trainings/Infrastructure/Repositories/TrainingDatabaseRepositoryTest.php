@@ -16,12 +16,13 @@ use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Team;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can get a training', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can get a training', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     try {
         $training = $repo->getById(1);
         expect($training)
@@ -41,11 +42,11 @@ it('can get a training', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can count all trainings', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can count all trainings', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     try {
         $query = $repo->createQuery();
         $count = $query->count();
@@ -56,20 +57,20 @@ it('can count all trainings', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('should throw a not found exception', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('should throw a not found exception', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     /** @noinspection PhpUnhandledExceptionInspection */
     $repo->getById(1000);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->throws(TrainingNotFoundException::class)
 ;
 
-it('can filter trainings on year and month', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can filter trainings on year and month', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     try {
         $query = $repo->createQuery();
         $query->filterYearMonth(2019, 8);
@@ -83,11 +84,11 @@ it('can filter trainings on year and month', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can filter trainings for a coach', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can filter trainings for a coach', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     try {
         $query = $repo->createQuery();
         $query->filterCoach(
@@ -108,11 +109,11 @@ it('can filter trainings for a coach', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can filter trainings for a team', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can filter trainings for a team', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     try {
         $query = $repo->createQuery();
         $query->filterTeam(
@@ -131,11 +132,11 @@ it('can filter trainings for a team', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can create a training', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can create a training', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
 
     $training = new Training(
         event: new Event(
@@ -146,12 +147,12 @@ it('can create a training', function () use ($context) {
         ),
         text: new Collection([
             new Text(
-                locale: new Locale('en'),
-                format: new DocumentFormat('md'),
+                locale: Locale::EN,
+                format: DocumentFormat::MARKDOWN,
                 title: 'Training for competitors',
+                author: new Creator(1, new Name('Jigoro', 'Kano')),
                 summary: 'This is a training for competitive members only',
-                content: null,
-                author: new Creator(1, new Name('Jigoro', 'Kano'))
+                content: null
             )
         ]),
         remark: 'This training is created from a unit test',
@@ -167,11 +168,11 @@ it('can create a training', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can get a training with presences', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
+it('can get a training with presences', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
     $query = $repo
         ->createQuery()
         ->filterId(1)
@@ -192,5 +193,5 @@ it('can get a training with presences', function () use ($context) {
         ->toBeInstanceOf(Collection::class)
     ;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

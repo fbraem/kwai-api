@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
@@ -9,12 +8,13 @@ use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Coach;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can get a coach', function () use ($context) {
-    $repo = new CoachDatabaseRepository($context->db);
+it('can get a coach', function () {
+    $repo = new CoachDatabaseRepository($this->db);
     try {
         $coaches = $repo->getById(1);
         expect($coaches)
@@ -30,11 +30,11 @@ it('can get a coach', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can get all active coaches', function () use ($context) {
-    $repo = new CoachDatabaseRepository($context->db);
+it('can get all active coaches', function () {
+    $repo = new CoachDatabaseRepository($this->db);
     try {
         $query = $repo->createQuery();
         $query->filterActive(true);
@@ -54,5 +54,5 @@ it('can get all active coaches', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

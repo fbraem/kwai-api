@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
@@ -14,16 +13,17 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create a definition', function () use ($context) {
-    $repo = new DefinitionDatabaseRepository($context->db);
+it('can create a definition', function () {
+    $repo = new DefinitionDatabaseRepository($this->db);
     $definition = new Definition(
         name: 'Test',
         description: 'Created while running unittest',
-        weekday: new Weekday(1),
+        weekday: Weekday::MONDAY,
         period: new TimePeriod(
             new Time(19, 0, 'Europe/Brussels'),
             new Time(20, 0, 'Europe/Brussels')
@@ -45,11 +45,11 @@ it('can create a definition', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can update a definition', function ($id) use ($context) {
-    $repo = new DefinitionDatabaseRepository($context->db);
+it('can update a definition', function ($id) {
+    $repo = new DefinitionDatabaseRepository($this->db);
 
     try {
         $definition = $repo->getById($id);
@@ -75,12 +75,12 @@ it('can update a definition', function ($id) use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a definition')
 ;
 
-it('can delete a definition', function ($id) use ($context) {
-    $repo = new DefinitionDatabaseRepository($context->db);
+it('can delete a definition', function ($id) {
+    $repo = new DefinitionDatabaseRepository($this->db);
 
     try {
         $definition = $repo->getById($id);
@@ -95,12 +95,12 @@ it('can delete a definition', function ($id) use ($context) {
     }
     $this->expectNotToPerformAssertions();
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a definition')
 ;
 
-it('can get a training definition', function () use ($context) {
-    $repo = new DefinitionDatabaseRepository($context->db);
+it('can get a training definition', function () {
+    $repo = new DefinitionDatabaseRepository($this->db);
     try {
         $definition = $repo->getById(1);
         expect($definition)
@@ -115,11 +115,11 @@ it('can get a training definition', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can get all training definitions', function () use ($context) {
-    $repo = new DefinitionDatabaseRepository($context->db);
+it('can get all training definitions', function () {
+    $repo = new DefinitionDatabaseRepository($this->db);
     try {
         $query = $repo->createQuery();
         $definitions = $repo->getAll($query);
@@ -138,5 +138,5 @@ it('can get all training definitions', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
