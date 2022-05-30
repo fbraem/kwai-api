@@ -58,10 +58,10 @@ it('can appoint/release a coach to a training', function () use ($creator) {
     $training->appointCoach(
         new TrainingCoach(
             coach: $coach,
+            creator: $creator,
             head: false,
             present: false,
-            payed: false,
-            creator: $creator
+            payed: false
         )
     );
     expect($training->getCoaches())
@@ -92,7 +92,7 @@ it('can manage a presence', function () use ($creator) {
             license: '',
             licenseEndDate: Date::createFromDate(2020),
             name: new Name(),
-            gender: Gender::MALE(),
+            gender: Gender::MALE,
             birthDate: Date::createFromDate(1860, 12, 10)
         )
     );

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Kwai\Core\Domain\ValueObjects\Creator;
@@ -18,7 +17,7 @@ it('can construct a definition', function () use ($creator) {
     $definition = new Definition(
         name: 'Wednesday Training',
         description: 'We train each wednesday evening',
-        weekday: Weekday::WEDNESDAY(),
+        weekday: Weekday::WEDNESDAY,
         period: new TimePeriod(
             new Time(20, 0, 'Europe/Brussels'),
             new Time(21, 0, 'Europe/Brussels')
@@ -34,7 +33,7 @@ it('throws an exception when start is after end time', function () use ($creator
     new Definition(
         name: 'Wednesday Training',
         description: 'We train each wednesday evening',
-        weekday: Weekday::WEDNESDAY(),
+        weekday: Weekday::WEDNESDAY,
         period: new TimePeriod(
             new Time(21, 0, 'Europe/Brussels'),
                 new Time(20, 0, 'Europe/Brussels')
