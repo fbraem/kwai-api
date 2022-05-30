@@ -5,49 +5,37 @@ namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
 use Exception;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
+use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
+use Kwai\Modules\Users\Domain\ValueObjects\Password;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-beforeAll(function () use ($context) {
-    $userRepo = new UserDatabaseRepository($context->db);
-    try {
-        $query = $userRepo
-            ->createQuery()
-            ->filterByEmail(new EmailAddress('jigoro.kano@kwai.com'))
-        ;
-        $users = $userRepo->getAll($query);
-        if ($users->isNotEmpty()) {
-            $context->user = $users->first();
-        }
-    } catch (QueryException $e) {
-        echo $e->getMessage(), PHP_EOL;
-    }
-});
-
-it('can create a refreshtoken', function () use ($context) {
-    if (!isset($context->user)) {
-        return null;
-    }
-    $repo = new RefreshTokenDatabaseRepository($context->db);
-    $accessTokenRepo = new AccessTokenDatabaseRepository($context->db);
+it('can create a refreshtoken', function () {
+    $repo = new RefreshTokenDatabaseRepository($this->db);
+    $accessTokenRepo = new AccessTokenDatabaseRepository($this->db);
     $future = new DateTime('now +2 hours');
     $tokenIdentifier = new TokenIdentifier();
     $accessToken = new AccessToken(
         identifier: $tokenIdentifier,
         expiration: Timestamp::createFromDateTime($future),
-        account: $context->user
+        account: new UserAccountEntity(
+            $this->withUser()->id(),
+            new UserAccount(
+                $this->withUser()->domain(),
+                Password::fromString('test')
+            )
+        )
     );
     try {
         $accessTokenEntity = $accessTokenRepo->create($accessToken);
@@ -59,7 +47,7 @@ it('can create a refreshtoken', function () use ($context) {
         );
         $entity = $repo->create($refreshToken);
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(RefreshTokenEntity::class)
         ;
         expect($entity->domain())
             ->toBeInstanceOf(RefreshToken::class)
@@ -70,17 +58,17 @@ it('can create a refreshtoken', function () use ($context) {
 
     return $tokenIdentifier;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can retrieve a refreshtoken', function (TokenIdentifier $tokenIdentifier) use ($context) {
-    $repo = new RefreshTokenDatabaseRepository($context->db);
+it('can retrieve a refreshtoken', function (TokenIdentifier $tokenIdentifier) {
+    $repo = new RefreshTokenDatabaseRepository($this->db);
     try {
         $refreshToken = $repo->getByTokenIdentifier(
             $tokenIdentifier
         );
         expect($refreshToken)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(RefreshTokenEntity::class)
         ;
         expect($refreshToken->domain())
             ->toBeInstanceOf(RefreshToken::class)
@@ -90,5 +78,5 @@ it('can retrieve a refreshtoken', function (TokenIdentifier $tokenIdentifier) us
     }
 })
     ->depends('it can create a refreshtoken')
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

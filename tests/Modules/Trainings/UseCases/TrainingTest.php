@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
@@ -15,11 +14,12 @@ use Kwai\Modules\Trainings\UseCases\GetTraining;
 use Kwai\Modules\Trainings\UseCases\GetTrainingCommand;
 use Kwai\Modules\Trainings\UseCases\UpdateTraining;
 use Kwai\Modules\Trainings\UseCases\UpdateTrainingCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create a training', function () use ($context) {
+it('can create a training', function () {
     $command = new CreateTrainingCommand();
 
     $command->start_date = '2020-12-16 20:00:00';
@@ -36,10 +36,10 @@ it('can create a training', function () use ($context) {
 
     try {
         $entity = CreateTraining::create(
-            new TrainingDatabaseRepository($context->db),
-            new DefinitionDatabaseRepository($context->db),
-            new TeamDatabaseRepository($context->db),
-            new CoachDatabaseRepository($context->db)
+            new TrainingDatabaseRepository($this->db),
+            new DefinitionDatabaseRepository($this->db),
+            new TeamDatabaseRepository($this->db),
+            new CoachDatabaseRepository($this->db)
         )($command, new Creator(1, new Name('Jigoro', 'Kano')));
         expect($entity)
             ->toBeInstanceOf(Entity::class)
@@ -49,10 +49,10 @@ it('can create a training', function () use ($context) {
     }
     return $entity->id();
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can update a training', function(int $id) use ($context) {
+it('can update a training', function(int $id) {
     $command = new UpdateTrainingCommand();
     $command->id = $id;
     $command->remark = 'Updated with unit test';
@@ -87,10 +87,10 @@ it('can update a training', function(int $id) use ($context) {
 
     try {
         $entity = UpdateTraining::create(
-            new TrainingDatabaseRepository($context->db),
-            new DefinitionDatabaseRepository($context->db),
-            new TeamDatabaseRepository($context->db),
-            new CoachDatabaseRepository($context->db)
+            new TrainingDatabaseRepository($this->db),
+            new DefinitionDatabaseRepository($this->db),
+            new TeamDatabaseRepository($this->db),
+            new CoachDatabaseRepository($this->db)
         )($command, new Creator(1, new Name('Jigoro', 'Kano')));
     } catch (Exception $e) {
         $this->fail((string) $e);
@@ -99,17 +99,17 @@ it('can update a training', function(int $id) use ($context) {
         ->toBeInstanceOf(Entity::class)
     ;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a training')
 ;
 
-it('can get a training', function (int $id) use ($context) {
+it('can get a training', function (int $id) {
     $command = new GetTrainingCommand();
     $command->id = $id;
 
     try {
         $training = GetTraining::create(new TrainingDatabaseRepository(
-            $context->db
+            $this->db
         ))($command);
         expect($training)
             ->toBeInstanceOf(Entity::class)
@@ -118,6 +118,6 @@ it('can get a training', function (int $id) use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->depends('it can create a training')
 ;

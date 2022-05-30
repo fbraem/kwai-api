@@ -4,39 +4,43 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use DateTime;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\AccessToken;
+use Kwai\Modules\Users\Domain\AccessTokenEntity;
+use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
+use Kwai\Modules\Users\Domain\ValueObjects\Password;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create an accesstoken', function () use ($context) {
-    if (!isset($context->user)) {
-        return null;
-    }
+it('can create an accesstoken', function () {
     $accessToken = new AccessToken(
         identifier: new TokenIdentifier(),
         expiration: Timestamp::createFromDateTime(
             new DateTime('now +2 hours')
         ),
-        account: $context->user
+        account: new UserAccountEntity(
+            $this->withUser()->id(),
+            new UserAccount(
+                user: $this->withUser()->domain(),
+                password: Password::fromString('test')
+            )
+        )
     );
-    $repo = new AccessTokenDatabaseRepository($context->db);
+    $repo = new AccessTokenDatabaseRepository($this->db);
     try {
         $entity = $repo->create($accessToken);
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(AccessTokenEntity::class)
         ;
     } catch (RepositoryException $e) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

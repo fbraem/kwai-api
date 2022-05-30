@@ -13,15 +13,17 @@ use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create an invitation', function () use ($context) {
-    $repo = new UserInvitationDatabaseRepository($context->db);
-    $userRepo = new UserDatabaseRepository($context->db);
+it('can create an invitation', function () {
+    $repo = new UserInvitationDatabaseRepository($this->db);
+    $userRepo = new UserDatabaseRepository($this->db);
 
     try {
         $query = $userRepo
@@ -48,7 +50,7 @@ it('can create an invitation', function () use ($context) {
         );
         $invitation = $repo->create($invitation);
         expect($invitation)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(UserInvitationEntity::class)
         ;
         expect($invitation->domain())
             ->toBeInstanceOf(UserInvitation::class)
@@ -58,11 +60,11 @@ it('can create an invitation', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can get an invitation using an email', function () use ($context) {
-    $repo = new UserInvitationDatabaseRepository($context->db);
+it('can get an invitation using an email', function () {
+    $repo = new UserInvitationDatabaseRepository($this->db);
     try {
         $query = $repo
             ->createQuery()
@@ -76,18 +78,18 @@ it('can get an invitation using an email', function () use ($context) {
             ->and($invitations->count())
             ->toBeGreaterThan(0)
             ->and($invitations->first())
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(UserInvitationEntity::class)
         ;
     } catch (RepositoryException $e) {
         $this->fail((string) $e);
     }
 })
     ->depends('it can create an invitation')
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can browse invitations', function () use ($context) {
-    $repo = new UserInvitationDatabaseRepository($context->db);
+it('can browse invitations', function () {
+    $repo = new UserInvitationDatabaseRepository($this->db);
     $query = $repo
         ->createQuery()
         ->filterActive(Timestamp::createNow())
@@ -100,5 +102,5 @@ it('can browse invitations', function () use ($context) {
     expect($invitations)
         ->toBeInstanceOf(Collection::class);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
