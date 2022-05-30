@@ -42,7 +42,7 @@ class PresenceResource
     #[JSONAPI\Attribute(name: 'gender')]
     public function getGender(): int
     {
-        return $this->presence->getMember()->getGender()->getValue();
+        return $this->presence->getMember()->getGender()->value;
     }
 
     #[JSONAPI\Attribute(name: 'birthdate')]
