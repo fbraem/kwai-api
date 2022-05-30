@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
@@ -10,14 +9,15 @@ use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseReposit
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainings;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainingsCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can browse trainings', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
-    $coachRepo = new CoachDatabaseRepository($context->db);
-    $defRepo = new DefinitionDatabaseRepository($context->db);
+it('can browse trainings', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
+    $coachRepo = new CoachDatabaseRepository($this->db);
+    $defRepo = new DefinitionDatabaseRepository($this->db);
     $command = new BrowseTrainingsCommand();
     try {
         [$count, $trainings] = BrowseTrainings::create(
@@ -40,13 +40,13 @@ it('can browse trainings', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can browse trainings for a given year and month', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
-    $coachRepo = new CoachDatabaseRepository($context->db);
-    $defRepo = new DefinitionDatabaseRepository($context->db);
+it('can browse trainings for a given year and month', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
+    $coachRepo = new CoachDatabaseRepository($this->db);
+    $defRepo = new DefinitionDatabaseRepository($this->db);
 
     $command = new BrowseTrainingsCommand();
     $command->year = 2020;
@@ -72,13 +72,13 @@ it('can browse trainings for a given year and month', function () use ($context)
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can browse trainings for a coach', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
-    $coachRepo = new CoachDatabaseRepository($context->db);
-    $defRepo = new DefinitionDatabaseRepository($context->db);
+it('can browse trainings for a coach', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
+    $coachRepo = new CoachDatabaseRepository($this->db);
+    $defRepo = new DefinitionDatabaseRepository($this->db);
 
     $command = new BrowseTrainingsCommand();
     $command->coach = 1;
@@ -103,13 +103,13 @@ it('can browse trainings for a coach', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('should throw an exception when coach does not exist', function () use ($context) {
-    $repo = new TrainingDatabaseRepository($context->db);
-    $coachRepo = new CoachDatabaseRepository($context->db);
-    $defRepo = new DefinitionDatabaseRepository($context->db);
+it('should throw an exception when coach does not exist', function () {
+    $repo = new TrainingDatabaseRepository($this->db);
+    $coachRepo = new CoachDatabaseRepository($this->db);
+    $defRepo = new DefinitionDatabaseRepository($this->db);
 
     $command = new BrowseTrainingsCommand();
     $command->coach = 1000;
@@ -117,6 +117,6 @@ it('should throw an exception when coach does not exist', function () use ($cont
     /** @noinspection PhpUnhandledExceptionInspection */
     BrowseTrainings::create($repo, $coachRepo, $defRepo)($command);
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
     ->expectException(CoachNotFoundException::class)
 ;
