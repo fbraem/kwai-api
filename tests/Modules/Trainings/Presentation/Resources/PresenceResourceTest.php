@@ -19,7 +19,7 @@ it('can serialize a presence as JSON:API resource', function () {
                license: '12345',
                licenseEndDate: Date::createFromString('2022-12-01'),
                name: new Name('Jigoro', 'Kano'),
-               gender: Gender::MALE(),
+               gender: Gender::MALE,
                birthDate: Date::createFromString('1860-10-28')
            )
        ),

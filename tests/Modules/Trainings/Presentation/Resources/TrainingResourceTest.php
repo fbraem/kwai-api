@@ -5,6 +5,7 @@ use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
+use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -28,14 +29,14 @@ it('can serialize a training to a JSON:API resource', function () {
             ),
             text: collect([
                 new Text(
-                    locale: new \Kwai\Core\Domain\ValueObjects\Locale('nl'),
-                    format: new DocumentFormat('md'),
+                    locale: Locale::NL,
+                    format: DocumentFormat::MARKDOWN,
                     title: 'Competition Training',
-                    summary: 'This is a training dedicated to competition',
                     author: new Creator(
                         1,
                         new Name('Jigoro', 'Kano')
-                    )
+                    ),
+                    summary: 'This is a training dedicated to competition'
                 )
             ]),
             remark: 'This is a test training',

@@ -19,7 +19,7 @@ it('can serialize a definition entity to JSON:API', function () {
         new Definition(
             name: 'Monday',
             description: 'Training on monday',
-            weekday: Weekday::MONDAY(),
+            weekday: Weekday::MONDAY,
             // location: new Location('Sporthal Stekene'),
             period: new TimePeriod(
                 new Time(19, 0, 'Europe/Brussels'),
