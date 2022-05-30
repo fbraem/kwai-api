@@ -15,17 +15,14 @@ use Kwai\Modules\Pages\UseCases\CreatePage;
 use Kwai\Modules\Pages\UseCases\CreatePageCommand;
 use Kwai\Modules\Pages\UseCases\UpdatePage;
 use Kwai\Modules\Pages\UseCases\UpdatePageCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-/**
- * Context for all tests in this file
- * + db: Database connection
- * + id: Id of the created page
- */
-$context = Context::createContext();
-$context->creator = new Creator(1, new Name('Jigoro', 'Kano'));
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create a page', function () use ($context) {
+$creator = new Creator(1, new Name('Jigoro', 'Kano'));
+
+it('can create a page', function () use ($creator) {
     $command = new CreatePageCommand();
     $command->application = 1;
     $content = new Content();
@@ -36,8 +33,8 @@ it('can create a page', function () use ($context) {
 
     try {
         $page = CreatePage::create(
-            new PageDatabaseRepository($context->db),
-            new ApplicationDatabaseRepository($context->db),
+            new PageDatabaseRepository($this->db),
+            new ApplicationDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -48,23 +45,23 @@ it('can create a page', function () use ($context) {
                 {
                 }
             }
-        )($command, $context->creator);
+        )($command, $creator);
         expect($page)
             ->toBeInstanceOf(Entity::class)
             ->and($page->domain())
             ->toBeInstanceOf(Page::class)
         ;
-        $context->id = $page->id();
+        return $page->id();
     } catch (Exception $e) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can update a page', function () use ($context) {
+it('can update a page', function ($id) use ($creator) {
     $command = new UpdatePageCommand();
-    $command->id = $context->id;
+    $command->id = $id;
     $command->application = 1;
     $content = new Content();
     $content->title = 'Test title';
@@ -74,8 +71,8 @@ it('can update a page', function () use ($context) {
 
     try {
         $page = UpdatePage::create(
-            new PageDatabaseRepository($context->db),
-            new ApplicationDatabaseRepository($context->db),
+            new PageDatabaseRepository($this->db),
+            new ApplicationDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -86,7 +83,7 @@ it('can update a page', function () use ($context) {
                 {
                 }
             }
-        )($command, $context->creator);
+        )($command, $creator);
         expect($page)
             ->toBeInstanceOf(Entity::class)
         ;
@@ -99,5 +96,5 @@ it('can update a page', function () use ($context) {
     }
 })
     ->depends('it can create a page')
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
@@ -9,20 +8,17 @@ use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\UseCases\GetPage;
 use Kwai\Modules\Pages\UseCases\GetPageCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-/**
- * Context for all tests in this file
- * + db: Database connection
- */
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can get a page', function () use ($context) {
+it('can get a page', function () {
     $command = new GetPageCommand();
     try {
         $command->id = 1;
         $page = GetPage::create(
-            new PageDatabaseRepository($context->db),
+            new PageDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -41,5 +37,5 @@ it('can get a page', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

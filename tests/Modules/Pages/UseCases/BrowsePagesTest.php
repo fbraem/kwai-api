@@ -7,19 +7,21 @@ use Kwai\Core\Infrastructure\Repositories\ImageRepository;
 use Kwai\Modules\Pages\Infrastructure\Repositories\PageDatabaseRepository;
 use Kwai\Modules\Pages\UseCases\BrowsePages;
 use Kwai\Modules\Pages\UseCases\BrowsePagesCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
 /**
  * Context for all tests in this file
  * + db: Database connection
  */
-$context = Context::createContext();
 
-it('can browse pages', function () use ($context) {
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
+
+it('can browse pages', function () {
     $command = new BrowsePagesCommand();
     try {
         BrowsePages::create(
-            new PageDatabaseRepository($context->db),
+            new PageDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -35,15 +37,15 @@ it('can browse pages', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can browse pages of a given user', function () use ($context) {
+it('can browse pages of a given user', function () {
     $command = new BrowsePagesCommand();
     $command->userId = 1;
     try {
         [$count, $pages] = BrowsePages::create(
-            new PageDatabaseRepository($context->db),
+            new PageDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -64,15 +66,15 @@ it('can browse pages of a given user', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can browse pages of a given application', function () use ($context) {
+it('can browse pages of a given application', function () {
     $command = new BrowsePagesCommand();
     $command->application = 1;
     try {
         [ $count, $pages ] = BrowsePages::create(
-            new PageDatabaseRepository($context->db),
+            new PageDatabaseRepository($this->db),
             new class implements ImageRepository {
                 public function getImages(int $id): Collection
                 {
@@ -93,5 +95,5 @@ it('can browse pages of a given application', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
