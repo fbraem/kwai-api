@@ -1,16 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
-use Kwai\Modules\Trainings\Presentation\REST\BrowseDefinitionsAction;
-use Kwai\Modules\Trainings\Presentation\REST\CreateDefinitionAction;
-use Kwai\Modules\Trainings\Presentation\REST\GetDefinitionAction;
-use Kwai\Modules\Trainings\Presentation\REST\UpdateDefinitionAction;
-use Nyholm\Psr7\Response;
-use Nyholm\Psr7\ServerRequest;
-use Tests\Context;
-
-$context = Context::createContext();
 
 $data = [
     'data' => [
@@ -26,85 +15,51 @@ $data = [
     ]
 ];
 
-it('can create a definition', function () use ($context, $data) {
-    $action = new CreateDefinitionAction(database: $context->db);
-
-    $request = new ServerRequest(
-        'PATCH',
-        '/trainings/definitions/',
-        []
-    );
-    $request = $request
-        ->withParsedBody($data)
-        ->withAttribute(
-            'kwai.user',
-            $context->user
-        )
-    ;
-    $response = new Response();
-
-    $response = $action($request, $response, []);
+it('can create a definition', function () use ($data) {
+    $response = $this->post('/trainings/definitions', $data);
     expect($response->getStatusCode())->toBe(200);
 
-    $result = json_decode((string) $response->getBody(), true);
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('definitions')
+    ;
+
     return $result['data']['id'];
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
+});
 
-it('can update a definition', function ($id) use ($context, $data) {
-    $action = new UpdateDefinitionAction(database: $context->db);
-
+it('can update a definition', function ($id) use ($data) {
     $data['data']['id'] = $id;
     $data['data']['attributes']['description'] = 'Updated with test "can update a definition"';
 
-    $request = new ServerRequest(
-        'PATCH',
-        '/trainings/definitions/',
-        []
-    );
-    $request = $request
-        ->withParsedBody($data)
-        ->withAttribute(
-            'kwai.user',
-            $context->user
-        )
+    $response = $this->patch("/trainings/definitions/$id", $data);
+    expect($response->getStatusCode())->toBe(200);
+
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('definitions')
     ;
-    $response = new Response();
 
-    $response = $action($request, $response, ['id' => $id]);
-    expect($response->getStatusCode())->toBe(200);
 })
     ->depends('it can create a definition')
-    ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can get a definition', function ($id) use ($context) {
-    $action = new GetDefinitionAction(database: $context->db);
-
-    $request = new ServerRequest(
-        'GET',
-        '/trainings/definitions/' . $id
-    );
-    $response = new Response();
-
-    $response = $action($request, $response, ['id' => $id]);
+it('can get a definition', function ($id) {
+    $response = $this->get("/trainings/definitions/$id");
     expect($response->getStatusCode())->toBe(200);
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIObject('definitions')
+    ;
 })
     ->depends('it can create a definition')
-    ->skip(!Context::hasDatabase(), 'No database available')
 ;
 
-it('can browse definitions', function () use ($context) {
-    $action = new BrowseDefinitionsAction($context->db);
-    $request = new ServerRequest(
-        'GET',
-        '/trainings/definitions'
-    );
-    $response = new Response();
-
-    $response = $action($request, $response, []);
+it('can browse definitions', function () {
+    $response = $this->get("/trainings/definitions");
     expect($response->getStatusCode())->toBe(200);
-})
-    ->skip(!Context::hasDatabase(), 'No database available')
-;
+    $result = $response->toArray();
+    expect($result)
+        ->tobeJSONAPIArray('definitions')
+    ;
+
+});
