@@ -101,8 +101,8 @@ class CreateTraining
             fn ($coach) => new TrainingCoach(
                 coach: $coaches->get($coach->id),
                 creator: $creator,
-                present: $coach->present,
                 head: $coach->head,
+                present: $coach->present,
                 payed: $coach->payed
             )
         );
@@ -113,9 +113,9 @@ class CreateTraining
                 locale: $text->locale,
                 format: $text->format,
                 title: $text->title,
+                author: $creator,
                 summary: $text->summary,
-                content: $text->content ?? null,
-                author: $creator
+                content: $text->content ?? null
             ));
         }
 
@@ -129,11 +129,11 @@ class CreateTraining
                 cancelled: $command->cancelled
             ),
             text: $contents,
-            traceableTime: new TraceableTime(),
+            remark: $command->remark,
             definition: $definition,
+            traceableTime: new TraceableTime(),
             coaches: $trainingCoaches,
             teams: $teams,
-            remark: $command->remark,
         ));
     }
 }
