@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
+use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\UseCases\GetUser;
 use Kwai\Modules\Users\UseCases\GetUserCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can get an user', function () use ($context) {
-    $accountRepo = new UserAccountDatabaseRepository($context->db);
+it('can get an user', function () {
+    $accountRepo = new UserAccountDatabaseRepository($this->db);
     try {
         $account = $accountRepo->get(new EmailAddress('jigoro.kano@kwai.com'));
     } catch (Exception $e) {
@@ -24,9 +25,9 @@ it('can get an user', function () use ($context) {
     $command->uuid = (string) $account->getUser()->getUuid();
 
     try {
-        $user = GetUser::create(new UserDatabaseRepository($context->db))($command);
+        $user = GetUser::create(new UserDatabaseRepository($this->db))($command);
         expect($user)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(UserEntity::class)
             ->and((string) $user->getEmailAddress())
             ->toBe('jigoro.kano@kwai.com')
         ;
@@ -34,5 +35,5 @@ it('can get an user', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

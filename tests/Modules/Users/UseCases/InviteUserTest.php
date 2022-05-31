@@ -4,25 +4,26 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\UseCases;
 
 use Kwai\Core\Domain\ValueObjects\Creator;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
 use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\UseCases\InviteUser;
 use Kwai\Modules\Users\UseCases\InviteUserCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can invite a user', function () use ($context) {
-    $invitationRepo = new UserInvitationDatabaseRepository($context->db);
-    $mailRepo = new MailDatabaseRepository($context->db);
-    $accountRepo = new UserAccountDatabaseRepository($context->db);
+it('can invite a user', function () {
+    $invitationRepo = new UserInvitationDatabaseRepository($this->db);
+    $mailRepo = new MailDatabaseRepository($this->db);
+    $accountRepo = new UserAccountDatabaseRepository($this->db);
 
     $command = new InviteUserCommand();
     $command->sender_mail = 'test@kwai.com';
@@ -47,7 +48,7 @@ it('can invite a user', function () use ($context) {
             new Creator(1, new Name('Jigoro', 'Kano'))
         ))($command);
         expect($invitation)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(UserInvitationEntity::class)
         ;
     } catch (UnprocessableException $e) {
         $this->fail((string) $e);
@@ -55,5 +56,5 @@ it('can invite a user', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tests\Modules\Users\UseCases;
 
 use Exception;
-use Kwai\Core\Domain\Entity;
 use Kwai\Modules\Users\Domain\RefreshToken;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\AccessTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\RefreshTokenDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
@@ -13,27 +13,27 @@ use Kwai\Modules\Users\UseCases\AuthenticateUser;
 use Kwai\Modules\Users\UseCases\AuthenticateUserCommand;
 use Kwai\Modules\Users\UseCases\CreateRefreshToken;
 use Kwai\Modules\Users\UseCases\CreateRefreshTokenCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can create a refreshtoken', function () use ($context) {
+it('can create a refreshtoken', function () {
     $command = new AuthenticateUserCommand();
     $command->email = $_ENV['user'];
     $command->password = $_ENV['password'];
 
-    $refreshTokenRepo = new RefreshTokenDatabaseRepository($context->db);
-    $accessTokenRepo = new AccessTokenDatabaseRepository($context->db);
+    $refreshTokenRepo = new RefreshTokenDatabaseRepository($this->db);
+    $accessTokenRepo = new AccessTokenDatabaseRepository($this->db);
 
     try {
         $refreshToken = (new AuthenticateUser(
-            new UserAccountDatabaseRepository($context->db),
+            new UserAccountDatabaseRepository($this->db),
             $accessTokenRepo,
             $refreshTokenRepo
         ))($command);
 
         $command = new CreateRefreshTokenCommand();
-        /** @noinspection PhpUndefinedMethodInspection */
         $command->identifier = strval($refreshToken->getIdentifier());
 
         $refreshToken = (new CreateRefreshToken(
@@ -42,7 +42,7 @@ it('can create a refreshtoken', function () use ($context) {
         ))($command);
 
         expect($refreshToken)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(RefreshTokenEntity::class)
         ;
         expect($refreshToken->domain())
             ->toBeInstanceOf(RefreshToken::class)
@@ -51,5 +51,5 @@ it('can create a refreshtoken', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

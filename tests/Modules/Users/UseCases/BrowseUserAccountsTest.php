@@ -5,16 +5,17 @@ use Illuminate\Support\Collection;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\UseCases\BrowseUserAccounts;
 use Kwai\Modules\Users\UseCases\BrowseUserAccountsCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can browse user accounts', function () use ($context) {
+it('can browse user accounts', function () {
     $command = new BrowseUserAccountsCommand();
 
     try {
         [$count, $accounts] = BrowseUserAccounts::create(
-            new UserAccountDatabaseRepository($context->db)
+            new UserAccountDatabaseRepository($this->db)
         )($command);
     } catch(Exception $e) {
         $this->fail((string) $e);
@@ -27,5 +28,5 @@ it('can browse user accounts', function () use ($context) {
         ->toBeInstanceOf(Collection::class)
     ;
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

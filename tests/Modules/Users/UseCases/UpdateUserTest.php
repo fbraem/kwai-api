@@ -8,20 +8,21 @@ use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\UseCases\UpdateUser;
 use Kwai\Modules\Users\UseCases\UpdateUserCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can update a user', function () use ($context) {
+it('can update a user', function () {
     $command = new UpdateUserCommand();
-    $command->uuid = (string) $context->user->getUuid();
+    $command->uuid = (string) $this->withUser()->getUuid();
     $command->first_name = 'Jigoro';
     $command->last_name = 'Kano';
     $command->remark = "Updated with 'can update a user test'";
     try {
         $user = UpdateUser::create(
-            new UserDatabaseRepository($context->db)
-        )($command, $context->user);
+            new UserDatabaseRepository($this->db)
+        )($command, $this->withUser());
         expect($user->getRemark())
             ->toEqual("Updated with 'can update a user test'")
         ;
@@ -35,5 +36,5 @@ it('can update a user', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

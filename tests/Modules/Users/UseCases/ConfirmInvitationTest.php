@@ -7,7 +7,6 @@ use DateTime;
 use Exception;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
@@ -17,53 +16,54 @@ use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserAccount;
+use Kwai\Modules\Users\Domain\UserAccountEntity;
+use Kwai\Modules\Users\Domain\UserInvitationEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
+use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\UseCases\ConfirmInvitation;
 use Kwai\Modules\Users\UseCases\ConfirmInvitationCommand;
 use Kwai\Modules\Users\Domain\UserInvitation;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-beforeAll(function () use ($context) {
-    $context->creator = new Creator(
-        id: 1,
-        name: new Name('Jigoro', 'Kano')
-    );
-
-    $context->userAccountRepo = new class($context->db) extends UserAccountDatabaseRepository {
-        public function create(UserAccount $account): Entity
+function createAccountRepo(Connection $db): UserAccountRepository {
+    return new class($db) extends UserAccountDatabaseRepository {
+        public function create(UserAccount $account): UserAccountEntity
         {
-            return new Entity(1, $account);
+            return new UserAccountEntity(1, $account);
         }
     };
-});
+}
 
-it('can confirm an invitation', function () use ($context) {
-    $userInvitationRepo = new class($context->db, $context->creator) extends UserInvitationDatabaseRepository {
+it('can confirm an invitation', function () {
+    $userInvitationRepo = new class($this->db) extends UserInvitationDatabaseRepository {
         public function __construct(
-            Connection $db,
-            private Creator $creator
+            Connection $db
         ) {
             parent::__construct($db);
         }
 
-        public function getByUniqueId(UniqueId $uuid): Entity
+        public function getByUniqueId(UniqueId $uuid): UserInvitationEntity
         {
-            return new Entity(1, new UserInvitation(
+            return new UserInvitationEntity(1, new UserInvitation(
                 emailAddress: new EmailAddress('gella.vandecavye@kwai.com'),
                 expiration: new LocalTimestamp(
                     Timestamp::createFromDateTime(new DateTime('now +15 days')),
                     'UTC'
                 ),
                 name: 'Gella Vandecaveye',
-                creator: $this->creator,
+                creator: new Creator(
+                    id: 1,
+                    name: new Name('Jigoro', 'Kano')
+                ),
                 remark: 'This is a test invitation',
                 uuid: new UniqueId()
             ));
         }
-        public function update(Entity $invitation): void
+        public function update(UserInvitationEntity $invitation): void
         {
             // Do nothing ...
         }
@@ -80,7 +80,7 @@ it('can confirm an invitation', function () use ($context) {
     try {
         $user = (new ConfirmInvitation(
             $userInvitationRepo,
-            $context->userAccountRepo
+            createAccountRepo($this->db)
         ))($command);
         expect($user->domain())
             ->toBeInstanceOf(UserAccount::class)
@@ -89,34 +89,35 @@ it('can confirm an invitation', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
 
-it('can handle an expired invitation', function () use ($context) {
-    $userInvitationRepo = new class($context->db, $context->creator) extends UserInvitationDatabaseRepository {
+it('can handle an expired invitation', function () {
+    $userInvitationRepo = new class($this->db) extends UserInvitationDatabaseRepository {
         public function __construct(
-            Connection $db,
-            private Creator $creator
+            Connection $db
         ) {
             parent::__construct($db);
-            $this->creator = $creator;
         }
 
-        public function getByUniqueId(UniqueId $uuid): Entity
+        public function getByUniqueId(UniqueId $uuid): UserInvitationEntity
         {
-            return new Entity(1, new UserInvitation(
+            return new UserInvitationEntity(1, new UserInvitation(
                 emailAddress: new EmailAddress('gella.vandecavye@kwai.com'),
                 expiration: new LocalTimestamp(
                     Timestamp::createFromDateTime(new DateTime('now -1 days')),
-                'UTC'
+                    'UTC'
                 ),
                 name: 'Gella Vandecaveye',
-                creator: $this->creator,
+                creator: new Creator(
+                    id: 1,
+                    name: new Name('Jigoro', 'Kano')
+                ),
                 remark: 'This is a test invitation',
                 uuid: new UniqueId()
             ));
         }
-        public function update(Entity $invitation): void
+        public function update(UserInvitationEntity $invitation): void
         {
             // Do nothing ...
         }
@@ -134,7 +135,7 @@ it('can handle an expired invitation', function () use ($context) {
         /** @noinspection PhpUnhandledExceptionInspection */
         (new ConfirmInvitation(
             $userInvitationRepo,
-            $context->userAccountRepo
+            createAccountRepo($this->db)
         ))($command);
     } catch (NotFoundException $e) {
         $this->fail((string) $e);
@@ -143,5 +144,5 @@ it('can handle an expired invitation', function () use ($context) {
     }
 })
     ->throws(UnprocessableException::class)
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

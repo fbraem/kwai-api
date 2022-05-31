@@ -6,12 +6,13 @@ use Illuminate\Support\Collection;
 use Kwai\Modules\Applications\Infrastructure\Repositories\ApplicationDatabaseRepository;
 use Kwai\Modules\Applications\UseCases\BrowseApplication;
 use Kwai\Modules\Applications\UseCases\BrowseApplicationCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can browse applications', function () use ($context) {
-    $repo = new ApplicationDatabaseRepository($context->db);
+it('can browse applications', function () {
+    $repo = new ApplicationDatabaseRepository($this->db);
     $command = new BrowseApplicationCommand();
     try {
         [$count, $applications] = BrowseApplication::create($repo)($command);
@@ -27,5 +28,5 @@ it('can browse applications', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;

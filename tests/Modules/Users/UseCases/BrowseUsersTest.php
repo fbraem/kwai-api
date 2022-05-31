@@ -1,17 +1,17 @@
 <?php
-
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\UseCases\BrowseUsers;
 use Kwai\Modules\Users\UseCases\BrowseUsersCommand;
-use Tests\Context;
+use Tests\DatabaseTrait;
 
-$context = Context::createContext();
+uses(DatabaseTrait::class);
+beforeEach(fn() => $this->withDatabase());
 
-it('can browse users', function () use ($context) {
-    $repo = new UserDatabaseRepository($context->db);
+it('can browse users', function () {
+    $repo = new UserDatabaseRepository($this->db);
     $command = new BrowseUsersCommand();
 
     try {
@@ -29,5 +29,5 @@ it('can browse users', function () use ($context) {
         $this->fail((string) $e);
     }
 })
-    ->skip(!Context::hasDatabase(), 'No database available')
+    ->skip(fn() => !$this->hasDatabase(), 'No database available')
 ;
