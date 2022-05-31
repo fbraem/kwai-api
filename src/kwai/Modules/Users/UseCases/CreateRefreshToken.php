@@ -7,11 +7,10 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
-
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\RefreshTokenNotFoundException;
+use Kwai\Modules\Users\Domain\RefreshTokenEntity;
 use Kwai\Modules\Users\Domain\ValueObjects\TokenIdentifier;
 use Kwai\Modules\Users\Domain\AccessToken;
 use Kwai\Modules\Users\Domain\RefreshToken;
@@ -48,13 +47,12 @@ class CreateRefreshToken
      * refreshtoken with a new accesstoken is returned.
      *
      * @param CreateRefreshTokenCommand $command
-     * @return Entity<RefreshToken>     A RefreshToken entity
-     * @throws AuthenticationException  Thrown when the refresh token is expired.
-     * @throws RepositoryException
+     * @return RefreshTokenEntity A RefreshToken entity
+     * @throws AuthenticationException Thrown when the refresh token is expired.
      * @throws RefreshTokenNotFoundException
-     * @noinspection PhpUndefinedMethodInspection
+     * @throws RepositoryException
      */
-    public function __invoke(CreateRefreshTokenCommand $command): Entity
+    public function __invoke(CreateRefreshTokenCommand $command): RefreshTokenEntity
     {
         $refreshToken = $this
             ->refreshTokenRepo
@@ -94,7 +92,7 @@ class CreateRefreshToken
             )
         );
 
-        $refreshToken = $this->refreshTokenRepo->create(
+        return $this->refreshTokenRepo->create(
             new RefreshToken(
                 identifier: new TokenIdentifier(),
                 expiration: Timestamp::createFromDateTime(
@@ -103,7 +101,5 @@ class CreateRefreshToken
                 accessToken: $accessToken
             )
         );
-
-        return $refreshToken;
     }
 }
