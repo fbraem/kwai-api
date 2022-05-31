@@ -19,7 +19,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserInvitationNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\Services\UserInvitationService;
-use Kwai\Modules\Users\UseCases\GetUserInvitationCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
