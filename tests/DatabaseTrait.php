@@ -1,17 +1,12 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Tests;
 
-
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\ValueObjects\Name;
-use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
-use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserEntity;
+use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Phinx\Config\Config;
 use Phinx\Migration\Manager;
 use Symfony\Component\Console\Input\StringInput;
@@ -60,13 +55,8 @@ trait DatabaseTrait
 
     public function withUser(): UserEntity
     {
-        return new UserEntity(
-            1,
-            new User(
-                new UniqueId(),
-                new EmailAddress('jigoro.kano@kwai.com'),
-                new Name('Jigoro', 'Kano')
-            )
-        );
+        $this->withDatabase();
+        $repo = new UserDatabaseRepository($this->db);
+        return $repo->getById(1);
     }
 }
