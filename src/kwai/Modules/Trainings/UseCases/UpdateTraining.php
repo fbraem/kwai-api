@@ -10,15 +10,12 @@ namespace Kwai\Modules\Trainings\UseCases;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
-use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
-use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
@@ -122,8 +119,8 @@ class UpdateTraining
         $contents = new Collection();
         foreach ($command->contents as $text) {
             $contents->add(new Text(
-                locale: Locale::from($text->locale),
-                format: DocumentFormat::from($text->format),
+                locale: $text->locale,
+                format: $text->format,
                 title: $text->title,
                 author: $creator,
                 summary: $text->summary,
