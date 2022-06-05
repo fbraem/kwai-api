@@ -14,11 +14,8 @@ use Kwai\JSONAPI;
 use Kwai\Modules\Pages\Domain\Application;
 use Kwai\Modules\Pages\Domain\Page;
 use Kwai\Modules\Pages\Presentation\Resources\PageResource;
-use Tests\Context;
 
-$context = Context::createContext();
-
-it('can serialize a page resource', function () use ($context) {
+it('can serialize a page resource', function () {
     $application = new Entity(
         1,
         new Application(
@@ -40,7 +37,7 @@ it('can serialize a page resource', function () use ($context) {
         format: DocumentFormat::MARKDOWN,
         title: 'Test page',
         author: new Creator(
-            id: $context->user->id(),
+            id: 1,
             name: new Name('Jigoro', 'Kano')
         ),
         summary: 'This is a test',

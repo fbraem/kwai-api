@@ -2,16 +2,17 @@
 declare(strict_types=1);
 
 use Kwai\Core\Domain\Entity;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Modules\Coaches\Domain\Coach;
 use Kwai\Modules\Coaches\Domain\Member;
 use Kwai\Modules\Coaches\Presentation\Resources\CoachResource;
 use Kwai\JSONAPI;
-use Tests\Context;
+use Kwai\Modules\Users\Domain\User;
+use Kwai\Modules\Users\Domain\UserEntity;
 
-$context = Context::createContext();
-
-it('can serialize a coach resource', function () use ($context) {
+it('can serialize a coach resource', function () {
     $coach = new Entity(
         1,
         new Coach(
@@ -25,7 +26,20 @@ it('can serialize a coach resource', function () use ($context) {
         )
     );
 
-    $resource = new CoachResource($coach, $context->user);
+    $resource = new CoachResource(
+        $coach,
+        new UserEntity(
+            1,
+            new User(
+                new UniqueId(),
+                new EmailAddress('jigoro.kano@kwai.com'),
+                new Name(
+                    'Jigoro',
+                    'Kano'
+                )
+            )
+        )
+    );
 
     try {
         $jsonapi = JSONAPI\Document::createFromObject($resource)->serialize();
