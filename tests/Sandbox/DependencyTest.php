@@ -11,7 +11,7 @@ class TestDependency implements Dependency
     {
     }
 
-    public function create()
+    public function create(): string
     {
         return 'TEST';
     }
