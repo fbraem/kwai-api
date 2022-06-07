@@ -50,7 +50,8 @@ it('can update a user', function ($uuid) {
             'attributes' => [
                 'first_name' => 'Jigoro',
                 'last_name' => 'Kano',
-                'remark' => 'Updated with UserActionTest'
+                'remark' => 'Updated with UserActionTest',
+                'admin' => true
             ]
         ]
     ];

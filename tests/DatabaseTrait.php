@@ -5,6 +5,7 @@ namespace Tests;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Modules\Users\Domain\User;
 use Kwai\Modules\Users\Domain\UserEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Phinx\Config\Config;
@@ -57,6 +58,15 @@ trait DatabaseTrait
     {
         $this->withDatabase();
         $repo = new UserDatabaseRepository($this->db);
-        return $repo->getById(1);
+        $user = $repo->getById(1);
+        return new UserEntity(
+            $user->id(),
+            new User(
+                uuid: $user->getUuid(),
+                emailAddress: $user->getEmailAddress(),
+                username: $user->getUsername(),
+                admin: true
+            )
+        );
     }
 }

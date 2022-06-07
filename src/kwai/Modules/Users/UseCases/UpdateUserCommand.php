@@ -23,4 +23,6 @@ class UpdateUserCommand
     public ?string $last_name = null;
 
     public ?string $remark = null;
+
+    public bool $admin = false;
 }

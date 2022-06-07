@@ -43,6 +43,7 @@ class UserSchema implements InputSchema
                     'first_name' => Expect::string()->required($this->create),
                     'last_name' => Expect::string()->required($this->create),
                     'remark' => Expect::string()->nullable(),
+                    'admin' => Expect::bool()->default(false)
                 ])
             ])
         ]);
@@ -60,6 +61,7 @@ class UserSchema implements InputSchema
         $command->last_name = $normalized->data->attributes->last_name;
         $command->uuid = $normalized->data->id;
         $command->remark = $normalized->data->attributes->remark;
+        $command->admin = $normalized->data->attributes->admin;
 
         return $command;
     }

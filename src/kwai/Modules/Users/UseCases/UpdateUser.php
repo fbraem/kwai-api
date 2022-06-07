@@ -80,9 +80,10 @@ class UpdateUser
                 uuid: $user->getUuid(),
                 emailAddress: $email ?? $user->getEmailAddress(),
                 username: new Name($command->first_name, $command->last_name),
+                admin: $command->admin,
                 remark: $command->remark,
                 member: $user->getMember(),
-                traceableTime: $traceableTime
+                traceableTime: $traceableTime,
             )
         );
 

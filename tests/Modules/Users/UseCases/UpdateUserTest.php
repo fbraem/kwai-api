@@ -14,11 +14,13 @@ uses(DatabaseTrait::class);
 beforeEach(fn() => $this->withDatabase());
 
 it('can update a user', function () {
+    $user = $this->withUser();
     $command = new UpdateUserCommand();
-    $command->uuid = (string) $this->withUser()->getUuid();
+    $command->uuid = (string) $user->getUuid();
     $command->first_name = 'Jigoro';
     $command->last_name = 'Kano';
     $command->remark = "Updated with 'can update a user test'";
+    $command->admin = $user->isAdmin();
     try {
         $user = UpdateUser::create(
             new UserDatabaseRepository($this->db)
