@@ -45,12 +45,12 @@ class TextInputSchema implements InputSchema
         $c = new Content();
         $c->content = $normalized->content;
         try {
-            $c->format = DocumentFormat::from($normalized->format);
+            $c->format = $normalized->format;
         } catch (ValueError) {
             throw new ValidationException("Invalid document format {$normalized->format}");
         }
         try {
-            $c->locale = Locale::from($normalized->locale);
+            $c->locale = $normalized->locale;
         } catch (ValueError) {
             throw new ValidationException("Invalid locale {$normalized->locale}");
         }

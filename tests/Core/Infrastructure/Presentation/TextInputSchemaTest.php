@@ -35,7 +35,7 @@ it('can set a default format', function () {
         ]
     );
     $content = $schema->process($normalized);
-    expect($content->format)->toBe(DocumentFormat::MARKDOWN);
+    expect($content->format)->toBe(DocumentFormat::MARKDOWN->value);
 });
 
 it('throws an exception when required value is missing', function () {

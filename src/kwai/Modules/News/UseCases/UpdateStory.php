@@ -61,8 +61,8 @@ class UpdateStory
             $contents = collect([]);
             foreach ($command->contents as $text) {
                 $contents->push(new Text(
-                    locale: $text->locale,
-                    format: $text->format,
+                    locale: Locale::from($text->locale),
+                    format: DocumentFormat::from($text->format),
                     title: $text->title,
                     summary: $text->summary,
                     content: $text->content,

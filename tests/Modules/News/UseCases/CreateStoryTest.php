@@ -35,8 +35,8 @@ it('can create a story', function ()  {
 
         $content = new Content();
         $content->content = 'This is a test from CreateStoryTest';
-        $content->format = DocumentFormat::MARKDOWN;
-        $content->locale = Locale::NL;
+        $content->format = DocumentFormat::MARKDOWN->value;
+        $content->locale = Locale::NL->value;
         $content->summary = 'This is a test';
         $content->title = 'Test';
         $command->contents = [ $content ];

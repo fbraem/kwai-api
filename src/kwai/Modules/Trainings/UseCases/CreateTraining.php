@@ -10,7 +10,9 @@ namespace Kwai\Modules\Trainings\UseCases;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
+use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
+use Kwai\Core\Domain\ValueObjects\Locale;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
@@ -108,8 +110,8 @@ class CreateTraining
         $contents = new Collection();
         foreach ($command->contents as $text) {
             $contents->add(new Text(
-                locale: $text->locale,
-                format: $text->format,
+                locale: Locale::from($text->locale),
+                format: DocumentFormat::from($text->format),
                 title: $text->title,
                 author: $creator,
                 summary: $text->summary,

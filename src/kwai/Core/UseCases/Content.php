@@ -24,14 +24,14 @@ class Content
     public string $title;
 
     /**
-     * Language code
+     * Language code. Default is nl.
      */
-    public Locale $locale = Locale::NL;
+    public string $locale = 'nl';
 
     /**
-     * The format of the content
+     * The format of the content. Default is md.
      */
-    public DocumentFormat $format = DocumentFormat::MARKDOWN;
+    public string $format = 'md';
 
     /**
      * Summary of the story
