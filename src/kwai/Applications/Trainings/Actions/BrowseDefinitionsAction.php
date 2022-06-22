@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\REST;
+namespace Kwai\Applications\Trainings\Actions;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\QueryException;
@@ -21,6 +21,7 @@ use Kwai\Modules\Trainings\UseCases\BrowseDefinitions;
 use Kwai\Modules\Trainings\UseCases\BrowseDefinitionsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use function depends;
 
 /**
  * Class BrowseDefinitionsAction

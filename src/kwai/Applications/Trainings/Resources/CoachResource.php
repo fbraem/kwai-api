@@ -1,15 +1,14 @@
 <?php
 /**
- * @package Modules
+ * @package Applications
  * @subpackage Trainings
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\Resources;
+namespace Kwai\Applications\Trainings\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 
 /**
  * Class CoachResource
@@ -19,11 +18,8 @@ use Kwai\Modules\Trainings\Domain\Coach;
 #[JSONAPI\Resource(type: 'coaches', id: 'getId')]
 class CoachResource
 {
-    /**
-     * @param Entity<Coach> $coach
-     */
     public function __construct(
-        private Entity $coach
+        private CoachEntity $coach
     ) {
     }
 

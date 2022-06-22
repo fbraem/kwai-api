@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Modules
+ * @package Applications
  * @subpackage Trainings
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\Resources;
+namespace Kwai\Applications\Trainings\Resources;
 
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
@@ -22,6 +22,7 @@ class TrainingResource
 {
     /**
      * @param Entity<Training> $training
+     * @param ConverterFactory $converterFactory
      */
     public function __construct(
         private Entity           $training,

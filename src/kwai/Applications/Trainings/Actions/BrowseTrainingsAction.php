@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\REST;
+namespace Kwai\Applications\Trainings\Actions;
 
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Database\Connection;
@@ -28,6 +28,7 @@ use Kwai\Modules\Trainings\UseCases\BrowseTrainings;
 use Kwai\Modules\Trainings\UseCases\BrowseTrainingsCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use function depends;
 
 /**
  * Class BrowseTrainingsAction

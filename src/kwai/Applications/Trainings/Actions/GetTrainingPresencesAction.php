@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\REST;
+namespace Kwai\Applications\Trainings\Actions;
 
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
@@ -23,6 +23,7 @@ use Kwai\Modules\Trainings\UseCases\GetTraining;
 use Kwai\Modules\Trainings\UseCases\GetTrainingCommand;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use function depends;
 
 /**
  * Class GetTrainingPresencesAction

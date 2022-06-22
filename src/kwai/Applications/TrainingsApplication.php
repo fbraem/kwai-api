@@ -7,16 +7,16 @@ declare(strict_types=1);
 
 namespace Kwai\Applications;
 
-use Kwai\Modules\Trainings\Presentation\REST\BrowseDefinitionsAction;
-use Kwai\Modules\Trainings\Presentation\REST\BrowseTrainingsAction;
-use Kwai\Modules\Trainings\Presentation\REST\CreateDefinitionAction;
-use Kwai\Modules\Trainings\Presentation\REST\CreateTrainingAction;
-use Kwai\Modules\Trainings\Presentation\REST\GetDefinitionAction;
-use Kwai\Modules\Trainings\Presentation\REST\GetTrainingAction;
-use Kwai\Modules\Trainings\Presentation\REST\GetTrainingPresencesAction;
+use Kwai\Applications\Trainings\Actions\BrowseDefinitionsAction;
+use Kwai\Applications\Trainings\Actions\BrowseTrainingsAction;
+use Kwai\Applications\Trainings\Actions\CreateDefinitionAction;
+use Kwai\Applications\Trainings\Actions\CreateTrainingAction;
+use Kwai\Applications\Trainings\Actions\GetDefinitionAction;
+use Kwai\Applications\Trainings\Actions\GetTrainingAction;
+use Kwai\Applications\Trainings\Actions\GetTrainingPresencesAction;
+use Kwai\Applications\Trainings\Actions\UpdateDefinitionAction;
+use Kwai\Applications\Trainings\Actions\UpdateTrainingAction;
 use Kwai\Core\Infrastructure\Presentation\Router;
-use Kwai\Modules\Trainings\Presentation\REST\UpdateDefinitionAction;
-use Kwai\Modules\Trainings\Presentation\REST\UpdateTrainingAction;
 
 /**
  * Class TrainingsApplication

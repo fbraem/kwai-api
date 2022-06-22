@@ -1,11 +1,11 @@
 <?php
 /**
- * @package Modules
+ * @package Applications
  * @subpackage Trainings
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\Resources;
+namespace Kwai\Applications\Trainings\Resources;
 
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;

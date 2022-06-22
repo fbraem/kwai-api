@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Kwai\Modules\Trainings\Presentation\REST;
+namespace Kwai\Applications\Trainings\Actions;
 
 use Kwai\Core\Infrastructure\Presentation\InputSchema;
 use Kwai\Core\Infrastructure\Presentation\TextInputSchema;
