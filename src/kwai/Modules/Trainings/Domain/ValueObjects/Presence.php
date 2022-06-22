@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Domain\ValueObjects;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Modules\Trainings\Domain\Member;
+use Kwai\Modules\Trainings\Domain\MemberEntity;
 
 /**
  * Class Presence
@@ -22,23 +21,20 @@ class Presence
     /**
      * Presence constructor.
      *
-     * @param Entity<Member>     $member
+     * @param MemberEntity       $member
      * @param Creator            $creator
      * @param string|null        $remark
      * @param TraceableTime|null $traceableTime
      */
     public function __construct(
-        private Entity $member,
+        private MemberEntity $member,
         private Creator $creator,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = new TraceableTime()
     ) {
     }
 
-    /**
-     * @return Entity<Member>
-     */
-    public function getMember(): Entity
+    public function getMember(): MemberEntity
     {
         return $this->member;
     }
