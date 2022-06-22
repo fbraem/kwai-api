@@ -10,7 +10,6 @@ namespace Kwai\Modules\Trainings\Domain;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Event;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -30,7 +29,7 @@ class Training implements DomainEntity
      * @param Event                   $event
      * @param Collection|null         $text
      * @param string|null             $remark
-     * @param Entity<Definition>|null $definition
+     * @param DefinitionEntity|null   $definition
      * @param TraceableTime|null      $traceableTime
      * @param Collection|null         $coaches
      * @param Collection|null         $teams
@@ -40,7 +39,7 @@ class Training implements DomainEntity
         private Event $event,
         private ?Collection $text = null,
         private ?string $remark = null,
-        private ?Entity $definition = null,
+        private ?DefinitionEntity $definition = null,
         private ?TraceableTime $traceableTime = null,
         private ?Collection $coaches = null,
         private ?Collection $teams = null,
@@ -99,10 +98,8 @@ class Training implements DomainEntity
 
     /**
      * Remove a coach from the training.
-     *
-     * @param Entity<Coach> $coach
      */
-    public function releaseCoach(Entity $coach)
+    public function releaseCoach(CoachEntity $coach)
     {
         if (isset($this->coaches[$coach->id()])) {
             unset($this->coaches[$coach->id()]);
@@ -136,10 +133,8 @@ class Training implements DomainEntity
 
     /**
      * Unregister a member as present on the training.
-     *
-     * @param Entity $member
      */
-    public function unregisterPresence(Entity $member)
+    public function unregisterPresence(MemberEntity $member)
     {
         if (isset($this->presences[$member->id()])) {
             unset($this->presences[$member->id()]);
@@ -172,20 +167,16 @@ class Training implements DomainEntity
 
     /**
      * Add a team to this training
-     *
-     * @param Entity $team
      */
-    public function addTeam(Entity $team)
+    public function addTeam(TeamEntity $team)
     {
         $this->teams[$team->id()] = $team;
     }
 
     /**
      * Returns the definition that was used to create this training (if any).
-     *
-     * @return Entity<Definition>|null
      */
-    public function getDefinition(): ?Entity
+    public function getDefinition(): ?DefinitionEntity
     {
         return $this->definition;
     }
