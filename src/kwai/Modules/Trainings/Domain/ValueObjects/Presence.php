@@ -20,17 +20,6 @@ use Kwai\Modules\Trainings\Domain\Member;
 class Presence
 {
     /**
-     * @var Entity<Member>
-     */
-    private Entity $member;
-
-    private ?string $remark;
-
-    private Creator $creator;
-
-    private TraceableTime $traceableTime;
-
-    /**
      * Presence constructor.
      *
      * @param Entity<Member>     $member
@@ -39,15 +28,11 @@ class Presence
      * @param TraceableTime|null $traceableTime
      */
     public function __construct(
-        Entity $member,
-        Creator $creator,
-        ?string $remark = null,
-        TraceableTime $traceableTime = null
+        private Entity $member,
+        private Creator $creator,
+        private ?string $remark = null,
+        private ?TraceableTime $traceableTime = new TraceableTime()
     ) {
-        $this->member = $member;
-        $this->remark = $remark ?? null;
-        $this->creator = $creator;
-        $this->traceableTime = $traceableTime ?? new TraceableTime();
     }
 
     /**
