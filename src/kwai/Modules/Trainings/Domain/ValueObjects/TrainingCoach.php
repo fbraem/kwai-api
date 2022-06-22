@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Domain\ValueObjects;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
-use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 
 /**
  * Class TrainingCoach
@@ -22,7 +21,7 @@ class TrainingCoach
     /**
      * TrainingCoach constructor.
      *
-     * @param Entity<Coach>      $coach
+     * @param CoachEntity        $coach
      * @param bool               $head
      * @param bool               $present
      * @param bool               $payed
@@ -31,7 +30,7 @@ class TrainingCoach
      * @param TraceableTime|null $traceableTime
      */
     public function __construct(
-        private Entity $coach,
+        private CoachEntity $coach,
         private Creator $creator,
         private bool $head = false,
         private bool $present = false,
@@ -44,10 +43,8 @@ class TrainingCoach
 
     /**
      * The coach
-     *
-     * @return Entity<Coach>
      */
-    public function getCoach(): Entity
+    public function getCoach(): CoachEntity
     {
         return $this->coach;
     }
