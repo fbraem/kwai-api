@@ -13,7 +13,7 @@ use Kwai\Core\Infrastructure\Mappers\CreatorMapper;
 use Kwai\Modules\Coaches\Domain\Coach;
 
 /**
- * Class CoachMapper
+ * Class CoachDTO
  */
 class CoachMapper
 {

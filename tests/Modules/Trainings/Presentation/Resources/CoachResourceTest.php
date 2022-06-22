@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
+use Kwai\Applications\Trainings\Resources\CoachResource;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Modules\Trainings\Domain\Coach;
-use Kwai\Modules\Trainings\Presentation\Resources\CoachResource;
 use Kwai\JSONAPI;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 
 it('can serialize a coach entity to JSON:API', function () {
-    $coach = new Entity(
+    $coach = new CoachEntity(
         1,
         new Coach(
             new Name('Jigoro', 'Kano')

@@ -10,7 +10,7 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachMapper;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachDTO;
 use Kwai\Modules\Trainings\Repositories\CoachQuery;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
 
@@ -30,7 +30,7 @@ class CoachDatabaseRepository extends DatabaseRepository implements CoachReposit
     {
         parent::__construct(
             $db,
-            fn($item) => CoachMapper::toDomain($item)
+            static fn(CoachDTO $dto) => $dto->createEntity()
         );
     }
 

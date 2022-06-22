@@ -2,11 +2,10 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Tests\DatabaseTrait;
 
@@ -20,7 +19,7 @@ it('can get a coach', function () {
         expect($coaches)
             ->toBeInstanceOf(Collection::class)
             ->and($coaches->first())
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(CoachEntity::class)
             ->and($coaches->first()->getName())
             ->toBeInstanceOf(Name::class)
             ->and($coaches->first()->getName()->getFirstName())
@@ -44,9 +43,7 @@ it('can get all active coaches', function () {
         ;
         $coach = $coaches->first();
         expect($coach)
-            ->toBeInstanceOf(Entity::class)
-            ->and($coach->domain())
-            ->toBeInstanceOf(Coach::class)
+            ->toBeInstanceOf(CoachEntity::class)
         ;
     } catch (RepositoryException $e) {
         $this->fail((string) $e);

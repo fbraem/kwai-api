@@ -9,9 +9,11 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Infrastructure\CoachesTable;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\CoachDTO;
+use Kwai\Modules\Trainings\Infrastructure\MembersTable;
+use Kwai\Modules\Trainings\Infrastructure\PersonsTable;
 use Kwai\Modules\Trainings\Repositories\CoachQuery;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -24,9 +26,8 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
      */
     public function filterActive(bool $active): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::COACHES()->active)->eq($active)
+            CoachesTable::field('active')->eq($active)
         );
         return $this;
     }
@@ -36,16 +37,21 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
      */
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from((string) Tables::COACHES())
+            ->from(CoachesTable::name())
             ->join(
-                (string) Tables::MEMBERS(),
-                on(Tables::MEMBERS()->id, Tables::COACHES()->member_id)
+                MembersTable::name(),
+                on(
+                    MembersTable::column('id'),
+                    CoachesTable::column('member_id')
+                )
             )
             ->join(
-                (string) Tables::PERSONS(),
-                on(Tables::PERSONS()->id, Tables::MEMBERS()->person_id)
+                PersonsTable::name(),
+                on(
+                    PersonsTable::column('id'),
+                    MembersTable::column('person_id')
+                )
             )
         ;
     }
@@ -55,13 +61,9 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
      */
     protected function getColumns(): array
     {
-        $coachAliasFn = Tables::COACHES()->getAliasFn();
-        $personAlias = Tables::PERSONS()->getAliasFn();
-
         return [
-            $coachAliasFn('id'),
-            $personAlias('lastname'),
-            $personAlias('firstname')
+            ...CoachesTable::aliases(),
+            ...PersonsTable::aliases()
         ];
     }
 
@@ -70,9 +72,8 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
      */
     public function filterId(int ...$ids): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::COACHES()->id)->in(...$ids)
+            CoachesTable::field('id')->in(...$ids)
         );
         return $this;
     }
@@ -85,19 +86,15 @@ class CoachDatabaseQuery extends DatabaseQuery implements CoachQuery
         $rows = parent::walk($limit, $offset);
 
         $coaches = new Collection();
-        $filters = new Collection([
-           Tables::COACHES()->getAliasPrefix(),
-           Tables::PERSONS()->getAliasPrefix()
-        ]);
         foreach ($rows as $row) {
-            [
-                $coach,
-                $person
-            ] = $row->filterColumns($filters);
-
+            $coach = CoachesTable::createFromRow($row);
             $coaches->put(
-                $coach->get('id'),
-                $coach->merge($person)
+                $coach->id,
+                new CoachDTO(
+                    $coach,
+                    MembersTable::createFromRow($row),
+                    PersonsTable::createFromRow($row)
+                )
             );
         }
 
