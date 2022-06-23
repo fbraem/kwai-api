@@ -11,7 +11,7 @@ use Kwai\Core\Infrastructure\Database\TableAttribute;
 use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
- * Class CoachesTable
+ * Class SeasonsTable
  */
 #[TableAttribute(name: 'seasons')]
 final class SeasonsTable extends TableSchema
