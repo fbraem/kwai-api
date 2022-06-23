@@ -8,11 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 
 /**
  * Interface TrainingRepository
@@ -22,12 +21,12 @@ interface TrainingRepository
     /**
      * Get the training with the given id.
      *
+     * @param int $id
+     * @return TrainingEntity
      * @throws RepositoryException
      * @throws TrainingNotFoundException
-     * @param int $id
-     * @return Entity<Training>
      */
-    public function getById(int $id): Entity;
+    public function getById(int $id): TrainingEntity;
 
     /**
      * Creates a query
@@ -56,16 +55,16 @@ interface TrainingRepository
      * Save a new training to the database.
      *
      * @param Training $training
-     * @return Entity<Training>
+     * @return TrainingEntity
      * @throws RepositoryException
      */
-    public function create(Training $training): Entity;
+    public function create(Training $training): TrainingEntity;
 
     /**
      * Updates a training
      *
-     * @param Entity $training
+     * @param TrainingEntity $training
      * @throws RepositoryException
      */
-    public function update(Entity $training): void;
+    public function update(TrainingEntity $training): void;
 }
