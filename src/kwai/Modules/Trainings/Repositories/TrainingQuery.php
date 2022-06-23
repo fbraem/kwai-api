@@ -7,12 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Repositories\Query;
-use Kwai\Modules\Trainings\Domain\Coach;
-use Kwai\Modules\Trainings\Domain\Definition;
-use Kwai\Modules\Trainings\Domain\Team;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 
 /**
  * Class TrainingQuery
@@ -62,26 +61,26 @@ interface TrainingQuery extends Query
     /**
      * Add a filter to only get trainings to which the coach is assigned.
      *
-     * @param Entity<Coach> $coach
+     * @param CoachEntity $coach
      * @return TrainingQuery
      */
-    public function filterCoach(Entity $coach): self;
+    public function filterCoach(CoachEntity $coach): self;
 
     /**
      * Add a filter to only get trainings for a specific team.
      *
-     * @param Entity<Team> $team
+     * @param TeamEntity $team
      * @return TrainingQuery
      */
-    public function filterTeam(Entity $team): self;
+    public function filterTeam(TeamEntity $team): self;
 
     /**
      * Add a filter to only get trainings for a specific definition.
      *
-     * @param Entity<Definition> $definition
+     * @param DefinitionEntity $definition
      * @return TrainingQuery
      */
-    public function filterDefinition(Entity $definition): self;
+    public function filterDefinition(DefinitionEntity $definition): self;
 
     /**
      * When called, the query will also return presences
