@@ -8,13 +8,13 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure;
 
 use Kwai\Core\Infrastructure\Database\TableAttribute;
-use Kwai\Core\Infrastructure\Database\TableSchema as TableSchemaAlias;
+use Kwai\Core\Infrastructure\Database\TableSchema;
 
 /**
  * Class CoachesTable
  */
 #[TableAttribute(name: 'coaches')]
-final class CoachesTable extends TableSchemaAlias
+final class CoachesTable extends TableSchema
 {
     public ?int $id = null;
     public ?int $active;
