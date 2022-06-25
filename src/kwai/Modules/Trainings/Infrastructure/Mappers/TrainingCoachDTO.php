@@ -63,4 +63,21 @@ class TrainingCoachDTO
             )
         );
     }
+
+    public function persist(TrainingCoach $coach): TrainingCoachDTO
+    {
+        $this->trainingCoach->user_id = $coach->getCreator()->getId();
+        $this->trainingCoach->coach_id = $coach->getCoach()->id();
+        $this->trainingCoach->present = $coach->isPresent() ? 1 : 0;
+        $this->trainingCoach->coach_type = $coach->isHead() ? 1 : 0;
+        $this->trainingCoach->payed = $coach->isPayed() ? 1 : 0;
+        $this->trainingCoach->remark = $coach->getRemark();
+        $this->trainingCoach->created_at = (string) $coach->getTraceableTime()->getCreatedAt();
+        if ($coach->getTraceableTime()->isUpdated()) {
+            $this->trainingCoach->updated_at = (string) $coach->getTraceableTime()->getUpdatedAt();
+        } else {
+            $this->trainingCoach->updated_at = null;
+        }
+        return $this;
+    }
 }
