@@ -21,7 +21,7 @@ class TrainingCoachesTable extends TableSchema
     public int $coach_type;
     public int $payed;
     public int $present;
-    public string $remark;
+    public ?string $remark;
     public int $user_id;
     public ?string $updated_at = null;
     public string $created_at;
