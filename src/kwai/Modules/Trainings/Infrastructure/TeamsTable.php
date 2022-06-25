@@ -16,6 +16,6 @@ use Kwai\Core\Infrastructure\Database\TableSchema;
 #[TableAttribute(name: 'teams')]
 final class TeamsTable extends TableSchema
 {
-    public ?int $id = null;
-    public string $name;
+    public ?int $id;
+    public ?string $name;
 }
