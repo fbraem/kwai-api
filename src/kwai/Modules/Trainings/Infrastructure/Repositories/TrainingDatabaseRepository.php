@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseException;
@@ -17,15 +16,19 @@ use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
-use Kwai\Core\Infrastructure\Mappers\TextMapper;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingCoachMapper;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingMapper;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingCoachDTO;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingContentDTO;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingDTO;
+use Kwai\Modules\Trainings\Infrastructure\TrainingCoachesTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingContentsTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingsTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingTeamsTable;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
 use Kwai\Modules\Trainings\Repositories\TrainingRepository;
-use function Latitude\QueryBuilder\field;
 
 /**
  * Class TrainingDatabaseRepository
@@ -43,14 +46,14 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     {
         parent::__construct(
             $db,
-            fn($item) => TrainingMapper::toDomain($item)
+            static fn(TrainingDTO $dto) => $dto->createEntity()
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function getById(int $id): Entity
+    public function getById(int $id): TrainingEntity
     {
         $query = $this->createQuery()->filterId($id);
 
@@ -73,19 +76,24 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * @inheritDoc
      */
-    public function create(Training $training): Entity
+    public function create(Training $training): TrainingEntity
     {
+        $dto = new TrainingDTO();
+        $data = $dto->persist($training)
+            ->training
+            ->collect()
+            ->forget('id')
+        ;
+
         try {
             $this->db->begin();
         } catch (DatabaseException $e) {
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $data = TrainingMapper::toPersistence($training);
-
         // Insert training
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::TRAININGS())
+            ->insert(TrainingsTable::name())
             ->columns(...$data->keys())
             ->values(... $data->values())
         ;
@@ -93,7 +101,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         try {
             $this->db->execute($query);
 
-            $entity = new Entity(
+            $entity = new TrainingEntity(
                 $this->db->lastInsertId(),
                 $training
             );
@@ -126,7 +134,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * @inheritDoc
      */
-    public function update(Entity $training): void
+    public function update(TrainingEntity $training): void
     {
         try {
             $this->db->begin();
@@ -134,25 +142,29 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        $data = TrainingMapper::toPersistence($training->domain());
+        $data = (new TrainingDTO())
+            ->persistEntity($training)
+            ->training
+            ->collect()
+        ;
         $queryFactory = $this->db->createQueryFactory();
 
         // Update training
         try {
             $this->db->execute(
                 $queryFactory
-                    ->update((string) Tables::TRAININGS())
+                    ->update(TrainingsTable::name())
                     ->set($data->toArray())
-                    ->where(field('id')->eq($training->id()))
+                    ->where(TrainingsTable::field('id')->eq($training->id()))
             );
 
             // Update contents
             // First delete all contents
             $this->db->execute(
                 $queryFactory
-                    ->delete((string) Tables::TRAINING_CONTENTS())
+                    ->delete(TrainingContentsTable::name())
                     ->where(
-                        field('training_id')->eq($training->id())
+                        TrainingContentsTable::field('training_id')->eq($training->id())
                     )
             );
 
@@ -163,9 +175,9 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
             // First delete all coaches
             $this->db->execute(
                 $queryFactory
-                    ->delete((string) Tables::TRAINING_COACHES())
+                    ->delete(TrainingCoachesTable::name())
                     ->where(
-                        field('training_id')->eq($training->id())
+                        TrainingCoachesTable::field('training_id')->eq($training->id())
                     )
             );
 
@@ -176,9 +188,9 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
             // First delete all teams
             $this->db->execute(
                 $queryFactory
-                    ->delete((string) Tables::TRAINING_TEAMS())
+                    ->delete(TrainingTeamsTable::name())
                     ->where(
-                        field('training_id')->eq($training->id())
+                        TrainingTeamsTable::field('training_id')->eq($training->id())
                     )
             );
             $this->insertTeams($training);
@@ -201,13 +213,11 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * Insert contents of the training
      *
-     * @param Entity $training
+     * @param TrainingEntity $training
      * @throws RepositoryException
      */
-    private function insertContents(Entity $training)
+    private function insertContents(TrainingEntity $training)
     {
-        /* @var Collection $contents */
-        /** @noinspection PhpUndefinedMethodInspection */
         $contents = $training->getText();
         if ($contents->count() == 0) {
             return;
@@ -215,15 +225,17 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         $contents
             ->transform(
-                fn(Text $text) => TextMapper::toPersistence($text)
+                static fn(Text $text)
+                    => (new TrainingContentDTO())->persist($text)->content->collect()
             )
             ->map(
-                fn (Collection $item) => $item->put('training_id', $training->id())
+                static fn (Collection $item)
+                    => $item->put('training_id', $training->id())
             )
         ;
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::TRAINING_CONTENTS())
+            ->insert(TrainingContentsTable::name())
             ->columns(...$contents->first()->keys())
         ;
         $contents->each(
@@ -239,13 +251,11 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * Insert coaches of the training
      *
-     * @param Entity $training
+     * @param TrainingEntity $training
      * @throws RepositoryException
      */
-    private function insertCoaches(Entity $training)
+    private function insertCoaches(TrainingEntity $training)
     {
-        /* @var Collection $coaches */
-        /** @noinspection PhpUndefinedMethodInspection */
         $coaches = $training->getCoaches();
         if ($coaches->count() == 0) {
             return;
@@ -253,15 +263,16 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         $coaches
             ->transform(
-                fn(TrainingCoach $coach) => TrainingCoachMapper::toPersistence($coach)
+                static fn(TrainingCoach $coach)
+                    => (new TrainingCoachDTO())->persist($coach)->trainingCoach->collect()
             )
             ->map(
-                fn (Collection $item) => $item->put('training_id', $training->id())
+                static fn (Collection $item) => $item->put('training_id', $training->id())
             )
         ;
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::TRAINING_COACHES())
+            ->insert(TrainingCoachesTable::name())
             ->columns(...$coaches->first()->keys())
         ;
         $coaches->each(
@@ -277,13 +288,11 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
     /**
      * Insert teams
      *
-     * @param Entity $training
+     * @param TrainingEntity $training
      * @throws RepositoryException
      */
-    private function insertTeams(Entity $training)
+    private function insertTeams(TrainingEntity $training)
     {
-        /* @var Collection $teams */
-        /** @noinspection PhpUndefinedMethodInspection */
         $teams = $training->getTeams();
         if ($teams->count() == 0) {
             return;
@@ -291,7 +300,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
 
         $teams
             ->transform(
-                fn(Entity $team) => collect(['team_id' => $team->id()])
+                fn(TeamEntity $team) => collect(['team_id' => $team->id()])
             )
             ->map(
                 fn (Collection $item) => $item->put('training_id', $training->id())
@@ -299,7 +308,7 @@ class TrainingDatabaseRepository extends DatabaseRepository implements TrainingR
         ;
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::TRAINING_TEAMS())
+            ->insert(TrainingTeamsTable::name())
             ->columns(...$teams->first()->keys())
         ;
         $teams->each(
