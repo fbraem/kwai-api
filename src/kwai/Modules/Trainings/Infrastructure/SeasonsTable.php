@@ -16,6 +16,6 @@ use Kwai\Core\Infrastructure\Database\TableSchema;
 #[TableAttribute(name: 'seasons')]
 final class SeasonsTable extends TableSchema
 {
-    public ?int $id = null;
-    public string $name;
+    public ?int $id;
+    public ?string $name;
 }
