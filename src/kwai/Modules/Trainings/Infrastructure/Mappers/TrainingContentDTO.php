@@ -21,8 +21,8 @@ use Kwai\Modules\Trainings\Infrastructure\UsersTable;
 class TrainingContentDTO
 {
     public function __construct(
-        public TrainingContentsTable $content,
-        public UsersTable $user
+        public TrainingContentsTable $content = new TrainingContentsTable(),
+        public UsersTable $user = new UsersTable()
     ) {
     }
 
@@ -42,5 +42,15 @@ class TrainingContentDTO
             summary: $this->content->summary,
             content: $this->content->content
         );
+    }
+
+    public function persist(Text $text): TrainingContentDTO {
+        $this->content->locale = $text->getLocale()->value;
+        $this->content->format = $text->getFormat()->value;
+        $this->content->title = $text->getTitle();
+        $this->content->user_id = $text->getAuthor()->getId();
+        $this->content->summary = $text->getSummary();
+        $this->content->content = $text->getContent();
+        return $this;
     }
 }
