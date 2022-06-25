@@ -43,7 +43,8 @@ class Training implements DomainEntity
         private ?TraceableTime $traceableTime = null,
         private ?Collection $coaches = null,
         private ?Collection $teams = null,
-        private ?Collection $presences = null
+        private ?Collection $presences = null,
+        private ?SeasonEntity $season = null
     ) {
         $this->text ??= new Collection();
         $this->traceableTime ??= new TraceableTime();
@@ -207,5 +208,10 @@ class Training implements DomainEntity
     public function addText(Text $text)
     {
         $this->text->put($text->getLocale()->value, $text);
+    }
+
+    public function getSeason(): ?SeasonEntity
+    {
+        return $this->season;
     }
 }
