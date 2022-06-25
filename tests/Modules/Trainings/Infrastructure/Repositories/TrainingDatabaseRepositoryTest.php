@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
@@ -12,9 +11,12 @@ use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Team;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
 use Tests\DatabaseTrait;
 
@@ -26,10 +28,7 @@ it('can get a training', function () {
     try {
         $training = $repo->getById(1);
         expect($training)
-            ->toBeInstanceOf(Entity::class)
-        ;
-        expect($training->domain())
-            ->toBeInstanceOf(Training::class)
+            ->toBeInstanceOf(TrainingEntity::class)
         ;
         /* @var Training $training */
         expect($training->getEvent())
@@ -92,7 +91,7 @@ it('can filter trainings for a coach', function () {
     try {
         $query = $repo->createQuery();
         $query->filterCoach(
-            new Entity(
+            new CoachEntity(
                 1,
                 new Coach(
                     name: new Name('Jigoro', 'Kano')
@@ -117,7 +116,7 @@ it('can filter trainings for a team', function () {
     try {
         $query = $repo->createQuery();
         $query->filterTeam(
-            new Entity(
+            new TeamEntity(
                 1,
                 new Team('U11')
             )
@@ -142,8 +141,8 @@ it('can create a training', function () {
         event: new Event(
             startDate: Timestamp::createFromString('2020-12-13 20:00:00'),
             endDate: Timestamp::createFromString('2020-12-13 21:00:00'),
-            location: new Location('Sports hall of the club'),
-            timezone: 'Europe/Brussels'
+            timezone: 'Europe/Brussels',
+            location: new Location('Sports hall of the club')
         ),
         text: new Collection([
             new Text(
@@ -160,7 +159,7 @@ it('can create a training', function () {
     try {
         $entity = $repo->create($training);
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(TrainingEntity::class)
             ->and($entity->domain())
             ->toBeInstanceOf(Training::class)
         ;
@@ -188,7 +187,7 @@ it('can get a training with presences', function () {
         ->and($trainings->count())
         ->toBe(1)
         ->and($trainings->first())
-        ->toBeInstanceOf(Entity::class)
+        ->toBeInstanceOf(TrainingEntity::class)
         ->and($trainings->first()->getPresences())
         ->toBeInstanceOf(Collection::class)
     ;
