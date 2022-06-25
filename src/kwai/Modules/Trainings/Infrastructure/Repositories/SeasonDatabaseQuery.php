@@ -9,7 +9,8 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\SeasonDTO;
+use Kwai\Modules\Trainings\Infrastructure\SeasonsTable;
 use Kwai\Modules\Trainings\Repositories\SeasonQuery;
 use function Latitude\QueryBuilder\field;
 
@@ -32,7 +33,7 @@ class SeasonDatabaseQuery extends DatabaseQuery implements SeasonQuery
      */
     protected function initQuery(): void
     {
-        $this->query->from((string) Tables::SEASONS());
+        $this->query->from(SeasonsTable::name());
     }
 
     /**
@@ -40,10 +41,8 @@ class SeasonDatabaseQuery extends DatabaseQuery implements SeasonQuery
      */
     protected function getColumns(): array
     {
-        $aliasFn = Tables::SEASONS()->getAliasFn();
         return [
-            $aliasFn('id'),
-            $aliasFn('name')
+            ...SeasonsTable::aliases()
         ];
     }
 
@@ -54,12 +53,10 @@ class SeasonDatabaseQuery extends DatabaseQuery implements SeasonQuery
     {
         $rows = parent::walk($limit, $offset);
 
-        $prefixes = [ Tables::SEASONS()->getAliasPrefix() ];
-
         $seasons = new Collection();
         foreach ($rows as $row) {
-            [ $season ] = $row->filterColumns($prefixes);
-            $seasons->put($season->get('id'), $season);
+            $season = SeasonsTable::createFromRow($row);
+            $seasons->put($season->id, new SeasonDTO($season));
         }
 
         return $seasons;
