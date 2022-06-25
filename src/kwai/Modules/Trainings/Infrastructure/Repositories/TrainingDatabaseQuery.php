@@ -9,16 +9,23 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Core\Infrastructure\Database\QueryException;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingContentDTO;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TrainingDTO;
+use Kwai\Modules\Trainings\Infrastructure\TrainingCoachesTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingContentsTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingsTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingTeamsTable;
+use Kwai\Modules\Trainings\Infrastructure\UsersTable;
 use Kwai\Modules\Trainings\Repositories\TrainingQuery;
 use function Latitude\QueryBuilder\criteria;
 use function Latitude\QueryBuilder\express;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\func;
 use function Latitude\QueryBuilder\group;
 use function Latitude\QueryBuilder\literal;
@@ -41,25 +48,30 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     ) {
         parent::__construct(
             $db,
-            Tables::TRAININGS()->getColumn('id')
+            TrainingsTable::column('id')
         );
     }
 
     /**
      * @inheritDoc
-     * @noinspection PhpUndefinedFieldInspection
      */
     protected function initQuery(): void
     {
         $this->query
-           ->from((string) Tables::TRAININGS())
+            ->from(TrainingsTable::name())
             ->join(
-                (string) Tables::TRAINING_CONTENTS(),
-                on(Tables::TRAINING_CONTENTS()->training_id, Tables::TRAININGS()->id)
+                TrainingContentsTable::name(),
+                on(
+                    TrainingContentsTable::column('training_id'),
+                    TrainingsTable::column('id')
+                )
             )
             ->leftJoin(
-                (string) Tables::USERS(),
-                on(Tables::USERS()->id, Tables::TRAINING_CONTENTS()->user_id)
+                UsersTable::name(),
+                on(
+                    UsersTable::column('id'),
+                    TrainingContentsTable::column('user_id')
+                )
             )
         ;
     }
@@ -69,31 +81,10 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
      */
     protected function getColumns(): array
     {
-        $trainingAliasFn = Tables::TRAININGS()->getAliasFn();
-        $contentAliasFn = Tables::TRAINING_CONTENTS()->getAliasFn();
-        $creatorAliasFn = Tables::USERS()->getAliasFn();
-
         return [
-            $trainingAliasFn('id'),
-            $trainingAliasFn('definition_id'),
-            $trainingAliasFn('created_at'),
-            $trainingAliasFn('updated_at'),
-            $trainingAliasFn('start_date'),
-            $trainingAliasFn('end_date'),
-            $trainingAliasFn('time_zone'),
-            $trainingAliasFn('active'),
-            $trainingAliasFn('cancelled'),
-            $trainingAliasFn('location'),
-            $contentAliasFn('locale'),
-            $contentAliasFn('format'),
-            $contentAliasFn('title'),
-            $contentAliasFn('content'),
-            $contentAliasFn('summary'),
-            $contentAliasFn('created_at'),
-            $contentAliasFn('updated_at'),
-            $creatorAliasFn('id'),
-            $creatorAliasFn('first_name'),
-            $creatorAliasFn('last_name')
+            ...TrainingsTable::aliases(),
+            ...TrainingContentsTable::aliases(),
+            ...UsersTable::aliases()
         ];
     }
 
@@ -102,16 +93,12 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
      */
     public function filterId(int $id): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->query->andWhere(
-            field(Tables::TRAININGS()->id)->eq($id)
-        );
+        $this->query->andWhere(TrainingsTable::field('id')->eq($id));
         return $this;
     }
 
     /**
      * @inheritDoc
-     * @noinspection PhpUndefinedFieldInspection
      */
     public function filterYearMonth(int $year, ?int $month = null): self
     {
@@ -119,7 +106,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             "%s = %d",
             func(
                 'YEAR',
-                Tables::TRAININGS()->start_date
+                TrainingsTable::column('start_date')
             ),
             literal($year)
         );
@@ -129,7 +116,7 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
                     "%s = %d",
                     func(
                         'MONTH',
-                        Tables::TRAININGS()->start_date
+                        TrainingsTable::column('start_date')
                     ),
                     literal($month)
                 )
@@ -154,24 +141,23 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
     /**
      * @inheritDoc
-     * @noinspection PhpUndefinedFieldInspection
      */
     public function filterBetweenDates(Date $from, Date $to): TrainingQuery
     {
         $this->query->andWhere(
-            field(Tables::TRAININGS()->start_date)->between($from->format(), $to->addDay()->format())
+            TrainingsTable::field('start_date')
+                ->between($from->format(), $to->addDay()->format())
         );
         return $this;
     }
 
     /**
      * @inheritDoc
-     * @noinspection PhpUndefinedFieldInspection
      */
     public function filterActive(): self
     {
         $this->query->andWhere(
-            field(Tables::TRAININGS()->active)->eq(true)
+            TrainingsTable::field('active')->eq(true)
         );
         return $this;
     }
@@ -179,22 +165,18 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     /**
      * @inheritDoc
      */
-    public function filterCoach(Entity $coach): self
+    public function filterCoach(CoachEntity $coach): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $innerSelect = $this->db->createQueryFactory()->select()
             ->columns(
-                Tables::TRAINING_COACHES()->training_id
+                TrainingCoachesTable::column('training_id')
             )
-            ->from((string) Tables::TRAINING_COACHES())
+            ->from(TrainingCoachesTable::name())
             ->where(
-                field(Tables::TRAINING_COACHES()->coach_id)
-                ->eq($coach->id())
+                TrainingCoachesTable::field('coach_id')->eq($coach->id())
             )
         ;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $criteria = field(Tables::TRAININGS()->id)
-            ->in(express('%s', $innerSelect));
+        $criteria = TrainingsTable::field('id')->in(express('%s', $innerSelect));
         $this->query->andWhere(group($criteria));
         return $this;
     }
@@ -202,22 +184,18 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     /**
      * @inheritDoc
      */
-    public function filterTeam(Entity $team): self
+    public function filterTeam(TeamEntity $team): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $innerSelect = $this->db->createQueryFactory()->select()
             ->columns(
-                Tables::TRAINING_TEAMS()->training_id
+                TrainingTeamsTable::column('training_id')
             )
-            ->from((string) Tables::TRAINING_TEAMS())
+            ->from(TrainingTeamsTable::name())
             ->where(
-                field(Tables::TRAINING_TEAMS()->team_id)
-                    ->eq($team->id())
+                TrainingTeamsTable::field('team_id')->eq($team->id())
             )
         ;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $criteria = field(Tables::TRAININGS()->id)
-            ->in(express('%s', $innerSelect));
+        $criteria = TrainingsTable::field('id')->in(express('%s', $innerSelect));
         $this->query->andWhere(group($criteria));
         return $this;
     }
@@ -225,54 +203,66 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
     /**
      * @param int|null $limit
      * @param int|null $offset
-     * @return Collection
+     * @return Collection<TrainingDTO>
      * @throws QueryException
      */
     public function execute(?int $limit = null, ?int $offset = null): Collection
     {
         $rows = parent::walk($limit, $offset);
-
-        $trainings = new Collection();
-        $filters = new Collection([
-            Tables::TRAININGS()->getAliasPrefix(),
-            Tables::TRAINING_CONTENTS()->getAliasPrefix(),
-            Tables::USERS()->getAliasPrefix()
-        ]);
-        foreach ($rows as $row) {
-            [
-                $training,
-                $content,
-                $user
-            ] = $row->filterColumns($filters);
-
-            if (!$trainings->has($training['id'])) {
-                $trainings->put($training['id'], $training);
-                $training->put('contents', new Collection());
-            }
-            $content['creator'] = $user;
-            $trainings[$training['id']]['contents']->push($content);
-        }
-
         if ($rows->isEmpty()) {
             return new Collection();
         }
 
-        // Get all definitions, if available
-        $definitionIds = $trainings->pluck('definition_id')->filter();
-        if ($definitionIds->count() > 0) {
-            $definitionQuery = new DefinitionDatabaseQuery($this->db);
-            $definitionQuery->filterIds(
-                $trainings->pluck('definition_id')->filter()
-            );
-            $definitions = $definitionQuery->execute();
-            foreach ($trainings as $training) {
-                if ($training->has('definition_id')) {
-                    $training->put(
-                        'definition',
-                        $definitions->get($training->get('definition_id'))
-                    );
-                }
+        $trainings = new Collection();
+        foreach ($rows as $row) {
+            $training = TrainingsTable::createFromRow($row);
+
+            if ($trainings->has($training->id)) {
+                $trainingDTO = $trainings->get($training->id);
+            } else {
+                $trainingDTO = new TrainingDTO($training);
+                $trainings->put($training->id, $trainingDTO);
             }
+            $trainingDTO->contents->push(
+                new TrainingContentDTO(
+                    content: TrainingContentsTable::createFromRow($row),
+                    user: UsersTable::createFromRow($row)
+                )
+            );
+        }
+
+        // Get all definitions, if linked
+        $definitionIdMap = $trainings
+            ->filter(static fn(TrainingDTO $dto) => $dto->training->definition_id !== null)
+            ->mapWithKeys(static fn(TrainingDTO $dto) => [
+                $dto->training->id => $dto->training->definition_id
+            ])
+        ;
+        if ($definitionIdMap->count() > 0) {
+            $definitionQuery = new DefinitionDatabaseQuery($this->db);
+            $definitionQuery->filterIds($definitionIdMap->values()->unique());
+            $definitions = $definitionQuery->execute();
+            $definitionIdMap->each(
+                static fn(int $definitionId, int $trainingId)
+                    => $trainings[$trainingId]->definition = $definitions[$definitionId]
+            );
+        }
+
+        // Get all seasons, if linked
+        $seasonIdMap = $trainings
+            ->filter(static fn(TrainingDTO $dto) => $dto->training->season_id !== null)
+            ->mapWithKeys(static fn(TrainingDTO $dto) => [
+                $dto->training->id => $dto->training->season_id
+            ])
+        ;
+        if ($seasonIdMap->count() > 0) {
+            $seasonQuery = new SeasonDatabaseQuery($this->db);
+            $seasonQuery->filterId(...$seasonIdMap->values()->unique()->toArray());
+            $seasons = $seasonQuery->execute();
+            $seasonIdMap->each(
+                static fn (int $seasonId, int $trainingId)
+                    => $trainings[$trainingId]->season = $seasons[$seasonId]
+            );
         }
 
         $trainingIds = $trainings->keys()->toArray();
@@ -282,12 +272,13 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $trainingCoachQuery->filterOnTrainings($trainingIds);
         $trainingCoaches = $trainingCoachQuery->execute();
         foreach ($trainingIds as $trainingId) {
-            $trainings[$trainingId]->put(
-                'coaches',
-                $trainingCoaches[$trainingId] ?? new Collection()
-            );
+            if ($trainingCoaches->has($trainingId)) {
+                $trainings[$trainingId]->coaches = $trainingCoaches[$trainingId];
+            }
         }
 
+        return $trainings;
+/*
         // Get all teams of the training(s)
         $teamQuery = new TrainingTeamDatabaseQuery($this->db);
         $teamQuery->filterOnTrainings($trainingIds);
@@ -309,8 +300,8 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
                 ;
             }
         }
-
-        return $trainings;
+*/
+        // return $trainings;
     }
 
     public function withPresences(): TrainingQuery
@@ -321,16 +312,14 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
 
     public function orderByDate(): TrainingQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->query->orderBy(Tables::TRAININGS()->start_date, 'ASC');
+        $this->query->orderBy(TrainingsTable::column('start_date'), 'ASC');
         return $this;
     }
 
-    public function filterDefinition(Entity $definition): TrainingQuery
+    public function filterDefinition(DefinitionEntity $definition): TrainingQuery
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::TRAININGS()->definition_id)->eq($definition->id())
+            TrainingsTable::field('definition_id')->eq($definition->id())
         );
         return $this;
     }

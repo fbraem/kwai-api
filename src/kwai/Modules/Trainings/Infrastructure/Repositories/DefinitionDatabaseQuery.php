@@ -9,9 +9,15 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Infrastructure\DefinitionsTable;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\CreatorDTO;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\DefinitionDTO;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\SeasonDTO;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamDTO;
+use Kwai\Modules\Trainings\Infrastructure\SeasonsTable;
+use Kwai\Modules\Trainings\Infrastructure\TeamsTable;
+use Kwai\Modules\Trainings\Infrastructure\UsersTable;
 use Kwai\Modules\Trainings\Repositories\DefinitionQuery;
-use function Latitude\QueryBuilder\field;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -26,25 +32,18 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
     {
         $rows = parent::walk($limit, $offset);
 
-        $filters = new Collection([
-            Tables::TRAINING_DEFINITIONS()->getAliasPrefix(),
-            Tables::TEAMS()->getAliasPrefix(),
-            Tables::SEASONS()->getAliasPrefix(),
-            Tables::USERS()->getAliasPrefix()
-        ]);
-
         $definitions = new Collection();
         foreach ($rows as $row) {
-            [ $definition, $team, $season, $creator ] =
-                $row->filterColumns($filters);
-            $definition->put('creator', $creator);
-            if ($team->has('id')) {
-                $definition->put('team', $team);
-            }
-            if ($season->has('id')) {
-                $definition->put('season', $season);
-            }
-            $definitions->put($definition['id'], $definition);
+            $definition = DefinitionsTable::createFromRow($row);
+            $definitions->put(
+                $definition->id,
+                new DefinitionDTO(
+                    definition: $definition,
+                    season: new SeasonDTO(SeasonsTable::createFromRow($row)),
+                    team: new TeamDTO(TeamsTable::createFromRow($row)),
+                    creator: new CreatorDTO(UsersTable::createFromRow($row))
+                )
+            );
         }
         return $definitions;
     }
@@ -54,9 +53,8 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
      */
     public function filterId(int $id): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::TRAINING_DEFINITIONS()->id)->eq($id)
+            DefinitionsTable::field('id')->eq($id)
         );
         return $this;
     }
@@ -66,9 +64,8 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
      */
     public function filterIds(Collection $ids): self
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::TRAINING_DEFINITIONS()->id)->in(...$ids->toArray())
+            DefinitionsTable::field('id')->in(...$ids->toArray())
         );
         return $this;
     }
@@ -78,20 +75,28 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
      */
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from((string) Tables::TRAINING_DEFINITIONS())
+            ->from(DefinitionsTable::name())
             ->leftJoin(
-                (string) Tables::TEAMS(),
-                on(Tables::TEAMS()->id, Tables::TRAINING_DEFINITIONS()->team_id)
+                TeamsTable::name(),
+                on(
+                    TeamsTable::column('id'),
+                    DefinitionsTable::column('team_id')
+                )
             )
             ->leftJoin(
-                (string) Tables::SEASONS(),
-                on(Tables::SEASONS()->id, Tables::TRAINING_DEFINITIONS()->season_id)
+                SeasonsTable::name(),
+                on(
+                    SeasonsTable::column('id'),
+                    DefinitionsTable::column('season_id')
+                )
             )
             ->join(
-                (string) Tables::USERS(),
-                on(Tables::USERS()->id, Tables::TRAINING_DEFINITIONS()->user_id)
+                UsersTable::name(),
+                on(
+                    UsersTable::column('id'),
+                    DefinitionsTable::column('user_id')
+                )
             )
         ;
     }
@@ -101,34 +106,11 @@ class DefinitionDatabaseQuery extends DatabaseQuery implements DefinitionQuery
      */
     protected function getColumns(): array
     {
-        $definitionAliasFn = Tables::TRAINING_DEFINITIONS()->getAliasFn();
-        $teamAliasFn = Tables::TEAMS()->getAliasFn();
-        $seasonAliasFn = Tables::SEASONS()->getAliasFn();
-        $creatorAliasFn = Tables::USERS()->getAliasFn();
-
         return [
-            $definitionAliasFn('id'),
-            $definitionAliasFn('name'),
-            $definitionAliasFn('description'),
-            $definitionAliasFn('season_id'),
-            $definitionAliasFn('team_id'),
-            $definitionAliasFn('weekday'),
-            $definitionAliasFn('start_time'),
-            $definitionAliasFn('end_time'),
-            $definitionAliasFn('time_zone'),
-            $definitionAliasFn('active'),
-            $definitionAliasFn('location'),
-            $definitionAliasFn('remark'),
-            $definitionAliasFn('user_id'),
-            $definitionAliasFn('created_at'),
-            $definitionAliasFn('updated_at'),
-            $teamAliasFn('id'),
-            $teamAliasFn('name'),
-            $seasonAliasFn('id'),
-            $seasonAliasFn('name'),
-            $creatorAliasFn('id'),
-            $creatorAliasFn('first_name'),
-            $creatorAliasFn('last_name')
+            ...DefinitionsTable::aliases(),
+            ...TeamsTable::aliases(),
+            ...SeasonsTable::aliases(),
+            ...UsersTable::aliases()
         ];
     }
 }
