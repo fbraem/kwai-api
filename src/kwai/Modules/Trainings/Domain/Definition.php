@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\Domain;
 
 use Kwai\Core\Domain\DomainEntity;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
@@ -30,8 +29,8 @@ class Definition implements DomainEntity
      * @param Weekday            $weekday
      * @param TimePeriod         $period
      * @param Creator            $creator
-     * @param Entity<Team>|null  $team
-     * @param Entity|null        $season
+     * @param TeamEntity|null    $team
+     * @param SeasonEntity|null  $season
      * @param bool               $active
      * @param Location|null      $location
      * @param string|null        $remark
@@ -43,8 +42,8 @@ class Definition implements DomainEntity
         private Weekday $weekday,
         private TimePeriod $period,
         private Creator $creator,
-        private ?Entity $team = null,
-        private ?Entity $season = null,
+        private ?TeamEntity $team = null,
+        private ?SeasonEntity $season = null,
         private bool $active = true,
         private ?Location $location = null,
         private ?string $remark = null,
@@ -75,10 +74,8 @@ class Definition implements DomainEntity
 
     /**
      * Get the associated team to this definition
-     *
-     * @return Entity<Team>|null
      */
-    public function getTeam(): ?Entity
+    public function getTeam(): ?TeamEntity
     {
         return $this->team;
     }
@@ -155,20 +152,16 @@ class Definition implements DomainEntity
 
     /**
      * Attach a team to this definition
-     *
-     * @param Entity<Team> $team
      */
-    public function attachTeam(Entity $team): void
+    public function attachTeam(TeamEntity $team): void
     {
         $this->team = $team;
     }
 
     /**
      * Get the season, if any, that is attached to this definition
-     *
-     * @return Entity<Season>|null
      */
-    public function getSeason(): ?Entity
+    public function getSeason(): ?SeasonEntity
     {
         return $this->season;
     }
