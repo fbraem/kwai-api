@@ -141,5 +141,7 @@ sudo a2ensite kwai_dev_api
 sudo a2ensite phpmyadmin
 service apache2 restart
 
+cd /vagrant
+composer update
 # Run the database migration
 /vagrant/vendor/bin/phinx migrate -c /vagrant/src/phinx.php
