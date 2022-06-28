@@ -42,9 +42,10 @@ class UserMigration extends AbstractMigration
             ];
         } else {
             $password = $this->randomPassword();
+            $websiteConfiguration = $settings->getWebsiteConfiguration();
             $data = [
                 [
-                    'email' => $settings['website']['email'],
+                    'email' => (string) $websiteConfiguration->getAddress()->getEmail(),
                     'password' => password_hash($password, PASSWORD_DEFAULT),
                     'remark' => 'Root User'
                 ]
