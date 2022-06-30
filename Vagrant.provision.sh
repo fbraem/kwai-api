@@ -121,8 +121,8 @@ PHPMYADMIN_CONF=$(cat <<EOF
         ServerName api.kwai.com
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/phpmyadmin
-        ErrorLog ${APACHE_LOG_DIR}/phpmyadmin_error.log
-        CustomLog ${APACHE_LOG_DIR}/phpmyadmin_access.log combined
+        ErrorLog \${APACHE_LOG_DIR}/phpmyadmin_error.log
+        CustomLog \${APACHE_LOG_DIR}/phpmyadmin_access.log combined
     </VirtualHost>
 EOF
 )
