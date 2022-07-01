@@ -8,13 +8,11 @@ use Exception;
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Domain\UserInvitationEntity;
-use Kwai\Modules\Users\Infrastructure\Repositories\UserDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Tests\DatabaseTrait;
 
@@ -23,19 +21,9 @@ beforeEach(fn() => $this->withDatabase());
 
 it('can create an invitation', function () {
     $repo = new UserInvitationDatabaseRepository($this->db);
-    $userRepo = new UserDatabaseRepository($this->db);
 
     try {
-        $query = $userRepo
-            ->createQuery()
-            ->filterByEmail(
-                new EmailAddress('jigoro.kano@kwai.com')
-            );
-        $users = $userRepo->getAll($query, 1);
-        expect($users->isEmpty())
-            ->toBeFalse()
-        ;
-        $user = $users->first();
+        $user = $this->withUser();
 
         $invitation = new UserInvitation(
             emailAddress: new EmailAddress('gella.vandecaveye@kwai.com'),
