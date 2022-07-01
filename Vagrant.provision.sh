@@ -41,6 +41,7 @@ echo "${API_CONF}" > /etc/apache2/sites-available/api.conf
 
 # Create a configuration that can be used to test the deployment of kwai-api
 DEPLOY_CONF=$(cat <<EOF
+    Listen 82
     <VirtualHost *:82>
       ServerName api.kwai.com
 
@@ -112,12 +113,13 @@ rm /var/tmp/phpmyadmin.zip
 rm -r /var/tmp/phpmyadmin
 
 PHPMYADMIN_CONF=$(cat <<EOF
-    <Directory /var/www/phpmyadmin>
-        Options Indexes FollowSymLinks
-        AllowOverride None
-        Require all granted
-    </Directory>
+    Listen 81
     <VirtualHost *:81>
+        <Directory /var/www/phpmyadmin>
+            Options Indexes FollowSymLinks
+            AllowOverride None
+            Require all granted
+        </Directory>
         ServerName api.kwai.com
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/phpmyadmin
