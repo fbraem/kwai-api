@@ -5,8 +5,7 @@ namespace Tests\Modules\Users\Infrastructure\Repositories;
 
 use Exception;
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
+use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserNotFoundException;
 use Kwai\Modules\Users\Domain\User;
@@ -18,11 +17,12 @@ uses(DatabaseTrait::class);
 beforeEach(fn() => $this->withDatabase());
 
 it('can get a user with email', function () {
+    $settings = depends('kwai.settings', Settings::class);
     $repo = new UserDatabaseRepository($this->db);
     try {
         $query = $repo
             ->createQuery()
-            ->filterByEmail(new EmailAddress('jigoro.kano@kwai.com'));
+            ->filterByEmail($settings->getWebsiteConfiguration()->getAddress()->getEmail());
         $users = $repo->getAll($query);
         expect($users)
             ->toBeInstanceOf(Collection::class)
