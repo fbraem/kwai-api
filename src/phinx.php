@@ -27,7 +27,8 @@ return [
             __DIR__ . '/kwai/Modules/News/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Pages/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Trainings/Infrastructure/Migrations',
-            __DIR__ . '/kwai/Modules/Coaches/Infrastructure/Migrations'
+            __DIR__ . '/kwai/Modules/Coaches/Infrastructure/Migrations',
+            __DIR__ . '/kwai/Modules/Club/Infrastructure/Migrations'
         ]
     ],
     'environments' => $environments
