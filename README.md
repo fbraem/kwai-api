@@ -127,6 +127,9 @@ installed automatically.
 Running Tests
 =============
 
+Copy `phpunit.xml.dist` to `phpunit.xml` and update the user/password. This user/password
+is printed when the migration is executed.
+
 Kwai uses [pest](https://pestphp.com/) to run tests:
 
     vagrant up
