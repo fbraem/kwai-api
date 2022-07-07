@@ -95,6 +95,8 @@ deploy_path on the (shared) host and run it manually:
 ../vendor/bin/phinx migrate -c ./phinx.php
 ````
 
+> **Remark:** The initial user/password to login will be printed.
+
 Manual
 ------
 The recommended way of installing kwai-api is using deployer, but it is also
