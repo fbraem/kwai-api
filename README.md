@@ -127,8 +127,13 @@ installed automatically.
 Running Tests
 =============
 
-Copy `phpunit.xml.dist` to `phpunit.xml` and update the user/password. This user/password
-is printed when the migration is executed.
+Copy `phpunit.xml.dist` to `phpunit.xml`.
+
+Add the user/password used for logging in to `.kwai`
+
+    # Test user
+    KWAI_TEST_USER=
+    KWAI_TEST_PASSWORD=
 
 Kwai uses [pest](https://pestphp.com/) to run tests:
 
