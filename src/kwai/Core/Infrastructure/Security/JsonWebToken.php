@@ -25,7 +25,7 @@ class JsonWebToken
 
     public function encode(): string
     {
-        return JWT::encode($this->tokenObject, $this->secret, $this->algorithm);
+        return JWT::encode((array) $this->tokenObject, $this->secret, $this->algorithm);
     }
 
     public function withProperty(string $property, string $value): self
