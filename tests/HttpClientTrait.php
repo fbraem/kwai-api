@@ -42,10 +42,12 @@ trait HttpClientTrait
                         ]
                     ]
                 );
+                if ($response->getStatusCode() === 500) {
+                    var_dump($response->getContent(false));
+                }
             } catch (TransportExceptionInterface $e) {
                 $this->fail((string) $e);
             }
-
             try {
                 $result = $response->toArray();
             } catch (ExceptionInterface $e) {
