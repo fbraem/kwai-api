@@ -141,7 +141,7 @@ abstract class TableSchema
     {
         $populatedSchema = new static($this->alias);
 
-        $prefix = $this->alias . '_';
+        $prefix = strlen($this->alias) > 0 ? $this->alias . '_' : '';
         $record->filter(
             fn ($item, $key) => str_starts_with($key, $prefix)
         )->mapWithKeys(
