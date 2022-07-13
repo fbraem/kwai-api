@@ -10,7 +10,7 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamMapper;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamDTO;
 use Kwai\Modules\Trainings\Repositories\TeamQuery;
 use Kwai\Modules\Trainings\Repositories\TeamRepository;
 
@@ -28,7 +28,7 @@ class TeamDatabaseRepository extends DatabaseRepository implements TeamRepositor
     {
         parent::__construct(
             $db,
-            fn($item) => TeamMapper::toDomain($item)
+            static fn(TeamDTO $dto) => $dto->createEntity()
         );
     }
 
