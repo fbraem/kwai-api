@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Domain\ValueObjects\Event;
@@ -12,7 +11,9 @@ use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 use Kwai\Modules\Trainings\Domain\Member;
+use Kwai\Modules\Trainings\Domain\MemberEntity;
 use Kwai\Modules\Trainings\Domain\Training;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
@@ -49,7 +50,7 @@ it('can appoint/release a coach to a training', function () use ($creator) {
             new Location('Tokyo'),
         )
     );
-    $coach = new Entity(
+    $coach = new CoachEntity(
         1,
         new Coach(
             name: new Name('Jigoro', 'Kano')
@@ -86,7 +87,7 @@ it('can manage a presence', function () use ($creator) {
             new Location('Tokyo'),
         ),
     );
-    $member = new Entity(
+    $member = new MemberEntity(
         1,
         new Member(
             license: '',
