@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
 use Tests\DatabaseTrait;
 
@@ -19,7 +19,7 @@ it('can get a team', function () {
     expect($teams)
         ->toBeInstanceOf(Collection::class)
         ->and($teams->first())
-        ->toBeInstanceOf(Entity::class)
+        ->toBeInstanceOf(TeamEntity::class)
     ;
 })
     ->skip(fn() => !$this->hasDatabase(), 'No database available')
