@@ -62,4 +62,32 @@ class DefinitionDTO
             $this->create()
         );
     }
+
+    public function persist(Definition $definition): DefinitionDTO
+    {
+        $this->definition->name = $definition->getName();
+        $this->definition->active = $definition->isActive() ? 0 : 1;
+        $this->definition->weekday = $definition->getWeekday()->value;
+        $this->definition->description = $definition->getDescription();
+        $this->definition->start_time = (string) $definition->getPeriod()->getStart();
+        $this->definition->end_time = (string) $definition->getPeriod()->getEnd();
+        $this->definition->time_zone = $definition->getPeriod()->getStart()->getTimezone();
+        $this->definition->location = $definition->getLocation()?->__toString();
+        $this->definition->created_at = (string) $definition->getTraceableTime()->getCreatedAt();
+        if ($definition->getTraceableTime()->isUpdated()) {
+            $this->definition->updated_at = (string) $definition->getTraceableTime()->getUpdatedAt();
+        } else {
+            $this->definition->updated_at = null;
+        }
+
+        $this->creator->user->id = $definition->getCreator()->getId();
+
+        return $this;
+    }
+
+    public function persistEntity(DefinitionEntity $definition): DefinitionDTO
+    {
+        $this->definition->id = $definition->id();
+        return $this->persist($definition->domain());
+    }
 }

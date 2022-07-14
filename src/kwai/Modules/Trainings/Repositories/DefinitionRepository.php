@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Definition;
 
@@ -23,11 +24,11 @@ interface DefinitionRepository
      * Get the definition with the given id
      *
      * @param int $id
-     * @return Entity<Definition>
+     * @return DefinitionEntity
      * @throws RepositoryException
      * @throws DefinitionNotFoundException
      */
-    public function getById(int $id): Entity;
+    public function getById(int $id): DefinitionEntity;
 
     /**
      * Create a query
@@ -52,24 +53,24 @@ interface DefinitionRepository
      * Save a new definition
      *
      * @param Definition $definition
-     * @return Entity<Definition>
+     * @return DefinitionEntity
      * @throws RepositoryException
      */
-    public function create(Definition $definition): Entity;
+    public function create(Definition $definition): DefinitionEntity;
 
     /**
      * Updates a definition
      *
-     * @param Entity<Definition> $definition
+     * @param DefinitionEntity $definition
      * @throws RepositoryException
      */
-    public function update(Entity $definition): void;
+    public function update(DefinitionEntity $definition): void;
 
     /**
      * Removes a definition
      *
-     * @param Entity $definition
+     * @param DefinitionEntity $definition
      * @throws RepositoryException
      */
-    public function remove(Entity $definition): void;
+    public function remove(DefinitionEntity $definition): void;
 }

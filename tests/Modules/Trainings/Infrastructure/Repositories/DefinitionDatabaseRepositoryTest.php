@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Time;
@@ -10,6 +9,7 @@ use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Definition;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
@@ -36,7 +36,7 @@ it('can create a definition', function () {
     try {
         $entity = $repo->create($definition);
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(DefinitionEntity::class)
             ->and($entity->id())
             ->toBeInt()
         ;
@@ -60,14 +60,17 @@ it('can update a definition', function ($id) {
     /* @var $definition Definition */
     $traceableTime = $definition->getTraceableTime()->markUpdated();
 
-    $newDefinition = new Entity($id, new Definition(
-        name: $definition->getName(),
-        description: 'Updated while running unittest',
-        weekday: $definition->getWeekDay(),
-        period: $definition->getPeriod(),
-        creator: $definition->getCreator(),
-        traceableTime: $traceableTime
-    ));
+    $newDefinition = new DefinitionEntity(
+        $id,
+        new Definition(
+            name: $definition->getName(),
+            description: 'Updated while running unittest',
+            weekday: $definition->getWeekDay(),
+            period: $definition->getPeriod(),
+            creator: $definition->getCreator(),
+            traceableTime: $traceableTime
+        )
+    );
     try {
         $repo->update($newDefinition);
         $this->expectNotToPerformAssertions();
@@ -104,10 +107,7 @@ it('can get a training definition', function () {
     try {
         $definition = $repo->getById(1);
         expect($definition)
-            ->toBeInstanceOf(Entity::class)
-        ;
-        expect($definition->domain())
-            ->toBeInstanceOf(Definition::class)
+            ->toBeInstanceOf(DefinitionEntity::class)
         ;
     } catch (DefinitionNotFoundException $e) {
         $this->fail((string) $e);
@@ -128,9 +128,7 @@ it('can get all training definitions', function () {
         ;
         $definition = $definitions->first();
         expect($definition)
-            ->toBeInstanceOf(Entity::class)
-            ->and($definition->domain())
-            ->toBeInstanceOf(Definition::class)
+            ->toBeInstanceOf(DefinitionEntity::class)
         ;
     } catch (RepositoryException $e) {
         $this->fail((string) $e);

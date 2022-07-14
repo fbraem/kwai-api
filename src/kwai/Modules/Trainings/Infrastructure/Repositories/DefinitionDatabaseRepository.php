@@ -7,15 +7,17 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseRepository;
 use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
-use Kwai\Modules\Trainings\Infrastructure\Mappers\DefinitionMapper;
+use Kwai\Modules\Trainings\Infrastructure\DefinitionsTable;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\DefinitionDTO;
 use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Infrastructure\TrainingsTable;
 use Kwai\Modules\Trainings\Repositories\DefinitionQuery;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 use function Latitude\QueryBuilder\field;
@@ -29,14 +31,14 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     {
         parent::__construct(
             $db,
-            fn($item) => DefinitionMapper::toDomain($item)
+            static fn(DefinitionDTO $dto) => $dto->createEntity()
         );
     }
 
     /**
      * @inheritDoc
      */
-    public function getById(int $id): Entity
+    public function getById(int $id): DefinitionEntity
     {
         $query = $this->createQuery()->filterId($id);
 
@@ -59,14 +61,15 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     /**
      * @inheritDoc
      */
-    public function create(Definition $definition): Entity
+    public function create(Definition $definition): DefinitionEntity
     {
-        $data = DefinitionMapper::toPersistence($definition);
-        $creator = $data->pull('creator');
-        $data->put('user_id', $creator->get('id'));
+        $dto = (new DefinitionDTO())->persist($definition);
+
+        $data = $dto->definition->collect();
+        $data->put('user_id', $dto->creator->user->id);
 
         $query = $this->db->createQueryFactory()
-            ->insert((string) Tables::TRAINING_DEFINITIONS())
+            ->insert(DefinitionsTable::name())
             ->columns(
                 ... $data->keys()
             )
@@ -81,7 +84,7 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
             throw new RepositoryException(__METHOD__, $e);
         }
 
-        return new Entity(
+        return new DefinitionEntity(
             $this->db->lastInsertId(),
             $definition
         );
@@ -90,14 +93,17 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     /**
      * @inheritDoc
      */
-    public function update(Entity $definition): void
+    public function update(DefinitionEntity $definition): void
     {
-        $data = DefinitionMapper::toPersistence($definition->domain());
-        $creator = $data->pull('creator');
-        $data->put('user_id', $creator->get('id'));
+        $dto = (new DefinitionDTO())->persistEntity($definition);
+        $data = $dto->definition
+            ->collect()
+            ->forget('id')
+        ;
+        $data->put('user_id', $dto->creator->user->id);
 
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::TRAINING_DEFINITIONS())
+            ->update(DefinitionsTable::name())
             ->set($data->toArray())
             ->where(field('id')->eq($definition->id()))
         ;
@@ -112,10 +118,10 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     /**
      * @inheritDoc
      */
-    public function remove(Entity $definition): void
+    public function remove(DefinitionEntity $definition): void
     {
         $query = $this->db->createQueryFactory()
-            ->delete((string) Tables::TRAINING_DEFINITIONS())
+            ->delete(DefinitionsTable::name())
             ->where(field('id')->eq($definition->id()))
         ;
         try {
@@ -126,7 +132,7 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
 
         // Update all trainings that belonged to this definition.
         $query = $this->db->createQueryFactory()
-            ->update((string) Tables::TRAININGS())
+            ->update(TrainingsTable::name())
             ->set(
                 ['definition_id' => null]
             )
