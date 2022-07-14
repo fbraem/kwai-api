@@ -80,7 +80,8 @@ class DefinitionDTO
             $this->definition->updated_at = null;
         }
 
-        $this->creator->user->id = $definition->getCreator()->getId();
+        $this->definition->season_id = $definition->getSeason()?->id();
+        $this->definition->user_id = $definition->getCreator()->getId();
 
         return $this;
     }

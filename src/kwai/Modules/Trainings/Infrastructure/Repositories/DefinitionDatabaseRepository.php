@@ -64,9 +64,7 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
     public function create(Definition $definition): DefinitionEntity
     {
         $dto = (new DefinitionDTO())->persist($definition);
-
         $data = $dto->definition->collect();
-        $data->put('user_id', $dto->creator->user->id);
 
         $query = $this->db->createQueryFactory()
             ->insert(DefinitionsTable::name())
@@ -100,7 +98,6 @@ class DefinitionDatabaseRepository extends DatabaseRepository implements Definit
             ->collect()
             ->forget('id')
         ;
-        $data->put('user_id', $dto->creator->user->id);
 
         $query = $this->db->createQueryFactory()
             ->update(DefinitionsTable::name())
