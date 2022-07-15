@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
+use Kwai\Modules\Trainings\Domain\SeasonEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\SeasonDatabaseRepository;
 use Tests\DatabaseTrait;
 
@@ -19,7 +19,7 @@ it('can get a season', function () {
     expect($season)
         ->toBeInstanceOf(Collection::class)
         ->and($season->first())
-        ->toBeInstanceOf(Entity::class)
+        ->toBeInstanceOf(SeasonEntity::class)
     ;
 })
     ->skip(fn() => !$this->hasDatabase(), 'No database available')
