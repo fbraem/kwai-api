@@ -17,4 +17,7 @@ use Kwai\Core\Infrastructure\Database\TableSchema as TableSchemaAlias;
 class MembersTable extends TableSchemaAlias
 {
     public ?int $id = null;
+    public string $license;
+    public string $license_end_date;
+    public int $person_id;
 }

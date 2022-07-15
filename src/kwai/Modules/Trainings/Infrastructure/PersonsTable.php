@@ -19,4 +19,6 @@ class PersonsTable extends TableSchema
     public ?int $id = null;
     public string $firstname;
     public string $lastname;
+    public int $gender;
+    public string $birthdate;
 }
