@@ -6,6 +6,7 @@ use Kwai\Core\Domain\ValueObjects\Date;
 use Kwai\Core\Domain\ValueObjects\Gender;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Modules\Trainings\Domain\Member;
+use Kwai\Modules\Trainings\Domain\MemberEntity;
 use Kwai\Modules\Trainings\Infrastructure\MembersTable;
 use Kwai\Modules\Trainings\Infrastructure\PersonsTable;
 
@@ -28,6 +29,14 @@ class MemberDTO
             ),
             gender: Gender::from($this->person->gender),
             birthDate: Date::createFromString($this->person->birthdate)
+        );
+    }
+
+    public function createEntity(): MemberEntity
+    {
+        return new MemberEntity(
+            $this->member->id,
+            $this->create()
         );
     }
 }
