@@ -30,6 +30,7 @@ class TrainingDTO
      * @param SeasonDTO                         $season
      * @param Collection<TrainingCoachDTO>      $coaches
      * @param Collection<TeamDTO>               $teams
+     * @param Collection<PresenceDTO>           $presences
      */
     public function __construct(
         public TrainingsTable $training = new TrainingsTable(),
@@ -37,7 +38,8 @@ class TrainingDTO
         public DefinitionDTO $definition = new DefinitionDTO(),
         public SeasonDTO $season = new SeasonDTO(),
         public Collection $coaches = new Collection(),
-        public Collection $teams = new Collection()
+        public Collection $teams = new Collection(),
+        public Collection $presences = new Collection()
     ) {
     }
 
@@ -62,6 +64,8 @@ class TrainingDTO
                     : null
             ),
             coaches: $this->coaches->map(static fn(TrainingCoachDTO $dto) => $dto->create()),
+            teams: $this->teams->map(static fn(TeamDTO $dto) => $dto->createEntity()),
+            presences: $this->presences->map(static fn(PresenceDTO $dto) => $dto->create()),
             season: $this->training->season_id ? $this->season->createEntity() : null
         );
     }
