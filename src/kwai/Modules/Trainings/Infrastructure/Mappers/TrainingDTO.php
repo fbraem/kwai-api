@@ -29,7 +29,7 @@ class TrainingDTO
      * @param DefinitionDTO                     $definition
      * @param SeasonDTO                         $season
      * @param Collection<TrainingCoachDTO>      $coaches
-     * @param Collection<TeamDTO>            $teams
+     * @param Collection<TeamDTO>               $teams
      */
     public function __construct(
         public TrainingsTable $training = new TrainingsTable(),
