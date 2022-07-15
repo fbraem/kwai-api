@@ -9,7 +9,8 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamDTO;
+use Kwai\Modules\Trainings\Infrastructure\TeamsTable;
 use Kwai\Modules\Trainings\Repositories\TeamQuery;
 use function Latitude\QueryBuilder\field;
 
@@ -32,7 +33,7 @@ class TeamDatabaseQuery extends DatabaseQuery implements TeamQuery
      */
     protected function initQuery(): void
     {
-        $this->query->from((string) Tables::TEAMS());
+        $this->query->from(TeamsTable::name());
     }
 
     /**
@@ -40,10 +41,8 @@ class TeamDatabaseQuery extends DatabaseQuery implements TeamQuery
      */
     protected function getColumns(): array
     {
-        $aliasFn = Tables::TEAMS()->getAliasFn();
         return [
-            $aliasFn('id'),
-            $aliasFn('name')
+            ...TeamsTable::aliases()
         ];
     }
 
@@ -51,12 +50,13 @@ class TeamDatabaseQuery extends DatabaseQuery implements TeamQuery
     {
         $rows = parent::walk($limit, $offset);
 
-        $prefixes = [ Tables::TEAMS()->getAliasPrefix() ];
-
         $teams = new Collection();
         foreach ($rows as $row) {
-            [ $team ] = $row->filterColumns($prefixes);
-            $teams->put($team->get('id'), $team);
+            $team = TeamsTable::createFromRow($row);
+            $teams->put(
+                $team->id,
+                new TeamDTO($team)
+            );
         }
 
         return $teams;
