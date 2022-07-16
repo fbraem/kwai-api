@@ -7,16 +7,13 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
-use Carbon\Traits\Week;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
-use Kwai\Core\Domain\ValueObjects\Weekday;
-use Kwai\Core\Infrastructure\Database\QueryException;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
@@ -28,7 +25,7 @@ use Kwai\Modules\Trainings\Repositories\TeamRepository;
  *
  * Use case: create a definition
  */
-class CreateDefinition
+final class CreateDefinition
 {
     /**
      * CreateDefinition constructor.
@@ -38,9 +35,9 @@ class CreateDefinition
      * @param SeasonRepository     $seasonRepo
      */
     public function __construct(
-        private DefinitionRepository $definitionRepo,
-        private TeamRepository $teamRepo,
-        private SeasonRepository $seasonRepo
+        private readonly DefinitionRepository $definitionRepo,
+        private readonly TeamRepository       $teamRepo,
+        private readonly SeasonRepository $seasonRepo
     ) {
     }
 
@@ -48,16 +45,16 @@ class CreateDefinition
      * Execute the use case
      *
      * @param CreateDefinitionCommand $command
-     * @param Creator                 $creator
-     * @return Entity<Definition>
+     * @param Creator $creator
+     * @return DefinitionEntity
      * @throws RepositoryException
-     * @throws TeamNotFoundException
      * @throws SeasonNotFoundException
+     * @throws TeamNotFoundException
      */
     public function __invoke(
         CreateDefinitionCommand $command,
         Creator $creator
-    ): Entity {
+    ): DefinitionEntity {
         if (isset($command->team_id)) {
             $teams = $this->teamRepo->getById($command->team_id);
             if ($teams->isEmpty()) {
@@ -86,12 +83,12 @@ class CreateDefinition
                 Time::createFromString($command->start_time, $command->time_zone),
                 Time::createFromString($command->end_time, $command->time_zone)
             ),
-            active: $command->active,
+            creator: $creator,
             team: $team,
             season: $season,
+            active: $command->active,
             location: $command->location ? new Location($command->location) : null,
             remark: $command->remark,
-            creator: $creator,
         );
 
         return $this->definitionRepo->create($definition);
@@ -109,7 +106,8 @@ class CreateDefinition
         DefinitionRepository $definitionRepo,
         TeamRepository $teamRepo,
         SeasonRepository $seasonRepo
-    ) {
+    ): CreateDefinition
+    {
         return new self(
             $definitionRepo,
             $teamRepo,
