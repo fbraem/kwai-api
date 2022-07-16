@@ -277,8 +277,6 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             }
         }
 
-        return $trainings;
-/*
         // Get all teams of the training(s)
         $teamQuery = new TrainingTeamDatabaseQuery($this->db);
         $teamQuery->filterOnTrainings($trainingIds);
@@ -300,8 +298,8 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
                 ;
             }
         }
-*/
-        // return $trainings;
+
+        return $trainings;
     }
 
     public function withPresences(): TrainingQuery
