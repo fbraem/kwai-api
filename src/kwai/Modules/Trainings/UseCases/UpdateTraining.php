@@ -105,8 +105,8 @@ final class UpdateTraining
                 $coach->id => new TrainingCoach(
                     coach: $coaches->get($coach->id),
                     creator: $creator,
-                    present: $coach->present,
                     head: $coach->head,
+                    present: $coach->present,
                     payed: $coach->payed
                 )
             ]
