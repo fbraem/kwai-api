@@ -7,13 +7,13 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Time;
 use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\SeasonNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
@@ -29,7 +29,7 @@ use Kwai\Modules\Trainings\Repositories\TeamRepository;
  *
  * Use case: update a definition
  */
-class UpdateDefinition
+final class UpdateDefinition
 {
     /**
      * UpdateDefinition constructor.
@@ -39,9 +39,9 @@ class UpdateDefinition
      * @param SeasonRepository     $seasonRepo
      */
     public function __construct(
-        private DefinitionRepository $definitionRepo,
-        private TeamRepository $teamRepo,
-        private SeasonRepository $seasonRepo
+        private readonly DefinitionRepository $definitionRepo,
+        private readonly TeamRepository       $teamRepo,
+        private readonly SeasonRepository     $seasonRepo
     ) {
     }
 
@@ -65,23 +65,21 @@ class UpdateDefinition
      * Execute the use case
      *
      * @param UpdateDefinitionCommand $command
-     * @param Creator                 $creator
-     * @return Entity<Definition>
+     * @param Creator $creator
+     * @return DefinitionEntity
      * @throws DefinitionNotFoundException
      * @throws RepositoryException
-     * @throws TeamNotFoundException
      * @throws SeasonNotFoundException
+     * @throws TeamNotFoundException
      */
     public function __invoke(
         UpdateDefinitionCommand $command,
         Creator $creator
-    ): Entity {
+    ): DefinitionEntity {
         $definition = $this->definitionRepo->getById($command->id);
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $traceableTime = $definition->getTraceableTime()->markUpdated();
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $currentTeam = $definition->getTeam();
         if (isset($command->team_id)) {
             if ($currentTeam == null || $command->team_id != $currentTeam->id()) {
@@ -97,11 +95,10 @@ class UpdateDefinition
             }
         }
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $currentSeason = $definition->getSeason();
         if (isset($command->season_id)) {
             if ($currentSeason == null || $command->season_id != $currentSeason->id()) {
-                $seasons = $this->teamRepo->getById($command->season_id);
+                $seasons = $this->seasonRepo->getById($command->season_id);
                 if ($seasons->isEmpty()) {
                     throw new SeasonNotFoundException($command->season_id);
                 }
@@ -113,7 +110,7 @@ class UpdateDefinition
             }
         }
 
-        $updatedDefinition = new Entity(
+        $updatedDefinition = new DefinitionEntity(
             $definition->id(),
             new Definition(
                 name: $command->name,
