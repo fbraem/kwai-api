@@ -12,7 +12,7 @@ namespace Kwai\Modules\Trainings\UseCases;
  *
  * Command for the use case Browse Trainings
  */
-class BrowseTrainingsCommand
+final class BrowseTrainingsCommand
 {
     /**
      * Limit the returned number of trainings
