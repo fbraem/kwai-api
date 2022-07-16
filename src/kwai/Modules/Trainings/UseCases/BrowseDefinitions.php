@@ -16,7 +16,7 @@ use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
  *
  * Use case for browsing training definitions.
  */
-class BrowseDefinitions
+final class BrowseDefinitions
 {
     /**
      * BrowseDefinitions constructor.
@@ -24,7 +24,7 @@ class BrowseDefinitions
      * @param DefinitionRepository $repo
      */
     public function __construct(
-        private DefinitionRepository $repo
+        private readonly DefinitionRepository $repo
     ) {
     }
 
@@ -34,7 +34,7 @@ class BrowseDefinitions
      * @param DefinitionRepository $repo
      * @return BrowseDefinitions
      */
-    public static function create(DefinitionRepository $repo)
+    public static function create(DefinitionRepository $repo): BrowseDefinitions
     {
         return new self($repo);
     }
@@ -47,7 +47,7 @@ class BrowseDefinitions
      * @throws QueryException
      * @throws RepositoryException
      */
-    public function __invoke(BrowseDefinitionsCommand $command)
+    public function __invoke(BrowseDefinitionsCommand $command): array
     {
         $query = $this->repo->createQuery();
 
