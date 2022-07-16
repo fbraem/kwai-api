@@ -16,7 +16,7 @@ use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
  *
  * Use case for deleting a definition
  */
-class DeleteDefinition
+final class DeleteDefinition
 {
     /**
      * DeleteDefinition constructor.
@@ -24,7 +24,7 @@ class DeleteDefinition
      * @param DefinitionRepository $repo
      */
     public function __construct(
-        private DefinitionRepository $repo
+        private readonly DefinitionRepository $repo
     ) {
     }
 
