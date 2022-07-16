@@ -20,16 +20,14 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  */
 class GetTraining
 {
-    private TrainingRepository $repo;
-
     /**
      * GetTraining constructor.
      *
      * @param TrainingRepository $repo
      */
-    public function __construct(TrainingRepository $repo)
+    public function __construct(
+        private readonly TrainingRepository $repo)
     {
-        $this->repo = $repo;
     }
 
     /**
