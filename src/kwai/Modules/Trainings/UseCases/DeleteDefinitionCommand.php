@@ -12,7 +12,7 @@ namespace Kwai\Modules\Trainings\UseCases;
  *
  * Command for the use case Delete Definition.
  */
-class DeleteDefinitionCommand
+final class DeleteDefinitionCommand
 {
     public int $id;
 }
