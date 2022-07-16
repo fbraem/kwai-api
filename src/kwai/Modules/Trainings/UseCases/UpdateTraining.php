@@ -43,10 +43,10 @@ class UpdateTraining
      * @param CoachRepository      $coachRepository
      */
     public function __construct(
-        private TrainingRepository $trainingRepo,
-        private DefinitionRepository $definitionRepository,
-        private TeamRepository $teamRepository,
-        private CoachRepository $coachRepository
+        private readonly TrainingRepository   $trainingRepo,
+        private readonly DefinitionRepository $definitionRepository,
+        private readonly TeamRepository       $teamRepository,
+        private readonly CoachRepository      $coachRepository
     ) {
     }
 
