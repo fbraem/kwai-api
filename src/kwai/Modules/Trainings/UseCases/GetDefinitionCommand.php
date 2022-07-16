@@ -12,7 +12,7 @@ namespace Kwai\Modules\Trainings\UseCases;
  *
  * Command for the GetDefinition use case.
  */
-class GetDefinitionCommand
+final class GetDefinitionCommand
 {
     public int $id;
 }
