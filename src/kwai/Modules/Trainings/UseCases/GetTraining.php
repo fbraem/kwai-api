@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
-use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Repositories\TrainingRepository;
 
 /**
@@ -36,7 +35,7 @@ final class GetTraining
      * @param TrainingRepository $repo
      * @return GetTraining
      */
-    public static function create(TrainingRepository $repo)
+    public static function create(TrainingRepository $repo): GetTraining
     {
         return new self($repo);
     }
@@ -45,11 +44,11 @@ final class GetTraining
      * Get a training
      *
      * @param GetTrainingCommand $command
-     * @return Entity<Training>
-     * @throws TrainingNotFoundException
+     * @return TrainingEntity
      * @throws RepositoryException
+     * @throws TrainingNotFoundException
      */
-    public function __invoke(GetTrainingCommand $command): Entity
+    public function __invoke(GetTrainingCommand $command): TrainingEntity
     {
         $query = $this->repo->createQuery()->filterId($command->id);
         if ($command->withPresences) {
