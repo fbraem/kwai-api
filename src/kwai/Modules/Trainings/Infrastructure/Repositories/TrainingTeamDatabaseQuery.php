@@ -9,8 +9,9 @@ namespace Kwai\Modules\Trainings\Infrastructure\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
-use Kwai\Modules\Trainings\Infrastructure\Tables;
-use function Latitude\QueryBuilder\field;
+use Kwai\Modules\Trainings\Infrastructure\Mappers\TeamDTO;
+use Kwai\Modules\Trainings\Infrastructure\TeamsTable;
+use Kwai\Modules\Trainings\Infrastructure\TrainingTeamsTable;
 use function Latitude\QueryBuilder\on;
 
 /**
@@ -22,12 +23,14 @@ class TrainingTeamDatabaseQuery extends DatabaseQuery
 {
     protected function initQuery(): void
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query
-            ->from((string) Tables::TRAINING_TEAMS())
+            ->from(TrainingTeamsTable::name())
             ->join(
-                (string) Tables::TEAMS(),
-                on(Tables::TRAINING_TEAMS()->team_id, Tables::TEAMS()->id)
+                TeamsTable::name(),
+                on(
+                    TrainingTeamsTable::column('team_id'),
+                    TeamsTable::column('id')
+                )
             )
         ;
     }
@@ -39,21 +42,16 @@ class TrainingTeamDatabaseQuery extends DatabaseQuery
      */
     public function filterOnTrainings(array $ids)
     {
-        /** @noinspection PhpUndefinedFieldInspection */
         $this->query->andWhere(
-            field(Tables::TRAINING_TEAMS()->training_id)->in(...$ids)
+            TrainingTeamsTable::field('training_id')->in(...$ids)
         );
     }
 
     protected function getColumns(): array
     {
-        $trainingTeamsAliasFn = Tables::TRAINING_TEAMS()->getAliasFn();
-        $teamAliasFn = Tables::TEAMS()->getAliasFn();
-
         return [
-            $trainingTeamsAliasFn('training_id'),
-            $teamAliasFn('id'),
-            $teamAliasFn('name')
+            ... TrainingTeamsTable::aliases(),
+            ... TeamsTable::aliases()
         ];
     }
 
@@ -61,18 +59,15 @@ class TrainingTeamDatabaseQuery extends DatabaseQuery
     {
         $rows = parent::walk($limit, $offset);
 
-        $prefixes = new Collection([
-            Tables::TRAINING_TEAMS()->getAliasPrefix(),
-            Tables::TEAMS()->getAliasPrefix()
-        ]);
-
         $trainings = new Collection();
         foreach ($rows as $row) {
-            [ $training, $team ] = $row->filterColumns($prefixes);
-            if (!$trainings->has($training['training_id'])) {
-                $trainings->put($training['training_id'], new Collection());
+            $trainingTeam = TrainingTeamsTable::createFromRow($row);
+            if (!$trainings->has($trainingTeam->training_id)) {
+                $trainings->put($trainingTeam->training_id, new Collection());
             }
-            $trainings[$training['training_id']]->push($team);
+            $trainings[$trainingTeam->training_id]->push(
+                new TeamDTO(TeamsTable::createFromRow($row))
+            );
         }
 
         return $trainings;
