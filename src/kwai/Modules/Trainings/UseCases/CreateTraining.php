@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\UseCases;
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
@@ -20,6 +19,7 @@ use Kwai\Core\Domain\ValueObjects\TraceableTime;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
@@ -31,7 +31,7 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  *
  * Use case for creating
  */
-class CreateTraining
+final class CreateTraining
 {
     /**
      * CreateTraining constructor.
@@ -42,10 +42,10 @@ class CreateTraining
      * @param CoachRepository      $coachRepository
      */
     public function __construct(
-        private TrainingRepository $trainingRepo,
-        private DefinitionRepository $definitionRepository,
-        private TeamRepository $teamRepository,
-        private CoachRepository $coachRepository
+        private readonly TrainingRepository   $trainingRepo,
+        private readonly DefinitionRepository $definitionRepository,
+        private readonly TeamRepository       $teamRepository,
+        private readonly CoachRepository      $coachRepository
     ) {
     }
 
@@ -63,7 +63,8 @@ class CreateTraining
         DefinitionRepository $definitionRepository,
         TeamRepository $teamRepository,
         CoachRepository $coachRepository
-    ) {
+    ): CreateTraining
+    {
         return new self(
             $trainingRepo,
             $definitionRepository,
@@ -74,12 +75,12 @@ class CreateTraining
 
     /**
      * @param CreateTrainingCommand $command
-     * @param Creator               $creator
-     * @return Entity<Training>
-     * @throws RepositoryException
+     * @param Creator $creator
+     * @return TrainingEntity
      * @throws DefinitionNotFoundException
+     * @throws RepositoryException
      */
-    public function __invoke(CreateTrainingCommand $command, Creator $creator): Entity
+    public function __invoke(CreateTrainingCommand $command, Creator $creator): TrainingEntity
     {
         $definition = isset($command->definition)
             ? $this->definitionRepository->getById($command->definition)
