@@ -33,7 +33,7 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  *
  * Use case for updating a training
  */
-class UpdateTraining
+final class UpdateTraining
 {
     /**
      * UpdateTraining constructor.
