@@ -21,6 +21,7 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 use Kwai\Modules\Trainings\Repositories\CoachRepository;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
@@ -64,7 +65,8 @@ class UpdateTraining
         DefinitionRepository $definitionRepository,
         TeamRepository $teamRepository,
         CoachRepository $coachRepository
-    ) {
+    ): UpdateTraining
+    {
         return new self(
             $trainingRepo,
             $definitionRepository,
@@ -75,13 +77,13 @@ class UpdateTraining
 
     /**
      * @param UpdateTrainingCommand $command
-     * @param Creator               $creator
-     * @return Entity<Training>
+     * @param Creator $creator
+     * @return TrainingEntity
      * @throws DefinitionNotFoundException
      * @throws RepositoryException
      * @throws TrainingNotFoundException
      */
-    public function __invoke(UpdateTrainingCommand $command, Creator $creator): Entity
+    public function __invoke(UpdateTrainingCommand $command, Creator $creator): TrainingEntity
     {
         $training = $this->trainingRepo->getById($command->id);
 
@@ -130,12 +132,10 @@ class UpdateTraining
             ));
         }
 
-        /* @var TraceableTime $traceableTime */
-        /** @noinspection PhpUndefinedMethodInspection */
         $traceableTime = $training->getTraceableTime();
         $traceableTime->markUpdated();
 
-        $entity = new Entity(
+        $entity = new TrainingEntity(
             $command->id,
             new Training(
                 event: new Event(
