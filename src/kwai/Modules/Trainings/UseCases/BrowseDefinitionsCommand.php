@@ -10,7 +10,7 @@ namespace Kwai\Modules\Trainings\UseCases;
 /**
  * Class BrowseDefinitionsCommand
  */
-class BrowseDefinitionsCommand
+final class BrowseDefinitionsCommand
 {
     public ?int $limit = null;
     public ?int $offset = null;
