@@ -18,7 +18,7 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  *
  * Use case for getting a training with the given id.
  */
-class GetTraining
+final class GetTraining
 {
     /**
      * GetTraining constructor.
