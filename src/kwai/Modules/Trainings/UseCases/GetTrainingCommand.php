@@ -12,7 +12,7 @@ namespace Kwai\Modules\Trainings\UseCases;
  *
  * Command for the GetTraining use case.
  */
-class GetTrainingCommand
+final class GetTrainingCommand
 {
     public int $id;
 
