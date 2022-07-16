@@ -12,7 +12,7 @@ namespace Kwai\Modules\Trainings\UseCases;
  *
  * Command for the use case Create Definition
  */
-class CreateDefinitionCommand
+final class CreateDefinitionCommand
 {
     use DefinitionTrait;
 }
