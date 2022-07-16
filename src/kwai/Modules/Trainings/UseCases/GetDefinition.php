@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Trainings\UseCases;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
-use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
 
@@ -18,7 +17,7 @@ use Kwai\Modules\Trainings\Repositories\DefinitionRepository;
  *
  * Use case for getting a definition
  */
-class GetDefinition
+final class GetDefinition
 {
     /**
      * GetDefinition constructor.
@@ -26,7 +25,7 @@ class GetDefinition
      * @param DefinitionRepository $repo
      */
     public function __construct(
-        private DefinitionRepository $repo
+        private readonly DefinitionRepository $repo
     ) {
     }
 
@@ -43,11 +42,11 @@ class GetDefinition
 
     /**
      * @param GetDefinitionCommand $command
-     * @return Entity<Definition>
+     * @return DefinitionEntity
      * @throws DefinitionNotFoundException
      * @throws RepositoryException
      */
-    public function __invoke(GetDefinitionCommand $command): Entity
+    public function __invoke(GetDefinitionCommand $command): DefinitionEntity
     {
         return $this->repo->getById($command->id);
     }
