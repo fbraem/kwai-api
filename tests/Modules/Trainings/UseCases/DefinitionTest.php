@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\SeasonDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
@@ -46,7 +46,7 @@ it('can create a definition', function() {
         $entity = CreateDefinition::create($definitionRepo, $teamRepo, $seasonRepo)
             ($command, $creator);
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(DefinitionEntity::class)
             ->and($entity->domain())
             ->toBeInstanceOf(Definition::class)
         ;
@@ -68,7 +68,7 @@ it('can get a definition', function($id) {
     try {
         $definition = GetDefinition::create($repo)($command);
         expect($definition)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(DefinitionEntity::class)
             ->and($definition->domain())
             ->toBeInstanceOf(Definition::class)
         ;
@@ -123,7 +123,7 @@ it('can update a definition', function ($id) {
         $entity = UpdateDefinition::create($definitionRepo, $teamRepo, $seasonRepo)
             ($command, $creator);
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(DefinitionEntity::class)
             ->and($entity->domain())
             ->toBeInstanceOf(Definition::class)
         ;
