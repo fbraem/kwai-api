@@ -21,7 +21,7 @@ use Kwai\Modules\Trainings\Repositories\TrainingRepository;
  *
  * Use case for browsing trainings
  */
-class BrowseTrainings
+final class BrowseTrainings
 {
     /**
      * BrowseTrainings constructor.
@@ -31,9 +31,9 @@ class BrowseTrainings
      * @param DefinitionRepository $defRepo
      */
     public function __construct(
-        private TrainingRepository $repo,
-        private CoachRepository $coachRepo,
-        private DefinitionRepository $defRepo,
+        private readonly TrainingRepository   $repo,
+        private readonly CoachRepository      $coachRepo,
+        private readonly DefinitionRepository $defRepo,
     ) {
     }
 
@@ -49,7 +49,8 @@ class BrowseTrainings
         TrainingRepository $repo,
         CoachRepository $coachRepo,
         DefinitionRepository $defRepo
-    ) {
+    ): BrowseTrainings
+    {
         return new self($repo, $coachRepo, $defRepo);
     }
 
@@ -63,7 +64,7 @@ class BrowseTrainings
      * @throws CoachNotFoundException
      * @throws DefinitionNotFoundException
      */
-    public function __invoke(BrowseTrainingsCommand $command)
+    public function __invoke(BrowseTrainingsCommand $command): array
     {
         $query = $this->repo->createQuery();
 
