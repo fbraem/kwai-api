@@ -12,7 +12,7 @@ namespace Kwai\Modules\Trainings\UseCases;
  *
  * Command for the use case Create Command
  */
-class CreateTrainingCommand
+final class CreateTrainingCommand
 {
     use TrainingTrait;
 }
