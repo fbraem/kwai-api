@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
@@ -42,7 +42,7 @@ it('can create a training', function () {
             new CoachDatabaseRepository($this->db)
         )($command, new Creator(1, new Name('Jigoro', 'Kano')));
         expect($entity)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(TrainingEntity::class)
         ;
     } catch (Exception $e) {
         $this->fail((string) $e);
@@ -96,7 +96,7 @@ it('can update a training', function(int $id) {
         $this->fail((string) $e);
     }
     expect($entity)
-        ->toBeInstanceOf(Entity::class)
+        ->toBeInstanceOf(TrainingEntity::class)
     ;
 })
     ->skip(fn() => !$this->hasDatabase(), 'No database available')
@@ -112,7 +112,7 @@ it('can get a training', function (int $id) {
             $this->db
         ))($command);
         expect($training)
-            ->toBeInstanceOf(Entity::class)
+            ->toBeInstanceOf(TrainingEntity::class)
         ;
     } catch (Exception $e) {
         $this->fail((string) $e);
