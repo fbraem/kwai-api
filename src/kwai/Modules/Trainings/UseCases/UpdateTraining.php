@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Trainings\UseCases;
 
 use Illuminate\Support\Collection;
+use Kwai\Core\Domain\Exceptions\NotFoundException;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
@@ -16,6 +17,7 @@ use Kwai\Core\Domain\ValueObjects\Location;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Trainings\Domain\Exceptions\CoachNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\Training;
@@ -80,6 +82,7 @@ final class UpdateTraining
      * @throws DefinitionNotFoundException
      * @throws RepositoryException
      * @throws TrainingNotFoundException
+     * @throws CoachNotFoundException
      */
     public function __invoke(UpdateTrainingCommand $command, Creator $creator): TrainingEntity
     {
@@ -100,6 +103,10 @@ final class UpdateTraining
                 ... $coachCollection->keys()->toArray()
             ) : new Collection()
         ;
+        if ($coaches->count() != $coachCollection->count()) {
+            throw new CoachNotFoundException($coachCollection->diffKeys($coaches)->first()->id);
+        }
+
         $trainingCoaches = $coachCollection->mapWithKeys(
             fn ($coach) => [
                 $coach->id => new TrainingCoach(
