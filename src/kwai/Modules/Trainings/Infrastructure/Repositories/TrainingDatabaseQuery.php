@@ -282,9 +282,9 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
         $teamQuery->filterOnTrainings($trainingIds);
         $trainingTeams = $teamQuery->execute();
         foreach ($trainingIds as $trainingId) {
-            $trainings[$trainingId]
-                ->put('teams', $trainingTeams[$trainingId] ?? new Collection())
-            ;
+            if ($trainingTeams->has($trainingId)) {
+                $trainings[$trainingId]->teams = $trainingTeams[$trainingId];
+            }
         }
 
         if ($this->includePresences) {
@@ -293,9 +293,9 @@ class TrainingDatabaseQuery extends DatabaseQuery implements TrainingQuery
             $presenceQuery->filterOnTrainings($trainingIds);
             $presences = $presenceQuery->execute();
             foreach ($trainingIds as $trainingId) {
-                $trainings[$trainingId]
-                    ->put('presences', $presences[$trainingId] ?? new Collection())
-                ;
+                if ($presences->has($trainingId)) {
+                    $trainings[$trainingId]->presences = $presences[$trainingId];
+                }
             }
         }
 
