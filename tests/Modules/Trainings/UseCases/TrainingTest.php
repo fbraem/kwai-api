@@ -1,13 +1,17 @@
 <?php
 declare(strict_types=1);
 
+use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Name;
+use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
+use Kwai\Modules\Trainings\Repositories\CoachRepository;
 use Kwai\Modules\Trainings\UseCases\CreateTraining;
 use Kwai\Modules\Trainings\UseCases\CreateTrainingCommand;
 use Kwai\Modules\Trainings\UseCases\GetTraining;
@@ -16,8 +20,33 @@ use Kwai\Modules\Trainings\UseCases\UpdateTraining;
 use Kwai\Modules\Trainings\UseCases\UpdateTrainingCommand;
 use Tests\DatabaseTrait;
 
+$coachRepo = null;
+
 uses(DatabaseTrait::class);
-beforeEach(fn() => $this->withDatabase());
+beforeEach(function() {
+    $this->withDatabase();
+    $this->coachRepo = new class($this->db) extends CoachDatabaseRepository implements CoachRepository {
+        public function getById(int ...$ids): Collection
+        {
+            $coaches = new Collection();
+            foreach($ids as $id) {
+                $coaches->put(
+                    $id,
+                    new CoachEntity(
+                        $id,
+                        new Coach(
+                            name: new Name(
+                                firstname: 'Jigoro',
+                                lastname: 'Kano'
+                            )
+                        )
+                    )
+                );
+            }
+            return $coaches;
+        }
+    };
+});
 
 it('can create a training', function () {
     $command = new CreateTrainingCommand();
@@ -39,7 +68,7 @@ it('can create a training', function () {
             new TrainingDatabaseRepository($this->db),
             new DefinitionDatabaseRepository($this->db),
             new TeamDatabaseRepository($this->db),
-            new CoachDatabaseRepository($this->db)
+            $this->coachRepo
         )($command, new Creator(1, new Name('Jigoro', 'Kano')));
         expect($entity)
             ->toBeInstanceOf(TrainingEntity::class)
@@ -90,7 +119,7 @@ it('can update a training', function(int $id) {
             new TrainingDatabaseRepository($this->db),
             new DefinitionDatabaseRepository($this->db),
             new TeamDatabaseRepository($this->db),
-            new CoachDatabaseRepository($this->db)
+            $this->coachRepo
         )($command, new Creator(1, new Name('Jigoro', 'Kano')));
     } catch (Exception $e) {
         $this->fail((string) $e);
