@@ -51,7 +51,7 @@ class DatabaseConfiguration implements Configurable
             new DsnDatabaseConfiguration($variables['KWAI_DB_DSN']),
             $variables['KWAI_DB_USER'],
             $variables['KWAI_DB_PASSWORD'],
-            LoggerConfiguration::createFromPrefixedVariables('KWAI_DB', $variables)
+            LoggerConfiguration::createFromPrefixedVariables('KWAI_DB_', $variables)
         );
     }
 
