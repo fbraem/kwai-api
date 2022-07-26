@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Kwai\Applications\Trainings\Resources\DefinitionResource;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Location;
@@ -11,10 +12,10 @@ use Kwai\Core\Domain\ValueObjects\TimePeriod;
 use Kwai\Core\Domain\ValueObjects\Weekday;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Definition;
-use Kwai\Modules\Trainings\Presentation\Resources\DefinitionResource;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 
 it('can serialize a definition entity to JSON:API', function () {
-    $definition = new Entity(
+    $definition = new DefinitionEntity(
         1,
         new Definition(
             name: 'Monday',
@@ -44,22 +45,20 @@ it('can serialize a definition entity to JSON:API', function () {
 
     expect($json)
         ->toHaveProperty('data')
-    ;
-    expect($json->data)
-        ->toMatchObject([
-            'type' => 'definitions',
-            'id' => '1'
-        ])
-        ->toHaveProperty('attributes')
-    ;
-    expect($json->data->attributes)
-        ->toMatchObject([
-            'active' => true,
-            'weekday' => 1,
-            'start_time' => '19:00',
-            'end_time' => '21:00',
-            'time_zone' => 'Europe/Brussels',
-            'location' => null
-        ])
+        ->and($json->data)
+            ->toMatchObject([
+                'type' => 'definitions',
+                'id' => '1'
+            ])
+            ->toHaveProperty('attributes')
+        ->and($json->data->attributes)
+            ->toMatchObject([
+                'active' => true,
+                'weekday' => 1,
+                'start_time' => '19:00',
+                'end_time' => '21:00',
+                'time_zone' => 'Europe/Brussels',
+                'location' => null
+            ])
     ;
 });

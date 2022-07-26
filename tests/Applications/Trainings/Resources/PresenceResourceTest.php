@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Kwai\Applications\Trainings\Resources\PresenceResource;
 use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\Date;
@@ -8,12 +9,12 @@ use Kwai\Core\Domain\ValueObjects\Gender;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Member;
+use Kwai\Modules\Trainings\Domain\MemberEntity;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
-use Kwai\Modules\Trainings\Presentation\Resources\PresenceResource;
 
 it('can serialize a presence as JSON:API resource', function () {
    $presence = new Presence(
-       member: new Entity(
+       member: new MemberEntity(
            1,
            new Member(
                license: '12345',
@@ -41,22 +42,20 @@ it('can serialize a presence as JSON:API resource', function () {
 
     expect($json)
         ->toHaveProperty('data')
-    ;
-    expect($json->data)
-        ->toMatchObject([
-            'type' => 'presences',
-            'id' => '1'
-        ])
-        ->toHaveProperty('attributes')
-    ;
-    expect($json->data->attributes)
-        ->toMatchObject([
-            'remark' => null,
-            'name' => 'Jigoro Kano',
-            'gender' => 1,
-            'birthdate' => '1860-10-28',
-            'license' => '12345',
-            'license_end_date' => '2022-12-01'
-        ])
+        ->and($json->data)
+            ->toMatchObject([
+                'type' => 'presences',
+                'id' => '1'
+            ])
+            ->toHaveProperty('attributes')
+        ->and($json->data->attributes)
+            ->toMatchObject([
+                'remark' => null,
+                'name' => 'Jigoro Kano',
+                'gender' => 1,
+                'birthdate' => '1860-10-28',
+                'license' => '12345',
+                'license_end_date' => '2022-12-01'
+            ])
     ;
 });

@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Trainings\Domain\Team;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 
 /**
  * Class TeamResource
@@ -18,10 +17,10 @@ use Kwai\Modules\Trainings\Domain\Team;
 class TeamResource
 {
     /**
-     * @param Entity<Team> $team
+     * @param TeamEntity $team
      */
     public function __construct(
-        private Entity $team
+        private TeamEntity $team
     ) {
     }
 

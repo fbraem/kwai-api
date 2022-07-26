@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
+use Kwai\Applications\Trainings\Resources\SeasonResource;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Season;
-use Kwai\Modules\Trainings\Presentation\Resources\SeasonResource;
+use Kwai\Modules\Trainings\Domain\SeasonEntity;
 
 it('can serialize a season to a JSONAPI resource', function () {
-    $season = new Entity(
+    $season = new SeasonEntity(
         1,
         new Season(name: '2021-2022')
     );
@@ -24,17 +24,15 @@ it('can serialize a season to a JSONAPI resource', function () {
 
     expect($json)
         ->toHaveProperty('data')
-    ;
-    expect($json->data)
-        ->toMatchObject([
-            'type' => 'seasons',
-            'id' => '1'
-        ])
-        ->toHaveProperty('attributes')
-    ;
-    expect($json->data->attributes)
-        ->toMatchObject([
-            'name' => '2021-2022'
-        ])
+        ->and($json->data)
+            ->toMatchObject([
+                'type' => 'seasons',
+                'id' => '1'
+            ])
+            ->toHaveProperty('attributes')
+        ->and($json->data->attributes)
+            ->toMatchObject([
+                'name' => '2021-2022'
+            ])
     ;
 });

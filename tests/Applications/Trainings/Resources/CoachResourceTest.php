@@ -27,17 +27,15 @@ it('can serialize a coach entity to JSON:API', function () {
 
     expect($json)
         ->toHaveProperty('data')
-    ;
-    expect($json->data)
-        ->toMatchObject([
-            'type' => 'coaches',
-            'id' => '1'
-        ])
-        ->toHaveProperty('attributes')
-    ;
-    expect($json->data->attributes)
-        ->toMatchObject([
-            'name' => 'Jigoro Kano'
-        ])
+        ->and($json->data)
+            ->toMatchObject([
+                'type' => 'coaches',
+                'id' => '1'
+            ])
+            ->toHaveProperty('attributes')
+        ->and($json->data->attributes)
+            ->toMatchObject([
+                'name' => 'Jigoro Kano'
+            ])
     ;
 });

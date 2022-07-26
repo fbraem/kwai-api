@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\ValueObjects\Text;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\JSONAPI;
-use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 
 /**
@@ -21,11 +21,11 @@ use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
 class TrainingResource
 {
     /**
-     * @param Entity<Training> $training
+     * @param TrainingEntity $training
      * @param ConverterFactory $converterFactory
      */
     public function __construct(
-        private Entity           $training,
+        private TrainingEntity   $training,
         private ConverterFactory $converterFactory
     ) {
     }
@@ -112,7 +112,7 @@ class TrainingResource
     public function getTeams(): array
     {
         return $this->training->getTeams()->map(
-            fn(Entity $team) => new TeamResource($team)
+            fn(TeamEntity $team) => new TeamResource($team)
         )->toArray();
     }
 

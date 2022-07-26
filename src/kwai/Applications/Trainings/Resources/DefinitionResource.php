@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Trainings\Domain\Definition;
+use Kwai\Modules\Trainings\Domain\DefinitionEntity;
 
 /**
  * Class DefinitionResource
@@ -17,11 +16,8 @@ use Kwai\Modules\Trainings\Domain\Definition;
 #[JSONAPI\Resource(type: 'definitions', id: 'getId')]
 class DefinitionResource
 {
-    /**
-     * @param Entity<Definition> $definition
-     */
     public function __construct(
-        private Entity $definition
+        private DefinitionEntity $definition
     ) {
     }
 

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
+use Kwai\Applications\Trainings\Resources\TeamResource;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Team;
-use Kwai\Modules\Trainings\Presentation\Resources\TeamResource;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 
 it('can serialize a team to a JSONAPI resource', function () {
-    $team = new Entity(
+    $team = new TeamEntity(
         1,
         new Team(name: 'U13')
     );
@@ -24,17 +24,15 @@ it('can serialize a team to a JSONAPI resource', function () {
 
     expect($json)
         ->toHaveProperty('data')
-    ;
-    expect($json->data)
-        ->toMatchObject([
-            'type' => 'teams',
-            'id' => '1'
-        ])
-        ->toHaveProperty('attributes')
-    ;
-    expect($json->data->attributes)
-        ->toMatchObject([
-            'name' => 'U13'
-        ])
+        ->and($json->data)
+            ->toMatchObject([
+                'type' => 'teams',
+                'id' => '1'
+            ])
+            ->toHaveProperty('attributes')
+        ->and($json->data->attributes)
+            ->toMatchObject([
+                'name' => 'U13'
+            ])
     ;
 });

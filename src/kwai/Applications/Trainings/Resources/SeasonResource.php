@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Resources;
 
-use Kwai\Core\Domain\Entity;
 use Kwai\JSONAPI;
-use Kwai\Modules\Trainings\Domain\Season;
+use Kwai\Modules\Trainings\Domain\SeasonEntity;
 
 /**
  * Class SeasonResource
@@ -17,11 +16,8 @@ use Kwai\Modules\Trainings\Domain\Season;
 #[JSONAPI\Resource(type: 'seasons', id: 'getId')]
 class SeasonResource
 {
-    /**
-     * @param Entity<Season> $season
-     */
     public function __construct(
-        private Entity $season
+        private SeasonEntity $season
     ) {
     }
 

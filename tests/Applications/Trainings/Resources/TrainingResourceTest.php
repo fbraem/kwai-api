@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Core\Domain\Entity;
+use Kwai\Applications\Trainings\Resources\TrainingResource;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\DocumentFormat;
 use Kwai\Core\Domain\ValueObjects\Event;
@@ -13,13 +13,15 @@ use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Converter\MarkdownConverter;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Coach;
+use Kwai\Modules\Trainings\Domain\CoachEntity;
 use Kwai\Modules\Trainings\Domain\Team;
+use Kwai\Modules\Trainings\Domain\TeamEntity;
 use Kwai\Modules\Trainings\Domain\Training;
+use Kwai\Modules\Trainings\Domain\TrainingEntity;
 use Kwai\Modules\Trainings\Domain\ValueObjects\TrainingCoach;
-use Kwai\Modules\Trainings\Presentation\Resources\TrainingResource;
 
 it('can serialize a training to a JSON:API resource', function () {
-    $training = new Entity(
+    $training = new TrainingEntity(
         1,
         new Training(
             event: new Event(
@@ -42,7 +44,7 @@ it('can serialize a training to a JSON:API resource', function () {
             remark: 'This is a test training',
             coaches: collect([
                 new TrainingCoach(
-                    coach: new Entity(
+                    coach: new CoachEntity(
                         1,
                         new Coach(
                             new Name('Jigoro', 'Kano')
@@ -56,7 +58,7 @@ it('can serialize a training to a JSON:API resource', function () {
                 )
             ]),
             teams: collect([
-                new Entity(
+                new TeamEntity(
                     1,
                     new Team('U15')
                 )
@@ -81,44 +83,38 @@ it('can serialize a training to a JSON:API resource', function () {
 
     expect($json)
         ->toHaveProperty('data')
-    ;
-    expect($json->data)
-        ->toMatchObject([
-            'type' => 'trainings',
-            'id' => '1'
-        ])
-        ->toHaveProperty('attributes')
-        ->toHaveProperty('relationships')
-    ;
-    expect($json->data->attributes)
-        ->toMatchObject([
-            'remark' => 'This is a test training',
-            'event' => (object)[
-                'start_date' => '2021-12-05 19:00:00',
-                'end_date' => '2021-12-05 21:00:00',
-                'timezone' => 'Europe/Brussels',
-                'cancelled' => false,
-                'active' => true,
-                'location' => null
-            ],
-            'contents' => [
-                (object) [
-                    'locale' => 'nl',
-                    'title' => 'Competition Training',
-                    'summary' => 'This is a training dedicated to competition',
-                    'html_summary' => '<p>This is a training dedicated to competition</p>',
-                    'content' => null,
-                    'html_content' => ''
-                ]
-            ]
-        ])
-    ;
-    expect($json->data->relationships)
-        ->toHaveProperty('coaches')
-        ->toHaveProperty('teams')
-    ;
-
-    expect($json)
         ->toHaveProperty('included')
+        ->and($json->data)
+            ->toMatchObject([
+                'type' => 'trainings',
+                'id' => '1'
+            ])
+            ->toHaveProperty('attributes')
+            ->toHaveProperty('relationships')
+        ->and($json->data->attributes)
+            ->toMatchObject([
+                'remark' => 'This is a test training',
+                'event' => (object)[
+                    'start_date' => '2021-12-05 19:00:00',
+                    'end_date' => '2021-12-05 21:00:00',
+                    'timezone' => 'Europe/Brussels',
+                    'cancelled' => false,
+                    'active' => true,
+                    'location' => null
+                ],
+                'contents' => [
+                    (object) [
+                        'locale' => 'nl',
+                        'title' => 'Competition Training',
+                        'summary' => 'This is a training dedicated to competition',
+                        'html_summary' => '<p>This is a training dedicated to competition</p>',
+                        'content' => null,
+                        'html_content' => ''
+                    ]
+                ]
+            ])
+        ->and($json->data->relationships)
+            ->toHaveProperty('coaches')
+            ->toHaveProperty('teams')
     ;
 });
