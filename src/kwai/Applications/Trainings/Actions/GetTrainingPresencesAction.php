@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Actions;
 
+use Kwai\Applications\Trainings\Resources\PresenceResource;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
@@ -18,7 +19,6 @@ use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Domain\ValueObjects\Presence;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Resources\PresenceResource;
 use Kwai\Modules\Trainings\UseCases\GetTraining;
 use Kwai\Modules\Trainings\UseCases\GetTrainingCommand;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -64,7 +64,7 @@ class GetTrainingPresencesAction extends Action
         );
 
         return (new JSONAPIResponse(
-            JSONAPI\Document::createFromArray($resources)
+            JSONAPI\Document::createFromArray($resources->toArray())
         ))($response);
     }
 }

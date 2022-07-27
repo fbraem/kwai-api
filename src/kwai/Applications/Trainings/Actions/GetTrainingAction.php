@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Actions;
 
+use Kwai\Applications\Trainings\Resources\TrainingResource;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\ConvertDependency;
@@ -19,7 +20,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Exceptions\TrainingNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Resources\TrainingResource;
 use Kwai\Modules\Trainings\UseCases\GetTraining;
 use Kwai\Modules\Trainings\UseCases\GetTrainingCommand;
 use Psr\Http\Message\ResponseInterface as Response;

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Actions;
 
+use Kwai\Applications\Trainings\Resources\DefinitionResource;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
@@ -23,7 +24,6 @@ use Kwai\Modules\Trainings\Domain\Exceptions\TeamNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\SeasonDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Resources\DefinitionResource;
 use Kwai\Modules\Trainings\UseCases\UpdateDefinition;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;

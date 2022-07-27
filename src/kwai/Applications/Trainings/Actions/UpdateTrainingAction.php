@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Actions;
 
+use Kwai\Applications\Trainings\Resources\TrainingResource;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Converter\ConverterFactory;
 use Kwai\Core\Infrastructure\Database\Connection;
@@ -25,7 +26,6 @@ use Kwai\Modules\Trainings\Infrastructure\Repositories\CoachDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TeamDatabaseRepository;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\TrainingDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Resources\TrainingResource;
 use Kwai\Modules\Trainings\UseCases\UpdateTraining;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;

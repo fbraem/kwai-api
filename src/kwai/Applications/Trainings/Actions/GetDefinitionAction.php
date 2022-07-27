@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Kwai\Applications\Trainings\Actions;
 
+use Kwai\Applications\Trainings\Resources\DefinitionResource;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
 use Kwai\Core\Infrastructure\Presentation\Action;
@@ -17,7 +18,6 @@ use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\JSONAPI;
 use Kwai\Modules\Trainings\Domain\Exceptions\DefinitionNotFoundException;
 use Kwai\Modules\Trainings\Infrastructure\Repositories\DefinitionDatabaseRepository;
-use Kwai\Modules\Trainings\Presentation\Resources\DefinitionResource;
 use Kwai\Modules\Trainings\UseCases\GetDefinition;
 use Kwai\Modules\Trainings\UseCases\GetDefinitionCommand;
 use Psr\Http\Message\ResponseInterface as Response;
