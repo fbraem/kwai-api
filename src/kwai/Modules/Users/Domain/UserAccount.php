@@ -54,7 +54,6 @@ final class UserAccount implements DomainEntity
     }
 
     /**
-     * TODO: Add revoked to table
      * Checks if the user is revoked.
      * @return bool
      */
