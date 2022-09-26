@@ -32,19 +32,19 @@ final class MailMapper
     public static function toDomain(Collection $data): Mail
     {
         return new Mail(
-            tag: $data->get('tag'),
             uuid: new UniqueId($data->get('raw')),
             sender: new Address(new EmailAddress($data->get('sender_email')), $data->get('sender_name', '')),
             content: new MailContent($data->get('subject'), $data->get('text_body'), $data->get('html_body', '')),
+            creator: CreatorMapper::toDomain($data->get('user')),
             sentTime: $data->has('sent_time') ? Timestamp::createFromString($data->get('sent_time')) : null,
+            remark: $data->get('remark'),
             traceableTime: new TraceableTime(
                 Timestamp::createFromString($data->get('created_at')),
                 $data->has('updated_at')
                 ? Timestamp::createFromString($data->get('updated_at'))
                 : null
             ),
-            remark: $data->get('remark'),
-            creator: CreatorMapper::toDomain($data->get('user')),
+            tag: $data->get('tag'),
             recipients: $data->get('recipients')->map(
                 fn ($recipient) => RecipientMapper::toDomain($recipient)
             )
