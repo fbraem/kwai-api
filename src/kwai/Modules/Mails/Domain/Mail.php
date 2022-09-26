@@ -25,21 +25,21 @@ class Mail implements DomainEntity
     /**
      * Constructor
      *
-     * @param string|null        $tag
-     * @param UniqueId           $uuid
-     * @param Address            $sender
-     * @param MailContent        $content
-     * @param Timestamp|null     $sentTime
-     * @param string|null        $remark
-     * @param Creator            $creator
+     * @param UniqueId $uuid
+     * @param Address $sender
+     * @param MailContent $content
+     * @param Creator|null $creator
+     * @param Timestamp|null $sentTime
+     * @param string|null $remark
      * @param TraceableTime|null $traceableTime
-     * @param Collection|null    $recipients
+     * @param string|null $tag
+     * @param Collection|null $recipients
      */
     public function __construct(
         private UniqueId $uuid,
         private Address $sender,
         private MailContent $content,
-        private Creator $creator,
+        private ?Creator $creator = null,
         private ?Timestamp $sentTime = null,
         private ?string $remark = null,
         private ?TraceableTime $traceableTime = null,
@@ -117,9 +117,17 @@ class Mail implements DomainEntity
     }
 
     /**
+     * Does this mail has an owner?
+     */
+    public function hasCreator(): bool
+    {
+        return $this->creator != null;
+    }
+
+    /**
      * Get the creator of this mail
      */
-    public function getCreator(): Creator
+    public function getCreator(): ?Creator
     {
         return $this->creator;
     }
