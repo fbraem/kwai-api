@@ -8,6 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Core\Infrastructure\Mailer;
 
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
+use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 use Symfony\Component\Mime\Email;
 
 /**
@@ -16,17 +17,9 @@ use Symfony\Component\Mime\Email;
 interface Message
 {
     /**
-     * Return the subject
-     * @return string
+     * @return MailContent
      */
-    public function getSubject(): string;
-
-    /**
-     * Create a Email message
-     *
-     * @return Email
-     */
-    public function createMessage(): Email;
+    public function createMailContent(): MailContent;
 
     /**
      * Returns a From Address. This allows to override the used from field
@@ -35,4 +28,6 @@ interface Message
      * @return Address|null
      */
     public function getFrom(): ?Address;
+
+    public function getRecipients(): array;
 }

@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Mailer;
 
+use Kwai\Modules\Mails\Domain\Recipient;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 
 /**
@@ -24,16 +25,8 @@ interface MailerService
     /**
      * Send a message.
      *
-     * @param Message        $message
-     * @param array<Address> $to
-     * @param array<Address> $cc
-     * @param array<Address> $bcc
+     * @param Message $message
      * @return void
      */
-    public function send(
-        Message $message,
-        array $to,
-        array $cc = [],
-        array $bcc = []
-    ): void;
+    public function send(Message $message): void;
 }
