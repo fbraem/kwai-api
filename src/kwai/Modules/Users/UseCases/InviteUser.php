@@ -10,7 +10,6 @@ namespace Kwai\Modules\Users\UseCases;
 use DateTime;
 use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
