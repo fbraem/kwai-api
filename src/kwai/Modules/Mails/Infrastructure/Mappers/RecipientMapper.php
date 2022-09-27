@@ -44,7 +44,7 @@ final class RecipientMapper
     public static function toPersistence(Recipient $recipient): Collection
     {
         return collect([
-            'type' => strval($recipient->getType()),
+            'type' => $recipient->getType()->value,
             'email' => $recipient->getAddress()->getEmail(),
             'name' => $recipient->getAddress()->getName()
         ]);
