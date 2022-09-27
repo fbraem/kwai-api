@@ -23,9 +23,9 @@ class SimpleMessage implements Message
      * @param Address|null $from
      */
     public function __construct(
-        private string $subject,
-        private string $body,
-        private ?Address $from = null
+        private readonly string $subject,
+        private readonly string $body,
+        private readonly ?Address $from = null
     ) {
     }
 
