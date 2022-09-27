@@ -23,6 +23,7 @@ class WebsiteConfiguration implements Configurable
      * @param Address $email
      */
     public function __construct(
+        private string $name,
         private string $url,
         private Address $email
     ) {
@@ -38,9 +39,15 @@ class WebsiteConfiguration implements Configurable
         return $this->email;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public static function createFromVariables(array $variables): self
     {
         return new self(
+            $variables['KWAI_WEBSITE_NAME'] ?? '',
             $variables['KWAI_WEBSITE_URL'],
             new Address(
                 new EmailAddress($variables['KWAI_WEBSITE_EMAIL']),
