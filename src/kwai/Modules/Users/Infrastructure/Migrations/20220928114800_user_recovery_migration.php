@@ -15,7 +15,7 @@ class UserRecoveryMigration extends AbstractMigration
             ->addColumn('uuid', 'string')
             ->addColumn('expired_at', 'datetime')
             ->addColumn('expired_at_timezone', 'string')
-            ->addColumn('confirmed_at', 'datetime')
+            ->addColumn('confirmed_at', 'datetime', ['null' => true])
             ->addColumn('remark', 'string', ['null' => true])
             ->addTimestamps()
             ->create()
