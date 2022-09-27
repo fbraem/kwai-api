@@ -46,6 +46,7 @@ class Mail implements DomainEntity
         private ?string $tag = null,
         private ?Collection $recipients = null
     ) {
+        $this->sentTime ??= Timestamp::createNow();
         $this->traceableTime ??= new TraceableTime();
         $this->recipients ??= new Collection();
     }
