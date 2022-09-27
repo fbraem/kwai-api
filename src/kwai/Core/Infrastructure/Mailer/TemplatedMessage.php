@@ -52,7 +52,7 @@ class TemplatedMessage implements Message
         return new MailContent(
             subject: $this->template->getSubject(),
             text: $this->template->renderPlainText($this->vars),
-            html: $this->template->renderPlainText($this->vars)
+            html: $this->template->renderHtml($this->vars)
         );
     }
 }
