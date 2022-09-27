@@ -18,14 +18,10 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
  */
 class WebsiteConfiguration implements Configurable
 {
-    /**
-     * @param string  $url
-     * @param Address $email
-     */
     public function __construct(
-        private string $name,
-        private string $url,
-        private Address $email
+        private readonly string $name,
+        private readonly string $url,
+        private readonly Address $email
     ) {
     }
 
