@@ -27,7 +27,7 @@ final class RecipientMapper
     public static function toDomain(Collection $data): Recipient
     {
         return new Recipient(
-            type: new RecipientType((int) $data->get('type')),
+            type: RecipientType::from((int) $data->get('type')),
             address: new Address(
                 new EmailAddress($data->get('email')),
                 $data->get('name', '')

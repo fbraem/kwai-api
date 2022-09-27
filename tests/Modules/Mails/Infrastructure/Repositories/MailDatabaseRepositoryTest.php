@@ -46,7 +46,7 @@ it('can create an email', function () {
             tag: 'test',
             recipients: collect([
                 new Recipient(
-                    type: RecipientType::TO(),
+                    type: RecipientType::TO,
                     address: new Address(
                         email: new EmailAddress('jigoro.kano@kwai.com'),
                         name: 'Jigoro Kano'

@@ -146,7 +146,7 @@ final class InviteUser
             tag: 'user.invitation',
             recipients: collect([
                 new Recipient(
-                    type: RecipientType::TO(),
+                    type: RecipientType::TO,
                     address: new Address(
                         new EmailAddress($command->email),
                         $command->name
