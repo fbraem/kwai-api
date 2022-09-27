@@ -69,7 +69,7 @@ final class MailMapper
             'text_body' => $mail->getContent()->getText(),
             'sent_time' => $mail->getSentTime()?->__toString(),
             'remark' => $mail->getRemark(),
-            'user_id' => $mail->getCreator()->getId(),
+            'user_id' => $mail->getCreator()?->getId(),
             'created_at' => strval($mail->getTraceableTime()->getCreatedAt()),
             'updated_at' => $mail->getTraceableTime()->getUpdatedAt()?->__toString(),
         ]);
