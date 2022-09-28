@@ -101,8 +101,8 @@ class CreateUserInvitationAction extends Action
                 new MailDatabaseRepository($this->database),
                 new MailTemplate(
                     'User Invitation',
-                    $this->templateEngine->createTemplate('User/invitation_html'),
-                    $this->templateEngine->createTemplate('User/invitation_txt'),
+                    $this->templateEngine->createTemplate('Users::invitation_html'),
+                    $this->templateEngine->createTemplate('Users::invitation_txt'),
                 ),
                 $creator
             ))($command);

@@ -30,6 +30,8 @@ class PlatesEngine implements TemplateEngine
     public function __construct(string $templatePath, array $variables = [])
     {
         $this->engine = new Engine($templatePath);
+        $this->engine->addFolder('root', $templatePath);
+        $this->engine->addFolder('Users', $templatePath . '/Users');
         $this->engine->addData($variables);
     }
 
