@@ -26,6 +26,7 @@ class TemplateDependency implements Dependency
         $websiteConfiguration = $this->settings->getWebsiteConfiguration();
         $variables = [
             'website' => [
+                'name' => $websiteConfiguration->getName(),
                 'url' => $websiteConfiguration->getUrl(),
                 'email' => $websiteConfiguration->getAddress()->getEmail(),
             ]
