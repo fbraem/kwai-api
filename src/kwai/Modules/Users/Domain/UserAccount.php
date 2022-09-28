@@ -7,6 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain;
 
+use Kwai\Core\Domain\Exceptions\NotAllowedException;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\DomainEntity;
 
@@ -29,7 +30,7 @@ final class UserAccount implements DomainEntity
      */
     public function __construct(
         private readonly User $user,
-        private readonly Password $password,
+        private Password $password,
         private ?Timestamp $lastLogin = null,
         private ?Timestamp $lastUnsuccessfulLogin = null,
         private bool $revoked = false,
@@ -104,5 +105,20 @@ final class UserAccount implements DomainEntity
     public function getPassword(): Password
     {
         return $this->password;
+    }
+
+    /**
+     * @throws NotAllowedException
+     */
+    public function resetPassword(Password $password): void
+    {
+        if ($this->isRevoked()) {
+            throw new NotAllowedException(
+                'User Account',
+                'ResetPassword',
+                'Reset password on revoked account is not allowed'
+            );
+        }
+        $this->password = $password;
     }
 }
