@@ -74,6 +74,8 @@ final class UserAccountDTO
         }
         $this->user->revoked = $account->isRevoked() ? 1 : 0;
         $this->user->password = (string) $account->getPassword();
+        $this->user->created_at = (string) $account->getUser()->getTraceableTime()->getCreatedAt();
+        $this->user->updated_at = $account->getUser()->getTraceableTime()->getUpdatedAt()?->__toString();
 
         return $this;
     }
