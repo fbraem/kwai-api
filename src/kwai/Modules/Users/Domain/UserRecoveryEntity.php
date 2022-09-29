@@ -11,7 +11,8 @@ use Kwai\Core\Domain\EntityTrait;
 
 /**
  * Class UserRecoveryEntity
- * @Mixin UserRecovery
+ *
+ * @mixin UserRecovery
  */
 final class UserRecoveryEntity
 {
