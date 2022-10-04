@@ -50,13 +50,63 @@ Deployer or do a manual install.
 Deployer
 --------
 
-> To be able to deploy on a (shared) host SSH must be setup. The article
-> ["Deploying a Symfony application with Deployer"](https://dev.to/andersbjorkland/deploying-a-symfony-application-with-deployer-afe)
-> can help.
+> This information is based on the article
+> ["Deploying a Symfony application with Deployer"](https://dev.to/andersbjorkland/deploying-a-symfony-application-with-deployer-afe).
 
+### ssh
+Whenever deployer connects to the server, it will prompt for a password. And when you are using deploy tools it 
+can be entirely cumbersome. This can be avoided by setting up a public and private key.
+
+On your local environment use **ssh-keygen** to generate a key. Navigate to the ~/.ssh folder (
+if you don't have that folder, create it with `mkdir ~/.ssh`) and run ssh-keygen. This will start
+the key-generation. It will prompt you for a name for the keys. Either enter one or accept the 
+default (id_rsa). Then it will prompt you for a passphrase if you would like to add one to 
+the keys. If not, it's just as simple as pressing enter twice.
+
+````shell
+cd ~/.ssh
+ssh-keygen
+````
+
+Next we are going to add the public key to the remote server. First we will copy the contents 
+of the key. Cat the file (with the extension .pub) you have named when running ssh-keygen. Copy the text string.
+
+Login to your remote server. Go to the ~/.ssh folder. Create a file to store the public key.
+````shell
+cd ~/.ssh
+touch authorized_keys
+nano authorized_keys
+````
+Paste the contents of the public key file into this file and save it.
+
+You can now exit the connection to the remote server.
+
+Next up we are going to configure an SSH connection to the remote server, so we don't have to 
+type host, username, and password each time. Create a config file in the ~/.ssh folder.
+
+````shell
+cd ~/.ssh
+touch config
+nano config
+````
+The config file can look like this when the host is ssh.example.com:
+````
+Host example
+HostName ssh.example.com
+User example.com
+IdentityFile /c/Users/example/.ssh/example
+````
+The IdentityFile should be the name you have used in ssh-keygen.
+This example can be tested as follows: `ssh example`.
+
+### Install Deployer
 Install [deployer](https://deployer.org/) (version 6.x)
 and create a deployer configuration file. The `hosts.yml` file can be used as an
 example. This file can look like this:
+
+> Currently, Deployer 6.x is used.
+
+### Deployer Configuration
 
 ````yaml
 kwai:
@@ -75,7 +125,7 @@ Run deployer from the folder where hosts.yml is located:
 dep deploy production
 ````
 
-When the deploy is successful, the deploy_path will contain a `shared` and a
+When deploy is successful, the deploy_path will contain a `shared` and a
 `releases` folder and a symbolic link `current`. The symbolic link will point
 to the latest deployed application code. The shared folder contains folders
 and files that will be shared between different releases. In this folder the 
