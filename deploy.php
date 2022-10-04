@@ -26,6 +26,7 @@ task('deploy:staging', function() {
     $appFiles = [
         'api',
         'src',
+        'autoload.php',
         'composer.json',
         'composer.lock',
         'facebook.php'
