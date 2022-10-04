@@ -28,8 +28,7 @@ task('deploy:staging', function() {
         'src',
         'autoload.php',
         'composer.json',
-        'composer.lock',
-        'facebook.php'
+        'composer.lock'
     ];
     $releasePath = get('release_path');
 
