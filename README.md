@@ -119,6 +119,7 @@ kwai:
 
 `application` contains the value 'kwai_api'.
 
+### Deploy
 Run deployer from the folder where hosts.yml is located:
 
 ````shell
@@ -137,7 +138,7 @@ These files will be overwritten on each deploy. In the public path an autoload
 PHP script will be created. This autoload script will load the
 vendor/autoload.php file.
 
-The database migration is currently not executed after a deploy. When a 
+The database migration is currently not executed after a deployment. When a 
 migration is needed, go to the src folder in the current folder of the 
 deploy_path on the (shared) host and run it manually:
 
