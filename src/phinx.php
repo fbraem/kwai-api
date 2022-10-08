@@ -21,6 +21,7 @@ $environments = [
 return [
     'paths' => [
         'migrations' => [
+            __DIR__ . '/migrations',
             __DIR__ . '/kwai/Modules/Applications/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Users/Infrastructure/Migrations',
             __DIR__ . '/kwai/Modules/Mails/Infrastructure/Migrations',
