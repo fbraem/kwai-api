@@ -57,20 +57,13 @@ final class SymfonyMailerService implements MailerService
             (string) $address->getEmail(), $address->getName()
         );
 
-        $content = $message->createMailContent();
-
-        $symfonyMessage = (new Email())
-            ->subject($content->getSubject())
-            ->text($content->getText())
-            ->from(new \Symfony\Component\Mime\Address(
+        $email = $message->processMail(new Email());
+        $email = $email->from(new \Symfony\Component\Mime\Address(
                 (string) $from->getEmail(),
                 $from->getName()
             ))
             ->to(...array_map($mapToSymfonyAddress, $to))
         ;
-        if ($content->hasHtml()) {
-            $symfonyMessage = $symfonyMessage->html($content->getHtml());
-        }
         $cc = array_map(
             fn(Recipient $recipient) => $recipient->getAddress(),
             array_filter(
@@ -79,7 +72,7 @@ final class SymfonyMailerService implements MailerService
             )
         );
         if (count($cc) > 0) {
-            $symfonyMessage = $symfonyMessage->cc(...array_map($mapToSymfonyAddress, $cc));
+            $email = $email->cc(...array_map($mapToSymfonyAddress, $cc));
         }
         $bcc = array_map(
             fn(Recipient $recipient) => $recipient->getAddress(),
@@ -89,11 +82,11 @@ final class SymfonyMailerService implements MailerService
             )
         );
         if (count($bcc) > 0) {
-            $symfonyMessage = $symfonyMessage->bcc(...array_map($mapToSymfonyAddress, $bcc));
+            $email = $email->bcc(...array_map($mapToSymfonyAddress, $bcc));
         }
 
         try {
-            $this->mailer->send($symfonyMessage);
+            $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
             throw new MailerException('Could not send email', $e);
         }

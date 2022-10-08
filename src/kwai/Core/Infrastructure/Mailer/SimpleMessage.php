@@ -7,7 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Mailer;
 
-use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
+use Symfony\Component\Mime\Email;
 
 /**
  * An email message
@@ -26,11 +26,11 @@ class SimpleMessage implements Message
     ) {
     }
 
-    public function createMailContent(): MailContent
+    public function processMail(Email $email): Email
     {
-        return new MailContent(
-            subject: $this->subject,
-            text: $this->body
-        );
+        return $email
+            ->subject($this->subject)
+            ->text($this->body)
+        ;
     }
 }

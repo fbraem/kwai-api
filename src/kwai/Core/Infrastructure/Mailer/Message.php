@@ -7,7 +7,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Mailer;
 
-use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
+use Symfony\Component\Mime\Email;
 
 /**
  * Interface for an email message
@@ -15,7 +15,8 @@ use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
 interface Message
 {
     /**
-     * @return MailContent
+     * @param Email $email
+     * @return Email
      */
-    public function createMailContent(): MailContent;
+    public function processMail(Email $email): Email;
 }

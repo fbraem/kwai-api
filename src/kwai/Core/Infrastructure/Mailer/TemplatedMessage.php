@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Core\Infrastructure\Mailer;
 
 use Kwai\Core\Infrastructure\Template\MailTemplate;
-use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
+use Symfony\Component\Mime\Email;
 
 /**
  * Class TemplatedMessage
@@ -21,16 +21,21 @@ class TemplatedMessage implements Message
      */
     public function __construct(
         private readonly MailTemplate $template,
-        private readonly array $vars
+        private array $vars = []
     ) {
     }
 
-    public function createMailContent(): MailContent
+    public function addVariable(string $name, mixed $value): void
     {
-        return new MailContent(
-            subject: $this->template->getSubject(),
-            text: $this->template->renderPlainText($this->vars),
-            html: $this->template->renderHtml($this->vars)
-        );
+        $this->vars[$name] = $value;
+    }
+
+    public function processMail(Email $email): Email
+    {
+        return $email
+            ->subject($this->template->getSubject())
+            ->html($this->template->renderHtml($this->vars))
+            ->text($this->template->renderPlainText($this->vars))
+        ;
     }
 }
