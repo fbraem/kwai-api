@@ -7,7 +7,6 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Mailer;
 
-use Kwai\Modules\Mails\Domain\Recipient;
 use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 
 /**
@@ -16,17 +15,12 @@ use Kwai\Modules\Mails\Domain\ValueObjects\Address;
 interface MailerService
 {
     /**
-     * Returns the from address
-     *
-     * @return Address
-     */
-    public function getFrom(): Address;
-
-    /**
      * Send a message.
      *
      * @param Message $message
+     * @param array $recipients
+     * @param Address|null $from
      * @return void
      */
-    public function send(Message $message): void;
+    public function send(Message $message, array $recipients = [], ?Address $from = null): void;
 }

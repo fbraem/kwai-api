@@ -34,18 +34,13 @@ final class SymfonyMailerService implements MailerService
 
     /**
      * @inheritdoc
-     */
-    public function getFrom(): Address
-    {
-        return $this->config->getFromAddress();
-    }
-
-    /**
-     * @inheritdoc
      * @throws MailerException
      */
-    public function send(Message $message): void {
-        $recipients = $message->getRecipients();
+    public function send(Message $message, array $recipients = [], ?Address $from = null): void {
+        $from ??= $this->config->getFromAddress();
+        if ($from == null) {
+            throw new MailerException('No sender');
+        }
 
         $to = array_map(
             fn(Recipient $recipient) => $recipient->getAddress(),
@@ -64,7 +59,6 @@ final class SymfonyMailerService implements MailerService
 
         $content = $message->createMailContent();
 
-        $from = $message->getFrom() ?? $this->getFrom();
         $symfonyMessage = (new Email())
             ->subject($content->getSubject())
             ->text($content->getText())

@@ -10,6 +10,7 @@ namespace Kwai\Applications\Auth;
 use Kwai\Applications\Application;
 use Kwai\Applications\Auth\Actions\LoginAction;
 use Kwai\Applications\Auth\Actions\LogoutAction;
+use Kwai\Applications\Auth\Actions\RecoverAction;
 use Kwai\Applications\Auth\Actions\RefreshTokenAction;
 use Kwai\Applications\Auth\Actions\GetUserAction;
 
@@ -23,8 +24,9 @@ class AuthApplication extends Application
         return [
             LoginAction::class,
             LogoutAction::class,
+            RecoverAction::class,
             RefreshTokenAction::class,
-            GetUserAction::class
+            GetUserAction::class,
         ];
     }
 }
