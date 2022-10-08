@@ -8,7 +8,7 @@ declare(strict_types = 1);
 namespace Kwai\Modules\Mails\Domain\ValueObjects;
 
 /**
- * Valueobject for mail content
+ * Value object for mail content
  */
 final class MailContent
 {
@@ -19,9 +19,9 @@ final class MailContent
      * @param string $html    HTML content of the mail
      */
     public function __construct(
-        private string $subject,
-        private string $text,
-        private string $html = ''
+        private readonly string $subject,
+        private readonly string $text,
+        private readonly string $html = ''
     ) {
     }
 
