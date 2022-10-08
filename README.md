@@ -130,8 +130,8 @@ When deploy is successful, the deploy_path will contain a `shared` and a
 `releases` folder and a symbolic link `current`. The symbolic link will point
 to the latest deployed application code. The shared folder contains folders
 and files that will be shared between different releases. In this folder the 
-config folder is used to store `config.php`. Use `config.dist.php` to create
-a config.php for this installation.
+config folder is used to store `.kwai`. Use `.kwai.dist` to create
+a .kwai file for this installation.
 
 In the public_path, the api php entry files will be copied into the api folder.
 These files will be overwritten on each deploy. In the public path an autoload
