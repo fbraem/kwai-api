@@ -31,7 +31,9 @@ class PlatesEngine implements TemplateEngine
     {
         $this->engine = new Engine($templatePath);
         $this->engine->addFolder('root', $templatePath);
-        $this->engine->addFolder('Users', $templatePath . '/Users');
+        if (is_dir($templatePath . '/Users')) {
+            $this->engine->addFolder('Users', $templatePath . '/Users');
+        }
         $this->engine->addData($variables);
     }
 
