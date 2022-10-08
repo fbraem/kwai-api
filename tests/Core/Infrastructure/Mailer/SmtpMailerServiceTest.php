@@ -21,17 +21,17 @@ it('can send a mail', function () {
         new SimpleMessage(
             'Hello',
             'World',
-            [
-                new Recipient(
-                    RecipientType::TO,
-                    Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
-                ),
-                new Recipient(
-                    RecipientType::CC,
-                    Address::create(['gella.vandecaveye@kwai.com' => 'Gella Vandecaveye'])
-                )
-            ]
-        )
+        ),
+        [
+            new Recipient(
+                RecipientType::TO,
+                Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
+            ),
+            new Recipient(
+                RecipientType::CC,
+                Address::create(['gella.vandecaveye@kwai.com' => 'Gella Vandecaveye'])
+            )
+        ]
     );
 })->expectNotToPerformAssertions();
 
@@ -44,18 +44,15 @@ it('can overrule the sender', function () {
     $mailer->send(
         new SimpleMessage(
             'Hello',
-            'World',
-            [
-                new Recipient(
-                    RecipientType::TO,
-                    Address::create(['ingrid.berghmans@kwai.com' => 'Ingrid Berghmans'])
-                ),
-                new Recipient(
-                    RecipientType::TO,
-                    Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
-                )
-            ]
-        )
+            'World'
+        ),
+        [
+            new Recipient(
+                RecipientType::TO,
+                Address::create(['ingrid.berghmans@kwai.com' => 'Ingrid Berghmans'])
+            )
+        ],
+        Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
     );
 })->expectNotToPerformAssertions();
 
@@ -68,13 +65,13 @@ it('fails when no recipient is set', function () {
     $mailer->send(
         new SimpleMessage(
             'Hello',
-            'World',
-            [
-                new Recipient(
-                RecipientType::BCC,
-                Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
-                )
-            ]
-        )
+            'World'
+        ),
+        [
+            new Recipient(
+            RecipientType::BCC,
+            Address::create(['jigoro.kano@kwai.com' => 'Jigoro Kano'])
+            )
+        ]
     );
 })->throws(MailerException::class);
