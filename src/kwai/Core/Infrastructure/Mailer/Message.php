@@ -14,9 +14,21 @@ use Symfony\Component\Mime\Email;
  */
 interface Message
 {
+    public function getRecipients(): Recipients;
+    public function withRecipients(Recipients $recipients): self;
+
+    public function getSubject(): string;
+    public function withSubject(string $subject): self;
+
     /**
-     * @param Email $email
-     * @return Email
+     * @return array<string, string>
      */
-    public function processMail(Email $email): Email;
+    public function getHeaders(): array;
+    public function withHeaders(array $headers): self;
+
+    public function getHtml(): ?string;
+    public function withHtml(string $html): self;
+
+    public function getText(): ?string;
+    public function withText(string $text): self;
 }

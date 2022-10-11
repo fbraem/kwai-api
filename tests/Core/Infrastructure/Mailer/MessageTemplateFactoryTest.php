@@ -1,14 +1,20 @@
 <?php
 declare(strict_types=1);
 
-use Kwai\Core\Infrastructure\Mailer\TemplatedMessage;
+use Kwai\Core\Infrastructure\Mailer\MessageTemplateFactory;
+use Kwai\Core\Infrastructure\Mailer\Recipient;
+use Kwai\Core\Infrastructure\Mailer\Recipients;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
 use Kwai\Core\Infrastructure\Template\PlatesEngine;
-use Symfony\Component\Mime\Email;
 
 it('can create a mail from a template', function() {
     $engine = new PlatesEngine(__DIR__);
-    $message = new TemplatedMessage(
+    $recipients = new Recipients(
+        new Recipient('jigoro.kano@kwai.com'),
+        [ new Recipient('gella.vandecaveye@kwai.com') ]
+    );
+    $message = (new MessageTemplateFactory(
+        $recipients,
         new MailTemplate(
             'Test',
             $engine->createTemplate('mail_html_template'),
@@ -17,15 +23,13 @@ it('can create a mail from a template', function() {
         [
             'name' => 'Jigoro Kano'
         ]
-    );
+    ))->createMessage();
 
-    $email = new Email();
-    $email = $message->processMail($email);
-    expect($email->getSubject())
+    expect($message->getSubject())
         ->toBe('Test')
-        ->and($email->getHtmlBody())
+        ->and($message->getHtml())
         ->toBe('<div>Hello Jigoro Kano</div>')
-        ->and($email->getTextBody())
+        ->and($message->getText())
         ->toBe('Hello Jigoro Kano')
     ;
 });
