@@ -1,11 +1,15 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Core
+ * @subpackage Infrastructure
  */
 declare(strict_types=1);
 
 namespace Kwai\Core\Infrastructure\Template;
+
+use Kwai\Core\Infrastructure\Mailer\Message;
+use Kwai\Core\Infrastructure\Mailer\Recipients;
+use Kwai\Core\Infrastructure\Mailer\SimpleMessage;
 
 /**
  * MailTemplate
@@ -13,31 +17,23 @@ namespace Kwai\Core\Infrastructure\Template;
 class MailTemplate
 {
     /**
-     * The subject of the mail
-     */
-    private string $subject;
-
-    /**
-     * Template for generating a HTML mail
-     */
-    private Template $htmlTemplate;
-
-    /**
-     * Template for generating a plain text mail
-     */
-    private Template $plainTextTemplate;
-
-    /**
      * MailTemplate constructor.
-     * @param string $subject The subject of the mail
      * @param Template $htmlTemplate Template for generating HTML mail
      * @param Template $plainTextTemplate Template for generating plain text mail
      */
-    public function __construct(string $subject, Template $htmlTemplate, Template $plainTextTemplate)
+    public function __construct(
+        private readonly Template $htmlTemplate,
+        private readonly Template $plainTextTemplate
+    ) {
+    }
+
+    public function createMessage(Recipients $recipients, string $subject, array $vars): Message
     {
-        $this->subject = $subject;
-        $this->htmlTemplate = $htmlTemplate;
-        $this->plainTextTemplate = $plainTextTemplate;
+        $message = new SimpleMessage($recipients, $subject);
+        return $message
+            ->withHtml($this->renderHtml($vars))
+            ->withText($this->renderPlainText($vars))
+        ;
     }
 
     /**
@@ -45,7 +41,7 @@ class MailTemplate
      * @param array $vars
      * @return string
      */
-    public function renderHtml(array $vars): string
+    private function renderHtml(array $vars): string
     {
         return $this->htmlTemplate->render($vars);
     }
@@ -55,16 +51,8 @@ class MailTemplate
      * @param array $vars
      * @return string
      */
-    public function renderPlainText(array $vars): string
+    private function renderPlainText(array $vars): string
     {
         return $this->plainTextTemplate->render($vars);
-    }
-
-    /**
-     * Returns the subject
-     */
-    public function getSubject(): string
-    {
-        return $this->subject;
     }
 }

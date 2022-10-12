@@ -8,12 +8,10 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\Mailers;
 
 use Kwai\Core\Infrastructure\Mailer\MailerService;
-use Kwai\Core\Infrastructure\Mailer\TemplatedMessage;
+use Kwai\Core\Infrastructure\Mailer\MessageTemplateFactory;
+use Kwai\Core\Infrastructure\Mailer\Recipient;
+use Kwai\Core\Infrastructure\Mailer\Recipients;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
-use Kwai\Modules\Mails\Domain\Mail;
-use Kwai\Modules\Mails\Domain\Recipient;
-use Kwai\Modules\Mails\Domain\ValueObjects\Address;
-use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 use Kwai\Modules\Mails\Repositories\MailRepository;
 use Kwai\Modules\Users\Domain\UserAccountEntity;
 use Kwai\Modules\Users\Domain\UserRecoveryEntity;
@@ -34,25 +32,23 @@ class UserRecoveryMailer
     ) {
     }
 
-    public function send(): void
+    public function send(Recipients $recipients): void
     {
-        $message = new TemplatedMessage(
-            template: $this->template,
-            vars: [
+        $message = $this->template->createMessage(
+            $recipients->withTo(
+                new Recipient(
+                    (string) $this->recovery->getReceiver(),
+                    (string) $this->account->getUser()->getUsername()
+                )
+            ),
+            'Recover User Password',
+            [
                 'uuid' => (string) $this->recovery->getUuid(),
                 'name' => (string) $this->account->getUser()->getUsername(),
                 'expires' => '',
             ]
         );
-        $recipients = [
-            new Recipient(
-                type: RecipientType::TO,
-                address: new Address(
-                    $this->recovery->getReceiver(),
-                    (string) $this->account->getUser()->getUsername()
-                )
-            )
-        ];
+        /*
         $this->mailRepo->create(
             new Mail(
                 uuid: $this->$this->recovery->getUuid(),
@@ -61,10 +57,8 @@ class UserRecoveryMailer
                 recipients: collect($recipients)
             )
         );
+        */
 
-        $this->mailer->send(
-            $message,
-            $recipients
-        );
+        $this->mailer->send($message);
     }
 }
