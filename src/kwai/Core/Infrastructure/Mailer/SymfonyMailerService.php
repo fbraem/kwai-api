@@ -8,8 +8,6 @@ declare(strict_types = 1);
 namespace Kwai\Core\Infrastructure\Mailer;
 
 use Kwai\Core\Infrastructure\Configuration\MailerConfiguration;
-use Kwai\Modules\Mails\Domain\Recipient;
-use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
@@ -73,5 +71,13 @@ final class SymfonyMailerService implements MailerService
         } catch (TransportExceptionInterface $e) {
             throw new MailerException('Could not send email', $e);
         }
+    }
+
+    public function createRecipients(): Recipients
+    {
+        $from = $this->config->getFromAddress();
+        return new Recipients(
+            new Recipient((string) $from->getEmail(), $from->getName())
+        );
     }
 }

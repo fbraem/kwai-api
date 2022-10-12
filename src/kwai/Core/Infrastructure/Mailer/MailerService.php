@@ -19,4 +19,6 @@ interface MailerService
      * @return void
      */
     public function send(Message $message): void;
+
+    public function createRecipients(): Recipients;
 }
