@@ -26,5 +26,5 @@
     <a href="mailto:<?= $this->e($website['email']) ?>"><?= $this->e($website['email']) ?></a>
 </p>
 <p>
-    Note: This code will expire within 2 hours.
+    Note: This code will expire within <?= $this->e($expires) ?> hours.
 </p>
