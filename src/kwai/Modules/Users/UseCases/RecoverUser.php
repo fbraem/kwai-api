@@ -71,7 +71,6 @@ final class RecoverUser
         $recovery = $this->userRecoverRepo->create(
             new UserRecovery(
                 uuid: new UniqueId(),
-                receiver: $receiverEmail,
                 expiration: new LocalTimestamp(
                     Timestamp::createFromDateTime(
                         new DateTime("now +{$command->expiration} hours")
@@ -88,8 +87,7 @@ final class RecoverUser
         (new UserRecoveryMailer(
             $this->mailerService,
             $this->template,
-            $recovery,
-            $account
+            $recovery
         ))->send();
 
         return $recovery;
