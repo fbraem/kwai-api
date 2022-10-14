@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Infrastructure\Mappers;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -32,7 +31,6 @@ class UserRecoveryDTO
     {
         return new UserRecovery(
             uuid: new UniqueId($this->userRecoveriesTable->uuid),
-            receiver: new EmailAddress($this->userRecoveriesTable->email),
             expiration: new LocalTimestamp(
                 Timestamp::createFromString($this->userRecoveriesTable->expired_at),
                 $this->userRecoveriesTable->expired_at_timezone
@@ -62,7 +60,6 @@ class UserRecoveryDTO
     public function persist(UserRecovery $recovery): static
     {
         $this->userRecoveriesTable->remark = $recovery->getRemark();
-        $this->userRecoveriesTable->email = (string) $recovery->getReceiver();
         $this->userRecoveriesTable->expired_at = (string) $recovery->getExpiration()->getTimestamp();
         $this->userRecoveriesTable->expired_at_timezone = $recovery->getExpiration()->getTimezone();
         $this->userRecoveriesTable->uuid = (string) $recovery->getUuid();

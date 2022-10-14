@@ -13,7 +13,6 @@ class UserRecoveryMigration extends AbstractMigration
         $this->table('user_recoveries', ['signed' => false])
             ->addColumn('user_id', 'integer')
             ->addColumn('uuid', 'string')
-            ->addColumn('email', 'string')
             ->addColumn('expired_at', 'datetime')
             ->addColumn('expired_at_timezone', 'string')
             ->addColumn('confirmed_at', 'datetime', ['null' => true])

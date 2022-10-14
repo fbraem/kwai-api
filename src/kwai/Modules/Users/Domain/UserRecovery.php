@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\Domain;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
 use Kwai\Core\Domain\ValueObjects\TraceableTime;
@@ -22,7 +21,6 @@ final class UserRecovery
 {
     public function __construct(
         private readonly UniqueId $uuid,
-        private readonly EmailAddress $receiver,
         private readonly LocalTimestamp $expiration,
         private readonly UserEntity $user,
         private readonly ?string $remark = null,
@@ -87,10 +85,5 @@ final class UserRecovery
     public function getUser(): UserEntity
     {
         return $this->user;
-    }
-
-    public function getReceiver(): EmailAddress
-    {
-        return $this->receiver;
     }
 }
