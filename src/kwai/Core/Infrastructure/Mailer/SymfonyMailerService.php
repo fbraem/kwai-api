@@ -62,7 +62,7 @@ final class SymfonyMailerService implements MailerService
         if ($text)
             $email = $email->text($text);
 
-        $html = $message->getText();
+        $html = $message->getHtml();
         if ($html)
             $email = $email->html($html);
 
