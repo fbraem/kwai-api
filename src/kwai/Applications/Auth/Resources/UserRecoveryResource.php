@@ -1,12 +1,13 @@
 <?php
 /**
  * @package Applications
- * @subpackage Users
+ * @subpackage Auth
  */
 declare(strict_types=1);
 
-namespace Kwai\Applications\Users\Resources;
+namespace Kwai\Applications\Auth\Resources;
 
+use Kwai\Applications\Auth\Resources\ResourceTypes;
 use Kwai\JSONAPI;
 use Kwai\Modules\Users\Domain\UserRecoveryEntity;
 
