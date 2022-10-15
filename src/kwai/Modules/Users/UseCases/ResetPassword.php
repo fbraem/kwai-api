@@ -53,7 +53,7 @@ class ResetPassword
             throw new UserRecoveryExpiredException($uuid);
         }
 
-        $userAccount = $this->userAccountRepo->get($recovery->getUser()->id());
+        $userAccount = $this->userAccountRepo->get($recovery->getUser()->getEmailAddress());
         $userAccount->resetPassword(Password::fromString($command->password));
         $userAccount->getUser()->getTraceableTime()->markUpdated();
         $this->userAccountRepo->update($userAccount);
