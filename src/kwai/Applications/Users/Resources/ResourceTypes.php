@@ -16,5 +16,6 @@ enum ResourceTypes: string
 {
     const USER_ACCOUNTS = 'user_accounts';
     const USER_INVITATIONS = 'user_invitations';
+    const USER_RECOVERIES = 'user_recoveries';
     const USERS = 'users';
 }
