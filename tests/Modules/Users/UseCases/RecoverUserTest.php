@@ -4,8 +4,6 @@ declare(strict_types=1);
 use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
-use Kwai\Core\Infrastructure\Template\PlatesEngine;
-use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
 use Kwai\Modules\Users\Domain\UserRecoveryEntity;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserRecoveryDatabaseRepository;
@@ -27,10 +25,8 @@ it('can recover a user', function() {
         $recover = RecoverUser::create(
             new UserRecoveryDatabaseRepository($this->db),
             new UserAccountDatabaseRepository($this->db),
-            new MailDatabaseRepository($this->db),
             $mailService,
             new MailTemplate(
-                'Recover user password',
                 $engine->createTemplate('Users::recover_html'),
                 $engine->createTemplate('Users::recover_txt')
             )
