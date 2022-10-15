@@ -53,7 +53,7 @@ it('does not recover a revoked user', function() {
     $mailService = depends('kwai.mailer', MailerDependency::class);
 
     $command = new RecoverUserCommand();
-    $command->email = 'franky.braem@gmail.com';
+    $command->email = 'jigoro.kano@kwai.com';
 
     $engine = depends('kwai.template', TemplateDependency::class);
     try {
