@@ -14,6 +14,7 @@ use Kwai\Applications\Users\Actions\BrowseUserInvitationsAction;
 use Kwai\Applications\Users\Actions\BrowseUsersAction;
 use Kwai\Applications\Users\Actions\ConfirmInvitationAction;
 use Kwai\Applications\Users\Actions\CreateUserInvitationAction;
+use Kwai\Applications\Users\Actions\CreateUserRecoveryAction;
 use Kwai\Applications\Users\Actions\DeleteUserInvitationAction;
 use Kwai\Applications\Users\Actions\GetUserAction;
 use Kwai\Applications\Users\Actions\GetUserInvitationAction;
@@ -33,6 +34,7 @@ class UsersApplication extends Application
             BrowseUsersAction::class,
             ConfirmInvitationAction::class,
             CreateUserInvitationAction::class,
+            CreateUserRecoveryAction::class,
             DeleteUserInvitationAction::class,
             GetUserAction::class,
             GetUserInvitationAction::class,
