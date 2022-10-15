@@ -6,6 +6,7 @@ use Tests\HttpClientTrait;
 require __DIR__ . '/../vendor/autoload.php';
 
 $httpFeature = [
+    'Applications/Auth/Actions',
     'Applications/Trainings/Actions',
     'Applications/Users/Actions',
     'Modules/Applications/Presentation/REST',
