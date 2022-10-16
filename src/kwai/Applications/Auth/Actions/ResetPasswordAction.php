@@ -80,7 +80,7 @@ class ResetPasswordAction extends Action
                 new UserAccountDatabaseRepository($this->database)
             )($command);
         } catch (UserRecoveryExpiredException) {
-            return (new SimpleResponse(400, 'Code is expired'))($response);
+            return (new SimpleResponse(401, 'Code is expired'))($response);
         } catch (RepositoryException $e) {
             $this->logException($e);
             return (
