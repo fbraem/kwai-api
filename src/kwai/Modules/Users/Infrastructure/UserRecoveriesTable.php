@@ -19,7 +19,6 @@ class UserRecoveriesTable extends TableSchema
     public ?int $id = null;
     public int $user_id;
     public string $uuid;
-    public string $email;
     public string $expired_at;
     public string $expired_at_timezone;
     public ?string $confirmed_at = null;
