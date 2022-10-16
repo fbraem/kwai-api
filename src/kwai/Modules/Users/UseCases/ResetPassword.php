@@ -44,7 +44,7 @@ class ResetPassword
      * @throws UserAccountNotFoundException
      * @throws NotAllowedException
      */
-    public function execute(ResetPasswordCommand $command): void
+    public function __invoke(ResetPasswordCommand $command): void
     {
         $uuid = new UniqueId($command->uuid);
         $recovery = $this->userRecoveryRepo->getByUniqueId($uuid);
