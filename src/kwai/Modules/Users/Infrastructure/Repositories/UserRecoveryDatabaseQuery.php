@@ -13,7 +13,9 @@ use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Database\DatabaseQuery;
 use Kwai\Modules\Users\Infrastructure\Mappers\UserRecoveryDTO;
 use Kwai\Modules\Users\Infrastructure\UserRecoveriesTable;
+use Kwai\Modules\Users\Infrastructure\UsersTable;
 use Kwai\Modules\Users\Repositories\UserRecoveryQuery;
+use function Latitude\QueryBuilder\on;
 
 /**
  * Class UserRecoveryDatabaseQuery
@@ -36,19 +38,31 @@ class UserRecoveryDatabaseQuery extends DatabaseQuery implements UserRecoveryQue
     public function filterByUUID(UniqueId $uuid): UserRecoveryQuery
     {
         $this->query->andWhere(
-            UserRecoveriesTable::field('uuid')->eq($uuid)
+            UserRecoveriesTable::field('uuid')->eq((string) $uuid)
         );
         return $this;
     }
 
     protected function initQuery(): void
     {
-        $this->query->from(UserRecoveriesTable::name());
+        $this->query
+            ->from(UserRecoveriesTable::name())
+            ->join(
+                UsersTable::name(),
+                on(
+                    UserRecoveriesTable::column('user_id'),
+                    UsersTable::column('id')
+                )
+            )
+        ;
     }
 
     protected function getColumns(): array
     {
-        return UserRecoveriesTable::aliases();
+        return [
+            ... UserRecoveriesTable::aliases(),
+            ... UsersTable::aliases()
+        ];
     }
 
     public function execute(?int $limit = null, ?int $offset = null): Collection
@@ -61,7 +75,10 @@ class UserRecoveryDatabaseQuery extends DatabaseQuery implements UserRecoveryQue
             $recovery = UserRecoveriesTable::createFromRow($row);
             $userRecoveries->put(
                 $recovery->id,
-                new UserRecoveryDTO($recovery)
+                new UserRecoveryDTO(
+                    $recovery,
+                    UsersTable::createFromRow($row)
+                )
             );
         }
 
