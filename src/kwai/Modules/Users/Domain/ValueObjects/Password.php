@@ -19,9 +19,8 @@ final class Password
      * @param string $password A hashed string used as password.
      */
     public function __construct(
-        private string $password
+        private readonly string $password
     ) {
-        $this->password = $password;
     }
 
     public function __toString(): string
