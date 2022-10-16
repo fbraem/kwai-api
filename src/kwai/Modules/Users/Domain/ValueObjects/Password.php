@@ -30,8 +30,6 @@ final class Password
 
     /**
      * Creates a new password. String will be hashed.
-     * @param  string $str
-     * @return self
      */
     public static function fromString(string $str): self
     {
@@ -40,10 +38,9 @@ final class Password
 
     /**
      * Verify this password against the given password.
-     * @param  string $password
-     * @return bool             Returns true when the password matches
+     * Returns true when the password matches
      */
-    public function verify(string $password)
+    public function verify(string $password): bool
     {
         return password_verify($password, $this->password);
     }
