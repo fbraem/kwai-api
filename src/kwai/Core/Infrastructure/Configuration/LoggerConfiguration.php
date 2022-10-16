@@ -22,8 +22,8 @@ use Psr\Log\LogLevel;
 class LoggerConfiguration implements Configurable
 {
     public function __construct(
-        private ?string $file = null,
-        private string $level = LogLevel::INFO
+        private readonly ?string $file = null,
+        private readonly string $level = LogLevel::INFO
     ) {
     }
 
