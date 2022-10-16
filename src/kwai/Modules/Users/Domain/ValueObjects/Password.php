@@ -9,6 +9,8 @@ declare(strict_types = 1);
 
 namespace Kwai\Modules\Users\Domain\ValueObjects;
 
+use InvalidArgumentException;
+
 /**
  * Value object for a password.
  */
@@ -33,6 +35,19 @@ final class Password
      */
     public static function fromString(string $str): self
     {
+        $strength = 0;
+        if (strlen($str) > 7) {
+            $strength++;
+        }
+        if (preg_match("([a-z])", $str) && preg_match("([A-Z])", $str)) {
+            $strength++;
+        }
+        if (preg_match("([0-9])", $str)) {
+            $strength++;
+        }
+        if ($strength < 3) {
+            throw new InvalidArgumentException('Password is not strong enough');
+        }
         return new self(password_hash($str, PASSWORD_DEFAULT));
     }
 
