@@ -16,7 +16,7 @@ use Kwai\Core\Infrastructure\Database\TableSchema;
 #[TableAttribute(name: 'users')]
 class UsersTable extends TableSchema
 {
-    public ?int $id;
+    public ?int $id = null;
     public string $email;
     public string $password;
     public ?string $last_login;
