@@ -13,6 +13,7 @@ use Kwai\Applications\Auth\Actions\LogoutAction;
 use Kwai\Applications\Auth\Actions\RecoverAction;
 use Kwai\Applications\Auth\Actions\RefreshTokenAction;
 use Kwai\Applications\Auth\Actions\GetUserAction;
+use Kwai\Applications\Auth\Actions\ResetPasswordAction;
 
 /**
  * Class AuthApplication
@@ -26,6 +27,7 @@ class AuthApplication extends Application
             LogoutAction::class,
             RecoverAction::class,
             RefreshTokenAction::class,
+            ResetPasswordAction::class,
             GetUserAction::class,
         ];
     }
