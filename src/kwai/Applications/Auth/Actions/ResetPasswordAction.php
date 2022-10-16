@@ -1,7 +1,7 @@
 <?php
 /**
- * @package
- * @subpackage
+ * @package Applications
+ * @subpackage Auth
  */
 declare(strict_types=1);
 
@@ -25,12 +25,18 @@ use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class ResetPasswordAction
  *
  * Action to reset a password of the user
  */
+#[Route(
+    path: '/auth/reset',
+    name: 'auth.reset',
+    methods: ['POST']
+)]
 class ResetPasswordAction extends Action
 {
     public function __construct(
@@ -74,9 +80,14 @@ class ResetPasswordAction extends Action
                 new UserAccountDatabaseRepository($this->database)
             )($command);
         } catch (UserRecoveryExpiredException) {
-        } catch (RepositoryException) {
-        } catch (UserAccountNotFoundException) {
-        } catch (NotAllowedException) {
+            return (new SimpleResponse(400, 'Code is expired'))($response);
+        } catch (RepositoryException $e) {
+            $this->logException($e);
+            return (
+                new SimpleResponse(500, 'A repository exception occurred.')
+            )($response);
+        } catch (UserAccountNotFoundException|NotAllowedException) {
+            return (new SimpleResponse(400, 'Bad request'))($response);
         }
 
         return (new OkResponse())($response);
