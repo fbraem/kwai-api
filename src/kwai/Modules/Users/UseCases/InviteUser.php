@@ -13,21 +13,17 @@ use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
 use Kwai\Core\Domain\ValueObjects\LocalTimestamp;
 use Kwai\Core\Domain\ValueObjects\Timestamp;
+use Kwai\Core\Infrastructure\Mailer\MailerService;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
-use Kwai\Modules\Mails\Domain\Mail;
-use Kwai\Modules\Mails\Domain\Recipient;
-use Kwai\Modules\Mails\Domain\ValueObjects\Address;
-use Kwai\Modules\Mails\Domain\ValueObjects\MailContent;
-use Kwai\Modules\Mails\Domain\ValueObjects\RecipientType;
-use Kwai\Modules\Mails\Repositories\MailRepository;
 use Kwai\Modules\Users\Domain\UserInvitation;
 use Kwai\Modules\Users\Domain\UserInvitationEntity;
+use Kwai\Modules\Users\Mailers\UserInvitationMailer;
 use Kwai\Modules\Users\Repositories\UserAccountRepository;
 use Kwai\Modules\Users\Repositories\UserInvitationRepository;
 
 /**
- * Usecase: Invite user.
+ * Use case: Invite user.
  * - Step 1 - Check if the email address isn't used yet by another user
  * - Step 2 - Check if there is a previous non-expired invitation
  * - Step 3 - Create the invitation
@@ -43,17 +39,17 @@ final class InviteUser
      * Constructor.
      *
      * @param UserInvitationRepository $userInvitationRepo
-     * @param UserAccountRepository    $userAccountRepo
-     * @param MailRepository           $mailRepo
-     * @param MailTemplate             $template A template to generate the mail body
-     * @param Creator                  $creator  The user that will execute this use case
+     * @param UserAccountRepository $userAccountRepo
+     * @param MailerService $mailerService
+     * @param MailTemplate $template A template to generate the mail body
+     * @param Creator $creator The user that will execute this use case
      */
     public function __construct(
-        private UserInvitationRepository $userInvitationRepo,
-        private UserAccountRepository $userAccountRepo,
-        private MailRepository $mailRepo,
-        private MailTemplate $template,
-        private Creator $creator
+        private readonly UserInvitationRepository $userInvitationRepo,
+        private readonly UserAccountRepository $userAccountRepo,
+        private readonly MailerService $mailerService,
+        private readonly MailTemplate $template,
+        private readonly Creator $creator
     ) {
     }
 
@@ -61,23 +57,23 @@ final class InviteUser
      * Factory method
      *
      * @param UserInvitationRepository $userInvitationRepo
-     * @param UserAccountRepository    $userAccountRepo
-     * @param MailRepository           $mailRepo
-     * @param MailTemplate             $template
-     * @param Creator                  $creator
+     * @param UserAccountRepository $userAccountRepo
+     * @param MailerService $mailerService
+     * @param MailTemplate $template
+     * @param Creator $creator
      * @return static
      */
     public static function create(
         UserInvitationRepository $userInvitationRepo,
         UserAccountRepository $userAccountRepo,
-        MailRepository $mailRepo,
+        MailerService $mailerService,
         MailTemplate $template,
         Creator $creator
     ): self {
         return new self(
             $userInvitationRepo,
             $userAccountRepo,
-            $mailRepo,
+            $mailerService,
             $template,
             $creator
         );
@@ -96,7 +92,7 @@ final class InviteUser
         $email = new EmailAddress($command->email);
         if ($this->userAccountRepo->existsWithEmail($email)) {
             throw new UnprocessableException(
-                strval($email) . ' is already in use.'
+                $email . ' is already in use.'
             );
         }
 
@@ -114,7 +110,7 @@ final class InviteUser
                 emailAddress: new EmailAddress($command->email),
                 expiration: new LocalTimestamp(
                     Timestamp::createFromDateTime(
-                        new DateTime("now +{$command->expiration} days")
+                        new DateTime("now +$command->expiration days")
                     ),
                     'UTC'
                 ),
@@ -124,36 +120,11 @@ final class InviteUser
             )
         );
 
-        $templateVars = [
-            'uuid' => $invitation->getUniqueId(),
-            'name' => $command->name,
-            'expires' => $invitation->getExpiration()->getTimestamp()->diffInDays()
-        ];
-
-        $mail = new Mail(
-            uuid: $invitation->getUniqueId(),
-            sender: new Address(
-                new EmailAddress($command->sender_mail),
-                $command->sender_name
-            ),
-            content: new MailContent(
-                $this->template->getSubject(),
-                $this->template->renderHtml($templateVars),
-                $this->template->renderPlainText($templateVars)
-            ),
-            creator: $this->creator,
-            tag: 'user.invitation',
-            recipients: collect([
-                new Recipient(
-                    type: RecipientType::TO,
-                    address: new Address(
-                        new EmailAddress($command->email),
-                        $command->name
-                    )
-                )
-            ])
-        );
-        $this->mailRepo->create($mail);
+        (new UserInvitationMailer(
+            $this->mailerService,
+            $this->template,
+            $invitation
+        ))->send();
 
         return $invitation;
     }

@@ -15,8 +15,10 @@ use Kwai\Core\Domain\ValueObjects\Creator;
 use Kwai\Core\Infrastructure\Configuration\Configuration;
 use Kwai\Core\Infrastructure\Database\Connection;
 use Kwai\Core\Infrastructure\Dependencies\DatabaseDependency;
+use Kwai\Core\Infrastructure\Dependencies\MailerDependency;
 use Kwai\Core\Infrastructure\Dependencies\Settings;
 use Kwai\Core\Infrastructure\Dependencies\TemplateDependency;
+use Kwai\Core\Infrastructure\Mailer\MailerService;
 use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\InputSchemaProcessor;
 use Kwai\Core\Infrastructure\Presentation\Responses\ForbiddenResponse;
@@ -24,9 +26,8 @@ use Kwai\Core\Infrastructure\Presentation\Responses\JSONAPIResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Core\Infrastructure\Template\MailTemplate;
-use Kwai\Core\Infrastructure\Template\PlatesEngine;
+use Kwai\Core\Infrastructure\Template\TemplateEngine;
 use Kwai\JSONAPI;
-use Kwai\Modules\Mails\Infrastructure\Repositories\MailDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserInvitationDatabaseRepository;
 use Kwai\Modules\Users\UseCases\InviteUser;
@@ -54,12 +55,14 @@ class CreateUserInvitationAction extends Action
 
     public function __construct(
         private ?Connection $database = null,
-        private ?PlatesEngine $templateEngine = null,
+        private ?MailerService $mailerService = null,
+        private ?TemplateEngine $templateEngine = null,
         private ?Configuration $settings = null,
         ?LoggerInterface $logger = null
     ) {
         parent::__construct($logger);
         $this->database ??= depends('kwai.database', DatabaseDependency::class);
+        $this->mailerService ??= depends('kwai.mailer', MailerDependency::class);
         $this->templateEngine ??= depends('kwai.template_engine', TemplateDependency::class);
         $this->settings ??= depends('kwai.settings', Settings::class);
     }
@@ -98,9 +101,8 @@ class CreateUserInvitationAction extends Action
             $invitation = (new InviteUser(
                 new UserInvitationDatabaseRepository($this->database),
                 new UserAccountDatabaseRepository($this->database),
-                new MailDatabaseRepository($this->database),
+                $this->mailerService,
                 new MailTemplate(
-                    'User Invitation',
                     $this->templateEngine->createTemplate('Users::invitation_html'),
                     $this->templateEngine->createTemplate('Users::invitation_txt'),
                 ),
