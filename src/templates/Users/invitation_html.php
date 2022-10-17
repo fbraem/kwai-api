@@ -1,17 +1,34 @@
+<?php $this->layout('root::layout', ['title' => $website['name'] ?? '']) ?>
+<h2>User Invitation</h2>
 <p>
-    Beste <?= $this->e($name) ?>,<br />
-    <br />
-    Je werd uitgenodigd om lid te worden van onze website!<br /><br />
-    Klik op deze <a href="<?= $this->e($website['url']) ?>#/users/invitation/<?= $this->e($uuid) ?>">link</a> om deze uitnodiging
-    te activeren.
+    Dear <strong><?= $this->e($name) ?>,</strong>
 </p>
 <p>
-    Let op! Deze uitnodiging blijft maar geldig voor <?= $this->e($expires) ?> dagen.
+    You were invited to become a member of our website.
+</p>
+<p style="text-align: center">
+    <a href="<?= $this->e($website['url']) ?>/login#recover/<?= $this->e($uuid) ?>"
+       class="button"
+    >
+        Accept Invitation
+    </a>
 </p>
 <p>
-    Heb je vragen over deze uitnodiging? Neem dan contact op met onze <a href="mailto:<?= $this->e($website['email']) ?>">webmaster</a>.
+    When the button is not working, or you would like to accept the invitation on
+    our <a href="<?= $this->e($website['url']) ?>/login">website</a> without using the button, use the
+    following code:
+</p>
+<p class="center">
+    <strong><?= $this->e($uuid) ?></strong>
 </p>
 <p>
-    Met vriendelijke groeten,<br />
-    Judokwai Kemzeke.
+    If you need assistance, or you did not make this request, please contact our webmaster
+    <a href="mailto:<?= $this->e($website['email']) ?>"><?= $this->e($website['email']) ?></a>
+</p>
+<p>
+    Note: This code will expire within <?= $this->e($expires) ?> hours.
+</p>
+<p>
+    Best regards,<br />
+    <?= $this->e($website['name']) ?>
 </p>
