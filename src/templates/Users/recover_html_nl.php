@@ -29,3 +29,7 @@
 <p>
     Let op: Deze code vervalt binnen <?= $this->e($expires) ?> uren.
 </p>
+<p>
+    Met vriendelijke groeten, <br />
+    <?= $this->e($website['name']) ?>
+</p>

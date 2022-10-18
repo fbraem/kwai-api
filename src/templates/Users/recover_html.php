@@ -28,3 +28,7 @@
 <p>
     Note: This code will expire within <?= $this->e($expires) ?> hours.
 </p>
+<p>
+    Best regards,<br />
+    <?= $this->e($website['name']) ?>
+</p>
