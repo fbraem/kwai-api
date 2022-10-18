@@ -15,7 +15,8 @@ interface TemplateEngine
     /**
      * Create a template
      * @param string $template
+     * @param string $lang
      * @return Template
      */
-    public function createTemplate(string $template): Template;
+    public function createTemplate(string $template, string $lang = 'nl'): Template;
 }

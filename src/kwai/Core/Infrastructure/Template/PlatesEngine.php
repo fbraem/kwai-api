@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace Kwai\Core\Infrastructure\Template;
 
-use \League\Plates\Engine;
+use League\Plates\Engine;
 
 /**
  * Class PlatesEngine
@@ -38,12 +38,23 @@ class PlatesEngine implements TemplateEngine
     }
 
     /**
-     * Creates a template
+     * Creates a template.
+     *
+     * When a language is passed, it will search for <template>_<lang>.php
+     *
+     * When there is no specific template for the given language, a template file
+     * without the language suffix is used.
+     *
      * @param string $template
+     * @param string $lang
      * @return Template
      */
-    public function createTemplate(string $template): Template
+    public function createTemplate(string $template, string $lang = 'nl'): Template
     {
+        $languageTemplate = "${template}_${lang}";
+        if ( $this->engine->exists($languageTemplate) ) {
+            return new PlatesTemplate($this->engine, $languageTemplate);
+        }
         return new PlatesTemplate($this->engine, $template);
     }
 }
