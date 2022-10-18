@@ -9,6 +9,8 @@ namespace Kwai\Modules\Users\Repositories;
 
 use Illuminate\Support\Collection;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
+use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\UserRecoveryNotFoundException;
 use Kwai\Modules\Users\Domain\UserRecovery;
 use Kwai\Modules\Users\Domain\UserRecoveryEntity;
 
@@ -17,7 +19,8 @@ use Kwai\Modules\Users\Domain\UserRecoveryEntity;
  */
 interface UserRecoveryRepository
 {
-    /*
+    /**
+     * @throws RepositoryException
      * @throws UserRecoveryNotFoundException
      */
     public function getByUniqueId(UniqueId $uuid): UserRecoveryEntity;

@@ -34,8 +34,7 @@ class UserRecoveryDatabaseRepository extends DatabaseRepository implements UserR
     }
 
     /**
-     * @throws RepositoryException
-     * @throws UserRecoveryNotFoundException
+     * @inheritdoc
      */
     public function getByUniqueId(UniqueId $uuid): UserRecoveryEntity
     {
