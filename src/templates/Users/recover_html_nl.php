@@ -8,7 +8,7 @@
     om de wijziging te starten.
 </p>
 <p style="text-align: center">
-    <a href="<?= $this->e($website['url']) ?>/login#recover/<?= $this->e($uuid) ?>"
+    <a href="<?= $this->e($website['url']) ?>/login#reset?uuid=<?= $this->e($uuid) ?>"
        class="button"
     >
         Wijzig mijn paswoord
@@ -16,7 +16,7 @@
 </p>
 <p>
     Wanneer de knop niet werkt, of u wilt het paswoord herstellen via onze
-    <a href="<?= $this->e($website['url']) ?>/login">website</a> zonder gebruik te maken
+    <a href="<?= $this->e($website['url']) ?>">website</a> zonder gebruik te maken
     van deze knop, gebruik dan de volgende code:
 </p>
 <p class="center">

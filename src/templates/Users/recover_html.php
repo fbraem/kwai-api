@@ -7,7 +7,7 @@
     We have received your request to reset your password. Please click the button below to complete the reset.
 </p>
 <p style="text-align: center">
-    <a href="<?= $this->e($website['url']) ?>/login#recover/<?= $this->e($uuid) ?>"
+    <a href="<?= $this->e($website['url']) ?>/login#reset?uuid=/<?= $this->e($uuid) ?>"
        class="button"
     >
         Reset My Password
