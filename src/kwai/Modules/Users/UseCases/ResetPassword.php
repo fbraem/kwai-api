@@ -42,6 +42,7 @@ class ResetPassword
      * @throws UserRecoveryExpiredException
      * @throws RepositoryException
      * @throws UserAccountNotFoundException
+     * @throws UserRecoveryNotFoundException
      * @throws NotAllowedException
      */
     public function __invoke(ResetPasswordCommand $command): void

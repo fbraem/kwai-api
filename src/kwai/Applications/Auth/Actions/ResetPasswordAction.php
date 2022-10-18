@@ -16,6 +16,7 @@ use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
 use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Domain\Exceptions\UserRecoveryExpiredException;
+use Kwai\Modules\Users\Domain\Exceptions\UserRecoveryNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserRecoveryDatabaseRepository;
 use Kwai\Modules\Users\UseCases\ResetPassword;
@@ -88,8 +89,9 @@ class ResetPasswordAction extends Action
             )($response);
         } catch (UserAccountNotFoundException|NotAllowedException) {
             return (new SimpleResponse(400, 'Bad request'))($response);
+        } catch(UserRecoveryNotFoundException $e) {
+            return (new SimpleResponse(404, $e->getMessage()))($response);
         }
-
         return (new OkResponse())($response);
     }
 }
