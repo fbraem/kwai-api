@@ -51,7 +51,8 @@ final class ConfirmInvitation
     public static function create(
         UserInvitationRepository $invitationRepository,
         UserAccountRepository $userAccountRepository
-    ) {
+    ): self
+    {
         return new self($invitationRepository, $userAccountRepository);
     }
 
