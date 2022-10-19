@@ -7,9 +7,8 @@ declare(strict_types=1);
 
 namespace Kwai\Modules\Users\UseCases;
 
-use Kwai\Core\Domain\ValueObjects\EmailAddress;
-use Kwai\Core\Domain\Entity;
 use Kwai\Core\Domain\Exceptions\UnprocessableException;
+use Kwai\Core\Domain\ValueObjects\EmailAddress;
 use Kwai\Core\Domain\ValueObjects\Name;
 use Kwai\Core\Domain\ValueObjects\UniqueId;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
@@ -36,8 +35,8 @@ final class ConfirmInvitation
      * @param UserAccountRepository    $userAccountRepository
      */
     public function __construct(
-        private UserInvitationRepository $invitationRepo,
-        private UserAccountRepository $userAccountRepository
+        private readonly UserInvitationRepository $invitationRepo,
+        private readonly UserAccountRepository $userAccountRepository
     ) {
     }
 
