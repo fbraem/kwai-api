@@ -28,6 +28,7 @@ it('can get an user invitation', function ($uuid) {
 ;
 
 it('can confirm a user invitation', function ($uuid) use ($data) {
+    unset($data['data']['attributes']['email']);
     unset($data['data']['attributes']['name']);
     $data['data']['id'] = $uuid;
     $data['data']['attributes']['first_name'] = 'Jigoro';

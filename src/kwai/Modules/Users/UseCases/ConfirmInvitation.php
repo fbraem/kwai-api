@@ -79,7 +79,7 @@ final class ConfirmInvitation
             throw new UnprocessableException('User invitation is already confirmed');
         }
 
-        $email = new EmailAddress($command->email);
+        $email = $invitation->getEmailAddress();
         try {
             $this->userAccountRepository->get($email);
             throw new UnprocessableException('Email is already used');

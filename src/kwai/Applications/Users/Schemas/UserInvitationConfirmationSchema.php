@@ -31,7 +31,6 @@ class UserInvitationConfirmationSchema implements InputSchema
                 'type' => Expect::string(),
                 "id" => Expect::string(),
                 'attributes' => Expect::structure([
-                    'email' => Expect::string()->required(),
                     'first_name' => Expect::string()->required(),
                     'last_name' =>  Expect::string()->required(),
                     'password' => Expect::string()->required(),
@@ -48,7 +47,6 @@ class UserInvitationConfirmationSchema implements InputSchema
     {
         $command = new ConfirmInvitationCommand();
         $command->uuid = $normalized->data->id;
-        $command->email = $normalized->data->attributes->email;
         $command->firstName = $normalized->data->attributes->first_name;
         $command->lastName = $normalized->data->attributes->last_name;
         $command->remark = $normalized->data->attributes->remark;

@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kwai\Modules\Users\UseCases;
 
 /**
- * ConfirmInvitationCommand is a datatransferobject for the usecase ConfirmInvitation
+ * ConfirmInvitationCommand
  */
 final class ConfirmInvitationCommand
 {
@@ -36,9 +36,4 @@ final class ConfirmInvitationCommand
      * The password
      */
     public string $password;
-
-    /**
-     * The email of the new user
-     */
-    public string $email;
 }
