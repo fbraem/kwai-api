@@ -7,7 +7,7 @@
     You were invited to become a member of our website.
 </p>
 <p style="text-align: center">
-    <a href="<?= $this->e($website['url']) ?>/login/recover/<?= $this->e($uuid) ?>"
+    <a href="<?= $this->e($website['url']) ?>/login/invited/<?= $this->e($uuid) ?>"
        class="button"
     >
         Accept Invitation

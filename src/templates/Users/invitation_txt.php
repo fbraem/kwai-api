@@ -1,7 +1,7 @@
 Beste <?= $this->e($name) ?>,
 
 Je werd uitgenodigd om lid te worden van onze website!
-Gebruik deze link <?= $this->e($website['url']) ?>#/users/invitation/<?= $this->e($uuid) ?> om deze uitnodiging te activeren.
+Gebruik deze link <?= $this->e($website['url']) ?>/login/invited/<?= $this->e($uuid) ?> om deze uitnodiging te activeren.
 
 Let op! Deze uitnodiging blijft maar geldig voor <?= $this->e($expires) ?> dagen.
 
