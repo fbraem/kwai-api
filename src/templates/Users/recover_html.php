@@ -4,7 +4,8 @@
     Dear <strong><?= $this->e($name) ?>,</strong>
 </p>
 <p>
-    We have received your request to reset your password. Please click the button below to complete the reset.
+    Did you forget your password? No problem. With a click on the button below, you can
+    reset your password.
 </p>
 <p style="text-align: center">
     <a href="<?= $this->e($website['url']) ?>/login/reset?uuid=/<?= $this->e($uuid) ?>"

@@ -4,8 +4,8 @@
     Beste <strong><?= $this->e($name) ?>,</strong>
 </p>
 <p>
-    We hebben een verzoek om uw paswoord te wijzigen ontvangen. Gelieve op onderstaande knop te drukken
-    om de wijziging te starten.
+    Jouw paswoord vergeten? Geen probleem. Met een klik op onderstaande knop kan je een nieuw
+    paswoord instellen.
 </p>
 <p style="text-align: center">
     <a href="<?= $this->e($website['url']) ?>/login/reset?uuid=<?= $this->e($uuid) ?>"
