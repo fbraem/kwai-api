@@ -8,7 +8,7 @@
     reset your password.
 </p>
 <p style="text-align: center">
-    <a href="<?= $this->e($website['url']) ?>/login/reset?uuid=/<?= $this->e($uuid) ?>"
+    <a href="<?= $this->e($website['url']) ?>/auth/reset?uuid=/<?= $this->e($uuid) ?>"
        class="button"
     >
         Reset My Password
@@ -16,7 +16,7 @@
 </p>
 <p>
     When the button is not working, or you would like to reset your password on
-    our <a href="<?= $this->e($website['url']) ?>/login">website</a> without using the button, use the
+    our <a href="<?= $this->e($website['url']) ?>/auth">website</a> without using the button, use the
     following code:
 </p>
 <p class="center">

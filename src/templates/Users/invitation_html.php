@@ -7,7 +7,7 @@
     You were invited to become a member of our website.
 </p>
 <p style="text-align: center">
-    <a href="<?= $this->e($website['url']) ?>/login/invited?uuid=<?= $this->e($uuid) ?>"
+    <a href="<?= $this->e($website['url']) ?>/auth/invited?uuid=<?= $this->e($uuid) ?>"
        class="button"
     >
         Accept Invitation
@@ -15,7 +15,7 @@
 </p>
 <p>
     When the button is not working, or you would like to accept the invitation on
-    our <a href="<?= $this->e($website['url']) ?>/login">website</a> without using the button, use the
+    our <a href="<?= $this->e($website['url']) ?>/auth">website</a> without using the button, use the
     following code:
 </p>
 <p class="center">

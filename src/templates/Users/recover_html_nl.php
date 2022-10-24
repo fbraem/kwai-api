@@ -8,7 +8,7 @@
     paswoord instellen.
 </p>
 <p style="text-align: center">
-    <a href="<?= $this->e($website['url']) ?>/login/reset?uuid=<?= $this->e($uuid) ?>"
+    <a href="<?= $this->e($website['url']) ?>/auth/reset?uuid=<?= $this->e($uuid) ?>"
        class="button"
     >
         Wijzig mijn paswoord
