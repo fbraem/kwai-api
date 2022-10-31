@@ -33,7 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
     path: '/auth/change',
     name: 'auth.change',
     options: ['auth' => true],
-    methods: ['PATCH']
+    methods: ['POST']
 )]
 final class ChangePasswordAction extends Action
 {
