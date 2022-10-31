@@ -14,6 +14,7 @@ use Kwai\Core\Infrastructure\Presentation\Action;
 use Kwai\Core\Infrastructure\Presentation\Responses\OkResponse;
 use Kwai\Core\Infrastructure\Presentation\Responses\SimpleResponse;
 use Kwai\Core\Infrastructure\Repositories\RepositoryException;
+use Kwai\Modules\Users\Domain\Exceptions\UserAccountNotFoundException;
 use Kwai\Modules\Users\Infrastructure\Repositories\UserAccountDatabaseRepository;
 use Kwai\Modules\Users\UseCases\ChangePassword;
 use Kwai\Modules\Users\UseCases\ChangePasswordCommand;
@@ -82,6 +83,10 @@ final class ChangePasswordAction extends Action
         } catch (NotAllowedException $e) {
             return (
                 new SimpleResponse(403, 'Password change is not allowed.')
+            )($response);
+        } catch (UserAccountNotFoundException $e) {
+            return (
+                new SimpleResponse(400, 'User account could not be found.')
             )($response);
         }
         return (new OkResponse())($response);
