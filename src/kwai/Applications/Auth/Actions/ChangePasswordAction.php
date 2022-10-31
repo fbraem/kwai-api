@@ -80,11 +80,11 @@ final class ChangePasswordAction extends Action
             return (
                 new SimpleResponse(500, 'A repository exception occurred.')
             )($response);
-        } catch (NotAllowedException $e) {
+        } catch (NotAllowedException) {
             return (
                 new SimpleResponse(403, 'Password change is not allowed.')
             )($response);
-        } catch (UserAccountNotFoundException $e) {
+        } catch (UserAccountNotFoundException) {
             return (
                 new SimpleResponse(400, 'User account could not be found.')
             )($response);
