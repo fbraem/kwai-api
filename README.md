@@ -1,3 +1,5 @@
+> A new version is developed using Python: [kwai](https://codeberg.org/zumuta/kwai).
+
 Kwai-api
 ========
 
